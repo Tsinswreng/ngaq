@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--23.05.23-1437-->
+<root>
+	<dbUserName>root</dbUserName>
+	<dbPassword>admin</dbPassword>
+</root>
+
+<!--
+{
+數據庫用戶名和密碼
+㕥配日期ᵗ正則表達式
+分割詞塊之正則表達式
+用戶自定義保存ᵗ權重算法
+}
+-->

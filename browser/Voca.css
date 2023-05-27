@@ -1,0 +1,108 @@
+body{
+	background-color: black;
+	color: white;
+}
+button{
+	background-color: black;
+	color: white;
+}
+input[type="radio"] {
+	/*transform: scale(1.5);*/ /*不知胡加此後則複選框會突破側邊欄ᵗ覆*/
+}
+#word{
+	font-size: 50px;
+	/*border: white solid 1px;*/
+	white-space: pre;
+	background-color: black;
+	color: white;
+	font-family: "孤鹜 筑紫明朝";
+	/*width: 500px;*/
+}
+#curWordInfo{
+	/*请注意，float 属性有可能会引起其他元素的位置出现异常。为了避免这种情况，你可以在容器元素上添加 overflow: auto; 属性，这样容器元素就会自动适应内部元素的高度，并且不会出现位置异常的问题。*/
+	float: right;
+	border: white solid 1px;
+	white-space: pre;
+	font-size: 14px;
+	display: none;
+}
+#lastWordInfo{
+	font-size: 14px;
+	/*border: white solid 1px;*/
+	white-space: pre;
+}
+
+#lastWordInfoCtainer{
+	font-size: 14px;
+	/*border: white solid 1px;*/
+	white-space: pre;
+	display: none;
+}
+#last_wordInfoTable{
+	float: right;
+	border: white solid 1px;
+}
+.ctrlBtn{
+	width: 125px;
+	height: 25px;
+	font-size: 16px;
+	background: transparent;
+	color: white;
+	border: white solid 1px;
+}
+.score{
+	width: 250px;
+	height: 25px;
+	font-size: 16px;
+	background: transparent;
+	color: white;
+	border: none;
+}
+.yesOrNo:hover, .ctrlBtn:hover ,.score:hover{
+	border: white solid 3px;
+}
+.yesOrNo:active, .ctrlBtn:active, .score:active {
+	background-color: white;
+	color: black;
+}
+.yesOrNo{
+	width: 250px;
+	height: 50px;
+	font-size: 32px;
+	background: transparent;
+	/*background: black;*/
+	/*color: white;*/
+	border: white solid 1px;
+}
+#leftSideBar, .leftSideBar{
+	position: fixed;
+	top: 20px;
+	/*left: -200px; !* 菜单初始状态为隐藏 *!*/
+	width: 200px;
+	height: 100%;
+	display: none;
+	background: rgb(32, 33, 36);
+	/*transition: left 0.3s ease-in-out; !* 设置过渡动画效果 *!*/
+}
+
+.toggleButton{
+	position: fixed;
+	top: 5px;
+	left: 5px;
+	padding: 5px;
+	width: 10px;
+	height: 10px;
+	border: none;
+	cursor: pointer;
+	transform: scale(1.5);
+}
+.sidebar.visible {
+	left: 0px;
+}
+
+
+/*
+button.wordsList{
+	font-family: "孤鹜 筑紫明朝";
+	font-size: 20px;
+}*/

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+	</style>
+	<link rel="stylesheet" href='./Voca.css'> <!--??href=''中ʸ寫./browser/Voca.css抑./Voca.css??-->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="./VocaB.js"></script>
+	<script src="https://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue/3.0.5/vue.global.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+	<script>
+		//待做:id統一用變量ˣ存
+			function getValue() {
+				const selectedValue = document.querySelector('input[name="ling"]:checked').value;
+				console.log(selectedValue);
+			}
+			function toggleSidebar() {
+				/*const div = document.getElementById("leftSideBar");
+				console.log(div.style.display)
+				if(div.style.display === 'none'){
+					div.style.display = "block";
+				}else{
+					div.style.display = "none";
+				}*/
+				let css = $('#leftSideBar').css('display')
+				//console.log(css)
+				if(css === 'none'){
+					css = "block";
+				}else{
+					css = "none";
+				}
+				$('#leftSideBar').css('display' , css)
+
+				//console.log(css)
+				// 获取菜单元素
+				//const sidebar = document.getElementById("leftSideBar");
+				// 切换菜单的可见性状态
+				//sidebar.classList.toggle(".visible");
+
+			}
+			function toggle_curWordInfo() {
+				let css = $('#curWordInfo').css('display')
+				//console.log(css)
+				if(css === 'none'){
+					css = "block";
+				}else{
+					css = "none";
+				}
+				$('#curWordInfo').css('display' , css)
+			}
+			function toggle_lastWordInfoCtainer(){
+				let css = $('#lastWordInfoCtainer').css('display')
+				//console.log(css)
+				if(css === 'none'){
+					css = "block";
+				}else{
+					css = "none";
+				}
+				$('#lastWordInfoCtainer').css('display' , css)
+			}
+			function 跳轉() {
+				let idToSkip = $('#跳轉').val();
+
+			}
+
+	</script>
+</head>
+<body>
+	<button onclick="toggleSidebar()" class="toggleButton">+</button>
+	<div id="leftSideBar" class="leftSideBar" >這は是れ一個左側邊欄なり
+		<button onclick="console.log(reviewed);">看今回既學ᵗ詞</button>
+		<br>
+		<button onclick="vocaB.reviewForgottenWords()">複習此次所忘</button>(請先手動點擊保存)
+		<br>
+		<a href="./multiWordMode.html" target="_blank">多詞模式</a>
+		<br>
+		<input type="text" placeholder="id" id="跳轉"><button>跳轉</button>
+	</div>
+	<div>v23.04.11-2016</div>
+	A Tsinswreng Gwāng fābricātus est
+	<!--Ab Tsinswreng Gwāng-ō creātus est-->
+	<div>請選擇語言:<nobr>
+		<label for="eng">英:<input type="radio" name="ling" id="eng" value="eng"></label>
+		<label for="jap">日:<input type="radio" name="ling" id="jap" value="jap"></label>
+		<label for="lat">拉:<input type="radio" name="ling" id="lat" value="lat"></label>
+		<button onclick="assignWordsFromServ();">發GET請求</button>
+		<button onclick="vocaB.startToShow()">始</button>
+		注意:重複發GET請求㕥取單詞則所再取得ᵗ詞會加至原ᵗ詞ᵗ後
+	</nobr>
+	</div>
+	<div id="curWordInfo">curWordInfo
+		<table>
+			<tr>
+				<td>詞形</td>
+				<td id="wordShape"></td>
+			</tr>
+			<tr>
+				<td>id</td>
+				<td id="wordId"></td>
+			</tr>
+			<tr>
+				<td>語言</td>
+				<td id="ling"></td>
+			</tr>
+			<tr>
+				<td>事件</td>
+				<td id="wordEvent"></td>
+			</tr>
+			<tr>
+				<td>權重</td>
+				<td id="priority"></td>
+			</tr>
+			<tr>
+				<td>添ᵗ期</td>
+				<td id="addedDates"></td>
+			</tr>
+			<tr>
+				<td>添ᵗ次</td>
+				<td id="addedTimes"></td>
+			</tr>
+			<tr>
+				<td>記ᵗ期</td>
+				<td id="rememberedDates"></td>
+			</tr>
+			<tr>
+				<td>記ᵗ次</td>
+				<td id="rememberedTimes"></td>
+			</tr>
+			<tr>
+				<td>忘ᵗ期</td>
+				<td id="forgottenDates"></td>
+			</tr>
+			<tr>
+				<td>忘ᵗ次</td>
+				<td id="forgottenTimes"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+
+	<!--此の單語を覺えて居るか?--><br>
+
+	<div id="yesOrNoBtnContainer">
+
+
+		<button class="ctrlBtn" onclick="vocaB.reviewForgottenWords()">複習此輪所忘</button>
+		<button class="ctrlBtn" onclick="vocaB.saveToServ()">保存</button>
+		<br>
+		<button class="score" id="score" onclick="toggle_curWordInfo();toggle_lastWordInfoCtainer()"></button>
+		<br>
+		<!--<button onclick="testPostBtn()">post</button>
+		<button onclick="testGetDataBtn()">get</button>
+		<button onclick="vocaB.testAjax(JSON.stringify(vocaB.allWords[0]))">testAjax</button>
+		<button onclick="vocaB.testAxios(JSON.stringify(vocaB.allWords))">testAxios</button>-->
+	</div>
+	<button class="yesOrNo" onclick="vocaB.showNext()">跳過</button>
+	<br>
+	<button class="yesOrNo" onclick="vocaB.forgotEvent()">不記得</button>
+	<br>
+
+	<button class="yesOrNo" onclick="vocaB.rememberedEvent()">記得</button>
+	<br>
+	<br>
+	<button id="word" onclick="vocaB.showWordInfoAtBottom()">&lt;div id="word"&gt;乜都冇有&lt;/div&gt;</button>
+	<br>
+	上一個: <br>
+	<div id="lastWordInfo">
+
+	</div>
+	<div id="lastWordInfoCtainer">
+
+		<table id="last_wordInfoTable">
+			<tr>
+				<td>詞形</td>
+				<td id="last_wordShape"></td>
+			</tr>
+			<tr>
+				<td>id</td>
+				<td id="last_wordId"></td>
+			</tr>
+			<tr>
+				<td>語言</td>
+				<td id="last_ling"></td>
+			</tr>
+			<tr>
+				<td>事件</td>
+				<td id="last_wordEvent"></td>
+			</tr>
+			<tr>
+				<td>權重</td>
+				<td id="last_priority"></td>
+			</tr>
+			<tr>
+				<td>添ᵗ期</td>
+				<td id="last_addedDates"></td>
+			</tr>
+			<tr>
+				<td>添ᵗ次</td>
+				<td id="last_addedTimes"></td>
+			</tr>
+			<tr>
+				<td>記ᵗ期</td>
+				<td id="last_rememberedDates"></td>
+			</tr>
+			<tr>
+				<td>記ᵗ次</td>
+				<td id="last_rememberedTimes"></td>
+			</tr>
+			<tr>
+				<td>忘ᵗ期</td>
+				<td id="last_forgottenDates"></td>
+			</tr>
+			<tr>
+				<td>忘ᵗ次</td>
+				<td id="last_forgottenTimes"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>
