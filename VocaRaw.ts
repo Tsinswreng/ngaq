@@ -10,9 +10,12 @@ const lodash = require('lodash');
 import * as readline from 'readline';
 import { ReadableStreamDefaultReader } from "node:stream/web";
 import * as tty from "tty";
+import {re} from "mathjs";
+const xml2js = require('xml2js')
+//import * as xml2js from 'xml2js';
 
 /*TODO{
-數據庫中id分動態與靜態
+
 完善根據不同ᵗ日期格式ⁿ讀文件之功能
 待改:類中ᵗ初錄旹ᵗ日期與格式ˇᵗ存ˋ宜用鍵值對
 待改:數據庫中ᵗ日期格式ˋ宜統一用20230507111301 %Y%m%d%H%M%S
@@ -107,11 +110,18 @@ class SingleWord{
 }
 
 export default class VocaRaw{
+	
+	public static readonly configFilePath:string = './config.xml'
+	private _xmlSrc:string = ''
 	private _alreadyAdded:boolean;
 	private _ling:string;
 	private _dbName:string;
 	private _tableName:string;
-
+	
+	private _dbUserName:string = 'root';
+	private _dbPassword:string = 'admin'
+	
+	
 	private _srcFilePath: string;
 	
 	private _wordShape_fullComment:{[key:string]:string};
@@ -123,6 +133,30 @@ export default class VocaRaw{
 	private _singleWords:SingleWord[];
 	private _wordUnits:any[];
 	
+	
+	get xmlSrc(): string {
+		return this._xmlSrc;
+	}
+	
+	set xmlSrc(value: string) {
+		this._xmlSrc = value;
+	}
+	
+	get dbUserName(): string {
+		return this._dbUserName;
+	}
+	
+	set dbUserName(value: string) {
+		this._dbUserName = value;
+	}
+	
+	get dbPassword(): string {
+		return this._dbPassword;
+	}
+	
+	set dbPassword(value: string) {
+		this._dbPassword = value;
+	}
 	
 	get alreadyAdded(): boolean {
 		return this._alreadyAdded;
@@ -162,7 +196,6 @@ export default class VocaRaw{
 	
 	set srcFilePath(value: string) {
 		this._srcFilePath = value;
-		this.init()
 	}
 	
 	get wordShape_fullComment(): { [p: string]: string } {
@@ -438,7 +471,12 @@ export default class VocaRaw{
 		}
 	}
 
+	/**
+	* 把單詞從txt加進數據庫裏
+	*
+	*/
 	public addSingleWordsToDb(filePath?:string){
+		this.init() //23.05.28-2030 this.init() 被從set srcStr() 移到此處。
 		let 此輪ʸ加ᵗ詞:SingleWord[] = []
 		let 此輪ʸ加ᵗ詞之一:SingleWord = new SingleWord();
 		if(filePath){
@@ -447,7 +485,7 @@ export default class VocaRaw{
 		if(!this.srcFilePath){
 			throw new Error('未曾設置文件路徑')
 		}
-		const db = this.getDbObj();
+		const db = this.getDbConnection();
 
 		let recordsLength:number;//未用
 		console.log(`SELECT COUNT(*) as count FROM ${this._tableName}`);
@@ -623,7 +661,7 @@ export default class VocaRaw{
 	} */
 	
 	public printAllRecords(){
-		const db = this.getDbObj()
+		const db = this.getDbConnection()
 		db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 			console.log(results)//RowDataPacket
 			//console.log(results['600']['wordShape'])
@@ -631,6 +669,9 @@ export default class VocaRaw{
 		})
 	}
 
+	/*
+	* 在數據庫中同步ᵈ創建ᵣ新ᵗ單詞表
+	* */
 	public creatTableSync(tableName?:string){
 		if(!tableName){
 			tableName = this._tableName;
@@ -658,6 +699,7 @@ export default class VocaRaw{
 		
 	}
 	
+	
 	public dropTableSync(tableName?:string):void{
 		
 		if(!tableName){
@@ -680,7 +722,11 @@ export default class VocaRaw{
 		//console.log(4)
 	}
 
-	public getDbObj(){
+	
+	/*
+	* 獲取ᵣ數據庫ᵗ連接ˡ對象
+	* */
+	public getDbConnection(){
 		let db = mysql.createConnection({
 			host: 'localhost',
 			user: 'root',
@@ -741,7 +787,7 @@ export default class VocaRaw{
 			tableName = this._tableName
 		}
 		const sql = `DELETE FROM ${tableName};`
-		const db = this.getDbObj();
+		const db = this.getDbConnection();
 		/* db.connect((err)=>{
 			if (err) {
 				console.error('failed '+err.stack);
@@ -754,7 +800,7 @@ export default class VocaRaw{
 	}
 
 	public getAllSingleWordsSync(){
-		const db = this.getDbObj()
+		const db = this.getDbConnection()
 		db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 			//console.log(results)//RowDataPacket
 			//console.log(results['600']['wordShape'])
@@ -766,7 +812,7 @@ export default class VocaRaw{
 	public backupTable(){
 		const dateNow:string = moment().format('YYYYMMDDHHmmss')
 		const newTableName = this.tableName+dateNow
-		const db = this.getDbObj()
+		const db = this.getDbConnection()
 		//let backupSql = `CREATE TABLE ${this._tableName+dateNow} AS SELECT *FROM ${this._tableName};`
 		let backupSql = `CREATE TABLE ${newTableName} LIKE ${this.tableName};`
 		let step2 = `INSERT INTO ${newTableName} SELECT * FROM ${this.tableName};`
@@ -777,6 +823,35 @@ export default class VocaRaw{
 			})
 		})
 	}
+	public static getObjsByConfig(){
+		let xmlSrc = fs.readFileSync(VocaRaw.configFilePath)
+		let parser = new xml2js.Parser();
+		let xmlObj:any;
+		
+		parser.parseString(xmlSrc, (err:any, result:any)=>{
+			if(err){throw err}
+			xmlObj = result;
+		})
+		
+		if(!xmlObj){throw new Error('xml解析失敗')}
+		let vocaObjs:VocaRaw[] = [];
+		for(let i = 0; i < xmlObj.root.lings[0].ling.length; i++){
+			let curLing = xmlObj.root.lings[0].ling[i]
+			vocaObjs[i] = new VocaRaw();
+			vocaObjs[i].dbUserName = xmlObj.root.dbUserName[0]
+			vocaObjs[i].dbPassword = xmlObj.root.dbPassword[0]
+			vocaObjs[i].dbName = xmlObj.root.dbName[0]
+			vocaObjs[i].ling = curLing.lingName[0]
+			vocaObjs[i].tableName = curLing.tableName[0]
+			vocaObjs[i].srcFilePath = curLing.srcFilePath[0]
+		}
+		
+		return vocaObjs;
+		
+	}
+	
+	
+	
 	
 	public static updateDb
 	(

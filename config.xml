@@ -3,6 +3,19 @@
 <root>
 	<dbUserName>root</dbUserName>
 	<dbPassword>admin</dbPassword>
+	<dbName>voca</dbName>
+	<lings>
+		<ling>
+			<lingName>eng</lingName>
+			<tableName>eng</tableName>
+			<srcFilePath>.\srcWordList\eng\eng[20230515112601,].txt</srcFilePath>
+		</ling>
+		<ling>
+			<lingName>jap</lingName>
+			<tableName>jap</tableName>
+			<srcFilePath>.\srcWordList\jap\jap[20230515112439,].txt</srcFilePath>
+		</ling>
+	</lings>
 </root>
 
 <!--

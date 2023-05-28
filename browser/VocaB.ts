@@ -47,8 +47,8 @@ import {data} from "jquery";
 
 
 
-declare var moment: any;
-type lingType = ''|'eng'|'jap'|'lat'
+declare var moment: any; //即momentjs 但是我還不會導包
+type lingType = ''|'eng'|'jap'|'lat' //沒用的東西
 
 enum WordEvent{
 	ADD=0,
@@ -884,7 +884,7 @@ class VocaB{
 		$('#last_wordShape').text(this._curSingleWord.wordShape)
 		$('#last_wordId').text(this._curSingleWord.id)
 		$('#last_ling').text(this._curSingleWord.ling)
-		$('#last_wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●','■','□') as string)
+		$('#last_wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●','■','□') as string) //此步蜮甚耗時ⁿ致塞
 		$('#last_priority').text(this._curSingleWord.priority)
 		$('#last_addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.addedDates)))
 		$('#last_addedTimes').text(this._curSingleWord.addedTimes)

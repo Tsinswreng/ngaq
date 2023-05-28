@@ -9,6 +9,9 @@ export default class Config{
 	private _dbUserName:string|undefined
 	private _dbPassword:string|undefined
 	
+	
+	
+	
 	constructor() {
 		this.assign_xmlSrc();
 	}
@@ -51,7 +54,6 @@ export default class Config{
 	}
 	
 	
-	
 }
 
 function main(){
@@ -63,4 +65,4 @@ function main(){
 	})
 }
 
-main()
+//main()

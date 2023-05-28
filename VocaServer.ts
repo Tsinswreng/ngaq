@@ -35,7 +35,7 @@ class VocaServer{
 		
 		//eng.addSingleWordsToDb()
 		VocaServer.app.get('/eng', (req:any, res:any)=>{
-			const db =  eng.getDbObj()
+			const db =  eng.getDbConnection()
 			db.query(`SELECT * FROM ${eng.tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				//console.log('results:'+results)//RowDataPacket
 				res.setHeader('content-type','text/html;charset=utf-8')
@@ -48,7 +48,7 @@ class VocaServer{
 		VocaServer.app.get('/jap', (req:any, res:any)=>{
 			let path = req.path
 			console.log('path:'+path)//t
-			const db = jap.getDbObj()
+			const db = jap.getDbConnection()
 			db.query(`SELECT * FROM ${jap.tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				
 				//console.log('results:'+results)//RowDataPacket

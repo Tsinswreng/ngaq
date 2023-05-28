@@ -1,7 +1,6 @@
 import VocaRaw from "./VocaRaw"
-
+/*
 const eng = new VocaRaw();
-
 eng.dbName = 'voca'
 eng.tableName = 'eng'
 eng.srcFilePath = 'D:\\#\\mmf\\英語\\eng[20230515112601,].txt'
@@ -9,22 +8,27 @@ const jap = new VocaRaw()
 jap.dbName = 'voca'
 jap.tableName = 'jap'
 jap.srcFilePath = 'D:\\#\\mmf\\倭\\jap[20230515112439,].txt'
-
 function backup(){
 	eng.backupTable()
 	jap.backupTable()
 }
-
 function addNew(){
-	//eng.addSingleWordsToDb('D:\\#\\mmf\\英語\\eng[20230510213337,].txt')
-	//jap.addSingleWordsToDb('D:\\#\\mmf\\倭\\jap[20230510212607,].txt')
-	
-	//eng.srcFilePath = 'D:\\#\\mmf\\英語\\誧補錄入db.txt'
-
-	//console.log(jap.wordUnits)
-	
 	eng.addSingleWordsToDb()
 	jap.addSingleWordsToDb()
+}*/
+
+let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
+
+function backup(){
+	for (let i = 0; i < vocaObjs.length; i++) {
+		vocaObjs[i].backupTable()
+	}
+}
+
+function addNew(){
+	for (let i = 0; i < vocaObjs.length; i++) {
+		vocaObjs[i].addSingleWordsToDb()
+	}
 }
 
 //backup()
