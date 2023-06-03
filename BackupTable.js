@@ -1,28 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const VocaRaw_1 = require("./VocaRaw");
-const eng = new VocaRaw_1.default();
-eng.dbName = 'voca';
-eng.tableName = 'eng';
-eng.srcFilePath = 'D:\\#\\mmf\\英語\\eng[20230515112601,].txt';
-const jap = new VocaRaw_1.default();
-jap.dbName = 'voca';
-jap.tableName = 'jap';
-jap.srcFilePath = 'D:\\#\\mmf\\倭\\jap[20230515112439,].txt';
+/*
+const eng = new VocaRaw();
+eng.dbName = 'voca'
+eng.tableName = 'eng'
+eng.srcFilePath = 'D:\\#\\mmf\\英語\\eng[20230515112601,].txt'
+const jap = new VocaRaw()
+jap.dbName = 'voca'
+jap.tableName = 'jap'
+jap.srcFilePath = 'D:\\#\\mmf\\倭\\jap[20230515112439,].txt'
+function backup(){
+    eng.backupTable()
+    jap.backupTable()
+}
+function addNew(){
+    eng.addSingleWordsToDb()
+    jap.addSingleWordsToDb()
+}*/
+let vocaObjs = VocaRaw_1.default.getObjsByConfig(); //第0個昰英語 第1個是日語
 function backup() {
-    eng.backupTable();
-    jap.backupTable();
+    for (let i = 0; i < vocaObjs.length; i++) {
+        vocaObjs[i].backupTable();
+    }
 }
 function addNew() {
-    //eng.addSingleWordsToDb('D:\\#\\mmf\\英語\\eng[20230510213337,].txt')
-    //jap.addSingleWordsToDb('D:\\#\\mmf\\倭\\jap[20230510212607,].txt')
-    //eng.srcFilePath = 'D:\\#\\mmf\\英語\\誧補錄入db.txt'
-    //console.log(jap.wordUnits)
-    eng.addSingleWordsToDb();
-    jap.addSingleWordsToDb();
+    for (let i = 0; i < vocaObjs.length; i++) {
+        vocaObjs[i].addSingleWordsToDb();
+    }
 }
 backup();
-//addNew()//待叶:輸出ʃ增ᵗ單詞ᵗ量
+addNew(); //待叶:輸出ʃ增ᵗ單詞ᵗ量
+// 待叶: 把 備份數據庫 與 添詞 之功能 添ᵣ前端ʸ。
 /*
 源詞表中ᵗ格式:
 

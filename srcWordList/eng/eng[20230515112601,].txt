@@ -4291,3 +4291,641 @@ Web	瑟瑟；飒飒；沙沙作响
 
 
 }
+
+23.05.28-2134
+{
+eloquence
+US:  
+UK: ['eləkwəns] 
+n.	口才；雄辩；雄辩术；修辞法
+Web	文才；辩才；谈锋
+
+precursor
+US: [prɪˈkɜrsər] 
+UK: [priːˈkɜː(r)sə(r)] 
+n.	前驱；预兆；前任；先兆
+Web	先驱者；前体细胞；前驱物
+
+seamless
+US: [ˈsimləs] 
+UK: [ˈsiːmləs] 
+adj.	无（接）缝的；（两部分之间）无空隙的
+Web	无缝；无缝的；无缝隙
+
+discern
+US: [dɪˈsɜrn] 
+UK: [dɪˈsɜː(r)n] 
+v.	识别；觉察出；了解；听出
+Web	辨别；看出；辨明
+
+press for
+US:  
+UK:  
+na.	催促；(时间)迫促；(资金)短少
+Web	缺少；迫切要求
+
+tone down
+US:  
+UK:  
+na.	使柔和；变柔和
+Web	缓和；降低；使缓和
+
+portray
+US: [pɔrˈtreɪ] 
+UK: [pɔː(r)ˈtreɪ] 
+v.	描绘；描述；描写；画(人物,风景)
+Web	被描绘；扮演；扮演者
+
+hell-bent
+US:  
+UK:  
+adj.	不顾一切
+Web	不顾一切的；固执的；拼命的
+
+bent
+US: [bent] 
+UK: [bent] 
+n.	爱好
+adj.	弯曲的；（因年老或生病）驼背的；不诚实的；不正派的
+v.	“bend”的过去式和过去分词
+Web	弯的；倾向；半路情缘
+
+
+sow
+US: [soʊ] 
+UK: [səʊ] 
+播种
+n.	母猪
+v.	播种；散布；灌输；激起
+adj.	〈美〉雌的
+Web	播种机；播种期；播种造林
+
+pivotal
+US: [ˈpɪvət(ə)l] 
+UK: ['pɪvət(ə)l] 
+adj.	关键性的；核心的
+Web	关键的；枢轴的；中枢的
+
+disregard
+US: [ˌdɪsrɪˈɡɑrd] 
+UK: [ˌdɪsrɪˈɡɑː(r)d] 
+v.	漠视；不理会；不顾
+n.	漠视；忽视
+Web	不管；无视；轻视
+
+impairment
+US: [ɪmˈpermənt] 
+UK: [ɪmˈpeə(r)mənt] 
+n.	损伤；障碍；妨碍；〔计〕减损
+Web	损害；滞还债款的减损；生理损害
+
+proclaim
+US: [prəˈkleɪm] 
+UK: [prə'kleɪm] 
+v.	宣布；声明；表示；赞扬
+Web	宣称；给谦卑的人传福音；历久常新
+
+absolve
+US: [əbˈzɑlv] 
+UK: [əbˈzɒlv] 
+v.	解除；宽恕；某学科考试及格取得(学分)
+Web	赦免；免除；宣告...无罪
+
+nuanced
+US:  
+UK: ['njuːɑːnst] 
+adj.	(音调,调色,意义等)有细微差别的
+Web	细致入微；细微的；细致入微的
+
+
+}
+
+23.05.30-2130
+{
+avert
+US: [əˈvɜrt] 
+UK: [əˈvɜː(r)t] 
+v.	避免；转移
+Web	避开；逃避的
+
+happen to
+US:  
+UK:  
+v.	发生于
+Web	碰巧；偶然；发生在…身上
+
+retort
+US: [rɪˈtɔrt] 
+UK: [rɪˈtɔː(r)t] 
+n.	回嘴；(议论的)反攻；报复；【化】干馏釜
+v.	反驳；照样报复；反责；反驳 (on, upon, against)
+Web	是动词
+
+prostitution
+US: [ˌprɑstɪˈtuʃ(ə)n] 
+UK: [ˌprɒstɪˈtjuːʃ(ə)n] 
+n.	卖淫；为娼；当男妓；才能的滥用（或糟蹋）
+Web	妓院；娼妓；性交易
+
+
+compensate
+US: [ˈkɑmpənˌseɪt] 
+UK: [ˈkɒmpənseɪt] 
+v.	补偿；赔偿；酬劳；〈美〉给…付工钱
+Web	弥补；补偿式油量控制阀；代偿性
+
+curse
+US: [kɜrs] 
+UK: [kɜː(r)s] 
+v.	诅咒；咒骂；在心里诅咒；念咒语诅咒
+n.	咒；咒语；祸根；咒骂语
+Web	咒歌；骂人；诅咒术
+
+premise
+US: [ˈpremɪs] 
+UK: ['premɪs] 
+n.	前提；假定
+v.	假定；预述(条件等)；引导(论述等)；提出…作为前提[条件]
+Web	假设；房屋；根据
+
+
+orthodox
+US: [ˈɔrθəˌdɑks] 
+UK: [ˈɔː(r)θədɒks] 
+adj.	普遍接受的；正统的；规范的；正统信仰的
+Web	东正教；传统的；东正教的
+
+sip
+US: [sɪp] 
+UK: [sɪp] 
+v.	小口喝；抿
+n.	一小口（饮料）
+Web	系统级封装；会话初始协议(Session Initiation Protocol)；会话发起协议
+
+clap
+US: [klæp] 
+UK: [klæp] 
+n.	鼓掌；拍手；掌声；拍手声
+v.	拍手（表示赞许或欣赏）；击掌；（常指友好地）轻拍某人的背（或肩）
+Web	霹雳声；拍掌；拍手喝采声
+
+peep
+US: [pip] 
+UK: [piːp] 
+v.	偷看；微露出；部分现出；发出吱吱声
+n.	偷偷一瞥；说话；出声音；啾啾声
+Web	呼气末正压(positive end-expiratory pressure)；呼气末正压通气；窥视
+
+armament
+US: [ˈɑrməmənt] 
+UK: [ˈɑː(r)məmənt] 
+n.	武器；军备；武装；战备
+Web	武器装备；军械；军队
+
+lobe
+US: [loʊb] 
+UK: [ləʊb] 
+n.	（身体器官的）叶；（尤指）肺叶
+Web	瓣；裂片；脑叶
+
+radiate
+US: [ˈreɪdiˌeɪt] 
+UK: [ˈreɪdieɪt] 
+v.	辐射；放射；发光；射出
+adj.	射出的；【动,植】辐射形的
+Web	辐射的；散热；放射状的美
+
+mutter
+US: [ˈmʌtər] 
+UK: [ˈmʌtə(r)] 
+v.	咕哝；轻声低语；喃喃而语；咕哝地抱怨
+n.	咕哝；抱怨
+Web	喃喃自语；嘀咕
+
+nonetheless
+US: [ˌnʌnðəˈles] 
+UK: [.nʌnðə'les] 
+adv.	尽管如此
+Web	虽然如此；但是；然而
+
+run into
+偶遇
+US:  
+UK:  
+na.	冲进；(河)注入(海)；撞上；到达
+Web	偶遇；跑进；陷入
+
+snicker
+US: [ˈsnɪkər] 
+UK: [ˈsnɪkə(r)] 
+v.	窃笑；暗笑
+Web	偷笑；士力架；窃笑着说
+
+glimmer
+US: [ˈɡlɪmər] 
+UK: [ˈɡlɪmə(r)] 
+n.	微弱的闪光；闪烁的微光；微弱的迹象；一丝
+v.	隐约地闪烁；发出微弱的闪光
+Web	微弱的光；发微光；少许
+
+gloomy
+US: [ˈɡlumi] 
+UK: [ˈɡluːmi] 
+adj.	黑暗的；阴暗的；幽暗的；忧郁的
+Web	阴沉的；令人沮丧的；阴郁的
+
+illicit
+US: [ɪˈlɪsɪt] 
+UK: [ɪ'lɪsɪt] 
+adj.	非法的；违法的；违背社会常规的；不正当的
+Web	违禁的；禁止的；不法的
+
+resent
+US: [rɪˈzent] 
+UK: [rɪ'zent] 
+v.	憎恨；“resend”的过去式
+Web	愤恨；愤慨；忠言逆耳
+
+brat
+US: [bræt] 
+UK: [bræt] 
+n.	没有规矩的人；（尤指）顽童
+Web	小鬼；小家伙；乳臭未干的小孩
+
+creepy
+US: [ˈkripi] 
+UK: [ˈkriːpi] 
+adj.	令人毛骨悚然的；令人不寒而栗的；离奇的（使人感到紧张）
+Web	恐怖的；令人害怕的；使人毛骨悚然的
+
+ridicule
+US: [ˈrɪdɪˌkjul] 
+UK: [ˈrɪdɪˌkjuːl] 
+v.	嘲笑；愚弄；讥刺
+n.	嘲笑；〈古〉笑柄
+Web	嘲讽；嘲弄；奚落
+
+harassment
+US: [həˈræsmənt] 
+UK: [ˈhærəsmənt] 
+n.	骚扰；折磨人的东西；烦恼
+Web	扰乱；侵扰；袭扰
+
+
+vomit
+US: [ˈvɑmɪt] 
+UK: [ˈvɒmɪt] 
+v.	呕吐；吐出
+n.	【医】呕吐；吐出物；吐剂；脏话
+Web	呕吐物
+
+
+}
+
+
+23.05.31-2237
+{
+nuanced
+US:  
+UK: ['njuːɑːnst] 
+adj.	(音调,调色,意义等)有细微差别的
+Web	细致入微；细微的；细致入微的
+
+vengeance
+US: [ˈvendʒəns] 
+UK: [ˈvendʒ(ə)ns] 
+n.	复仇；报复；报仇
+Web	邪灵复仇；复仇之婚；复仇之魂
+
+mundane
+US: [mʌnˈdeɪn] 
+UK: [ˌmʌnˈdeɪn] 
+adj.	单调的；平凡的
+Web	世俗的；现世的；宇宙的
+
+grudge
+US: [ɡrʌdʒ] 
+UK: [ɡrʌdʒ] 
+n.	怨恨；恶意
+v.	嫉妒；不愿给；〈古〉鸣不平
+Web	积怨
+
+presume
+US: [prɪˈzum] 
+UK: [prɪˈzjuːm] 
+v.	假设；假定；设想；（尤指法庭上）推定
+Web	推测；认为；以为
+
+grievance
+US: [ˈɡrivəns] 
+UK: [ˈɡriːv(ə)ns] 
+n.	不满；抱怨；冤苦悲叹；苦难
+Web	不平；牢骚；民怨
+
+vent
+US: [vent] 
+UK: [vent] 
+n.	（空气、气体、液体的）出口；（鸟、鱼等小动物的）肛门
+v.	发泄（感情，尤指愤怒）
+Web	通风孔；通风口；通气孔
+
+
+intermediary
+US: [ˌɪntərˈmidiˌeri] 
+UK: [ˌɪntə(r)ˈmiːdiəri] 
+n.	中间人；媒介；手段；中间形态
+adj.	中间人的；调解人的；居间的
+Web	中介机构；中介人；中间商
+
+boom
+US: [bum] 
+UK: [buːm] 
+n.	繁荣；吊杆；（某种体育运动、音乐等）突然风靡的时期；帆桁
+v.	激增；繁荣昌盛；轰鸣；轰响
+adj.	〈美〉猛涨起来的
+Web	隆隆声；兴旺；景气
+
+engender
+US: [ɪnˈdʒendər] 
+UK: [ɪnˈdʒendə(r)] 
+v.	产生；使发生；惹起；形成
+Web	产生的；性别化；生成
+
+ramification
+US: [ˌræməfɪˈkeɪʃ(ə)n] 
+UK: [ˌræmɪfɪˈkeɪʃ(ə)n] 
+n.	后果；衍生物；分歧；分枝
+Web	分支；结果；法律后果
+
+supervision
+US: [ˌsupərˈvɪʒ(ə)n] 
+UK: [ˌsuːpə(r)ˈvɪʒ(ə)n] 
+n.	监督；管理
+Web	监管；监视；督导
+
+autocracy
+US: [ɔˈtɑkrəsi] 
+UK: [ɔːˈtɒkrəsi] 
+n.	专制制度；独裁政体；独裁国家；专制国家
+Web	独裁政府；独裁政治；专制政治
+
+ritual
+US: [ˈrɪtʃuəl] 
+UK: ['rɪtʃuəl] 
+n.	习惯；程序；仪规；礼节
+adj.	仪式上的；庆典的；习惯的；老套的
+Web	典礼；宗教仪式；礼仪
+
+
+
+}
+
+23.06.02-2321
+{
+slogan
+US: [ˈsloʊɡən] 
+UK: [ˈsləʊɡən] 
+n.	口号；标语
+Web	广告语；广告标语；品牌口号
+
+allude
+US: [əˈlud] 
+UK: [əˈluːd] 
+v.	暗示；(婉转)提到；指…说
+
+chase
+US: [tʃeɪs] 
+UK: [tʃeɪs] 
+v.	追逐；追赶；跟踪；追寻
+n.	追求；追赶；追猎；蔡斯
+Web	追逐战；行风之歌；雕镂
+
+squirrel
+US: [ˈskwɪrəl] 
+UK: ['skwɪrəl] 
+n.	松鼠
+Web	小松鼠；灰鼠；贮藏
+
+forge
+US: [fɔrdʒ] 
+UK: [fɔː(r)dʒ] 
+v.	锻造；制定；锻炼；(坚定地)勉力前进
+n.	锻压；锻造厂；(思想等的)锻炼；铁工厂
+Web	伪造；铸造；锻炉
+
+exemplary
+US: [ɪɡˈzempləri] 
+UK: [ɪɡ'zempləri] 
+adj.	典范的；可作榜样的；可作楷模的；严厉的
+Web	模范的；可仿效的；典型的
+
+punch line
+US: ['pʌntʃlaɪn] 
+UK: ['pʌntʃlaɪn] 
+n.	指一整段笑话中最后几句最能引人发笑的点睛之笔
+Web	头条笑料；妙语；抖包袱
+
+wantonly
+Web	大肆；肆意；任意
+
+slander
+US: [ˈslændər] 
+UK: [ˈslɑːndə(r)] 
+v.	诋毁；口头诽谤；中伤
+n.	口头诽谤；口头诽谤罪
+Web	毁谤；诬蔑；污蔑
+
+fertility
+US: [fɜrˈtɪləti] 
+UK: [fɜː(r)ˈtɪləti] 
+n.	丰产；富饶；能生育性；可繁殖性
+Web	丰饶；肥沃；繁殖力
+
+revenue
+US: [ˈrevənju] 
+UK: [ˈrevənjuː] 
+n.	收益；总收入；税收；(国家的)岁入
+Web	营收；营业收入；销售收入
+
+subsidise
+US: ['sʌbsɪdaɪz] 
+UK: ['sʌbsɪdaɪz] 
+v.	补助；资助；给…发津贴
+Web	消退；资助或补助；平息
+
+incentive
+US: [ɪnˈsentɪv] 
+UK: [ɪn'sentɪv] 
+n.	动机；刺激；诱因；鼓励
+adj.	刺激性的
+Web	激励；奖励旅游；鼓励措施
+
+Scandinavian
+US: [ˌskændɪˈneɪviən] 
+UK: [.skændɪ'neɪviən] 
+n.	北欧(人)的；斯堪的纳维亚语(的)
+Web	斯堪的纳维亚人；斯堪的纳维亚的；堪地那维亚
+
+bond
+US: [bɑnd] 
+UK: [bɒnd] 
+n.	债券；束缚；契约；借据
+v.	以证券为(债务等)作保证抵押；把(进口货)存入关栈以待完税
+adj.	被奴役的；奴隶的
+Web	公债；镣铐；结合
+
+entice
+US: [ɪnˈtaɪs] 
+UK: [ɪn'taɪs] 
+v.	诱使；引诱
+Web	诱惑；怂恿；吸引
+
+
+}
+
+23.06.03-2136
+{
+escalate
+US: [ˈeskəˌleɪt] 
+UK: [ˈeskəleɪt] 
+v.	(战争)逐步升级；飞快增加；乘自动梯上升；像乘自动梯上升
+Web	意思是逐步上升的；战争升级；不断升级的
+
+tumult
+US: [ˈtuˌmʌlt] 
+UK: [ˈtjuːmʌlt] 
+n.	骚动；骚乱；心烦意乱；混乱
+Web	吵闹；喧哗；暴动
+
+pre-eminence
+US: [pri:'emɪnəns] 
+UK: [pri:'emɪnəns] 
+n.	卓越
+Web	杰出；卓越才俊；卓越型
+
+muddy
+US: [ˈmʌdi] 
+UK: [ˈmʌdiz] 
+弄浊
+adj.	泥多的；尽是泥的；脏的；泥色的
+v.	弄浊；使头脑混乱[糊涂]；使混乱
+Web	泥泞的；多泥的；混浊
+
+bourgeois
+US: [ˈbʊrˌʒwɑ] 
+UK: [ˈbʊə(r)ʒwɑː] 
+n.	资产阶级；商人；有产者；中产阶级的市民
+adj.	中产阶级的；追求名利且平庸的；世俗的；资产阶级的
+Web	布尔乔亚；布尔乔亚阶级；资产者
+
+
+shutter
+US: [ˈʃʌtər] 
+UK: [ˈʃʌtə(r)] 
+n.	百叶窗；活动护窗；（照相机的）快门
+v.	给…装上百叶窗；使关上百叶窗；装光闸于(照相机上)
+Web	鬼影；闸板；活动遮板
+
+shuttered
+US: [ˈʃʌtərd] 
+UK: [ˈʃʌtə(r)d] 
+adj.	关上（或装有）护窗的
+Web	关门；有百叶窗的；被关闭的
+
+ancillary
+US: [ˈænsəˌleri] 
+UK: [ænˈsɪləri] 
+adj.	辅助的；补充的；附属的；附加的
+n.	〈英〉助手
+Web	补助的；辅助设备；从属的
+
+superficially
+US: [ˈsupɚˈfɪʃəlɪ] 
+UK: [ˌsu:pə'fɪʃəlɪ] 
+adv.	从表面上看
+Web	表面地；浅薄地；虚假地，表面地
+
+
+disparate
+US: [dɪˈsperət] 
+UK: [ˈdɪsp(ə)rət] 
+adj.	由不同的人（或事物）组成的；迥然不同的；无法比较的；不相干的
+n.	无法比较的东西
+Web	全异的；异类的；根本不同的
+
+literacy
+US: [ˈlɪt(ə)rəsi] 
+UK: ['lɪt(ə)rəsi] 
+n.	读写能力
+Web	识字；素养；有读写能力
+
+eradicate
+US: [ɪˈrædɪˌkeɪt] 
+UK: [ɪˈrædɪkeɪt] 
+v.	消灭
+Web	根除；根除的
+
+schistosomiasis
+US: [ˌʃɪstəsoʊ'maɪəsɪs] 
+UK: [ˌʃɪstəsəʊ'maɪəsɪs] 
+n.	【医】血吸虫病；裂体吸虫病
+Web	血吸虫症；日本血吸虫病；第一节血吸虫病
+
+furnace
+US: [ˈfɜrnɪs] 
+UK: [ˈfɜː(r)nɪs] 
+n.	熔炉；炉子；高炉；极热的地方
+v.	在炉中烧热(金属)
+Web	火炉；高温炉；马弗炉
+
+harness
+US: [ˈhɑrnəs] 
+UK: [ˈhɑː(r)nɪs] 
+v.	治理；给…套上马具[轭具]；使做固定的工作；〈古〉给…穿铠甲
+n.	挽具；【印,纺】综絖；(提花机上的)通丝；铠甲
+Web	利用；控制和驾驭
+
+subtle
+US: [ˈsʌt(ə)l] 
+UK: ['sʌt(ə)l] 
+adj.	不易察觉的；不明显的；微妙的；机智的
+Web	精巧的；细微的；精细的
+
+terminology
+US: [ˌtɜrmɪˈnɑlədʒi] 
+UK: [ˌtɜː(r)mɪˈnɒlədʒi] 
+n.	（某学科的）术语；有特别含义的用语；专门用语
+Web	术语学；专业术语；词汇
+
+in some respects
+US:  
+UK:  
+adv.	在某些方面
+Web	就某些方面而言；在有些方面；从另一方面来说
+
+confiscate
+US: [ˈkɑnfɪˌskeɪt] 
+UK: [ˈkɒnfɪˌskeɪt] 
+v.	（尤指作为惩罚）没收
+Web	充公；把…充公；查抄
+
+bestow
+US: [bɪˈstoʊ] 
+UK: [bɪˈstəʊ] 
+v.	授予
+Web	给予；恩赐；把…赠与
+
+askance
+US: [əˈskæns] 
+UK:  
+adv.	斜视；横
+Web	斜视地；斜眼看；侧目而视
+
+offspring
+US: [ˈɔfˌsprɪŋ] 
+UK: [ˈɒfˌsprɪŋ] 
+n.	后代；子女；孩子；幼苗
+Web	子孙；儿女；产物
+
+
+}

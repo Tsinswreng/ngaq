@@ -1,5 +1,6 @@
 "use strict";
-//23.05.18-1023
+//23.06.03-2259
+//v2.0.2
 /*縮寫:
     cur	current
     rmb	remember
@@ -23,11 +24,11 @@ class Procedure {
     set date_wordEvent(value) {
         this._date_wordEvent = value;
     }
-    get dateDif() {
-        return this._dateDif;
+    get eventDurationOfLastToThis() {
+        return this._eventDurationOfLastToThis;
     }
-    set dateDif(value) {
-        this._dateDif = value;
+    set eventDurationOfLastToThis(value) {
+        this._eventDurationOfLastToThis = value;
     }
     get dateWeight() {
         return this._dateWeight;
@@ -156,9 +157,6 @@ class Priority {
         if (this.word === undefined) {
             throw new Error('this.word === undefined');
         }
-        if (this.word.wordShape === 'mitigate') {
-            console.log(this.word); //t
-        }
         const timeNow = parseInt(moment().format('YYYYMMDDHHmmss'));
         this.dateThen = timeNow;
         this._prio0 = 1;
@@ -174,18 +172,21 @@ class Priority {
         }
         for (let j = 0; j < this.word.date_allEventObjs.length; j++) { // 再處理 憶與忘 ˉ事件
             let cur_date__wordEvent = this.word.date_allEventObjs[j];
-            let dateDif = 2; //若初值取一則取對數後得零
+            let eventDurationOfLastToThis = 2; //若初值取一則取對數後得零
             let dateWeight = 2;
             if (this.word.date_allEventObjs[j] && this.word.date_allEventObjs[j - 1] &&
                 this.word.date_allEventObjs[j - 1].wordEvent !== WordEvent.ADD //此處當不慮添ˉ事件 否則 例如有一詞、其複添ᵗ次ˋ潙2、然添ᵗ期ᵗ去今皆稍遠、復習旹初見ᶦ旹若能誌則其頻會大降、日後則見者稀也。非所冀也。故算dateDif旹當不慮添ᵗ期
             ) //第一個事件必昰加、故第一次循環旹恆進不去下ᵗ分支
              {
-                dateDif = VocaB.兩日期所差秒數YYYYMMDDHHmmss(this.word.date_allEventObjs[j].date, this.word.date_allEventObjs[j - 1].date);
-                if (dateDif < 0) {
+                eventDurationOfLastToThis = VocaB.兩日期所差秒數YYYYMMDDHHmmss(this.word.date_allEventObjs[j].date, this.word.date_allEventObjs[j - 1].date);
+                if (eventDurationOfLastToThis < 0) {
                     throw new Error('後ᵗ時間日期ˋ減ᵣ前ᐪ不應得負數');
                 }
-                if (dateDif >= 2) {
-                    dateWeight = Math.log2(dateDif); //或許此處可不寫死ᵈ、洏使用戶配置 函數芝把dataDif轉成dateWeight者。
+                dateWeight = Priority.getDateWeight(eventDurationOfLastToThis); //或許此處可不寫死ᵈ、洏使用戶配置 函數芝把dataDif轉成dateWeight者。
+                if (dateWeight < 1) { //實ᵈ處理後ᵗ dateWeight ˋ必大於一
+                    dateWeight = 1.1;
+                    console.log(this);
+                    console.log('因dateWeight<1、已被修正至1.1');
                 }
             }
             if (cur_date__wordEvent.wordEvent === WordEvent.ADD) {
@@ -208,8 +209,8 @@ class Priority {
                     this._prio0 = (this._prio0 / 1.1) / debuff;
                 }
                 this.procedure[j].aftPrio = this._prio0;
-                this.procedure[j].dateWeight = dateWeight;
-                this.procedure[j].dateDif = dateDif;
+                this.procedure[j].dateWeight = dateWeight; //此dateWeight昰未處理ᐪ 未除以2 之事
+                this.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis;
                 this.procedure[j].dateDebuff = debuff;
                 this.procedure[j].durationOfLastRmbEventToNow = durationOfLastRmbEventToNow;
             }
@@ -218,7 +219,7 @@ class Priority {
                 this._prio0 *= dateWeight;
                 this.procedure[j].aftPrio = this._prio0;
                 this.procedure[j].dateWeight = dateWeight;
-                this.procedure[j].dateDif = dateDif;
+                this.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis;
                 //無 debuff之類
             }
         }
@@ -234,6 +235,13 @@ class Priority {
     addBonus(bonus) {
         this.priority = this.prio0 + bonus;
         this.bonus = bonus;
+    }
+    /*
+    * 23.06.03-2244 由時間跨度(秒)算時間ᵗ權重
+    * */
+    static getDateWeight(dateDif, denominator = 60) {
+        let out = Math.log2((dateDif / denominator) + 1) + 1;
+        return out;
     }
 }
 class SingleWordB {
@@ -661,7 +669,7 @@ class VocaB {
         $('#last_wordShape').text(this._curSingleWord.wordShape);
         $('#last_wordId').text(this._curSingleWord.id);
         $('#last_ling').text(this._curSingleWord.ling);
-        $('#last_wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●', '■', '□'));
+        $('#last_wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●', '■', '□')); //此步蜮甚耗時ⁿ致塞
         $('#last_priority').text(this._curSingleWord.priority);
         $('#last_addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.addedDates)));
         $('#last_addedTimes').text(this._curSingleWord.addedTimes);
@@ -749,6 +757,20 @@ class VocaB {
         //復習所忘前先重設此
     }
     saveToServ() {
+        const tempPwd = $('#tempPwd').val();
+        /*
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", 'http://localhost:1919/logIn', true)
+        xhr.setRequestHeader('Content-type','application/json');
+        xhr.onload = ()=>{
+            if(xhr.status === 200){
+                console.log(xhr.responseText)
+            }else{
+                console.log('請求錯誤')
+            }
+        }
+        xhr.send(tempPwd)
+        */
         let temp = this.getWordsByIds(this.idsOfCurRvwWords);
         VocaB.saveToServ(temp);
         this.idsOfCurRvwWords = []; //每提交則清空 防止重複提交

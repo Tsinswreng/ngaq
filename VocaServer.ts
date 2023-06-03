@@ -8,13 +8,16 @@ const moment = require('moment')
 const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
+const querystring = require('querystring')
 
-const eng = new VocaRaw();
+/*const eng = new VocaRaw();
 eng.dbName = 'voca'
 eng.tableName = 'eng'
 const jap = new VocaRaw()
 jap.dbName = 'voca'
-jap.tableName = 'jap'
+jap.tableName = 'jap'*/
+
+let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
 class VocaServer{
 	static app = express();
@@ -34,9 +37,9 @@ class VocaServer{
 		//VocaServer.app.use(cors)
 		
 		//eng.addSingleWordsToDb()
-		VocaServer.app.get('/eng', (req:any, res:any)=>{
-			const db =  eng.getDbConnection()
-			db.query(`SELECT * FROM ${eng.tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+		VocaServer.app.get('/eng', (req:any, res:any)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
+			const db =  vocaObjs[0].getDbConnection()
+			db.query(`SELECT * FROM ${vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				//console.log('results:'+results)//RowDataPacket
 				res.setHeader('content-type','text/html;charset=utf-8')
 				res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
@@ -48,8 +51,8 @@ class VocaServer{
 		VocaServer.app.get('/jap', (req:any, res:any)=>{
 			let path = req.path
 			console.log('path:'+path)//t
-			const db = jap.getDbConnection()
-			db.query(`SELECT * FROM ${jap.tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+			const db = vocaObjs[1].getDbConnection()
+			db.query(`SELECT * FROM ${vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				
 				//console.log('results:'+results)//RowDataPacket
 				res.setHeader('content-type','text/html;charset=utf-8')
@@ -77,11 +80,24 @@ class VocaServer{
 			res.send('成功接收到数据'+timeNow)
 		})
 		
+		
+		VocaServer.app.post('/logIn', (req:any, res:any)=>{
+			console.log(req.body)
+			if(req.body.tempPwd === '一'){
+				console.log('密碼正確')
+			}else{
+				console.log('密碼錯誤')
+			}
+		})
+		
+		
+		
 		VocaServer.app.listen(1919, ()=>{
 			console.log('at\nhttp://127.0.0.1:1919')
 		})
+		
+		
 	}
 	
 }
 VocaServer.main()
-

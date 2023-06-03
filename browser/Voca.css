@@ -1,6 +1,7 @@
 body{
 	background-color: black;
 	color: white;
+	/*background-image: url("C:/Users/lenovo/Pictures/屏保/當前壁紙/aeAvq2.jpg");*/
 }
 button{
 	background-color: black;
@@ -100,9 +101,12 @@ input[type="radio"] {
 	left: 0px;
 }
 
-
+a{
+	color: white;
+}
 /*
 button.wordsList{
 	font-family: "孤鹜 筑紫明朝";
 	font-size: 20px;
 }*/
+

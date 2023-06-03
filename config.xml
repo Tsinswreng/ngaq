@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--23.05.23-1437-->
+<!--23.05.28-2116-->
 <root>
 	<dbUserName>root</dbUserName>
 	<dbPassword>admin</dbPassword>
 	<dbName>voca</dbName>
+	<url>http://127.0.0.1:1919</url>
 	<lings>
 		<ling>
 			<lingName>eng</lingName>

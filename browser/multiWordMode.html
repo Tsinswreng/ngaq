@@ -13,17 +13,22 @@
 	<script src="https://cdn.staticfile.org/vue/3.0.5/vue.global.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<script>
-		var app = new Vue({
-			el: "#app",
-			data: {
-				message: "114514"
+		import { createApp } from 'vue'
+
+		createApp({
+			data() {
+				return {
+					count: 0
+				}
 			}
-		})
+		}).mount('#app')
 	</script>
 </head>
 <body>
 	<div id="app">
-		{{ message }}
+		<button @click="count++">
+			Count is: {{ count }}
+		</button>
 	</div>
 	<a href="./Voca.html">返回</a>
 	<!--<div class="wordsTable">
@@ -36,8 +41,16 @@
 			</tr>
 		</table>
 	</div>-->
+	<form method="post" action="http://localhost:1919/logIn">
+		<input type="text" name="userName">
+		<input type="password" name="userPwd">
+		<input type="submit" name="">
+	</form>
+
 
 
 </body>
+
+
 
 </html>

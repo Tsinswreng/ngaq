@@ -10,7 +10,7 @@
 		//"allowJs": true, //昰否編譯js、默認ˋ否
 		//"checkJs": true, //昰否檢查js語法
 		//"removeComments": false, //
-		"noEmit": true, //不生成編譯後ᵗ文件
+		"noEmit": false, //不生成編譯後ᵗ文件
 		"noEmitOnError": false, //有錯旹生成編譯ᵗ文件
 		
 		"alwaysStrict": true, //恆開嚴格模式 有導包旹自動開嚴格模式

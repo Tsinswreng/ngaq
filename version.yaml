@@ -5,4 +5,8 @@ versions:
 
   - version: 2.0.1
     date: 20230528205759
-    comment: "新增config.xml"
+    comment: "新增config.xml; 把單詞源表移到了項目文件夾裏"
+    
+  - version: 2.0.2
+    date: 20230603230030
+    comment: "新增Priority.getDateWeight()、更改了日期權重的算法"

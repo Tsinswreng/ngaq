@@ -10,12 +10,14 @@ const moment = require('moment');
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
-const eng = new VocaRaw_1.default();
-eng.dbName = 'voca';
-eng.tableName = 'eng';
-const jap = new VocaRaw_1.default();
-jap.dbName = 'voca';
-jap.tableName = 'jap';
+const querystring = require('querystring');
+/*const eng = new VocaRaw();
+eng.dbName = 'voca'
+eng.tableName = 'eng'
+const jap = new VocaRaw()
+jap.dbName = 'voca'
+jap.tableName = 'jap'*/
+let vocaObjs = VocaRaw_1.default.getObjsByConfig(); //第0個昰英語 第1個是日語
 class VocaServer {
     static main() {
         VocaServer.app.use((req, res, next) => {
@@ -31,8 +33,8 @@ class VocaServer {
         //VocaServer.app.use(cors)
         //eng.addSingleWordsToDb()
         VocaServer.app.get('/eng', (req, res) => {
-            const db = eng.getDbObj();
-            db.query(`SELECT * FROM ${eng.tableName}`, (error, results, fields) => {
+            const db = vocaObjs[0].getDbConnection();
+            db.query(`SELECT * FROM ${vocaObjs[0].tableName}`, (error, results, fields) => {
                 //console.log('results:'+results)//RowDataPacket
                 res.setHeader('content-type', 'text/html;charset=utf-8');
                 res.end(JSON.stringify(results)); //TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
@@ -43,8 +45,8 @@ class VocaServer {
         VocaServer.app.get('/jap', (req, res) => {
             let path = req.path;
             console.log('path:' + path); //t
-            const db = jap.getDbObj();
-            db.query(`SELECT * FROM ${jap.tableName}`, (error, results, fields) => {
+            const db = vocaObjs[1].getDbConnection();
+            db.query(`SELECT * FROM ${vocaObjs[1].tableName}`, (error, results, fields) => {
                 //console.log('results:'+results)//RowDataPacket
                 res.setHeader('content-type', 'text/html;charset=utf-8');
                 res.end(JSON.stringify(results)); //TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
@@ -67,6 +69,15 @@ class VocaServer {
             //VocaRaw.updateDb(JSON.parse(req.body))
             const timeNow = moment().format(`YYYY.MM.DD-HH:mm:ss`);
             res.send('成功接收到数据' + timeNow);
+        });
+        VocaServer.app.post('/logIn', (req, res) => {
+            console.log(req.body);
+            if (req.body.tempPwd === '一') {
+                console.log('密碼正確');
+            }
+            else {
+                console.log('密碼錯誤');
+            }
         });
         VocaServer.app.listen(1919, () => {
             console.log('at\nhttp://127.0.0.1:1919');
