@@ -6,7 +6,11 @@ versions:
   - version: 2.0.1
     date: 20230528205759
     comment: "新增config.xml; 把單詞源表移到了項目文件夾裏"
-    
+
   - version: 2.0.2
     date: 20230603230030
     comment: "新增Priority.getDateWeight()、更改了日期權重的算法"
+
+  - version: 2.0.3
+    date: 20230604000950
+    comment: "若一個單詞ᵗ添ᵗ次ˋ不止一次、且從未複習過、則益增其權重、以達的芝優先背新詞"

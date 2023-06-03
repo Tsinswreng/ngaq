@@ -160,17 +160,31 @@ class Priority {
         const timeNow = parseInt(moment().format('YYYYMMDDHHmmss'));
         this.dateThen = timeNow;
         this._prio0 = 1;
+        let addEvent_cnt = 0; //計數
         for (let j = 0; j < this.word.date_allEventObjs.length; j++) { //先 專門處理添加事件
             this.procedure[j] = new Procedure(); //已初始化焉、後ʸ勿複初始化
             let cur_date__wordEvent = this.word.date_allEventObjs[j];
             this.procedure[j].date_wordEvent = cur_date__wordEvent;
             if (cur_date__wordEvent.wordEvent === WordEvent.ADD) {
+                addEvent_cnt++;
                 this.procedure[j].befPrio = this._prio0;
                 this._prio0 *= this.defaultAddWeight;
                 this.procedure[j].aftPrio = this._prio0;
             }
         }
+        if (addEvent_cnt === this.word.date_allEventObjs.length) {
+            //若一個單詞ᵗ添ᵗ次ˋ不止一次、且從未複習過、則益增其權重、以達的芝優先背新詞
+            if (addEvent_cnt >= 2) {
+                this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt);
+            }
+            return; //直接return 不處理憶與忘ˉ事件 節約ᵣ時
+        }
         for (let j = 0; j < this.word.date_allEventObjs.length; j++) { // 再處理 憶與忘 ˉ事件
+            /*if(this.word.wordShape === 'fabric'){
+                console.log(this)
+                console.log(this._prio0)//t
+                console.log(j)
+            }*/
             let cur_date__wordEvent = this.word.date_allEventObjs[j];
             let eventDurationOfLastToThis = 2; //若初值取一則取對數後得零
             let dateWeight = 2;
