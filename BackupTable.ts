@@ -31,7 +31,7 @@ function addNew(){
 	}
 }
 
-backup()
+//backup()
 
 addNew()//待叶:輸出ʃ增ᵗ單詞ᵗ量
 // 待叶: 把 備份數據庫 與 添詞 之功能 添ᵣ前端ʸ。

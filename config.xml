@@ -17,6 +17,9 @@
 			<srcFilePath>.\srcWordList\jap\jap[20230515112439,].txt</srcFilePath>
 		</ling>
 	</lings>
+	<priority>
+		<!--TODO-->
+	</priority>
 </root>
 
 <!--

@@ -4929,3 +4929,133 @@ Web	子孙；儿女；产物
 
 
 }
+
+23.06.04-2101
+{
+encyclopedia
+US: [ɪnˌsaɪkləˈpidiə] 
+UK: [ɪnˌsaɪkləˈpiːdiə] 
+n.	（纸质、网络或光盘版）百科全书；（某一学科的）专科全书
+Web	百科事典；百科大全；百科辞典
+
+mob
+US: [mɑb] 
+UK: [mɒb] 
+n.	人群；（尤指）暴民；一群；一帮
+v.	（鸟群或兽群）围攻；围拢
+Web	暴徒；乌合之众；聚众闹事
+
+conspiracy
+US: [kənˈspɪrəsi] 
+UK: [kən'spɪrəsi] 
+n.	密谋策划；阴谋
+Web	共谋；同谋；反叛
+
+petition
+US: [pəˈtɪʃ(ə)n] 
+UK: [pə'tɪʃ(ə)n] 
+n.	请愿；请愿书；申请；祈求
+v.	请愿；向…请愿[祈求]
+Web	单一申诉窗口；人民请愿书；联署
+
+bribe
+US: [braɪb] 
+UK: [braɪb] 
+n.	贿赂；诱惑物
+v.	行贿；用贿赂引诱；向…行贿；用贿赂影响
+Web	贿赂史；赃物
+
+pork barrel
+US:  
+UK:  
+n.	分肥项目
+Web	猪肉桶；政治分肥；肉桶立法
+
+distort
+US: [dɪˈstɔrt] 
+UK: [dɪˈstɔː(r)t] 
+v.	曲解；使歪扭；使不正常；【电】使失真
+Web	扭曲的；受到曲解的；扭歪的
+
+discipline
+US: [ˈdɪsəplɪn] 
+UK: ['dɪsəplɪn] 
+n.	纪律；训练；自制力；风纪
+v.	训练；管教；惩罚；处罚
+Web	学科；规训；自律
+
+factionalism
+US: [ˈfækʃənlizəm] 
+UK: [ˈfækʃənəlizəm] 
+n.	〔政〕宗派主义；派别活动；派性；党派主义
+Web	党派之争；派系主义；派系模式
+
+traction
+US: [ˈtrækʃ(ə)n] 
+UK: ['trækʃ(ə)n] 
+n.	牵引；牵引力；拉力；拖拉
+Web	地力；牵引术；拖带
+
+
+
+emulation
+US:  
+UK: [ˌemjʊ'leɪʃ(ə)n] 
+n.	竞争；仿效；【自】仿真(技术)
+Web	模拟；模仿；竞赛
+
+
+rein
+US: [reɪn] 
+UK: [reɪn] 
+n.	控制；缰绳；（幼儿佩带以防走失的）保护带；主宰
+v.	控制；箝制；抑制(情欲等)；给(马)套上缰绳
+Web	统治；驾驭；支配
+
+
+ostentatiously
+US: [ˈɑstənˈteɪʃəslɪ] 
+UK: [ˌɒsten'teɪʃəslɪ] 
+adv.	故意；夸耀地
+Web	显眼地；炫耀地；夸示地
+
+institution
+US: [ˌɪnstɪˈtuʃ(ə)n] 
+UK: [ˌɪnstɪˈtjuːʃ(ə)n] 
+n.	制度；制定；建立；设立
+Web	机构；协会；公共机构
+
+ecstasy
+US: [ˈekstəsi] 
+UK: ['ekstəsi] 
+n.	狂喜；摇头丸；陶醉；入迷
+Web	心醉神迷；销魂；令人销魂
+
+medieval
+US: [ˌmediˈiv(ə)l] 
+UK: [ˌmediˈiːv(ə)l] 
+adj.	中世纪的（约公元 1000 到 1450 年）
+Web	中古的；中世纪战争；仿中世纪的
+
+venerate
+US: [ˈvenəˌreɪt] 
+UK: [ˈvenəreɪt] 
+v.	尊敬；尊崇
+Web	崇敬；崇拜；敬仰
+
+Aesop
+US: [ˈi] 
+UK: [ˈi:sɔp] 
+n.	伊索
+Web	古希腊寓言家伊索；伊索寓言；澳洲伊索
+
+fable
+US: [ˈfeɪb(ə)l] 
+UK: ['feɪb(ə)l] 
+n.	寓言；〈集合词〉神话；荒唐故事；人人谈论的话题
+v.	编寓言；虚构(故事)
+Web	寓言故事；寓言集；智慧寓言
+
+
+
+}

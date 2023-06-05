@@ -1,6 +1,6 @@
 "use strict";
-//23.06.03-2259
-//v2.0.2
+//23.06.04-0010
+//v2.0.3
 /*縮寫:
     cur	current
     rmb	remember
@@ -141,7 +141,7 @@ class Priority {
     }
     constructor() {
         this._priority = 1; //終ᵗ權重
-        this._numerator = 3600 * 12; //分子
+        this._numerator = 3600 * 24; //分子  23.06.05-1130默認值改爲3600*24
         this._defaultAddWeight = 80;
         this._addWeight = 1;
         this._randomRange_max = 0;
