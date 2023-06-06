@@ -14,7 +14,7 @@
 		"noEmitOnError": false, //有錯旹生成編譯ᵗ文件
 		
 		"alwaysStrict": true, //恆開嚴格模式 有導包旹自動開嚴格模式
-		"noImplicitAny": true, //不准 隱式ᵗ any
+		"noImplicitAny": false, //不准 隱式ᵗ any
 		"noImplicitThis": true, //不准 隱式ᵗ this
 		"strictNullChecks": true, //嚴格ᵈ檢空值
 		//npm i -D webpack webpack-cli typescript ts-loader

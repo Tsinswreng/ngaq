@@ -142,7 +142,7 @@ class Priority {
     constructor() {
         this._priority = 1; //終ᵗ權重
         this._numerator = 3600 * 24; //分子  23.06.05-1130默認值改爲3600*24
-        this._defaultAddWeight = 80;
+        this._defaultAddWeight = 100; //23.06.05-1158默認值改爲100
         this._addWeight = 1;
         this._randomRange_max = 0;
         this._bonus = 0;
@@ -175,7 +175,9 @@ class Priority {
         if (addEvent_cnt === this.word.date_allEventObjs.length) {
             //若一個單詞ᵗ添ᵗ次ˋ不止一次、且從未複習過、則益增其權重、以達的芝優先背新詞
             if (addEvent_cnt >= 2) {
-                this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt);
+                //this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt)
+                //this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
+                this._prio0 *= addEvent_cnt * addEvent_cnt;
             }
             return; //直接return 不處理憶與忘ˉ事件 節約ᵣ時
         }

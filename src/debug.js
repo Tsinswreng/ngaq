@@ -1,4 +1,8 @@
 "use strict";
+let i = 2, j = 3;
+let k = (i++) + (j++) + 4 + (++i) + (++j);
+console.log(k);
+let number = 1;
 /*import VocaRaw from "./VocaRaw"
 const Bn = require('bignumber.js')*/
 /*
