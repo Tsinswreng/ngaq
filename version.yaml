@@ -22,3 +22,7 @@ versions:
   - version: 2.0.5
     date: 20230606200926
     comment: "更改了項目結構"
+
+  - version: 2.0.6
+    date: 20230607100701
+    comment: "微調˪權重ᵗ算法與默認值"

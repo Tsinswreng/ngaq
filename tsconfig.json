@@ -1,3 +1,4 @@
+/*
 //23.05.04-1726
 {
 	"compilerOptions": {
@@ -20,9 +21,43 @@
 		//npm i -D webpack webpack-cli typescript ts-loader
 		//"allowImportingTsExtensions": true,
 		
-		"moduleResolution": "Node" /*当设置为 "Node" 时，TypeScript 编译器会使用 Node.js 的模块解析策略来解析模块的导入语句。具体来说，它会在以下目录下查找模块：
+		"moduleResolution": "Node" */
+/*当设置为 "Node" 时，TypeScript 编译器会使用 Node.js 的模块解析策略来解析模块的导入语句。具体来说，它会在以下目录下查找模块：
 当前目录下的 node_modules 文件夹
 父目录下的 node_modules 文件夹，一直查找到根目录
-系统级别的全局安装目录（如果使用了 -g 选项安装了全局模块）*/
+系统级别的全局安装目录（如果使用了 -g 选项安装了全局模块）*//*
+
 	}
+}
+*/
+
+// 23.06.06-2031 重構
+{
+	"compilerOptions": {
+		"target": "ES2015",
+		//"useDefineForClassFields": true,
+		//"module": "ESNext",
+		"module": "commonjs", //模塊化ᵗ標準
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"skipLibCheck": true,
+		
+		/* Bundler mode */
+		//"moduleResolution": "bundler",Option 'bundler' can only be used when 'module' is set to 'es2015' or later.
+		//"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": false, //不生成編譯後ᵗ文件
+		"noEmitOnError": false, //有錯旹不生成編譯ᵗ文件
+		"jsx": "preserve",
+		
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": false, //不准 隱式ᵗ any
+		"moduleResolution": "Node"
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"references": [{ "path": "./tsconfig.node.json" }]
 }

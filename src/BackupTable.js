@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const VocaRaw_1 = require("./VocaRaw");
+//const VocaRaw = require('./VocaRaw')
 /*
 const eng = new VocaRaw();
 eng.dbName = 'voca'

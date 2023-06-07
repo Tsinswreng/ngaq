@@ -285,8 +285,8 @@ class Priority{
 				console.log(j)
 			}*/
 			let cur_date__wordEvent = this.word.date_allEventObjs[j]
-			let eventDurationOfLastToThis = 2 //若初值取一則取對數後得零
-			let dateWeight = 2
+			let eventDurationOfLastToThis = 1.1 //若初值取一則取對數後得零
+			let dateWeight = 1.1 //改于 23.06.07-1005
 			if(
 				this.word.date_allEventObjs[j] && this.word.date_allEventObjs[j-1] &&
 				this.word.date_allEventObjs[j-1].wordEvent !== WordEvent.ADD//此處當不慮添ˉ事件 否則 例如有一詞、其複添ᵗ次ˋ潙2、然添ᵗ期ᵗ去今皆稍遠、復習旹初見ᶦ旹若能誌則其頻會大降、日後則見者稀也。非所冀也。故算dateDif旹當不慮添ᵗ期
@@ -361,7 +361,8 @@ class Priority{
 	* 23.06.03-2244 由時間跨度(秒)算時間ᵗ權重
 	* */
 	public static getDateWeight(dateDif:number, denominator:number=60):number{
-		let out = Math.log2((dateDif/denominator)+1)+1
+		//let out = Math.log2((dateDif/denominator)+1)+1
+		let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
 		return out;
 	}
 	

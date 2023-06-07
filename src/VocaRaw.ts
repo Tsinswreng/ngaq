@@ -111,7 +111,7 @@ class SingleWord{
 
 export default class VocaRaw{
 	
-	public static readonly configFilePath:string = './config.xml'
+	public static readonly configFilePath:string = '../config.xml'
 	private _xmlSrc:string = ''
 	private _alreadyAdded:boolean;
 	private _ling:string;

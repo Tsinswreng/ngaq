@@ -944,7 +944,7 @@ class VocaRaw {
         return stacks[0].length === 0 && stacks[1].length === 0;
     }
 }
-VocaRaw.configFilePath = './config.xml';
+VocaRaw.configFilePath = '../config.xml';
 exports.default = VocaRaw;
 function main() {
     let eng = new VocaRaw();

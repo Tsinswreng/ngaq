@@ -1,4 +1,5 @@
 import VocaRaw from "./VocaRaw"
+//const VocaRaw = require('./VocaRaw')
 /*
 const eng = new VocaRaw();
 eng.dbName = 'voca'
