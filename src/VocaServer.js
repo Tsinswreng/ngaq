@@ -85,4 +85,5 @@ class VocaServer {
     }
 }
 VocaServer.app = express();
+exports.default = VocaServer;
 VocaServer.main();

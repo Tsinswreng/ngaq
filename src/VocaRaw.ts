@@ -502,10 +502,6 @@ export default class VocaRaw{
 
 			for(let i = 0; i < this._singleWords.length; i++){//遍歷所有單詞數組
 				let currentWordShape = this._singleWords[i].wordShape;
-				/*if(currentWordShape.match(/.*back someone up.*!/g)){
-					console.log(this.singleWords[i])//t
-				}*/
-				
 				if(currentWordShape === '' || currentWordShape.match(/^[\\s]+$/)){//不加空白
 					throw new Error("wordShape潙空白")
 					//continue;
@@ -517,12 +513,6 @@ export default class VocaRaw{
 				escaped = escaped.replace(/\\/g, '\\\\'); //把每個反斜槓都轉成兩個反斜槓
 				
 				const qrySql = `SELECT *FROM ${this._tableName} WHERE wordShape REGEXP '^${escaped}$'`
-				
-				/*if(currentWordShape === 'breed(bred'){
-					console.log(qrySql)
-					console.log(lodash.escapeRegExp(currentWordShape))
-				}*/
-				
 				//db.query(`SELECT * FROM ${this.tableName} WHERE ${wordShapeCol} = ?`, [currentWordShape], (error, results, fields)=>{
 				db.query(qrySql, (error, results, fields)=>{
 					if (error) {
@@ -530,7 +520,6 @@ export default class VocaRaw{
 						console.error(error);
 						return;
 					}
-					//console.log(results);//t
 					if (results.length > 0) {//即當前ᵗ單詞ᵗ詞形ˋ在˪數據庫ʸ。
 						//console.log(results.length);:1
 						//console.log(result);:[ RowDataPacket { count: 620 } ]
@@ -625,10 +614,6 @@ export default class VocaRaw{
 							'[]',
 							'[]'
 						];
-						/* if(currentWordShape === 'つい'){
-							console.log(JSON.stringify(this.singleWords[i].fullComments))//t
-						} */
-						
 						此輪ʸ加ᵗ詞之一 = new SingleWord()
 						此輪ʸ加ᵗ詞之一.wordShape = currentWordShape
 						此輪ʸ加ᵗ詞之一.addedTimes = 1

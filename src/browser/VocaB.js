@@ -177,16 +177,12 @@ class Priority {
             if (addEvent_cnt >= 2) {
                 //this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt)
                 //this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
-                this._prio0 *= addEvent_cnt * addEvent_cnt;
+                //this._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
+                this._prio0 += Math.pow(this._prio0, addEvent_cnt); //[23.06.07-2320,]
             }
             return; //直接return 不處理憶與忘ˉ事件 節約ᵣ時
         }
         for (let j = 0; j < this.word.date_allEventObjs.length; j++) { // 再處理 憶與忘 ˉ事件
-            /*if(this.word.wordShape === 'fabric'){
-                console.log(this)
-                console.log(this._prio0)//t
-                console.log(j)
-            }*/
             let cur_date__wordEvent = this.word.date_allEventObjs[j];
             let eventDurationOfLastToThis = 1.1; //若初值取一則取對數後得零
             let dateWeight = 1.1; //改于 23.06.07-1005
@@ -217,7 +213,9 @@ class Priority {
                 }*/
                 this.procedure[j].befPrio = this._prio0;
                 let durationOfLastRmbEventToNow = VocaB.兩日期所差秒數YYYYMMDDHHmmss(timeNow, cur_date__wordEvent.date);
-                let debuff = (this.numerator / durationOfLastRmbEventToNow) + 1; //降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
+                //降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
+                //let debuff = (this.numerator/durationOfLastRmbEventToNow) + 1 //[,23.06.09-0941]
+                let debuff = Math.floor((this.numerator / durationOfLastRmbEventToNow) + 1); //[23.06.09-0941,]
                 if (dateWeight >= 2) {
                     this._prio0 = this._prio0 / (dateWeight / 2) / debuff; //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
                 }
@@ -257,7 +255,12 @@ class Priority {
     * */
     static getDateWeight(dateDif, denominator = 60) {
         //let out = Math.log2((dateDif/denominator)+1)+1
-        let out = Math.ceil(Math.log2((dateDif / denominator) + 1) + 1); //改于 23.06.07-1003
+        //let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
+        //let out = Math.floor( Math.log2((dateDif/denominator)+1)+1 ) //[23.06.09-0928,]
+        let out = Math.log2((dateDif / denominator)); //[23.06.09-1240,]
+        if (out <= 1) {
+            out = 1.01;
+        }
         return out;
     }
 }

@@ -15,6 +15,7 @@
 			<lingName>jap</lingName>
 			<tableName>jap</tableName>
 			<srcFilePath>..\srcWordList\jap\jap[20230515112439,].txt</srcFilePath>
+			<!--<srcFilePath>srcWordList\jap\jap[20230515112439,].txt</srcFilePath>-->
 		</ling>
 	</lings>
 	<priority>

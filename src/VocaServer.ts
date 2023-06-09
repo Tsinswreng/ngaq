@@ -19,7 +19,7 @@ jap.tableName = 'jap'*/
 
 let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
-class VocaServer{
+export default class VocaServer{
 	static app = express();
 
 	public static main(){

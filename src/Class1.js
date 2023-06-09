@@ -24,7 +24,7 @@ function p1() {
 }
 function p2() {
     let promise = new Promise((resolve, reject) => {
-        fs.readFile('./debug.ts', 'utf8', (err, result) => {
+        fs.readFile('./test.ts', 'utf8', (err, result) => {
             if (err != null) {
                 reject(err); //将错误的信息传递出去
             }

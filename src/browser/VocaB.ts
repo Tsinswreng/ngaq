@@ -7,6 +7,8 @@
 *
 * */
 
+import { molarMassC12Dependencies } from "mathjs";
+
 /*待做:{
 多語混學
 設時限、逾時不點記得ˡ按鈕則算不記得
@@ -273,17 +275,13 @@ class Priority{
 			if(addEvent_cnt >= 2){
 				//this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt)
 				//this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
-				this._prio0 *= addEvent_cnt*addEvent_cnt
+				//this._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
+				this._prio0 += Math.pow(this._prio0, addEvent_cnt) //[23.06.07-2320,]
 			}
 			return;//直接return 不處理憶與忘ˉ事件 節約ᵣ時
 		}
 		
 		for(let j = 0; j< this.word.date_allEventObjs.length; j++){// 再處理 憶與忘 ˉ事件
-			/*if(this.word.wordShape === 'fabric'){
-				console.log(this)
-				console.log(this._prio0)//t
-				console.log(j)
-			}*/
 			let cur_date__wordEvent = this.word.date_allEventObjs[j]
 			let eventDurationOfLastToThis = 1.1 //若初值取一則取對數後得零
 			let dateWeight = 1.1 //改于 23.06.07-1005
@@ -315,7 +313,9 @@ class Priority{
 				}*/
 				this.procedure[j].befPrio = this._prio0
 				let durationOfLastRmbEventToNow = VocaB.兩日期所差秒數YYYYMMDDHHmmss(timeNow, cur_date__wordEvent.date)
-				let debuff = (this.numerator/durationOfLastRmbEventToNow) + 1//降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
+				//降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
+				//let debuff = (this.numerator/durationOfLastRmbEventToNow) + 1 //[,23.06.09-0941]
+				let debuff = Math.floor((this.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,]
 				if(dateWeight >=2){
 					this._prio0 = this._prio0/(dateWeight/2)/debuff //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
 				}else{
@@ -362,11 +362,17 @@ class Priority{
 	* */
 	public static getDateWeight(dateDif:number, denominator:number=60):number{
 		//let out = Math.log2((dateDif/denominator)+1)+1
-		let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
+		//let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
+		//let out = Math.floor( Math.log2((dateDif/denominator)+1)+1 ) //[23.06.09-0928,]
+		let out = Math.log2((dateDif/denominator)) //[23.06.09-1240,]
+		if(out <= 1){
+			out = 1.01;
+		}
 		return out;
 	}
 	
 }
+
 
 class SingleWordB{
 	//id:number;//唯一標識
@@ -627,6 +633,8 @@ class SingleWordB{
 			return a.date - b.date
 		})
 	}
+
+
 	public 取ᵣ可視化事件(add:string, remember:string, forget:string){
 		//console.log(this)//t
 		this.assignDate_eventObjs()
@@ -642,9 +650,7 @@ class SingleWordB{
 			}else {
 				throw new Error('未知wordEvent')
 			}
-			//console.log(outcome)//t
 		}
-		//console.log(this.date_eventObjs)//t
 		return outcome
 	}
 }
@@ -923,12 +929,12 @@ class VocaB{
 			console.log('nextIndex被重設潙0')
 			alert('nextIndex被重設潙0')
 		}
-		//console.log(nextIndex);
+
 		this._currentIndex = nextIndex;
 		console.log('currentIndex='+this._currentIndex)
 		this._curSingleWord = this._wordsToLearn[nextIndex];
 		$('#'+this._wordAreaId).text(this._curSingleWord.wordShape);
-		//console.log(this.currentWord);
+
 		this.showCurWordInfoRight()
 	}
 	
@@ -1088,151 +1094,7 @@ class VocaB{
 	}
 	
 	public assignPriority(){
-		//每憶或忘則優先度ˋ比例ᵈ增減
-		/*
-		每憶則*(1-0.01)
-		每忘則*(1+0.1)
-		每複錄則*(1+0.2)
-		然後、對所有ᵗ優先度取平均數 設潙p、取0到p之間ᵗ隨機數數組、各ᵈ加到各詞ᵗ原ᵗ優先度、遂得終ᵗ優先度
-		待叶:時間相隔越久則變ᵗ權重越高
-		今日內憶ᵗ詞ˋ今日內ʸᵗ複現ˋ當少
-		*/
-		/*let prio0:number[] = [this.allWords.length]
-		const MILL = 1000000*/
-		
-		/*
-		for(let i = 0; i < this.allWords.length; i++){
-			prio0[i] = 1
-			//let t = this.allWords[i].addedTimes*3 + this.allWords[i].forgottenTimes*2 - this.allWords[i].rememberedTimes//棄用
-			//let wordEvents:string = this.allWords[i].取ᵣ可視化事件('a','r','f')
-			let date_eventObj = this.allWords[i].date_allEventObjs
-			for(let j = 0; j < date_eventObj.length; j++){//兩日期相減 絕對值大於1000000則隔˪日
-				if(j<=0){
-					if(date_eventObj[j].wordEvent === WordEvent.ADD){
-						prio0[i] *= (1+0.2)
-					}else{
-						console.log(this.allWords[i])
-						throw new Error('第一個單詞事件非添加 循環中當i='+i)
-					}
-				}
-					else
-				{
-					//let dateDif = date_eventObj[j].date-date_eventObj[j-1].date //後ᵗ日期減前ᵗ日期
-					let dateDif = VocaB.兩日期所差秒數YYYYMMDDHHmmss(date_eventObj[j].date, date_eventObj[j-1].date)
-					//宜用同類事件ᵗ日期相減//太瑣、不用也無妨
-					if(date_eventObj[j].wordEvent === WordEvent.ADD){
-						let dateDifOfSameEvent = 10;
-						if(this.allWords[i].date_addEventObjs[j-1] && this.allWords[i].date_addEventObjs[j]){
-							//dateDifOfSameEvent = this.allWords[i].date_addEventObjs[j] - this.allWords[i].date_addEventObjs[j-1]//不要直接減數字ₐ日期、宜調包㕥計兩日期ᵗ隔ᵗ時
-							//不考慮add之況
-						}
-						prio0[i] *= 100
-					}else if(date_eventObj[j].wordEvent === WordEvent.REMEMBER){
-						let dateDifOfSameEvent = 10;
-						if(this.allWords[i].date_rmbEventObjs[j-1] && this.allWords[i].date_rmbEventObjs[j]){
-							console.log(this.allWords[i].date_rmbEventObjs)//t
-							console.log(this.allWords[i].date_rmbEventObjs[j-1].date)//t
-							console.log(this.allWords[i].date_rmbEventObjs[j].date)//t
-							dateDifOfSameEvent = VocaB.兩日期所差秒數YYYYMMDDHHmmss(this.allWords[i].date_rmbEventObjs[j].date, this.allWords[i].date_rmbEventObjs[j-1].date)
-						}
-						console.log(Math.log2(dateDif))//t
-						prio0[i] *= (1-0.09)*Math.log2(dateDif) //待改:縱憶猶使增
-						
-					}else if(date_eventObj[j].wordEvent === WordEvent.FORGET){
-						let dateDifOfSameEvent = 10;
-						if(this.allWords[i].date_fgtEventObjs[j-1] && this.allWords[i].date_fgtEventObjs[j]){
-							dateDifOfSameEvent = VocaB.兩日期所差秒數YYYYMMDDHHmmss(this.allWords[i].date_fgtEventObjs[j].date, this.allWords[i].date_fgtEventObjs[j-1].date)
-						}
-						prio0[i] *= (1+0.1)*Math.log2(dateDif) //待叶:畫出函數圖像
-					}
-				}
-				
-				
-				
-				/!*if(wordEvents.charAt(j) === 'a'){
-					prio0[i] *= (1+0.2)
-				}else if(wordEvents.charAt(j) === 'r'){
-					prio0[i] *= (1-0.01)
-				}else if(wordEvents.charAt(j) === 'f'){
-					prio0[i] *= (1+0.1)
-				}*!/
-			}
-		}
-		*/
-		
-		//-------
-		
-		/*
-		const timeNow:number = parseInt(moment().format('YYYYMMDDHHmmss'))
-		let prio0:number[] = []
-		const MILL = 1000000
-		let secs = 3600*12 //分子
-		let defaultAddWeight = 80
-		
-		for(let i = 0; i < this._allWords.length; i ++){
-			prio0[i] = 1;
-			let date_allEventObjs = this._allWords[i].date_allEventObjs
-			for(let j = 0; j < date_allEventObjs.length; j++){
-				if(date_allEventObjs[j].wordEvent === WordEvent.ADD){//add事件與憶,忘 ˉ事件分ᵈ理
-					prio0[i]*= defaultAddWeight
-				}
-			}
-		}
-		
-		for(let i = 0; i < this._allWords.length; i++){
-			
-			let date_allEventObjs = this._allWords[i].date_allEventObjs
-			for(let j = 0; j < date_allEventObjs.length; j++){
-				let dateDif = 2 //若初值取一則取對數後得零
-				let dateWeight = 2
-				if(date_allEventObjs[j] && date_allEventObjs[j-1] && date_allEventObjs[j-1].wordEvent !== WordEvent.ADD){//此處當不慮添ˉ事件 否則 例如有一詞、其複添ᵗ次ˋ潙2、然添ᵗ期ᵗ去今皆稍遠、復習旹初見ᶦ旹若能誌則其頻會大降、日後則見者稀也。非所冀也。故算dateDif旹當不慮添ᵗ期
-					dateDif = VocaB.兩日期所差秒數YYYYMMDDHHmmss(date_allEventObjs[j].date, date_allEventObjs[j-1].date)
-					if(dateDif < 0){
-						console.log(date_allEventObjs)
-						console.log('date_allEventObjs[j].date')
-						console.log(date_allEventObjs[j].date)
-						console.log('date_allEventObjs[j-1].date')
-						console.log(date_allEventObjs[j-1].date)
-						throw new Error('後ᵗ時間日期ˋ減ᵣ前ᐪ不應得負數')
-					}
-					dateWeight = Math.log2(dateDif)
-				}
-				
-				if(date_allEventObjs[j].wordEvent === WordEvent.ADD){
-					//prio0[i] *= defaultAddWeight
-					//不處理
-					
-				}else if(date_allEventObjs[j].wordEvent === WordEvent.REMEMBER){
-					let durationOfLastRmbEventToNow = VocaB.兩日期所差秒數YYYYMMDDHHmmss(timeNow, date_allEventObjs[j].date)
-					let debuff = (secs/durationOfLastRmbEventToNow)+1 //降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*6 即六小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
-					prio0[i] = (dateWeight>=2)? (prio0[i]/(dateWeight/2))/debuff : (prio0[i]/1.1)/debuff
-					
-				}else if(date_allEventObjs[j].wordEvent === WordEvent.FORGET){
-					prio0[i] *= dateWeight
-				}
-			}
-		}
-		
-		
-		
-		console.log('prio0:')
-		console.log(prio0)
-		let aver = 0;
-		for(let j = 0; j < prio0.length; j++){
-			aver += prio0[j]
-		}
-		aver = aver/this._allWords.length
-		console.log('平均初權重:'+aver)
-		let median = VocaB.median(prio0)
-		console.log('初權重中位數:'+median)
-		let randoms:number[] = VocaB.generateRandomNumbers(this._allWords.length, 0, aver/8)
-		//console.log(randoms)
-		let prio1:number[] = new Array(this._allWords.length)
-		for(let i = 0; i < this._allWords.length; i++){
-			prio1[i] = prio0[i] + randoms[i]
-			this._allWords[i].priority = prio1[i]
-		}
-	*/
+		// [23.06.09-1655]刪除了被註釋掉的舊版實現
 		
 		for(let i = 0; i < this.allWords.length; i++){
 			this.allWords[i].priorityObj.word = this.allWords[i]
@@ -1308,7 +1170,7 @@ class VocaB{
 		}
 		return result;
 	}
-	
+	/* 
 	public static putArrInTableInDiv(divId:string, arr:string[], tableId?:string, tableClass?:string, trIdPrefix?:string, trClass?:string,tdIdPrefix?:string, tdClass?:string, btnIdPrefix?:string, btnClass?:string){
 		if(!tableId) tableId = 'tableId'
 		if(!tableClass) tableClass = 'tableClass'
@@ -1333,7 +1195,7 @@ class VocaB{
 			outcome += singleUnit
 		}
 		return outcome
-	}
+	} */
 	
 	public static median(arr:number[]) {
 		const sortedArr = [...arr].sort((a, b) => a - b);
@@ -1405,6 +1267,8 @@ class VocaB{
 
 }
 
+function a(){}
+
 
 function testPostData(url:any, obj:any){
 	
@@ -1430,33 +1294,7 @@ let vocaB = new VocaB();
 let newTestWords:SingleWordB[] = []
 
 let testSingleWord = new SingleWordB()
-/*function testGetDataBtn(){
-	fetch('/eng')
-	.then(response => response.json())
-	.then(data => { //後端ˋ數據ˇjsonᵉ包裝ⁿ前端ʰ傳、前端ˋ得ᶦ後不需手動parse?
-		console.log(data);
-		// 在这里处理从服务器返回的数据
-		let dataObj = data
-		for(let i = 0; i < dataObj.length; i++){
-			let temp = new SingleWordB();
-			temp.wordShape = dataObj[i].wordShape
-			temp.fullComments = JSON.parse(dataObj[i].fullComments)
-			temp.addedDates = JSON.parse(dataObj[i].addedDates)
-			temp.datesFormats = JSON.parse(dataObj[i].datesFormats)
-			temp.addedTimes = dataObj[i].addedTimes
-			temp.rememberedDates = dataObj[i].rememberedDates
-			temp.reviewedTimes = dataObj[i].rememberedTimes
-			// console.log(temp.rememberedTimes)
-			temp.forgottenDates = dataObj[i].forgottenDates
-			temp.forgottenTimes = dataObj[i].forgottenTimes
-			
-			newTestWords.push(temp)
-			//newTestWords.push(dataObj[i])
-		}
-		vocaB.setWords(newTestWords)
-	});
-}*/
-
+// 註釋ʴᵗ函數ˇ刪˪
 const eng = new VocaB()
 const jap = new VocaB()
 const lat = new VocaB()
