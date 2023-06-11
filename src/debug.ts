@@ -7,3 +7,12 @@ const voca:VocaRaw[] = VocaRaw.getObjsByConfig()
 console.log(voca[1].srcFilePath)
 
 //let out:string = fs.readFileSync('\\'+voca[1].srcFilePath)
+
+interface I{
+	right:()=>void
+}
+
+class C implements I{
+	//right: () => void = ()=>{};
+	right(){}
+}

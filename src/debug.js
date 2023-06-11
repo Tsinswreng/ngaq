@@ -6,4 +6,7 @@ console.log(__dirname);
 const voca = VocaRaw_1.default.getObjsByConfig();
 //voca[1].init()
 console.log(voca[1].srcFilePath);
-//let out:string = fs.readFileSync('\\'+voca[1].srcFilePath)
+class C {
+    //right: () => void = ()=>{};
+    right() { }
+}

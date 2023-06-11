@@ -28,13 +28,13 @@ function backup(){
 
 function addNew(){
 	for (let i = 0; i < vocaObjs.length; i++) {
-		vocaObjs[i].addSingleWordsToDb()
+		vocaObjs[i].addSingleWordsToDb().then((result)=>{console.log(result)})
 	}
 }
 
 backup()
 
-addNew()//待叶:輸出ʃ增ᵗ單詞ᵗ量
+//addNew()//待叶:輸出ʃ增ᵗ單詞ᵗ量
 // 待叶: 把 備份數據庫 與 添詞 之功能 添ᵣ前端ʸ。
 /*
 源詞表中ᵗ格式:

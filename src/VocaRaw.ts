@@ -1,6 +1,5 @@
 //23.05.03-1311
 import * as fs from "fs";
-import {match} from "assert";
 import * as mysql from 'mysql';
 // import {Connection} from 'mysql2'
 // import mysql2 from 'mysql2';
@@ -8,9 +7,6 @@ const mysql2 = require('mysql2')
 const moment = require('moment');
 const lodash = require('lodash');
 import * as readline from 'readline';
-import { ReadableStreamDefaultReader } from "node:stream/web";
-import * as tty from "tty";
-import {re} from "mathjs";
 const xml2js = require('xml2js')
 //import * as xml2js from 'xml2js';
 
@@ -21,6 +17,7 @@ const xml2js = require('xml2js')
 待改:數據庫中ᵗ日期格式ˋ宜統一用20230507111301 %Y%m%d%H%M%S
 常ᵈ自動ᵈ備份表
 配置文件
+新建一數據庫、㕥錄用戶ᵗ行爲
  } */
 class SingleWord{
 	private _ling:string
@@ -475,7 +472,7 @@ export default class VocaRaw{
 	* 把單詞從txt加進數據庫裏
 	*
 	*/
-	public addSingleWordsToDb(filePath?:string){
+	public async addSingleWordsToDb(filePath?:string){
 		this.init() //23.05.28-2030 this.init() 被從set srcStr() 移到此處。
 		let 此輪ʸ加ᵗ詞:SingleWord[] = []
 		let 此輪ʸ加ᵗ詞之一:SingleWord = new SingleWord();
@@ -534,34 +531,7 @@ export default class VocaRaw{
 						let addedDatesSetFromDb:Set<string> = new Set(JSON.parse(results[0].addedDates));
 						let addedDatesSetHere:Set<string> = new Set(this._singleWords[i].addedDates);
 						//檢查昰否重複添加 詞形與全ᵗ釋與日期皆同則視ᵣ複加ᵉ。
-						/* if(
-							results[0].wordShape === this.singleWords[i].wordShape
-							&& VocaRaw.arraysEqual(JSON.parse(results[0].fullComments), this.singleWords[i].fullComments)
-							&& VocaRaw.arraysEqual(JSON.parse(results[0].addedDates), this.singleWords[i].addedDates)
-							
-						){
-							//各單詞ˇ重添ᵗ次[i] = this.singleWords[i].addedDates.length - results[0].addedDates.length;
-						}else if(
-							VocaRaw._isProperSubsetOf_(fullCommentsSetHere, fullCommentsSetFromDb)
-							&&VocaRaw._isProperSubsetOf_(addedDatesSetHere, addedDatesSetFromDb)
-						){//以上:若彼含我則闡ᵣ我ˇ已被加入過、故何モˇ不需做
-
-						}
-						else if(
-							VocaRaw._isProperSubsetOf_(fullCommentsSetFromDb, fullCommentsSetHere)
-							&&VocaRaw._isProperSubsetOf_(addedDatesSetFromDb, addedDatesSetHere)
-						){//以上:(詞形相同&&數據庫中ᐪˋ被我ᐪ真包含) 即我含彼、即闡ᵣ我ᵗ詞ˋ更多、則以我作彼
-							let newFullComments = JSON.stringify(this.singleWords[i].fullComments)
-							let newAddedDates = JSON.stringify(this.singleWords[i].addedDates)
-							let newAddedTimes = this.singleWords[i].addedDates.length
-							let upDateSql = `UPDATE ${this.tableName} SET 
-							fullComments='${newFullComments.replace(/\\n/g,'\\\\n')}',
-							addedDates='${newAddedDates.replace(/\\n/g,'\\\\n')}',
-							addedTimes=${newAddedTimes}
-							WHERE id=${results[0].id}
-							`;//于dataGrip、表格中ᵗ\nˋ實ᵈ昰一反斜槓ˉ字符與一字符ˉn、洏控制檯中ᵗ\n則昰換行符
-							db.query(upDateSql);
-						}else */{//後纔念 直ᵈ取差集ⁿᶦˇ加入數庫即可、前ᵗ判斷ˋ徒增勞也。
+						{//後纔念 直ᵈ取差集ⁿᶦˇ加入數庫即可、前ᵗ判斷ˋ徒增勞也。
 							//let newFullComments = results[0].fullComments.concat(this.singleWords[i].fullComments);//["したしい", "したしい"]したしい,したしい
 							let fullCommentsSetToInsertIn:Set<string> = VocaRaw.differenceSetAMinusSetB(fullCommentsSetHere, fullCommentsSetFromDb)//取我ᐪ與彼ᐪ之差集、然後拼接
 							let addedDatesSetToInsertIn:Set<string> = VocaRaw.differenceSetAMinusSetB(addedDatesSetHere, addedDatesSetFromDb)//當每次加ᵗ詞ᵗ全釋ˋ皆同旹、集合ᵗ差集ˋ空, 故不宜用全釋義數組ᵗ長 作添加ᵗ次洏宜用日期數組ᵗ長
@@ -576,13 +546,6 @@ export default class VocaRaw{
 							//let newAddedTimes = JSON.parse(results[0].addedDates).length + this.singleWords[i].addedDates.length - 各單詞ˇ重添ᵗ次[i];
 							let newAddedTimes = JSON.parse(newAddedDates).length;
 //于dataGrip、表格中ᵗ\nˋ實ᵈ昰一反斜槓ˉ字符與一字符ˉn、洏控制檯中ᵗ\n則昰換行符 不只換行符、若不用寫法芝含佔位符者則所有特殊字符皆需手動轉義、故直ᵈ把反斜槓ᵗ量ˇ倍增即可。下ʸᵗ初添ᵗ代碼ˋ鈣會自動轉義。
-							/*let upDateSql = `UPDATE ${this._tableName} SET
-							fullComments='${newFullComments.replace(/\\/g,'\\\\')}',
-							addedDates='${newAddedDates.replace(/\\/g,'\\\\')}',
-							addedTimes=${newAddedTimes}
-                               WHERE id=${results[0].id}
-							`;*/
-							//console.log(upDateSql);//t
 							let upDateSql = `UPDATE ${this._tableName} SET
 								fullComments = ?,
 								addedDates = ?,
@@ -628,8 +591,18 @@ export default class VocaRaw{
 		});
 		this._alreadyAdded = true;//!!㢓處理恐不妥
 		//db.end();
-		console.log(此輪ʸ加ᵗ詞.length)
-		console.log(此輪ʸ加ᵗ詞)
+		
+		//23.06.10-2306
+		return new Promise<any>((resolve, reject)=>{
+			resolve(此輪ʸ加ᵗ詞)
+			console.log('<此輪ʸ加ᵗ詞>')
+			console.log(此輪ʸ加ᵗ詞)
+			console.log('</此輪ʸ加ᵗ詞>')
+			console.log('<此輪ʸ加ᵗ詞.length>');
+			console.log(此輪ʸ加ᵗ詞.length)
+			console.log('</此輪ʸ加ᵗ詞.length>');
+			console.log('done')
+		}) //不效
 	}
 
 /* 	public getAllRecordsFromDb(){

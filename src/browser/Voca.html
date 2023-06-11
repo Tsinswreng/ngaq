@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href='Voca.css'> <!--??href=''中ʸ寫./browser/Voca.css抑./Voca.css??-->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="VocaB.js"></script>
+	<script src="Ui.js"></script>
+	<script src="main.js"></script>
 	<script src="https://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/vue/3.0.5/vue.global.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -66,15 +68,15 @@
 				let idToSkip = $('#跳轉').val();
 
 			}
-
 	</script>
+
 </head>
 <body>
 	<button onclick="toggleSidebar()" class="toggleButton">+</button>
 	<div id="leftSideBar" class="leftSideBar" >這は是れ一個左側邊欄なり
 		<button onclick="console.log(reviewed);">看今回既學ᵗ詞</button>
 		<br>
-		<button onclick="vocaB.reviewForgottenWords()">複習此次所忘</button>(請先手動點擊保存)
+		<button onclick="originUi.reviewForgottenWords()">複習此次所忘</button>(請先手動點擊保存)
 		<br>
 		<a href="multiWordMode.html" target="_blank">多詞模式</a>
 		<br>
@@ -88,7 +90,7 @@
 		<label for="jap">日:<input type="radio" name="ling" id="jap" value="jap"></label>
 		<label for="lat">拉:<input type="radio" name="ling" id="lat" value="lat"></label>
 		<button onclick="assignWordsFromServ();">發GET請求</button>
-		<button onclick="vocaB.startToShow()">始</button>
+		<button onclick="originUi.startToShow()">始</button>
 		<input type="text" id="tempPwd" name="tempPwd">
 	</nobr>
 	</div>
@@ -150,7 +152,7 @@
 	<div id="yesOrNoBtnContainer">
 
 
-		<button class="ctrlBtn" onclick="vocaB.reviewForgottenWords()">複習此輪所忘</button>
+		<button class="ctrlBtn" onclick="originUi.reviewForgottenWords()">複習此輪所忘</button>
 		<button class="ctrlBtn" onclick="vocaB.saveToServ()">保存</button>
 		<br>
 		<button class="score" id="score" onclick="toggle_curWordInfo();toggle_lastWordInfoCtainer()"></button>
@@ -160,15 +162,15 @@
 		<button onclick="vocaB.testAjax(JSON.stringify(vocaB.allWords[0]))">testAjax</button>
 		<button onclick="vocaB.testAxios(JSON.stringify(vocaB.allWords))">testAxios</button>-->
 	</div>
-	<button class="yesOrNo" onclick="vocaB.showNext()">跳過</button>
+	<button class="yesOrNo" onclick="originUi.showNext(()=>{})">跳過</button>
 	<br>
-	<button class="yesOrNo" onclick="vocaB.forgotEvent()">不記得</button>
+	<button class="yesOrNo" onclick="originUi.showNext(vocaB.fgtEvent/* .bind(vocaB) */)">不記得</button>
 	<br>
 
-	<button class="yesOrNo" onclick="vocaB.rememberedEvent()">記得</button>
+	<button class="yesOrNo" onclick="originUi.showNext(vocaB.rmbEvent/* .bind(vocaB) */)">記得</button>
 	<br>
 	<br>
-	<button id="word" onclick="vocaB.showWordInfoAtBottom()">&lt;div id="word"&gt;乜都冇有&lt;/div&gt;</button>
+	<button id="word" onclick="originUi.showWordInfoAtBottom()">&lt;div id="word"&gt;乜都冇有&lt;/div&gt;</button>
 	<br>
 	上一個: <br>
 	<div id="lastWordInfo">

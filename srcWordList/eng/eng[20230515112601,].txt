@@ -5696,3 +5696,300 @@ Web	过时；已过时；被废弃
 
 }
 
+23.06.09-2120
+{
+slight
+US: [slaɪt] 
+UK: [slaɪt] 
+侮慢
+adj.	轻微的；略微的；细小的；纤细的
+n.	侮慢；冷落；轻视
+v.	侮慢；冷落；轻视
+Web	微小的；少量的；细长的
+
+vengeance
+US: [ˈvendʒəns] 
+UK: [ˈvendʒ(ə)ns] 
+n.	复仇；报复；报仇
+Web	邪灵复仇；复仇之婚；复仇之魂
+
+beam
+US: [bim] 
+UK: [biːm] 
+辐射；发射
+v.	微笑；辐射；发射(光线,电波)；(用雷达)探测
+n.	栋梁；(船的)横梁；柱；【物】波束
+adj.	有木梁的
+Web	有梁的；光子化
+
+anthem
+US: [ˈænθəm] 
+UK: ['ænθəm] 
+n.	赞美诗；圣歌；国家或组织的法定歌曲；对某一人群有重要意义的歌曲
+Web	颂歌；足球圣歌；国歌
+
+verse
+US: [vɜrs] 
+UK: [vɜː(r)s] 
+n.	诗；韵文；诗节；歌曲的段落
+v.	作诗；用诗表现；(把…)写成诗
+Web	诗歌；诗句；诗行
+
+saviour
+US: [ˈseɪvjər] 
+UK: [ˈseɪvjə(r)] 
+n.	救星；救主；拯救者；救助者
+Web	救世主；救世主高达；救世者
+
+deity
+US: [ˈdiəti] 
+UK: [ˈdeɪəti] 
+n.	神；神性；神的身分；上帝
+Web	神灵；神只；神明
+
+misuse
+US: [mɪsˈjuz] 
+UK: [mɪsˈjuːz] 
+n.	滥用；误用；盗用
+v.	滥用；误用；虐待
+Web	错用；乱用；错误使用
+
+sanctify
+US: [ˈsæŋktəˌfaɪ] 
+UK: [ˈsæŋktɪfaɪ] 
+v.	使神圣；使净化；把…奉献给神；使圣洁
+Web	神圣化的；成圣；已被神化
+
+
+badge
+US: [bædʒ] 
+UK: [bædʒ] 
+n.	徽章；标记；象征
+abbr.	〈美(=Base Air Defense Ground Environment)【空】基地防空地面警备系统
+Web	奖章；标志；小徽章
+
+tradable,
+US: ['treɪdəbl] 
+UK: ['treɪdəbl] 
+adj.	可买卖的；可交易的
+Web	可贸易的；可交易性；台湾证券市场第一支交易型
+
+resound
+US: [rɪˈzaʊnd] 
+UK: [rɪ'zaʊnd] 
+v.	回响；反响；(名声等)轰传；赞扬
+Web	瑞声达；回荡着声音；鸣响
+
+newsreel
+US: [ˈnuzˌril] 
+UK: [ˈnjuːzˌriːl] 
+abbr.	(=news film)
+Web	新闻片；新闻短片；新闻汇辑
+
+inundate
+US: [ˈɪnənˌdeɪt] 
+UK: [ˈɪnʌndeɪt] 
+v.	淹没；使充满
+Web	钢铁市场已被进口钢品淹没；豪雨成灾；洪泛的
+
+sculpture
+US: [ˈskʌlptʃə] 
+UK: [ˈskʌlptʃə(r)] 
+v.	雕塑；【地】刻蚀
+n.	雕像；塑像；【艺】雕塑品；【艺】雕刻
+Web	雕刻品；雕刻作品；雕塑术
+
+awe
+US: [ɔ] 
+UK: [ɔː] 
+n.	敬畏；畏惧；惊叹；惊惧
+v.	〈正式〉使敬畏；使惊奇
+Web	ANSYS Workbench Environment
+
+intimidate
+US: [ɪnˈtɪmɪˌdeɪt] 
+UK: [ɪnˈtɪmɪdeɪt] 
+v.	威胁；恐吓
+Web	胁迫；恫吓；威吓
+
+bust
+US: [bʌst] 
+UK: [bʌst] 
+adj.	破产；破碎；毁坏
+v.	打破；摔碎；突击搜查（或搜捕）；（使）降级
+n.	胸围；（石或金属的）半身像；（警方的）突击搜捕；蹩脚的东西
+Web	胸像；胸部；泡沫破灭
+
+denote
+US: [dɪˈnoʊt] 
+UK: [dɪˈnəʊt] 
+v.	表示；意味着；【逻】概述
+Web	指示；直义；所指的
+
+outward
+US: [ˈaʊtwərd] 
+UK: [ˈaʊtwə(r)d] 
+n.	外表；外在事务；周围世界；〈罕〉外部
+adj.	表面的；外表的；外出的；向外的
+adv.	同“outwards. outward and homeward”
+Web	外面的；公开的；外部的
+
+fealty
+US: [ˈfiəlti] 
+UK: [ˈfiːəlti] 
+n.	（尤指对君主的）效忠宣誓
+Web	忠诚；孝顺；忠实
+
+haze
+US: [heɪz] 
+UK: [heɪz] 
+n.	烟雾；雾霭；迷蒙；迷糊
+v.	（使）笼罩在薄雾中
+Web	霾；雾度；烟霞
+
+expel
+US: [ɪkˈspel] 
+UK: [ɪk'spel] 
+v.	排出；把…开除（或除名）；驱逐出境；喷出
+Web	赶出；赶走
+
+renegade
+US: [ˈrenˌɪɡeɪd] 
+UK: [ˈrenɪɡeɪd] 
+n.	叛徒；叛逆者；背叛者；变节者
+v.	变节；脱党；背教
+adj.	变节的
+Web	叛教者；变节点数
+
+
+}
+
+23.06.10-2201
+{
+plaster
+美: [ˈplæstər] 
+英: [ˈplɑːstə(r)] 
+n.	灰泥；膏药；熟石膏；建筑石膏
+v.	抹灰于；往…上涂抹；把（头发）梳平；使（头发）粘在（头上）
+网络	硬膏；硬膏剂；灰浆
+
+ardor
+美: [ˈɑrdər] 
+英: [ˈɑː(r)də(r)] 
+na.	“ardour”的变体
+网络	热情；密爱；激情
+
+conclusion
+美: [kənˈkluʒ(ə)n] 
+英: [kənˈkluːʒ(ə)n] 
+结束
+n.	结论；结束；结果；结尾
+网络	总结；结语；结束语
+
+at the conclusion of
+美:  
+英:  
+na.	当…完结时
+网络	当...完结时；当…结束时
+
+bust
+美: [bʌst] 
+英: [bʌst] 
+n.	（石或金属的）半身像；（尤指衣服或尺寸）女子的胸部
+v.	打破；摔碎；突击搜查（或搜捕）；降低军阶
+adj.	破碎；毁坏；破产
+网络	胸围；胸像；半身雕像
+
+backstage
+美: [ˌbækˈsteɪdʒ] 
+英: [ˈbækˌsteɪdʒ] 
+adv.	在后台；私下；秘密地
+adj.	后台的；关于戏剧界人物私生活的
+网络	幕后；幕后激情；向后台
+
+shatter
+美: [ˈʃætə(r)] 
+英: [ˈʃætə(r)d] 
+v.	破碎；粉碎；碎裂；(完全)丧失
+n.	碎片
+adj.	非常惊愕难过的；遭受极大打击的；筋疲力尽的
+网络	爱人别出声；老唐头；破碎的
+
+exalt
+美: [ɪɡˈzɔlt] 
+英: [ɪɡˈzɔːlt] 
+v.	提拔；表扬；褒扬；高度赞扬
+网络	提升；提高；歌颂
+
+fount
+美: [faʊnt] 
+英: [faʊnt] 
+n.	源泉
+网络	饮水器；笔划字体；一套活字
+
+fragment
+美: [ˈfræɡmənt] 
+英: ['fræɡmənt] 
+n.	片段；破片；弹片；小块
+v.	分割；使成碎片
+网络	断片；片断；碎块
+
+inviolable
+美: [ɪnˈvaɪələb(ə)l] 
+英: [ɪn'vaɪələb(ə)l] 
+adj.	不容亵渎的；不可侵犯的；不容破坏的
+网络	神圣的；不可亵渎的；不可违背的
+
+charge
+美: [tʃɑrdʒ] 
+英: [tʃɑː(r)dʒ] 
+指责
+n.	收费；主管；指控；掌管
+v.	收费；充电；冲锋；指责
+网络	费用；电荷；控告
+
+shard
+美: [ʃɑrd] 
+英: [ʃɑː(r)d] 
+n.	碎陶瓷片；薄硬壳；【动】(昆虫的)甲；鞘翅
+网络	碎片；怪物碎片；碎片图片
+
+complicit
+美: [kəmˈplɪsɪt] 
+英: [kəmˈplɪsɪt] 
+adj.	（与某人在某事上）同谋的
+网络	串通一气的；有同谋关系的；共谋性
+
+conceal
+美: [kənˈsil] 
+英: [kənˈsiːl] 
+v.	隐藏；隐瞒；掩盖
+网络	隐蔽；把…隐藏起来；掩饰
+
+deed
+美: [did] 
+英: [diːd] 
+n.	行为；行动；证书
+adv.	〈口〉同“indeed”
+v.	〈美〉立契转让(财产)
+网络	契约；契据；事迹
+
+restraint
+美: [rɪˈstreɪnt] 
+英: [rɪ'streɪnt] 
+n.	约束；抑制；克制；限制
+网络	制止；束缚；约束措施
+
+clumsy
+美: [ˈklʌmzi] 
+英: ['klʌmzi] 
+adj.	(手脚)笨拙的；愚笨的；制作粗陋的；(文体等)臃肿的
+
+modesty
+美: [ˈmɑdəsti] 
+英: [ˈmɒdɪsti] 
+n.	谦虚；谦逊；庄重；朴素
+网络	羞怯；端庄；虚心
+
+
+}
