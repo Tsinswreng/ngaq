@@ -7,7 +7,6 @@
 *
 * */
 
-import { molarMassC12Dependencies } from "mathjs";
 
 /*待做:{
 多語混學
@@ -49,10 +48,15 @@ enum WordEvent{
 	FORGET=-1
 }
 
+
+
 interface Date_wordEvent{
 	date: number,
 	wordEvent: WordEvent
 }
+
+
+
 
 class Procedure {
 	private _date_wordEvent?:Date_wordEvent; //最好別在後面寫問號洏昰寫清Date_wordEvent | undefined、不然用idea生成ᵗgetter 和 setter 有謬
@@ -137,7 +141,7 @@ class Priority{
 	private _word:SingleWordB|undefined;  //不寫|undefined就可能無限遞歸調用
 	private _priority:number = 1; //終ᵗ權重
 	private _prio0:number|undefined //初權重
-	private _numerator:number = 3600*24 //分子  23.06.05-1130默認值改爲3600*24
+	private _numerator:number = 3600 //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
 	private _defaultAddWeight:number = 100; //23.06.05-1158默認值改爲100
 	private _addWeight:number = 1
 	private _randomRange_max:number = 0
@@ -315,7 +319,9 @@ class Priority{
 				let durationOfLastRmbEventToNow = VocaB.兩日期所差秒數YYYYMMDDHHmmss(timeNow, cur_date__wordEvent.date)
 				//降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
 				//let debuff = (this.numerator/durationOfLastRmbEventToNow) + 1 //[,23.06.09-0941]
-				let debuff = Math.floor((this.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,]
+				
+				//let debuff = Math.floor((this.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,23.06.11-0002]
+				let debuff = this.getDebuff(durationOfLastRmbEventToNow)
 				if(dateWeight >=2){
 					this._prio0 = this._prio0/(dateWeight/2)/debuff //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
 				}else{
@@ -369,6 +375,20 @@ class Priority{
 			out = 1.01;
 		}
 		return out;
+	}
+
+	public getDebuff(durationOfLastRmbEventToNow){
+		//憶ˡ事件ᵗ次ˋ愈多則分母愈大
+		if(!this.word){throw new Error('!this.word')}
+		let date_allEventObjs = this.word.date_allEventObjs
+		//console.log(date_allEventObjs)//t
+		if(date_allEventObjs[date_allEventObjs.length-1].wordEvent === WordEvent.REMEMBER){ //要求末ᵗ事件潙 憶 旹纔有debuff
+			let numerator = this.word.date_allEventObjs.length*this.numerator*2
+			let debuff = Math.floor((numerator/durationOfLastRmbEventToNow) + 1)
+			return debuff
+		}else{
+			return 1;
+		}
 	}
 	
 }
@@ -566,26 +586,7 @@ class SingleWordB{
 	
 	
 	public constructor() {
-		/*this._ling = ''
-		this._id = -1;
-		this._wordShape = '';
-		this._fullComments = [];
-		this._addedTimes = -1;
-		this._rvwTimes = -1;
-		this._rmbTimes = -1;
-		this._rmbDates = [];
-		this._fgtTimes = -1;
-		this._fgtDates = [];
-		this._addedDates = [];
-		//this.datesFormats = '%Y_%m_%d_%H%M%S';
-		this._datesFormats = ['%y.%m.%d-%H%M']
-		this._rvwDates = [];
-		this._priority = 1;
-		this._date_allEventObjs = []
-	
-		this._date_addEventObjs = []
-		this._date_rmbEventObjs = []
-		this._date_fgtEventObjs = []*/
+		
 		this.assignDate_eventObjs()
 	}
 	
@@ -628,7 +629,7 @@ class SingleWordB{
 				wordEvent:WordEvent.FORGET
 			})
 		}
-		//console.log(this.date_eventObjs)
+		
 		this._date_allEventObjs.sort((a, b)=>{
 			return a.date - b.date
 		})
@@ -636,7 +637,7 @@ class SingleWordB{
 
 
 	public 取ᵣ可視化事件(add:string, remember:string, forget:string){
-		//console.log(this)//t
+		
 		this.assignDate_eventObjs()
 		
 		let outcome = ''
@@ -802,45 +803,51 @@ class VocaB{
 		this._lastWordInfoDivId = 'lastWordInfo';
 		this._curWordInfoId = 'curWordInfo'
 	}
-	
-	public startToShow(wordsToLearn?:SingleWordB[]){
-		//let randomIndex = Math.floor(Math.random() * (this.words.length))//第一個單詞完全由隨機數決定
-		if(!wordsToLearn){
-			wordsToLearn = this._allWords
+
+
+	/**
+	 * [23.06.11-1047,]
+	 * 濾除ᵣ詞芝只有一個事件者
+	 */
+	public filtWordsToLearn(ws:SingleWordB[]):SingleWordB[]{
+		let filtedWords:SingleWordB[] = [];
+		for(let i = 0; i < ws.length; i++){
+			if(ws[i].date_addEventObjs.length >= 2){
+				filtedWords.push(ws[i])
+			}
 		}
+		return filtedWords
+	}
+	
+	/**
+	 * 
+	 * @param wordsToLearn 
+	 * @param fn_ui 負責界面交互之函數
+	 */
+	public startToShow(wordsToLearn:SingleWordB[]/* =this._allWords *//* , fn_ui:(vocaBObj:VocaB)=>void */):void{
+		//let randomIndex = Math.floor(Math.random() * (this.words.length))//第一個單詞完全由隨機數決定
+		/* if(!wordsToLearn){
+			wordsToLearn = this._allWords
+		} */
+		
+		this.wordsToLearn = this.filtWordsToLearn(wordsToLearn)
+		//console.log(wordsToLearn)//t
 		this.assignPriority()
-		wordsToLearn.sort((a, b)=>{
+		this.wordsToLearn.sort((a, b)=>{
 			return b.priority - a.priority
 		})
 		this._currentIndex = 0
 		if(this._curSingleWord.wordShape === ''){
-			this._curSingleWord = wordsToLearn[this._currentIndex]
+			this._curSingleWord = this.wordsToLearn[this._currentIndex]
 		}
+		//fn_ui(this)
 		//console.log(this.curSingleWord)//t
-		$('#'+this._wordAreaId).text(this._curSingleWord.wordShape)
-		this.showCurWordInfoRight()
+		
 		/*for(let i = 0; i < this.words.length; i++){//t
 			console.log(this.words[i].wordShape)
 			console.log(this.words[i].priority)
 		}*/
 	}
-	
-	public showCurWordInfoRight(){
-		$('#wordShape').text(this._curSingleWord.wordShape)
-		$('#wordId').text(this._curSingleWord.id)
-		$('#ling').text(this._curSingleWord.ling)
-		$('#wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●','■','□') as string)
-		$('#priority').text(this._curSingleWord.priority)
-		$('#addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.addedDates)))
-		$('#addedTimes').text(this._curSingleWord.addedTimes)
-		$('#rememberedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.rmbDates)))
-		$('#rememberedTimes').text(this._curSingleWord.rmbTimes)
-		$('#forgottenDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.fgtDates)))
-		$('#forgottenTimes').text(this._curSingleWord.fgtTimes)
-	}
-	
-	
-	
 
 	public setAllWords(words:SingleWordB[]){
 		this._allWords = words;
@@ -868,91 +875,63 @@ class VocaB{
 		
 	}
 
-	public rememberedEvent(){
+	public rmbEvent(vocaBObj:VocaB){
 		//currentWord之功能未叶
 		let dateNow:string = moment().format('YYYYMMDDHHmmss')//坑:ss大寫後似成毫秒 20230507162355
 		console.log(dateNow)
-		//console.log(this.currentWord)
-		this._curSingleWord.rmbDates.push(dateNow)
-		this._curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.REMEMBER})
-		//this.curSingleWord.reviewedTimes++; //無需手動++ 因用get方法取次數旹自動返回日期數組ᵗ長
-		//this.curSingleWord.rememberedTimes++;
-		//reviewed.allWords.push(this.curSingleWord)
-		//this.curRememberedWords.push(this.curSingleWord)
-		//this.curReviewedWords.push(this.curSingleWord)
-		this._idsOfCurRemWords.push(this._curSingleWord.id)
-		this._idsOfCurRvwWords.push(this._curSingleWord.id)
-		this.showNext();
-		
+		//console.log(currentWord)
+		vocaBObj.curSingleWord.rmbDates.push(dateNow)
+		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.REMEMBER})
+		//curSingleWord.reviewedTimes++; //無需手動++ 因用get方法取次數旹自動返回日期數組ᵗ長
+		//curSingleWord.rememberedTimes++;
+		//reviewed.allWords.push(curSingleWord)
+		//curRememberedWords.push(curSingleWord)
+		//curReviewedWords.push(curSingleWord)
+		vocaBObj.idsOfCurRemWords.push(vocaBObj.curSingleWord.id)
+		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
+		//showNext();
 	}
 	
-	public forgotEvent(){
+	public fgtEvent(vocaBObj:VocaB){
 		let dateNow:string = moment().format('YYYYMMDDHHmmss')//坑:ss大寫後似成毫秒 20230507162355
 		console.log(dateNow)
-		//console.log(this.currentWord)
-		this._curSingleWord.fgtDates.push(dateNow)
-		this._curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.FORGET})
-		//this.curSingleWord.reviewedTimes++;
-		//this.curSingleWord.forgottenTimes++;
-		//reviewed.allWords.push(this.curSingleWord)
-		//this.curForgottenWords.push(this.curSingleWord)
-		//this.curReviewedWords.push(this.curSingleWord)
-		this._idsOfCurRvwWords.push(this._curSingleWord.id)
-		this._idsOfCurFgtWords.push(this._curSingleWord.id)
-		this.showNext();
+		//console.log(currentWord)
+		vocaBObj.curSingleWord.fgtDates.push(dateNow)
+		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.FORGET})
+		//curSingleWord.reviewedTimes++;
+		//curSingleWord.forgottenTimes++;
+		//reviewed.allWords.push(curSingleWord)
+		//curForgottenWords.push(curSingleWord)
+		//curReviewedWords.push(curSingleWord)
+		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
+		vocaBObj.idsOfCurFgtWords.push(vocaBObj.curSingleWord.id)
+		//showNext();
+		//fn_showNext();
 	}
 
-	public showNext(){
-		
-		$('#'+this._lastWordInfoDivId).text(this._curSingleWord.wordShape+
-			 "\n"+VocaB.取逆轉義ᵗstr(VocaB.取字符串數組中長度最大者(this._curSingleWord.fullComments)));//TODO:示釋義數組旹每元素間增空行
-		
-		
-		$('#last_wordShape').text(this._curSingleWord.wordShape)
-		$('#last_wordId').text(this._curSingleWord.id)
-		$('#last_ling').text(this._curSingleWord.ling)
-		$('#last_wordEvent').text(this._curSingleWord.取ᵣ可視化事件('●','■','□') as string) //此步蜮甚耗時ⁿ致塞
-		$('#last_priority').text(this._curSingleWord.priority)
-		$('#last_addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.addedDates)))
-		$('#last_addedTimes').text(this._curSingleWord.addedTimes)
-		$('#last_rememberedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.rmbDates)))
-		$('#last_rememberedTimes').text(this._curSingleWord.rmbTimes)
-		$('#last_forgottenDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this._curSingleWord.fgtDates)))
-		$('#last_forgottenTimes').text(this._curSingleWord.fgtTimes)
-		$('#score').text(this._idsOfCurRemWords.length+':'+this._idsOfCurFgtWords.length)
+	//[23.06.11-1616,]
+	public showNext(vocaBObj){
 		
 		//let nextIndex = Math.floor(Math.random() * (this.words.length))
-		let nextIndex = this._currentIndex+1
+		let nextIndex = vocaBObj.currentIndex+1
 		console.log('nextIndex='+nextIndex)//t
-		if(nextIndex >= this._idsOfWordsToLearn.length || nextIndex <0){
+		if(nextIndex >= vocaBObj.idsOfWordsToLearn.length || nextIndex <0){
 			nextIndex = 0
 			console.log('nextIndex被重設潙0')
 			alert('nextIndex被重設潙0')
 		}
 
-		this._currentIndex = nextIndex;
-		console.log('currentIndex='+this._currentIndex)
-		this._curSingleWord = this._wordsToLearn[nextIndex];
-		$('#'+this._wordAreaId).text(this._curSingleWord.wordShape);
+		vocaBObj.currentIndex = nextIndex;
+		console.log('currentIndex='+vocaBObj.currentIndex)
+		vocaBObj.curSingleWord = vocaBObj.wordsToLearn[nextIndex];
+		
+	}
 
-		this.showCurWordInfoRight()
-	}
-	
-	
-	
-	public showWordInfoAtBottom(){
-		console.dir(this.curSingleWord)
-		console.dir(this.curSingleWord.priorityObj)
-		console.dir(this.curSingleWord.priorityObj.procedure)
-		$('#'+this._lastWordInfoDivId).text(this._curSingleWord.wordShape+
-			"\n"+VocaB.取逆轉義ᵗstr(VocaB.取字符串數組中長度最大者(this._curSingleWord.fullComments) ));
-	}
-	
 	public assignWordsToLearnToCurForgottenWords(){
 		this.setWordsToLearn(this.getWordsByIds(this._idsOfCurFgtWords))
 	}
 	
-	public reviewForgottenWords(){ //待改:只一次有效
+	public reviewForgottenWords(/* ui_fn_startToShow:(...a:any)=>void=()=>{} */){
 		let forgottenWordsIds:number[] = [...this._idsOfCurFgtWords]
 		this.resetCur()
 		this._idsOfCurFgtWords = forgottenWordsIds
@@ -960,9 +939,11 @@ class VocaB{
 		this.assignWordsToLearnToCurForgottenWords()
 		this.assignPriority()
 		this._currentIndex = -1
-		console.log(this._wordsToLearn)//t
-		this.startToShow(this._wordsToLearn)
+		//console.log(this._wordsToLearn)//t
+		//this.startToShow(this._wordsToLearn, )this.ui_startToShow
 		this._idsOfCurFgtWords = []// 此項要在最後重置 否則愈積愈多
+		//ui_fn_startToShow()
+		
 		//this.showNext()
 	}
 	
@@ -1267,79 +1248,5 @@ class VocaB{
 
 }
 
-function a(){}
-
-
-function testPostData(url:any, obj:any){
-	
-	window.fetch(url, {
-		method : 'POST',
-		headers: {'Content-Type':'application/json'},
-		body: JSON.stringify(obj),
-	})
-		 .then((response:any)=>{
-			 console.log('數據發送成功', response);
-		 })
-		 .catch((err:any)=>{
-			 console.log('出錯', err);
-		 })
-}
-
-function testPostBtn(){
-	testPostData('http://localhost:1919', vocaB.allWords);
-}
-
-
-let vocaB = new VocaB();
-let newTestWords:SingleWordB[] = []
-
-let testSingleWord = new SingleWordB()
-// 註釋ʴᵗ函數ˇ刪˪
-const eng = new VocaB()
-const jap = new VocaB()
-const lat = new VocaB()
-let reviewed = new VocaB()
-let 此次所忘 = new VocaB()
-//前幾個ˇ皆未用及
-
-let ling = new VocaB()
-function main(){
-
-}
-
-function assignWordsFromServ(){
-	let gotVal:string = $('input[name="ling"]:checked').val() as string;
-	console.log(gotVal)
-	ling = new VocaB()
-	ling.ling = gotVal;
-	let url:string = '/'+gotVal
-	fetch(url)
-		.then(response=>response.json())
-		.then(data=>{
-			let dataObj = data
-			for(let i = 0; i < dataObj.length; i++){
-				let temp = new SingleWordB();
-				temp.ling = gotVal??'';
-				temp.id = dataObj[i].id
-				temp.wordShape = dataObj[i].wordShape
-				temp.fullComments = JSON.parse(dataObj[i].fullComments)//坑:  忘记用JSON.parse 直接把字符串赋给类型为字符串数组的变量 ts编译器居然没发现, , ,
-				temp.addedDates = JSON.parse(dataObj[i].addedDates)
-				temp.datesFormats = JSON.parse(dataObj[i].datesFormats)
-				//temp.addedTimes = dataObj[i].addedTimes
-				temp.rmbDates = JSON.parse(dataObj[i].rememberedDates)
-				//temp.rmbTimes = dataObj[i].rememberedTimes
-				//temp.reviewedTimes = dataObj[i].reviewedTimes
-				temp.fgtDates = JSON.parse(dataObj[i].forgottenDates)
-				//temp.fgtTimes = dataObj[i].forgottenTimes
-				newTestWords.push(temp)
-				//newTestWords.push(dataObj[i])
-			}
-			ling.setAllWords(newTestWords)
-			//ling.setWordsToLearn(newTestWords)
-			
-			vocaB = ling
-			console.log(ling)
-		})
-}
 
 
