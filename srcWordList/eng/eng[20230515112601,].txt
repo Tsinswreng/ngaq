@@ -5993,3 +5993,274 @@ n.	谦虚；谦逊；庄重；朴素
 
 
 }
+
+
+23.06.11-2210
+{
+disillusionment
+US: [ˌdɪsɪˈluʒ(ə)nmənt] 
+UK: [ˌdɪsɪˈluːʒ(ə)nmənt] 
+n.	醒悟；不再抱幻想；幻想破灭
+Web	幻灭；幻灭感；理想破灭
+
+lay bare
+US:  
+UK:  
+na.	露出；说出
+Web	暴露；揭露；揭示
+
+sheen
+US: [ʃin] 
+UK: [ʃiːn] 
+n.	光泽；光彩；光辉
+v.	发亮；发光彩；照耀；闪闪发光
+adj.	【诗】华丽的；光辉的；有光泽的
+Web	新英；贯诗钦；闪耀剑
+
+outpace
+US: [aʊtˈpeɪs] 
+UK: [ˌaʊtˈpeɪs] 
+v.	跑得比…快；发展快过；胜过
+Web	超过；超过…速度；追过
+
+tale
+US: [teɪl] 
+UK: [teɪl] 
+n.	（尤指充满惊险的）故事；历险记；（精彩但不一定完全真实的）讲述
+Web	传说；坏话；谣言
+
+bleak
+US: [blik] 
+UK: [bliːk] 
+adj.	不乐观的；无望的；暗淡的；阴冷的
+n.	【鱼】(淡水产)银鲤
+Web	荒凉的；凄凉的；寒冷的
+
+scrub
+US: [skrʌb] 
+UK: [skrʌb] 
+n.	擦洗；刷洗；灌木丛；矮树丛
+v.	擦洗；刷洗；取消（原有安排）
+adj.	矮小的；不中用的；次等的；由预备队员组成的
+Web	纯净的；搓洗；擦掉
+
+hypocritical
+US: [ˌhɪpəˈkrɪtɪk(ə)l] 
+UK: [.hɪpə'krɪtɪk(ə)l] 
+adj.	伪善(者)的
+Web	伪善的；虚伪；虚伪的
+
+gown
+US: [ɡaʊn] 
+UK: [ɡaʊn] 
+n.	女长服；长外衣；外罩
+v.	着大学礼服
+Web	长袍；睡袍；睡衣
+
+abiding
+US: [əˈbaɪdɪŋ] 
+UK: [ə'baɪdɪŋ] 
+adj.	〔书面语〕持久的；永久的；由来已久的
+Web	持久不变的；住在主里；容忍
+
+gruelling
+US: ['ɡru(ə)lɪŋ] 
+UK: ['ɡruːəlɪŋ] 
+adj.	使人筋疲力尽的；折磨人的
+n.	惩罚
+Web	繁重而累人的；艰苦的；使人精疲力尽的
+
+prestigious
+US: [preˈstidʒəs] 
+UK: [preˈstɪdʒəs] 
+adj.	有威望的；声誉高的
+Web	有声望的；有名望的；有威信的
+
+scathing
+US: [ˈskeɪðɪŋ] 
+UK: ['skeɪðɪŋ] 
+adj.	严厉批评的；无情抨击的；尖刻地斥责的
+Web	严厉的；苛刻的；尖刻的
+
+resonate
+US: [ˈrezəˌneɪt] 
+UK: [ˈrezəneɪt] 
+v.	共鸣；产生共鸣；产生共振；【天】同步运动
+Web	产生共鸣的；感通；互感应
+
+exact
+US: [ɪɡˈzækt] 
+UK: [ɪɡ'zækt] 
+adj.	精确的；准确的；严谨的；严格的
+v.	要求；索取；迫使；强迫
+Web	确切的；精密的；真确
+
+pedestal
+US: [ˈpedɪst(ə)l] 
+UK: ['pedɪst(ə)l] 
+n.	基座
+v.	把…搁在架上；给…加台脚；支持
+Web	底座；基础；台座
+
+flurry
+US: [ˈflɜri] 
+UK: [ˈflʌri] 
+n.	一阵忙乱（或激动、兴奋等）；小阵雪（或雨等）
+v.	搅乱；使混乱；慌张
+Web	乱舞；疾风；阵风
+
+liken
+US: [ˈlaɪkən] 
+UK: [ˈlaɪkənd] 
+v.	比作；弄得像…
+Web	把……比作；比做
+
+gaslight
+US: [ˈɡæsˌlaɪt] 
+UK: ['ɡæs.laɪt] 
+na.	煤气灯光
+Web	装神弄鬼；蒙蔽
+
+ascetic
+US: [əˈsetɪk] 
+UK: [ə'setɪk] 
+adj.	禁欲主义的
+n.	苦行者
+Web	苦修者；苦行僧；工夫论
+
+dawn
+US: [dɔn] 
+UK: [dɔːn] 
+n.	黎明；曙光；拂晓；破晓
+v.	开始；变得明朗；开始清楚
+Web	道恩；晨曦；开端
+
+gloom
+US: [ɡlum] 
+UK: [ɡluːm] 
+n.	黑暗；忧郁；幽暗；昏暗
+v.	变黑暗；变忧郁；现愁容；使朦胧
+Web	阴暗；郁闷；忧愁
+
+humble
+US: [ˈhʌmb(ə)l] 
+UK: ['hʌmb(ə)l] 
+v.	谦逊；低声下气；虚心；贬低
+adj.	谦逊的；虚心的；表示谦逊；（级别或地位）低下的
+Web	谦虚的；恭顺的；谦卑的
+
+lane
+US: [leɪn] 
+UK: [leɪn] 
+n.	车道；小巷；泳道；胡同
+Web	小路；通道；跑道
+
+assure
+US: [əˈʃʊr] 
+UK: [əˈʃɔː(r)] 
+v.	确保；使确信；向…保证；弄清
+Web	担保；使放心；确告
+
+falter
+US: [ˈfɔltər] 
+UK: [ˈfɔːltə(r)] 
+v.	蹒跚；畏缩；衰弱；衰退
+n.	结巴；踌躇；不稳；摇晃
+Web	支吾；结巴说；动摇
+
+break-neck
+US: ['breɪk.nek] 
+UK: ['breɪk.nek] 
+adj.	飞速惊险的
+Web	非常危险的；非常快的；极危险的
+
+
+staunch
+US: [stɔntʃ] 
+UK: [stɔːntʃ] 
+adj.	忠实的；坚定的
+v.	止住（血等的）流出
+Web	坚强；刚强；忠诚的
+
+poignancy
+US: [ˈpɔɪnjənsɪ] 
+UK: ['pɔɪnjənsɪ] 
+n.	辛辣；尖锐；强烈；深刻
+Web	辛酸事；刻薄；心酸
+
+sage
+US: [seɪdʒ] 
+UK: [seɪdʒ] 
+n.	圣人；智者；鼠尾草
+adj.	贤明的；明智的
+Web	贤者；洋苏草；基因表达系列分析(serial analysis of gene expression)
+
+biting
+US: [ˈbaɪtɪŋ] 
+UK: ['baɪtɪŋ] 
+adj.	刺骨的；凛冽的；刻薄的；辛辣的
+v.	“bite”的现在分词
+Web	刺痛的；咬人；尖刻
+
+feudalism
+US: [ˈfjudəlˌɪzəm] 
+UK: [ˈfjuːd(ə)lɪz(ə)m] 
+n.	封建主义；封建制度
+Web	封建社会；封建主义的简称；封建国家
+
+subversive
+US: [səbˈvɜrsɪv] 
+UK: [səbˈvɜː(r)sɪv] 
+adj.	颠覆性的；暗中起破坏作用的
+n.	颠覆分子
+Web	破坏性的；颠覆的；破坏的
+
+censure
+US: [ˈsenʃər] 
+UK: [ˈsenʃə(r)] 
+v.	谴责；责难；指责；抨击
+n.	谴责；指责；责备；非议
+Web	非难；指摘；公开谴责
+
+canonise
+US: [ˈkænəˌnaɪz] 
+UK: [ˈkænənaɪz] 
+v.	正式宣布（某人）为圣徒；宣圣；列入圣品
+Web	宣布……为圣徒；封为圣徒；推崇
+
+recess
+US: [rɪˈses] 
+UK: [rɪˈses] 
+v.	休会；暂停；宣布暂停；把…放进壁龛（或壁橱）
+n.	休会期；休庭；壁龛；课间休息
+Web	凹槽；凹座；凹进处
+
+brutality
+US: [bruˈtæləti] 
+UK: [bruːˈtæləti] 
+n.	残忍；兽性；蛮横
+Web	暴行；残酷；兽行
+
+bygone
+US: [ˈbaɪˌɡɔn] 
+UK: [ˈbaɪɡɒn] 
+adj.	很久以前的；以往的
+n.	过去的事；往事
+Web	过时的；已往的；往昔的
+
+lore
+US: [lɔr] 
+UK: [lɔː(r)] 
+n.	（尤指口头流传的）某一方面的学问；（某一群体的）传说
+Web	知识；少女洛荷；学识
+
+canonical
+US: [kəˈnɑnɪk(ə)l] 
+UK: [kəˈnɒnɪk(ə)l] 
+adj.	被收入真经篇目的；经典的；按照基督教教会法规的
+n.	(布道时应穿的)法衣
+Web	标准；规范的；典型
+
+
+
+}

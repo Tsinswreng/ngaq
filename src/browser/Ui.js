@@ -16,6 +16,9 @@ class OriginUi {
         //console.log(this.vocaBObj)//t
         //vocaBObj = this.vocaBObj;
         vocaBObj.startToShow(vocaBObj.wordsToLearn);
+        this.addRandomBonus(); //<bug>第一個出現的單詞仍然是prio0最大者、縱 其他單詞加了bonus後總權重更大</bug>
+        vocaBObj.wordsToLearn.sort((a, b) => { return b.priority_num - a.priority_num; });
+        //vocaBObj.startToShow(vocaBObj.wordsToLearn)
         $('#' + vocaBObj.wordAreaId).text(vocaBObj.curSingleWord.wordShape);
         this.showCurWordInfoRight(vocaBObj);
     }
@@ -32,7 +35,7 @@ class OriginUi {
         $('#last_wordId').text(this.vocaBObj.curSingleWord.id);
         $('#last_ling').text(this.vocaBObj.curSingleWord.ling);
         $('#last_wordEvent').text(this.vocaBObj.curSingleWord.取ᵣ可視化事件('●', '■', '□')); //此步蜮甚耗時ⁿ致塞
-        $('#last_priority').text(this.vocaBObj.curSingleWord.priority);
+        $('#last_priority').text(this.vocaBObj.curSingleWord.priority_num);
         $('#last_addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this.vocaBObj.curSingleWord.addedDates)));
         $('#last_addedTimes').text(this.vocaBObj.curSingleWord.addedTimes);
         $('#last_rememberedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(this.vocaBObj.curSingleWord.rmbDates)));
@@ -56,7 +59,7 @@ class OriginUi {
         $('#wordId').text(vocaBObj.curSingleWord.id);
         $('#ling').text(vocaBObj.curSingleWord.ling);
         $('#wordEvent').text(vocaBObj.curSingleWord.取ᵣ可視化事件('●', '■', '□'));
-        $('#priority').text(vocaBObj.curSingleWord.priority);
+        $('#priority').text(vocaBObj.curSingleWord.priority_num);
         $('#addedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(vocaBObj.curSingleWord.addedDates)));
         $('#addedTimes').text(vocaBObj.curSingleWord.addedTimes);
         $('#rememberedDates').text(JSON.stringify(VocaB.simplifyDateArrFormat(vocaBObj.curSingleWord.rmbDates)));
@@ -67,5 +70,10 @@ class OriginUi {
     reviewForgottenWords() {
         this.vocaBObj.reviewForgottenWords();
         this.startToShow();
+    }
+    addRandomBonus() {
+        let maxS = $('#max_randomBonus').val();
+        let maxN = parseFloat(maxS);
+        this.vocaBObj.addRandomBonus(0, maxN);
     }
 }

@@ -139,13 +139,13 @@ class Procedure {
 
 class Priority{
 	private _word:SingleWordB|undefined;  //不寫|undefined就可能無限遞歸調用
-	private _priority:number = 1; //終ᵗ權重
+	private _priority_num:number|undefined; //終ᵗ權重
 	private _prio0:number|undefined //初權重
 	private _numerator:number = 3600 //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
 	private _defaultAddWeight:number = 100; //23.06.05-1158默認值改爲100
 	private _addWeight:number = 1
 	private _randomRange_max:number = 0
-	private _bonus:number = 0;
+	private _bonus:number|undefined
 	private _dateThen:number = 0; // 當時ᵗ日期時間
 	/*private _randomBuff:number = -1//棄用˪
 	private _prio1:number = -1 //棄用˪
@@ -154,11 +154,11 @@ class Priority{
 	private _procedure: Procedure[] = []
 	
 	
-	get bonus(): number {
+	get bonus():number|undefined{
 		return this._bonus;
 	}
 	
-	private set bonus(value: number) {
+	private set bonus(value: number|undefined) {
 		this._bonus = value;
 	}
 	
@@ -170,12 +170,12 @@ class Priority{
 		this._defaultAddWeight = value;
 	}
 	
-	get priority(): number {
-		return this._priority;
+	get priority_num(): number|undefined {
+		return this._priority_num;
 	}
 	
-	set priority(value: number) {
-		this._priority = value;
+	set priority_num(value: number|undefined) {
+		this._priority_num = value;
 	}
 	
 	get dateThen(): number {
@@ -281,6 +281,7 @@ class Priority{
 				//this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
 				//this._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
 				this._prio0 += Math.pow(this._prio0, addEvent_cnt) //[23.06.07-2320,]
+				//this.priority_num = this.prio0!
 			}
 			return;//直接return 不處理憶與忘ˉ事件 節約ᵣ時
 		}
@@ -341,9 +342,8 @@ class Priority{
 				this.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis
 				//無 debuff之類
 			}
-				
-			
 		}
+		//this.priority_num = this.prio0!
 		
 		/*for(let i = 0; i < this.procedure.length; i++){
 			if(this.procedure[i].date_wordEvent === undefined){
@@ -356,8 +356,8 @@ class Priority{
 		
 	}
 	
-	public addBonus(bonus:number){
-		this.priority = this.prio0! + bonus;
+	public addBonus(bonus:number):void{
+		this.priority_num = this.prio0! + bonus;
 		this.bonus = bonus
 	}
 	
@@ -377,7 +377,7 @@ class Priority{
 		return out;
 	}
 
-	public getDebuff(durationOfLastRmbEventToNow){
+	public getDebuff(durationOfLastRmbEventToNow:number):number{
 		//憶ˡ事件ᵗ次ˋ愈多則分母愈大
 		if(!this.word){throw new Error('!this.word')}
 		let date_allEventObjs = this.word.date_allEventObjs
@@ -410,7 +410,7 @@ class SingleWordB{
 	private _rmbDates:string[] = []
 	private _fgtTimes:number = -1
 	private _fgtDates:string[] = []
-	private _priority:number = 1
+	private _priority_num:number = 1
 	private _priorityObj:Priority = new Priority();
 	/*private _date_allEventObjs:{date:number, wordEvent:WordEvent}[]
 	private _date_addEventObjs:{date:number, wordEvent:WordEvent}[]
@@ -537,13 +537,14 @@ class SingleWordB{
 		this._fgtDates = value;
 	}
 	
-	get priority(): number {
-		return this._priority;
+	get priority_num(): number|undefined {
+		//return this._priority_num;
+		return this.priorityObj.priority_num
 	}
 	
-	set priority(value: number) {
-		this._priority = value;
-	}
+	/* set priority_num(value: number) {
+		this.priorityObj.priority_num = value;
+	} */
 	
 	get date_allEventObjs(): { date: number; wordEvent: WordEvent }[] {
 		return this._date_allEventObjs;
@@ -818,23 +819,30 @@ class VocaB{
 		}
 		return filtedWords
 	}
+
+	
+
+	
 	
 	/**
 	 * 
 	 * @param wordsToLearn 
 	 * @param fn_ui 負責界面交互之函數
 	 */
-	public startToShow(wordsToLearn:SingleWordB[]/* =this._allWords *//* , fn_ui:(vocaBObj:VocaB)=>void */):void{
+	public startToShow(wordsToLearn:SingleWordB[], randomBonusArr?:number[]):void{
 		//let randomIndex = Math.floor(Math.random() * (this.words.length))//第一個單詞完全由隨機數決定
 		/* if(!wordsToLearn){
 			wordsToLearn = this._allWords
 		} */
-		
+		/* if(!randomBonusArr){
+
+		} */
 		this.wordsToLearn = this.filtWordsToLearn(wordsToLearn)
 		//console.log(wordsToLearn)//t
-		this.assignPriority()
+		this.assignPriority(randomBonusArr)
+		
 		this.wordsToLearn.sort((a, b)=>{
-			return b.priority - a.priority
+			return b.priority_num! - a.priority_num! 
 		})
 		this._currentIndex = 0
 		if(this._curSingleWord.wordShape === ''){
@@ -874,6 +882,14 @@ class VocaB{
 		this.setWordsToLearn(wordsToLearn)
 		
 	}
+
+	public addRandomBonus(min:number, max:number):void{
+		let rand:number[] = VocaB.generateRandomNumbers(this.wordsToLearn.length, min, max);
+		for(let i = 0; i < this.wordsToLearn.length; i++){
+			this.wordsToLearn[i].priorityObj.addBonus(rand[i]);
+		}
+	}
+
 
 	public rmbEvent(vocaBObj:VocaB){
 		//currentWord之功能未叶
@@ -1074,7 +1090,8 @@ class VocaB{
 		xhr.send(JSON.stringify(dataToReturn))
 	}
 	
-	public assignPriority(){
+	public assignPriority(randomBonusArr?:number[]){
+		
 		// [23.06.09-1655]刪除了被註釋掉的舊版實現
 		
 		for(let i = 0; i < this.allWords.length; i++){
@@ -1089,12 +1106,23 @@ class VocaB{
 		
 		aver /= this.allWords.length;
 		console.log('平均初權重:'+aver)
-		let randoms:number[] = VocaB.generateRandomNumbers(this._allWords.length, 0, aver/8)
+
+		/* */
+		if(!randomBonusArr){
+			randomBonusArr = new Array(this.allWords.length)
+			randomBonusArr.fill(0)
+			//let randoms:number[] = VocaB.generateRandomNumbers(this._allWords.length, 0, aver/8)
+			//randomBonusArr.fill(1)
+			//randomBonusArr = randoms
+		}
+
+		
 		for(let i = 0; i < this.allWords.length; i++){
 			this.allWords[i].priorityObj.randomRange_max = aver/8
-			this.allWords[i].priorityObj.addBonus(randoms[i]);
-			this.allWords[i].priority = this.allWords[i].priorityObj.priority
-		}
+			this.allWords[i].priorityObj.addBonus(randomBonusArr[i]);
+			//this.allWords[i].priority_num = this.allWords[i].priorityObj.priority_num
+			//this.allWords[i].priorityObj.priority_num = this.allWords[i].priorityObj.priority_num //[23.06.12-1048,]
+		} 
 		
 	}
 	
@@ -1140,12 +1168,19 @@ class VocaB{
 		return strArr[indexOfMax]
 	}
 	
-	public static generateRandomNumbers(n:number, a:number, b:number) {
-		a*=10000
-		b*=10000
+	/**
+	 * 
+	 * @param n 個數
+	 * @param bottom 
+	 * @param top 
+	 * @returns 
+	 */
+	public static generateRandomNumbers(n:number, bottom:number, top:number) {
+		bottom*=10000
+		top*=10000
 		const result:number[] = [];
 		for (let i = 0; i < n; i++) {
-			let randomNumber = Math.floor(Math.random() * (b - a + 1) + a);
+			let randomNumber = Math.floor(Math.random() * (top - bottom + 1) + bottom);
 			randomNumber/=10000
 			result.push(randomNumber);
 		}

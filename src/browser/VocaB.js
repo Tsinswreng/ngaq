@@ -80,11 +80,11 @@ class Priority {
     set defaultAddWeight(value) {
         this._defaultAddWeight = value;
     }
-    get priority() {
-        return this._priority;
+    get priority_num() {
+        return this._priority_num;
     }
-    set priority(value) {
-        this._priority = value;
+    set priority_num(value) {
+        this._priority_num = value;
     }
     get dateThen() {
         return this._dateThen;
@@ -140,12 +140,10 @@ class Priority {
         this._randomRange_max = value;
     }
     constructor() {
-        this._priority = 1; //終ᵗ權重
         this._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
         this._defaultAddWeight = 100; //23.06.05-1158默認值改爲100
         this._addWeight = 1;
         this._randomRange_max = 0;
-        this._bonus = 0;
         this._dateThen = 0; // 當時ᵗ日期時間
         /*private _randomBuff:number = -1//棄用˪
         private _prio1:number = -1 //棄用˪
@@ -179,6 +177,7 @@ class Priority {
                 //this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
                 //this._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
                 this._prio0 += Math.pow(this._prio0, addEvent_cnt); //[23.06.07-2320,]
+                //this.priority_num = this.prio0!
             }
             return; //直接return 不處理憶與忘ˉ事件 節約ᵣ時
         }
@@ -238,6 +237,7 @@ class Priority {
                 //無 debuff之類
             }
         }
+        //this.priority_num = this.prio0!
         /*for(let i = 0; i < this.procedure.length; i++){
             if(this.procedure[i].date_wordEvent === undefined){
                 console.log('i = '+i)
@@ -248,7 +248,7 @@ class Priority {
         }*/
     }
     addBonus(bonus) {
-        this.priority = this.prio0 + bonus;
+        this.priority_num = this.prio0 + bonus;
         this.bonus = bonus;
     }
     /*
@@ -368,12 +368,13 @@ class SingleWordB {
     set fgtDates(value) {
         this._fgtDates = value;
     }
-    get priority() {
-        return this._priority;
+    get priority_num() {
+        //return this._priority_num;
+        return this.priorityObj.priority_num;
     }
-    set priority(value) {
-        this._priority = value;
-    }
+    /* set priority_num(value: number) {
+        this.priorityObj.priority_num = value;
+    } */
     get date_allEventObjs() {
         return this._date_allEventObjs;
     }
@@ -421,7 +422,7 @@ class SingleWordB {
         this._rmbDates = [];
         this._fgtTimes = -1;
         this._fgtDates = [];
-        this._priority = 1;
+        this._priority_num = 1;
         this._priorityObj = new Priority();
         /*private _date_allEventObjs:{date:number, wordEvent:WordEvent}[]
         private _date_addEventObjs:{date:number, wordEvent:WordEvent}[]
@@ -607,16 +608,19 @@ class VocaB {
      * @param wordsToLearn
      * @param fn_ui 負責界面交互之函數
      */
-    startToShow(wordsToLearn /* =this._allWords */ /* , fn_ui:(vocaBObj:VocaB)=>void */) {
+    startToShow(wordsToLearn, randomBonusArr) {
         //let randomIndex = Math.floor(Math.random() * (this.words.length))//第一個單詞完全由隨機數決定
         /* if(!wordsToLearn){
             wordsToLearn = this._allWords
         } */
+        /* if(!randomBonusArr){
+
+        } */
         this.wordsToLearn = this.filtWordsToLearn(wordsToLearn);
         //console.log(wordsToLearn)//t
-        this.assignPriority();
+        this.assignPriority(randomBonusArr);
         this.wordsToLearn.sort((a, b) => {
-            return b.priority - a.priority;
+            return b.priority_num - a.priority_num;
         });
         this._currentIndex = 0;
         if (this._curSingleWord.wordShape === '') {
@@ -650,6 +654,12 @@ class VocaB {
     setWordsToLearnByIds(ids) {
         let wordsToLearn = this.getWordsByIds(ids);
         this.setWordsToLearn(wordsToLearn);
+    }
+    addRandomBonus(min, max) {
+        let rand = VocaB.generateRandomNumbers(this.wordsToLearn.length, min, max);
+        for (let i = 0; i < this.wordsToLearn.length; i++) {
+            this.wordsToLearn[i].priorityObj.addBonus(rand[i]);
+        }
     }
     rmbEvent(vocaBObj) {
         //currentWord之功能未叶
@@ -823,7 +833,7 @@ class VocaB {
         };
         xhr.send(JSON.stringify(dataToReturn));
     }
-    assignPriority() {
+    assignPriority(randomBonusArr) {
         // [23.06.09-1655]刪除了被註釋掉的舊版實現
         for (let i = 0; i < this.allWords.length; i++) {
             this.allWords[i].priorityObj.word = this.allWords[i];
@@ -835,11 +845,19 @@ class VocaB {
         }
         aver /= this.allWords.length;
         console.log('平均初權重:' + aver);
-        let randoms = VocaB.generateRandomNumbers(this._allWords.length, 0, aver / 8);
+        /* */
+        if (!randomBonusArr) {
+            randomBonusArr = new Array(this.allWords.length);
+            randomBonusArr.fill(0);
+            //let randoms:number[] = VocaB.generateRandomNumbers(this._allWords.length, 0, aver/8)
+            //randomBonusArr.fill(1)
+            //randomBonusArr = randoms
+        }
         for (let i = 0; i < this.allWords.length; i++) {
             this.allWords[i].priorityObj.randomRange_max = aver / 8;
-            this.allWords[i].priorityObj.addBonus(randoms[i]);
-            this.allWords[i].priority = this.allWords[i].priorityObj.priority;
+            this.allWords[i].priorityObj.addBonus(randomBonusArr[i]);
+            //this.allWords[i].priority_num = this.allWords[i].priorityObj.priority_num
+            //this.allWords[i].priorityObj.priority_num = this.allWords[i].priorityObj.priority_num //[23.06.12-1048,]
         }
     }
     /*public static assignWordsWithReviewForgottenWords(vocaBObj:VocaB):void{
@@ -877,12 +895,19 @@ class VocaB {
         }
         return strArr[indexOfMax];
     }
-    static generateRandomNumbers(n, a, b) {
-        a *= 10000;
-        b *= 10000;
+    /**
+     *
+     * @param n 個數
+     * @param bottom
+     * @param top
+     * @returns
+     */
+    static generateRandomNumbers(n, bottom, top) {
+        bottom *= 10000;
+        top *= 10000;
         const result = [];
         for (let i = 0; i < n; i++) {
-            let randomNumber = Math.floor(Math.random() * (b - a + 1) + a);
+            let randomNumber = Math.floor(Math.random() * (top - bottom + 1) + bottom);
             randomNumber /= 10000;
             result.push(randomNumber);
         }
