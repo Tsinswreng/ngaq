@@ -15,7 +15,9 @@ class OriginUi {
     startToShow(vocaBObj = this.vocaBObj) {
         //console.log(this.vocaBObj)//t
         //vocaBObj = this.vocaBObj;
+        this.assign_debuffNumerator();
         vocaBObj.startToShow(vocaBObj.wordsToLearn);
+        //addRandomBonus 宜 末ʸ珩
         this.addRandomBonus(); //<bug>第一個出現的單詞仍然是prio0最大者、縱 其他單詞加了bonus後總權重更大</bug>
         vocaBObj.wordsToLearn.sort((a, b) => { return b.priority_num - a.priority_num; });
         //vocaBObj.startToShow(vocaBObj.wordsToLearn)
@@ -73,7 +75,20 @@ class OriginUi {
     }
     addRandomBonus() {
         let maxS = $('#max_randomBonus').val();
-        let maxN = parseFloat(maxS);
+        //let maxN:number = parseFloat(maxS as string)
+        let maxN = eval(maxS); //[23.06.13-1039,]
+        if (isNaN(maxN)) {
+            alert('max_randomBonus不合法');
+        }
         this.vocaBObj.addRandomBonus(0, maxN);
+    }
+    assign_debuffNumerator() {
+        let v = $('#debuffNumerator').val();
+        let n = eval(v);
+        if (isNaN(n)) {
+            alert('debuffNumerator不合法');
+            n = 0;
+        }
+        Priority.numerator = n;
     }
 }

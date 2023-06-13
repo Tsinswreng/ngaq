@@ -141,8 +141,8 @@ class Priority{
 	private _word:SingleWordB|undefined;  //不寫|undefined就可能無限遞歸調用
 	private _priority_num:number|undefined; //終ᵗ權重
 	private _prio0:number|undefined //初權重
-	private _numerator:number = 3600 //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
-	private _defaultAddWeight:number = 100; //23.06.05-1158默認值改爲100
+	private static _numerator:number = 3600 //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
+	private static _defaultAddWeight:number = 100; //23.06.05-1158默認值改爲100 //[23.06.13-1047,]{改爲靜態}
 	private _addWeight:number = 1
 	private _randomRange_max:number = 0
 	private _bonus:number|undefined
@@ -163,11 +163,11 @@ class Priority{
 	}
 	
 	get defaultAddWeight(): number {
-		return this._defaultAddWeight;
+		return Priority._defaultAddWeight;
 	}
 	
 	set defaultAddWeight(value: number) {
-		this._defaultAddWeight = value;
+		Priority._defaultAddWeight = value;
 	}
 	
 	get priority_num(): number|undefined {
@@ -211,11 +211,19 @@ class Priority{
 	}
 	
 	get numerator(): number {
-		return this._numerator;
+		return Priority._numerator;
 	}
 	
 	set numerator(value: number) {
-		this._numerator = value;
+		Priority._numerator = value;
+	}
+
+	static get numerator(): number {
+		return Priority._numerator;
+	}
+	
+	static set numerator(value: number) {
+		Priority._numerator = value;
 	}
 	
 	get addWeight(): number {
@@ -274,6 +282,7 @@ class Priority{
 			
 		}
 		
+
 		if(addEvent_cnt === this.word.date_allEventObjs.length){
 			//若一個單詞ᵗ添ᵗ次ˋ不止一次、且從未複習過、則益增其權重、以達的芝優先背新詞
 			if(addEvent_cnt >= 2){
@@ -383,7 +392,8 @@ class Priority{
 		let date_allEventObjs = this.word.date_allEventObjs
 		//console.log(date_allEventObjs)//t
 		if(date_allEventObjs[date_allEventObjs.length-1].wordEvent === WordEvent.REMEMBER){ //要求末ᵗ事件潙 憶 旹纔有debuff
-			let numerator = this.word.date_allEventObjs.length*this.numerator*2
+			//let numerator = this.word.date_allEventObjs.length*this.numerator*2
+			let numerator = this.numerator //[23.06.13-1056,]
 			let debuff = Math.floor((numerator/durationOfLastRmbEventToNow) + 1)
 			return debuff
 		}else{
@@ -1282,6 +1292,8 @@ class VocaB{
 	}
 
 }
+
+
 
 
 

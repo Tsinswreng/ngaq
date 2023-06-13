@@ -6264,3 +6264,152 @@ Web	标准；规范的；典型
 
 
 }
+
+23.06.12-2251
+{
+manipulate
+US: [məˈnɪpjəˌleɪt] 
+UK: [məˈnɪpjʊleɪt] 
+v.	控制；(有技巧地)使用；巧妙地处理(问题等)；摆布
+Web	操纵；操作；操纵操作
+
+bore
+US: [bɔr] 
+UK: [bɔː(r)] 
+n.	钻孔；口径；（常因话多）令人厌烦的人；烦人的状况（或事情）
+v.	钻；（尤指因啰嗦）使厌烦；盯着看
+Web	缸径；内径；孔径
+
+helmsman
+US: [ˈhelmzmən] 
+UK: ['helmzmən] 
+n.	舵手
+Web	舵工；艄公；操舵员
+
+disgrace
+US: [dɪsˈɡreɪs] 
+UK: [dɪs'ɡreɪs] 
+n.	耻辱；受气；出丑的人
+v.	玷污(名誉)；使丢脸；使失宠；贬黜
+Web	不光彩的；丢脸的；失宠的
+
+radiance
+US: [ˈreɪdiəns] 
+UK: ['reɪdiəns] 
+n.	容光焕发；红光满面；（散发出来的）光辉
+Web	发光；光彩；辐射率
+
+strip
+US: [strɪp] 
+UK: [strɪp] 
+n.	带；（陆地、海域等）狭长地带；带状水域；队服
+v.	夺；脱掉大部分衣服；扒光…的衣服；进行脱衣表演
+adj.	脱衣舞的；被剥去外皮的
+Web	条；条带；剥夺
+
+ample
+US: [ˈæmp(ə)l] 
+UK: ['æmp(ə)l] 
+adj.	足够的；丰裕的；丰满的；硕大的
+Web	充足的；宽敞的；丰富的
+
+ammunition
+US: [ˌæmjəˈnɪʃ(ə)n] 
+UK: [ˌæmjʊˈnɪʃ(ə)n] 
+n.	弹药；（辩论中可攻击对方的）把柄
+v.	供给…弹药
+Web	军火；子弹；军火弹药
+
+legitimize
+US: [ləˈdʒɪtəˌmaɪz] 
+UK: [lɪˈdʒɪtəmaɪz] 
+v.	使（坏事或不正当的事）看起来可以接受；使合法
+Web	合法化；宣布合法化；正当化
+
+spectacle
+US: [ˈspektək(ə)l] 
+UK: ['spektək(ə)l] 
+n.	精彩的表演；壮观的场面；壮观的景象；奇特的现象
+Web	奇观；眼镜；景观
+
+oracular
+US: [ɔˈrækjələr] 
+UK: [ɒˈrækjʊlə(r)] 
+adj.	神谕般的；天书般的；晦涩难懂的
+Web	神谕的；神论似的；神谕性
+
+margin
+US: [ˈmɑrdʒɪn] 
+UK: [ˈmɑː(r)dʒɪn] 
+n.	边缘；差额；余地；界限
+v.	给…镶边；在…加旁注；【股】为…付保险金
+Web	保证金；边距；外边距
+
+Water Margin
+Web	水浒传；梁山泊；水边
+
+bandit
+US: [ˈbændɪt] 
+UK: ['bændɪt] 
+n.	土匪
+Web	强盗；盗匪；匪徒
+
+offhand
+US: [ˈɔfˌhænd] 
+UK: [ɒfˈhænd] 
+adv.	未经核实地；不假思索地；即席地
+adj.	漫不经心的；不在乎的
+Web	无准备的；即席的；临时的
+
+capitulationist
+Web	投降主义者；投降主义者的
+
+reel
+US: [ril] 
+UK: [riːl] 
+n.	卷；(苏格兰高地人的)双人对舞(曲)；〈美〉弗吉尼亚舞；【机】线轴
+v.	跳双人对舞；【印,纺】卷(线)；摇摆；摇动
+Web	卷取；使眩晕；绕卷
+
+torture
+US: [ˈtɔrtʃər] 
+UK: [ˈtɔː(r)tʃə(r)] 
+n.	折磨；痛苦；拷打
+v.	折磨；拷打；使痛苦
+adj.	遭受重创的；饱受煎熬的
+Web	犯罪精英；拷问；受折磨
+
+senile
+US: [ˈsiˌnaɪl] 
+UK: [ˈsiːnaɪl] 
+adj.	衰老的；年老糊涂的
+Web	老年的；高龄的；龙钟
+
+cataract
+US: [ˈkætəˌrækt] 
+UK: [ˈkætərækt] 
+n.	大瀑布；暴雨；奔流；【医学】(白)内障
+v.	(使)像瀑布似地注流
+Web	白内障；白内脏；先天性白内障
+
+ineptly
+US: [ɪˈneptlɪ] 
+UK: [ɪ'neptli] 
+adv.	愚蠢地
+Web	不适当地；无能地；不适当的
+
+omen
+US: [ˈoʊmən] 
+UK: [ˈəʊmən] 
+n.	预兆；征兆；前兆
+v.	预告
+Web	兆头；凶兆；先兆
+
+inauspicious
+US: [ˌɪnɔˈspɪʃəs] 
+UK: [ˌɪnɔːˈspɪʃəs] 
+adj.	预示前景黯淡的；不祥的；不吉利的
+Web	不幸的；凶；不顺利的
+
+
+}

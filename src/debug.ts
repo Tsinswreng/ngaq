@@ -16,3 +16,4 @@ class C implements I{
 	//right: () => void = ()=>{};
 	right(){}
 }
+

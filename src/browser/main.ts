@@ -37,6 +37,7 @@ function main(){
 
 }
 
+
 function assignWordsFromServ(){
 	let gotVal:string = $('input[name="ling"]:checked').val() as string;
 	console.log(gotVal)
@@ -72,3 +73,4 @@ function assignWordsFromServ(){
 			originUi = new OriginUi(vocaB)
 		})
 }
+

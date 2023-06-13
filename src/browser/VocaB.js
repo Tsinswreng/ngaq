@@ -75,10 +75,10 @@ class Priority {
         this._bonus = value;
     }
     get defaultAddWeight() {
-        return this._defaultAddWeight;
+        return Priority._defaultAddWeight;
     }
     set defaultAddWeight(value) {
-        this._defaultAddWeight = value;
+        Priority._defaultAddWeight = value;
     }
     get priority_num() {
         return this._priority_num;
@@ -113,10 +113,16 @@ class Priority {
         }
     }
     get numerator() {
-        return this._numerator;
+        return Priority._numerator;
     }
     set numerator(value) {
-        this._numerator = value;
+        Priority._numerator = value;
+    }
+    static get numerator() {
+        return Priority._numerator;
+    }
+    static set numerator(value) {
+        Priority._numerator = value;
     }
     get addWeight() {
         return this._addWeight;
@@ -140,8 +146,6 @@ class Priority {
         this._randomRange_max = value;
     }
     constructor() {
-        this._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
-        this._defaultAddWeight = 100; //23.06.05-1158默認值改爲100
         this._addWeight = 1;
         this._randomRange_max = 0;
         this._dateThen = 0; // 當時ᵗ日期時間
@@ -272,7 +276,8 @@ class Priority {
         let date_allEventObjs = this.word.date_allEventObjs;
         //console.log(date_allEventObjs)//t
         if (date_allEventObjs[date_allEventObjs.length - 1].wordEvent === WordEvent.REMEMBER) { //要求末ᵗ事件潙 憶 旹纔有debuff
-            let numerator = this.word.date_allEventObjs.length * this.numerator * 2;
+            //let numerator = this.word.date_allEventObjs.length*this.numerator*2
+            let numerator = this.numerator; //[23.06.13-1056,]
             let debuff = Math.floor((numerator / durationOfLastRmbEventToNow) + 1);
             return debuff;
         }
@@ -281,6 +286,8 @@ class Priority {
         }
     }
 }
+Priority._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
+Priority._defaultAddWeight = 100; //23.06.05-1158默認值改爲100 //[23.06.13-1047,]{改爲靜態}
 class SingleWordB {
     get priorityObj() {
         return this._priorityObj;
