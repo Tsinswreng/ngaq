@@ -668,27 +668,46 @@ class VocaRaw {
     }
     getAllSingleWordsSync() {
         const db = this.getDbConnection();
-        db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields) => {
-            //console.log(results)//RowDataPacket
-            //console.log(results['600']['wordShape'])
-            return results; //蜮不效
+        //[23.06.15-0942,]
+        return new Promise((resolve, reject) => {
+            db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields) => {
+                //console.log(results)//RowDataPacket
+                //console.log(results['600']['wordShape'])
+                //return results//蜮不效
+                resolve(results);
+            });
         });
     }
     backupTable() {
-        const dateNow = moment().format('YYYYMMDDHHmmss');
-        const newTableName = this.tableName + dateNow;
-        const db = this.getDbConnection();
-        //let backupSql = `CREATE TABLE ${this._tableName+dateNow} AS SELECT *FROM ${this._tableName};`
-        let backupSql = `CREATE TABLE ${newTableName} LIKE ${this.tableName};`;
-        let step2 = `INSERT INTO ${newTableName} SELECT * FROM ${this.tableName};`;
-        db.query(backupSql, (err, result) => {
-            if (err)
-                throw err;
-            db.query(step2, (err, result) => {
-                if (err)
-                    throw err;
-            });
-        });
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dateNow = moment().format('YYYYMMDDHHmmss');
+                const newTableName = this.tableName + dateNow;
+                const db = this.getDbConnection();
+                //let backupSql = `CREATE TABLE ${this._tableName+dateNow} AS SELECT *FROM ${this._tableName};`
+                let backupSql = `CREATE TABLE ${newTableName} LIKE ${this.tableName};`;
+                let step2 = `INSERT INTO ${newTableName} SELECT * FROM ${this.tableName};`;
+                yield new Promise((resolve2, reject2) => {
+                    db.query(backupSql, (err, result) => {
+                        if (err)
+                            throw err;
+                        resolve2(); //欲不傳參 則Promise之尖括號內當寫void
+                    });
+                });
+                yield new Promise((resolve2, reject2) => {
+                    db.query(step2, (err, result) => {
+                        if (err)
+                            throw err;
+                    });
+                    resolve2();
+                });
+                let out = newTableName + '複製成功';
+                resolve(out);
+            }
+            catch (error) {
+                reject(error);
+            }
+        }));
     }
     static getObjsByConfig() {
         let xmlSrc = fs.readFileSync(VocaRaw.configFilePath);

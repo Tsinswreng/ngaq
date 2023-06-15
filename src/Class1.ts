@@ -52,12 +52,12 @@ setTimeout(()=>{
 
 
 //then方法只有异步调用对象promise才可以用，所以要加async
-async function fn(){
+async function fna(){
 	// throw '发生错误'//等价于reject('发生错误‘)
 	return 123;  //实际等价于resolve(123)
 }
 //then方法只有异步调用对象promise才可以用，所以要加async
-fn().then((data)=>{//调用fn函数，将该函数的返回值传递给then的回调函数
+fna().then((data)=>{//调用fn函数，将该函数的返回值传递给then的回调函数
 	console.log(data)
 })/*.catch((err)=>{//catch的回调函数接收的fn函数中的throw抛出的异常信息
 	console.log(err)

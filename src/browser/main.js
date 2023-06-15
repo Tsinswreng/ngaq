@@ -18,27 +18,20 @@ function testPostData(url:any, obj:any){
     testPostData('http://localhost:1919', vocaB.allWords);
 } */
 let vocaB = new VocaB();
-let originUi = new OriginUi(vocaB);
-let newTestWords = [];
-let testSingleWord = new SingleWordB();
+let originUi; // = new OriginUi(vocaB)
+let wordsToPush = [];
 // 註釋ʴᵗ函數ˇ刪˪
-const eng = new VocaB();
-const jap = new VocaB();
-const lat = new VocaB();
-let reviewed = new VocaB();
-let 此次所忘 = new VocaB();
 //前幾個ˇ皆未用及
-let ling = new VocaB();
-function main() {
-}
+let lingVocaB;
+function main() { }
 function assignWordsFromServ() {
     let gotVal = $('input[name="ling"]:checked').val();
     console.log(gotVal);
-    ling = new VocaB();
-    ling.ling = gotVal;
+    lingVocaB = new VocaB();
+    lingVocaB.ling = gotVal;
     let url = '/' + gotVal;
     fetch(url)
-        .then(response => response.json())
+        .then(response => response.json()) //?[]?
         .then(data => {
         let dataObj = data;
         for (let i = 0; i < dataObj.length; i++) {
@@ -55,13 +48,13 @@ function assignWordsFromServ() {
             //temp.reviewedTimes = dataObj[i].reviewedTimes
             temp.fgtDates = JSON.parse(dataObj[i].forgottenDates);
             //temp.fgtTimes = dataObj[i].forgottenTimes
-            newTestWords.push(temp);
+            wordsToPush.push(temp); //push之故、可叶多語混學。
             //newTestWords.push(dataObj[i])
-        }
-        ling.setAllWords(newTestWords);
+        } //endfor
+        lingVocaB.setAllWords(wordsToPush);
         //ling.setWordsToLearn(newTestWords)
-        vocaB = ling;
-        console.log(ling);
+        vocaB = lingVocaB;
+        console.log(lingVocaB);
         originUi = new OriginUi(vocaB);
-    });
-}
+    }); //endthen
+} //endfn

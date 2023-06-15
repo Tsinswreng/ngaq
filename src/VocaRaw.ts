@@ -1,5 +1,6 @@
 //23.05.03-1311
 import * as fs from "fs";
+import { resolve } from "mathjs";
 import * as mysql from 'mysql';
 // import {Connection} from 'mysql2'
 // import mysql2 from 'mysql2';
@@ -8,6 +9,7 @@ const moment = require('moment');
 const lodash = require('lodash');
 import * as readline from 'readline';
 const xml2js = require('xml2js')
+import * as mariadb from 'mariadb'
 //import * as xml2js from 'xml2js';
 
 /*TODO{
@@ -759,26 +761,45 @@ export default class VocaRaw{
 
 	public getAllSingleWordsSync(){
 		const db = this.getDbConnection()
-		db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+		//[23.06.15-0942,]
+		return new Promise((resolve, reject)=>{
+			db.query(`SELECT * FROM ${this._tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 			//console.log(results)//RowDataPacket
 			//console.log(results['600']['wordShape'])
-			return results//蜮不效
+			//return results//蜮不效
+			resolve(results)
+			})
 		})
 		
 	}
 	
 	public backupTable(){
-		const dateNow:string = moment().format('YYYYMMDDHHmmss')
-		const newTableName = this.tableName+dateNow
-		const db = this.getDbConnection()
-		//let backupSql = `CREATE TABLE ${this._tableName+dateNow} AS SELECT *FROM ${this._tableName};`
-		let backupSql = `CREATE TABLE ${newTableName} LIKE ${this.tableName};`
-		let step2 = `INSERT INTO ${newTableName} SELECT * FROM ${this.tableName};`
-		db.query(backupSql, (err, result)=>{
-			if(err) throw err;
-			db.query(step2, (err,result)=>{
-				if(err) throw err;
-			})
+		return new Promise<any>(async (resolve, reject)=>{ //這裏也要寫一個async
+			try{
+				const dateNow:string = moment().format('YYYYMMDDHHmmss')
+				const newTableName = this.tableName+dateNow
+				const db = this.getDbConnection()
+				//let backupSql = `CREATE TABLE ${this._tableName+dateNow} AS SELECT *FROM ${this._tableName};`
+				let backupSql = `CREATE TABLE ${newTableName} LIKE ${this.tableName};`
+				let step2 = `INSERT INTO ${newTableName} SELECT * FROM ${this.tableName};`
+				await new Promise<void>((resolve2, reject2)=>{
+					db.query(backupSql, (err, result)=>{
+						if(err) throw err;
+						resolve2() //欲不傳參 則Promise之尖括號內當寫void
+					})
+				})
+				await new Promise<void>((resolve2, reject2)=>{
+					db.query(step2, (err,result)=>{
+						if(err) throw err;
+					})
+					resolve2()
+				})
+				
+				let out = newTableName+'複製成功'
+				resolve(out)
+			}catch(error){
+				reject(error)
+			}
 		})
 	}
 	public static getObjsByConfig(){
@@ -811,16 +832,14 @@ export default class VocaRaw{
 	
 	
 	
-	public static updateDb
-	(
+	public static updateDb(
 		dataToReturn:{
 			ling:string
 			id:number,
 			rememberedDates:string[]
 			forgottenDates:string[]
 		}[]
-	)
-	{
+	){
 		const db = VocaRaw.getDbObj()
 		for(let i = 0; i < dataToReturn.length; i++){
 			/*let updateSql =

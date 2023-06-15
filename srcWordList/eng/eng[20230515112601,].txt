@@ -6413,3 +6413,220 @@ Web	不幸的；凶；不顺利的
 
 
 }
+
+23.06.13-2241
+{
+snap
+US: [snæp] 
+UK: [snæp] 
+adv.	突然
+v.	（使咔嚓）断裂；移到某位置；厉声说；怒气冲冲地说
+n.	（尤指关上或断裂的声音）啪嗒声；（尤指抢拍的）照片
+
+
+protracted
+US: [prəˈtræktəd] 
+UK: [prəˈtræktɪd] 
+adj.	拖沓的
+Web	拖延的；延长的；旷日持久
+
+
+protract
+US:  
+UK: [prə'trækt] 
+v.	(用比例尺半圆规)画(线)；拖长；【解】伸出
+Web	延长；拖延；绘制
+
+palpable
+US: [ˈpælpəb(ə)l] 
+UK: ['pælpəb(ə)l] 
+adj.	易于察觉的；可意识到的；明显的
+Web	可触知的；明白的；摸得出的
+
+indistinct
+US: [ˌɪndɪˈstɪŋkt] 
+UK: [.ɪndɪ'stɪŋkt] 
+adj.	模糊不清的；不清楚的
+Web	模糊的；朦胧的；含混
+
+
+}
+
+23.06.14-2012
+{
+outset
+US: [ˈaʊtˌset] 
+UK: ['aʊt.set] 
+n.	开始
+Web	开端；开头；最初
+
+sprang
+spring
+
+spontaneously
+US: [spɔnˈtenɪəslɪ] 
+UK: [spɒn'teɪnɪəslɪ] 
+adv.	自发；自然；自动；自然地
+Web	自发地；自然产生地；本能地
+
+
+patronage
+US: [ˈpætrənɪdʒ] 
+UK: ['pætrənɪdʒ] 
+n.	赞助；惠顾；光顾；资助
+Web	赞助人；恩惠；保护
+
+
+polemic
+US: [pəˈlemɪk] 
+UK: [pə'lemɪk] 
+n.	论战；驳斥；(神学上的)论证法；争论者
+adj.	论战的；喜欢争论的
+Web	辩论术；脚注掩饰的诡辩；论战式
+
+exhortation
+US: [ˌɛgzɔrˈteɪʃənz] 
+UK: [ˌegzɔ:ˈteɪʃənz] 
+n.	劝告；规劝；告诫；赞扬
+Web	劝勉的部份；励志；师长赠言
+
+revelation
+US: [ˌrevəˈleɪʃ(ə)n] 
+UK: [.revə'leɪʃ(ə)n] 
+n.	【宗】天启；圣经；(基督教《圣经》中的)《启示录》；揭发
+adj.	暴露的；显示的；天启的；意外发现的
+Web	泄露；刺客信条-启示录；揭露真相
+
+bombard
+US: [bɑmˈbɑrd] 
+UK: [bɒmˈbɑː(r)d] 
+v.	轰炸；轰击；大量提问；大肆抨击
+n.	射石炮
+Web	炮击；炮轰；攻击
+
+headquarter
+US: ['hɛd'kwɔrtər] 
+UK: ['hed'kwɔ:tə] 
+v.	设总部；在…设总部；把…放在总部中
+Web	总公司；司令部；公司总部
+
+underscore
+US: [ˌʌndərˈskɔr] 
+UK: [ˌʌndə(r)ˈskɔː(r)] 
+n.	下划线
+v.	强调；在…下面划线
+Web	底线；在……下面划线；在…之下划线
+
+nascent
+US: [ˈnæs(ə)nt] 
+UK: [ˈnæs(ə)nt] 
+adj.	新生的；萌芽的；未成熟的
+Web	初生的；初期的；发展初期的
+
+supplement
+US: [ˈsʌpləmənt] 
+UK: [ˈsʌplɪmənt] 
+n.	增补；补足；(书报的)补遗；增刊
+v.	增补
+Web	补充；辅以；补充培养基
+
+exposé
+US: [ˌekspoʊˈzeɪ] 
+UK: [ɪkˈspəʊzeɪ] 
+n.	〈外〉(事实的)陈述；(丑事,真相等的)暴露
+
+ample
+US: [ˈæmp(ə)l] 
+UK: ['æmp(ə)l] 
+adj.	足够的；丰裕的；丰满的；硕大的
+Web	充足的；宽敞的；丰富的
+
+liberate
+US: [ˈlɪbəˌreɪt] 
+UK: [ˈlɪbəreɪt] 
+v.	解放；使自由；使摆脱约束（或限制）
+Web	释放；使获自由；解放生产力
+
+take out of context
+Web	断章取义
+
+fabricate
+US: [ˈfæbrɪˌkeɪt] 
+UK: [ˈfæbrɪkeɪt] 
+v.	〈美〉制作；伪造；构成；组成
+Web	虚妄；捏造的；制造
+
+facilitate
+US: [fəˈsɪləˌteɪt] 
+UK: [fəˈsɪləteɪt] 
+v.	促进；促使；使便利
+Web	使容易；帮助；推动
+
+exhilaration
+US:  
+UK: [ɪɡˌzɪlə'reɪʃ(ə)n] 
+n.	高兴
+Web	愉快；兴奋；令人高兴
+
+buttress
+US: [ˈbʌtrəs] 
+UK: ['bʌtrəs] 
+n.	【建】(前)扶垛；【矿】支壁；支持物；扶壁状物
+v.	支持；用扶壁支衬[支撑,加固]
+Web	板根；板根的
+
+militarize
+US: ['mɪlɪtəraɪz] 
+UK: ['mɪlɪtəraɪz] 
+v.	向（某地）派遣武装力量；使具有军事性质；武装化
+Web	军事化；使军事化；军品化的商品
+
+lingo
+US: [ˈlɪŋɡoʊ] 
+UK: [ˈlɪŋɡəʊ] 
+n.	行话；语言；（尤指）外国语；术语
+Web	隐语；方言；软件
+
+grandiose
+US: [ˈɡrændiˌoʊs] 
+UK: [ˈɡrændiəʊs] 
+adj.	华而不实的；浮夸的；不切实际的
+Web	宏伟的；夸大的；宏大的
+
+resolve
+US: [rɪˈzɑlv] 
+UK: [rɪˈzɒlv] 
+v.	决心；决定；解决（问题或困难）；（经正式投票）作出决定
+n.	决心；坚定的信念
+Web	解析；分解；决议
+
+chamber
+US: [ˈtʃeɪmbər] 
+UK: [ˈtʃeɪmbə(r)] 
+n.	室；卧室；寝室；会议厅
+v.	(枪上)装(子弹)；禁闭；使有房间
+adj.	秘密的；【乐】在小厅内表演的
+Web	会议室；议院；腔
+
+Dream of the Red Chamber
+Web	红楼梦；新红楼梦；金玉良缘红楼梦
+
+
+}
+
+23.06.15-0914
+{
+annotation
+US:  
+UK:  
+n.	注释；注解；附注；评注
+Web	注释语法；旁注；图形注解集合
+
+metrics
+US: ['metrɪks] 
+UK: ['metrɪks] 
+n.	韵律学
+Web	度量；指标；量度
+
+
+}

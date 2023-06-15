@@ -22,7 +22,7 @@ function addNew(){
 let vocaObjs = VocaRaw_1.default.getObjsByConfig(); //第0個昰英語 第1個是日語
 function backup() {
     for (let i = 0; i < vocaObjs.length; i++) {
-        vocaObjs[i].backupTable();
+        vocaObjs[i].backupTable().then((result) => { console.log(result); });
     }
 }
 function addNew() {

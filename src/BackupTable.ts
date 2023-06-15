@@ -22,7 +22,7 @@ let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是
 
 function backup(){
 	for (let i = 0; i < vocaObjs.length; i++) {
-		vocaObjs[i].backupTable()
+		vocaObjs[i].backupTable().then((result)=>{console.log(result)})
 	}
 }
 

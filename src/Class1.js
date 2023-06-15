@@ -57,14 +57,14 @@ setTimeout(()=>{
     console.log('114');console.log(glo)}, 1000)
 */
 //then方法只有异步调用对象promise才可以用，所以要加async
-function fn() {
+function fna() {
     return __awaiter(this, void 0, void 0, function* () {
         // throw '发生错误'//等价于reject('发生错误‘)
         return 123; //实际等价于resolve(123)
     });
 }
 //then方法只有异步调用对象promise才可以用，所以要加async
-fn().then((data) => {
+fna().then((data) => {
     console.log(data);
 }); /*.catch((err)=>{//catch的回调函数接收的fn函数中的throw抛出的异常信息
     console.log(err)

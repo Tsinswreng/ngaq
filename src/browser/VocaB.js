@@ -169,9 +169,17 @@ class Priority {
             this.procedure[j].date_wordEvent = cur_date__wordEvent;
             if (cur_date__wordEvent.wordEvent === WordEvent.ADD) {
                 addEvent_cnt++;
-                this.procedure[j].befPrio = this._prio0;
-                this._prio0 *= this.defaultAddWeight;
-                this.procedure[j].aftPrio = this._prio0;
+                //[23.06.15-2114,]{第三次複加之後、重複且連續ᵗ加ˡ事件ᵘ、減其增ᵗ權。昔斯司詞程序未造成旹、不能以ᶦ複習單詞、故會有詞芝連續複添ᵗ次ˋ甚多者、權亦益增。程序未成 不能複習之故也。今程序既成、若及時ᵈ複習、則每詞ᵗ權ˋ皆不應極端。}
+                if (addEvent_cnt >= 3 && this.word.date_allEventObjs[j - 1].wordEvent === WordEvent.ADD) {
+                    this.procedure[j].befPrio = this._prio0;
+                    this._prio0 *= 2; //this.defaultAddWeight;
+                    this.procedure[j].aftPrio = this._prio0;
+                }
+                else {
+                    this.procedure[j].befPrio = this._prio0;
+                    this._prio0 *= this.defaultAddWeight;
+                    this.procedure[j].aftPrio = this._prio0;
+                }
             }
         }
         if (addEvent_cnt === this.word.date_allEventObjs.length) {
@@ -221,7 +229,9 @@ class Priority {
                 //let debuff = Math.floor((this.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,23.06.11-0002]
                 let debuff = this.getDebuff(durationOfLastRmbEventToNow);
                 if (dateWeight >= 2) {
-                    this._prio0 = this._prio0 / (dateWeight / 2) / debuff; //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
+                    this._prio0 = this._prio0 / (dateWeight / 4) / debuff; //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
+                    //[23.06.14-1632,]改成 除以四
+                    //<待叶>{若一詞 連續亻嘰次皆能被憶、且時間ᵗ誇度ˋ達ᵣ亻嘰久、則濾ᶦ不示。}
                 }
                 else {
                     this._prio0 = (this._prio0 / 1.1) / debuff;
@@ -258,11 +268,12 @@ class Priority {
     /*
     * 23.06.03-2244 由時間跨度(秒)算時間ᵗ權重
     * */
-    static getDateWeight(dateDif, denominator = 60) {
+    static getDateWeight(dateDif /* , denominator:number=60 */) {
         //let out = Math.log2((dateDif/denominator)+1)+1
         //let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
         //let out = Math.floor( Math.log2((dateDif/denominator)+1)+1 ) //[23.06.09-0928,]
-        let out = Math.log2((dateDif / denominator)); //[23.06.09-1240,]
+        //let out = Math.log2((dateDif/denominator)) //[23.06.09-1240,23.06.15-1250] [23.06.15-1254,]{原算法ˋ隔24小時 與 隔72小時 結果ᵗ差ᵗ不大。故改用 開平方 㕥代 取對數}
+        let out = (1 / 25) * Math.pow(dateDif, 1 / 2);
         if (out <= 1) {
             out = 1.01;
         }
@@ -278,8 +289,15 @@ class Priority {
         if (date_allEventObjs[date_allEventObjs.length - 1].wordEvent === WordEvent.REMEMBER) { //要求末ᵗ事件潙 憶 旹纔有debuff
             //let numerator = this.word.date_allEventObjs.length*this.numerator*2
             let numerator = this.numerator; //[23.06.13-1056,]
-            let debuff = Math.floor((numerator / durationOfLastRmbEventToNow) + 1);
-            return debuff;
+            //let debuff = Math.floor((numerator/durationOfLastRmbEventToNow) + 1)
+            let debuff = (numerator / durationOfLastRmbEventToNow) + 1; //[23.06.15-1805,]
+            /* console.log('debuff');//t
+            console.log(debuff);
+            if(isNaN(debuff) || !isFinite(debuff)){
+                
+                throw new Error('debuff is not a number')
+            } */
+            return debuff >= 1 ? debuff : 1;
         }
         else {
             return 1;
@@ -288,6 +306,7 @@ class Priority {
 }
 Priority._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
 Priority._defaultAddWeight = 100; //23.06.05-1158默認值改爲100 //[23.06.13-1047,]{改爲靜態}
+Priority.deemAsRememberedPrio0 = Priority._defaultAddWeight; // [23.06.15-2203,]{當初權重低於斯量旹則視作既誌。}
 class SingleWordB {
     get priorityObj() {
         return this._priorityObj;
@@ -599,12 +618,32 @@ class VocaB {
     }
     /**
      * [23.06.11-1047,]
-     * 濾除ᵣ詞芝只有一個事件者
+     * v23.06.15-2216
+     * 濾除ᵣ詞芝只有一個事件者 及 [被視爲已記得的]單詞
      */
     filtWordsToLearn(ws) {
+        ws = this.filtAlreadyRememberedWords(ws);
         let filtedWords = [];
         for (let i = 0; i < ws.length; i++) {
             if (ws[i].date_addEventObjs.length >= 2) {
+                filtedWords.push(ws[i]);
+            }
+        }
+        return filtedWords;
+    }
+    /**
+     * [23.06.15-2213]{
+     * 濾除[被視爲已記得的]單詞}
+     * @param ws
+     * @returns
+     */
+    filtAlreadyRememberedWords(ws) {
+        let filtedWords = [];
+        for (let i = 0; i < ws.length; i++) {
+            //ws[i].priorityObj.assignPrio0()
+            if (ws[i].priorityObj.prio0 < Priority.deemAsRememberedPrio0) {
+            }
+            else {
                 filtedWords.push(ws[i]);
             }
         }
@@ -623,9 +662,10 @@ class VocaB {
         /* if(!randomBonusArr){
 
         } */
+        this.assignPriority(); //[23.06.15-2237,]<可改進>{assignPriority()調了兩次、宜試避免重複算權重}
         this.wordsToLearn = this.filtWordsToLearn(wordsToLearn);
         //console.log(wordsToLearn)//t
-        this.assignPriority(randomBonusArr);
+        this.assignPriority(randomBonusArr); //
         this.wordsToLearn.sort((a, b) => {
             return b.priority_num - a.priority_num;
         });
@@ -903,21 +943,26 @@ class VocaB {
         return strArr[indexOfMax];
     }
     /**
-     *
+     * v23.06.15-2252
      * @param n 個數
      * @param bottom
      * @param top
      * @returns
      */
     static generateRandomNumbers(n, bottom, top) {
-        bottom *= 10000;
-        top *= 10000;
+        /* bottom*=10000
+        top*=10000 [,23.06.15-2238]*/
         const result = [];
-        for (let i = 0; i < n; i++) {
+        /* for (let i = 0; i < n; i++) {
             let randomNumber = Math.floor(Math.random() * (top - bottom + 1) + bottom);
-            randomNumber /= 10000;
+            //randomNumber/=10000
             result.push(randomNumber);
+        } */
+        for (let i = 0; i < n; i++) {
+            const randomValue = Math.random() * (top - bottom) + bottom;
+            result.push(randomValue);
         }
+        //console.log(result);//t
         return result;
     }
     /*
