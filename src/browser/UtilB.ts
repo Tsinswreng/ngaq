@@ -3,6 +3,7 @@
  */
 class UtilB{
 	
+	private constructor(){}
 	public static isRemembered(
 		word:SingleWordB,
 		opt={
@@ -13,4 +14,16 @@ class UtilB{
 	):boolean{
 		throw new Error("Method not implemented.");
 	}
+
+	/**
+	 * [23.06.16-1656,]
+	 * @param bef 
+	 * @param post 
+	 * @returns 
+	 */
+	public static numDiff(bef:number, post:number){
+		return (post - bef) / bef
+	}
+
+	
 }

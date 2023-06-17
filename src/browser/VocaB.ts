@@ -163,11 +163,11 @@ class Priority{
 		this._bonus = value;
 	}
 	
-	get defaultAddWeight(): number {
+	public get defaultAddWeight(): number {
 		return Priority._defaultAddWeight;
 	}
 	
-	set defaultAddWeight(value: number) {
+	public set defaultAddWeight(value: number) {
 		Priority._defaultAddWeight = value;
 	}
 	
@@ -237,7 +237,8 @@ class Priority{
 	
 	get prio0(): number|undefined {
 		if(!this._prio0){
-			this.assignPrio0()
+			//this.assignPrio0()
+			this.calcPrio0() //[23.06.16-2054,]
 		}
 		return this._prio0;
 	}
@@ -259,61 +260,78 @@ class Priority{
 	constructor() {
 	
 	}
-	
-	public assignPrio0(){
-		if(this.word === undefined){
-			throw new Error('this.word === undefined')
-		}
-		
+
+
+	/**
+	 * [23.06.16-2048,]
+	 * @param priorityObj 
+	 * @param date_allEventObjs 
+	 * @returns 
+	 */
+	public calcPrio0(priorityObj:Priority=this, date_allEventObjs?:Date_wordEvent[]){
+		/* if(priorityObj.word === undefined){
+			throw new Error('priorityObj.word === undefined')
+		} */
+		//if(!priorityObj){priorityObj = this}
+		if(!date_allEventObjs){date_allEventObjs = this.word?.date_allEventObjs}
+		if(!date_allEventObjs){throw new Error('!date_allEventObjs')}
 		const timeNow:number = parseInt(moment().format('YYYYMMDDHHmmss'))
-		this.dateThen = timeNow;
-		this._prio0 = 1;
+		priorityObj.dateThen = timeNow;
+		priorityObj._prio0 = 1;
 		
 		let addEvent_cnt = 0; //計數
-		for(let j = 0; j < this.word.date_allEventObjs.length; j++){ //先 專門處理添加事件
-			this.procedure[j] = new Procedure(); //已初始化焉、後ʸ勿複初始化
-			let cur_date__wordEvent = this.word.date_allEventObjs[j]
-			this.procedure[j].date_wordEvent = cur_date__wordEvent
+		let tempProcedure:Procedure
+		for(let j = 0; j < date_allEventObjs.length; j++){ //先 專門處理添加事件
+			tempProcedure = new Procedure();
+			//priorityObj.procedure[j] = new Procedure(); //已初始化焉、後ʸ勿複初始化
+			
+			let cur_date__wordEvent = date_allEventObjs[j]
+			//priorityObj.procedure[j].date_wordEvent = cur_date__wordEvent
+			tempProcedure.date_wordEvent = cur_date__wordEvent
 			if(cur_date__wordEvent.wordEvent === WordEvent.ADD){
 				addEvent_cnt++;
 				//[23.06.15-2114,]{第三次複加之後、重複且連續ᵗ加ˡ事件ᵘ、減其增ᵗ權。昔斯司詞程序未造成旹、不能以ᶦ複習單詞、故會有詞芝連續複添ᵗ次ˋ甚多者、權亦益增。程序未成 不能複習之故也。今程序既成、若及時ᵈ複習、則每詞ᵗ權ˋ皆不應極端。}
-				if(addEvent_cnt >= 3 && this.word.date_allEventObjs[j-1].wordEvent === WordEvent.ADD){
-					this.procedure[j].befPrio = this._prio0;
-					this._prio0 *= 2 //this.defaultAddWeight;
-					this.procedure[j].aftPrio = this._prio0;
+				tempProcedure.befPrio = priorityObj._prio0;
+				if(addEvent_cnt >= 3 && date_allEventObjs[j-1].wordEvent === WordEvent.ADD){
+					//priorityObj.procedure[j].befPrio = priorityObj._prio0;
+					priorityObj._prio0 *= 2 //priorityObj.defaultAddWeight;
+					//priorityObj.procedure[j].aftPrio = priorityObj._prio0;
 				}else{
-					this.procedure[j].befPrio = this._prio0;
-					this._prio0 *= this.defaultAddWeight;
-					this.procedure[j].aftPrio = this._prio0;
+					//priorityObj.procedure[j].befPrio = priorityObj._prio0;
+					priorityObj._prio0 *= priorityObj.defaultAddWeight;
+					//priorityObj.procedure[j].aftPrio = priorityObj._prio0;
 				}
+				tempProcedure.aftPrio = priorityObj._prio0;
+				priorityObj.procedure.push(tempProcedure)
 				
 			}
 			
 		}
-		
 
-		if(addEvent_cnt === this.word.date_allEventObjs.length){
+		if(addEvent_cnt === date_allEventObjs.length){
 			//若一個單詞ᵗ添ᵗ次ˋ不止一次、且從未複習過、則益增其權重、以達的芝優先背新詞
 			if(addEvent_cnt >= 2){
-				//this._prio0 *= Math.pow(this.defaultAddWeight, addEvent_cnt)
-				//this._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
-				//this._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
-				this._prio0 += Math.pow(this._prio0, addEvent_cnt) //[23.06.07-2320,]
-				//this.priority_num = this.prio0!
+				//priorityObj._prio0 *= Math.pow(priorityObj.defaultAddWeight, addEvent_cnt)
+				//priorityObj._prio0 *= Math.pow(10, addEvent_cnt) //改於23.06.05-1203
+				//priorityObj._prio0 *= addEvent_cnt*addEvent_cnt / [23.06.07-2319,]
+				priorityObj._prio0 += Math.pow(priorityObj._prio0, addEvent_cnt) //[23.06.07-2320,]
+				//priorityObj.priority_num = priorityObj.prio0!
 			}
 			return;//直接return 不處理憶與忘ˉ事件 節約ᵣ時
 		}
 		
-		for(let j = 0; j< this.word.date_allEventObjs.length; j++){// 再處理 憶與忘 ˉ事件
-			let cur_date__wordEvent = this.word.date_allEventObjs[j]
+		for(let j = 0; j< date_allEventObjs.length; j++){// 再處理 憶與忘 ˉ事件
+			tempProcedure = new Procedure()
+			let cur_date__wordEvent = date_allEventObjs[j]
+			tempProcedure.date_wordEvent = cur_date__wordEvent
 			let eventDurationOfLastToThis = 1.1 //若初值取一則取對數後得零
 			let dateWeight = 1.1 //改于 23.06.07-1005
 			if(
-				this.word.date_allEventObjs[j] && this.word.date_allEventObjs[j-1] &&
-				this.word.date_allEventObjs[j-1].wordEvent !== WordEvent.ADD//此處當不慮添ˉ事件 否則 例如有一詞、其複添ᵗ次ˋ潙2、然添ᵗ期ᵗ去今皆稍遠、復習旹初見ᶦ旹若能誌則其頻會大降、日後則見者稀也。非所冀也。故算dateDif旹當不慮添ᵗ期
+				date_allEventObjs[j] && date_allEventObjs[j-1] &&
+				date_allEventObjs[j-1].wordEvent !== WordEvent.ADD//此處當不慮添ˉ事件 否則 例如有一詞、其複添ᵗ次ˋ潙2、然添ᵗ期ᵗ去今皆稍遠、復習旹初見ᶦ旹若能誌則其頻會大降、日後則見者稀也。非所冀也。故算dateDif旹當不慮添ᵗ期
 			)//第一個事件必昰加、故第一次循環旹恆進不去下ᵗ分支
 			{
-				eventDurationOfLastToThis = VocaB.兩日期所差秒數YYYYMMDDHHmmss(this.word.date_allEventObjs[j].date, this.word.date_allEventObjs[j-1].date)
+				eventDurationOfLastToThis = VocaB.兩日期所差秒數YYYYMMDDHHmmss(date_allEventObjs[j].date, date_allEventObjs[j-1].date)
 				if(eventDurationOfLastToThis < 0){
 					throw new Error('後ᵗ時間日期ˋ減ᵣ前ᐪ不應得負數')
 				}
@@ -326,55 +344,73 @@ class Priority{
 			}
 			if(cur_date__wordEvent.wordEvent === WordEvent.ADD){
 				//啥也不做 直接到下輪循環 同時也防止procedure[j]變抹掉重設
-				//console.log(this.procedure[j])//t
+				//console.log(priorityObj.procedure[j])//t
 			}else if(cur_date__wordEvent.wordEvent === WordEvent.REMEMBER){
 				
-				/*if(this.procedure[j-1]){
-					this.procedure[j].befPrio = this.procedure[j-1].aftPrio
+				/*if(priorityObj.procedure[j-1]){
+					priorityObj.procedure[j].befPrio = priorityObj.procedure[j-1].aftPrio
 				}else{
-					this.procedure[j].befPrio = this._prio0
+					priorityObj.procedure[j].befPrio = priorityObj._prio0
 				}*/
-				this.procedure[j].befPrio = this._prio0
+				//priorityObj.procedure[j].befPrio = priorityObj._prio0
+				tempProcedure.befPrio = priorityObj._prio0
 				let durationOfLastRmbEventToNow = VocaB.兩日期所差秒數YYYYMMDDHHmmss(timeNow, cur_date__wordEvent.date)
 				//降低在secs秒內憶ᵗ詞ˋ再現ᵗ率 初設secs潙 3600*8 即六(應潙八)小時 然則憶ᵗ詞ˋ六小時內ʸ複現ᵗ率ˋ降、且越近則降ˋ越多
-				//let debuff = (this.numerator/durationOfLastRmbEventToNow) + 1 //[,23.06.09-0941]
+				//let debuff = (priorityObj.numerator/durationOfLastRmbEventToNow) + 1 //[,23.06.09-0941]
 				
-				//let debuff = Math.floor((this.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,23.06.11-0002]
-				let debuff = this.getDebuff(durationOfLastRmbEventToNow)
+				//let debuff = Math.floor((priorityObj.numerator/durationOfLastRmbEventToNow) + 1) //[23.06.09-0941,23.06.11-0002]
+				let debuff = priorityObj.getDebuff(durationOfLastRmbEventToNow)
 				if(dateWeight >=2){
-					this._prio0 = this._prio0/(dateWeight/4)/debuff //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
+					priorityObj._prio0 = priorityObj._prio0/(dateWeight/4)/debuff //待改:除以二ˋ既未錄入procedure 亦 寫死的ᵉ
 					//[23.06.14-1632,]改成 除以四
 					//<待叶>{若一詞 連續亻嘰次皆能被憶、且時間ᵗ誇度ˋ達ᵣ亻嘰久、則濾ᶦ不示。}
 				}else{
-					this._prio0 = (this._prio0/1.1)/debuff
+					priorityObj._prio0 = (priorityObj._prio0/1.1)/debuff
 				}
 				
-				this.procedure[j].aftPrio = this._prio0
-				this.procedure[j].dateWeight = dateWeight; //此dateWeight昰未處理ᐪ 未除以2 之事
-				this.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis
-				this.procedure[j].dateDebuff = debuff
-				this.procedure[j].durationOfLastRmbEventToNow = durationOfLastRmbEventToNow
+				/* priorityObj.procedure[j].aftPrio = priorityObj._prio0
+				priorityObj.procedure[j].dateWeight = dateWeight; //此dateWeight昰未處理ᐪ 未除以2 之事
+				priorityObj.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis
+				priorityObj.procedure[j].dateDebuff = debuff
+				priorityObj.procedure[j].durationOfLastRmbEventToNow = durationOfLastRmbEventToNow
+ */
+				tempProcedure.aftPrio = priorityObj._prio0
+				tempProcedure.dateWeight = dateWeight; //此dateWeight昰未處理ᐪ 未除以2 之事
+				tempProcedure.eventDurationOfLastToThis = eventDurationOfLastToThis
+				tempProcedure.dateDebuff = debuff
+				tempProcedure.durationOfLastRmbEventToNow = durationOfLastRmbEventToNow
+				priorityObj.procedure.push(tempProcedure)
 			}else if(cur_date__wordEvent.wordEvent === WordEvent.FORGET) {
-				this.procedure[j].befPrio = this._prio0
-				this._prio0 *= dateWeight
-				this.procedure[j].aftPrio = this._prio0
-				this.procedure[j].dateWeight = dateWeight;
-				this.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis
+				/* priorityObj.procedure[j].befPrio = priorityObj._prio0
+				priorityObj._prio0 *= dateWeight
+				priorityObj.procedure[j].aftPrio = priorityObj._prio0
+				priorityObj.procedure[j].dateWeight = dateWeight;
+				priorityObj.procedure[j].eventDurationOfLastToThis = eventDurationOfLastToThis */
+
+				tempProcedure.befPrio = priorityObj._prio0
+				priorityObj._prio0 *= dateWeight
+				tempProcedure.aftPrio = priorityObj._prio0
+				tempProcedure.dateWeight = dateWeight;
+				tempProcedure.eventDurationOfLastToThis = eventDurationOfLastToThis
 				//無 debuff之類
+				priorityObj.procedure.push(tempProcedure)
 			}
 		}
-		//this.priority_num = this.prio0!
+		//priorityObj.priority_num = priorityObj.prio0!
 		
-		/*for(let i = 0; i < this.procedure.length; i++){
-			if(this.procedure[i].date_wordEvent === undefined){
+		/*for(let i = 0; i < priorityObj.procedure.length; i++){
+			if(priorityObj.procedure[i].date_wordEvent === undefined){
 				console.log('i = '+i)
-				console.error(this._word)
-				console.error(this.procedure[i])
-				throw new Error('this.procedure[i].date_wordEvent === undefined')
+				console.error(priorityObj._word)
+				console.error(priorityObj.procedure[i])
+				throw new Error('priorityObj.procedure[i].date_wordEvent === undefined')
 			}
 		}*/
 		
 	}
+	
+	/*
+	*/
 	
 	public addBonus(bonus:number):void{
 		this.priority_num = this.prio0! + bonus;
@@ -839,7 +875,7 @@ class VocaB{
 	 * 濾除ᵣ詞芝只有一個事件者 及 [被視爲已記得的]單詞
 	 */
 	public filtWordsToLearn(ws:SingleWordB[]):SingleWordB[]{
-		
+		//<待改>{不宜只用權重㕥篩詞、憶ᵗ事件ᵗ量ᵘ亦宜有要求。}
 		ws = this.filtAlreadyRememberedWords(ws)
 		let filtedWords:SingleWordB[] = [];
 		for(let i = 0; i < ws.length; i++){
@@ -890,8 +926,10 @@ class VocaB{
 		this.assignPriority()//[23.06.15-2237,]<可改進>{assignPriority()調了兩次、宜試避免重複算權重}
 		this.wordsToLearn = this.filtWordsToLearn(wordsToLearn)
 		//console.log(wordsToLearn)//t
-		this.assignPriority(randomBonusArr) //
+		//this.assignPriority(randomBonusArr) //
+		if(randomBonusArr){this.addRandomArrAsBonus(randomBonusArr)}
 		
+		//this.addRandomBonus()
 		
 		this.wordsToLearn.sort((a, b)=>{
 			return b.priority_num! - a.priority_num! 
@@ -937,24 +975,30 @@ class VocaB{
 
 	public addRandomBonus(min:number, max:number):void{
 		let rand:number[] = VocaB.generateRandomNumbers(this.wordsToLearn.length, min, max);
-		for(let i = 0; i < this.wordsToLearn.length; i++){
+		/* for(let i = 0; i < this.wordsToLearn.length; i++){
 			this.wordsToLearn[i].priorityObj.addBonus(rand[i]);
+		} [,23.06.17-1910,]*/
+		this.addRandomArrAsBonus(rand)
+	}
+
+	/**
+	 * [23.06.17-1910,]
+	 * @param arr 
+	 */
+	public addRandomArrAsBonus(arr:number[]):void{
+		for(let i = 0; i < arr.length; i++){
+			this.wordsToLearn[i].priorityObj.addBonus(arr[i])
 		}
 	}
 
 
 	public rmbEvent(vocaBObj:VocaB){
-		//currentWord之功能未叶
+		
 		let dateNow:string = moment().format('YYYYMMDDHHmmss')//坑:ss大寫後似成毫秒 20230507162355
 		console.log(dateNow)
 		//console.log(currentWord)
 		vocaBObj.curSingleWord.rmbDates.push(dateNow)
 		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.REMEMBER})
-		//curSingleWord.reviewedTimes++; //無需手動++ 因用get方法取次數旹自動返回日期數組ᵗ長
-		//curSingleWord.rememberedTimes++;
-		//reviewed.allWords.push(curSingleWord)
-		//curRememberedWords.push(curSingleWord)
-		//curReviewedWords.push(curSingleWord)
 		vocaBObj.idsOfCurRemWords.push(vocaBObj.curSingleWord.id)
 		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
 		//showNext();
@@ -966,11 +1010,6 @@ class VocaB{
 		//console.log(currentWord)
 		vocaBObj.curSingleWord.fgtDates.push(dateNow)
 		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.FORGET})
-		//curSingleWord.reviewedTimes++;
-		//curSingleWord.forgottenTimes++;
-		//reviewed.allWords.push(curSingleWord)
-		//curForgottenWords.push(curSingleWord)
-		//curReviewedWords.push(curSingleWord)
 		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
 		vocaBObj.idsOfCurFgtWords.push(vocaBObj.curSingleWord.id)
 		//showNext();
@@ -994,6 +1033,14 @@ class VocaB{
 		vocaBObj.curSingleWord = vocaBObj.wordsToLearn[nextIndex];
 		
 	}
+
+	/* public getChangeOfPrio0(priorityObj:Priority, new_word_event:WordEvent):Procedure{
+		if(!priorityObj.prio0){
+			priorityObj.assignPrio0()
+		}
+
+		throw new Error()
+	} */
 
 	public assignWordsToLearnToCurForgottenWords(){
 		this.setWordsToLearn(this.getWordsByIds(this._idsOfCurFgtWords))
@@ -1148,7 +1195,8 @@ class VocaB{
 		
 		for(let i = 0; i < this.allWords.length; i++){
 			this.allWords[i].priorityObj.word = this.allWords[i]
-			this.allWords[i].priorityObj.assignPrio0();
+			//this.allWords[i].priorityObj.assignPrio0();
+			this.allWords[i].priorityObj.calcPrio0()
 		}
 		
 		let aver:number = 0;

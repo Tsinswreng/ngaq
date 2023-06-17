@@ -89,7 +89,7 @@ class OriginUi implements Ui{ //負責傳數據ˇ予vocaB 與 示
 		this.startToShow()
 
 	}
-
+	
 	public addRandomBonus(){
 		let maxS = $('#max_randomBonus').val()
 		//let maxN:number = parseFloat(maxS as string)

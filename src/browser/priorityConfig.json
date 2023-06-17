@@ -1,0 +1,9 @@
+{
+	"deemAsRemembered": {
+		"minPrio0": 101,
+		"consecutiveRmbTimes": 10
+	},
+	"addWeight": 99,
+	"max_randomBonus": 0,
+	"debuffNumerator": 28800
+}

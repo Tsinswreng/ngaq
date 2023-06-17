@@ -6630,3 +6630,205 @@ Web	度量；指标；量度
 
 
 }
+
+23.06.16-2216
+{
+sarcasm
+US: [ˈsɑrˌkæzəm] 
+UK: [ˈsɑː(r)kæz(ə)m] 
+n.	讽刺；嘲讽；挖苦
+Web	讥讽；反话；讽刺话
+
+puff
+US: [pʌf] 
+UK: [pʌf] 
+v.	膨胀；噗噗地喷气；喘气；喘着气走
+n.	一吹[喷]；噗的一吹[喷]；一阵；吹[喷]的声音
+adj.	气喘吁吁；上气不接下气
+Web	泡；疏松的；白米花
+
+damp
+US: [dæmp] 
+UK: [dæmp] 
+n.	潮湿；湿气；潮气；湿块
+adj.	潮湿的；微湿的；湿气重的
+v.	dampen
+Web	阻尼；有湿气的；脱氧腺苷酸
+
+quiver
+US: [ˈkwɪvə] 
+UK: [ˈkwɪvə(r)] 
+n.	颤动；冷战；箭筒；箭袋
+v.	颤动；打颤；颤抖；哆嗦
+
+assail
+US: [əˈseɪl] 
+UK: [ə'seɪl] 
+v.	袭击；(用言论)指责；毅然应付(难局,工作等)
+Web	攻击；猛击；或者
+
+spine
+US: [spaɪn] 
+UK: [spaɪn] 
+n.	脊柱；脊椎；书脊；（植物的）刺
+Web	脊骨；棘；中心
+
+chill
+US: [tʃɪl] 
+UK: [tʃɪl] 
+n.	寒冷；寒意；受寒；凉意
+v.	使很冷；使冰冷；（使）冷却；（被）冷藏
+adj.	寒冷的；冷飕飕的；阴冷的
+Web	使变冷；寒战；使寒冷
+
+goose
+US: [ɡus] 
+UK: [ɡuːs] 
+n.	鹅肉；【鸟】鹅；【动】母鹅；呆头鹅
+v.	拧或掐屁股；忽然加满油；催促
+Web	雌鹅；小鹅；一只鹅
+
+bump
+US: [bʌmp] 
+UK: [bʌmp] 
+v.	碰；颠簸；作鹭鸶叫；撞
+n.	撞击；鹭鸶的叫声；(车的)颠簸；【航】突变的气流
+adv.	猛烈地；扑通一声
+Web	肿块；碰伤；凸块
+
+pitch
+US: [pɪtʃ] 
+UK: [pɪtʃ] 
+n.	沥青；球场；柏油；（体育比赛的）场地
+v.	投；推销；抛；颠簸
+Web	音高；间距；节距
+
+pitched
+US: [pɪtʃt] 
+UK: [pɪtʃt] 
+adj.	倾斜的
+v.	“pitch”的过去分词和过去式
+Web	高音的；定位于；散饶
+
+flippant
+US: [ˈflɪpənt] 
+UK: ['flɪpənt] 
+adj.	轻率的
+Web	无礼的；油头滑脑；轻浮的
+
+ticklish
+US: [ˈtɪk(ə)lɪʃ] 
+UK: ['tɪk(ə)lɪʃ] 
+adj.	怕痒的；易痒的；难对付的；难处理的
+Web	易怒的；棘手的；不稳定的
+
+eerie
+US: [ˈɪri] 
+UK: [ˈɪəri] 
+adj.	怪异的；神秘的；恐怖的
+Web	怪诞的；引起恐惧的；可怕的
+
+threshold
+US: [ˈθreʃˌhoʊld] 
+UK: [ˈθreʃˌhəʊld] 
+n.	阈；门槛；起点；开端
+Web	阈值；阀值；临界值
+
+breach
+US: [britʃ] 
+UK: [briːtʃ] 
+v.	违反；违背；在…上打开缺口
+n.	突破口；破坏；缺口；（对法规等的）违背
+Web	破裂；裂口；违约
+
+ramp
+US: [ræmp] 
+UK: [ræmp] 
+n.	匝道；斜坡；坡道；（装车或上下飞机的）活动梯
+v.	诈骗；【纹章】(狮子等)用后脚直立；作恫吓姿势；猛扑
+Web	跳板；渐变；斜面
+
+ramp up
+US:  
+UK:  
+v.	上升；增加；提高
+Web	斜升；加大；自举
+
+meteorological
+US: [ˌmitɪərə'lɒdʒɪkl] 
+UK: [ˌmi:tɪərə'lɒdʒɪkl] 
+adj.	气象的
+Web	气象学的；气象预报；气象文件
+
+calamitous
+US: [kəˈlæmɪtəs] 
+UK: [kə'læmɪtəs] 
+adj.	（对人命、财产等）引起灾难的
+Web	多灾难的；多灾多难的；不幸的
+
+nudge
+US: [nʌdʒ] 
+UK: [nʌdʒ] 
+n.	推动；(温和的)劝说；讨厌的家伙；【网】(聊天工具的)窗口抖动功能
+v.	用身体的一部分(尤指肘部)轻推；(朝某一方向)逐步推进；劝说
+Web	用肘轻推；微移；助推
+
+mercury
+US: [ˈmɜrkjəri] 
+UK: [ˈmɜː(r)kjʊri] 
+n.	汞；水银
+Web	水星；墨丘利；水星网络
+
+mercury
+US: [ˈmɜrkjəri] 
+UK: [ˈmɜː(r)kjʊri] 
+n.	汞；水银
+Web	水星；墨丘利；水星网络
+
+stark
+US: [stɑrk] 
+UK: [stɑː(r)k] 
+adj.	了无修饰的；荒凉的；粗陋的；严酷的
+adv.	一丝不挂；赤裸
+n.	斯塔克
+Web	史塔克；僵硬的；完全的
+
+dampen
+US: [ˈdæmpən] 
+UK: ['dæmpən] 
+v.	抑制；减少；减轻；使潮湿
+Web	受潮；心情沉重；使衰减
+
+amplitude
+US: [ˈæmplɪˌtud] 
+UK: [ˈæmplɪˌtjuːd] 
+n.	（声波、无线电波等的）振幅
+Web	幅度；波幅；幅值
+
+magnitude
+US: [ˈmæɡnəˌtud] 
+UK: [ˈmæɡnɪtjuːd] 
+n.	震级；巨大；重大；重要性
+Web	大小；数量；星等
+
+arctic
+US: [ˈɑrktɪk] 
+UK: [ˈɑː(r)ktɪk] 
+adj.	北极的；北极地区的；极冷的；严寒的
+n.	北极；北极地区
+Web	北极圈；北极区的；极地版限量车型
+
+anomaly
+US: [əˈnɑməli] 
+UK: [əˈnɒməli] 
+n.	异常事物；反常现象
+Web	不规则；异常现象；异常的人或物
+
+hemisphere
+US: [ˈhemɪˌsfɪr] 
+UK: [ˈhemɪˌsfɪə(r)] 
+n.	（地球的）半球；（尤指）北半球；（大脑的）半球；（球体的）半球
+Web	半球地图；大脑半球；半球体
+
+
+}
