@@ -9,6 +9,12 @@
 
 const lodash = require('lodash')
 
+//[23.06.20-1932,]
+class Filter{
+	//用map數組
+	// 各事件ᵗ數ᵗ上下界, 權重ᵗ上下界 ...
+}
+
 class DeemAsRemembered{
 	//public minPrio0:number = new PriorityConfig().addWeight; 
 	public minPrio0:number = PriorityConfig.defaultAddWeight

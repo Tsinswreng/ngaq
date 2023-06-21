@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-<!--  <div>
+ <div>
 		<a href="https://vitejs.dev" target="_blank">
 			<img src="/vite.svg" class="logo" alt="Vite logo" />
 		</a>
@@ -19,7 +19,7 @@ export default {
 			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
 		</a>
 	</div>
-	<HelloWorld msg="Vite + Vue" />-->
+	<HelloWorld msg="Vite + Vue" />
 	<h3>模板語法</h3>
 	<p>{{ msg }}</p>
 	<a href="./src/browser/Voca.html" class="">go</a>

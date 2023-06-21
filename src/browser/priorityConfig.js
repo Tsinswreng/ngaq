@@ -6,6 +6,9 @@
 
 */
 const lodash = require('lodash');
+//[23.06.20-1932,]
+class Filter {
+}
 class DeemAsRemembered {
     constructor() {
         //public minPrio0:number = new PriorityConfig().addWeight; 
