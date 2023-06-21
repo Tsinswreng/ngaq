@@ -843,7 +843,7 @@ class VocaB{
 	 */
 	public filtWordsToLearn(ws:SingleWordB[]):SingleWordB[]{
 		//<待改>{不宜只用權重㕥篩詞、憶ᵗ事件ᵗ量ᵘ亦宜有要求。}
-		ws = this.filtAlreadyRememberedWords(ws)
+		//ws = this.filtAlreadyRememberedWords(ws)[,23.06.21-2017]
 		let filtedWords:SingleWordB[] = [];
 		for(let i = 0; i < ws.length; i++){
 			if(ws[i].date_addEventObjs.length >= 2){
@@ -975,7 +975,7 @@ class VocaB{
 		console.log(vocaBObj.curSingleWord.priorityObj.procedure)
 		console.log(vocaBObj.curSingleWord.priorityObj.prio0)
 		//alert(vocaBObj.curSingleWord.priorityObj)//t
-		//vocaBObj.curSingleWord.rmbDates.push(dateNow)
+		vocaBObj.curSingleWord.rmbDates.push(dateNow)
 		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.REMEMBER})
 		vocaBObj.idsOfCurRemWords.push(vocaBObj.curSingleWord.id)
 		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
@@ -997,7 +997,7 @@ class VocaB{
 		vocaBObj.curSingleWord.priorityObj.calcPrio0(vocaBObj.curSingleWord.priorityObj, [temp_date__event])
 		console.log(vocaBObj.curSingleWord.priorityObj.procedure)
 		console.log(vocaBObj.curSingleWord.priorityObj.prio0)
-		//vocaBObj.curSingleWord.fgtDates.push(dateNow)
+		vocaBObj.curSingleWord.fgtDates.push(dateNow)
 		vocaBObj.curSingleWord.date_allEventObjs.push({date:parseInt(dateNow), wordEvent:WordEvent.FORGET})
 		vocaBObj.idsOfCurFgtWords.push(vocaBObj.curSingleWord.id)
 		vocaBObj.idsOfCurRvwWords.push(vocaBObj.curSingleWord.id)
