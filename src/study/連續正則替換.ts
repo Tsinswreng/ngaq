@@ -1,4 +1,4 @@
-class ContinuousRegExp{
+/* class ContinuousRegExp{
 	public static replace(srcStr:string, left:string[], right:string[]):string{
 		if(left.length !== right.length){
 			throw new Error('left.length !== right.length');
@@ -19,4 +19,4 @@ function t20230618094140(){
 
 }
 
-t20230618094140()
+t20230618094140() */

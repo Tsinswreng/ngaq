@@ -1,16 +1,18 @@
 <!-- setup lang="ts"-->
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
-export default {
+import starter from './views/mono/starter.vue';
+/* export default {
 	data(){
 		return{
 			msg: "114514"
 		}
 	}
-}
+} */
 </script>
 
 <template>
+	<starter/>
  <div>
 		<a href="https://vitejs.dev" target="_blank">
 			<img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -21,7 +23,7 @@ export default {
 	</div>
 	<HelloWorld msg="Vite + Vue" />
 	<h3>模板語法</h3>
-	<p>{{ msg }}</p>
+	<!-- <p>{{ msg }}</p> -->
 	<a href="./src/browser/Voca.html" class="">go</a>
 </template>
 

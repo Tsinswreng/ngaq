@@ -17,9 +17,10 @@ const jap = new VocaRaw()
 jap.dbName = 'voca'
 jap.tableName = 'jap'*/
 
-let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
+//let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
 export default class VocaServer{
+	static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	static app = express();
 
 	public static main(){
@@ -38,8 +39,8 @@ export default class VocaServer{
 		
 		//eng.addSingleWordsToDb()
 		VocaServer.app.get('/eng', (req:any, res:any)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
-			const db =  vocaObjs[0].getDbConnection()
-			db.query(`SELECT * FROM ${vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+			const db = VocaServer.vocaObjs[0].getDbConnection()
+			db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				//console.log('results:'+results)//RowDataPacket
 				res.setHeader('content-type','text/html;charset=utf-8')
 				res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
@@ -51,8 +52,8 @@ export default class VocaServer{
 		VocaServer.app.get('/jap', (req:any, res:any)=>{
 			let path = req.path
 			console.log('path:'+path)//t
-			const db = vocaObjs[1].getDbConnection()
-			db.query(`SELECT * FROM ${vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+			const db = VocaServer.vocaObjs[1].getDbConnection()
+			db.query(`SELECT * FROM ${VocaServer.vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				
 				//console.log('results:'+results)//RowDataPacket
 				res.setHeader('content-type','text/html;charset=utf-8')
@@ -101,3 +102,4 @@ export default class VocaServer{
 	
 }
 VocaServer.main()
+

@@ -46,7 +46,7 @@
 		//"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"noEmit": false, //不生成編譯後ᵗ文件
+		"noEmit": true, //不生成編譯後ᵗ文件
 		"noEmitOnError": false, //有錯旹不生成編譯ᵗ文件
 		"jsx": "preserve",
 		

@@ -163,20 +163,45 @@ class Priority {
      * @param date_allEventObjs
      * @returns
      */
+    //[23.06.22-0930,]<待叶>{判斷原procedure中昰否含ᵣ傳入ᵗdate、㕥防複計。}
     calcPrio0(priorityObj = this, date_allEventObjs) {
-        var _a, _b;
+        var _a;
         //判空
-        if (!date_allEventObjs) {
-            date_allEventObjs = (_a = this.word) === null || _a === void 0 ? void 0 : _a.date_allEventObjs;
+        if (!priorityObj.word) {
+            throw new Error('!priorityObj.word');
         }
         if (!date_allEventObjs) {
-            throw new Error('!date_allEventObjs');
+            date_allEventObjs = priorityObj.word.date_allEventObjs;
         }
+        //if(!date_allEventObjs){throw new Error('!date_allEventObjs')}
+        /*
+                //<除重>
+                //[23.06.22-1127,]<可優化>{可試ˣ避ᵣˌ重複ᵈ建ᵣset}
+                //把已有ᵗ日期 添進集合裏
+                let tempSet:Set<number> = new Set();
+                for(let i = 0; i < priorityObj.word.date_allEventObjs.length; i++){
+                    tempSet.add(priorityObj.word.date_allEventObjs[i].date)
+                }
+                //console.log(tempSet)//t
+                //let temp_date_allEventObjs = new Array(date_allEventObjs) 不能如是複製數組、否則返回二維數組?
+                //let temp_date_allEventObjs = date_allEventObjs.slice()
+                let temp_date_allEventObjs:Date_wordEvent[] = []
+                for(let i = 0; i < date_allEventObjs.length; i++){
+                    if(tempSet.has(date_allEventObjs[i].date)){
+        
+                    }else{
+                        temp_date_allEventObjs.push(date_allEventObjs[i])
+                    }
+                }
+                date_allEventObjs = temp_date_allEventObjs
+                //console.log(date_allEventObjs)//t
+                //</除重>
+         */
         //獲取當時的時間
         const timeNow = parseInt(moment().format('YYYYMMDDHHmmss'));
         priorityObj.dateThen = timeNow;
         //priorityObj._prio0 = 1; //[,23.06.20-2101]
-        (_b = priorityObj._prio0) !== null && _b !== void 0 ? _b : (priorityObj._prio0 = 1);
+        (_a = priorityObj._prio0) !== null && _a !== void 0 ? _a : (priorityObj._prio0 = 1);
         let addEvent_cnt = 0; //計數
         let tempProcedure;
         //先 專門處理添加事件
@@ -312,12 +337,25 @@ Priority._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06
 Priority._defaultAddWeight = 200; //23.06.05-1158默認值改爲100 //[23.06.13-1047,]{改爲靜態}
 Priority.deemAsRememberedPrio0 = Priority._defaultAddWeight; // [23.06.15-2203,]{當初權重低於斯量旹則視作既誌。}
 class SingleWordB {
+    /* 	public get date_allEventMap(){
+            if(this._date_allEventMap.size === this.date_addEventObjs.length){
+                return this._date_allEventMap
+            }else{
+                for(let i = this.date_addEventObjs.length-1; i>=0 ;i--){
+                    this._date_allEventMap
+                }
+            }
+            
+        } */
+    /* public set date_allEventMap(v){
+        this._date_allEventMap = v
+    } */
     get priorityObj() {
         return this._priorityObj;
     }
-    set priorityObj(value) {
+    /* set priorityObj(value: Priority) {
         this._priorityObj = value;
-    }
+    } */
     get ling() {
         return this._ling;
     }
@@ -459,6 +497,7 @@ class SingleWordB {
         private _date_rmbEventObjs:{date:number, wordEvent:WordEvent}[]
         private _date_fgtEventObjs:{date:number, wordEvent:WordEvent}[]*/
         this._date_allEventObjs = [];
+        this._date_allEventMap = new Map();
         this._date_addEventObjs = [];
         this._date_rmbEventObjs = [];
         this._date_fgtEventObjs = [];
@@ -755,8 +794,8 @@ class VocaB {
             date: parseInt(dateNow),
             wordEvent: WordEvent.FORGET
         };
-        console.log('111'); //t
-        console.log(vocaBObj.curSingleWord.priorityObj); //t
+        //console.log('111')//t
+        //console.log(vocaBObj.curSingleWord.priorityObj)//t
         vocaBObj.curSingleWord.priorityObj.calcPrio0(vocaBObj.curSingleWord.priorityObj, [temp_date__event]);
         console.log(vocaBObj.curSingleWord.priorityObj.procedure);
         console.log(vocaBObj.curSingleWord.priorityObj.prio0);

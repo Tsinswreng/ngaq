@@ -271,10 +271,35 @@ class Priority{
 	 * @returns 
 	 */
 
+	//[23.06.22-0930,]<待叶>{判斷原procedure中昰否含ᵣ傳入ᵗdate、㕥防複計。}
 	public calcPrio0(priorityObj:Priority=this, date_allEventObjs?:Date_wordEvent[]){
 		//判空
-		if(!date_allEventObjs){date_allEventObjs = this.word?.date_allEventObjs}
-		if(!date_allEventObjs){throw new Error('!date_allEventObjs')}
+		if(!priorityObj.word){throw new Error('!priorityObj.word')}
+		if(!date_allEventObjs){date_allEventObjs = priorityObj.word.date_allEventObjs}
+		//if(!date_allEventObjs){throw new Error('!date_allEventObjs')}
+/* 
+		//<除重>
+		//[23.06.22-1127,]<可優化>{可試ˣ避ᵣˌ重複ᵈ建ᵣset}
+		//把已有ᵗ日期 添進集合裏
+		let tempSet:Set<number> = new Set();
+		for(let i = 0; i < priorityObj.word.date_allEventObjs.length; i++){
+			tempSet.add(priorityObj.word.date_allEventObjs[i].date)
+		}
+		//console.log(tempSet)//t
+		//let temp_date_allEventObjs = new Array(date_allEventObjs) 不能如是複製數組、否則返回二維數組?
+		//let temp_date_allEventObjs = date_allEventObjs.slice()
+		let temp_date_allEventObjs:Date_wordEvent[] = []
+		for(let i = 0; i < date_allEventObjs.length; i++){
+			if(tempSet.has(date_allEventObjs[i].date)){
+
+			}else{
+				temp_date_allEventObjs.push(date_allEventObjs[i])
+			}
+		}
+		date_allEventObjs = temp_date_allEventObjs
+		//console.log(date_allEventObjs)//t
+		//</除重>
+ */
 		//獲取當時的時間
 		const timeNow:number = parseInt(moment().format('YYYYMMDDHHmmss'))
 		
@@ -287,7 +312,7 @@ class Priority{
 		//先 專門處理添加事件
 		for(let j = 0; j < date_allEventObjs.length; j++){ 
 			if(date_allEventObjs[j].wordEvent !== WordEvent.ADD)
-			{continue}
+				{continue}
 
 			tempProcedure = new Procedure();
 			tempProcedure.date_wordEvent = date_allEventObjs[j]
@@ -448,18 +473,34 @@ class SingleWordB{
 	private _date_fgtEventObjs:{date:number, wordEvent:WordEvent}[]*/
 	
 	private _date_allEventObjs:Date_wordEvent[] = []
+	private _date_allEventMap:Map<number, WordEvent> = new Map();
 	private _date_addEventObjs:Date_wordEvent[] = []
 	private _date_rmbEventObjs:Date_wordEvent[] = []
 	private _date_fgtEventObjs:Date_wordEvent[] = []
 	
-	
+
+/* 	public get date_allEventMap(){
+		if(this._date_allEventMap.size === this.date_addEventObjs.length){
+			return this._date_allEventMap
+		}else{
+			for(let i = this.date_addEventObjs.length-1; i>=0 ;i--){
+				this._date_allEventMap
+			}
+		}
+		
+	} */
+
+	/* public set date_allEventMap(v){
+		this._date_allEventMap = v
+	} */
+
 	get priorityObj(): Priority {
 		return this._priorityObj;
 	}
 	
-	set priorityObj(value: Priority) {
+	/* set priorityObj(value: Priority) {
 		this._priorityObj = value;
-	}
+	} */
 	
 	get ling(): string {
 		return this._ling;
@@ -992,8 +1033,8 @@ class VocaB{
 			date:parseInt(dateNow),
 			wordEvent:WordEvent.FORGET
 		}
-		console.log('111')//t
-		console.log(vocaBObj.curSingleWord.priorityObj)//t
+		//console.log('111')//t
+		//console.log(vocaBObj.curSingleWord.priorityObj)//t
 		vocaBObj.curSingleWord.priorityObj.calcPrio0(vocaBObj.curSingleWord.priorityObj, [temp_date__event])
 		console.log(vocaBObj.curSingleWord.priorityObj.procedure)
 		console.log(vocaBObj.curSingleWord.priorityObj.prio0)

@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const VocaRaw_1 = require("./VocaRaw");
 const fs = require('fs');
-console.log(__dirname);
-const voca = VocaRaw_1.default.getObjsByConfig();
+const VocaServer_1 = require("./VocaServer");
+/* console.log(__dirname)
+const voca:VocaRaw[] = VocaRaw.getObjsByConfig()
 //voca[1].init()
-console.log(voca[1].srcFilePath);
-class C {
-    //right: () => void = ()=>{};
-    right() { }
-}
+console.log(voca[1].srcFilePath) */
+//let out:string = fs.readFileSync('\\'+voca[1].srcFilePath)
+VocaServer_1.default.main();

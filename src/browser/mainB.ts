@@ -14,6 +14,8 @@ function testPostData(url:any, obj:any){
 		 })
 } */
 
+
+
 /* function testPostBtn(){
 	testPostData('http://localhost:1919', vocaB.allWords);
 } */
