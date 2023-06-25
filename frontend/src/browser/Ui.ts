@@ -3,7 +3,9 @@ interface Ui{
 }
 
 //[23.06.11-1205,]
-class OriginUi implements Ui{ //負責傳數據ˇ予vocaB 與 示
+import VocaB from "./VocaB";
+import { Priority } from "./VocaB";
+export default class OriginUi implements Ui{ //負責傳數據ˇ予vocaB 與 示
 	private _vocaBObj:VocaB
 	get vocaBObj(){
 		return this._vocaBObj

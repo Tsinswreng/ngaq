@@ -19,6 +19,11 @@ function testPostData(url:any, obj:any){
 /* function testPostBtn(){
 	testPostData('http://localhost:1919', vocaB.allWords);
 } */
+import OriginUi from "./Ui";
+import VocaB from "./VocaB";
+import { SingleWordB } from "./VocaB";
+
+//import * as VocaBM from './VocaB'
 
 
 let vocaB = new VocaB();

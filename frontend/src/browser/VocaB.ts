@@ -58,7 +58,7 @@ interface Date_wordEvent{
 
 
 
-class Procedure {
+export class Procedure {
 	private _date_wordEvent?:Date_wordEvent; //最好別在後面寫問號洏昰寫清Date_wordEvent | undefined、不然用idea生成ᵗgetter 和 setter 有謬
 	private _eventDurationOfLastToThis?: number //單位ˋ秒、從當前ᵗ事件ᵗ日期 至 前個ᐪ  非後個!
 	private _dateWeight?:number
@@ -137,7 +137,7 @@ class Procedure {
 	}
 }
 
-class Priority{
+export class Priority{
 	private _word:SingleWordB|undefined;  //不寫|undefined就可能無限遞歸調用
 	private _priority_num:number|undefined; //終ᵗ權重
 	private _prio0:number|undefined //初權重
@@ -449,7 +449,7 @@ class Priority{
 }
 
 
-class SingleWordB{
+export class SingleWordB{
 	//id:number;//唯一標識
 	//public ling:lingType
 	private _ling:string = ''
@@ -728,7 +728,7 @@ class SingleWordB{
 	}
 }
 
-class VocaB{
+export default class VocaB{
 	private _ling:string
 	private _allWords:SingleWordB[]; // 會不會存了兩份SingleWord?
 	private _id_wordMap:Map<number, SingleWordB>
