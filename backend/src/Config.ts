@@ -1,10 +1,12 @@
-//[23.05.23-2118,]
+/* //[23.05.23-2118,]
+
 const xml2js = require('xml2js')
 const fs = require('fs')
 const VocaRaw = require('./VocaRaw')
+const path = require('path')
 export default class Config{
-	
-	private _configFilePath:string = './config.xml'
+	public rootDir = path.dirname(__dirname);
+	private _configFilePath:string =  this.rootDir+'/config.xml'
 	private _xmlSrc:string = ''
 	private _dbUserName:string|undefined
 	private _dbPassword:string|undefined
@@ -56,13 +58,13 @@ export default class Config{
 	
 }
 
-function main(){
+/* function main(){
 	//console.log(xml2js)
 	let config = new Config();
 	
 	xml2js.parseString(config.xmlSrc, (err:any, result:any)=>{
 		console.dir(result)
 	})
-}
+} */
 
-//main()
+//main() */

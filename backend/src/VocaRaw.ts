@@ -7,6 +7,7 @@ import * as mysql from 'mysql';
 const mysql2 = require('mysql2')
 const moment = require('moment');
 const lodash = require('lodash');
+const path = require('path')
 import * as readline from 'readline';
 const xml2js = require('xml2js')
 import * as mariadb from 'mariadb'
@@ -110,7 +111,7 @@ class SingleWord{
 
 export default class VocaRaw{
 	
-	public static readonly configFilePath:string = '../config.xml'
+	public static readonly configFilePath:string = path.resolve(process.cwd())+ '/config.xml'
 	private _xmlSrc:string = ''
 	private _alreadyAdded:boolean;
 	private _ling:string;

@@ -9,12 +9,12 @@
 		<ling>
 			<lingName>eng</lingName>
 			<tableName>eng</tableName>
-			<srcFilePath>..\srcWordList\eng\eng[20230515112601,].txt</srcFilePath> <!--婼示項目根目錄?-->
+			<srcFilePath>\srcWordList\eng\eng[20230515112601,].txt</srcFilePath> <!--婼示項目根目錄?-->
 		</ling>
 		<ling>
 			<lingName>jap</lingName>
 			<tableName>jap</tableName>
-			<srcFilePath>..\srcWordList\jap\jap[20230515112439,].txt</srcFilePath>
+			<srcFilePath>\srcWordList\jap\jap[20230515112439,].txt</srcFilePath>
 			<!--<srcFilePath>srcWordList\jap\jap[20230515112439,].txt</srcFilePath>-->
 		</ling>
 	</lings>

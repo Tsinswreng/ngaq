@@ -9,7 +9,8 @@ const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
 const querystring = require('querystring')
-
+const path = require('path')
+//console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾
 /*const eng = new VocaRaw();
 eng.dbName = 'voca'
 eng.tableName = 'eng'
@@ -22,6 +23,7 @@ jap.tableName = 'jap'*/
 export default class VocaServer{
 	static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	static app = express();
+	static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static main(){
 		
@@ -31,7 +33,9 @@ export default class VocaServer{
 			res.header("Access-Control-Allow-Headers", "*");
 			next()
 		})
-		VocaServer.app.use(express.static('browser'));
+		//VocaServer.app.use(express.static('browser'));
+		VocaServer.app.use(express.static('dist'));
+		VocaServer.app.use(express.static('frontend\\src\\browser'))
 		VocaServer.app.use(bodyParser.json());//??{}??
 		VocaServer.app.use(express.json({limit: '65536mb'}))
 		VocaServer.app.use(express.urlencoded({limit: '65536mb', extended:true}))
@@ -70,7 +74,8 @@ export default class VocaServer{
 			
 			//eng.addSingleWordsToDb()
 			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(__dirname+'/browser/Voca.html')
+			//res.sendFile(__dirname+'/browser/Voca.html')
+			res.sendFile('/index.html')
 			//res.end('114514')
 		})
 		VocaServer.app.post('/post', (req:any, res:any)=>{
@@ -82,7 +87,7 @@ export default class VocaServer{
 		})
 		
 		
-		VocaServer.app.post('/logIn', (req:any, res:any)=>{
+		VocaServer.app.post('/login', (req:any, res:any)=>{
 			console.log(req.body)
 			if(req.body.tempPwd === '一'){
 				console.log('密碼正確')
@@ -102,4 +107,6 @@ export default class VocaServer{
 	
 }
 VocaServer.main()
+
+
 
