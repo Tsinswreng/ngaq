@@ -816,14 +816,14 @@ export default class VocaRaw{
 		if(!xmlObj){throw new Error('xml解析失敗')}
 		let vocaObjs:VocaRaw[] = [];
 		for(let i = 0; i < xmlObj.root.lings[0].ling.length; i++){
-			let curLing = xmlObj.root.lings[0].ling[i]
+			let curLing = xmlObj.root.lings[0].ling[i]//<待優化>{有無法芝不需逐屬性ʰ賦值}
 			vocaObjs[i] = new VocaRaw();
 			vocaObjs[i].dbUserName = xmlObj.root.dbUserName[0]
 			vocaObjs[i].dbPassword = xmlObj.root.dbPassword[0]
 			vocaObjs[i].dbName = xmlObj.root.dbName[0]
 			vocaObjs[i].ling = curLing.lingName[0]
 			vocaObjs[i].tableName = curLing.tableName[0]
-			vocaObjs[i].srcFilePath = curLing.srcFilePath[0]
+			vocaObjs[i].srcFilePath = path.resolve(process.cwd()) + curLing.srcFilePath[0]//[23.06.26-1014,]
 		}
 		
 		return vocaObjs;
