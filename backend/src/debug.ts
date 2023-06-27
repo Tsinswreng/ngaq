@@ -10,42 +10,14 @@ console.log(voca[1].srcFilePath) */
 //let out:string = fs.readFileSync('\\'+voca[1].srcFilePath)
 
 //VocaServer.main()
+//import rootPath from './Root'
 
-function aaa(){
-	{
-		{
-			{
-				{
-					{
-						{
-							{
-								{
-									{
-										{
-											{
-												{
-													{
-														{
-															{
-																{
-																	{
-																		
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
+//console.log(global.rootDir)
+const vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig()
+
+/* console.log(VocaRaw.configFilePath)
+vocaObjs[1].查重().then((o)=>{
+	//vocaObjs[1].刪重(o)
+	vocaObjs[1].第三步()
+}) */
 

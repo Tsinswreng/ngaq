@@ -1,6 +1,6 @@
 //23.05.03-1311
 import * as fs from "fs";
-import { resolve } from "mathjs";
+import { number, resolve } from "mathjs";
 import * as mysql from 'mysql';
 // import {Connection} from 'mysql2'
 // import mysql2 from 'mysql2';
@@ -11,6 +11,9 @@ const path = require('path')
 import * as readline from 'readline';
 const xml2js = require('xml2js')
 import * as mariadb from 'mariadb'
+import Root from "../../root";
+const util = require('util');
+
 //import * as xml2js from 'xml2js';
 
 /*TODO{
@@ -111,7 +114,8 @@ class SingleWord{
 
 export default class VocaRaw{
 	
-	public static readonly configFilePath:string = path.resolve(process.cwd())+ '/config.xml'
+	//public static readonly configFilePath:string = path.resolve(process.cwd())+ '/config.xml'
+	public static readonly configFilePath:string = Root.rootDir + '/config.xml'
 	private _xmlSrc:string = ''
 	private _alreadyAdded:boolean;
 	private _ling:string;
@@ -509,12 +513,13 @@ export default class VocaRaw{
 				// 坑:SELECT * FROM jap WHERE wordShape = '傾げる' 會返回「傾げる」和「傾ける」、當用SELECT * FROM jap WHERE wordShape REGEXP '^傾げる$'
 				// 坑:先轉義正則表達式中ᵗ特殊字符
 				// 坑:轉義完後還要再對反斜槓轉義一次 其 終ᵗ形ˋ當如java中雙引號中ᵗ正則表達式ᵗ形
-				let escaped = lodash.escapeRegExp(currentWordShape)
-				escaped = escaped.replace(/\\/g, '\\\\'); //把每個反斜槓都轉成兩個反斜槓
+				// let escaped = lodash.escapeRegExp(currentWordShape)
+				// escaped = escaped.replace(/\\/g, '\\\\'); //把每個反斜槓都轉成兩個反斜槓
 				
-				const qrySql = `SELECT *FROM ${this._tableName} WHERE wordShape REGEXP '^${escaped}$'`
+				//const qrySql = `SELECT *FROM ${this._tableName} WHERE BINARY wordShape REGEXP '^{escaped}$'` //[23.06.26-2145,]{BINARY㕥辨大小寫}
+				const qrySql = `SELECT *FROM ${this._tableName} WHERE BINARY wordShape = ?`//[23.06.26-2205,]<坑>{REGEXP '^exposé$'查不到exposé}
 				//db.query(`SELECT * FROM ${this.tableName} WHERE ${wordShapeCol} = ?`, [currentWordShape], (error, results, fields)=>{
-				db.query(qrySql, (error, results, fields)=>{
+				db.query(qrySql, currentWordShape,(error, results, fields)=>{
 					if (error) {
 						console.error(qrySql)
 						console.error(error);
@@ -823,7 +828,7 @@ export default class VocaRaw{
 			vocaObjs[i].dbName = xmlObj.root.dbName[0]
 			vocaObjs[i].ling = curLing.lingName[0]
 			vocaObjs[i].tableName = curLing.tableName[0]
-			vocaObjs[i].srcFilePath = path.resolve(process.cwd()) + curLing.srcFilePath[0]//[23.06.26-1014,]
+			vocaObjs[i].srcFilePath = Root.rootDir + curLing.srcFilePath[0]//[23.06.26-1014,]
 		}
 		
 		return vocaObjs;
@@ -998,6 +1003,70 @@ export default class VocaRaw{
 	public static forEach_doFn_(obj:any[], fn:object){
 	
 	}
+
+
+	/* public async 除重(){
+		const db = this.getDbConnection()
+		// let duplicateResult;
+		// const sql = `SELECT wordShape, COUNT(*) as count
+		// FROM ${this.tableName}
+		// GROUP BY wordShape
+		// HAVING COUNT(*) > 1;`
+		// await db.query(sql, (err, result)=>{
+		// 	console.log('<result>')
+		// 	console.log(result)
+		// 	console.log('</result>')
+		// 	duplicateResult = result
+		// })
+		// for(let i = 0; i < duplicateResult.length; i++){
+		// 	console.log(duplicateResult.id)
+		// }
+		let duplicateResult:SingleWord[]|undefined
+		const sql = `SELECT * FROM ${this.tableName}`
+		await new Promise<void>((resolve, reject)=>{
+			db.query(sql, (err, result)=>{
+				if(err){throw err}
+				//console.log('<result>')
+				console.log(result.length)
+				//console.log('</result>')
+				//console.log(result[0]) //worked
+				duplicateResult = result;
+				resolve() //不寫此則續ᵈ待
+			})
+		})
+		if(!duplicateResult){
+			throw new Error()
+		}
+		//duplicateResult = <SingleWord[]>duplicateResult as SingleWord[]
+		//console.log(duplicateResult[0])
+		//console.log(114514)
+		let mladhs = new Set<string>() //無重
+		let dhs_idToSingleWord = new Map<number, SingleWord>()//重
+		let dhs_idToTimes = new Map<number, number>()
+		for(let i = 0; i<duplicateResult.length; i++){
+			//console.log(duplicateResult[i].wordShape)
+			if(mladhs.has(duplicateResult[i].wordShape)){
+				let originId = duplicateResult[i].id
+				duplicateResult[i].id = -1
+				dhs_idToSingleWord.set(originId, duplicateResult[i])
+			}else{
+				mladhs.add(duplicateResult[i].wordShape)
+			}
+		}
+		//console.log(mladhs)
+		console.log(dhs_idToSingleWord.size)
+		let 全同者M = new Map<string, number[]>();
+		let 有異者 = new Map<string, number[]>();
+		for(let [id,v] of dhs_idToSingleWord){
+			if(全同者M.has(JSON.stringify(v))){
+				
+			}else{
+				
+			}
+			全同者M.set(JSON.stringify(v), id)
+
+		}
+	} */
 	
 	/*public static matchOrNot(str:string, ...target:string){ //
 		for(let i = 0; i < target.length; i++){
@@ -1036,7 +1105,192 @@ export default class VocaRaw{
 		}
 		return stack.length === 0;
 	}*/ //待叶
+
+
+	//[23.06.27-1802,]
 	
+	public async 查重(){//查ᵗ標準: 除id外完全相同之列
+		const db = this.getDbConnection()
+		let columnNames:string[] = []
+		let columnNames_str:string = ''
+		let 表名除id_str:string = ''
+		await new Promise<void>((resolve, reject)=>{
+			db.query(`SHOW COLUMNS FROM ${this.tableName};`,(err, result)=>{
+				if(err){throw err}
+				//console.log(result);
+				for(let i = 0; i < result.length; i++){
+					//console.log(result[i].Field)
+					columnNames.push(result[i].Field)
+				}
+				for(let i = 0; i < columnNames.length; i++){
+					columnNames_str += columnNames[i]
+					columnNames_str += ','
+					if(columnNames[i] !== 'id'){
+						表名除id_str += columnNames[i]
+						表名除id_str += ','
+					}
+					
+				}
+				columnNames_str = columnNames_str.replace(/,$/g, '')//刪ᵣ末ᵗ逗號
+				表名除id_str = 表名除id_str.replace(/,$/g, '')//刪ᵣ末ᵗ逗號
+				resolve()
+			})
+		})
+		
+		//console.log(columnNames_str)
+		//console.log(表名除id_str)
+
+		const 查重sql = `
+			SELECT ${表名除id_str}, COUNT(*) as count, GROUP_CONCAT(id) AS duplicate_ids
+			FROM ${this.tableName}
+			GROUP BY ${表名除id_str}
+			HAVING count > 1;
+		`
+		const 查重2sql = `
+		SELECT wordShape, COUNT(*) as count
+		FROM ${this.tableName}
+		GROUP BY wordShape
+		HAVING count > 1;`//
+		//查重與查重2之果ˋ皆728
+		//console.log(查重sql)
+		let 詞_重複ᵗid = new Map<string, number[]>() //key放ᵣ整個詞芝除id再轉json後者、value放id數組。
+		await new Promise<void>((resolve, reject)=>{
+			db.query(查重2sql, (err, result)=>{
+				if(err){throw err}
+				//console.log(result)
+				for(let i = 0; i < result.length; i++){
+					let 原id = result[i].id
+					result[i].id = null
+					if(typeof(result[i].duplicate_ids) === 'string'){
+						let idArr:number[] = result[i].duplicate_ids.split(',').map(Number)
+						//console.log(idArr)
+						if(詞_重複ᵗid.has(JSON.stringify(result[i]))){
+							throw new Error()
+						}else{
+							詞_重複ᵗid.set(JSON.stringify(result[i]), idArr)
+						}
+					}
+					
+				}
+				resolve()
+				//console.log(詞_重複ᵗid)
+			})
+			
+		})
+		//console.log(詞_重複ᵗid)
+
+		return 詞_重複ᵗid
+		
+	}
+	//[23.06.27-1803,]
+	public 刪重(詞_重複ᵗid:Map<string, number[]>){
+		const db = this.getDbConnection()
+		let 要被刪的id:number[] = []
+		for(let [k,v] of 詞_重複ᵗid){
+			//使id數組按升序排序
+			v.sort((a,b)=>{
+				return a - b
+			})
+			let tempIdArr = v.slice();
+			
+			tempIdArr.shift()
+			要被刪的id = 要被刪的id.concat(tempIdArr)
+		}
+		//console.log(要被刪的id)
+		const sql = `DELETEnonono  FROM ${this.tableName} WHERE id = ?`
+		for(let i = 0; i < 要被刪的id.length; i++){
+			db.query(sql, 要被刪的id[i], (err, result)=>{
+				if(err){throw err}
+				//console.log(result)
+			})
+		}
+	}
+
+	//[23.06.27-1846,]
+	public async 第三步(){
+		const db = this.getDbConnection()
+		const queryAsync = util.promisify(db.query).bind(db);
+		const 查重2sql = `
+		SELECT wordShape, COUNT(*) as count, GROUP_CONCAT(id) AS duplicate_ids,
+		GROUP_CONCAT(rememberedDates) AS rememberedDates, GROUP_CONCAT(forgottenTimes) AS forgottenDates
+		FROM ${this.tableName}
+		GROUP BY wordShape
+		HAVING count > 1;`
+		let 要被刪的id:number[] = []
+		let allIdArr:number[] = []
+		await new Promise<void>((resolve, reject)=>{
+			db.query(查重2sql,(err, result)=>{
+				//console.log(result)
+				for(let i = 0; i < result.length; i++){
+					if(typeof(result[i].duplicate_ids) === 'string'){
+						
+					}
+					let tempIdArr:number[] = []
+					tempIdArr = result[i].duplicate_ids.split(',').map(Number)
+					allIdArr = allIdArr.concat(tempIdArr)
+				}
+				resolve()
+			})
+		})
+		//console.log(allIdArr)
+		const qry = `SELECT * FROM ${this.tableName} WHERE id = ?`
+
+		
+		for(let i = 0; i < allIdArr.length; i++){
+			await new Promise<void>((resolve, reject)=>{
+				db.query(qry, allIdArr[i], (err, result)=>{
+					if(err){throw err}
+					
+					for(let j = 0; j < result.length; j++){
+						//console.log(result[j].rememberedDates + '\t' + result[j].forgottenDates)
+						if(result[j].rememberedDates == '[]' && result[j].forgottenDates == '[]'){
+							//console.log(result[j].id)
+							要被刪的id.push(result[j].id)
+						}
+					}
+					resolve()
+				})
+				
+			})
+			
+		}
+		//console.log(要被刪的id)
+		const deleteSql = `DELETE FROM ${this.tableName} WHERE id = ?`
+		for(let i = 0; i < 要被刪的id.length; i++){
+			db.query(deleteSql, 要被刪的id[i], (err, result)=>{
+				if(err){throw err}
+				//console.log(result)
+			})
+		}
+
+		
+		
+/* 		for (let i = 0; i < allIdArr.length; i++) {
+			await new Promise<void>(async (resolve, reject) => {
+			  try {
+				const result = await queryAsync(qry, allIdArr[i]);
+		  
+				for (let j = 0; j < result.length; j++) {
+				  if (result[j].rememberedDates == '[]' && result[j].forgottenDates == '[]') {
+					要被刪的id.push(result[j].id);
+				  }
+				}
+		  
+				resolve();
+			  } catch (err) {
+				reject(err);
+			  }
+			});
+		  }
+		  console.log(要被刪的id) */
+		
+	}
+
+	
+
+	
+	
+
 	//目前只能檢查大括號與雙重中括號昰否配對、宜封裝成通用ᵗ函數
 	public static 括號匹配檢查(str:string){
 		let regex = /(\{|\}|\[{2}|\]{2})/g
@@ -1066,6 +1320,8 @@ export default class VocaRaw{
 		
 		return stacks[0].length === 0 && stacks[1].length === 0
 	}
+
+
 	
 }
 

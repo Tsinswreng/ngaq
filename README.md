@@ -6,6 +6,45 @@
 
 ## 更新記錄
 
+### 20230627221032 2.7.0
+
+#### refactor:
+
+* 移除了一些無關的文件
+
+#### feat:
+
+* 在項目根目錄中新增Root.ts、用來給項目文件夾的各級子目錄中的源文件提供項目根目錄的絕對路徑。棄用了2.6.2版本的`path.resolve(process.cwd())`
+
+#### fix:
+
+* 在添加單詞的部分修復了重大漏洞:
+* VocaRaw中新增了幾個函數、用于臨時ᵈ 表ᵗ去重
+
+最初、檢驗一個單詞是否 數據庫ʰ 已被添加過 時、用的sql是 
+
+``` ts
+	const qrySql = `SELECT *FROM ${this._tableName} WHERE wordShape = ?`
+```
+
+在這種情況下、`傾ける`和`傾げる`被視作相等。當時尚不知`BINARY`、遂改用
+
+``` ts
+let escaped = lodash.escapeRegExp(currentWordShape)
+escaped = escaped.replace(/\\/g, '\\\\'); //把每個反斜槓都轉成兩個反斜槓
+const qrySql = `SELECT *FROM ${this._tableName} WHERE wordShape REGEXP '^${escaped}$'`
+```
+
+能解決`傾ける`和`傾げる`不分的情況、並且長時間以來未發現問題。
+
+但昨日把新單詞從txt中加進數據庫時發現有些單詞會被重複添加、佔據多行。究其故、發現`SELECT *FROM eng WHERE wordShape REGEXP '^exposé$'` 竟然匹配不到數據庫中已有的`exposé`一詞、導致該詞被複添並佔據多行。另外又發現這樣的sql語句默認不區別大小寫、導致`stem`和`STEM`被視作同一詞而合併。後又發現類似的諸問題在日語單詞表中更嚴重、複添者竟達數百個。
+
+卒用
+
+``` ts
+	const qrySql = `SELECT *FROM ${this._tableName} WHERE wordShape = ?`
+```
+
 ### 20230626101836 2.6.2
 
 * 修複了讀單詞時路徑不正確的問題

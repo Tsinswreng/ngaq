@@ -56,7 +56,12 @@
 		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": false, //不准 隱式ᵗ any
-		"moduleResolution": "Node"
+		"moduleResolution": "Node",
+		"esModuleInterop": true, //用import導入commonJs模塊
+		"baseUrl": "./",
+		"paths": {
+			"@root/*": ["./*"]
+		}
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 	"references": [{ "path": "./tsconfig.node.json" }]
