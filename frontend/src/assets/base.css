@@ -1,0 +1,97 @@
+:root {
+	/* paleta de colores */
+	--colorFondoBlanco: #e0e0e0;
+	--colorPrimario: #009ef7;
+	--colorBlanco: #ffffff; 
+	--colorBlancoRelax: #eee6e6;
+	--colorNegro: #000000;
+	--colorNegroRelax: #222;
+	--colorGris: #666666;
+	--color-bg: #000000;
+	--highLight: #4cb6ac; 
+	--menuBackground:  #151515;
+	--redondeo: 1rem;
+	--separacion: 2rem;
+}
+
+html {
+/* 将根元素 <html> 的字体大小设置为基准值的 62.5%。这是为了方便使用相对单位（如 rem）来进行字体大小的计算。
+在这种情况下，1rem 等于 10px。 */
+	font-size: 62.5%;
+/* 将元素的盒模型设置为 border-box，这意味着元素的总宽度和总高度包括了内边距和边框，
+而不会受到添加的内边距和边框的影响。 */
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+
+	color-scheme: dark;
+}
+
+/* 通配选择器 */
+* {
+	/* font-family: var(--fontPrincipal); */
+	color: var(--colorBlancoRelax);
+}
+
+*,
+*:before,
+*:after {
+/* box-sizing: inherit;：将元素的盒模型设置为继承。
+inherit 是一个 CSS 关键字，表示元素将继承其父元素的 box-sizing 值 */
+	box-sizing: inherit;
+}
+
+body {
+	font-size: 1.6rem;
+	line-height: 1.5;
+	background-color: var(--color-bg);
+}
+
+.contenedor {
+	width: 95%;
+	margin: 0 auto;
+}
+
+/* 媒体查询（media query），它适用于视口宽度大于等于 480 像素的情况。 */
+@media (min-width: 480px) {
+	.contenedor {
+		width: 90%;
+	}
+}
+
+@media (min-width: 768px) {
+	.contenedor {
+		/* width: 85%;
+		max-width: 120rem; */
+		width: min(85%, 120rem);
+	}
+}
+
+h1 {
+	font-size: 3rem;
+}
+
+h2 {
+	font-size: 2.6rem;
+}
+
+h3 {
+	font-size: 2.2rem;
+}
+
+h4 {
+	font-size: 2.0rem;
+}
+
+img {
+	max-width: 100%;
+	margin: 0;
+	vertical-align: top;
+}
+
+.centrar-texto {
+	text-align: center;
+}
+
+button {
+	cursor: pointer;
+}
