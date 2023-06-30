@@ -1,28 +1,31 @@
 /* Esto sería una solicitud, un json, etc */
 
+
+let i = 0;
 export default{
 	profile:
 	{
 		name: 'user name',
 		img: '../assets/profile.svg',
 		onClick(){
-			console.log(`name: 'user name',`)
+			window.location.href = '/login'
 		}
 	},
 	items: 
 	[
 		{
-			id: 0,
-			title: 'home',
+			id: i++,
+			title: 'Home',
 			// <font-awesome-icon icon="fa-solid fa-house-user" />
 			icon: 'fa-houser-user',
 			onClick(){
-				console.log('home')
+				/* console.log(this.id) */
+				window.location.href = '/'
 			}
 		},
 		{
-			id:1,
-			title: 'Reports',
+			id:i++,
+			title: 'Languages',
 			// <font-awesome-icon icon="fa-regular fa-screwdriver-wrench" />
 			icon: 'fa-screwdriver-wrench',
 			onClick(){
@@ -30,7 +33,16 @@ export default{
 			}
 		},
 		{
-			id: 3,
+			id:i++,
+			title: 'Settings',
+			// <font-awesome-icon icon="fa-regular fa-screwdriver-wrench" />
+			icon: 'fa-screwdriver-wrench',
+			onClick(){
+				console.log('Reports')
+			}
+		},
+		{
+			id: i++,
 			title: 'Terms of service',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',
@@ -39,7 +51,7 @@ export default{
 			}
 		},
 		{
-			id: 4,
+			id: i++,
 			title: '舊版界面',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',

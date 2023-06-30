@@ -7,7 +7,7 @@ import menuItems from './menuItems'
 
 // booleano para contraer o expandir menú
 let collapsed = ref(true);
-
+let status:string = collapsed? '+':'-'
 </script>
 
 <template>
@@ -16,7 +16,7 @@ let collapsed = ref(true);
 	<div class="header">
 		<button class="menu-button" @click.prevent="collapsed = !collapsed">
 			<!-- <font-awesome-icon icon="fa-solid fa-bars" size="2x"/> -->
-			+
+			{{ collapsed? '+':'-' }}
 		</button>
 	</div>
 	<div class="profile" v-if="!collapsed">
@@ -24,7 +24,7 @@ let collapsed = ref(true);
 		<!-- cuando este expandido (no collapsed) se va a mostrar name -->
 		<div class="profile__name"> <a href="#" @click.prevent="menuItems.profile.onClick">{{ menuItems.profile.name }}</a> </div>
 	</div>
-
+	<hr class="cyan" v-if="!collapsed">
 	<div class="menu__item">
 		<ul>
 			<!-- <MenuItem v-if="!collapsed" v-for="item in menuItems.items" :key="item.id" :item="item" :collapsed="!collapsed"/> -->
@@ -72,6 +72,11 @@ let collapsed = ref(true);
 	/* justify-content: end; */
 }
 
+.cyan{
+	border-color: var(--highLight);
+	height: 0px;
+}
+
 .menu-button{
 	position: fixed;
 	width: 4rem;
@@ -92,6 +97,10 @@ let collapsed = ref(true);
 	padding: var(--separacion);
 	gap: var(--separacion);
 	align-items: center;
+}
+
+.profile:hover{
+	background-color: var(--highLight);
 }
 
 .profile__img {

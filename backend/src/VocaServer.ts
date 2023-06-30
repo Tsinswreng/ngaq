@@ -3,6 +3,7 @@
   日誌模塊
   數據庫中null作0
 }*/
+import Root from "../../root";
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 const moment = require('moment')
 const cors = require('cors')
@@ -10,6 +11,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const querystring = require('querystring')
 const path = require('path')
+
 //console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾
 /*const eng = new VocaRaw();
 eng.dbName = 'voca'
@@ -42,6 +44,9 @@ export default class VocaServer{
 		//VocaServer.app.use(cors)
 		
 		//eng.addSingleWordsToDb()
+	
+
+
 		VocaServer.app.get('/eng', (req:any, res:any)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
 			const db = VocaServer.vocaObjs[0].getDbConnection()
 			db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
@@ -67,16 +72,20 @@ export default class VocaServer{
 			})
 		})
 		
-		VocaServer.app.get('/', (req:any, res:any)=>{
+/* 		VocaServer.app.get('/', (req:any, res:any)=>{
 			console.log(req.ip)
 			let path = req.path
-			console.log('path:'+path)//t
-			
-			//eng.addSingleWordsToDb()
+			console.log('path:'+path)
 			res.setHeader('content-type','text;charset=utf-8')
-			//res.sendFile(__dirname+'/browser/Voca.html')
 			res.sendFile('/index.html')
-			//res.end('114514')
+		}) */
+
+		VocaServer.app.get('*', (req:any, res:any)=>{
+			console.log(req.ip)
+			let path = req.path
+			console.log('path:'+path)
+			res.setHeader('content-type','text;charset=utf-8')
+			res.sendFile(Root.rootDir+'/dist/index.html')
 		})
 		VocaServer.app.post('/post', (req:any, res:any)=>{
 			console.log(req.body)
@@ -87,14 +96,14 @@ export default class VocaServer{
 		})
 		
 		
-		VocaServer.app.post('/login', (req:any, res:any)=>{
+		/* VocaServer.app.get('/login', (req:any, res:any)=>{
 			console.log(req.body)
 			if(req.body.tempPwd === '一'){
 				console.log('密碼正確')
 			}else{
 				console.log('密碼錯誤')
 			}
-		})
+		}) */
 		
 		
 		
