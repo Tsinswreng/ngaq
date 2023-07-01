@@ -53,12 +53,13 @@ let status:string = collapsed? '+':'-'
 }
 
 .collapsed{
-	width: 4rem;
+	width: 0rem;
 	/* height: 4.4rem; */
 	background-color: var(--menuBackground);
 }
 
 .expanded{
+	z-index: 999; /* 设置层级，值越大越在上层 */
 	width: 35rem;
 	background-color: var(--menuBackground);
 }

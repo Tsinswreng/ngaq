@@ -10,8 +10,10 @@
 	--color-bg: #000000;
 	--highLight: #4cb6ac; 
 	--menuBackground:  #151515;
+	--cl-cyan: var(--highLight);
 	--redondeo: 1rem;
 	--separacion: 2rem;
+	--cl-deepGreen: #007722;
 }
 
 html {
@@ -93,5 +95,18 @@ img {
 }
 
 button {
+	/*border: none;*/
 	cursor: pointer;
+	background: transparent;
 }
+
+button:hover{
+	border: none;
+	background: var(--cl-cyan);
+}
+
+button:active{
+	border: none;
+	background: #007722;
+}
+

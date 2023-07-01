@@ -43,11 +43,20 @@ export default{
 		},
 		{
 			id: i++,
-			title: 'Terms of service',
+			title: '背單詞',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',
 			onClick() {
-				console.log('Terms of service');
+				window.location.href = '/monoMode'
+			}
+		},
+		{
+			id: i++,
+			title: '打字測速',
+			// <font-awesome-icon icon="fa-solid fa-info" />
+			icon: 'fa-info',
+			onClick() {
+				window.location.href = '/typeTest'
 			}
 		},
 		{
