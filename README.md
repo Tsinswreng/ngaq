@@ -4,7 +4,44 @@
 
 ## 文檔待補充
 
+## 部署方法:
+
+```
+# 1. 確保你已安裝了node
+
+# 2. 
+git clone https://github.com/Tsinswreng/voca.git
+
+# 3. 安裝依賴
+npm i
+
+# 4. 使用vite打包
+npm run build
+
+#5. 編譯後端的ts文件
+`npm run out`
+
+#6. (待完成)
+```
+
+
 ## 更新記錄
+
+### 20230702191959 3.1.0
+
+#### refactor:
+
+* 項目根目錄 改用 通過第三方模塊 來獲取
+
+#### docs:
+
+* 新增了部分與部署相關的文檔
+
+#### chore:
+
+* 新增命令別名 `npm run out` 、該命令會編譯後端部分的ts文件並在backend-out生成
+* 更改了.gitignore
+* 移除了不必要的文件
 
 ### 20230702102917 3.0.0
 

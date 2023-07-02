@@ -3,7 +3,7 @@
   日誌模塊
   數據庫中null作0
 }*/
-import Root from "../../root";
+
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 const moment = require('moment')
 const cors = require('cors')
@@ -11,6 +11,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const querystring = require('querystring')
 const path = require('path')
+const rootDir = require('app-root-path').path
 
 //console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾
 /*const eng = new VocaRaw();
@@ -85,7 +86,7 @@ export default class VocaServer{
 			let path = req.path
 			console.log('path:'+path)
 			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(Root.rootDir+'/dist/index.html')
+			res.sendFile(rootDir+'/dist/index.html')
 		})
 		VocaServer.app.post('/post', (req:any, res:any)=>{
 			console.log(req.body)

@@ -11,7 +11,7 @@ const path = require('path')
 import * as readline from 'readline';
 const xml2js = require('xml2js')
 import * as mariadb from 'mariadb'
-import Root from "../../root";
+const rootDir = require('app-root-path').path
 const util = require('util');
 
 //import * as xml2js from 'xml2js';
@@ -115,7 +115,7 @@ class SingleWord{
 export default class VocaRaw{
 	
 	//public static readonly configFilePath:string = path.resolve(process.cwd())+ '/config.xml'
-	public static readonly configFilePath:string = Root.rootDir + '/config.xml'
+	public static readonly configFilePath:string = rootDir + '/config.xml'
 	private _xmlSrc:string = ''
 	private _alreadyAdded:boolean;
 	private _ling:string;
@@ -828,7 +828,7 @@ export default class VocaRaw{
 			vocaObjs[i].dbName = xmlObj.root.dbName[0]
 			vocaObjs[i].ling = curLing.lingName[0]
 			vocaObjs[i].tableName = curLing.tableName[0]
-			vocaObjs[i].srcFilePath = Root.rootDir + curLing.srcFilePath[0]//[23.06.26-1014,]
+			vocaObjs[i].srcFilePath = rootDir + curLing.srcFilePath[0]//[23.06.26-1014,]
 		}
 		
 		return vocaObjs;
