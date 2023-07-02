@@ -39,7 +39,9 @@ import {data} from "jquery";
 
 
 
-declare var moment: any; //即momentjs 但是我還不會導包
+// declare var moment: any; //即momentjs 但是我還不會導包
+//import * as moment from "moment";
+import moment from 'moment';
 type lingType = ''|'eng'|'jap'|'lat' //沒用的東西
 
 enum WordEvent{
@@ -1136,7 +1138,7 @@ export default class VocaB{
 	}
 	
 	public saveToServ(){
-		const tempPwd = $('#tempPwd').val()
+		//const tempPwd = $('#tempPwd').val()
 		
 		/*
 		const xhr = new XMLHttpRequest();

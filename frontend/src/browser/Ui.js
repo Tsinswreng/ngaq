@@ -1,6 +1,7 @@
-"use strict";
 //[23.06.11-1205,]
-class OriginUi {
+import VocaB from "../ts/VocaB";
+import { Priority } from "../ts/VocaB";
+export default class OriginUi {
     get vocaBObj() {
         return this._vocaBObj;
     }

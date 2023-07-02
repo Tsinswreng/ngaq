@@ -34,6 +34,7 @@
 // 23.06.06-2031 重構
 {
 	"compilerOptions": {
+		"allowJs": false,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,
 		//"module": "ESNext",
@@ -63,6 +64,16 @@
 			"@root/*": ["./*"]
 		}
 	},
+	"esModuleInterop": true,
+	"allowSyntheticDefaultImports": true,
+	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 	"references": [{ "path": "./tsconfig.node.json" }]
+	// "include": [
+	// 	"backend/**/*.ts"
+	//   ],
+	// "exclude": [
+	// 	"node_modules",
+	// 	"**/*.spec.ts"
+	// ]
 }

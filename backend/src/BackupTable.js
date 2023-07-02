@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const VocaRaw_1 = require("./VocaRaw");
+const VocaRaw_1 = __importDefault(require("./VocaRaw"));
 //const VocaRaw = require('./VocaRaw')
 /*
 const eng = new VocaRaw();

@@ -14,7 +14,7 @@ console.log(voca[1].srcFilePath) */
 
 //console.log(global.rootDir)
 const vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig()
-
+console.log(vocaObjs)
 /* console.log(VocaRaw.configFilePath)
 vocaObjs[1].查重().then((o)=>{
 	//vocaObjs[1].刪重(o)

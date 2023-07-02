@@ -52,16 +52,25 @@ export default{
 		},
 		{
 			id: i++,
-			title: '打字測速',
+			title: '背單詞(舊)',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',
 			onClick() {
-				window.location.href = '/typeTest'
+				window.location.href = '/oldMonoMode'
 			}
 		},
 		{
 			id: i++,
-			title: '舊版界面',
+			title: '打字測速',
+			// <font-awesome-icon icon="fa-solid fa-info" />
+			icon: 'fa-info',
+			onClick() {
+				window.location.href = '/typingTest'
+			}
+		},
+		{
+			id: i++,
+			title: '原生舊版界面',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',
 			onClick() {

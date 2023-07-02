@@ -1,4 +1,3 @@
-"use strict";
 //23.06.04-0010
 //v2.0.3
 /*縮寫:
@@ -13,7 +12,7 @@ var WordEvent;
     WordEvent[WordEvent["REMEMBER"] = 1] = "REMEMBER";
     WordEvent[WordEvent["FORGET"] = -1] = "FORGET";
 })(WordEvent || (WordEvent = {}));
-class Procedure {
+export class Procedure {
     constructor() {
         this._aftPrio = 1; //變ᵗ後ᵗ優先度
         this._randomBonus = 0;
@@ -336,7 +335,8 @@ class Priority {
 Priority._numerator = 3600; //分子  23.06.05-1130默認值改爲3600*24 [23.06.10-2342,]{改潙3600}
 Priority._defaultAddWeight = 200; //23.06.05-1158默認值改爲100 //[23.06.13-1047,]{改爲靜態}
 Priority.deemAsRememberedPrio0 = Priority._defaultAddWeight; // [23.06.15-2203,]{當初權重低於斯量旹則視作既誌。}
-class SingleWordB {
+export { Priority };
+export class SingleWordB {
     /* 	public get date_allEventMap(){
             if(this._date_allEventMap.size === this.date_addEventObjs.length){
                 return this._date_allEventMap
@@ -562,7 +562,7 @@ class SingleWordB {
         return outcome;
     }
 }
-class VocaB {
+export default class VocaB {
     get ling() {
         return this._ling;
     }

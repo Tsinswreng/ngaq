@@ -1,49 +1,70 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-//[23.05.23-2118,]
-const xml2js = require('xml2js');
-const fs = require('fs');
-const VocaRaw = require('./VocaRaw');
-class Config {
+/* //[23.05.23-2118,]
+
+const xml2js = require('xml2js')
+const fs = require('fs')
+const VocaRaw = require('./VocaRaw')
+const path = require('path')
+export default class Config{
+    public rootDir = path.dirname(__dirname);
+    private _configFilePath:string =  this.rootDir+'/config.xml'
+    private _xmlSrc:string = ''
+    private _dbUserName:string|undefined
+    private _dbPassword:string|undefined
+    
+    
+    
+    
     constructor() {
-        this._configFilePath = './config.xml';
-        this._xmlSrc = '';
         this.assign_xmlSrc();
     }
-    get configFilePath() {
+    
+    
+    get configFilePath(): string {
         return this._configFilePath;
     }
-    set configFilePath(value) {
+    
+    private set configFilePath(value: string) {
         this._configFilePath = value;
     }
-    get xmlSrc() {
+    
+    get xmlSrc(): string {
         return this._xmlSrc;
     }
-    set xmlSrc(value) {
+    
+    private set xmlSrc(value: string) {
         this._xmlSrc = value;
     }
-    get dbUserName() {
+    
+    get dbUserName(): string | undefined {
         return this._dbUserName;
     }
-    set dbUserName(value) {
+    
+    set dbUserName(value: string | undefined) {
         this._dbUserName = value;
     }
-    get dbPassword() {
+    
+    get dbPassword(): string | undefined {
         return this._dbPassword;
     }
-    set dbPassword(value) {
+    
+    set dbPassword(value: string | undefined) {
         this._dbPassword = value;
     }
-    assign_xmlSrc() {
-        this.xmlSrc = fs.readFileSync(this.configFilePath, 'utf-8');
+    
+    public assign_xmlSrc():void{
+        this.xmlSrc = fs.readFileSync(this.configFilePath, 'utf-8')
     }
+    
+    
 }
-exports.default = Config;
-function main() {
+
+/* function main(){
     //console.log(xml2js)
     let config = new Config();
-    xml2js.parseString(config.xmlSrc, (err, result) => {
-        console.dir(result);
-    });
-}
-//main()
+    
+    xml2js.parseString(config.xmlSrc, (err:any, result:any)=>{
+        console.dir(result)
+    })
+} */
+//main() */
