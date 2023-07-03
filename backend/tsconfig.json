@@ -3,8 +3,11 @@
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
-		"composite": true,
-		"outDir": "../backend-out",
+		//"composite": true,
+		"declaration": false,
+		//"outDir": "../backend-out",
+		"outDir": "./",
+		"rootDir": "./",
 		"allowJs": false,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,
@@ -30,15 +33,17 @@
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
-		"baseUrl": "../",
+		/* "baseUrl": "../",
 		"paths": {
 			"@root/*": ["../*"]
-		}
+		} */
 	},
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	//"include": ["/*.ts"],
+	"exclude": [],
 	// "include": [
 	// 	"backend/**/*.ts"
 	//   ],
