@@ -5,4 +5,4 @@ dist/
 backend-out/
 backend/**/*.js
 out/
-study/
+backend/src/study/*

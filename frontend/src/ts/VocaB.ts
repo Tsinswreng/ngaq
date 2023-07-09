@@ -27,6 +27,7 @@
 [23.06.15-1309,]{按˪憶或忘之按鈕後則示其權重ᵗ變ᵗ量}
 }
 }
+[23.07.05-2319,]撤銷
 */
 //import * as $ from 'jquery';
 //import axios from "axios";

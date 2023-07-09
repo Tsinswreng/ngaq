@@ -1,6 +1,5 @@
 //23.05.03-1311
 import * as fs from "fs";
-import { number, resolve } from "mathjs";
 import * as mysql from 'mysql';
 // import {Connection} from 'mysql2'
 // import mysql2 from 'mysql2';
