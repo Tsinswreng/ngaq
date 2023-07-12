@@ -27,6 +27,13 @@ npm run build
 
 ## 更新記錄
 
+### 20230712084918 3.3.0
+
+#### chore:
+
+* 更改了項目結構。前端代碼在`src/frontend`、後端代碼在`src/backend`、`src/shared`用于放置共用的工具。
+* 更改了.gitignore
+
 ### 20230709223858 3.2.0
 
 #### feat:

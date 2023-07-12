@@ -1,8 +1,12 @@
+
 node_modules/
 .idea/
 .vscode/
-dist/
+*/dist/
+*.js
 backend-out/
-backend/**/*.js
+src/backend/**/*.js
+src/shared/**/*.js
+src/**/*.js
 out/
-backend/src/study/*
+src/backend/src/study/*

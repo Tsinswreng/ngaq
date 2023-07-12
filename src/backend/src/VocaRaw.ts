@@ -444,6 +444,9 @@ export default class VocaRaw{
 							console.error('<tempToPush>')
 							console.error(tempToPush)
 							console.error('</tempToPush>')
+							console.error('<srcFilePath>')
+							console.error(this.srcFilePath)
+							console.error('</srcFilePath>')
 							throw new Error(`fullComment不應潙空、請檢查源詞表\n`+tempToPush.wordShape+'\n'+tempToPush.date)
 						}
 						wordUnits.push(tempToPush)

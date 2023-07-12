@@ -1,3 +1,4 @@
+
 import VocaRaw from "./VocaRaw"
 //const VocaRaw = require('./VocaRaw')
 /*
@@ -21,20 +22,30 @@ function addNew(){
 let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
 function backup(){
-	for (let i = 0; i < vocaObjs.length; i++) {
-		vocaObjs[i].backupTable().then((result)=>{console.log(result)})
-	}
+	return new Promise<string>((resolve, reject)=>{
+		for (let i = 0; i < vocaObjs.length; i++) {
+			vocaObjs[i].backupTable().then((result)=>{console.log(result)})
+		}
+		
+	})
+
 }
 
-function addNew(){
-	for (let i = 0; i < vocaObjs.length; i++) {
-		vocaObjs[i].addSingleWordsToDb().then((result)=>{console.log(result)})
-	}
+async function addNew(){
+	return new Promise<string>((resolve, reject)=>{
+		for (let i = 0; i < vocaObjs.length; i++) {
+			vocaObjs[i].addSingleWordsToDb().then((result)=>{console.log(result)})
+		}
+		resolve('addNew done')
+	})
+
 }
 
 backup()
 
-addNew()//待叶:輸出ʃ增ᵗ單詞ᵗ量
+addNew().then((data)=>{
+	console.log(data)
+})//待叶:輸出ʃ增ᵗ單詞ᵗ量
 
 
 

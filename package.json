@@ -23,6 +23,7 @@
 		"lodash": "^4.17.21",
 		"mariadb": "^3.1.2",
 		"mathjs": "^11.8.0",
+		"module-alias": "^2.2.3",
 		"moment": "^2.29.4",
 		"mysql": "^2.18.1",
 		"mysql2": "^3.2.4",
@@ -43,13 +44,23 @@
 		"webpack-cli": "^5.0.2"
 	},
 	"scripts": {
-		"start": "webpack serve --open",
-		"dev": "vite",
-		"build": "vue-tsc && vite build",
-		"preview": "vite preview",
-		"out": "cd backend && tsc -p ."
+		"start": "../../node_modules/.bin/webpack serve --open",
+		"dev": "cd src/frontend && vite",
+		"build": "cd src/frontend && vue-tsc && vite build",
+		"build2": "vue-tsc && vite build",
+		"preview": "../../node_modules/.bin/vite preview",
+		"out": "tsc -p . ",
+		"srv": "node ./src/backend/src/VocaServer.js",
+		"addWords": "node src/backend/src/BackupTable.js",
+		"all": "npm run addWords && npm run build && npm run out && node ./src/backend/src/VocaServer.js "
 	},
-	"paths":{
-		"@my_modules/*":["my_modules/*"]
+	"paths": {
+		"@my_modules/*": [
+			"my_modules/*"
+		]
+	},
+	"_moduleAliases": {
+		"@components": "dist/api/components",
+		"@services": "dist/services"
 	}
 }

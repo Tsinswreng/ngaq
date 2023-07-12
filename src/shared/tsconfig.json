@@ -1,13 +1,13 @@
 
 {
-	"extends": "../tsconfig.json",
+	// "extends": "../tsconfig.json",
 	"compilerOptions": {
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
 		"declaration": false,
 		//"outDir": "../backend-out",
 		"outDir": "./",
-		"rootDir": "./",
+		"rootDir": "../../",
 		"allowJs": false,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,

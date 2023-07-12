@@ -1,41 +1,13 @@
-/*
-//23.05.04-1726
-{
-	"compilerOptions": {
-		"target": "es2015",
-		"module": "commonjs", //模塊化ᵗ標準
-		//"lib": ["dom"]
-		//"outDir": "" //編譯後文件ᵗʃ在
-		//"outFile": "" //編譯後ᵗ代碼ˇ合一、受模塊化規範ᵗ影響
-		"strict": true, //全ᵗ嚴格ᵗ檢之總開關
-		//"allowJs": true, //昰否編譯js、默認ˋ否
-		//"checkJs": true, //昰否檢查js語法
-		//"removeComments": false, //
-		"noEmit": false, //不生成編譯後ᵗ文件
-		"noEmitOnError": false, //有錯旹生成編譯ᵗ文件
-		
-		"alwaysStrict": true, //恆開嚴格模式 有導包旹自動開嚴格模式
-		"noImplicitAny": false, //不准 隱式ᵗ any
-		"noImplicitThis": true, //不准 隱式ᵗ this
-		"strictNullChecks": true, //嚴格ᵈ檢空值
-		//npm i -D webpack webpack-cli typescript ts-loader
-		//"allowImportingTsExtensions": true,
-		
-		"moduleResolution": "Node" */
-/*当设置为 "Node" 时，TypeScript 编译器会使用 Node.js 的模块解析策略来解析模块的导入语句。具体来说，它会在以下目录下查找模块：
-当前目录下的 node_modules 文件夹
-父目录下的 node_modules 文件夹，一直查找到根目录
-系统级别的全局安装目录（如果使用了 -g 选项安装了全局模块）*//*
-
-	}
-}
-*/
-
-// 23.06.06-2031 重構
 
 {
+	//"extends": "../src/frontend/tsconfig.json",
 	"compilerOptions": {
-		"outDir": "out",
+/* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
+		//"composite": true,
+		"declaration": false,
+		//"outDir": "../backend-out",
+		"outDir": "./",
+		"rootDir": "./",
 		"allowJs": false,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,
@@ -49,7 +21,7 @@
 		//"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"noEmit": true, //不生成編譯後ᵗ文件
+		"noEmit": false, //不生成編譯後ᵗ文件
 		"noEmitOnError": false, //有錯旹不生成編譯ᵗ文件
 		"jsx": "preserve",
 		
@@ -60,22 +32,19 @@
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
-		"esModuleInterop": true, //用import導入commonJs模塊
-		"baseUrl": "./",
+		"esModuleInterop": true //用import導入commonJs模塊
+		/* "baseUrl": "../",
 		"paths": {
-			// "@root/*": ["./*"]
-			"@root": ["."]
-		}
+			"@root/*": ["../*"]
+		} */
 	},
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
+	"exclude": ["src/frontend/*"],
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-	"references": 
-	[
-		{ "path": "./tsconfig.node.json" },
-		//{"path": "./backend/tsconfig.json"}
-	]
+	//"include": ["/*.ts"],
+	
 	// "include": [
 	// 	"backend/**/*.ts"
 	//   ],

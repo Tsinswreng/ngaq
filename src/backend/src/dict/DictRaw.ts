@@ -1,6 +1,12 @@
 const sqlite3 = require("sqlite3").verbose();
 import * as fs from 'fs'
-const Txt = require("@my_modules/Txt")
+const rootDir = require('app-root-path').path
+import 'module-alias/register';
+import Txt from '../../../shared/Txt';
+
+//const Txt = require('../../../my_modules/Txt')
+//const Txt = require("@my_modules/Txt")
+//const Txt = require('Txt')
 /**
  * [23.07.08-2146,]
  * 用于處理字表、如rime輸入法之dict.yaml, 音韻學/方言字表等
@@ -14,16 +20,7 @@ export class DictRaw{
 	private _table:string[][] = [] //行,列
 
 
-	public static getTableFromStr(tableStr:string, splitter='\t'):string[][]{
-		let tableStr2:string = ContinuousRegExp.unifyNewline_s(tableStr)
-		let result:string[][] = []
-		let half:string[] = []
-		half = ContinuousRegExp.spliteStrByNewline_s(tableStr2)
-		
-		for(let i = 0; i < half.length; i++){
-			result = ContinuousRegExp.
-		}
-	}
+	
 
 	
 
@@ -122,4 +119,15 @@ function t20230618094140(){
 
 }
 
-t20230618094140()
+//t20230618094140()
+
+function t20230710114423(){
+	const rawStr:string = fs.readFileSync('D:/Program Files/Rime/User_Data/mscc.dict.yaml', 'utf-8')
+	//console.log(rawStr)
+	//console.log(Txt.getTableFromStr)//<!>{undefined}
+	//console.log(fs.readFileSync(rootDir+'/my_modules/Txt'))
+	const table:string[][] = Txt.getTableFromStr(rawStr)
+	console.log(table)
+}
+
+t20230710114423()

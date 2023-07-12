@@ -26,7 +26,7 @@ jap.tableName = 'jap'*/
 export default class VocaServer{
 	static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	static app = express();
-	static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
+	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static main(){
 		
@@ -37,8 +37,8 @@ export default class VocaServer{
 			next()
 		})
 		//VocaServer.app.use(express.static('browser'));
-		VocaServer.app.use(express.static('dist'));
-		VocaServer.app.use(express.static('frontend\\src\\browser'))
+		VocaServer.app.use(express.static(rootDir+'/src/frontend/dist'));
+		//VocaServer.app.use(express.static('frontend\\src\\browser'))
 		VocaServer.app.use(bodyParser.json());//??{}??
 		VocaServer.app.use(express.json({limit: '65536mb'}))
 		VocaServer.app.use(express.urlencoded({limit: '65536mb', extended:true}))
@@ -86,7 +86,9 @@ export default class VocaServer{
 			let path = req.path
 			console.log('path:'+path)
 			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(rootDir+'/dist/index.html')
+			res.sendFile(rootDir+'/src/frontend/dist/index.html')
+			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
+			//res.send('<h1>1919</h1>')
 		})
 		VocaServer.app.post('/post', (req:any, res:any)=>{
 			console.log(req.body)

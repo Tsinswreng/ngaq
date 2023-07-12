@@ -1,5 +1,5 @@
 //[23.07.09-2234,]
-class Txt{
+export default class Txt{
 	private constructor(){}
 	
 	/**
@@ -50,6 +50,18 @@ class Txt{
 	public static spliteStrByNewline_s(str:string):string[]{
 		str = Txt.unifyNewline_s(str)
 		let result:string[] = Txt.spliteStrBy_(str, '\n')
+		return result
+	}
+
+	public static getTableFromStr(tableStr:string, splitter='\t'):string[][]{
+		let tableStr2:string = Txt.unifyNewline_s(tableStr)
+		let result:string[][] = []
+		let half:string[] = []
+		half = Txt.spliteStrByNewline_s(tableStr2)
+		
+		for(let i = 0; i < half.length; i++){
+			result[i] = half[i].split(splitter)
+		}
 		return result
 	}
 
