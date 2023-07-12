@@ -2,6 +2,11 @@
 // const fs = require('fs')
 // import VocaServer from "./VocaServer";
 //const { Worker } = require('worker_threads');
+//import { Database } from "sqlite3";
+//const temp = require('sqlite3')
+// import * as sqlite3Temp from 'sqlite3'
+// let sqlite3 = sqlite3Temp.verbose()
+import { DictDb } from "./dict/DictRaw";
 /* console.log(__dirname)
 const voca:VocaRaw[] = VocaRaw.getObjsByConfig()
 //voca[1].init()
@@ -24,8 +29,16 @@ vocaObjs[1].查重().then((o)=>{
 
 //console.log('\a')
 
-let arr:string[] = ['a', 'b']
+let dictDb = new DictDb('saffes')
+//dictDb.creatTable('saffes')
+dictDb.testInsert()
 
-let str:string = arr[5]
+//console.log(dictDb.r)
 
-console.log(str)
+//dictDb.testInsert()
+//console.log(dictDb)
+
+
+
+
+ 

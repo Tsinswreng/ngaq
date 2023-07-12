@@ -1,94 +1,154 @@
-const sqlite3 = require("sqlite3").verbose();
+//const sqlite3 = require("sqlite3").verbose();
+import { Database } from 'sqlite3';
+import * as sqlite3Temp from 'sqlite3'
+const sqlite3 = sqlite3Temp.verbose()
 import * as fs from 'fs'
-const rootDir = require('app-root-path').path
+const rootDir:string = require('app-root-path').path
 import 'module-alias/register';
 import Txt from '../../../shared/Txt';
 
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
 //const Txt = require('Txt')
+
+class OcSyllable {
+
+}
+
+/**
+ * 音節
+ */
+class Syllable{
+	protected _whole?:string //整個音節
+	protected _phoneme?:string[] //音素
+	protected _fragments?:string[] //片段
+}
+
+/**
+ * 音節內的片段
+ */
+class FragmentSyllable{
+	protected _whole?:string //整個片段
+	protected _phoneme?:string[] //音素
+}
+
+/**
+ * 漢字
+ */
+class Kanji{
+	private _glyph?:string //字形
+	private _pronounce?:string //碼
+	private _freq?:string //出現頻率
+}
+
+
 /**
  * [23.07.08-2146,]
  * 用于處理字表、如rime輸入法之dict.yaml, 音韻學/方言字表等
  */
 export class DictRaw{
+	private _name?:string
 	private _srcPath?:string //源碼表文件路徑
 	private _splitter:string = '\t' //源碼表中分割字與碼之符號
 	//private _char:string[] = [] //字
 	//private _code:string[] = [] //碼、形碼或音碼
 
-	private _table:string[][] = [] //行,列
+	private _tableArr:string[][] = [] //行,列
 
+	public set tableArr(v){
+		this._tableArr = v
+	}
 
+	public get tableArr(){
+		return this._tableArr
+	}
+
+	public set name(v){
+		this._name = v
+	}
+
+	public get name(){
+		return this._name
+	}
+
+	public set splitter(v){
+		this._splitter = v
+	}
+
+	public get splitter(){
+		return this._splitter
+	}
+	public set srcPath(v){
+		this._srcPath = v
+	}
+
+	public get srcPath(){
+		return this._srcPath
+	}
 	
+	public assignTableArrByPath(path=this.srcPath){
+		if(!path){throw new Error('!path')}
+		this.tableArr = Txt.getTableFromStr(fs.readFileSync(path, 'utf-8'))
+	}
 
-	
-
-	
 }
 
+export class DictDb{
+/* 	private _db = new sqlite3.Database('db.sqlite', (err)=>{
+		if(err){throw err}
+	}); */
+	//public static dbPath:string = rootDir + '/db'
 
-class ContinuousRegExp{
+	public static readonly dbName = 'DictDb'
+	public static readonly dbPath = rootDir+'/db/'+DictDb.dbName+'.db'
+	public static readonly db:Database = new sqlite3.Database(DictDb.dbPath, (err)=>{
+		if(err){throw err}
+	})
+	private _tableName?:string
+	private _db?:Database
 
-	public static getUnescapeStr(str:string):string{
-		let result:string = str + ''  //
-		/* if(str === undefined){
-			throw new Error('0')
-		}
-		if(result === undefined ){
-			throw new Error('1')
-		}
-		if(result === 'undefined'){
-			throw new Error('2')
-		} */
-		
-		result = result.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\r/g, '\r')
-
-		if(result === undefined || result === 'undefined'){
-			//console.log('undefined')
-			result = ''
-		}
-		//console.log(result)
-		return result
+	constructor(tableName?:string){
+		this.tableName = tableName
 	}
 
-	/**
-	 * 用一連串正則表達式給字符串作替換
-	 * @param str 
-	 * @param regexArr -正則表達式數組。循環中每次替換時會把regexArr[i][0]匹配到的內容替換成regexArr[i][1]
-	 * @returns 
-	 */
-	public static replace(str:string, regexArr: string[][]):string{
-		let result:string = str + '' //複製字符串
-		for(let i = 0; i < regexArr.length; i++){
-			if(typeof(regexArr[i][0]) !== 'string'){
-				throw new Error(`regexArr[i][0]) !== 'string'`)
-			}
-			if(typeof(regexArr[i][1]) !== 'string'){
-				regexArr[i][1] = ''
-			}
-
-			let left = new RegExp(regexArr[i][0], 'gm')
-			let right:string = ContinuousRegExp.getUnescapeStr(regexArr[i][1])
-			result = result.replace(left, right)
-			//result = result.replace(/./g, '$0$0')
-			//result = XRegExp.replace(result, left, regexArr[i][1])
-			//result = XRegExp.replace(result, /(.)/g, '\\U$1')
-			//console.log(right)
-		}
-		return result
+	public set tableName(v){
+		this._tableName = v
 	}
-	/* public static replace(srcStr:string, left:string[], right:string[]):string{
-		if(left.length !== right.length){
-			throw new Error('left.length !== right.length');
-		}
-		let newStr = srcStr + ''
-		for(let i = 0; i < left.length; i++){
-			let regex = new RegExp(left[i])
-			newStr = srcStr.replace(regex, right[i])
-		}
-		return newStr
-	} */
+
+	public get tableName(){
+		return this._tableName
+	}
+
+	public get db(){
+		return this._db
+	}
+
+
+	public creatTable(tableName = this.tableName){
+		//IF NOT EXISTS 
+		let sql:string = `CREATE TABLE ${tableName} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			kanji VARCHAR(64) NOT NULL,
+			pronounce VARCHAR(64) NOT NULL
+		)`
+		DictDb.db.run(sql, (err)=>{
+			if(err){throw err}
+			console.log('at\t'+DictDb.dbPath)
+		})
+		//this.db.exec(testCreat)
+	}
+
+
+	public testInsert(tableName=this.tableName){
+		let sql = `INSERT INTO ${tableName} (kanji, pronounce) VALUES (?,?)` 
+		let v = ['我', 'waq']
+		DictDb.db.run(sql, v, (err)=>{
+			if(err){throw err}
+		})
+	}
+
+	
+
 }
 
 
@@ -121,13 +181,3 @@ function t20230618094140(){
 
 //t20230618094140()
 
-function t20230710114423(){
-	const rawStr:string = fs.readFileSync('D:/Program Files/Rime/User_Data/mscc.dict.yaml', 'utf-8')
-	//console.log(rawStr)
-	//console.log(Txt.getTableFromStr)//<!>{undefined}
-	//console.log(fs.readFileSync(rootDir+'/my_modules/Txt'))
-	const table:string[][] = Txt.getTableFromStr(rawStr)
-	console.log(table)
-}
-
-t20230710114423()

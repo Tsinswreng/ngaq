@@ -1,4 +1,7 @@
 //[23.07.09-2232,]
+//const fs = require('fs')
+import * as fs from 'fs';
+import * as path from 'path'
 export default class Util{
 	
 	private constructor(){}
@@ -31,4 +34,25 @@ export default class Util{
 		return traverseArray(arr, indexPath);
 	}
 
+	/**
+	 * 檢 路徑是存在、若存在則原樣返回
+	 * @param dir 
+	 * @returns 
+	 */
+	public static pathAt(dir:string):string{
+		if(!fs.existsSync(dir)){
+			console.error('<absoluteDir>')
+			console.error(path.resolve(dir))
+			console.error('</absoluteDir>')
+			throw new Error('file not found')
+		}
+		return dir
+	}
 }
+
+
+// function t20230712092052(){
+// 	//const path = require('path')
+// 	console.log(path.resolve(Util.pathAt(__dirname)))
+// }
+// t20230712092052()

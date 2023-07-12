@@ -5,13 +5,17 @@
 }*/
 
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
-const moment = require('moment')
-const cors = require('cors')
-const express = require('express')
-const bodyParser = require('body-parser')
-const querystring = require('querystring')
-const path = require('path')
-const rootDir = require('app-root-path').path
+import Util from "../../shared/Util";
+//const moment = require('moment')
+import moment from 'moment'
+//const cors = require('cors')
+//const express = require('express')
+import express from 'express'
+import bodyParser from "body-parser";
+//const bodyParser = require('body-parser')
+//import * as bodyParser from 'bodyParser'
+
+const rootDir:string = require('app-root-path').path
 
 //console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾
 /*const eng = new VocaRaw();
@@ -37,7 +41,7 @@ export default class VocaServer{
 			next()
 		})
 		//VocaServer.app.use(express.static('browser'));
-		VocaServer.app.use(express.static(rootDir+'/src/frontend/dist'));
+		VocaServer.app.use(express.static(Util.pathAt(rootDir+'/src/frontend/dist')));
 		//VocaServer.app.use(express.static('frontend\\src\\browser'))
 		VocaServer.app.use(bodyParser.json());//??{}??
 		VocaServer.app.use(express.json({limit: '65536mb'}))
