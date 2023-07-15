@@ -1,22 +1,13 @@
 
 
-class ContinuousRegExp{
+export default class ContinuousRegExp{
 
 	public static getUnescapeStr(str:string):string{
 		let result:string = str + ''  //
-		/* if(str === undefined){
-			throw new Error('0')
-		}
-		if(result === undefined ){
-			throw new Error('1')
-		}
-		if(result === 'undefined'){
-			throw new Error('2')
-		} */
 		
 		result = result.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\r/g, '\r')
 
-		if(result === undefined || result === 'undefined'){
+		if(result === undefined/*  || result === 'undefined' */){
 			//console.log('undefined')
 			result = ''
 		}

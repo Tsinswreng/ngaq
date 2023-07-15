@@ -420,11 +420,11 @@ export class Priority{
 		//let out = Math.ceil( Math.log2((dateDif/denominator)+1)+1 ) //改于 23.06.07-1003
 		//let out = Math.floor( Math.log2((dateDif/denominator)+1)+1 ) //[23.06.09-0928,]
 		//let out = Math.log2((dateDif/denominator)) //[23.06.09-1240,23.06.15-1250] [23.06.15-1254,]{原算法ˋ隔24小時 與 隔72小時 結果ᵗ差ᵗ不大。故改用 開平方 㕥代 取對數}
-		let out = (1/25)*Math.pow(dateDif, 1/2)
-		if(out <= 1){
-			out = 1.01;
+		let result = (1/25)*Math.pow(dateDif, 1/2)
+		if(result <= 1){
+			result = 1.01;
 		}
-		return out;
+		return result;
 	}
 
 	public getDebuff(durationOfLastRmbEventToNow:number):number{

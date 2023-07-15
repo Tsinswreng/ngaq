@@ -71,3 +71,17 @@ export class MainB{
 }
 
 const mainB = new MainB()
+
+// if(1 <= 2){
+//
+// }
+//
+// let a = 1;
+// if(a <= 2){
+// 	a = 4
+// }
+//
+// let out = 1;
+// if(out <= 1){
+// 	out = 1.01;
+// }

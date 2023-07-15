@@ -6,7 +6,7 @@
 		//"composite": true,
 		"declaration": false,
 		//"outDir": "../backend-out",
-		"outDir": "./",
+		"outDir": "./out",
 		"rootDir": "./",
 		"allowJs": false,
 		"target": "ES2015",
@@ -32,11 +32,12 @@
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
-		"esModuleInterop": true //用import導入commonJs模塊
-		/* "baseUrl": "../",
+		"esModuleInterop": true, //用import導入commonJs模塊
+		"baseUrl": ".",
 		"paths": {
-			"@root/*": ["../*"]
-		} */
+			"@root/*": ["."],
+			"@shared/*": ["src/shared/*"] //不能不寫/*
+		}
 	},
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,

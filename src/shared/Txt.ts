@@ -53,6 +53,12 @@ export default class Txt{
 		return result
 	}
 
+	/**
+	 * 從字符串中獲取二維數組表格
+	 * @param tableStr 
+	 * @param splitter 同一行中分割單元格的依據、默認製表符
+	 * @returns 
+	 */
 	public static getTableFromStr(tableStr:string, splitter='\t'):string[][]{
 		let tableStr2:string = Txt.unifyNewline_s(tableStr)
 		let result:string[][] = []
@@ -65,4 +71,60 @@ export default class Txt{
 		return result
 	}
 
+
+	/**
+	 * 刪除單行註釋
+	 * @param str 
+	 * @param patternOfFlag 單行註釋標誌對應的正則表達式字符串。若與正則表達式的元字符重合則需轉義、否則按元字符處理
+	 * @returns 
+	 */
+	public static removeSingleLineComments_s(str:string, patternOfFlag:string){
+		// let lines:string[] = Txt.spliteStrByNewline_s(str)
+		// for(let i = 0; i < lines.length; i++){
+		// }
+		let pattern = patternOfFlag+'.*$'
+		let regex = new RegExp(pattern, 'gm')
+		//console.log(regex)//t
+		return str.replace(regex, '')
+	}
+
+	/**
+	 * 把一維字符串數組合併成文本、換行符默認用\n
+	 * @param strArr 
+	 * @param newLine 
+	 */
+	public static mergeArrIntoStr(strArr: string[], newLine?: string): string;
+
+	/**
+	 * 把二維字符串數組表格合併成文本、換行符默認用\n、同一行的表格分割符默認用製表符
+	 * @param strArr 
+	 * @param newLine 
+	 * @param separator 
+	 */
+	public static mergeArrIntoStr(strArr: string[][], newLine?: string, separator?: string): string;
+	public static mergeArrIntoStr(arr: string[][] | string[], newLine: string = '\n', separator: string = '\t'): string {
+		if (Array.isArray(arr[0])) {
+			// 处理二维数组的情况
+			const result = arr.map((subArr) => subArr.join(separator)).join(newLine);
+			return result;
+		} else {
+			// 处理一维数组的情况
+			const result = arr.join(newLine);
+			return result;
+		}
+	}
+
+	public static getFilted(strArr:string[], patternStr:string):string[]{
+		let regex = new RegExp(patternStr, 'g')
+		let result:string[] = []
+		for(let i = 0; i < strArr.length; i++){
+			if(regex.test(strArr[i])){
+				result.push(strArr[i])
+				//console.log(strArr[i])//t
+			}
+		}
+		//console.log(regex)//t
+		return result
+	}
+//, separator='\t'
 }

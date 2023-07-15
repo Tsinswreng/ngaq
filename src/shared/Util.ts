@@ -21,7 +21,8 @@ export default class Util{
 	
 			const currentIndex = currentIndexPath[0];
 			if (currentIndex < 0 || currentIndex >= currentArray.length) {
-				throw new Error('Index out of bounds');
+				let msg = `Index ${currentIndex} out of bounds`
+				throw new Error(msg);
 			}
 
 			const nextArray = currentArray[currentIndex];
