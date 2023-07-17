@@ -4,15 +4,15 @@
 	"compilerOptions": {
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
-		"declaration": false,
+		"declaration": true,
 		//"outDir": "../backend-out",
-		"outDir": "./out",
+		"outDir": ".",
 		"rootDir": "./",
 		"allowJs": false,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,
 		//"module": "ESNext",
-		"module": "commonjs", //模塊化ᵗ標準
+		"module": "CommonJS", //模塊化ᵗ標準
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
 		
@@ -35,8 +35,12 @@
 		"esModuleInterop": true, //用import導入commonJs模塊
 		"baseUrl": ".",
 		"paths": {
-			"@root/*": ["."],
-			"@shared/*": ["src/shared/*"] //不能不寫/*
+			"@root/*": ["./"],
+			"*":["src/shared/*"],
+			"@shared/*": ["src/shared/*"], //不能不寫/*
+			"@frontend/*": ["src/frontend/*"],
+			"@backend/*": ["src/backend/*"],
+			"@@": ["src/shared/Util"], //test
 		}
 	},
 	"esModuleInterop": true,

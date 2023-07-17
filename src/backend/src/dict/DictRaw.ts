@@ -1,13 +1,17 @@
 //const sqlite3 = require("sqlite3").verbose();
+require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
+import 'module-alias/register';
+//console.log(1)
 import { Database } from 'sqlite3';
 import * as sqlite3Temp from 'sqlite3'
 const sqlite3 = sqlite3Temp.verbose()
 import * as fs from 'fs'
 const rootDir:string = require('app-root-path').path
-import 'module-alias/register';
+//import 'module-alias/register';
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"
-import Util from '../../../shared/Util';
+//console.log(1)
+import Util from '@shared/Util';
 import ContinuousRegExp from './ContinuousRegExp';
 
 
@@ -231,12 +235,15 @@ export class DictRaw{
 			body = Txt.removeSingleLineComments_s(body, '#')
 			//console.log(bodyLines)
 			bodyLines = Txt.spliteStrByNewline_s(body)
+			let blankRe = new RegExp(/(\s)+/g)
 			for(let i = 0; i < bodyLines.length; i++){
-				if( bodyLines[i] !== ''){ //!bodyLines[i].match(/(\s)*/g)
+				if( bodyLines[i] !== '' && !blankRe.test(bodyLines[i])){ //!bodyLines[i].match(/(\s)*/g)
+					
 					validBodyStr += (bodyLines[i]+'\n')
 				}
 			}
-			validBodyStr.slice(0, validBodyStr.length-1)
+
+			validBodyStr = validBodyStr.slice(0, validBodyStr.length-1)
 			this.validBody = Txt.getTableFromStr(validBodyStr)
 		}else{
 			throw new Error()

@@ -10,3 +10,4 @@ src/shared/**/*.js
 src/**/*.js
 out/
 src/backend/src/study/*
+src/**/*.d.ts

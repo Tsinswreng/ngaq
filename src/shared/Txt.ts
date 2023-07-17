@@ -105,11 +105,11 @@ export default class Txt{
 	public static mergeArrIntoStr(arr: string[][] | string[], newLine: string = '\n', separator: string = '\t'): string {
 		if (Array.isArray(arr[0])) {
 			// 处理二维数组的情况
-			const result = arr.map((subArr) => subArr.join(separator)).join(newLine);
+			const result = (arr as string[][]).map((subArr) => subArr.join(separator)).join(newLine);
 			return result;
 		} else {
 			// 处理一维数组的情况
-			const result = arr.join(newLine);
+			const result = (arr as string[]).join(newLine);
 			return result;
 		}
 	}

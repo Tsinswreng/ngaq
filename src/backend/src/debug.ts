@@ -6,9 +6,14 @@
 //const temp = require('sqlite3')
 // import * as sqlite3Temp from 'sqlite3'
 // let sqlite3 = sqlite3Temp.verbose()
+require('tsconfig-paths/register');
+import 'module-alias/register';
+//import Txt from "@shared/Txt"
+import Txt from "Txt"
+import Util from '@shared/Util';
 import { DictDb, DictRaw } from "./dict/DictRaw";
 //import Txt from "../../shared/Txt";
-import Txt from "@shared/Txt"
+
 import { GetCompiledJs } from "./GetCompiledJs";
 const rootDir:string = require('app-root-path').path
 /* console.log(__dirname)
@@ -41,7 +46,11 @@ let testTable = Txt.getTableFromStr(testStr)
 let testLines = Txt.spliteStrByNewline_s(testStr)
 //console.log(testTable)
 let merged = Txt.mergeArrIntoStr(testLines)
-console.log(dictRaw.validBody)
+dictRaw.assign_validBody()
+console.log(Util)
+console.log(0xf)
+
+
 //GetCompiledJs.test()
 //console.log(new RegExp(/^.*\.js$/g).test('.git\\hooks\\applypatch-msg.sample.js'))
 //console.log(dictRaw.validBody)

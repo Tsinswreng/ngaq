@@ -5,7 +5,8 @@
 }*/
 
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
-import Util from "../../shared/Util";
+//import Util from "../../shared/Util";
+import Util from "@shared/Util"
 //const moment = require('moment')
 import moment from 'moment'
 //const cors = require('cors')
