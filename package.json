@@ -31,6 +31,7 @@
 		"mysql2": "^3.2.4",
 		"sqlite": "^4.2.1",
 		"sqlite3": "^5.1.6",
+		"string-width": "^6.1.0",
 		"ts-loader": "^9.4.2",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.2.0",
@@ -67,7 +68,7 @@
 		"@components": "dist/api/components",
 		"@services": "dist/services",
 		"@root": ".",
-		"*":"src/shared/*"
+		"*": "src/shared/*"
 	},
 	"註釋": {}
 }

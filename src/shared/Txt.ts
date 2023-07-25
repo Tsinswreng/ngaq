@@ -114,17 +114,67 @@ export default class Txt{
 		}
 	}
 
+	/**
+	 * 字符串數組以正則表達式過濾
+	 * @param strArr 
+	 * @param patternStr 
+	 * @returns 
+	 */
+
 	public static getFilted(strArr:string[], patternStr:string):string[]{
-		let regex = new RegExp(patternStr, 'g')
+		let regex = new RegExp(patternStr/* , 'g' */)
+		
 		let result:string[] = []
 		for(let i = 0; i < strArr.length; i++){
+			regex.lastIndex = 0;
+			//console.log(regex+'.test(\''+strArr[i]+'\')')
+			//console.log(regex.test(strArr[i]))
 			if(regex.test(strArr[i])){
 				result.push(strArr[i])
-				//console.log(strArr[i])//t
+				//console.log('push: '+strArr[i])
 			}
+			//console.log('2')
+			//console.log(regex+'.test(\''+strArr[i]+'\')')
+			//console.log(regex.test(strArr[i]))
+
 		}
-		//console.log(regex)//t
+		//console.log('result: '+result)//t
 		return result
 	}
+
+	public static getMappedIndexes<T>(column1:T[], column2:T[]):Array<number[]|undefined>{
+		let result:Array<number[]|undefined> = []
+		let c2map = new Map<T, number[]>()
+		for(let i = 0; i < column2.length; i++){
+			let v:number[]|undefined = c2map.get(column2[i])
+			if(v){
+				v.push(i)
+				c2map.set(column2[i], v)
+			}else{
+
+				c2map.set(column2[i], [i])
+			}
+		}
+		//for(let e of l2map){console.log(e)}
+		for(let i = 0; i < column1.length; i++){
+			result[i] = c2map.get(column1[i])
+		}
+		return result
+	}
+
+	/**
+	 * 獲取字符串中的字符數
+	 * @param str 
+	 * @returns 
+	 */
+	public static countChar(str:string) {
+		// 使用正则表达式匹配字符串中的所有字符（包括Unicode字符）
+		const regex = /./gu;
+		const matches = str.match(regex);
+	  
+		// 返回字符的真实数量
+		return matches ? matches.length : 0;
+	}
+
 //, separator='\t'
 }
