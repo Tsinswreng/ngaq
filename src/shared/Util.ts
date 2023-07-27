@@ -75,6 +75,15 @@ export default class Util{
 		}
 		return dir
 	}
+
+	public static check(v:any){
+		if(v === undefined){throw new Error(v+' '+undefined)}
+		return v
+	}
+
+	/* public static getFieldNames<T>(obj:T):(keyof T)[]{
+		return Object.keys({} as T) as (keyof T)[];
+	} */
 }
 
 

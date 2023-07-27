@@ -4,6 +4,7 @@
   數據庫中null作0
 }*/
 
+require('tsconfig-paths/register');
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 //import Util from "../../shared/Util";
 import Util from "@shared/Util"

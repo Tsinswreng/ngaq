@@ -15,6 +15,7 @@ import { DictDb, DictRaw } from "./dict/Dict";
 //import Txt from "../../shared/Txt";
 
 import { GetCompiledJs } from "./GetCompiledJs";
+import { partial } from 'lodash';
 
 const rootDir:string = require('app-root-path').path
 /* console.log(__dirname)
@@ -39,14 +40,11 @@ vocaObjs[1].查重().then((o)=>{
 
 //console.log('\a')
 
-let dictDb = new DictDb('saffes')
-let dictRaw = new DictRaw('D:/Program Files/Rime/User_Data/saffes.dict.yaml')
-let testStr = dictRaw.srcStr.slice(0, 512)
-let uut = Txt.removeSingleLineComments_s(testStr, '#')
-let testTable = Txt.getTableFromStr(testStr)
-let testLines = Txt.spliteStrByNewline_s(testStr)
-//console.log(testTable)
-let merged = Txt.mergeArrIntoStr(testLines)
+//let dictDb = new DictDb('saffes')
+//let dictDb = new DictDb({dbPath=''})
+//Partial<DictDb>
+
+//let dictRaw = new DictRaw('D:/Program Files/Rime/User_Data/saffes.dict.yaml')
 //dictRaw.assign_validBody()
 
 // Dict.run().then((data)=>{
@@ -57,16 +55,21 @@ let merged = Txt.mergeArrIntoStr(testLines)
 // 	console.error(e)
 // })
 //DictDb.run()
-dictDb.attachFreq().then((d)=>{console.log(d)})
+//dictDb.attachFreq().then((d)=>{console.log(d)})
+//DictDb.getDuplication('kana').then((d)=>{console.log(d)})
+//DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))
+
 // DictDb.quickStart('D:/Program Files/Rime/User_Data/OC_schuesslerOC.dict.yaml').then(
 // 	()=>{DictDb.quickStart('D:/Program Files/Rime/User_Data/saffes.dict.yaml')}
 // )
-
+//DictDb.attachFreq('saffes')
+//DictDb.testTransaction('saffes')
+let db = new DictDb({dbName:'御栽小姐的狗的數據庫'})
 //Dict.putKanjiFreqTable()
 //DictDb.getTableInfo('saffes').then((d)=>{console.log(d)})
 //DictDb.isColumnExist('saffes', 'kanji').then((d:boolean)=>{console.log(d)})
 
-
+console.log(42)
 
 
 // let dk = new Dict('D:/Program Files/Rime/User_Data/dk.dict.yaml')
@@ -76,3 +79,4 @@ dictDb.attachFreq().then((d)=>{console.log(d)})
 //DictDb.countDistinct('OC_schuesslerOC', 'id').then((d)=>{console.log(d)}).catch((e)=>{console.log(e)})
 // dictRaw.assign_validBody(false)
 // console.log(dictRaw.validBody)
+

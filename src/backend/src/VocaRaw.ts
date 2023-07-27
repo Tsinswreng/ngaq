@@ -23,6 +23,7 @@ const util = require('util');
 常ᵈ自動ᵈ備份表
 配置文件
 新建一數據庫、㕥錄用戶ᵗ行爲
+給 單詞列 增 索引
  } */
 class SingleWord{
 	private _ling:string
