@@ -11,7 +11,8 @@ const rootDir:string = require('app-root-path').path
 import Txt from "@shared/Txt"
 import Util from '@shared/Util';
 import ContinuousRegExp from './ContinuousRegExp';
-import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, columnName} from './DictType'
+import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
+import * as DictType from './DictType'
 
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
@@ -245,7 +246,9 @@ export class DictRaw {
 			}
 		}
 		let msg = `in ${this.srcPath} , "..." Not found`
-		throw new Error(msg)
+		//throw new Error(msg)
+		console.log(msg)
+		return null
 	}
 
 	public get_header(){
@@ -350,6 +353,16 @@ export class DictRaw {
 	public assign_srcLines(){
 		if(!this.srcStr){throw new Error('!this.srcStr')}
 		this.srcLines = Txt.spliteStrByNewline_s(this.srcStr)
+	}
+
+
+	public static getDictYamlPaths(userPath:string='D:/Program Files/Rime/User_Data'):string[]{
+		const fileNames:string[] = fs.readdirSync(userPath)
+		let dictyamlFullPath:string[] = Txt.getFilted(fileNames, '^.*\\.dict\\.ya?ml$')
+		for(let i = 0; i < dictyamlFullPath.length; i++){
+			dictyamlFullPath[i] = userPath+'/'+dictyamlFullPath[i]
+		}
+		return dictyamlFullPath
 	}
 
 	
@@ -469,10 +482,10 @@ export class DictDb{
 	public async creatTable(tableName = this.tableName){
 		
 		let sql:string = `CREATE TABLE [${tableName}] ( \
-${columnName.id} INTEGER PRIMARY KEY AUTOINCREMENT, \
-${columnName.char} VARCHAR(64) NOT NULL, \
-${columnName.code} VARCHAR(64) NOT NULL, \
-${columnName.ratio} VARCHAR(64) \
+${cn.id} INTEGER PRIMARY KEY AUTOINCREMENT, \
+${cn.char} VARCHAR(64) NOT NULL, \
+${cn.code} VARCHAR(64) NOT NULL, \
+${cn.ratio} VARCHAR(64) \
 )`
 
 		return new Promise((s,j)=>{
@@ -512,15 +525,17 @@ ${columnName.ratio} VARCHAR(64) \
 			db.serialize(()=>{
 				db.run('BEGIN TRANSACTION')
 			})
-			const stmt = db.prepare(sql)
+			const stmt = db.prepare(sql, (err)=>{
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
+			})
 			for(let i = 0; i < values.length; i++){
 				stmt.each(values[i], (err, row:T)=>{
-					if(err){j(sql+'\n'+err);return}
+					if(err){console.error(sql+'\n'+err+'\n');j(err);return}
 					result.push(row)
 				})
 			}
 			db.all('COMMIT', (err,rows)=>{
-				if(err){j(sql+'\n'+err);return};
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
 				s(result)
 			})
 		})
@@ -531,14 +546,14 @@ ${columnName.ratio} VARCHAR(64) \
 	public async insert(data:DictDbRow[]|string[][]){
 		Util.check(this.db)
 		let rowObjs:DictDbRow[] = []
-		if(columnName.char in data[0] && columnName.code in data[0]){
+		if(cn.char in data[0] && cn.code in data[0]){
 			rowObjs = data as DictDbRow[]
 		}else{
 			rowObjs = DictDb.toObjArr(data as string[][])
 		}
 		this.db!.serialize(()=>{
 			this.db!.run('BEGIN TRANSACTION')
-			const stmt = this.db!.prepare(`INSERT INTO '${this.tableName}' (${columnName.char}, ${columnName.code}) \
+			const stmt = this.db!.prepare(`INSERT INTO '${this.tableName}' (${cn.char}, ${cn.code}) \
 VALUES (?,?)`)
 			for(let i = 0; i < data.length; i++){
 				stmt.run(rowObjs[i].char, rowObjs[i].code)
@@ -557,29 +572,31 @@ VALUES (?,?)`)
 	}
 
 	public static async attachFreq(db:Database, tableName:string ,essayTableName='essay'){
-		let b1 = await DictDb.isColumnExist(db, tableName ,columnName.freq)
-		let b2 = await DictDb.isColumnExist(db,tableName ,columnName.essay_id)
+		let b1 = await DictDb.isColumnExist(db, tableName ,cn.freq)
+		let b2 = await DictDb.isColumnExist(db,tableName ,cn.essay_id)
 		if(!b1 || !b2){
 			let altSql = new Array<string>()
-			//altSql[0] = `ALTER TABLE '${tableName}' ADD COLUMN 'freq' VARCHAR(64)`
-			altSql[1] = `ALTER TABLE '${tableName}' ADD COLUMN ${columnName.essay_id} INTEGER REFERENCES ${essayTableName}(id) ON DELETE SET NULL`
+			altSql[0] = `ALTER TABLE '${tableName}' ADD COLUMN '${cn.freq}' INTEGER`
+			altSql[1] = `ALTER TABLE '${tableName}' ADD COLUMN ${cn.essay_id} INTEGER REFERENCES ${essayTableName}(id) ON DELETE SET NULL`
 			/* await new Promise((s,j)=>{
 				DictDb.db.run(altSql,(err)=>{
 					if(err){j(err);return}
 					s(0)
 			})}) */
 			//await DictDb.all(DictDb.db, altSql[0])
+			await DictDb.all(db, altSql[0])
 			await DictDb.all(db, altSql[1])
+			
 		}
 		let attachSql = `UPDATE '${tableName}' \
-\ SET freq = COALESCE(${essayTableName}.pronounce, '') \
+\ SET ${cn.freq} = CAST(COALESCE(${essayTableName}.${cn.code}, '') AS INTEGER) \
 \ FROM ${essayTableName} \
-\ WHERE '${tableName}'.${columnName.char} = ${essayTableName}.${columnName.char};`//不使用外鍵、已棄用
+\ WHERE '${tableName}'.${cn.char} = ${essayTableName}.${cn.char};`//不使用外鍵、已棄用
 
 		let attachSql2 = `UPDATE '${tableName}' \
-\ SET essay_id = COALESCE(${essayTableName}.id, '') \
+\ SET ${cn.essay_id} = COALESCE(${essayTableName}.${cn.id}, '') \
 \ FROM ${essayTableName} \
-\ WHERE '${tableName}'.${columnName.char} = ${essayTableName}.${columnName.char};`
+\ WHERE '${tableName}'.${cn.char} = ${essayTableName}.${cn.char};`
 		//DictDb.db.run(attachSql, (err)=>{if(err){console.error(attachSql);j(err);return}s(0)})
 		DictDb.all(db, attachSql)
 		DictDb.all(db, attachSql2)
@@ -588,7 +605,7 @@ VALUES (?,?)`)
 
 	public static async putNewTable(dictRaw:DictRaw){
 		if(!dictRaw.name){throw new Error("!dictRaw.name");}
-		let dictDb = new DictDb({dbName:dictRaw.name})
+		let dictDb = new DictDb({tableName:dictRaw.name})
 		let b:boolean = await dictDb.isTableExists()
 		if(!b){await dictDb.creatTable()}
 		dictDb.insert(dictRaw.validBody).catch((e)=>{console.error(e)})
@@ -625,6 +642,73 @@ VALUES (?,?)`)
 			}
 		}
 		return false
+	}
+
+	public static async qureySqlite_sequence(db:Database){
+		let sql = `SELECT * FROM sqlite_sequence`
+		return /* await */ DictDb.all<DictType.Sqlite_sequence>(db, sql)
+	}
+
+	public static async querySqlite_master(db:Database){
+		let sql = `SELECT * FROM sqlite_master`
+		return /* await */ DictDb.all<DictType.Sqlite_master>(db, sql)
+	}
+
+	public static async DropAllTables(db:Database){
+		let tableNames:string[] = []
+		//let seqs = await DictDb.qureySqlite_sequence(db)
+		let info = await DictDb.querySqlite_master(db)
+		//console.log(seqs)//t
+		//let prms:Promise<any>[] = []
+		for(let i = 0; i < info.length;i++){
+			//prms.push(DictDb.DropTable(db,seqs[i].name))
+			if(info[i].type === 'table' && info[i].name !== 'sqlite_sequence' && info[i].name !== 'sqlite_master')
+			{tableNames.push(info[i].name)}
+		}
+		return DictDb.DropTable(db,tableNames)
+		//return Promise.all(prms)
+	}
+
+	public static async DropTable(db:Database, tableName:string|string[]){
+		if(Array.isArray(tableName)){
+			//console.log(111)
+			//console.log(tableName)//t
+			// let sql = `DROP TABLE ?;`
+			// let v:string[] = tableName
+			// return DictDb.transaction(db, sql, v) <坑>{蓋佔位符ˉ?皆不可㕥代表名}
+			let prms:Promise<any>[] = []
+			for(let i = 0; i < tableName.length; i++){
+				let sql = `DROP TABLE '${tableName[i]}';`
+				//console.log(sql)
+				//DictDb.all(db,sql).then(()=>{})//t
+				prms.push(DictDb.all(db,sql))
+			}
+			//console.log(114514)
+
+			return Promise.all(prms)
+		}else{
+			let sql = `DROP TABLE ${tableName};`
+			return DictDb.all(db, sql)
+		}
+	}
+
+	/**
+	 * 先盡刪表、然後把整個User_Data下的.dict.yaml文件 字表的有效部分添進數據庫
+	 * @param userPath User_Data的絕對路徑
+	 */
+	public static async testAll(db:Database, userPath:string='D:/Program Files/Rime/User_Data'){
+		await DictDb.DropAllTables(db)
+		await DictDb.putEssay(db)
+		let paths:string[] = DictRaw.getDictYamlPaths(userPath)
+		let prms:Promise<any>[] = []
+		for(let i = 0; i < paths.length;i++){
+			let temp = DictDb.putNewTable(new DictRaw({srcPath:paths[i]})).catch((e)=>{
+				console.error(paths[i]+'\n'+e)
+			})
+			await temp // 防 sqlite busy
+			//prms.push(temp)
+		}
+		//return Promise.all(prms)
 	}
 
 	
@@ -754,7 +838,8 @@ VALUES (?,?)`)
 	public static async putEssay(db:Database, path=new DictDb({}).essayPath, essayName='essay'){
 		return new Promise(async(s,j)=>{
 			let b = await DictDb.isTableExist(db, essayName)
-			if(!b){await DictDb.quickStart(path,essayName)}
+			//if(!b){await DictDb.quickStart(path,essayName)}
+			if(!b){await DictDb.putNewTable(new DictRaw({srcPath:path, name:essayName}))}
 			s(0)
 		})
 	}
@@ -802,7 +887,8 @@ VALUES (?,?)`)
 						console.error('<sql>');console.error(sql);console.error('</sql>')
 						console.error('<tableInfo>');console.error(tableInfo);console.error('</tableInfo>')
 						console.error('<rows>');console.error(rows);console.error('</rows>')
-						j(err+'|| rows.length !== tableInfo.length');
+						console.error('|| rows.length !== tableInfo.length')
+						j(err);
 						return
 					}
 					//s(rows)
@@ -820,39 +906,59 @@ VALUES (?,?)`)
 	}
 
 
-
+	/**
+	 * 取 重複項。若char,code,ratio皆同則視爲重複。
+	 * @param db 
+	 * @param tableName 
+	 * @returns 
+	 */
 	public static async getDuplication(db:Database, tableName:string){
 		let sql = 
-`SELECT ${columnName.char}, ${columnName.code}, ${columnName.ratio}, COUNT(*) AS count \
+`SELECT ${cn.char}, ${cn.code}, ${cn.ratio}, COUNT(*) AS count \
 FROM '${tableName}' \
-GROUP BY ${columnName.char}, ${columnName.code}, ${columnName.ratio} \
+GROUP BY ${cn.char}, ${cn.code}, ${cn.ratio} \
 HAVING COUNT(*) > 1;`
 		return new Promise<Duplication[]>((s,j)=>{
 			db.all(sql, (err, rows:Duplication[])=>{
-				if(err){j(err);return}
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
 				s(rows)
 			})
 		})
 	}
 
+	/**
+	 * 刪除重複項、只保留id最大者。若char,code,ratio皆同則視爲重複。
+	 * @param db 
+	 * @param tableName 
+	 * @returns 
+	 */
+
 	public static async deleteDuplication(db:Database, tableName:string){
 		let sql = 
-`DELETE FROM '${tableName}' WHERE ID NOT IN (SELECT MAX(ID) FROM '${tableName}' GROUP BY ${columnName.char}, ${columnName.code}, ${columnName.ratio})`
+`DELETE FROM '${tableName}' WHERE ID NOT IN (SELECT MAX(ID) FROM '${tableName}' GROUP BY ${cn.char}, ${cn.code}, ${cn.ratio})`
 		return new Promise((s,j)=>{
 			db.all(sql, (err)=>{
-				if(err){j(err);return}
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
 				s(0)
 			})
 		})
 	}
 
-	public static async sum(){
-/* 		SELECT SUM(CASE
-			WHEN freq NOT NULL AND freq GLOB '*[0-9]*'
-			THEN CAST(freq AS INTEGER)
-			ELSE 0
-		  END) AS sum_result
- FROM saffes; */
+	/**
+	 * 對某列求和、支持字符串轉數字
+	 * @param db 
+	 * @param tableName 
+	 * @param columnName 
+	 * @returns 
+	 */
+	public static async getSum(db:Database, tableName:string, columnName:string):Promise<number>{
+		let sql = `SELECT SUM(CASE \
+WHEN '${tableName}' NOT NULL AND ${columnName} GLOB '*[0-9]*' \
+THEN CAST(${columnName} AS INTEGER) \
+ELSE 0 \
+END) AS sum_result \
+FROM '${tableName}';`
+		return (await DictDb.all<number>(db, sql))[0]
 	}
 
 
@@ -864,9 +970,11 @@ HAVING COUNT(*) > 1;`
 	 * @returns 
 	 */
 	public static all<T>(db:Database, sql:string, params?:any){
+		//console.log(sql)//t
 		return new Promise<T[]>((s,j)=>{
 			db.all(sql, params,(err,rows:T[])=>{
-				if(err){j(sql+'\n'+err);return}
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+				//console.log(rows)//t
 				s(rows)
 			})
 		})

@@ -25,7 +25,7 @@ export interface DictDbRow{
 	essay_id?:number|null
 }
 
-export const columnName ={
+export const cn ={ //column name
 	id:'id',
 	char:'char',
 	code:'code',
@@ -41,6 +41,19 @@ export interface SqliteTableInfo{
 	notnull: 0|1
 	dflt_value:number|null//默認值
 	pk:0|1 //主鍵
+}
+
+export interface Sqlite_sequence{
+	name:string
+	seq:number
+}
+
+export interface Sqlite_master{
+	type:string
+	name:string
+	tbl_name:string
+	rootpage:number
+	sql:string
 }
 
 export interface DictRawConfig{

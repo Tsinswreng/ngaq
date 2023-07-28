@@ -57,20 +57,22 @@ vocaObjs[1].查重().then((o)=>{
 //DictDb.run()
 //dictDb.attachFreq().then((d)=>{console.log(d)})
 //DictDb.getDuplication('kana').then((d)=>{console.log(d)})
-//DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))
+
 
 // DictDb.quickStart('D:/Program Files/Rime/User_Data/OC_schuesslerOC.dict.yaml').then(
 // 	()=>{DictDb.quickStart('D:/Program Files/Rime/User_Data/saffes.dict.yaml')}
 // )
 //DictDb.attachFreq('saffes')
 //DictDb.testTransaction('saffes')
-let db = new DictDb({dbName:'御栽小姐的狗的數據庫'})
 //Dict.putKanjiFreqTable()
 //DictDb.getTableInfo('saffes').then((d)=>{console.log(d)})
 //DictDb.isColumnExist('saffes', 'kanji').then((d:boolean)=>{console.log(d)})
 
-console.log(42)
-
+let db = new DictDb({})
+// DictDb.putEssay(db.db)
+// DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))
+// DictDb.attachFreq(db.db, 'saffes')
+DictDb.testAll(db.db).catch((e)=>{console.error(e)})
 
 // let dk = new Dict('D:/Program Files/Rime/User_Data/dk.dict.yaml')
 // let dkDb = new DictDb('www')
