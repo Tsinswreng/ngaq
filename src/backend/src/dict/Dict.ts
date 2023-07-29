@@ -56,8 +56,8 @@ export class Dict{
 	private _字頻總和?:number
 	private _加權重複率?:number
 
-	public constructor(name:string){
-		this.name = name
+	public constructor(props:Partial<Dict>){
+		Object.assign(this, props)
 	}
 	public get name(){
 		return this._name
@@ -89,12 +89,27 @@ export class Dict{
 	}
 
 	public async assign_無重複(){
-		this._無重複漢字數 = await DictDb.countDistinct(this.dbObj.db!, this.name, 'kanji')
-		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, 'pronounce')
+		this._無重複漢字數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
+		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
 	}
 
 	public async assign_字頻總和(){
 		//this._字頻總和 = await
+	}
+
+	public async countAll(){
+		await this.assign_無重複()
+		await this.assign_字頻總和()
+	}
+
+	public async putInfo(){
+		let keys:string[] = Object.keys(this)
+		for(let i = 0; i < keys.length; i++){
+			//let fun = eval()
+			console.log(keys[i])
+		}
+		//console.log(this.無重複音節數)
+		console.log(this._無重複音節數)
 	}
 
 
@@ -622,16 +637,16 @@ VALUES (?,?)`)
 	}
 
 	public static getTableInfo(db:Database, tableName:string){
-		let result:SqliteTableInfo[] = []
-		return new Promise<SqliteTableInfo[]>((s,j)=>{
-			const sql = `PRAGMA table_info('${tableName}')`
+		const sql = `PRAGMA table_info('${tableName}')`
+		//let result:SqliteTableInfo[] = []
+		/* return new Promise<SqliteTableInfo[]>((s,j)=>{
 			db.all(sql, (err, rows:SqliteTableInfo[])=>{
 				if(err){console.error(sql);j(err);return}
 				result = rows
 				s(result)
 			})
-		})
-
+		}) */
+		return DictDb.all<SqliteTableInfo>(db,sql)
 	}
 
 	public static async isColumnExist(db:Database, tableName:string, columnName:string){
@@ -700,14 +715,27 @@ VALUES (?,?)`)
 		await DictDb.DropAllTables(db)
 		await DictDb.putEssay(db)
 		let paths:string[] = DictRaw.getDictYamlPaths(userPath)
-		let prms:Promise<any>[] = []
+		let names:string[] = []
+		for(let i = 0; i < paths.length; i++){
+			let temp = new DictRaw({srcPath:paths[i]})
+			let name = temp.getOriginNameInDictYaml()
+			if(name){names.push(name)}
+		}
+
+		//let prms:Promise<any>[] = []
 		for(let i = 0; i < paths.length;i++){
-			let temp = DictDb.putNewTable(new DictRaw({srcPath:paths[i]})).catch((e)=>{
-				console.error(paths[i]+'\n'+e)
+			let pro = i+'/'+paths.length
+			console.log(pro)
+			await DictDb.putNewTable(new DictRaw({srcPath:paths[i]})).catch((e)=>{
+				console.error(paths[i])
+				console.log(e)
 			})
-			await temp // 防 sqlite busy
+			//await temp // 防 sqlite busy
 			//prms.push(temp)
 		}
+		// for(let i = 0; i < names.length;i++){
+		// 	await DictDb.attachFreq(db, names[i])
+		// }
 		//return Promise.all(prms)
 	}
 
@@ -804,7 +832,7 @@ VALUES (?,?)`)
 		
 	// }
 
-	public static async quickStart(path:string, name?:string){
+	/* public static async quickStart(path:string, name?:string){
 		return new Promise(async(s,j)=>{
 			//console.log(path)//t
 			let dictRaw:DictRaw|undefined
@@ -829,7 +857,7 @@ VALUES (?,?)`)
 			s(dictRaw.name+'成功')
 		})
 		
-	}
+	} */
 
 	/**
 	 * 把八股文(字頻表)加進數據庫裏、表名命名爲essay
@@ -959,6 +987,20 @@ ELSE 0 \
 END) AS sum_result \
 FROM '${tableName}';`
 		return (await DictDb.all<number>(db, sql))[0]
+	}
+
+	/**
+	 * 把一列中的null值轉爲指定值
+	 * @param db 
+	 * @param tableName 
+	 * @param columnName 
+	 * @param target 
+	 * @returns 
+	 */
+	public static async castNull(db:Database, tableName:string, columnName:string, target:any){
+		let sql = `UPDATE '${tableName}' SET ${columnName} = \ 
+CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
+		return DictDb.all(db, sql)
 	}
 
 

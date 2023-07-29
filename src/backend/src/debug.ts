@@ -11,13 +11,14 @@ import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
 import Util from '@shared/Util';
-import { DictDb, DictRaw } from "./dict/Dict";
+import { DictDb, DictRaw, Dict } from "./dict/Dict";
 //import Txt from "../../shared/Txt";
 
 import { GetCompiledJs } from "./GetCompiledJs";
 import { partial } from 'lodash';
 
 const rootDir:string = require('app-root-path').path
+Error.stackTraceLimit = 50;
 /* console.log(__dirname)
 const voca:VocaRaw[] = VocaRaw.getObjsByConfig()
 //voca[1].init()
@@ -69,10 +70,18 @@ vocaObjs[1].查重().then((o)=>{
 //DictDb.isColumnExist('saffes', 'kanji').then((d:boolean)=>{console.log(d)})
 
 let db = new DictDb({})
+let dict = new Dict({name:'saffes'})
+dict.countAll().then(()=>{
+	dict.putInfo()
+	console.log(dict.無重複漢字數)
+})
+
 // DictDb.putEssay(db.db)
-// DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))
+//DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))
+//DictDb.attachFreq(db.db, 'saffes')
 // DictDb.attachFreq(db.db, 'saffes')
-DictDb.testAll(db.db).catch((e)=>{console.error(e)})
+//DictDb.testAll(db.db).catch((e)=>{console.error(e)})
+
 
 // let dk = new Dict('D:/Program Files/Rime/User_Data/dk.dict.yaml')
 // let dkDb = new DictDb('www')
