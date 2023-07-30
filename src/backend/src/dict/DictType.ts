@@ -1,3 +1,5 @@
+// <>{TypeORM?}
+
 export interface Duplication{
 	kanji:string
 	pronounce:string

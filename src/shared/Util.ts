@@ -76,14 +76,49 @@ export default class Util{
 		return dir
 	}
 
-	public static check(v:any){
-		if(v === undefined){throw new Error(v+' '+undefined)}
+	public static getNonFalse<T>(v:T){
+
+		if(!v){throw new Error(v+'')}
 		return v
 	}
 
-	/* public static getFieldNames<T>(obj:T):(keyof T)[]{
-		return Object.keys({} as T) as (keyof T)[];
-	} */
+	public static 有重複排列<T>(seto:T[]|Set<T>, n:number){
+		let setus:Set<T>
+		if(seto instanceof Set){
+			setus = seto
+		}
+		else{
+			setus = new Set<T>([...seto])
+		}
+		let arr = [...setus]
+
+		for(let i = 0; i < arr.length; i++){
+			for(let j = 0; j < n; j++){
+
+			}
+		}
+
+		function plus(arr:number[], plusNum:number, carryBit:number){
+			let result = arr.slice()
+			let lastEle = result[result.length-1]
+			//let carryOver = 0
+			for(let i = result.length-1; i>=0; i--){
+				result[i] += plusNum
+				plusNum = 0
+				if(result[i]>=carryBit && i !== 0){
+					plusNum = parseInt((result[i] / carryBit)+'')
+					result[i] -= carryBit
+				}else{
+					break
+				}
+			}
+			return result
+		}
+
+	}
+
+	
+	
 }
 
 

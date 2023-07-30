@@ -69,12 +69,22 @@ vocaObjs[1].查重().then((o)=>{
 //DictDb.getTableInfo('saffes').then((d)=>{console.log(d)})
 //DictDb.isColumnExist('saffes', 'kanji').then((d:boolean)=>{console.log(d)})
 
-let db = new DictDb({})
-let dict = new Dict({name:'saffes'})
-dict.countAll().then(()=>{
-	dict.putInfo()
-	console.log(dict.無重複漢字數)
-})
+async function debug(){
+	//let name = 'OC_schuesslerOC'
+	let name = 'OC_msoeg'
+	let db = new DictDb({})
+	//await DictDb.DropAllTables(db.db)
+	let dict = new Dict({name:name})
+	await DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/OC_msoeg.dict.yaml'}))
+	await DictDb.attachFreq(db.db, name)
+	await dict.countAll()
+	console.log(dict)
+}
+//debug()
+
+let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
+let ar = [7,8,9]
+console.log(Util.plus(ar, 8, 10))
 
 // DictDb.putEssay(db.db)
 //DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))

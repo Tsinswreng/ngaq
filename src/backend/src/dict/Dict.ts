@@ -54,7 +54,8 @@ export class Dict{
 	private _無重複漢字數?:number
 	private _無重複音節數?:number
 	private _字頻總和?:number
-	private _加權重複率?:number
+	private _加頻重碼率?:number
+	private _重碼頻數?:number
 
 	public constructor(props:Partial<Dict>){
 		Object.assign(this, props)
@@ -70,6 +71,8 @@ export class Dict{
 	public get dbObj(){
 		return this._dbObj
 	}
+
+	public get 重碼頻數(){return this._重碼頻數;}
 	
 	public get 無重複漢字數(){
 		return this._無重複漢字數
@@ -84,33 +87,46 @@ export class Dict{
 	}
 
 	
-	public get 加權重複率(){
-		return this._加權重複率
+	public get 加頻重碼率(){
+		return this._加頻重碼率
 	}
 
-	public async assign_無重複(){
-		this._無重複漢字數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
-		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
+	public async assign_重碼頻數(){
+		let objs = await DictDb.get重碼頻數(this.dbObj.db, this.name)
+		let sum = 0
+		for(let i = 0; i < objs.length; i++){
+			sum += objs[i].freq_of_homo
+		}
+		this._重碼頻數 = sum
 	}
 
-	public async assign_字頻總和(){
-		//this._字頻總和 = await
-	}
 
 	public async countAll(){
-		await this.assign_無重複()
-		await this.assign_字頻總和()
+		//<待做>{驗ᵣ重複項}
+		await DictDb.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
+		await DictDb.deleteDuplication(this.dbObj.db, this.name)
+		console.log(await DictDb.getDuplication(this.dbObj.db, this.name))
+		this._無重複漢字數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
+		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
+		this._字頻總和 = await DictDb.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+		await this.assign_重碼頻數()
+		this._加頻重碼率 = Util.getNonFalse(this.重碼頻數) / Util.getNonFalse(this.字頻總和)
 	}
 
 	public async putInfo(){
-		let keys:string[] = Object.keys(this)
-		for(let i = 0; i < keys.length; i++){
-			//let fun = eval()
-			console.log(keys[i])
-		}
+		// let keys:string[] = Object.keys(this)
+		// for(let i = 0; i < keys.length; i++){
+		// 	//let fun = eval()
+		// 	console.log(keys[i])
+		// }
 		//console.log(this.無重複音節數)
-		console.log(this._無重複音節數)
+		//console.log(this._無重複音節數)
 	}
+
+	public async 各排列ˋ轄字ᵗ分析(){
+
+	}
+	
 
 
 
@@ -294,25 +310,9 @@ export class DictRaw {
 	}
 
 	public assign_name(){
-		/* for(let i = 0; i < this.tableArr.length; i++){
-			let cur = Util.arrAt(this.tableArr, i)
-			if(cur.length !== 1){continue}
-			let curStr:string = Util.arrAt(cur, 0)
-			//let regex = /^name:(.*)$/g
-			let caught = curStr.match(/^name:(.*)$/g)
-			if(!caught){continue}
-			
-			let name:string =  Util.arrAt(caught, 0).replace(/^name:(.*)$/g, '$1')
-			name = name.trim()
-			this.name = name
-		} */
 		if(this._name){return}
 		this.name = this.getOriginNameInDictYaml()
 	}
-
-/* 	public get_body():string[][]{
-		return this.tableArr.slice(this._indexOfHeader+1)
-	} */
 
 	/**
 	 * 取 有效表身
@@ -505,7 +505,7 @@ ${cn.ratio} VARCHAR(64) \
 
 		return new Promise((s,j)=>{
 			
-			Util.check(this.db).run(sql, (err)=>{
+			Util.getNonFalse(this.db).run(sql, (err)=>{
 				if(err){j(err);return}
 				console.log('at\t'+this.dbPath)
 				s(sql+'成功')
@@ -517,23 +517,13 @@ ${cn.ratio} VARCHAR(64) \
 		//this.db.exec(testCreat)
 	}
 
-	/* public static async testTransaction(tableName:string){
-		DictDb.db.serialize(()=>{
-			DictDb.db.run('BEGIN TRANSACTION')
-			const stmt = DictDb.db.prepare(`SELECT * FROM '${tableName}' WHERE id = ?`)
-			for(let i = 0; i < 999; i++){
-				//stmt.run(i)
-				stmt.each(i, (err, row)=>{
-					console.log(row)
-				})
-			}
-			DictDb.db.all('COMMIT', (err,rows)=>{
-				if(err){throw err};
-				console.log(rows)
-			})
-		})
-	} */
-
+	/**
+	 * 手動封裝的TRANSACTION
+	 * @param db 
+	 * @param sql 
+	 * @param values 
+	 * @returns 
+	 */
 	public static async transaction<T>(db:Database, sql:string, values:any[]){
 		let result:T[]
 		return new Promise<T[]>((s,j)=>{
@@ -556,16 +546,22 @@ ${cn.ratio} VARCHAR(64) \
 		})
 		
 	}
+
+	
 	
 
 	public async insert(data:DictDbRow[]|string[][]){
-		Util.check(this.db)
+		return new Promise((s,j)=>{
+			Util.getNonFalse(this.db)
 		let rowObjs:DictDbRow[] = []
 		if(cn.char in data[0] && cn.code in data[0]){
 			rowObjs = data as DictDbRow[]
 		}else{
 			rowObjs = DictDb.toObjArr(data as string[][])
 		}
+		let sql = `INSERT INTO '${this.tableName}' (${cn.char}, ${cn.code}) \
+VALUES (?,?)`
+
 		this.db!.serialize(()=>{
 			this.db!.run('BEGIN TRANSACTION')
 			const stmt = this.db!.prepare(`INSERT INTO '${this.tableName}' (${cn.char}, ${cn.code}) \
@@ -575,17 +571,26 @@ VALUES (?,?)`)
 			}
 			this.db!.run('COMMIT')
 		})
+		})
+		
+		//DictDb.transaction(this.db, sql, )
 		/* DictDb.db.close((err)=>{
 			if(err){throw err}
 		}) */
 	}
 
 	public async attachFreq(/* essayTableName='essay' */){
-		Util.check(this.db)
+		Util.getNonFalse(this.db)
 		if(!this.tableName){throw new Error('this.tableName')}
 		DictDb.attachFreq(this.db!, this.tableName)
 	}
 
+	/**
+	 * 依照八股文 在表中爲每個字附上字頻
+	 * @param db 
+	 * @param tableName 
+	 * @param essayTableName 
+	 */
 	public static async attachFreq(db:Database, tableName:string ,essayTableName='essay'){
 		let b1 = await DictDb.isColumnExist(db, tableName ,cn.freq)
 		let b2 = await DictDb.isColumnExist(db,tableName ,cn.essay_id)
@@ -593,12 +598,6 @@ VALUES (?,?)`)
 			let altSql = new Array<string>()
 			altSql[0] = `ALTER TABLE '${tableName}' ADD COLUMN '${cn.freq}' INTEGER`
 			altSql[1] = `ALTER TABLE '${tableName}' ADD COLUMN ${cn.essay_id} INTEGER REFERENCES ${essayTableName}(id) ON DELETE SET NULL`
-			/* await new Promise((s,j)=>{
-				DictDb.db.run(altSql,(err)=>{
-					if(err){j(err);return}
-					s(0)
-			})}) */
-			//await DictDb.all(DictDb.db, altSql[0])
 			await DictDb.all(db, altSql[0])
 			await DictDb.all(db, altSql[1])
 			
@@ -612,7 +611,6 @@ VALUES (?,?)`)
 \ SET ${cn.essay_id} = COALESCE(${essayTableName}.${cn.id}, '') \
 \ FROM ${essayTableName} \
 \ WHERE '${tableName}'.${cn.char} = ${essayTableName}.${cn.char};`
-		//DictDb.db.run(attachSql, (err)=>{if(err){console.error(attachSql);j(err);return}s(0)})
 		DictDb.all(db, attachSql)
 		DictDb.all(db, attachSql2)
 	
@@ -638,14 +636,6 @@ VALUES (?,?)`)
 
 	public static getTableInfo(db:Database, tableName:string){
 		const sql = `PRAGMA table_info('${tableName}')`
-		//let result:SqliteTableInfo[] = []
-		/* return new Promise<SqliteTableInfo[]>((s,j)=>{
-			db.all(sql, (err, rows:SqliteTableInfo[])=>{
-				if(err){console.error(sql);j(err);return}
-				result = rows
-				s(result)
-			})
-		}) */
 		return DictDb.all<SqliteTableInfo>(db,sql)
 	}
 
@@ -671,9 +661,7 @@ VALUES (?,?)`)
 
 	public static async DropAllTables(db:Database){
 		let tableNames:string[] = []
-		//let seqs = await DictDb.qureySqlite_sequence(db)
 		let info = await DictDb.querySqlite_master(db)
-		//console.log(seqs)//t
 		//let prms:Promise<any>[] = []
 		for(let i = 0; i < info.length;i++){
 			//prms.push(DictDb.DropTable(db,seqs[i].name))
@@ -686,8 +674,6 @@ VALUES (?,?)`)
 
 	public static async DropTable(db:Database, tableName:string|string[]){
 		if(Array.isArray(tableName)){
-			//console.log(111)
-			//console.log(tableName)//t
 			// let sql = `DROP TABLE ?;`
 			// let v:string[] = tableName
 			// return DictDb.transaction(db, sql, v) <坑>{蓋佔位符ˉ?皆不可㕥代表名}
@@ -733,131 +719,7 @@ VALUES (?,?)`)
 			//await temp // 防 sqlite busy
 			//prms.push(temp)
 		}
-		// for(let i = 0; i < names.length;i++){
-		// 	await DictDb.attachFreq(db, names[i])
-		// }
-		//return Promise.all(prms)
 	}
-
-	
-
-	/* public static leftJoin_on_(_1tableName:string, _2tableName:string, _1columnName:string, _2columnName:string, newColumnName:string){
-		throw new Error()
-		return new Promise(async (s,j)=>{
-			let b = await DictDb.isColumnExist(_2tableName ,newColumnName)
-			if(!b){
-				let altSql = `ALTER TABLE ${_2tableName} ADD COLUMN ${newColumnName} VARCHAR(64)`
-				await new Promise((s,j)=>{DictDb.db.run(altSql,(err)=>{console.error(err)})})
-			}
-			//DictDb.db.run()
-		})
-	} */
-
-
-	/**
-	 * 把整個User_Data下的.dict.yaml文件 字表的有效部分添進數據庫
-	 * @param userPath User_Data的絕對路徑
-	 */
-	// public static async run(userPath:string='D:/Program Files/Rime/User_Data'){
-	// 	return new Promise(async(s,j)=>{
-	// 	const dictRaws:DictRaw[] = []
-	// 	const dictDbs:DictDb[] = []
-	// 	const fileNames:string[] = fs.readdirSync(userPath)
-	// 	//console.dir(fileNames)//t
-	// 	let dictyamlFullPath:string[] = Txt.getFilted(fileNames, '^.*\\.dict\\.ya?ml$')
-	// 	for(let i = 0; i < dictyamlFullPath.length; i++){
-	// 		dictyamlFullPath[i] = userPath+'/'+dictyamlFullPath[i]
-	// 		//console.log(dictyamlFullPath[i])//t
-	// 	}
-
-	// 	await DictDb.putEssay()
-
-	// 	for(let i = 0; i < dictyamlFullPath.length; i++){
-	// 		//try{/* await */ Dict.quickStart(dictyamlFullPath[i])}catch(e){console.error(e)}
-	// 		//console.log('i='+i)//t
-	// 		DictDb.quickStart(dictyamlFullPath[i]).catch((e)=>{console.error(e)})
-	// 		//let t = new Dict(dictyamlFullPath[i])
-	// 		//console.log(t.name)
-	// 	}
-
-
-
-		
-	// 	/* if(dictyamlFullPath.length === 0){throw new Error('dictyamlFullPath.length === 0')}
-	// 	for(let i = 0; i < dictyamlFullPath.length; i++){
-			
-	// 		let unusDictRaw = new Dict(dictyamlFullPath[i])
-			
-	// 		let unusDictDb = new DictDb();
-	// 		dictRaws.push(unusDictRaw)
-	// 		dictDbs.push(unusDictDb)
-	// 	}
-		
-	// 	let result;
-	// 	if(dictRaws.length !== dictDbs.length){throw new Error('dictRaws.length !== dictDbs.length')}
-	// 	for(let i = 0; i < dictRaws.length; i++){
-	// 		console.log('i='+i)//t
-	// 		if(dictRaws[i].name === undefined){continue}
-	// 		//if(dictRaws[i].name === '3dgx'){continue}//t
-			
-	// 		console.log(dictyamlFullPath[i])
-	// 		dictRaws[i].srcPath = dictyamlFullPath[i]
-	// 		dictDbs[i].tableName = dictRaws[i].name
-
-	// 		let isExist:boolean = await dictDbs[i].isTableExists()
-	// 		console.log(isExist)//t
-	// 		if(!isExist){
-	// 			let creatResult = await dictDbs[i].creatTable() // await?
-	// 			console.log('creatResult:')//t
-	// 			console.log(creatResult)
-	// 		}
-	// 		s
-	// 		//dictDbs[i].insert(dictRaws[i].validBody)
-	// 		let dbObjs = DictDb.toObjArr(dictRaws[i].validBody)
-	// 		//console.log(dbObjs)//t
-	// 		try{dictDbs[i].insert2(dbObjs)}catch(e){console.error(e)}
-	// 		//console.log(114514)//t *
-	// 		//console.log(result)
-	// 	}
-	// 	for(let i = 0; i < dictRaws.length; i++){
-	// 		console.log(dictRaws[i].srcPath)
-	// 	}
-	// 	for(let i = 0; i < dictDbs.length; i++){
-
-	// 	}
-		
-	// 	return result */
-
-	// 	})
-		
-	// }
-
-	/* public static async quickStart(path:string, name?:string){
-		return new Promise(async(s,j)=>{
-			//console.log(path)//t
-			let dictRaw:DictRaw|undefined
-			try{dictRaw = new DictRaw({srcPath:path})}catch(e){console.error(e)}
-			if(!dictRaw){
-				console.error('for '+path+' , dictRaw failed to constructor')
-				return
-			}
-			if(name){dictRaw.name=name}
-			if(!dictRaw.name){
-				//throw new Error('!dictRaw.name')
-				j('!dictRaw.name')
-				return
-			}
-			//if(dictRaw.name !== 'essay'){await DictDb.putEssay()}
-			let dictDb = new DictDb({dbName:dictRaw.name})
-			let b = await dictDb.isTableExists()
-			if(!b){await dictDb.creatTable().catch((e)=>{console.error(e)})}
-			let rows = DictDb.toObjArr(dictRaw.validBody)
-			await dictDb.insert(rows)
-			//if(dictRaw.name !== 'essay'){await dictDb.attachFreq()}
-			s(dictRaw.name+'成功')
-		})
-		
-	} */
 
 	/**
 	 * 把八股文(字頻表)加進數據庫裏、表名命名爲essay
@@ -884,16 +746,7 @@ VALUES (?,?)`)
 	public static async countDistinct(db:Database, tableName:string, columnName?:string){
 		if(columnName){
 			let sql = `SELECT COUNT(DISTINCT ${columnName}) AS distinct_count FROM '${tableName}'`
-			/* return new Promise<number>((s,j)=>{
-				
-				DictDb.db.all(sql, (err, rows:any)=>{
-					if(err){j(err);return}
-					s(rows[0].distinct_count)
-					//console.log(sql)
-				})
-			}) */
-			//let s = await DictDb.all<number>(sql)
-			let r = (await DictDb.all<number>(db, sql))[0]
+			let r = (await DictDb.all<{distinct_count:number}>(db, sql))[0].distinct_count
 			return r
 		}else{
 			let tableInfo = await DictDb.getTableInfo(db, tableName)
@@ -919,18 +772,51 @@ VALUES (?,?)`)
 						j(err);
 						return
 					}
-					//s(rows)
-					/* let result:{columnName:string, distinct_count:number}[] = []
-					for(let i = 0; i < rows.length; i++){
-						let obj = {columnName: tableInfo[i].name, distinct_count: rows[i].distinct_count}
-						result.push(obj)
-					}
-					 */
-					//console.log(sql)
 					s(rows)
 				})
 			})
 		}
+	}
+
+	public static async get重碼頻數(db:Database, tableName:string){
+		/* 
+這是一個複雜的 SQL 查詢，它使用了子查詢和窗口函數來計算每個 code 對應的非最大頻率的總和。
+讓我們逐步解釋這個查詢：
+首先，內部的子查詢選擇了 saffes 表中的 code 和 freq 字段，並使用窗口函數 ROW_NUMBER() 來為每個 code 分組，並按照 freq 的降序進行排序。ROW_NUMBER() 函數為每個分組的行分配一個連續的整數值，最大的 freq 對應的行會得到 rn 為 1，第二大的 freq 對應的行會得到 rn 為 2，以此類推。
+然後，外部的主查詢（SELECT）對內部子查詢得到的結果集 s 進行過濾，只保留 rn > 1 的行，即保留非最大頻率的行。
+接著，對過濾後的結果進行分組（GROUP BY），按照 code 字段進行分組，並對每個 code 分組計算 freq 的總和，並將結果作為新的 total_freq 列返回。
+總體來說，這個查詢的目的是計算每個 code 對應的非最大頻率的總和，並將結果返回。這個查詢中使用了子查詢和窗口函數來實現這個功能，因此比較複雜，但在特定的業務場景中可能會很有用。
+		*/
+		let sql1 = `SELECT
+		${DictType.cn.code},
+		SUM(${DictType.cn.freq}) AS freq_of_homo
+	  FROM (
+		SELECT
+		${DictType.cn.code},
+		${DictType.cn.freq},
+		  ROW_NUMBER() OVER (PARTITION BY ${DictType.cn.code} ORDER BY ${DictType.cn.freq} DESC) AS rn
+		FROM
+		  '${tableName}'
+	  ) AS s
+	  WHERE
+		rn > 1
+	  GROUP BY
+	  ${DictType.cn.code};`
+
+		//sql1幾乎瞬間出結果、sql2要等幾十秒
+	  let sql2 = `SELECT 
+	  ${DictType.cn.code},
+	  SUM(${DictType.cn.freq}) AS freq_of_homo
+	FROM
+	  ${tableName} s1
+	WHERE
+	${DictType.cn.freq} < (SELECT MAX(${DictType.cn.freq}) FROM ${tableName} s2 WHERE s1.${DictType.cn.code} = s2.${DictType.cn.code})
+	GROUP BY
+	${DictType.cn.code};`
+		return DictDb.all<{code:string, freq_of_homo:number}>(db, sql1)
+
+		/*
+  亦可、然更慢*/
 	}
 
 
@@ -986,7 +872,7 @@ THEN CAST(${columnName} AS INTEGER) \
 ELSE 0 \
 END) AS sum_result \
 FROM '${tableName}';`
-		return (await DictDb.all<number>(db, sql))[0]
+		return (await DictDb.all<{sum_result:number}>(db, sql))[0].sum_result
 	}
 
 	/**
@@ -1021,18 +907,6 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 			})
 		})
 	}
-
-	/* public static async batch(db:Database ,sqls:string[], values:any){
-		let result:any[][]
-		return new Promise((s,j)=>{
-			db.serialize(()=>{
-				db.run('BEGIN TRANSACTION;')
-				for(let i = 0; i < sqls.length; i++){
-					db.all(sqls[i], )
-				}
-			})
-		})
-	} */
 
 }
 
