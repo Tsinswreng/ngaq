@@ -71,20 +71,35 @@ vocaObjs[1].查重().then((o)=>{
 
 async function debug(){
 	//let name = 'OC_schuesslerOC'
-	let name = 'OC_msoeg'
+	let srcPath = "D:\\Program Files\\Rime\\User_Data\\OC_baxter-sagart.dict.yaml"
+	let raw = new DictRaw({srcPath:srcPath})
+	//let name = 'OC_msoeg'
 	let db = new DictDb({})
 	//await DictDb.DropAllTables(db.db)
-	let dict = new Dict({name:name})
-	await DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/OC_msoeg.dict.yaml'}))
-	await DictDb.attachFreq(db.db, name)
+	let dict = new Dict({name:raw.name})
+	await DictDb.putNewTable(raw)
+	await DictDb.attachFreq(db.db, raw.name!)
 	await dict.countAll()
 	console.log(dict)
 }
-//debug()
+debug()
 
-let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
-let ar = [7,8,9]
-console.log(Util.plus(ar, 8, 10))
+const fn1 = ()=>{
+	let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
+	console.log(Util.有重複排列(a,2).length)
+}
+
+const fn2 = ()=>{
+	let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
+	console.log(Util.getCombinationsWithRepetition(a,2).length)
+}
+
+// console.log(Util.measureTime(fn2))
+// console.log(Util.measureTime(fn1))
+
+//DictDb.alterIntoAllowNull(new DictDb({}).db, 'saffes', 'code')
+// let d = new Dict({name:'saffesNoHead'})
+// d.saffes韻母轄字統計('saffes_temp')
 
 // DictDb.putEssay(db.db)
 //DictDb.putNewTable(new DictRaw({srcPath:'D:/Program Files/Rime/User_Data/saffes.dict.yaml'}))

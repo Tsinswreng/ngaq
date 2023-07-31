@@ -49,6 +49,7 @@ class Kanji{
 }
 
 export class Dict{
+	public static readonly L_ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 	private _name:string = ''
 	private _dbObj:DictDb = new DictDb({dbName:this.name})
 	private _無重複漢字數?:number
@@ -102,7 +103,7 @@ export class Dict{
 
 
 	public async countAll(){
-		//<待做>{驗ᵣ重複項}
+		//<待做>{驗ᵣ重複項、濾除 碼潙空字串 者}
 		await DictDb.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
 		await DictDb.deleteDuplication(this.dbObj.db, this.name)
 		console.log(await DictDb.getDuplication(this.dbObj.db, this.name))
@@ -110,7 +111,7 @@ export class Dict{
 		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
 		this._字頻總和 = await DictDb.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		await this.assign_重碼頻數()
-		this._加頻重碼率 = Util.getNonFalse(this.重碼頻數) / Util.getNonFalse(this.字頻總和)
+		this._加頻重碼率 = Util.nonFalseGet(this.重碼頻數) / Util.nonFalseGet(this.字頻總和)
 	}
 
 	public async putInfo(){
@@ -127,6 +128,17 @@ export class Dict{
 
 	}
 	
+	public async saffes韻母轄字統計(newTableName:string){
+		let seto = Util.getCombinationsWithRepetition(Dict.L_ALPHABET.split(''), 2)
+		let creatSql = `CREATE TABLE '${newTableName}' AS SELECT * FROM '${this.name}';`
+		//await DictDb.alterIntoAllowNull(this.dbObj.db, this.name, newTableName)
+		let objs:DictDbRow[] = []
+		for(let i = 0; i < seto.length; i++){
+			let obj:DictDbRow = {char:'temp', code:seto[i].join('')}
+			objs.push(obj)
+		}
+		await this.dbObj.insert(objs)
+	}
 
 
 
@@ -296,7 +308,8 @@ export class DictRaw {
 			let caught = curStr.match(/^name:(.*)$/g)
 			if(!caught){continue}
 			
-			let name:string =  Util.arrAt(caught, 0).replace(/^name:(.*)$/g, '$1')
+			//let name:string =  Util.arrAt(caught, 0).replace(/^name:(.*)$/g, '$1')
+			let name:string =  caught[0].replace(/^name:(.*)$/g, '$1')
 			name = name.trim()
 			//若首尾是引號則除ᶦ
 			let b1:boolean = (name.at(0) === '"' && name.at(name.length-1) === '"')
@@ -442,7 +455,7 @@ export class DictDb{
 
 
 	public static async isTableExist(db:Database, tableName:string){
-		let sql = `SELECT name FROM sqlite_master WHERE type='table' AND name='${tableName}';`
+		let sql = `SELECT name FROM sqlite_master WHERE  type='table' AND name='${tableName}';`
 		
 		return new Promise<boolean>((resolve, reject)=>{
 			
@@ -505,7 +518,7 @@ ${cn.ratio} VARCHAR(64) \
 
 		return new Promise((s,j)=>{
 			
-			Util.getNonFalse(this.db).run(sql, (err)=>{
+			Util.nonFalseGet(this.db).run(sql, (err)=>{
 				if(err){j(err);return}
 				console.log('at\t'+this.dbPath)
 				s(sql+'成功')
@@ -552,7 +565,7 @@ ${cn.ratio} VARCHAR(64) \
 
 	public async insert(data:DictDbRow[]|string[][]){
 		return new Promise((s,j)=>{
-			Util.getNonFalse(this.db)
+			Util.nonFalseGet(this.db)
 		let rowObjs:DictDbRow[] = []
 		if(cn.char in data[0] && cn.code in data[0]){
 			rowObjs = data as DictDbRow[]
@@ -580,7 +593,7 @@ VALUES (?,?)`)
 	}
 
 	public async attachFreq(/* essayTableName='essay' */){
-		Util.getNonFalse(this.db)
+		Util.nonFalseGet(this.db)
 		if(!this.tableName){throw new Error('this.tableName')}
 		DictDb.attachFreq(this.db!, this.tableName)
 	}
@@ -628,15 +641,31 @@ VALUES (?,?)`)
 		let result:DictDbRow[] = []
 		for(let i = 0; i < strArr.length; i++){
 			//let obj = {columnName.char: Util.arrAt(strArr,i,0), "pronounce": strArr[i][1]??''}
-			let obj:DictDbRow = {char:Util.arrAt(strArr,i,0), code: strArr[i][1]??''}
+			//let obj:DictDbRow = {char:Util.arrAt(strArr,i,0), code: strArr[i][1]??''}
+			let obj:DictDbRow = {char:Util.nonFalseGet(strArr[i][0]), code: strArr[i][1]??''} //[23.07.31-0931,]
 			result.push(obj)
 		}
 		return result
 	}
 
-	public static getTableInfo(db:Database, tableName:string){
+	public static async getTableInfo(db:Database, tableName:string, columnName:string):Promise<SqliteTableInfo|undefined>
+	public static async getTableInfo(db:Database, tableName:string):Promise<SqliteTableInfo[]>
+	public static async getTableInfo(db:Database, tableName:string, columnName?:string){
 		const sql = `PRAGMA table_info('${tableName}')`
-		return DictDb.all<SqliteTableInfo>(db,sql)
+		let prms = DictDb.all<SqliteTableInfo>(db,sql)
+		if(columnName){
+			let infos = await prms
+			for(let i = 0; i < infos.length; i++){
+				if(infos[i].name === columnName){
+					return infos[i]
+				}
+			}
+			return undefined
+		}else{
+			
+			return prms
+		}
+
 	}
 
 	public static async isColumnExist(db:Database, tableName:string, columnName:string){
@@ -906,6 +935,13 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 				s(rows)
 			})
 		})
+	}
+
+	public static async alterIntoAllowNull(db:Database, tableName:string, columnName:string){
+		let info = await DictDb.getTableInfo(db, tableName, columnName)
+		let type = Util.nonUndefGet(info).type
+		let sql = `ALTER TABLE '${tableName}' MODIFY COLUMN ${columnName} ${type}`
+		return DictDb.all(db, sql)
 	}
 
 }

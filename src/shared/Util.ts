@@ -2,6 +2,8 @@
 //const fs = require('fs')
 import * as fs from 'fs';
 import * as path from 'path'
+import now from 'performance-now';
+
 type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 export default class Util{
 	
@@ -9,6 +11,7 @@ export default class Util{
 
 /**
  * [23.07.09-2134,]
+ * [23.07.31-0928]{建議用getNonDef來代替此函數}
  * 訪問數組元素、越界則拋錯誤。支持任意維數組。如需訪問arr[3][2]則arrAt(arr, 3, 2)
  * @param arr 
  * @param indexPath 
@@ -76,28 +79,24 @@ export default class Util{
 		return dir
 	}
 
-	public static getNonFalse<T>(v:T){
+	public static nonFalseGet<T>(v:T){
 
 		if(!v){throw new Error(v+'')}
 		return v
 	}
 
+	public static nonUndefGet<T>(v:T){
+		if(v === undefined){
+			throw new Error(v+' '+undefined)
+		}
+		return v
+	}
+
+
 	public static 有重複排列<T>(seto:T[]|Set<T>, n:number){
-		let setus:Set<T>
-		if(seto instanceof Set){
-			setus = seto
-		}
-		else{
-			setus = new Set<T>([...seto])
-		}
-		let arr = [...setus]
 
-		for(let i = 0; i < arr.length; i++){
-			for(let j = 0; j < n; j++){
 
-			}
-		}
-
+		//給用來表示位值的數組做加法、等于或超過carryBit時則向高位進位。如[1,8] 加上 9 、當carryBit爲10時則進位(即滿十進一)、結果得[2,7]
 		function plus(arr:number[], plusNum:number, carryBit:number){
 			let result = arr.slice()
 			let lastEle = result[result.length-1]
@@ -115,9 +114,73 @@ export default class Util{
 			return result
 		}
 
+		//若 傳入的 seto是包含所有26個小寫字母的集合、n是3、要列舉 由任意三個可重複的字母組成的字符串 的所有可能
+		let setus:Set<T>
+		if(seto instanceof Set){
+			setus = seto
+		}
+		else{
+			setus = new Set<T>([...seto])
+		}
+		let setArr:T[] = [...setus] //處理傳入的參數、統一化作無重複的數組
+		let outIndexes:number[][] = [] //用索引表示原集合中元素的位置
+		let innerIndexes:number[] = new Array(n).fill(0)
+		outIndexes.push(innerIndexes)
+		for(let i = 0;; i++){
+			innerIndexes = plus(innerIndexes, 1, setArr.length) //窮舉 [0,0,0],[0,0,1]...直到[25,25,25] (n爲26時最大索引是25)
+			if(innerIndexes[0]>=setArr.length){break} // arr.length是26、當上一個元素是[25,25,25]、再加一得[26,0,0]時已逾界、停止循環
+			outIndexes.push(innerIndexes)
+		}
+		//根據outIndexe取結果
+		let result:T[][] = []
+		for(let i = 0; i < outIndexes.length; i++){
+			result.push(Util.getNewArrByIndexes(setArr, outIndexes[i], true))//t
+		}
+		return result
+	}
+
+	public static getNewArrByIndexes<T>(arr:T[], indexes:number[], checkBound:boolean=false){
+		let result:T[] = []
+		if(checkBound){
+			for(let i = 0; i < indexes.length; i++){
+				result.push(Util.nonUndefGet(arr[indexes[i]]))
+			}
+		}else{
+			for(let i = 0; i < indexes.length; i++){
+				result.push(arr[indexes[i]])
+			}
+		}
+
+		return result
 	}
 
 	
+
+	public static measureTime(fn:()=>void){
+		const startTime = now();
+		fn();
+		const endTime = now();
+		const executionTime = endTime - startTime;
+		return executionTime;
+	}
+
+	public static getCombinationsWithRepetition<T>(set: T[], n: number): T[][] {
+		const result: T[][] = [];
+	  
+		function generateCombinations(currentCombination: T[]/* , currentIndex: number */) {
+			if (currentCombination.length === n) {
+				result.push(currentCombination);
+				return;
+			}
+	
+			for (let i = 0; i < set.length; i++) {
+				generateCombinations([...currentCombination, set[i]]/* , i */);
+			}
+		}
+
+		generateCombinations([]/* , 0 */);
+		return result;
+	}
 	
 }
 

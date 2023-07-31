@@ -29,6 +29,7 @@
 		"moment": "^2.29.4",
 		"mysql": "^2.18.1",
 		"mysql2": "^3.2.4",
+		"performance-now": "^2.1.0",
 		"sqlite": "^4.2.1",
 		"sqlite3": "^5.1.6",
 		"string-width": "^6.1.0",
