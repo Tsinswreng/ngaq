@@ -10,7 +10,7 @@ const rootDir:string = require('app-root-path').path
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"
 import Util from '@shared/Util';
-import ContinuousRegExp from './ContinuousRegExp';
+import {SerialRegExp} from 'SerialRegExp';
 import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
 import * as DictType from './DictType'
 
@@ -939,7 +939,7 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 
 	public static async alterIntoAllowNull(db:Database, tableName:string, columnName:string){
 		let info = await DictDb.getTableInfo(db, tableName, columnName)
-		let type = Util.nonUndefGet(info).type
+		let type = Util.nonNullableGet(info).type
 		let sql = `ALTER TABLE '${tableName}' MODIFY COLUMN ${columnName} ${type}`
 		return DictDb.all(db, sql)
 	}
@@ -957,19 +957,19 @@ function t20230618094140(){
 	//console.log(input)
 	let rawRegex = fs.readFileSync(__dirname+'/regex.txt', 'utf-8')
 	rawRegex = Txt.unifyNewline_s(rawRegex)
-	//const regexEachLine:string[] = ContinuousRegExp.spliteStrBy_(rawRegex, '\n')
+	//const regexEachLine:string[] = SerialRegExp.spliteStrBy_(rawRegex, '\n')
 	//console.log(regexEachLine)
 	let regex:string[][] = Txt.getRegExp(rawRegex, '\t')
 	//console.log(regex)
 	/* for(let i = 0; i < regex.length; i++){
 		console.log(regex[i][0])
 	} */
-	const output:string = ContinuousRegExp.replace(input, regex)
+	const output:string = ''//SerialRegExp.replace(input, regex)
 	//console.log(output)
 	fs.writeFile(__dirname+'/output.txt', output, {encoding:'utf-8'}, (err)=>{
 		if(err){throw err}
 	})
-	//const newStr = ContinuousRegExp.replace(oldFile,)
+	//const newStr = SerialRegExp.replace(oldFile,)
 
 }
 

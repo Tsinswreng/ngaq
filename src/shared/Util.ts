@@ -85,12 +85,18 @@ export default class Util{
 		return v
 	}
 
-	public static nonUndefGet<T>(v:T){
+
+	public static nonNullableGet<T>(v:T): NonNullable<T>{
 		if(v === undefined){
 			throw new Error(v+' '+undefined)
 		}
+		if(v === null){
+			throw new Error(v+' '+null)
+		}
 		return v
 	}
+
+	//[23.08.01-2101,]<>{nonUndefGet做不出}
 
 
 	public static 有重複排列<T>(seto:T[]|Set<T>, n:number){
@@ -143,7 +149,7 @@ export default class Util{
 		let result:T[] = []
 		if(checkBound){
 			for(let i = 0; i < indexes.length; i++){
-				result.push(Util.nonUndefGet(arr[indexes[i]]))
+				result.push(Util.nonNullableGet(arr[indexes[i]]))
 			}
 		}else{
 			for(let i = 0; i < indexes.length; i++){
@@ -180,6 +186,44 @@ export default class Util{
 
 		generateCombinations([]/* , 0 */);
 		return result;
+	}
+
+	/**
+	 * 統計數組中各元素出現的次數
+	 * @param arr 
+	 * @returns 元素對出現次數的Map
+	 */
+	public static mapOccurrenceTimes<T>(arr:T[]):Map<T, number>{
+		let result = new Map<T,number>()
+		for(let i = 0; i < arr.length; i++){
+			let k = result.get(arr[i])
+			if(k){
+				let v = k+1
+				result.set(arr[i], v)
+			}else{
+				result.set(arr[i], 1)
+			}
+		}
+		return result
+	}
+
+	public static mapToObjArr<K,V>(map:Map<K,V>){
+		let objArr:{k:K,v:V}[] = []
+		for(const [mk,mv] of map){
+			objArr.push({k:mk, v:mv})
+		}
+		return objArr
+	}
+
+	public static sortMapIntoObj<K,V>(map:Map<K,V>, desc=true){
+		let obj = Util.mapToObjArr(map)
+		if(desc){
+			obj = obj.sort((a,b)=>{return b.v as number - (a.v as number)})
+		}
+		else{
+			obj = obj.sort((a,b)=>{return a.v as number - (b.v as number)})
+		}
+		return obj
 	}
 	
 }

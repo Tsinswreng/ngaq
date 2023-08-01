@@ -176,5 +176,7 @@ export default class Txt{
 		return matches ? matches.length : 0;
 	}
 
+	
+
 //, separator='\t'
 }
