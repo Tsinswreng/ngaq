@@ -96,6 +96,16 @@ export default class Util{
 		return v
 	}
 
+/* 	public static nonNullableGetArr<T>(v:T): NonNullable<T>{
+		if(v === undefined){
+			throw new Error(v+' '+undefined)
+		}
+		if(v === null){
+			throw new Error(v+' '+null)
+		}
+		return v
+	} */
+
 	//[23.08.01-2101,]<>{nonUndefGet做不出}
 
 

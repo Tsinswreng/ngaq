@@ -42,12 +42,14 @@ export class SerialRegExp {
 		// return result
 	//}
 
-	public static serialReplace(str:string, regexArr:string[][]|RegexReplacePair[], mode:string):string
-	public static serialReplace(str:string[], regexArr:string[][]|RegexReplacePair[], mode:string, splitter?:string):string[]
-	public static serialReplace(str:string|string[], regexArr:string[][]|RegexReplacePair[], mode:string, splitter=/* String.fromCharCode(30) */'\n'){
+	public static serialReplace(str:string, regexArr:string[][], mode:string):string
+	public static serialReplace(str:string, regexArr:RegexReplacePair[]):string
+	public static serialReplace(str:string[], regexArr:string[][], mode:string, splitter?:string):string[]
+	public static serialReplace(str:string[], regexArr:RegexReplacePair[], splitter?:string):string[]
+	public static serialReplace(str:string|string[], regexArr:string[][]|RegexReplacePair[], mode?:string, splitter=/* String.fromCharCode(30) */'\n'){
 		let regexObjs:RegexReplacePair[] = []
 		if(Array.isArray(regexArr[0])){ //對應string[][]
-			regexObjs = SerialRegExp.regexStrArrToObjs(regexArr as string[][], mode)
+			regexObjs = SerialRegExp.regexStrArrToObjs(regexArr as string[][], mode!)
 		}else{
 			regexObjs = regexArr as RegexReplacePair[]
 		}

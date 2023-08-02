@@ -511,7 +511,7 @@ export class DictDb{
 		
 		let sql:string = `CREATE TABLE [${tableName}] ( \
 ${cn.id} INTEGER PRIMARY KEY AUTOINCREMENT, \
-${cn.char} VARCHAR(64) NOT NULL, \
+${cn.char} VARCHAR(1024) NOT NULL, \
 ${cn.code} VARCHAR(64) NOT NULL, \
 ${cn.ratio} VARCHAR(64) \
 )`
@@ -942,6 +942,11 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		let type = Util.nonNullableGet(info).type
 		let sql = `ALTER TABLE '${tableName}' MODIFY COLUMN ${columnName} ${type}`
 		return DictDb.all(db, sql)
+	}
+
+	public static async copyTransDb(targetDb:Database, srcDb:Database, srcTableName:string){
+
+		//await DictDb.all(targetDb)
 	}
 
 }
