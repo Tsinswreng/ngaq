@@ -82,17 +82,9 @@ async function debug(){
 	await dict.countAll()
 	console.log(dict)
 }
-debug()
+//debug()
 
-const fn1 = ()=>{
-	let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
-	console.log(Util.有重複排列(a,2).length)
-}
-
-const fn2 = ()=>{
-	let a = 'abcdefghijklmnopqrstuvwxyz'.split('')
-	console.log(Util.getCombinationsWithRepetition(a,2).length)
-}
+Dict.testMsoc()
 
 // console.log(Util.measureTime(fn2))
 // console.log(Util.measureTime(fn1))

@@ -10,7 +10,7 @@ const rootDir:string = require('app-root-path').path
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"
 import Util from '@shared/Util';
-import {SerialRegExp} from 'SerialRegExp';
+import {RegexReplacePair} from 'Type';
 import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
 import * as DictType from './DictType'
 
@@ -18,78 +18,138 @@ import * as DictType from './DictType'
 //const Txt = require("@my_modules/Txt")
 //const Txt = require('Txt')
 
-class OcSyllable {
-
-}
-
 /**
  * 音節
  */
-class Syllable{
-	protected _whole?:string //整個音節
-	protected _phoneme?:string[] //音素
-	protected _fragments?:string[] //片段
+// class Syllable{
+// 	protected _whole?:string //整個音節
+// 	protected _phoneme?:string[] //音素
+// 	protected _fragments?:string[] //片段
+// }
+
+export class Kanji{
+	public kanji?:string
+	public syllable = new ChieneseSyllable()
+	constructor(props?:Partial<Kanji>) {
+		if(props){Object.assign(this, props)}
+	}
+}
+
+export class ChieneseSyllable{
+	public whole?:string
+	public onset?:string
+	public medial?:string
+	public vowel?:string
+	public coda?:string
+	public tone?:string
+	public p2?:string //r+主元音
+	public p3?:string //韻尾+聲調
+
+
+	public get combined():string|undefined{
+		return this.onset!+this.combined_p2+this.combined_p3
+	}
+
+	public get combined_p2():string|undefined{
+		return this.medial! + this.vowel!
+	}
+	public get combined_p3():string|undefined{
+		return this.coda! + this.tone!
+	}
+
+	constructor(props?:Partial<ChieneseSyllable>) {
+		if(props){Object.assign(this, props)}
+	}
 }
 
 /**
  * 音節內的片段
  */
-class FragmentSyllable{
-	protected _whole?:string //整個片段
-	protected _phoneme?:string[] //音素
-}
+// class FragmentSyllable{
+// 	protected _whole?:string //整個片段
+// 	protected _phoneme?:string[] //音素
+// }
 
 /**
  * 漢字
  */
-class Kanji{
-	private _glyph?:string //字形
-	private _pronounce?:string //碼
-	private _freq?:string //出現頻率
-}
+// class Kanji{
+// 	private _glyph?:string //字形
+// 	private _pronounce?:string //碼
+// 	private _freq?:string //出現頻率
+// }
 
 export class Dict{
-	public static readonly L_ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
-	private _name:string = ''
-	private _dbObj:DictDb = new DictDb({dbName:this.name})
-	private _無重複漢字數?:number
-	private _無重複音節數?:number
-	private _字頻總和?:number
-	private _加頻重碼率?:number
-	private _重碼頻數?:number
+	public constructor(props:Partial<Dict>){Object.assign(this, props)}
 
-	public constructor(props:Partial<Dict>){
-		Object.assign(this, props)
-	}
-	public get name(){
-		return this._name
-	}
+	public static readonly L_ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+	
+	private _rawObj:DictRaw = new DictRaw({})
+	;public get rawObj(){return this._rawObj;};
+	;public set rawObj(v){this._rawObj=v;};
+
+	private _name:string = ''
+	public get name(){return this._name}
 	public set name(v){
 		this._name = v
+		this._rawObj.name = this.name
 		this._dbObj.tableName = this.name
 	}
 
+	private _dbObj:DictDb = new DictDb({dbName:this.name})
 	public get dbObj(){
 		return this._dbObj
 	}
 
+	private _重碼頻數?:number
 	public get 重碼頻數(){return this._重碼頻數;}
 	
-	public get 無重複漢字數(){
-		return this._無重複漢字數
+	private _無重複漢字數?:number
+	public get 無重複漢字數(){return this._無重複漢字數}
+
+	private _無重複音節數?:number
+	public get 無重複音節數(){return this._無重複音節數}
+
+	private _字頻總和?:number
+	public get 字頻總和(){return this._字頻總和}
+
+	private _加頻重碼率?:number
+	public get 加頻重碼率(){return this._加頻重碼率}
+
+	private _pronounceArr:string[] = []
+	;public get pronounceArr(){
+		return this._pronounceArr;
+	};
+	;public set pronounceArr(v){this._pronounceArr=v;};
+
+	private _kanjis:Kanji[] = []
+	;public get kanjis(){return this._kanjis;};
+	;public set kanjis(v){this._kanjis=v;};
+
+
+	//
+
+
+
+	public getUpdatedKanjis(validBody=this.rawObj.validBody, pronounceArr=this.pronounceArr){
+
+		let kanjis:Kanji[] = []
+		let tr = Util.transpose(validBody)
+		if(pronounceArr.length !== tr[0].length){throw new Error('pronounceArr.length !== tr[0].length')}
+		for(let i = 0; i < pronounceArr.length; i++){
+			let syllable = new ChieneseSyllable({whole:pronounceArr[i]})
+			let kanji = new Kanji({kanji:tr[0][i], syllable: syllable})
+			this.kanjis.push(kanji)
+		}
+		return kanjis
 	}
 
-	public get 無重複音節數(){
-		return this._無重複音節數
+	public get_pronounceArr(validBody=this.rawObj.validBody){
+		return Util.transpose(validBody)[1]
 	}
 
-	public get 字頻總和(){
-		return this._字頻總和
-	}
-
-	
-	public get 加頻重碼率(){
-		return this._加頻重碼率
+	public assign_pronounceArr(){
+		this.pronounceArr = this.get_pronounceArr()
 	}
 
 	public async assign_重碼頻數(){
@@ -99,6 +159,75 @@ export class Dict{
 			sum += objs[i].freq_of_homo
 		}
 		this._重碼頻數 = sum
+	}
+
+	public preprocess(replacePair:RegexReplacePair[], pronounceArr=this.pronounceArr){
+		//pronounceArr = Util.serialReplace(pronounceArr, replacePair) 如是則pronounceArr之地址ˋ變、不再指向this.pronounceArr
+		Object.assign(pronounceArr, Util.serialReplace(pronounceArr, replacePair))
+	}
+
+	public getRawDividedSyllable(replacePair:RegexReplacePair[], pronounceArr=this.pronounceArr):string[]{
+		return Util.serialReplace(pronounceArr, replacePair)
+	}
+
+
+
+	public static 首介腹尾調_分割(str:string,oldSyllableObj:ChieneseSyllable,pattern = /首1(.*?)首2(.*?)介1(.*?)介2(.*?)腹1(.*?)腹2(.*?)尾1(.*?)尾2(.*?)調1(.*?)調2/){
+		
+		const match = str.match(pattern);
+		let result = new ChieneseSyllable()
+		if (match) {
+			const [, first, second, intro1, intro2, belly1, belly2, tail1, tail2, tone1, tone2] = match; 
+//解构赋值、first對應match[1]
+			// console.log("首1 to 首2:", first);
+			// console.log("介1 to 介2:", intro1);
+			// console.log("腹1 to 腹2:", belly1);
+			// console.log("尾1 to 尾2:", tail1);
+			// console.log("調1ʔ to 調2:", tone1);
+			
+			result.onset = Util.nonNullableGet(first)
+			result.medial = Util.nonNullableGet(intro1)
+			result.vowel = Util.nonNullableGet(belly1)
+			result.coda = Util.nonNullableGet(tail1)
+			result.tone = Util.nonNullableGet(tone1)
+
+			// result.p2 = Util.nonNullableGet(intro1+belly1)
+			// result.p3 = Util.nonNullableGet(tail1+tone1)
+		}
+		//result 無whole字段、若傳入之oldSyllableObj有whole字段則能組合並返回一個完整的ChieneseSyllable對象
+		return Object.assign(oldSyllableObj, result)
+	}
+
+
+	public static 三分(str:string,oldSyllableObj:ChieneseSyllable,pattern = /首1(.*?)首2(.*?)介腹1(.*?)介腹2(.*?)尾調1(.*?)尾調2/){
+		const match = str.match(pattern);
+		let result = new ChieneseSyllable()
+		if(match){
+			const [, 首,,介腹,,尾調] = match;
+			result.onset = Util.nonNullableGet(首)
+			result.p2 = Util.nonNullableGet(介腹)
+			result.p3 = Util.nonNullableGet(尾調)
+		}
+		return Object.assign(oldSyllableObj, result)
+	}
+
+	public static getOccurrenceTimesMap(syllables:ChieneseSyllable[], field: keyof ChieneseSyllable){
+		let strArr:string[] = []
+		for(let i = 0; i < syllables.length; i++){
+			try{
+				let e = Util.nonNullableGet(syllables[i][field])
+				strArr.push(e)
+			}catch(e){
+				console.error(field)
+				console.error('i= '+i)
+				console.error(syllables[i])
+			}
+		}
+		return Util.mapOccurrenceTimes(strArr)
+	}
+
+	public static 批量取分割後ᵗ音節對象(){
+
 	}
 
 
@@ -141,6 +270,66 @@ export class Dict{
 	}
 
 
+	public static testMsoc(){
+		function msocPreprocess(){
+			return [
+				{regex:/（.*?）/gm, replacement:''}, 
+				{regex:/(.*)\*/gm, replacement:''},
+				{regex:/[\[\]]/gm, replacement:''},
+				{regex:/ɛ/gm, replacement:'e'},
+				{regex:/ɔ/gm, replacement:'o'},
+				{regex:/ʴ/gm, replacement:'r'},
+				{regex:/ɹ/gm, replacement:'r'},
+				{regex:/\(.*?\)/gm, replacement:''},
+				{regex:/⁽.*?⁾/gm, replacement:''},
+				{regex:/([aeiouə])i/gm, replacement:'$1j'},
+				{regex:/([aeiouə])u/gm, replacement:'$1w'},
+			] as RegexReplacePair[]
+		}
+		function 標記首介腹尾調(){
+			return [
+				//{regex:/(ˁ?[aeiouə])/gm, replacement:'腹1$1腹2'},
+				//{regex:/(r)/gm, replacement:'介1$1介2'},
+				{regex:/(r?ˁ?[aeiouə])/gm, replacement:'介腹1$1介腹2'},
+				//{regex:/^(.*)介1/gm, replacement:'首1$1首2介1'},
+				//{regex:/^(.*)腹1/gm, replacement:'首1$1首2腹1'},
+				{regex:/^(.*)(介腹1)/gm, replacement:'首1$1首2$2'},
+				{regex:/(介腹2)(.*)$/gm, replacement:'$1尾調1$2尾調2'},
+			] as RegexReplacePair[]
+		}
+		
+		let o = new Dict({
+			rawObj: new DictRaw({srcPath:'D:\\Program Files\\Rime\\User_Data\\下載\\RIME_OC_collections-main\\RIME_OC_collections-main\\OC_msoeg.dict.yaml'}),
+			name:'msoc'
+		})
+		
+		o.assign_pronounceArr()
+		o.preprocess(msocPreprocess())
+		//console.log(o.pronounceArr)
+		//Dict.首介腹尾調_分割(o.pronounceArr, )
+		
+		//帶標記的讀音數組
+		let marked = Util.serialReplace(o.pronounceArr, 標記首介腹尾調())
+		let syllables:ChieneseSyllable[] = []
+		for(let i = 0; i < marked.length; i++){
+			let sy = Dict.三分(marked[i], new ChieneseSyllable())
+			if(sy.onset === undefined){console.log(marked[i])}
+			syllables.push(sy)
+			//console.log(sy)//t
+		}
+		//console.log(syllables[4132])
+		let m = Dict.getOccurrenceTimesMap(syllables, 'p3')
+		console.log(Util.sortMapIntoObj(m))
+		//console.log(syllables[1]['onset'])
+		function 聲母合併(){
+			return [
+				{regex:/ʔɫ/gm, replacement:'ʔ'},
+				{regex:/ŋɫ/gm, replacement:'ŋ'},
+				{regex:/kʰɫ/gm, replacement:'kʰj'},
+
+			] as RegexReplacePair[]
+		}
+	}
 
 }
 
@@ -947,6 +1136,13 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 	public static async copyTransDb(targetDb:Database, srcDb:Database, srcTableName:string){
 
 		//await DictDb.all(targetDb)
+	}
+
+	public static async findMinimalPairs(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
+		/* 先分別對兩音素 SELECT * 、然後取 返回的行數少 者。假如查詢a音素返回的行數比b少。
+		則在a返回的表中、每個字的完整讀音的字串的子串都應包含音素a。
+		算出a在完整讀音的字串中的位置、在相同位置、把a替換成b、然後用替換後的完整讀音逐個查詢。查得的結果即最小對立對。
+		*/
 	}
 
 }

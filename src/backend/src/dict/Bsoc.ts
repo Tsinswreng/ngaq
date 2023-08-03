@@ -1,9 +1,9 @@
 import { Dict, DictRaw, DictDb } from "./Dict";
 import _ from "lodash";
-import {SerialRegExp, RegexReplacePair} from 'SerialRegExp'
 import Txt from 'Txt'
 import Util from "Util";
 import * as DType from './DictType'
+import {RegexReplacePair} from 'Type';
 
 /*
 <待做>{
@@ -12,6 +12,7 @@ import * as DType from './DictType'
 	篩 甲表同音但乙表否者
 	異ᵗ方案中拼式對應關係查找
 	音節拆分 對立互補之況ᵗ析
+	若A音併入B音則重碼率ˋ升幾多
 }
 */
 
@@ -21,7 +22,12 @@ export interface IPhonology{
 
 export class Phonology{
 
-	public static 賦讀音與漢字對象數組(validBody:string[][], kanjis:Kanji[], 音arr:string[]){
+	private _raw:DictRaw = new DictRaw({})
+
+	;public get raw(){return this._raw;};
+
+
+	public static 賦讀音和漢字對象數組(validBody:string[][], kanjis:Kanji[], 音arr:string[]){
 		//console.log(validBody)//t
 
 		let tr = _.zip(...validBody)
@@ -91,13 +97,13 @@ export class Bsoc{
 		replacePair.push({regex:/-/gm, replacement:''}) //除橫槓
 
 		replacePair.push({regex:/[\(\)]/gm, replacement:''}) //除小括號、姑先留小括號中ᵗ音
-		return SerialRegExp.serialReplace(strArr as string[], replacePair)
+		return Util.serialReplace(strArr as string[], replacePair)
 	}
 
 	public static 除拼音r(strArr:string[]){
 		let replacePair:RegexReplacePair[] = []
 		replacePair.push({regex:/^.*\*/gm, replacement:''})
-		return SerialRegExp.serialReplace(strArr as string[], replacePair)
+		return Util.serialReplace(strArr as string[], replacePair)
 	}
 
 	public 預處理(){
@@ -108,7 +114,7 @@ export class Bsoc{
 		//this.replacePair預處理.push({regex:/[\[\]]/gm, replacement:''}) //除中括號
 		//this.replacePair預處理.push({regex:/[<>]/gm, replacement:''}) //除尖括號
 
-		this.音strArr = SerialRegExp.serialReplace(this.音strArr as string[], this.replacePair預處理, 'gm')
+		this.音strArr = Util.serialReplace(this.音strArr as string[], this.replacePair預處理, 'gm')
 		this.非三等標記統一置于元音前()
 		// this.replacePair預處理.push({regex:/.*?\./gm, replacement: ''}) //除 次音節
 		
@@ -124,7 +130,7 @@ export class Bsoc{
 		replacePair.push({regex:/首1.*?ə(.*?)首2/gm, replacement:'首1$1首2'}) //除 次音節
 		replacePair.push({regex:/C/gm, replacement:''}) //
 
-		return SerialRegExp.serialReplace(strArr, replacePair)
+		return Util.serialReplace(strArr, replacePair)
 		
 	}
 
@@ -158,7 +164,7 @@ export class Bsoc{
 		this.replacePair音節分割.push({regex:/^((?!.*介).*)腹1/gm, replacement:'$1介1介2腹1'})
 		//this.replacePair音節分割.push({regex:/^(.*?\.)/gm, replacement:'次$1次'})
 		this.replacePair音節分割.push({regex:/^(.*?)介1/gm, replacement:'首1$1首2介1'})
-		this.音strArr = SerialRegExp.serialReplace(this.音strArr as string[], this.replacePair音節分割, 'gm')
+		this.音strArr = Util.serialReplace(this.音strArr as string[], this.replacePair音節分割, 'gm')
 
 		this.音strArr = Bsoc.聲明合併r(this.音strArr as string[])
 
@@ -224,7 +230,7 @@ export class Bsoc{
 			for(let i = 0; i < 音strArr.length; i++){
 				if(r.test(音strArr[i]!)){
 					if(proper.test(音strArr[i]!)){continue}
-					else{音strArr[i] = SerialRegExp.serialReplace(音strArr[i]!, replacePair)}
+					else{音strArr[i] = Util.serialReplace(音strArr[i]!, replacePair)}
 				}
 			}
 		}
@@ -406,7 +412,7 @@ export class Msoc{
 	pronounceArr:string[] = []
 
 	public assign(){
-		Phonology.賦讀音與漢字對象數組(this.raw.validBody, this.kanjis, this.pronounceArr)
+		Phonology.賦讀音和漢字對象數組(this.raw.validBody, this.kanjis, this.pronounceArr)
 		//console.log(this.pronounceArr)//t
 	}
 
@@ -435,7 +441,7 @@ export class Msoc{
 
 		]
 
-		this.pronounceArr = SerialRegExp.serialReplace(this.pronounceArr, replacePair)
+		this.pronounceArr = Util.serialReplace(this.pronounceArr, replacePair)
 	}
 
 	public static run(){
@@ -451,4 +457,4 @@ export class Msoc{
 
 //Bsoc.run()
 //Schloc.run()
-Msoc.run()
+//Msoc.run()

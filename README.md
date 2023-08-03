@@ -27,6 +27,16 @@ npm run build
 
 ## 更新記錄
 
+### 20230803233247 3.6.2
+
+#### refactor:
+
+* `SerialRegExp.ts` 併入 `Util.ts`
+
+#### feat:
+
+* 推進`Dict.ts`、寫了 處理msoeg上古擬音的邏輯。
+
 ### 20230802233229 3.6.1
 
 * 推進 `Bsoc.ts`
