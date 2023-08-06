@@ -20,6 +20,7 @@ HAVING COUNT(*) > 1; */
 } */
 
 export interface DictDbRow{
+	id?:number, //從數據庫中取數據時id不會undefined
 	char:string
 	code?:string
 	ratio?:string

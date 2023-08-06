@@ -13,6 +13,7 @@ import Util from '@shared/Util';
 import {RegexReplacePair} from 'Type';
 import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
 import * as DictType from './DictType'
+import _ from 'lodash';
 
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
@@ -26,6 +27,50 @@ import * as DictType from './DictType'
 // 	protected _phoneme?:string[] //音素
 // 	protected _fragments?:string[] //片段
 // }
+
+/**
+ * 最小對立對
+ */
+export class MinimalPair{
+	constructor(props?:Partial<Kanji>) {
+		if(props){Object.assign(this, props)}
+	}
+	/**
+	 * pair的每個元素都是一對最小對立對、第二維長度皆是2 如pair[1][0].code 潙'ta'、pair[1][1].code 潙'tʰa'
+	 */
+	private _pairs:DictDbRow[][] = []
+	;public get pairs(){return this._pairs;};
+	;public set pairs(v){this._pairs=v;};
+
+	/**
+	 * 算字頻之和。考慮除重。
+	 * @param pairs 
+	 * @param side 0對應左邊的音位、1對應右邊的音位。不填則返回左右的和。
+	 * @returns 
+	 */
+	public static sumFreq(pairs:DictDbRow[][], side?:0|1){
+		console.log(`console.log(pairs.length)`)//t
+		console.log(pairs.length)
+		function sumFreqOfOneSide(pairs:DictDbRow[][], side:0|1){
+			let tr = Util.transpose(pairs)
+			let sum = 0;
+			//let rows = tr[side]
+			let rows = _.uniqWith(tr[side], _.isEqual);
+			for(let i = 0; i < rows.length; i++){
+				sum+=rows[i].freq??0
+			}
+			return sum
+		}
+		if(side){
+			return sumFreqOfOneSide(pairs, side)
+		}else{
+			return sumFreqOfOneSide(pairs, 0) + sumFreqOfOneSide(pairs, 1)
+		}
+	}
+
+	
+
+}
 
 export class Kanji{
 	public kanji?:string
@@ -331,6 +376,39 @@ export class Dict{
 		}
 	}
 
+	public static saffesToOc(){
+		const replacePair:RegexReplacePair[] = require('./saffesToOcRegex')
+		const replacePair2:RegexReplacePair[] = require('./ocToOc3')
+		let o = new Dict({
+			rawObj: new DictRaw({srcPath:'D:\\Program Files\\Rime\\User_Data\\saffes.dict.yaml'}),
+			name:'saffes'
+		})
+		
+		o.assign_pronounceArr()
+		o.pronounceArr = o.pronounceArr.map((e)=>{return e.toUpperCase()})
+		o.preprocess(replacePair)
+		o.preprocess(replacePair2)
+		//console.log(o.pronounceArr)
+		Util.printArr(o.pronounceArr, '\t')
+	}
+
+	public static zyenphengToOc(){
+		let replacePair:RegexReplacePair[] = 
+		[
+			{regex:/ /gm, replacement:''},
+
+		]
+		let o = new Dict({
+			rawObj: new DictRaw({srcPath:'D:\\Program Files\\Rime\\User_Data\\zyenpheng.dict.yaml'}),
+			//name:''
+		})
+		
+		o.assign_pronounceArr()
+		o.preprocess(replacePair)
+		//console.log(o.pronounceArr)
+		Util.printArr(o.pronounceArr, '\t')
+	}
+
 }
 
 
@@ -582,6 +660,11 @@ export class DictRaw {
 		return dictyamlFullPath
 	}
 
+	public static 轉置後連續替換(body:string[][], index:number, replacePair:RegexReplacePair[]){
+		let tr = Util.transpose(body)
+		return Util.serialReplace(tr[index], replacePair)
+	}
+
 	
 	/**
 	 * 把有效表身存進數據庫
@@ -727,24 +810,27 @@ ${cn.ratio} VARCHAR(64) \
 	 * @returns 
 	 */
 	public static async transaction<T>(db:Database, sql:string, values:any[]){
-		let result:T[]
+		let result:T[] = []
 		return new Promise<T[]>((s,j)=>{
 			db.serialize(()=>{
 				db.run('BEGIN TRANSACTION')
-			})
-			const stmt = db.prepare(sql, (err)=>{
-				if(err){console.error(sql+'\n'+err+'\n');j(err);return} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
-			})
-			for(let i = 0; i < values.length; i++){
-				stmt.each(values[i], (err, row:T)=>{
-					if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-					result.push(row)
+				const stmt = db.prepare(sql, (err)=>{
+					if(err){console.error(sql+'\n'+err+'\n');j(err);return} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
 				})
-			}
-			db.all('COMMIT', (err,rows)=>{
-				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-				s(result)
+				for(let i = 0; i < values.length; i++){
+					stmt.each(values[i], (err, row:T)=>{
+						if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+						result.push(row)
+						//console.log(row)//t
+					})
+
+				}
+				db.all('COMMIT', (err,rows)=>{
+					if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+					s(result)
+				})
 			})
+			
 		})
 		
 	}
@@ -824,6 +910,55 @@ VALUES (?,?)`)
 		let b:boolean = await dictDb.isTableExists()
 		if(!b){await dictDb.creatTable()}
 		dictDb.insert(dictRaw.validBody).catch((e)=>{console.error(e)})
+	}
+
+	public async putNewTable(dictRaw:DictRaw, preprocess?:RegexReplacePair[]){
+		if(!dictRaw.name){throw new Error("!dictRaw.name");}
+		let dictDb = new DictDb({tableName:dictRaw.name})
+		let b:boolean = await dictDb.isTableExists()
+		if(!b){await dictDb.creatTable()}
+		let toInsert
+		if(preprocess){
+			toInsert = DictRaw.轉置後連續替換(dictRaw.validBody, 1, preprocess)
+		}else{
+			toInsert = dictRaw.validBody
+		}
+		
+		dictDb.insert(toInsert).catch((e)=>{console.error(e)})
+	}
+
+	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
+		let sql = `SELECT ${column} AS result FROM '${table}'`
+		let result = await DictDb.all<{result?:string}>(db, sql)
+		let strArr:string[] = []
+		for(let i = 0; i < result.length; i++){
+			if(!result[i].result){Promise.reject('!result[i].result');return}//似無用
+			strArr.push(result[i].result!)
+		}
+		if(strArr.length !== result.length){Promise.reject('strArr.length !== result.length');return}
+		let newStrArr = Util.serialReplace(strArr, replacementPair)
+		let replaceMap:Map<string, string> = new Map()
+		for(let i = 0; i < newStrArr.length; i++){
+			replaceMap.set(strArr[i], newStrArr[i])
+		}
+		db.serialize(()=>{
+			db.run('BEGIN TRANSACTION');
+			//let updateSql = `UPDATE '${table}' SET ${column} = (CASE WHEN ${column}=? THEN ? END)`
+			let updateSql = `UPDATE '${table}' SET ${column} = ? WHERE ${column}= ?`
+			const stmt = db.prepare(updateSql)
+			for(const[k,v] of replaceMap){
+				stmt.run([v,k], (err)=>{
+					if(err){
+						console.error(updateSql)
+						console.error([v,k])
+						Promise.reject(err);return
+					}
+				})
+			}
+			db.run('COMMIT', (err)=>{
+				if(err){Promise.reject(err);return}
+			})
+		})
 	}
 
 	public static toObjArr(strArr:string[][]):DictDbRow[]{
@@ -1138,11 +1273,186 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		//await DictDb.all(targetDb)
 	}
 
-	public static async findMinimalPairs(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
-		/* 先分別對兩音素 SELECT * 、然後取 返回的行數少 者。假如查詢a音素返回的行數比b少。
-		則在a返回的表中、每個字的完整讀音的字串的子串都應包含音素a。
-		算出a在完整讀音的字串中的位置、在相同位置、把a替換成b、然後用替換後的完整讀音逐個查詢。查得的結果即最小對立對。
+	// public static async findMinimalPairs_old(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
+	// 	/* 先分別對兩音素 SELECT * 、然後取 返回的行數少 者。假如查詢a音素返回的行數比b少。
+	// 	則在a返回的表中、每個字的完整讀音的字串的子串都應包含音素a。
+	// 	算出a在完整讀音的字串中的位置、在相同位置、把a替換成b、然後用替換後的完整讀音逐個查詢。查得的結果即最小對立對。
+	// 	*/
+	// 	function getSql(p:string){
+	// 		let sql = `SELECT ${cn.id}, ${columnName}, (INSTR(${columnName}, '${p}')-1) AS position FROM '${tableName}' WHERE ${columnName} LIKE '%${p}%';`
+	// 		return sql
+	// 	}
+		
+	// 	let qrySql:string
+	// 	let p:string
+	// 	let len:number
+	// 	//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
+	// 	let result1 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+	// 	let result2 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+	// 	let result:(DictDbRow & {position:number})[]
+	// 	//若result1結果更少、則用result1 音素替換成p2後來查。
+	// 	if(result1.length <= result2.length){
+	// 		result = result1
+	// 		p=phoneme2
+	// 		len=phoneme1.length
+	// 	}else{
+	// 		result = result2
+	// 		p=phoneme1
+	// 		len=phoneme2.length
+	// 	}
+	// 	result1 = [];result2 = []
+	// 	let strToBeQueried:string[] = []
+	// 	for(let i = 0; i < result.length; i++){
+	// 		let s = Util.nonNullableGet(result[i][columnName])
+	// 		s = Util.spliceStr(s, result[i].position, len, p)
+	// 		strToBeQueried.push(s)
+	// 	}
+	// 	//console.log(strToBeQueried)//t
+	// 	if(strToBeQueried.length !== result.length){Promise.reject('')}
+	// 	let sql = `SELECT * FROM '${tableName}' WHERE ${columnName}=?`
+	// 	return DictDb.transaction<DictDbRow>(db, sql, strToBeQueried)
+		
+
+	// }
+
+	/*有bug。let pair = await DictDb.findMinimalPairs(new DictDb({}).db, 'OC_msoeg', 'code', 't', 'k')
+	k在聲母/韻尾
+	*/
+
+	public static async findMinimalPairs_old2(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
+		function getSql(p:string){
+			let sql = `SELECT ${cn.id}, ${columnName}, (INSTR(${columnName}, '${p}')-1) AS position FROM '${tableName}' WHERE ${columnName} REGEXP BINARY '${p}';`
+			return sql
+		}
+		
+		//獲取第二個參數的結果
+		async function getR2(phoneme1:string, phoneme2:string){
+			let qrySql:string
+			let p:string
+			let len:number
+			//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
+			let result1 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+			let result2 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+			console.log(`console.log(result1.length)`)//t
+			console.log(result1.length)
+			console.log(`console.log(result2.length)`)//t
+			console.log(result2.length)
+			//let result:(DictDbRow & {position:number})[]
+			//若result1結果更少、則用result1 音素替換成p2後來查。
+			// if(result1.length <= result2.length){
+			// 	result = result1
+			// 	p=phoneme2
+			// 	len=phoneme1.length
+			// }else{
+			// 	result = result2
+			// 	p=phoneme1
+			// 	len=phoneme2.length
+			// }
+			//result1 = [];result2 = []
+			function getStrToBeQueried(result1:(DictDbRow & {position: number;})[], p1:string, p2:string){
+				let strToBeQueriedForP2:string[] = []
+				for(let i = 0; i < result1.length; i++){
+					let s = Util.nonNullableGet(result1[i][columnName])
+					s = Util.spliceStr(s, result1[i].position, phoneme1.length, phoneme2)
+					strToBeQueriedForP2.push(s)
+				}
+				return strToBeQueriedForP2
+			}
+			let strToBeQueriedForP2:string[] = getStrToBeQueried(result1, phoneme1, phoneme2)
+			console.log(`console.log(strToBeQueriedForP2)`)
+			console.log(strToBeQueriedForP2)//t
+			if(strToBeQueriedForP2.length !== result1.length){Promise.reject('')}
+			let sql = `SELECT * FROM '${tableName}' WHERE ${columnName}=?`
+			return await DictDb.transaction<DictDbRow>(db, sql, strToBeQueriedForP2)
+		}
+		let r2 = await getR2(phoneme1, phoneme2)
+		console.log(r2.length)
+		let r1 = await getR2(phoneme2, phoneme1)
+		console.log(r1.length)
+		// for(let i = 0; i < r1.length; i++){
+		// 	console.log(r1[i])
+		// 	console.log(r2[i])
+		// }
+		return Util.transpose([r1,r2])
+			//console.log('r2.length')
+			//console.log(r2.length)
+			//let strToBeQueriedForP1:string[] = getStrToBeQueried(r2, phoneme2, phoneme1)
+	
+	}
+
+
+	public static findMinimalPairs(rows:DictDbRow[], pattern1:string ,p2:string, mode='gm'){
+		/*pattern1必須只有三個捕獲組、其中音位在第二個捕獲組。
 		*/
+		if(!/\(.*\)\(.*\)\(.*\)/g.test(pattern1)){
+			console.error(`console.error(pattern1)`)
+			console.error(pattern1)
+			throw new Error('pattern1必須只有三個捕獲組')
+		}
+
+		let re1 = new RegExp(pattern1, mode)
+		//㕥存 第一個音位在對象數組中對應的索引
+		let p1Indexes:number[] = []
+
+		//把音位一替換成音位二後所得字串 所成數組
+		let strToBeQueried:string[] = []
+		let p1objs:{p1Index:number, strToBeQueried:string}[] = []
+		let p1Rows:DictDbRow[] = []
+		//獲取 數據庫中 音 對 id 之映射。緣有同音字、 一 音 可能 對應 多個 id
+		let mapCodeToIds = new Map<string, number[]>()
+		for(let i = 0; i < rows.length; i++){
+			if(!rows[i].code){continue}
+			let k:string = rows[i].code!
+			let eOfV:number = rows[i].id!
+			if(mapCodeToIds.has(k)){
+				let v:number[] = mapCodeToIds.get(k)!;
+				v?.push(eOfV)
+				mapCodeToIds.set(k,v!)
+			}else{
+				mapCodeToIds.set(k, [eOfV])
+			}
+		}
+		let testMap = Util.mapFields(rows, 'code', 'id')
+		console.log(`console.log(testMap)`)
+		console.log(testMap)//t
+		
+		//console.log(mapCodeToIds)//t
+		//邊歷數據庫每一行、尋 strToBeQueried
+		for(let i = 0; i < rows.length; i++){
+			if(!rows[i].code){continue}
+			let curCode = rows[i].code!
+			re1.lastIndex = 0;
+			//let result = re1.exec(rows[i].code??'')
+
+			if(re1.test(curCode)){
+				
+				p1Indexes.push(i)
+				let s = curCode.replace(re1, '$1'+p2+'$3')
+				strToBeQueried.push(s)
+				let tempP1Obj = {p1Index:i, strToBeQueried:s}
+				p1objs.push(tempP1Obj)
+				p1Rows.push(rows[i])
+			}
+		}
+		let resultIds1:number[][] = [] 
+		let resultIds2:number[][] = [] 
+		for(let i = 0; i < p1objs.length; i++){
+			let curCode = p1objs[i].strToBeQueried
+			let ids = mapCodeToIds.get(curCode)
+			if(ids){
+				//let tempResult1 = p1objs[i].p1Index
+				resultIds1.push([p1Rows[i].id!])
+				resultIds2.push(ids)
+			}
+		}
+		{
+			p1:'park'
+			p2:'bark'
+			id1:[] //讀音爲p1的諸字的id之集
+			id2:[]
+		}[]
+		//<待改>{返回ᵗ格式:}
+		return [resultIds1, resultIds2]
 	}
 
 }

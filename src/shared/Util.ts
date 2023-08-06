@@ -11,6 +11,8 @@ export default class Util{
 	
 	private constructor(){}
 
+	public static readonly L_ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+
 /**
  * [23.07.09-2134,]
  * [23.07.31-0928]{建議用getNonDef來代替此函數}
@@ -219,6 +221,11 @@ export default class Util{
 		return result
 	}
 
+	/**
+	 * map轉對象數組
+	 * @param map 
+	 * @returns 
+	 */
 	public static mapToObjArr<K,V>(map:Map<K,V>){
 		let objArr:{k:K,v:V}[] = []
 		for(const [mk,mv] of map){
@@ -226,6 +233,72 @@ export default class Util{
 		}
 		return objArr
 	}
+
+	// public static mapArrToIndexes<T,K,V>(objArr:T[], fieldAsK:keyof T, fieldAsV:keyof T){
+	// 	let result = new Map<any, any[]>()
+	// 	for(let i = 0; i < objArr.length; i++){
+	// 		let v = result.get(objArr[i][fieldAsK])
+	// 		//typeof(objArr[i][fieldAsK])
+	// 		//console.log(typeof v)
+	// 		//console.log(v)
+			
+	// 		if(v){
+	// 			v.push(objArr[i][fieldAsV])
+	// 			result.set(objArr[i][fieldAsK], v)
+	// 		}else{
+	// 			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]])
+	// 		}
+	// 	}
+	// 	return result as Map<K,V[]>
+	// }
+
+	// public static mapArrToIndexes<T extends Partial<Record<K, any>> & Record<V, any>, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]>{
+	// 	let result = new Map<T[K], T[V][]>();
+	  
+	// 	for (let i = 0; i < objArr.length; i++) {
+	// 		let v = result.get(objArr[i][fieldAsK]);
+		
+	// 		if (v) {
+	// 			v.push(objArr[i][fieldAsV]);
+	// 			result.set(objArr[i][fieldAsK], v);
+	// 		} else {
+	// 			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]]);
+	// 		}
+	// 	}
+	  
+	// 	return result;
+	// }
+
+	/**
+	 * 根據對象數組返回map。例如obj是對象數組、數組中每個元素都有字串name和數字id、則(obj, 'name', 'id')則返回 Map<string, number[]>
+	 * @param objArr 對象數組
+	 * @param fieldAsK 對象中的字段、該字段的值將作爲map的鍵
+	 * @param fieldAsV 對象中的字段、該字段的值將作爲map的值數組中的一個元素
+	 * @returns 
+	 */
+	public static mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]> {
+		const isValidObj = (obj: any): obj is T => obj != null && typeof obj === 'object' && fieldAsK in obj && fieldAsV in obj;
+		
+		if (!objArr.every(isValidObj)) {
+		  throw new Error(`Some objects in the input array are missing '${fieldAsK.toString()}' or '${fieldAsV.toString()}' properties.`);
+		}
+	  
+		let result = new Map<T[K], T[V][]>();
+	  
+		for (let i = 0; i < objArr.length; i++) {
+		  let v = result.get(objArr[i][fieldAsK]);
+		  
+		  if (v) {
+			v.push(objArr[i][fieldAsV]);
+			result.set(objArr[i][fieldAsK], v);
+		  } else {
+			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]]);
+		  }
+		}
+	  
+		return result;
+	  }
+
 
 	public static sortMapIntoObj<K,V>(map:Map<K,V>, desc=true){
 		let obj = Util.mapToObjArr(map)
@@ -351,6 +424,26 @@ export default class Util{
 		}
 		return result
 	}
+
+	/**
+	 * 
+	 * @param mainString 
+	 * @param replacement 
+	 * @param start 
+	 * @param end [start, end)
+	 * @returns 
+	 */
+	// public static replaceInRange(mainString: string, replacement: string, start: number, end=replacement.length): string {
+	// 	return mainString.substring(0, start) + replacement + mainString.substring(end);
+	// }
+
+	
+	// public static replaceFirstSubstring(full:string, str1:string, str2:string){
+	// 	let start = full.indexOf(str1)
+	// 	if(start === -1){Promise.reject(str1+' non est substring de '+full)}
+	// 	let end = start+str1.length
+	// 	return this.replaceInRange(full, str2, start, end)
+	// }
 	/* public static replace(srcStr:string, left:string[], right:string[]):string{
 		if(left.length !== right.length){
 			throw new Error('left.length !== right.length');
@@ -363,6 +456,43 @@ export default class Util{
 		return newStr
 	} */
 	
+	/**
+	 * 
+	 * @param oldStr 
+	 * @param replacement 
+	 * @param start 在oldStr上的起始索引
+	 * @param replaceLength oldStr要被替換掉的長度
+	 */
+	// public static replace(oldStr:string, replacement:string, start:number, replaceLength=0):string{
+	// 	if (start < 0 || start >= oldStr.length) {
+	// 		// 如果起始索引超出原字符串范围，则直接返回原字符串
+	// 		return oldStr;
+	// 	  }
+		
+	// 	  // 截取原字符串中需要保留的部分
+	// 	  const preservedPart = oldStr.substring(0, start);
+	// 	  const end = start + replaceLength;
+	// 	  const endPart = oldStr.substring(end);
+		
+	// 	  // 拼接替换后的新字符串
+	// 	  const newStr = preservedPart + replacement + endPart;
+		
+	// 	  return newStr;
+	// }
+
+
+	public static spliceStr(str: string, start: number, deleteCount: number, replacement: string = ''): string {
+		return str.slice(0, start) + replacement + str.slice(start + deleteCount);
+	}
+
+	public static printArr(arr:any[], splitter=''){
+		for(let i = 0; i < arr.length; i++){
+			process.stdout.write(arr[i])
+			process.stdout.write(splitter)
+		}
+	}
+
+
 }
 
 
