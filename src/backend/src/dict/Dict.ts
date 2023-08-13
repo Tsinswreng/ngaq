@@ -8,12 +8,14 @@ import * as fs from 'fs'
 const rootDir:string = require('app-root-path').path
 //import 'module-alias/register';
 //import Txt from '../../../shared/Txt';
-import Txt from "@shared/Txt"
-import Util from '@shared/Util';
+import Txt from "Txt"
+import Util from 'Util';
 import {RegexReplacePair} from 'Type';
+import * as Tp from 'Type'
 import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
 import * as DictType from './DictType'
-import _ from 'lodash';
+import _, { sum } from 'lodash';
+import moment from 'moment'
 
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
@@ -31,16 +33,61 @@ import _ from 'lodash';
 /**
  * 最小對立對
  */
-export class MinimalPair{
+export class MinimalPairUtil{
 	constructor(props?:Partial<Kanji>) {
 		if(props){Object.assign(this, props)}
 	}
 	/**
 	 * pair的每個元素都是一對最小對立對、第二維長度皆是2 如pair[1][0].code 潙'ta'、pair[1][1].code 潙'tʰa'
 	 */
-	private _pairs:DictDbRow[][] = []
+	private _pairs:MinimalPairUtil[] = []
 	;public get pairs(){return this._pairs;};
 	;public set pairs(v){this._pairs=v;};
+
+	
+	/**
+	 * 蔿 諸 最小對立對 算 字頻之和
+	 * @param db 
+	 * @param table 
+	 * @param pairs 諸 最小對立對
+	 * @returns 長度潙二的 數組。 第一個元素是諸最小對立對中包含第一個音位的字的字頻之和、第二個同理。
+	 */
+	public static async sumFreq(db:Database, table:string ,pairs:Tp.MinimalPair[]){
+		//let result:number[] = [0,0] //左,右
+		let left:number[][] = []
+		let right:number[][] = []
+		let sql = `SELECT ${cn.freq} FROM '${table}' WHERE id=?`
+		for(let i = 0; i < pairs.length; i++){
+			let unusLeft:number[] = await objTo2DArr(pairs[i].ids1)
+			let unusRight:number[] = await objTo2DArr(pairs[i].ids2)
+			left.push(unusLeft)
+			right.push(unusRight)
+		}
+
+		async function objTo2DArr(numArr:number[]){
+			let r = await DictDb.transaction<{freq:number}>(db, sql, numArr)
+			let arr:number[] = []
+			for(let i = 0; i < r.length; i++){
+				arr.push(r[i].freq) 
+			}
+			return arr
+		}
+		
+		function sum2DArr(para:number[][]) {
+			//console.log(para)
+			let sum = 0
+			for(let i = 0; i < para.length; i++){
+				for(let j = 0; j < para[i].length; j++){
+					sum += para[i][j]
+					//console.log(sum)
+				}
+			}
+			return sum
+		}
+		//console.log(sum2DArr(left))
+		return [sum2DArr(left), sum2DArr(right)]
+	}
+
 
 	/**
 	 * 算字頻之和。考慮除重。
@@ -48,7 +95,7 @@ export class MinimalPair{
 	 * @param side 0對應左邊的音位、1對應右邊的音位。不填則返回左右的和。
 	 * @returns 
 	 */
-	public static sumFreq(pairs:DictDbRow[][], side?:0|1){
+	public static sumFreq_deprecated(pairs:DictDbRow[][], side?:0|1){
 		console.log(`console.log(pairs.length)`)//t
 		console.log(pairs.length)
 		function sumFreqOfOneSide(pairs:DictDbRow[][], side:0|1){
@@ -65,6 +112,28 @@ export class MinimalPair{
 			return sumFreqOfOneSide(pairs, side)
 		}else{
 			return sumFreqOfOneSide(pairs, 0) + sumFreqOfOneSide(pairs, 1)
+		}
+	}
+
+	/**
+	 * 把MinimalPair[] 類型的最小對立對 數組 轉成 DictDbRow[][]類型的。
+	 */
+	//public static async toPairsOfDbRows(db:Database, table:string, pairs:Tp.MinimalPair[]){
+	//	let result:DictDbRow[][] = []
+	//	let sql = `SELECT * FROM '${table}' WHERE id=?`
+	//	for(let i = 0; i < pairs.length; i++){
+	//		let leftRows = await DictDb.transaction<DictDbRow>(db, sql, pairs[i].ids1)
+	//		let rightRows = await DictDb.transaction<DictDbRow>(db, sql, pairs[i].ids2)
+	//		//result.push([leftRows, rightRows])
+	//	}
+	//}
+
+	public static filterComplementary(pairs:Tp.MultiMinimalPairs[]){
+		let result:string[] = []
+		for(const p of pairs){
+			if(p.proportion[0] === -1){
+				result.push(...p.pair)
+			}
 		}
 	}
 
@@ -173,7 +242,22 @@ export class Dict{
 
 
 	//
-
+	public static getSimpleHead(name:string){
+		const dateNow:string = moment().format('YYYYMMDDHHmmss')
+		let head = 
+`
+#${dateNow}
+# Rime dictionary
+# encoding: utf-8
+---
+name: ${name}
+version: ""
+sort: by_weight
+use_preset_vocabulary: true
+...
+`
+		return head
+	}
 
 
 	public getUpdatedKanjis(validBody=this.rawObj.validBody, pronounceArr=this.pronounceArr){
@@ -190,20 +274,65 @@ export class Dict{
 	}
 
 	public get_pronounceArr(validBody=this.rawObj.validBody){
-		return Util.transpose(validBody)[1]
+		return Util.transpose(validBody, '')[1]
 	}
 
 	public assign_pronounceArr(){
 		this.pronounceArr = this.get_pronounceArr()
 	}
 
-	public async assign_重碼頻數(){
-		let objs = await DictDb.get重碼頻數(this.dbObj.db, this.name)
+	/**
+	 * 
+	 * @param min 若填則不慮字頻小於此者
+	 */
+	public async get_重碼頻數(min?:number){
+		let objs
+		if(min === undefined){
+			objs = await DictDb.get重碼頻數(this.dbObj.db, this.name)
+			
+		}else{
+			let tempTable = 'temp'+Util.YYYYMMDDHHmmss()
+			await DictDb.copyTable(this.dbObj.db, tempTable, this.name)
+			await Dict.篩頻(this.dbObj.db, tempTable, min)
+			objs = await DictDb.get重碼頻數(this.dbObj.db, tempTable)
+			await DictDb.dropTable(this.dbObj.db, tempTable)
+		}
 		let sum = 0
 		for(let i = 0; i < objs.length; i++){
 			sum += objs[i].freq_of_homo
 		}
-		this._重碼頻數 = sum
+		return sum
+	}
+
+	public async get_字頻總和(min?:number){
+		if(min===undefined){
+			return await DictDb.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+		}else{
+			let tempTable = 'temp'+Util.YYYYMMDDHHmmss()
+			await DictDb.copyTable(this.dbObj.db, tempTable, this.name)
+			await Dict.篩頻(this.dbObj.db, tempTable, min)
+			let r = await DictDb.getSum(this.dbObj.db, tempTable, DictType.cn.freq)
+			await DictDb.dropTable(this.dbObj.db, tempTable)
+			return r
+		}
+		
+	}
+
+	/**
+	 * 臨時用
+	 * @param db 
+	 * @param table 
+	 * @param min 
+	 * @returns 
+	 */
+	public static 篩頻(db:Database, table:string, min:number){
+		let sql = `DELETE FROM '${table}' WHERE ${cn.freq}<${min}`
+		return DictDb.all(db, sql)
+	}
+
+
+	public async assign_重碼頻數(min?:number){
+		this._重碼頻數 = await this.get_重碼頻數(min)
 	}
 
 	public preprocess(replacePair:RegexReplacePair[], pronounceArr=this.pronounceArr){
@@ -216,7 +345,15 @@ export class Dict{
 	}
 
 
-
+	/**
+	 * 示例 phraws 
+	 * let r = 首介腹尾調_分割('首1ph首2介1r介2腹1a腹2尾1w尾2調1s調2', new ChieneseSyllable())
+	 * 返回的r是一個ChieneseSyllable實例、有onset到tone等等。
+	 * @param str 
+	 * @param oldSyllableObj 
+	 * @param pattern 
+	 * @returns 
+	 */
 	public static 首介腹尾調_分割(str:string,oldSyllableObj:ChieneseSyllable,pattern = /首1(.*?)首2(.*?)介1(.*?)介2(.*?)腹1(.*?)腹2(.*?)尾1(.*?)尾2(.*?)調1(.*?)調2/){
 		
 		const match = str.match(pattern);
@@ -243,9 +380,22 @@ export class Dict{
 		return Object.assign(oldSyllableObj, result)
 	}
 
-
+	public static 三分arr(str:string[],pattern = /首1(.*?)首2(.*?)介腹1(.*?)介腹2(.*?)尾調1(.*?)尾調2/){
+		let result:ChieneseSyllable[] = []
+		for(let i = 0; i < str.length; i++){
+			let one = str[i]
+			let oneSyllable = this.三分(one, new ChieneseSyllable(), pattern)
+			result.push(oneSyllable)
+		}
+		return result
+	}
+	
+	//不要加全局標誌
 	public static 三分(str:string,oldSyllableObj:ChieneseSyllable,pattern = /首1(.*?)首2(.*?)介腹1(.*?)介腹2(.*?)尾調1(.*?)尾調2/){
+		//console.log(str)
+		//console.log(pattern)//t
 		const match = str.match(pattern);
+		//console.log(match)
 		let result = new ChieneseSyllable()
 		if(match){
 			const [, 首,,介腹,,尾調] = match;
@@ -288,6 +438,10 @@ export class Dict{
 		this._加頻重碼率 = Util.nonFalseGet(this.重碼頻數) / Util.nonFalseGet(this.字頻總和)
 	}
 
+	public 算加頻重碼率(min?:number){
+
+	}
+
 	public async putInfo(){
 		// let keys:string[] = Object.keys(this)
 		// for(let i = 0; i < keys.length; i++){
@@ -314,84 +468,45 @@ export class Dict{
 		await this.dbObj.insert(objs)
 	}
 
-
-	public static testMsoc(){
-		function msocPreprocess(){
-			return [
-				{regex:/（.*?）/gm, replacement:''}, 
-				{regex:/(.*)\*/gm, replacement:''},
-				{regex:/[\[\]]/gm, replacement:''},
-				{regex:/ɛ/gm, replacement:'e'},
-				{regex:/ɔ/gm, replacement:'o'},
-				{regex:/ʴ/gm, replacement:'r'},
-				{regex:/ɹ/gm, replacement:'r'},
-				{regex:/\(.*?\)/gm, replacement:''},
-				{regex:/⁽.*?⁾/gm, replacement:''},
-				{regex:/([aeiouə])i/gm, replacement:'$1j'},
-				{regex:/([aeiouə])u/gm, replacement:'$1w'},
-			] as RegexReplacePair[]
-		}
-		function 標記首介腹尾調(){
-			return [
-				//{regex:/(ˁ?[aeiouə])/gm, replacement:'腹1$1腹2'},
-				//{regex:/(r)/gm, replacement:'介1$1介2'},
-				{regex:/(r?ˁ?[aeiouə])/gm, replacement:'介腹1$1介腹2'},
-				//{regex:/^(.*)介1/gm, replacement:'首1$1首2介1'},
-				//{regex:/^(.*)腹1/gm, replacement:'首1$1首2腹1'},
-				{regex:/^(.*)(介腹1)/gm, replacement:'首1$1首2$2'},
-				{regex:/(介腹2)(.*)$/gm, replacement:'$1尾調1$2尾調2'},
-			] as RegexReplacePair[]
+	public recoverBody(pronounceArr=this.pronounceArr,validBody=this.rawObj.validBody){
+		let tr = Util.transpose(validBody,'')
+		let 字 = tr[0]
+		let 浮點頻 = tr[2]
+		//console.log([字, pronounceArr, 浮點頻])//t
+		let 復原
+		if(浮點頻){
+			復原 = Util.transpose([字, pronounceArr, 浮點頻])
+		}else{
+			復原 = Util.transpose([字, pronounceArr])
 		}
 		
-		let o = new Dict({
-			rawObj: new DictRaw({srcPath:'D:\\Program Files\\Rime\\User_Data\\下載\\RIME_OC_collections-main\\RIME_OC_collections-main\\OC_msoeg.dict.yaml'}),
-			name:'msoc'
-		})
-		
-		o.assign_pronounceArr()
-		o.preprocess(msocPreprocess())
-		//console.log(o.pronounceArr)
-		//Dict.首介腹尾調_分割(o.pronounceArr, )
-		
-		//帶標記的讀音數組
-		let marked = Util.serialReplace(o.pronounceArr, 標記首介腹尾調())
-		let syllables:ChieneseSyllable[] = []
-		for(let i = 0; i < marked.length; i++){
-			let sy = Dict.三分(marked[i], new ChieneseSyllable())
-			if(sy.onset === undefined){console.log(marked[i])}
-			syllables.push(sy)
-			//console.log(sy)//t
-		}
-		//console.log(syllables[4132])
-		let m = Dict.getOccurrenceTimesMap(syllables, 'p3')
-		console.log(Util.sortMapIntoObj(m))
-		//console.log(syllables[1]['onset'])
-		function 聲母合併(){
-			return [
-				{regex:/ʔɫ/gm, replacement:'ʔ'},
-				{regex:/ŋɫ/gm, replacement:'ŋ'},
-				{regex:/kʰɫ/gm, replacement:'kʰj'},
-
-			] as RegexReplacePair[]
-		}
+		return 復原
 	}
 
-	public static saffesToOc(){
-		const replacePair:RegexReplacePair[] = require('./saffesToOcRegex')
-		const replacePair2:RegexReplacePair[] = require('./ocToOc3')
-		let o = new Dict({
-			rawObj: new DictRaw({srcPath:'D:\\Program Files\\Rime\\User_Data\\saffes.dict.yaml'}),
-			name:'saffes'
-		})
-		
-		o.assign_pronounceArr()
-		o.pronounceArr = o.pronounceArr.map((e)=>{return e.toUpperCase()})
-		o.preprocess(replacePair)
-		o.preprocess(replacePair2)
-		//console.log(o.pronounceArr)
-		Util.printArr(o.pronounceArr, '\t')
+	public outputToFile(path:string, head=this.rawObj.header){
+
+		let recovered = this.recoverBody()
+		//console.log(recovered)//t
+		let outStr = head
+		for(const line of recovered){
+			for(const grid of line){
+				outStr += grid+'\t'
+			}
+			outStr += '\n'
+		}
+		//console.log(outStr.slice(0,999))
+		//console.log(path)
+		fs.writeFileSync(path, outStr)
+		//console.log(outStr)//t
 	}
 
+	public async update(){
+		const dateNow:string = moment().format('YYYYMMDDHHmmss')
+		const tempTable = 'temp'+dateNow
+
+	}
+
+	
 	public static zyenphengToOc(){
 		let replacePair:RegexReplacePair[] = 
 		[
@@ -407,6 +522,7 @@ export class Dict{
 		o.preprocess(replacePair)
 		//console.log(o.pronounceArr)
 		Util.printArr(o.pronounceArr, '\t')
+		
 	}
 
 }
@@ -778,28 +894,39 @@ export class DictDb{
 		return DictDb.isTableExist(this.db, tableName)
 	}
 
-
-	public async creatTable(tableName = this.tableName){
-		
+	public static async creatTable(db:Database, tableName:string){
 		let sql:string = `CREATE TABLE [${tableName}] ( \
 ${cn.id} INTEGER PRIMARY KEY AUTOINCREMENT, \
 ${cn.char} VARCHAR(1024) NOT NULL, \
 ${cn.code} VARCHAR(64) NOT NULL, \
 ${cn.ratio} VARCHAR(64) \
 )`
+		return DictDb.all(db,sql)
+	}
 
-		return new Promise((s,j)=>{
-			
-			Util.nonFalseGet(this.db).run(sql, (err)=>{
-				if(err){j(err);return}
-				console.log('at\t'+this.dbPath)
-				s(sql+'成功')
-			})
-			
-		})
-		//IF NOT EXISTS 
+
+	public async creatTable(tableName = this.tableName){
 		
-		//this.db.exec(testCreat)
+// 		let sql:string = `CREATE TABLE [${tableName}] ( \
+// ${cn.id} INTEGER PRIMARY KEY AUTOINCREMENT, \
+// ${cn.char} VARCHAR(1024) NOT NULL, \
+// ${cn.code} VARCHAR(64) NOT NULL, \
+// ${cn.ratio} VARCHAR(64) \
+// )`
+
+// 		return new Promise((s,j)=>{
+			
+// 			Util.nonFalseGet(this.db).run(sql, (err)=>{
+// 				if(err){j(err);return}
+// 				console.log('at\t'+this.dbPath)
+// 				s(sql+'成功')
+// 			})
+			
+// 		})
+// 		//IF NOT EXISTS 
+		
+// 		//this.db.exec(testCreat)
+		return DictDb.creatTable(this.db, Util.nonNullableGet(tableName))
 	}
 
 	/**
@@ -1012,7 +1139,7 @@ VALUES (?,?)`)
 		return /* await */ DictDb.all<DictType.Sqlite_master>(db, sql)
 	}
 
-	public static async DropAllTables(db:Database){
+	public static async dropAllTables(db:Database){
 		let tableNames:string[] = []
 		let info = await DictDb.querySqlite_master(db)
 		//let prms:Promise<any>[] = []
@@ -1021,11 +1148,11 @@ VALUES (?,?)`)
 			if(info[i].type === 'table' && info[i].name !== 'sqlite_sequence' && info[i].name !== 'sqlite_master')
 			{tableNames.push(info[i].name)}
 		}
-		return DictDb.DropTable(db,tableNames)
+		return DictDb.dropTable(db,tableNames)
 		//return Promise.all(prms)
 	}
 
-	public static async DropTable(db:Database, tableName:string|string[]){
+	public static async dropTable(db:Database, tableName:string|string[]){
 		if(Array.isArray(tableName)){
 			// let sql = `DROP TABLE ?;`
 			// let v:string[] = tableName
@@ -1051,7 +1178,7 @@ VALUES (?,?)`)
 	 * @param userPath User_Data的絕對路徑
 	 */
 	public static async testAll(db:Database, userPath:string='D:/Program Files/Rime/User_Data'){
-		await DictDb.DropAllTables(db)
+		await DictDb.dropAllTables(db)
 		await DictDb.putEssay(db)
 		let paths:string[] = DictRaw.getDictYamlPaths(userPath)
 		let names:string[] = []
@@ -1072,6 +1199,11 @@ VALUES (?,?)`)
 			//await temp // 防 sqlite busy
 			//prms.push(temp)
 		}
+	}
+
+	public static selectAll(db:Database, table:string){
+		let sql = `SELECT * FROM '${table}'`
+		return DictDb.all<DictDbRow>(db, sql)
 	}
 
 	/**
@@ -1273,6 +1405,11 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		//await DictDb.all(targetDb)
 	}
 
+	public static copyTable(db:Database, newTable:string, oldTable:string){
+		let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}`
+		return DictDb.all(db, sql)
+	}
+
 	// public static async findMinimalPairs_old(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
 	// 	/* 先分別對兩音素 SELECT * 、然後取 返回的行數少 者。假如查詢a音素返回的行數比b少。
 	// 	則在a返回的表中、每個字的完整讀音的字串的子串都應包含音素a。
@@ -1380,6 +1517,20 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 	
 	}
 
+	public static async toStrTable(db:Database, table:string, column?:string[]){
+		let sql
+		if(!column){
+			sql = `SELECT * FROM '${table}'`
+		}else{
+			sql = `SELECT ${[...column]} FROM '${table}'`
+		}
+		//console.log(sql)//t
+		let rows = await DictDb.all(db, sql)
+		//console.log(rows)//t
+		return Util.objArrToStrArr(rows)
+	}
+
+
 
 	public static findMinimalPairs(rows:DictDbRow[], pattern1:string ,p2:string, mode='gm'){
 		/*pattern1必須只有三個捕獲組、其中音位在第二個捕獲組。
@@ -1392,67 +1543,132 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 
 		let re1 = new RegExp(pattern1, mode)
 		//㕥存 第一個音位在對象數組中對應的索引
-		let p1Indexes:number[] = []
+		//let p1Indexes:number[] = []
 
 		//把音位一替換成音位二後所得字串 所成數組
-		let strToBeQueried:string[] = []
-		let p1objs:{p1Index:number, strToBeQueried:string}[] = []
-		let p1Rows:DictDbRow[] = []
-		//獲取 數據庫中 音 對 id 之映射。緣有同音字、 一 音 可能 對應 多個 id
-		let mapCodeToIds = new Map<string, number[]>()
-		for(let i = 0; i < rows.length; i++){
-			if(!rows[i].code){continue}
-			let k:string = rows[i].code!
-			let eOfV:number = rows[i].id!
-			if(mapCodeToIds.has(k)){
-				let v:number[] = mapCodeToIds.get(k)!;
-				v?.push(eOfV)
-				mapCodeToIds.set(k,v!)
-			}else{
-				mapCodeToIds.set(k, [eOfV])
-			}
-		}
-		let testMap = Util.mapFields(rows, 'code', 'id')
-		console.log(`console.log(testMap)`)
-		console.log(testMap)//t
-		
-		//console.log(mapCodeToIds)//t
-		//邊歷數據庫每一行、尋 strToBeQueried
-		for(let i = 0; i < rows.length; i++){
-			if(!rows[i].code){continue}
-			let curCode = rows[i].code!
+		// let strToBeQueried:string[] = []
+		// let p1objs:{p1Index:number, strToBeQueried:string}[] = []
+		// let p1Rows:DictDbRow[] = []
+
+		//包含p1音位的音在數據庫中的id
+		let p1Ids:number[][] = []
+		//獲取 整個數據庫中 音 對 id 之映射。緣有同音字、 一 音 可能 對應 多個 id
+		let mapCodeToIds_all = Util.mapFields(rows, 'code', 'id')
+		//把上面的map轉成對象數組
+		let codeToIdsArr = Util.mapToObjArr(mapCodeToIds_all)
+		//p1屬性㕥存數據庫中包含p1音位的音、p2屬性即在p1屬性的基礎上把p1音位換成p2
+		let p1vsP2:{p1:string, p2:string}[] = []
+
+		//邊歷數據庫的每種音、尋 p1vsP2
+		for(let i = 0; i < codeToIdsArr.length; i++){
+			if(!codeToIdsArr[i].k){continue} //判空
+			let curCode = codeToIdsArr[i].k as string //當前要研究的音
 			re1.lastIndex = 0;
 			//let result = re1.exec(rows[i].code??'')
+			if(re1.test(curCode)){ //若符合正則表達式r1 則此音潙包含p1音位的音
+				//p1Indexes.push(i) //舊
+				let s = curCode.replace(re1, '$1'+p2+'$3') //在curCode中把p1音位換成p2音位
+				p1vsP2.push({p1:curCode, p2:s}) //把一組可能的存在的最小對立對 push入p1vsP2
+				p1Ids.push(codeToIdsArr[i].v as number[]) //把 數據庫中curCode這個音對應的諸個漢字的各自的id所構成的數組 push
 
-			if(re1.test(curCode)){
+
+				// strToBeQueried.push(s)//舊
+				// let tempP1Obj = {p1Index:i, strToBeQueried:s}
+				// p1objs.push(tempP1Obj)
+				// p1Rows.push(rows[i])//?
 				
-				p1Indexes.push(i)
-				let s = curCode.replace(re1, '$1'+p2+'$3')
-				strToBeQueried.push(s)
-				let tempP1Obj = {p1Index:i, strToBeQueried:s}
-				p1objs.push(tempP1Obj)
-				p1Rows.push(rows[i])
 			}
 		}
-		let resultIds1:number[][] = [] 
-		let resultIds2:number[][] = [] 
-		for(let i = 0; i < p1objs.length; i++){
-			let curCode = p1objs[i].strToBeQueried
-			let ids = mapCodeToIds.get(curCode)
+		//let mapCodeToIds_p1 = Util.mapFields(p1Rows, 'code', 'id')
+
+		// let resultIds1:number[][] = [] 
+		// let resultIds2:number[][] = [] 
+		//let result:{p1:string, p2:string, rows1:DictDbRow[], rows2:DictDbRow[]}[] = []
+		//let result:{p1:string, p2:string, ids1:number[], ids2:number[]}[] = []
+		let result:Tp.MinimalPair[] = []
+		for(let i = 0; i < p1vsP2.length; i++){
+			let curCode = p1vsP2[i].p2
+			let ids = mapCodeToIds_all.get(curCode) as number[]
+//若整個數據庫中存在curCode這樣的音、即有最小對立對
 			if(ids){
-				//let tempResult1 = p1objs[i].p1Index
-				resultIds1.push([p1Rows[i].id!])
-				resultIds2.push(ids)
+				//let unusResult = {p1:p1vsP2[i].p1, p2:p1vsP2[i].p2, ids1: p1Ids[i], ids2:ids}
+				let unusResult:Tp.MinimalPair = {pair:[p1vsP2[i].p1, p1vsP2[i].p2], ids1: p1Ids[i], ids2:ids}
+				result.push(unusResult)
+				// resultIds1.push(p1Ids[i])
+				// resultIds2.push(ids)
 			}
 		}
-		{
-			p1:'park'
-			p2:'bark'
-			id1:[] //讀音爲p1的諸字的id之集
-			id2:[]
-		}[]
+		// {
+		// 	p1:'park'
+		// 	p2:'bark'
+		// 	id1:[] //讀音爲p1的諸字的id之集
+		// 	id2:[]
+		// }[]
 		//<待改>{返回ᵗ格式:}
-		return [resultIds1, resultIds2]
+		//return [resultIds1, resultIds2]
+		return result
+	}
+
+
+	/**
+	 * 示例 
+	 * let r = await DictDb.multiMinimalPairs(new DictDb({}).db, 'OC_msoeg', '^()(', ')(.*)$', ['p','t','k'], ['b', 'd'], 'asc');console.log(r)
+	 * 輸出 
+	 * 
+	 * [
+		{ pair: [ 'k', 'b' ], proportion: 0.026951720981624523 },
+		{ pair: [ 'p', 'b' ], proportion: 0.029148193756669428 },
+		{ pair: [ 't', 'b' ], proportion: 0.04542717702311534 },
+		{ pair: [ 'k', 'd' ], proportion: 0.06330477231253857 },
+		{ pair: [ 't', 'd' ], proportion: 0.06988718801675056 },
+		{ pair: [ 'p', 'd' ], proportion: 0.07573960447134613 }
+		]
+	 * 
+	 * @param db 
+	 * @param table 
+	 * @param leftPattern 
+	 * @param rightPattern 
+	 * @param phoneme1 
+	 * @param phoneme2 
+	 * @param orderBy 
+	 * @returns 
+	 */
+	public static async multiMinimalPairs(db:Database, table:string, leftPattern:string, rightPattern:string, phoneme1:string[], phoneme2?:string[], orderBy?:'asc'|'desc'){
+		if(!phoneme2){phoneme2 = phoneme1}
+		let rows = await DictDb.all<DictDbRow>(db, `SELECT * FROM '${table}'`)
+		let freqSum = await DictDb.getSum(db, table, cn.freq)
+		let cartesianProduct = Util.cartesianProduct(phoneme1, phoneme2)
+		cartesianProduct = Util.filterArrLikeSets(cartesianProduct)
+		//console.log(cartesianProduct)
+		//console.log(cartesianProduct.length)
+		//let result:{pair:string[], proportion:number}[] = []
+		let result:Tp.MultiMinimalPairs[] = []
+		for(let i = 0; i < cartesianProduct.length; i++){
+			let leftPhoneme = cartesianProduct[i][0]
+			let rightPhoneme = cartesianProduct[i][1]
+			let curPattern = leftPattern + leftPhoneme + rightPattern
+			// console.log(`console.log(curPattern)`)
+			// console.log(curPattern)
+			let pairs = DictDb.findMinimalPairs(rows, curPattern, rightPhoneme)
+			let freqPair = await MinimalPairUtil.sumFreq(db, table, pairs)
+			//let proportion = (freqPair[0] + freqPair[1]) / freqSum
+			let proportion:[number, number] = [freqPair[0]/freqSum, freqPair[1]/freqSum]
+			if(pairs.length === 0){//處理 完全不對立之況。有的對立對 轄字之字頻之和 亦可能潙0、與此區分。
+				proportion = [-1,-1]
+			}
+			//let unus = {pair: [leftPhoneme, rightPhoneme], proportion:proportion}
+			let unus:Tp. MultiMinimalPairs = {pair: [leftPhoneme, rightPhoneme], proportion:proportion}
+			result.push(unus)
+		}
+		if(!orderBy){return result}
+		if(orderBy === 'asc'){
+			result.sort((a,b)=>{return a.proportion[0]+a.proportion[1] - b.proportion[0]+b.proportion[1]})
+			return result
+		}else{
+			result.sort((b,a)=>{return a.proportion[0]+a.proportion[1] - b.proportion[0]+b.proportion[1]})
+			return result
+		}
+		
 	}
 
 }

@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path'
 import now from 'performance-now';
 import _ from 'lodash'
+import moment from 'moment'
 
 type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 export default class Util{
@@ -273,7 +274,7 @@ export default class Util{
 	 * 根據對象數組返回map。例如obj是對象數組、數組中每個元素都有字串name和數字id、則(obj, 'name', 'id')則返回 Map<string, number[]>
 	 * @param objArr 對象數組
 	 * @param fieldAsK 對象中的字段、該字段的值將作爲map的鍵
-	 * @param fieldAsV 對象中的字段、該字段的值將作爲map的值數組中的一個元素
+	 * @param fieldAsV 對象中的字段、該字段的值將作爲map的值數組中的一個元素。皆只支持當前層級的基本數據類型的字段
 	 * @returns 
 	 */
 	public static mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]> {
@@ -315,7 +316,7 @@ export default class Util{
 		
 	}
 
-	public static isMatrix(arr: any[][]): boolean {
+	public static isLikeMatrix(arr: any[][]): boolean {
 		if (!Array.isArray(arr)) {
 		  return false; // 不是数组，不是矩阵
 		}
@@ -332,9 +333,49 @@ export default class Util{
 	  }
 
 	
-	public static transpose<T>(arr:T[][]){
-		if(!Util.isMatrix(arr)){throw new Error('!Util.isMatrix(arr)')}
-		return _.zip(...arr) as T[][]
+	/**
+	 * 二維數組轉置
+	 * @param arr 
+	 * @param insteadOfUndef 原arr中的undefined元素對應在返回值中將被替換成insteadOfUndef。若不填則會調用isLikeMatrix()檢查arr是否合法
+	 * @returns 
+	 */
+	public static transpose<T>(arr:T[][], insteadOfUndef?){
+		if(insteadOfUndef === undefined){
+			if(!Util.isLikeMatrix(arr)){throw new Error('!Util.isMatrix(arr)')}
+			return _.zip(...arr) as T[][]
+		}else{
+			return tr(arr, insteadOfUndef)
+		}
+		function tr(arr:T[][], insteadOfUndef){
+			let max2DLength = findLongest2DLength(arr)
+			//let result:T[][] = new Array(max2DLength).fill(new Array(arr.length).fill(undefined))
+			let result:T[][] = [[]]
+			//console.log(result)
+			for(let i = 0; i < max2DLength; i++){
+				result[i] = []
+			}
+			
+			for(let i = 0; i < arr.length; i++){
+				//result[i] = []
+				for(let j = 0; j < max2DLength; j++){
+					let cur = arr[i][j]??insteadOfUndef
+					// let cur = arr[i][j]
+					// if(cur === undefined){
+					// 	cur = insteadOfUndef
+					// }
+					result[j][i] = cur
+				}
+			}
+			return result
+		}
+		function findLongest2DLength(arr:any[][]){
+			let max=arr[0].length
+			for(let i = 0; i < arr.length; i++){
+				if(arr[i].length>max){max=arr[i].length}
+			}
+			return max
+		}
+		
 	}
 
 	public static getUnescapeStr(str:string):string{
@@ -348,6 +389,15 @@ export default class Util{
 		}
 		//console.log(result)
 		return result
+	}
+
+	public static writeFile(path:string, data:string){
+		return new Promise((s,j)=>{
+			fs.writeFile(path, data, 'utf-8', (err)=>{
+				if(err){j(err);return}
+				s(0)
+			})
+		})
 	}
 
 	/**
@@ -490,6 +540,137 @@ export default class Util{
 			process.stdout.write(arr[i])
 			process.stdout.write(splitter)
 		}
+	}
+
+	/**
+	 * AI寫的創建多維數組並填充(試驗)
+	 * 創建一個2行3列的string[][]且使每個元素都是'a'
+	 * let arr2 = Util.createArr<string>([2,3], 'a')
+	 * @param dimensions 
+	 * @param fill 
+	 * @returns 
+	 */
+	public static createArr<T>(dimensions: number[], fill: any){
+		if (dimensions.length === 0) {
+			throw new Error("Dimensions array should not be empty");
+		}
+	
+		const result: T[][] = [];
+	
+		function fillArray(dims: number[], depth: number): T | T[] {
+			const currentDimension = dims[depth];
+			const isLastDimension = depth === dims.length - 1;
+	
+			if (isLastDimension) {
+				return Array(currentDimension).fill(fill) as T;
+			} else {
+				const subArray: T[] = [];
+				for (let i = 0; i < currentDimension; i++) {
+					subArray.push(fillArray(dims, depth + 1) as T);
+				}
+				return subArray;
+			}
+		}
+	
+		return [fillArray(dimensions, 0)];
+	}
+	
+
+
+	
+
+	public static permute<T>(elements: T[], m: number): T[][] {
+		const result: T[][] = [];
+	  
+		function backtrack(tempArr: any[]) {
+			if (tempArr.length === m) {
+				result.push([...tempArr]);
+				return;
+			}
+		
+			for (let i = 0; i < elements.length; i++) {
+				if (!tempArr.includes(elements[i])) {
+					tempArr.push(elements[i]);
+					backtrack(tempArr);
+					tempArr.pop();
+				}
+			}
+		}
+	  
+		backtrack([]);
+		return result;
+	}
+
+	/**
+	 * 求兩數組的笛卡爾積
+	 * @param arr1 
+	 * @param arr2 
+	 * @returns 
+	 */
+	public static cartesianProduct<A,B>(arr1: A[], arr2: B[]) {
+		const result: [A,B][] = [];
+		for (const item1 of arr1) {
+			for (const item2 of arr2) {
+				result.push([item1, item2]);
+			}
+		}
+		return result
+	}
+
+	/**
+	 * 用集合的標準過濾數組、例如傳入 [[a,a],[a,b],[b,a],[a,c]] 則返回 [[a,b], [a,c]]
+	 * @param arr 
+	 * @returns 
+	 */
+	public static filterArrLikeSets<A,B>(arr: [A, B][]){
+		const seenPairs = new Set<string>();
+		const uniquePairs: [A, B][] = [];
+		for (const pair of arr) {
+		  if (pair[0] as any !== pair[1]) { //<待叶>{如何在函數中比較兩個泛型類型是否是同一類型}
+			const sortedPair = pair.slice().sort();
+			const pairKey = `${sortedPair[0]},${sortedPair[1]}`;
+	  
+			if (!seenPairs.has(pairKey)) {
+			  seenPairs.add(pairKey);
+			  uniquePairs.push(pair);
+			}
+		  }
+		}
+	  
+		return uniquePairs;
+	  }
+
+
+	/**
+	 * 取對象數組的某個字段的值組成一個新數組並返回
+	 * @param arr 
+	 * @param field 
+	 * @returns 
+	 */
+	public static extractFieldValues<T extends any, K extends keyof T>(arr: T[], field: K): T[K][] {
+		return arr.map((obj) => obj[field]);
+	}
+
+	public static objArrToStrArr<T>(objArr:T[]){
+		let result:string[][] = []
+		for(let i = 0; i < objArr.length; i++){
+			let line:string[] = []
+			for(let key in objArr[i]){
+				// console.log(`console.log(key)`)
+				// console.log(key)
+				// console.log(`console.log(objArr[i][key])`)
+				// console.log(objArr[i][key])
+				let e:any = objArr[i][key]
+				if(!e){e=''}
+				line.push(e.toString())
+			}
+			result.push(line)
+		}
+		return result
+	}
+
+	public static YYYYMMDDHHmmss(){
+		return moment().format('YYYYMMDDHHmmss')
 	}
 
 

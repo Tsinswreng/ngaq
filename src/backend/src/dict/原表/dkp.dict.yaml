@@ -1,0 +1,1011 @@
+#23.08.12-1620
+#
+# Rime dictionary
+# vim: set ts=8 sw=8 noet:
+# encoding: utf-8
+#匪漢字:[\x00-\xff]
+#詞:[^\x00-\xff]{2,}.*
+#空行:^.*\r\n$
+---
+name: dkp
+version: ""
+sort: by_weight
+use_preset_vocabulary: true
+import_tables:  #加載其它外部碼表 似不支持多級引入
+  #- cangjie7-1ForLookUp2
+  - nonKanji
+  - chineseDict
+...
+
+不	pə		
+爲	waj		
+爲	wajs		
+的	tˁewks		
+明	mraŋ		
+悲	prəj		
+快	kʰʷrˁets		
+需	sno		
+今	kəm		
+金	krəm		
+禁	krəms		
+月	ŋot		
+天	lʰˁin		
+還	wrˁen		
+牛	ŋʷə		
+三	sˁəm	# ms,sch	
+三	srum	# bs	
+夫	pa		
+丘	kʷʰə		
+邱	kʷʰə		
+蚯	kʷʰə		
+挺	lˁeŋ		
+聽	lʰeŋs		
+他	lʰaj		
+手	nʰuʔ		
+意	ʔəks		
+讀	lˁok		
+件	granʔ		
+家	krˁa		
+軍	kʷəl		
+君	kul		
+羣	ɡul		
+群	ɡul		
+降	krˁuŋs		
+夜	jAks		
+風	prəm		
+秋	tsʰiw		
+修	siw		
+下	grˁaʔ	# 舍他音	
+馬	mrˁaʔ		
+醉	tsuts		
+詐	tsrˁaks		
+乍	dzrˁaks		
+忽	mʰˁut	# bs	
+聞	mun	# bs	
+問	muns	# bs	
+移	laj		
+由	liw	# ms	
+油	liw	# ms	
+悠	jiw	# ms	
+遊	ju		
+游	ju		
+			
+未	məts		
+調	diws		
+先	sˁən		
+			
+			
+紙	keʔ		
+氏	ɡeʔ		
+運	wəls		
+羣	gul		
+			
+連	ran		
+掩	ʔramʔ		
+抑	ʔik		
+訴	sˁaks		
+低	tˁi		
+信	nʰiŋs		
+限	ɡrˁənʔ		
+地	lˁajs		
+结	kˁit		
+合	ɡˁop	# bs	
+皆	krˁij		
+世	lʰaps		
+大	lˁats		
+啼	lˁe		
+弟	lˁiʔ		
+遞	lˁeʔ		
+			
+級	kəp		
+急	krəp		
+然	nan		
+服	bək		
+伏	bəks		
+			
+電	lˁins		
+殿	tˁəns		
+澱	dˁəns		
+路	rˁas		
+露	rˁaks		
+川	kʰun		
+			
+場	lraŋ		
+計	kijs		
+係	kˁeks		
+釋	lʰAk		
+變	prons		
+即	tsik		
+唧	tsik		
+			
+唯	wijʔ		
+維	wuj	# bs	
+惟	wij		
+嘆	nʰˁans		
+歎	nʰˁans		
+炭	lʰˁans		
+億	ʔək		
+憶	ʔrək		
+亦	jak		
+易	leks		
+書	sta		
+十	ɡip		
+			
+兄	mʰraŋ		
+願	ŋons		
+替	nʰˁits		
+西	sˁəj		
+道	lˁuʔ		
+皇	wˁaŋ		
+煌	wˁaŋ		
+凰	wˁaŋ		
+惶	wˁaŋ		
+蝗	wˁaŋ		
+遑	wˁaŋ		
+徨	wˁaŋ		
+明	mraŋ		
+箭	tsens		
+濺	tsans		
+山	sran		
+期	ɡrə		
+奇	kaj	# 舍他音	
+陰	ʔum	# bs	
+較	krˁews	# 舍他音	
+裏	mrəʔ	# bs	
+裡	mrəʔ	# bs	
+赴	pʰoks		
+飛	pəl	# bs	
+氣	kʰəps	# bs	
+池	lraj		
+			
+雇	kʷˁas		
+鼓	kʷˁaʔ		
+況	mʰaŋs		
+向	nʰaŋs		
+			
+荒	mʰˁaŋ		
+謊	mʰˁaŋʔ		
+相	saŋs	# 舍他音	
+符	bo		
+妹	mˁəts		
+烘	hˁoŋ	# 舍他音	
+裝	tsraŋ	# 舍他音	
+磨	mˁajs	# 舍他音	
+麼	mˁajʔ		
+門	mˁəl	# bs	
+鶴	ɡˁawk		
+脫	lʰˁot		
+#舊	ɡʷəs		
+尚	daŋs	# 舍他音	
+上	daŋʔ	# 舍他音	
+雲	wən		
+云	wəl		
+但	dˁans	# 舍他音	
+彈	dˁan	# 舍他音	
+對	tˁups		
+沒	mˁət		
+歿	mˁut		
+竟	kraŋs		
+競	ɡraŋs		
+京	kraŋ		
+景	kraŋʔ		
+華	wrˁa	# 舍他音	
+雄	wəŋ		
+熊	wəm		
+吐	tʰˁas	# 舍他音	
+兔	lʰˁas		
+卻	kʰak	# 舍他音	
+却	kʰak	# 舍他音	
+眼	ŋrˁənʔ		
+米	mˁiʔ		
+迷	mˁi		
+離	raj		
+忘	maŋs	# 舍他音	
+放	paŋs	# 舍他音	
+王	waŋ	# 舍他音	
+或	wˁək		
+辯	brenʔ		
+辦	brˁens		
+煙	ʔˁin		
+烟	ʔˁin		
+衣	ʔrəj		
+唐	jˁaŋ		
+糖	lˁaŋ		
+了	rˁewʔ	# 舍他音	
+太	lʰˁats		
+朝	traw	# 舍他音	
+臨	rum	# bs	
+霰	sˁens		
+見	kˁens	# 舍他音	
+視	gijʔ		
+示	gijs		
+覺	krˁuk		
+角	krˁok		
+確	kʰrˁawk		
+九	kuʔ
+久	kʷəʔ		
+玖	kʷəʔ		
+灸	kʷəʔ		
+串	kʰrˁons		
+廳	lʰˁeŋ
+原	ŋol	# ms
+
+元	ŋon
+夏	ɡrˁas
+條	lˁiw
+跳	lˁew
+調	dˁiw
+織	təks
+至	tits
+執	tip
+摯	tips
+汁	kip	# ms
+寓	ŋros
+孤	kʷˁa
+壺	ɡʷˁa	# bs
+後	ɡˁos
+候	ɡrˁos
+侯	ɡˁo
+喉	ɡrˁo
+
+區	*kʰo
+驅	kʰjo	# ms
+軀	kʰro
+
+
+漁	ŋra	# bs
+吳	ŋʷˁa
+吳	ŋʷˁa
+娛	ŋʷa
+
+禺	ŋos
+遇	ŋros
+愚	ŋo
+隅	ŋro
+虞	ŋʷra
+
+根	kˁəl	# bs
+跟	kˁən
+老	rˁuʔ
+
+務	mos
+霧	moks	# bs
+拖	lʰˁas
+令	riŋs
+零	rˁiŋ
+〇	rˁiŋ
+靈	rˁeŋ
+
+屎	hijʔ	# bs
+矢	lʰiʔ
+
+以	ləʔ
+已	jəʔ
+
+格	krˁak
+各	kˁak
+
+流	riw	# sch
+劉	mru	# bs
+
+羊	jaŋ
+洋	jaŋ
+陽	laŋ
+
+同	lˁoŋ
+
+童	dˁoŋ
+桶	lʰˁoŋ
+洞	lˁoŋs
+
+蹄	lˁe
+題	dˁes
+提	dˁe
+
+料	rˁews
+
+教	krˁaws
+敎	krˁaws
+
+交	krˁew	# ptl
+蛟	krˁew	# ptl
+效	ɡrˁews	# ptl
+効	ɡrˁews	# ptl
+餃	krˁewʔ	# ptl
+佼	krˁewʔ	# ptl
+膠	krˁiw
+攪	krˁuʔ
+
+鵝	ŋˁal	# bs
+
+求	ɡu
+球	ɡru
+
+觀	kʷˁal
+官	kʷˁan
+貫	kˁons
+冠	kˁols	# bs
+灌	kʷˁals
+罐	kʷˁals
+作	tsˁak
+假	krˁaʔ
+架	krˁajs
+#嫁	skrˁas	# bs
+價	krˁas
+
+落	rˁak
+
+樂	ŋrˁawk
+樂	ŋrˁawks
+樂	rˁawk
+姚	law
+
+遙	jaw
+第	lˁis
+睇	lʰˁi
+逮	lˁəps
+帝	tˁeks
+併	peŋs
+
+張	traŋ
+
+譯	lAk	
+驛	lak	
+役	wek
+弈	jak
+腋	jak
+射	mlaks
+將	tsaŋ
+搶	tsʰaŋʔ
+槍	tsʰaŋ
+乾	ɡal
+干	kal
+肝	kal
+竿	kal
+汗	ɡˁals
+盤	bˁan
+繁	ban
+量	raŋs
+良	raŋ
+
+
+郎	rˁaŋ
+亮	raŋs
+
+輝	hʷəl
+煇	hʷəl
+俞	jo	# ms
+逾	lo
+
+倒	tˁawʔ
+
+工	kˁoŋ
+
+公	kjˁoŋ	# ms
+功	kˁoŋʔ	# ts
+攻	kjˁoŋʔ	# ts
+界	krˁets
+介	krˁeps	# bs
+屆	krˁits
+届	krˁits
+
+卷	kronʔ
+圈	kʰron
+
+剛	kˁaŋ
+岡	kˁaŋ
+
+康	kʰAŋ	# ms
+糠	kʰAŋ	# ms
+
+夠	kˁos
+够	kˁos
+
+構	krˁos
+
+其	ɡə
+居	ka
+
+圖	dˁa
+
+
+
+途	lˁa
+
+塗	stˁa
+
+茶	lrˁa
+坐	dzˁojʔ
+約	ʔewk
+要	ʔews
+摸	mˁa
+
+方	paŋ
+商	staŋ
+填	dˁin
+田	lˁin
+成	deŋ
+盛	deŋs
+傍	bˁaŋs
+防	baŋs
+於	ʔa
+污	ʔʷrˁa
+周	tiw
+週	tiw
+州	tu
+
+臭	kʰjus	# sch
+與	jas
+譽	las
+予	laʔ
+
+丸	wˁal
+越	wˁat
+
+身	nʰin	# bs
+演 janʔ
+引	linʔ
+代	lˁəks
+袋	lˁəs
+捲	kronʔ
+權	ɡʷral
+科	kʰˁoj
+課	kʰˁojs
+在	dzˁəʔ
+
+炒	tsʰˁrewʔ
+
+排	brˁəj
+
+含	ɡˁəm
+涵	ɡˤom
+函	ɡrˁəm
+
+末	mˁat
+
+克	kʰˁək
+穿	tʰon
+咳	kʰˁəks
+專	ton
+
+平	ben
+#評
+#必
+畢	pik	# ms
+
+厲	rats
+
+#曰
+#瓶
+屏	peŋ
+也	lAjʔ	# bs
+野	lAʔ	# bs
+人	nin	# sch
+仁	niŋ	# bs
+醒	sˁeŋʔ
+姓	seŋs
+
+四	slijs	# bs
+肆	sləps	# bs
+系	ɡˤeks	# bs
+繫	kˁes
+怠	lˁəʔ
+殆	lˁəʔ
+偕	krˁi
+載	tsˁəʔ
+擊	kˁik	# bs
+激	kˁewk
+石	dAk	# bs
+碩	dak
+紀	krəʔ
+己	kəʔ
+室	stit
+失	lʰit
+腸	lraŋ
+
+義	ŋajs
+議	ŋrajs
+態	nʰˁəs
+貸	lʰˁəks
+藥	jawk
+躍	lewk
+概	kˁəts
+鐵	lʰˁik
+歸	kʷəj
+賞	staŋʔ
+戶	ɡˁaʔ
+舊	ɡʷəs
+
+水	stulʔ	# bs
+
+塵	drən
+陳	lrin
+陣	lrins
+愁	dzriw
+島	tˁuʔ
+搗	tˁuʔ
+禱	tˁus
+逐	lriwk
+軸	lruk
+筑	truk
+于	wa
+雨	waʔ
+宇	waʔ
+羽	waʔ
+禹	waʔ
+識	stək
+謀	mə
+某	mˁəʔ
+眉	mrəl	# bs
+媚	mrəjs	# bs
+弓	kʷəŋ
+躬	kʷəŋ
+洗	sˁəlʔ
+指	kiʔ
+脂	ki
+旨	kiʔ
+酯	kiʔ
+澤	lrˁak
+擇	lrˁak
+宅	drˁak
+早	tsˁuʔ
+澡	tsˁawʔ
+藻	tsˁawʔ
+枣	tsˁuʔ
+位	wrəps	
+# 曾
+# 層
+# 增
+
+# 當
+# 檔
+# 子
+# 仔
+# 考
+# 烤
+# 式
+# 識
+# 街
+# 圍
+# 韋
+# 違
+# 爸
+# 霸
+# 率
+# 帥
+# 邊
+# 倒
+# 島
+# 搗
+# 由
+# 油
+# 黨
+# 擋
+# 党
+# 躲
+# 朵
+# 戒
+# 尬
+# 勃
+# 脖
+# 早
+# 澡
+# 導
+# 盜
+# 惠
+# 慧
+# 晨
+# 臣
+# 辰
+# 值
+# 直
+# 縣
+# 炫
+# 單
+# 丹
+# 講
+# 港
+# 狗
+# 苟
+# 呈
+# 程
+# 宜
+# 儀
+# 仙
+# 鮮
+# 發
+# 髮
+# 員
+# 圓
+# 症
+# 正
+# 政
+# 燈
+# 登
+# 澤
+# 宅
+# 擇
+# 互
+# 護
+# 單
+# 付
+# 傅
+# 賦
+# 首
+# 守
+# 止
+# 址
+# 着
+# 著
+# 優
+# 憂
+# 反
+# 返
+# 乘
+# 剩
+# 軸
+# 逐
+# 筑
+# 倉
+# 蒼
+# 泡
+# 拋
+# 朱
+# 珠
+# 掘
+# 撅
+# 尤
+# 郵
+# 肩
+# 堅
+# 曹
+# 槽
+# #很
+
+# 素
+# 塑
+
+# 亡
+# 芒
+# 齊
+# 劑
+# 勸
+# 券
+# 劵
+# 新
+# 辛
+# 全
+# 泉
+# 資
+# 姿
+# 吊
+# 釣
+# 右
+# 佑
+# 父
+# 輔
+# 腐
+# 負
+# 婦
+# 序
+# 敘
+# 緒
+# 丁
+# 釘
+# 鳥
+# 屌
+# 忙
+# 芒
+# 茫
+# 養
+# 癢
+# 氧
+# 森
+# 參
+# 般
+# 搬
+# 錯
+# 醋
+# 措
+# 震
+# 振
+# 懂
+# 董
+# 隔
+# 革
+# 普
+# 浦
+# 騙
+# 偏
+# 羊
+# 洋
+
+
+# 術	
+# 述	
+# 中
+# 忠
+
+# 進
+# 晉
+# 蛋
+# 誕
+
+# 着
+# 著
+# 砸
+# 雜
+# 製
+# 制
+# 抖
+# 斗
+# 陡
+# 席
+# 夕
+# 疏
+# 梳
+# #待
+
+
+# #佳
+# 安
+# 鞍
+# 訊
+# 迅
+# 啥
+# 舍
+# 差
+# 叉
+# 雨
+# 羽
+# 八
+# 扒
+# 突
+# 凸
+# 宮
+# 弓
+# 俊
+# 駿
+# 鞋
+
+
+# 集
+# 輯
+
+
+
+# 左
+# 佐
+# 度
+# 渡
+# 心
+# 芯
+# 覆
+# 複
+# 竹
+# 築
+# 士
+# 仕
+# 師
+# 獅
+# 息
+# 熄
+# 領
+# 嶺
+# 境
+# 警
+# 七
+# 漆
+# 行
+# 航
+
+# 和
+# 禾
+# 率
+# 律
+# 撤
+# 徹
+# 受
+# 壽
+# 藍
+# 籃
+# 龍
+# 籠
+# 免
+# 勉
+# 五
+# 伍
+# 救
+# 究
+# 編
+# 鞭
+
+
+# 包
+# 胞
+
+
+# 腦
+# 惱
+
+# 探
+# 貪
+# 倚
+# 椅
+# 邪
+# 斜
+# 布
+# 佈
+# 灣
+# 彎
+# 杖
+# 仗
+# 丈
+# 祭
+# 際
+
+
+
+#@
+
+猶	lu	# ts	
+有	wuʔ	# ts	
+又	wus	# ts	
+聯	ron	# ts	
+給	krop	# ts	
+使	srə	# ts	
+何	ɡˁajʔ	# ts	
+#行	ɡˁaŋs	# ts	
+航	ɡˁaŋs	# ts	
+啊	ʔajs	# ts	
+男	nˁom	# ts	
+詞	səʔ	# ts	
+乎	ɡas	# ts	
+里	mʰrə	# ts	
+理	mʰrəʔ	# ts	
+#郎			
+馳	draj	# ts	
+顧	kʷrˁas	# ts	
+固	krˁas	# ts	
+估	krˁaʔ	# ts	
+鄉	nʰaŋ	# ts	
+享	hraŋʔ	# ts	
+洪	ɡoŋ	# ts	
+虹	ɡrˁoŋ	# ts	
+#鴻	ɡrˁoŋʔ	# ts	
+莊	tsraŋʔ	# ts	
+妝	dzraŋʔ	# ts	
+什	dəms	# ts	「甚」之轉
+什	ɡrip	# ts	
+閣	kˁaks	# ts	
+們	mˁən	# ts	
+漢	hˁans	# ts	
+嘗	dAŋ	# ts	
+嚐	dAŋs	# ts	
+償	staŋ	# ts	
+鏡	ɡraŋʔ	# ts 	
+帖	lʰˁep	# ts	
+望	mˁaŋs	# ts	或用mAŋs
+妄	pʰˁaŋs	# ts	
+惑	wrˁək	# ts	
+辨	prenʔ	# ts	
+伺	tsʰəs	# ts	
+思	səs	# ts	
+司	tsʰə	# ts	
+淋	rəms	# ts	
+午	ŋrˁaʔ	# ts	
+猴	ɡʷˁo	# ts
+梧	ŋrˁa	# ts
+
+嗯	kʰˁən	# ts
+
+嗎	mrˁa	# ts
+嘛	mrˁaʔ	# ts
+媽	mˁaʔ	# ts
+她	lˁaj	# ts
+
+另	rˁiŋs	# ts
+
+鈴	reŋ	# ts
+齡	reŋs	# ts
+
+揚	læŋs	# ts
+楊	læŋ	# ts
+銅	jˁoŋ	# ts
+校	kʰrˁews	# ts
+咬	ŋrˁewʔ	# ts
+怕	pʰrˁaks	# ts
+哦	ʔo	# ts
+啦	ra	# ts
+郊	kʰrˁew	# ts
+仇	ɡʷu	# ts
+館	kˁʷanʔ	# ts
+
+嫁	kʰrˁas	# ts
+駕	kʰrˁajs	# ts
+
+搖	jaws	# ts
+謠	jawʔ	# ts
+
+締	lˁes	# ts
+
+液	rAk	# ts
+
+疫	wˁek	# ts
+打	trˁaŋʔ	# ts
+
+胖	pʰˁaŋs	# ts
+
+涼	srˁaŋ	# ts
+糧	mʰrˁaŋs	# ts
+梁	mʰrˁaŋ	# ts
+粱	mʰrˁaŋʔ	# ts
+
+狼	kʰraŋʔ	# ts
+
+廊	kʷraŋ	# ts
+輛	kʰraŋs	# ts
+晾	nrˁaŋs	# ts
+
+冷	rˁiŋʔ	# ts
+稀	hrəj	# ts
+渝	lro	# ts
+哥	kʰˁaj	# ts
+源	ŋols	# ts
+
+曆	rˁik	# ts
+
+呀	ja	# ts
+鋼	kʰˁaŋ	# ts
+崗	kˁaŋ	# ts
+
+購	kʷrˁos	# ts
+車	kʰra	# ts
+
+支	ke
+枝	kej	# ts
+肢	kejʔ	# ts
+
+徒	drˁa	# ts
+涂	stˁa	# ts
+屠	tʰˁa	# ts
+膜	mak	# ts
+幕	mʰˁak	# ts
+漠	mʰak	# ts
+
+咯	lˁo	# ts
+誠	deŋʔ	# ts
+城	tʰeŋ	# ts
+房	baŋʔ	# ts
+洲	tʰu	# ts
+舟	tʰus	# gs
+
+像	dzaŋʔ	# ts
+余	lA	# ts
+旗	prə	# ts
+棋	mrə	# ts
+
+型	kʰˁeŋ	# ts
+形	kʰʷˁeŋ	# ts
+德	tʰˁək	# ts
+伸	lʰinʔ	# ts
+
+吧	pˁa	# ts
+
+財	tsˁəj	# ts
+材	tsˁəjʔ	# ts
+纔	dzˁəj	# ts
+裁	dzˁəjs	# ts
+案	ʔˁanʔ	# ts
+篇	pʰˁen	# ts
+抹	mʰˁat	# ts
+吵	tsʰrˁawʔ	# ts
+牌	bˁej # ts
+刻	kˁək	# ts
+磚	tonʔ	# ts
+例	rets	# ts
+勵	raks	# ts
+狠	hˁənʔ	# ts
+性	sˁeŋs	# ts
+街	krˁej	# ts
+諧	ɡrˁi	# ts

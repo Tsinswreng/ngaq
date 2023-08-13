@@ -13,6 +13,7 @@ import {RegexReplacePair} from 'Type';
 	異ᵗ方案中拼式對應關係查找
 	音節拆分 對立互補之況ᵗ析
 	若A音併入B音則重碼率ˋ升幾多
+	算 每種onset 能接的p2及數量
 }
 */
 

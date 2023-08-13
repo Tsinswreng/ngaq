@@ -11,12 +11,14 @@ import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
 import Util from '@shared/Util';
-import { DictDb, DictRaw, Dict, MinimalPair } from "./dict/Dict";
+import { DictDb, DictRaw, Dict, MinimalPairUtil } from "./dict/Dict";
 //import Txt from "../../shared/Txt";
 
 import { GetCompiledJs } from "./GetCompiledJs";
 import { partial } from 'lodash';
 import { RegexReplacePair } from 'Type';
+import { DictDbRow } from './dict/DictType';
+import _ from 'lodash';
 const rootDir:string = require('app-root-path').path
 Error.stackTraceLimit = 50;
 /* console.log(__dirname)
@@ -69,46 +71,8 @@ vocaObjs[1].查重().then((o)=>{
 //DictDb.getTableInfo('saffes').then((d)=>{console.log(d)})
 //DictDb.isColumnExist('saffes', 'kanji').then((d:boolean)=>{console.log(d)})
 
-async function debug(){
-	//let name = 'OC_schuesslerOC'
-	// let srcPath = "D:\\Program Files\\Rime\\User_Data\\OC_baxter-sagart.dict.yaml"
-	// let raw = new DictRaw({srcPath:srcPath})
-	// //let name = 'OC_msoeg'
-	// let db = new DictDb({})
-	// //await DictDb.DropAllTables(db.db)
-	// let dict = new Dict({name:raw.name})
-	// await DictDb.putNewTable(raw)
-	// await DictDb.attachFreq(db.db, raw.name!)
-	// await dict.countAll()
-	// console.log(dict)
-	//console.log()
-	//let pair = await DictDb.findMinimalPairs_old(new DictDb({}).db, 'OC_msoeg', 'code', 'n̥', 'm̥')
-	let pair = await DictDb.findMinimalPairs_old2(new DictDb({}).db, 'saffes', 'code', '^p', '^b')
-	let freqSum = await DictDb.getSum(new DictDb({}).db, 'saffes', 'freq')
-	//console.log(pair)
-	console.log(pair.length)
-	console.log(MinimalPair.sumFreq(pair)/freqSum * 100 +'%')
-	
-	function msocPreprocess(){
-		return [
-			{regex:/（.*?）/gm, replacement:''}, 
-			{regex:/(.*)\*/gm, replacement:''},
-			{regex:/[\[\]]/gm, replacement:''},
-			{regex:/ɛ/gm, replacement:'e'},
-			{regex:/ɔ/gm, replacement:'o'},
-			{regex:/ʴ/gm, replacement:'r'},
-			{regex:/ɹ/gm, replacement:'r'},
-			{regex:/\(.*?\)/gm, replacement:''},
-			{regex:/⁽.*?⁾/gm, replacement:''},
-			{regex:/([aeiouə])i/gm, replacement:'$1j'},
-			{regex:/([aeiouə])u/gm, replacement:'$1w'},
-		] as RegexReplacePair[]
-	}
 
-	//DictDb.serialReplace(new DictDb({}).db, 'OC_msoeg', 'code', msocPreprocess()).catch((e)=>{console.error(e)})
-}
-debug()
-//Dict.saffesToOc()
+
 //Dict.zyenphengToOc()
 //Dict.testMsoc()
 //let ss = 'abcdef'
@@ -136,3 +100,25 @@ debug()
 // dictRaw.assign_validBody(false)
 // console.log(dictRaw.validBody)
 
+
+async function debug(){
+	
+	let r = await DictDb.multiMinimalPairs(new DictDb({}).db, 'OC_msoeg', '^()(', ')(.*)$', ['p','t','k'], ['b', 'd'], 'asc')
+	console.log(r)
+}
+//debug()
+async function testfunc(){
+	let arr = 
+	[
+		[1,2,3],
+		[4,5,6],
+		[7, 8],
+		[9,8,7]
+	]
+	let r = Util.transpose(arr, 'a')
+	console.log(r)
+	//let arr2 = Util.createArr<string>([2,3], 'a')
+	//console.log(arr2)
+}
+
+testfunc()

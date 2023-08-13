@@ -27,6 +27,15 @@ npm run build
 
 ## 記錄
 
+### 20230813233429 3.7.0
+
+### feat:
+
+* `Dict.ts`新增音系分析等相關API
+* `Util.ts` 新增若干方法
+* `saffesToOcRegex.ts` , `ocToOc3.ts` 正則表達式替換對
+* `dks.ts` 自動化構建碼表
+
 ### 20230807003712 3.6.3
 
 #### feat:
