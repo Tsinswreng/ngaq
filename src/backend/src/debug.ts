@@ -10,7 +10,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from '@shared/Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil } from "./dict/Dict";
 //import Txt from "../../shared/Txt";
 
@@ -108,17 +108,11 @@ async function debug(){
 }
 //debug()
 async function testfunc(){
-	let arr = 
-	[
-		[1,2,3],
-		[4,5,6],
-		[7, 8],
-		[9,8,7]
-	]
-	let r = Util.transpose(arr, 'a')
+	let r = await DictDb.all(new DictDb({}).db, `SELECT  a.*, b.*
+	FROM  'bsoc' a
+	FULL JOIN saffes b ON a.char=b.char
+	`)
 	console.log(r)
-	//let arr2 = Util.createArr<string>([2,3], 'a')
-	//console.log(arr2)
 }
 
 testfunc()

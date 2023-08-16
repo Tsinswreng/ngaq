@@ -3,6 +3,7 @@ export let replacePair:RegexReplacePair[] = [
 	//{regex:/waj/gm, replacement:'test'},
 	{regex:/g/gm, replacement:'ɡ'},
 	{regex:/ˤ/gm, replacement:'ˁ'},
+	//{regex:/jʷ/gm, replacement:'w'},
 	{regex:/ʷʰ/gm, replacement:'ʰʷ'},
 
 	{regex:/rr/gm, replacement:'r'},
@@ -51,22 +52,18 @@ export let replacePair:RegexReplacePair[] = [
 
 	//{regex:/首一(p|pʰ|m)ʷ首二/gm, replacement:'首一$1首二'},
 	//{regex:/首一(ts|tsʰ|dz)ʷ首二/gm, replacement:'首一$1首二'},
-	{regex:/首一(kʰ|k|ɡ|ʔ|h)ʷ首二/gm, replacement:'首一$1合首二'},
+	{regex:/首一(kʰ|k|ɡ|ŋ|ʔ|h)ʷ首二/gm, replacement:'首一$1合首二'},
 	{regex:/首一(.*)ʷ首二/gm, replacement:'首一$1首二'},
 	{regex:/首一(.*)合首二/gm, replacement:'首一$1ʷ首二'},
 	
 
 	//{regex:/首一ŋʷ首二/gm, replacement:'首一;首二'},
 	//{regex:/首一(jʷ)首二/gm, replacement:'首一W首二'},
+	
 
 	{regex:/首一kw首二/gm, replacement:'首一kʷ首二'},
-	{regex:/首一hʷ首二/gm, replacement:'首一kʰʷ首二'},
-	{regex:/首一lʰ首二/gm, replacement:'首一O首二'},
-	{regex:/首一nʰ首二/gm, replacement:'首一,首二'},
-	{regex:/首一mʰ首二/gm, replacement:'首一.首二'},
-	{regex:/首一sn首二/gm, replacement:'首一;首二'},
-	{regex:/首一st首二/gm, replacement:'首一;首二'},
-	{regex:/首一sk首二/gm, replacement:'首一k首二'},
+
+
 
 	{regex:/腹二(ps)/gm, replacement:'腹二尾一B尾二'},
 	{regex:/腹二(ts)/gm, replacement:'腹二尾一I尾二'},
@@ -107,9 +104,22 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/腹二$/gm, replacement:'腹二尾一A尾二'},
 
 
-	{regex:/首一(kj)首二/gm, replacement:'首一kʷ首二'},
-	{regex:/首一(kʰl)首二/gm, replacement:'首一kʷ首二'},
-	{regex:/首一(sl)首二/gm, replacement:'首一s首二'},
+	{regex:/首一kl首二/gm, replacement:'首一I首二'},
+	{regex:/首一ɡl首二/gm, replacement:'首一U首二'},
+	{regex:/首一ɡj首二/gm, replacement:'首一U首二'},
+	{regex:/首一ŋj首二/gm, replacement:'首一U首二'},
+	{regex:/首一hʷ首二/gm, replacement:'首一A首二'},
+	{regex:/首一lʰ首二/gm, replacement:'首一O首二'},
+	{regex:/首一nʰ首二/gm, replacement:'首一,首二'},
+	{regex:/首一mʰ首二/gm, replacement:'首一.首二'},
+	{regex:/首一sn首二/gm, replacement:'首一;首二'},
+	{regex:/首一st首二/gm, replacement:'首一;首二'},
+	{regex:/首一sk首二/gm, replacement:'首一K首二'},
+	{regex:/首一ɦ首二/gm, replacement:'首一U首二'},
+	{regex:/首一rʰ首二/gm, replacement:'首一E首二'},
+	{regex:/首一(kj)首二/gm, replacement:'首一I首二'},
+	{regex:/首一(kʰl)首二/gm, replacement:'首一A首二'},
+	{regex:/首一(sl)首二/gm, replacement:'首一S首二'},
 	{regex:/首一(ʔ)首二/gm, replacement:'首一Q首二'},
 	{regex:/首一(ŋ)首二/gm, replacement:'首一W首二'},
 	{regex:/首一(tʰ)首二/gm, replacement:'首一E首二'},
@@ -117,7 +127,8 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/首一(t)首二/gm, replacement:'首一T首二'},
 	{regex:/首一(w)首二/gm, replacement:'首一Y首二'},
 	{regex:/首一(ɡʷ)首二/gm, replacement:'首一U首二'},
-	{regex:/首一(ʔʷ)首二/gm, replacement:'首一U首二'},
+	{regex:/首一(ŋʷ)首二/gm, replacement:'首一U首二'},
+	{regex:/首一(ʔʷ)首二/gm, replacement:'首一A首二'},
 	{regex:/首一(kʰʷ)首二/gm, replacement:'首一A首二'},
 	{regex:/首一(kʷ)首二/gm, replacement:'首一I首二'},
 	

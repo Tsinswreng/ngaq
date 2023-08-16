@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from '@shared/Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "../../dict/Dict";
 //import Txt from "../../shared/Txt";
 
@@ -75,10 +75,10 @@ class Bsoc{
 		o.preprocess(this.預處理)
 		
 		o.preprocess(this.合併聲母)
-		let marked = Util.serialReplace(o.pronounceArr, this.拆分聲母)
+		let marked = Ut.serialReplace(o.pronounceArr, this.拆分聲母)
 		let syllables = Dict.三分arr(marked, /首一(.*?)首二(.*?)腹一(.*?)腹二(.*?)尾一(.*?)尾二/)
 		let m = Dict.getOccurrenceTimesMap(syllables, 'onset')
-		let 聲母出現次數 = Util.sortMapIntoObj(m)
+		let 聲母出現次數 = Ut.sortMapIntoObj(m)
 		聲母出現次數.forEach((e)=>{console.log(e)})
 		console.log(`console.log(聲母出現次數.length)`)
 		console.log(聲母出現次數.length)

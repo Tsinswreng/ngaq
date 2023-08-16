@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from '@shared/Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "../../dict/Dict";
 //import Txt from "../../shared/Txt";
 
@@ -39,7 +39,7 @@ async function schl_test(){
 	o.assign_pronounceArr()
 	o.preprocess(預處理)
 	//帶標記的讀音數組
-	let marked = Util.serialReplace(o.pronounceArr, 標記首介腹尾調)
+	let marked = Ut.serialReplace(o.pronounceArr, 標記首介腹尾調)
 	let syllables:ChieneseSyllable[] = []
 	for(let i = 0; i < marked.length; i++){
 		let sy = Dict.三分(marked[i], new ChieneseSyllable())
@@ -49,11 +49,11 @@ async function schl_test(){
 	}
 	//console.log(syllables[4132])
 	let m = Dict.getOccurrenceTimesMap(syllables, 'onset')
-	console.log(Util.sortMapIntoObj(m))
+	console.log(Ut.sortMapIntoObj(m))
 	//let 聲母集 = m.map((e)=>e.onset!)
 	//let 聲母集 = Array.from(m.keys())
 	//DictDb.serialReplace(db.db, 'OC_schuesslerOC', 'code', [{regex:/(.)̂/gm, replacement:'ˁ$1'}])
-	let 聲母集 = Util.sortMapIntoObj(m).map((e)=>e.k)
+	let 聲母集 = Ut.sortMapIntoObj(m).map((e)=>e.k)
 	console.log(聲母集)
 	//let 諸最小對立對 = await DictDb.multiMinimalPairs(new DictDb({}).db, 'OC_msoeg', '^()(', ')(.*)$', 聲母集, 聲母集, 'asc')
 	let 寡 = 聲母集.slice(聲母集.length-10 ,聲母集.length)

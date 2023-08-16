@@ -1,7 +1,7 @@
 import { Dict, DictRaw, DictDb } from "./Dict";
 import _ from "lodash";
 import Txt from 'Txt'
-import Util from "Util";
+import Ut from "Ut";
 import * as DType from './DictType'
 import {RegexReplacePair} from 'Type';
 
@@ -98,13 +98,13 @@ export class Bsoc{
 		replacePair.push({regex:/-/gm, replacement:''}) //除橫槓
 
 		replacePair.push({regex:/[\(\)]/gm, replacement:''}) //除小括號、姑先留小括號中ᵗ音
-		return Util.serialReplace(strArr as string[], replacePair)
+		return Ut.serialReplace(strArr as string[], replacePair)
 	}
 
 	public static 除拼音r(strArr:string[]){
 		let replacePair:RegexReplacePair[] = []
 		replacePair.push({regex:/^.*\*/gm, replacement:''})
-		return Util.serialReplace(strArr as string[], replacePair)
+		return Ut.serialReplace(strArr as string[], replacePair)
 	}
 
 	public 預處理(){
@@ -115,7 +115,7 @@ export class Bsoc{
 		//this.replacePair預處理.push({regex:/[\[\]]/gm, replacement:''}) //除中括號
 		//this.replacePair預處理.push({regex:/[<>]/gm, replacement:''}) //除尖括號
 
-		this.音strArr = Util.serialReplace(this.音strArr as string[], this.replacePair預處理, 'gm')
+		this.音strArr = Ut.serialReplace(this.音strArr as string[], this.replacePair預處理, 'gm')
 		this.非三等標記統一置于元音前()
 		// this.replacePair預處理.push({regex:/.*?\./gm, replacement: ''}) //除 次音節
 		
@@ -131,7 +131,7 @@ export class Bsoc{
 		replacePair.push({regex:/首1.*?ə(.*?)首2/gm, replacement:'首1$1首2'}) //除 次音節
 		replacePair.push({regex:/C/gm, replacement:''}) //
 
-		return Util.serialReplace(strArr, replacePair)
+		return Ut.serialReplace(strArr, replacePair)
 		
 	}
 
@@ -165,7 +165,7 @@ export class Bsoc{
 		this.replacePair音節分割.push({regex:/^((?!.*介).*)腹1/gm, replacement:'$1介1介2腹1'})
 		//this.replacePair音節分割.push({regex:/^(.*?\.)/gm, replacement:'次$1次'})
 		this.replacePair音節分割.push({regex:/^(.*?)介1/gm, replacement:'首1$1首2介1'})
-		this.音strArr = Util.serialReplace(this.音strArr as string[], this.replacePair音節分割, 'gm')
+		this.音strArr = Ut.serialReplace(this.音strArr as string[], this.replacePair音節分割, 'gm')
 
 		this.音strArr = Bsoc.聲明合併r(this.音strArr as string[])
 
@@ -190,11 +190,11 @@ export class Bsoc{
 				// console.log("尾1 to 尾2:", tail1);
 				// console.log("調1ʔ to 調2:", tone1);
 				
-				result.onset = Util.nonNullableGet(first)
-				result.medial = Util.nonNullableGet(intro1)
-				result.vowel = Util.nonNullableGet(belly1)
-				result.coda = Util.nonNullableGet(tail1)
-				result.tone = Util.nonNullableGet(tone1)
+				result.onset = Ut.nng(first)
+				result.medial = Ut.nng(intro1)
+				result.vowel = Ut.nng(belly1)
+				result.coda = Ut.nng(tail1)
+				result.tone = Ut.nng(tone1)
 
 				// result.p2 = Util.nonNullableGet(intro1+belly1)
 				// result.p3 = Util.nonNullableGet(tail1+tone1)
@@ -231,7 +231,7 @@ export class Bsoc{
 			for(let i = 0; i < 音strArr.length; i++){
 				if(r.test(音strArr[i]!)){
 					if(proper.test(音strArr[i]!)){continue}
-					else{音strArr[i] = Util.serialReplace(音strArr[i]!, replacePair)}
+					else{音strArr[i] = Ut.serialReplace(音strArr[i]!, replacePair)}
 				}
 			}
 		}
@@ -243,21 +243,21 @@ export class Bsoc{
 		let p3:string[] = []
 		for(let i = 0; i < this.kanjis.length; i++){
 			try{
-				onset.push(Util.nonNullableGet(this.kanjis[i].syllable.onset))
+				onset.push(Ut.nng(this.kanjis[i].syllable.onset))
 				// if(this.kanjis[i].syllable.onset! === ''){
 				// 	console.log(this.kanjis[i])
 				// } //來母分割得的onset是空字串
-				p2.push(Util.nonNullableGet(this.kanjis[i].syllable.p2))
-				p3.push(Util.nonNullableGet(this.kanjis[i].syllable.p3))
+				p2.push(Ut.nng(this.kanjis[i].syllable.p2))
+				p3.push(Ut.nng(this.kanjis[i].syllable.p3))
 			}catch(e){
 				console.error(this.kanjis[i])
 				console.error(e)
 			}
 
 		}
-		this.onsetMap = Util.mapOccurrenceTimes(onset)
-		this.p2Map = Util.mapOccurrenceTimes(p2)
-		this.p3Map = Util.mapOccurrenceTimes(p3)
+		this.onsetMap = Ut.mapOccurrenceTimes(onset)
+		this.p2Map = Ut.mapOccurrenceTimes(p2)
+		this.p3Map = Ut.mapOccurrenceTimes(p3)
 	}
 
 	public async creatTable(){
@@ -290,13 +290,13 @@ export class Bsoc{
 				for(let i = 0; i < kanjis.length; i++){
 					try{
 						let v:string[] = 
-						[Util.nonNullableGet(kanjis[i].kanji), 
-						Util.nonNullableGet(kanjis[i].syllable.whole),
-						Util.nonNullableGet(kanjis[i].syllable.onset),
-						Util.nonNullableGet(kanjis[i].syllable.medial),
-						Util.nonNullableGet(kanjis[i].syllable.vowel),
-						Util.nonNullableGet(kanjis[i].syllable.coda),
-						Util.nonNullableGet(kanjis[i].syllable.tone),]
+						[Ut.nng(kanjis[i].kanji),
+						Ut.nng(kanjis[i].syllable.whole),
+						Ut.nng(kanjis[i].syllable.onset),
+						Ut.nng(kanjis[i].syllable.medial),
+						Ut.nng(kanjis[i].syllable.vowel),
+						Ut.nng(kanjis[i].syllable.coda),
+						Ut.nng(kanjis[i].syllable.tone),]
 						stmt.run(v)
 					}catch(e){
 						//console.error(e)
@@ -325,13 +325,13 @@ export class Bsoc{
 		//console.log(bsoc.音)
 		//bsoc.檢查音節分割是否正確()
 		//bsoc.kanjis.forEach((e)=>{console.log(e)})
-		console.log(Util.sortMapIntoObj(bsoc.onsetMap))
-		console.log(Util.sortMapIntoObj(bsoc.p2Map))
-		console.log(Util.sortMapIntoObj(bsoc.p3Map))
+		console.log(Ut.sortMapIntoObj(bsoc.onsetMap))
+		console.log(Ut.sortMapIntoObj(bsoc.p2Map))
+		console.log(Ut.sortMapIntoObj(bsoc.p3Map))
 
-		console.log(Util.sortMapIntoObj(bsoc.onsetMap).length)
-		console.log(Util.sortMapIntoObj(bsoc.p2Map).length)
-		console.log(Util.sortMapIntoObj(bsoc.p3Map).length)
+		console.log(Ut.sortMapIntoObj(bsoc.onsetMap).length)
+		console.log(Ut.sortMapIntoObj(bsoc.p2Map).length)
+		console.log(Ut.sortMapIntoObj(bsoc.p3Map).length)
 		//await bsoc.creatTable()
 		//await bsoc.insertIntoDb(bsoc.kanjis)
 	}
@@ -442,7 +442,7 @@ export class Msoc{
 
 		]
 
-		this.pronounceArr = Util.serialReplace(this.pronounceArr, replacePair)
+		this.pronounceArr = Ut.serialReplace(this.pronounceArr, replacePair)
 	}
 
 	public static run(){

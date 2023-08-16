@@ -11,7 +11,7 @@ import * as readline from 'readline';
 const xml2js = require('xml2js')
 import * as mariadb from 'mariadb'
 const rootDir = require('app-root-path').path
-const util = require('util');
+const util = require('Ut');
 
 //import * as xml2js from 'xml2js';
 
@@ -1212,7 +1212,7 @@ export default class VocaRaw{
 	//[23.06.27-1846,]
 	public async 第三步(){
 		const db = this.getDbConnection()
-		const queryAsync = util.promisify(db.query).bind(db);
+		const queryAsync = Ut.promisify(db.query).bind(db);
 		const 查重2sql = `
 		SELECT wordShape, COUNT(*) as count, GROUP_CONCAT(id) AS duplicate_ids,
 		GROUP_CONCAT(rememberedDates) AS rememberedDates, GROUP_CONCAT(forgottenTimes) AS forgottenDates

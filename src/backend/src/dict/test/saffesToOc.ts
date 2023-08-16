@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from '@shared/Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil } from "../../dict/Dict";
 //import Txt from "../../shared/Txt";
 
@@ -28,14 +28,14 @@ function saffesToOc(){
 	o.preprocess(replacePair2)
 	o.pronounceArr = o.pronounceArr.map((e)=>{return e.toLowerCase()})
 	//console.log(o.pronounceArr)
-	let 字 = Util.transpose(o.rawObj.validBody)[0]
-	let 浮點頻 = Util.transpose(o.rawObj.validBody)[2]
-	let 復原 = Util.transpose([字, o.pronounceArr, 浮點頻])
+	let 字 = Ut.transpose(o.rawObj.validBody)[0]
+	let 浮點頻 = Ut.transpose(o.rawObj.validBody)[2]
+	let 復原 = Ut.transpose([字, o.pronounceArr, 浮點頻])
 	const msoeg:string[][] = require('./msoc_test')
 	
 	//Util.printArr(復原, '\t')
 	復原.forEach((e)=>{console.log(e)})
-	Util.printArr(o.pronounceArr, '\t')
+	Ut.printArr(o.pronounceArr, '\t')
 	let outPath = 'D:\\Program Files\\Rime\\User_Data\\dks.dict.yaml'
 	let 碼表頭 = `#23.08.09-1604
 #

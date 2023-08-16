@@ -1,6 +1,6 @@
 require('tsconfig-paths/register');
 import Txt from "Txt";
-import Util from "Util";
+import Ut from "Ut";
 
 
 let l1 = ['a', 'b', 'c']

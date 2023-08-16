@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from '@shared/Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "../../dict/Dict";
 //import Txt from "../../shared/Txt";
 
@@ -59,21 +59,21 @@ async function testMsoc(){
 	
 	o.preprocess(replacePair2)
 	o.pronounceArr = o.pronounceArr.map((e)=>{return e.toLowerCase()})
-	let 字 = Util.transpose(o.rawObj.validBody)[0]
+	let 字 = Ut.transpose(o.rawObj.validBody)[0]
 	//let 浮點頻 = Util.transpose(o.rawObj.validBody)[2]
 	//let 復原 = Util.transpose([字, o.pronounceArr])
 	let 復原 = o.recoverBody(o.pronounceArr,o.rawObj.validBody)
 	外=復原
 	//Util.printArr(復原, '\t')
 	復原.forEach((e)=>{console.log(e)})
-	Util.printArr(o.pronounceArr, '\t')
+	Ut.printArr(o.pronounceArr, '\t')
 	//console.log(o.pronounceArr)
 
 	//console.log(o.pronounceArr)
 	//Dict.首介腹尾調_分割(o.pronounceArr, )
 	
 	//帶標記的讀音數組
-	let marked = Util.serialReplace(o.pronounceArr, 標記首介腹尾調())
+	let marked = Ut.serialReplace(o.pronounceArr, 標記首介腹尾調())
 	let syllables:ChieneseSyllable[] = []
 	// for(let i = 0; i < marked.length; i++){
 	// 	let sy = Dict.三分(marked[i], new ChieneseSyllable())
@@ -84,12 +84,12 @@ async function testMsoc(){
 	// //console.log(syllables[4132])
 	let m = Dict.getOccurrenceTimesMap(syllables, 'onset')
 	//console.log(Util.sortMapIntoObj(m))
-	let 聲母映射能配的韻腹 = Util.mapFields(syllables, 'onset', 'p2') //要除重
+	let 聲母映射能配的韻腹 = Ut.mapFields(syllables, 'onset', 'p2') //要除重
 	for(let [k,v] of 聲母映射能配的韻腹){
 		v = Array.from(new Set(v))
 		聲母映射能配的韻腹.set(k,v)
 	}
-	let 聲母映射能配的韻腹toArr = Util.mapToObjArr(聲母映射能配的韻腹)
+	let 聲母映射能配的韻腹toArr = Ut.mapToObjArr(聲母映射能配的韻腹)
 	聲母映射能配的韻腹toArr.sort((a,b)=>{return a.v.length - b.v.length})
 	//console.log(`console.log(聲母映射能配的韻腹toArr)`)
 	//console.log(聲母映射能配的韻腹toArr)

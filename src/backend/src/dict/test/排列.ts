@@ -1,4 +1,4 @@
-import Util from "Util";
+import Ut from "Ut";
 function permute(elements: any[], m: number): any[][] {
 	const result: any[][] = [];
   

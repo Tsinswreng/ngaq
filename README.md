@@ -27,6 +27,19 @@ npm run build
 
 ## 記錄
 
+### 20230816212435 3.8.0
+
+#### feat:
+
+* 蔿dks生成倉頡輔助碼
+
+#### refactor:
+
+* `Dict.ts`中部分靜態方法移到了`shared/db/Sqlite.ts`
+* 取消 `DictType.ts`、統一用`Type.ts`來放接口。
+* 調整了從中古音映射上古音的正則表達式。
+
+
 ### 20230813233429 3.7.0
 
 ### feat:

@@ -7,7 +7,7 @@
 require('tsconfig-paths/register');
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 //import Util from "../../shared/Util";
-import Util from "@shared/Util"
+import Ut from "Ut"
 //const moment = require('moment')
 import moment from 'moment'
 //const cors = require('cors')
@@ -43,7 +43,7 @@ export default class VocaServer{
 			next()
 		})
 		//VocaServer.app.use(express.static('browser'));
-		VocaServer.app.use(express.static(Util.pathAt(rootDir+'/src/frontend/dist')));
+		VocaServer.app.use(express.static(Ut.pathAt(rootDir+'/src/frontend/dist')));
 		//VocaServer.app.use(express.static('frontend\\src\\browser'))
 		VocaServer.app.use(bodyParser.json());//??{}??
 		VocaServer.app.use(express.json({limit: '65536mb'}))

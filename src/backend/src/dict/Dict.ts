@@ -9,13 +9,14 @@ const rootDir:string = require('app-root-path').path
 //import 'module-alias/register';
 //import Txt from '../../../shared/Txt';
 import Txt from "Txt"
-import Util from 'Util';
+import Ut from 'Ut';
 import {RegexReplacePair} from 'Type';
 import * as Tp from 'Type'
-import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from './DictType'
-import * as DictType from './DictType'
+import {Duplication,DictDbRow,SqliteTableInfo,DictRawConfig, cn} from 'Type'
+import * as DictType from 'Type'
 import _, { sum } from 'lodash';
 import moment from 'moment'
+import Sqlite from 'db/Sqlite';
 
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
@@ -65,7 +66,7 @@ export class MinimalPairUtil{
 		}
 
 		async function objTo2DArr(numArr:number[]){
-			let r = await DictDb.transaction<{freq:number}>(db, sql, numArr)
+			let r = await Sqlite.transaction<{freq:number}>(db, sql, numArr)
 			let arr:number[] = []
 			for(let i = 0; i < r.length; i++){
 				arr.push(r[i].freq) 
@@ -99,7 +100,7 @@ export class MinimalPairUtil{
 		console.log(`console.log(pairs.length)`)//t
 		console.log(pairs.length)
 		function sumFreqOfOneSide(pairs:DictDbRow[][], side:0|1){
-			let tr = Util.transpose(pairs)
+			let tr = Ut.transpose(pairs)
 			let sum = 0;
 			//let rows = tr[side]
 			let rows = _.uniqWith(tr[side], _.isEqual);
@@ -243,7 +244,7 @@ export class Dict{
 
 	//
 	public static getSimpleHead(name:string){
-		const dateNow:string = moment().format('YYYYMMDDHHmmss')
+		const dateNow:string = moment().format('YYYYMMDDHHmmssSSS')
 		let head = 
 `
 #${dateNow}
@@ -263,7 +264,7 @@ use_preset_vocabulary: true
 	public getUpdatedKanjis(validBody=this.rawObj.validBody, pronounceArr=this.pronounceArr){
 
 		let kanjis:Kanji[] = []
-		let tr = Util.transpose(validBody)
+		let tr = Ut.transpose(validBody)
 		if(pronounceArr.length !== tr[0].length){throw new Error('pronounceArr.length !== tr[0].length')}
 		for(let i = 0; i < pronounceArr.length; i++){
 			let syllable = new ChieneseSyllable({whole:pronounceArr[i]})
@@ -274,7 +275,7 @@ use_preset_vocabulary: true
 	}
 
 	public get_pronounceArr(validBody=this.rawObj.validBody){
-		return Util.transpose(validBody, '')[1]
+		return Ut.transpose(validBody, '')[1]
 	}
 
 	public assign_pronounceArr(){
@@ -291,11 +292,11 @@ use_preset_vocabulary: true
 			objs = await DictDb.get重碼頻數(this.dbObj.db, this.name)
 			
 		}else{
-			let tempTable = 'temp'+Util.YYYYMMDDHHmmss()
-			await DictDb.copyTable(this.dbObj.db, tempTable, this.name)
+			let tempTable = 'temp'+Ut.YYYYMMDDHHmmss()
+			await Sqlite.copyTable(this.dbObj.db, tempTable, this.name)
 			await Dict.篩頻(this.dbObj.db, tempTable, min)
 			objs = await DictDb.get重碼頻數(this.dbObj.db, tempTable)
-			await DictDb.dropTable(this.dbObj.db, tempTable)
+			await Sqlite.dropTable(this.dbObj.db, tempTable)
 		}
 		let sum = 0
 		for(let i = 0; i < objs.length; i++){
@@ -306,13 +307,13 @@ use_preset_vocabulary: true
 
 	public async get_字頻總和(min?:number){
 		if(min===undefined){
-			return await DictDb.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+			return await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		}else{
-			let tempTable = 'temp'+Util.YYYYMMDDHHmmss()
-			await DictDb.copyTable(this.dbObj.db, tempTable, this.name)
+			let tempTable = 'temp'+Ut.YYYYMMDDHHmmss()
+			await Sqlite.copyTable(this.dbObj.db, tempTable, this.name)
 			await Dict.篩頻(this.dbObj.db, tempTable, min)
-			let r = await DictDb.getSum(this.dbObj.db, tempTable, DictType.cn.freq)
-			await DictDb.dropTable(this.dbObj.db, tempTable)
+			let r = await Sqlite.getSum(this.dbObj.db, tempTable, DictType.cn.freq)
+			await Sqlite.dropTable(this.dbObj.db, tempTable)
 			return r
 		}
 		
@@ -327,7 +328,7 @@ use_preset_vocabulary: true
 	 */
 	public static 篩頻(db:Database, table:string, min:number){
 		let sql = `DELETE FROM '${table}' WHERE ${cn.freq}<${min}`
-		return DictDb.all(db, sql)
+		return Sqlite.all(db, sql)
 	}
 
 
@@ -337,11 +338,11 @@ use_preset_vocabulary: true
 
 	public preprocess(replacePair:RegexReplacePair[], pronounceArr=this.pronounceArr){
 		//pronounceArr = Util.serialReplace(pronounceArr, replacePair) 如是則pronounceArr之地址ˋ變、不再指向this.pronounceArr
-		Object.assign(pronounceArr, Util.serialReplace(pronounceArr, replacePair))
+		Object.assign(pronounceArr, Ut.serialReplace(pronounceArr, replacePair))
 	}
 
 	public getRawDividedSyllable(replacePair:RegexReplacePair[], pronounceArr=this.pronounceArr):string[]{
-		return Util.serialReplace(pronounceArr, replacePair)
+		return Ut.serialReplace(pronounceArr, replacePair)
 	}
 
 
@@ -367,11 +368,11 @@ use_preset_vocabulary: true
 			// console.log("尾1 to 尾2:", tail1);
 			// console.log("調1ʔ to 調2:", tone1);
 			
-			result.onset = Util.nonNullableGet(first)
-			result.medial = Util.nonNullableGet(intro1)
-			result.vowel = Util.nonNullableGet(belly1)
-			result.coda = Util.nonNullableGet(tail1)
-			result.tone = Util.nonNullableGet(tone1)
+			result.onset = Ut.nng(first)
+			result.medial = Ut.nng(intro1)
+			result.vowel = Ut.nng(belly1)
+			result.coda = Ut.nng(tail1)
+			result.tone = Ut.nng(tone1)
 
 			// result.p2 = Util.nonNullableGet(intro1+belly1)
 			// result.p3 = Util.nonNullableGet(tail1+tone1)
@@ -399,9 +400,9 @@ use_preset_vocabulary: true
 		let result = new ChieneseSyllable()
 		if(match){
 			const [, 首,,介腹,,尾調] = match;
-			result.onset = Util.nonNullableGet(首)
-			result.p2 = Util.nonNullableGet(介腹)
-			result.p3 = Util.nonNullableGet(尾調)
+			result.onset = Ut.nng(首)
+			result.p2 = Ut.nng(介腹)
+			result.p3 = Ut.nng(尾調)
 		}
 		return Object.assign(oldSyllableObj, result)
 	}
@@ -410,7 +411,7 @@ use_preset_vocabulary: true
 		let strArr:string[] = []
 		for(let i = 0; i < syllables.length; i++){
 			try{
-				let e = Util.nonNullableGet(syllables[i][field])
+				let e = Ut.nng(syllables[i][field])
 				strArr.push(e)
 			}catch(e){
 				console.error(field)
@@ -418,7 +419,7 @@ use_preset_vocabulary: true
 				console.error(syllables[i])
 			}
 		}
-		return Util.mapOccurrenceTimes(strArr)
+		return Ut.mapOccurrenceTimes(strArr)
 	}
 
 	public static 批量取分割後ᵗ音節對象(){
@@ -428,14 +429,14 @@ use_preset_vocabulary: true
 
 	public async countAll(){
 		//<待做>{驗ᵣ重複項、濾除 碼潙空字串 者}
-		await DictDb.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
+		await Sqlite.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
 		await DictDb.deleteDuplication(this.dbObj.db, this.name)
 		console.log(await DictDb.getDuplication(this.dbObj.db, this.name))
-		this._無重複漢字數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
-		this._無重複音節數 = await DictDb.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
-		this._字頻總和 = await DictDb.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+		this._無重複漢字數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
+		this._無重複音節數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
+		this._字頻總和 = await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		await this.assign_重碼頻數()
-		this._加頻重碼率 = Util.nonFalseGet(this.重碼頻數) / Util.nonFalseGet(this.字頻總和)
+		this._加頻重碼率 = Ut.nonFalseGet(this.重碼頻數) / Ut.nonFalseGet(this.字頻總和)
 	}
 
 	public 算加頻重碼率(min?:number){
@@ -457,7 +458,7 @@ use_preset_vocabulary: true
 	}
 	
 	public async saffes韻母轄字統計(newTableName:string){
-		let seto = Util.getCombinationsWithRepetition(Dict.L_ALPHABET.split(''), 2)
+		let seto = Ut.getCombinationsWithRepetition(Dict.L_ALPHABET.split(''), 2)
 		let creatSql = `CREATE TABLE '${newTableName}' AS SELECT * FROM '${this.name}';`
 		//await DictDb.alterIntoAllowNull(this.dbObj.db, this.name, newTableName)
 		let objs:DictDbRow[] = []
@@ -469,15 +470,15 @@ use_preset_vocabulary: true
 	}
 
 	public recoverBody(pronounceArr=this.pronounceArr,validBody=this.rawObj.validBody){
-		let tr = Util.transpose(validBody,'')
+		let tr = Ut.transpose(validBody,'')
 		let 字 = tr[0]
 		let 浮點頻 = tr[2]
 		//console.log([字, pronounceArr, 浮點頻])//t
 		let 復原
 		if(浮點頻){
-			復原 = Util.transpose([字, pronounceArr, 浮點頻])
+			復原 = Ut.transpose([字, pronounceArr, 浮點頻])
 		}else{
-			復原 = Util.transpose([字, pronounceArr])
+			復原 = Ut.transpose([字, pronounceArr])
 		}
 		
 		return 復原
@@ -521,7 +522,7 @@ use_preset_vocabulary: true
 		o.assign_pronounceArr()
 		o.preprocess(replacePair)
 		//console.log(o.pronounceArr)
-		Util.printArr(o.pronounceArr, '\t')
+		Ut.printArr(o.pronounceArr, '\t')
 		
 	}
 
@@ -641,7 +642,7 @@ export class DictRaw {
 
 	public assign_srcStr(path=this.srcPath){
 		if(!path){throw new Error('!path')}
-		this.srcStr = fs.readFileSync(Util.pathAt(path), 'utf-8')
+		this.srcStr = fs.readFileSync(Ut.pathAt(path), 'utf-8')
 	}
 	
 /* 	public assign_tableArrByPath(path=this.srcPath){
@@ -777,8 +778,8 @@ export class DictRaw {
 	}
 
 	public static 轉置後連續替換(body:string[][], index:number, replacePair:RegexReplacePair[]){
-		let tr = Util.transpose(body)
-		return Util.serialReplace(tr[index], replacePair)
+		let tr = Ut.transpose(body)
+		return Ut.serialReplace(tr[index], replacePair)
 	}
 
 	
@@ -842,56 +843,11 @@ export class DictDb{
 
 
 
-	public static async isTableExist(db:Database, tableName:string){
-		let sql = `SELECT name FROM sqlite_master WHERE  type='table' AND name='${tableName}';`
-		
-		return new Promise<boolean>((resolve, reject)=>{
-			
-			db.get(sql, (err, result:any)=>{
-				
-				if(err){
-					console.log('<sql>')
-					console.error(sql)
-					console.log('</sql>')
-					throw err
-				}
-				if(!result){
-					resolve(false)
-					return false
-				}
-				console.log(result)
-				//console.log(result)
-				/* if(!result || !result.hasOwnProperty('name')){
-					console.log('<sql>')
-					console.error(sql)
-					console.log('</sql>')
-					throw new Error(`!result.hasOwnProperty('name')`)
-				} */
-				if(result.name === tableName){
-					resolve(true)
-					return true
-					//return true
-				}else{
-					console.log('<result>')
-					console.log(result)
-					console.log('</result>')
-					console.log('<tableName>')
-					console.log(tableName)
-					console.log('</tableName>')
-					throw new Error('意外')
-					//return false
-				}
-				//resolve(result as string)
-			})
-			
-		})
-	}
-
 	public async isTableExists(tableName = this.tableName){
 		//写一个同步的typescript函数、判断一个sqlite数据库是否含有某表
 		if(!this.db){throw new Error('!this.db')}
 		if(!tableName){return false}
-		return DictDb.isTableExist(this.db, tableName)
+		return Sqlite.isTableExist(this.db, tableName)
 	}
 
 	public static async creatTable(db:Database, tableName:string){
@@ -901,7 +857,7 @@ ${cn.char} VARCHAR(1024) NOT NULL, \
 ${cn.code} VARCHAR(64) NOT NULL, \
 ${cn.ratio} VARCHAR(64) \
 )`
-		return DictDb.all(db,sql)
+		return Sqlite.all(db,sql)
 	}
 
 
@@ -926,48 +882,15 @@ ${cn.ratio} VARCHAR(64) \
 // 		//IF NOT EXISTS 
 		
 // 		//this.db.exec(testCreat)
-		return DictDb.creatTable(this.db, Util.nonNullableGet(tableName))
+		return DictDb.creatTable(this.db, Ut.nng(tableName))
 	}
 
-	/**
-	 * 手動封裝的TRANSACTION
-	 * @param db 
-	 * @param sql 
-	 * @param values 
-	 * @returns 
-	 */
-	public static async transaction<T>(db:Database, sql:string, values:any[]){
-		let result:T[] = []
-		return new Promise<T[]>((s,j)=>{
-			db.serialize(()=>{
-				db.run('BEGIN TRANSACTION')
-				const stmt = db.prepare(sql, (err)=>{
-					if(err){console.error(sql+'\n'+err+'\n');j(err);return} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
-				})
-				for(let i = 0; i < values.length; i++){
-					stmt.each(values[i], (err, row:T)=>{
-						if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-						result.push(row)
-						//console.log(row)//t
-					})
 
-				}
-				db.all('COMMIT', (err,rows)=>{
-					if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-					s(result)
-				})
-			})
-			
-		})
-		
-	}
-
-	
 	
 
 	public async insert(data:DictDbRow[]|string[][]){
 		return new Promise((s,j)=>{
-			Util.nonFalseGet(this.db)
+			Ut.nonFalseGet(this.db)
 		let rowObjs:DictDbRow[] = []
 		if(cn.char in data[0] && cn.code in data[0]){
 			rowObjs = data as DictDbRow[]
@@ -995,7 +918,7 @@ VALUES (?,?)`)
 	}
 
 	public async attachFreq(/* essayTableName='essay' */){
-		Util.nonFalseGet(this.db)
+		Ut.nonFalseGet(this.db)
 		if(!this.tableName){throw new Error('this.tableName')}
 		DictDb.attachFreq(this.db!, this.tableName)
 	}
@@ -1007,14 +930,14 @@ VALUES (?,?)`)
 	 * @param essayTableName 
 	 */
 	public static async attachFreq(db:Database, tableName:string ,essayTableName='essay'){
-		let b1 = await DictDb.isColumnExist(db, tableName ,cn.freq)
-		let b2 = await DictDb.isColumnExist(db,tableName ,cn.essay_id)
+		let b1 = await Sqlite.isColumnExist(db, tableName ,cn.freq)
+		let b2 = await Sqlite.isColumnExist(db,tableName ,cn.essay_id)
 		if(!b1 || !b2){
 			let altSql = new Array<string>()
 			altSql[0] = `ALTER TABLE '${tableName}' ADD COLUMN '${cn.freq}' INTEGER`
 			altSql[1] = `ALTER TABLE '${tableName}' ADD COLUMN ${cn.essay_id} INTEGER REFERENCES ${essayTableName}(id) ON DELETE SET NULL`
-			await DictDb.all(db, altSql[0])
-			await DictDb.all(db, altSql[1])
+			await Sqlite.all(db, altSql[0])
+			await Sqlite.all(db, altSql[1])
 			
 		}
 		let attachSql = `UPDATE '${tableName}' \
@@ -1026,8 +949,8 @@ VALUES (?,?)`)
 \ SET ${cn.essay_id} = COALESCE(${essayTableName}.${cn.id}, '') \
 \ FROM ${essayTableName} \
 \ WHERE '${tableName}'.${cn.char} = ${essayTableName}.${cn.char};`
-		DictDb.all(db, attachSql)
-		DictDb.all(db, attachSql2)
+		Sqlite.all(db, attachSql)
+		Sqlite.all(db, attachSql2)
 	
 	}
 
@@ -1055,37 +978,7 @@ VALUES (?,?)`)
 	}
 
 	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
-		let sql = `SELECT ${column} AS result FROM '${table}'`
-		let result = await DictDb.all<{result?:string}>(db, sql)
-		let strArr:string[] = []
-		for(let i = 0; i < result.length; i++){
-			if(!result[i].result){Promise.reject('!result[i].result');return}//似無用
-			strArr.push(result[i].result!)
-		}
-		if(strArr.length !== result.length){Promise.reject('strArr.length !== result.length');return}
-		let newStrArr = Util.serialReplace(strArr, replacementPair)
-		let replaceMap:Map<string, string> = new Map()
-		for(let i = 0; i < newStrArr.length; i++){
-			replaceMap.set(strArr[i], newStrArr[i])
-		}
-		db.serialize(()=>{
-			db.run('BEGIN TRANSACTION');
-			//let updateSql = `UPDATE '${table}' SET ${column} = (CASE WHEN ${column}=? THEN ? END)`
-			let updateSql = `UPDATE '${table}' SET ${column} = ? WHERE ${column}= ?`
-			const stmt = db.prepare(updateSql)
-			for(const[k,v] of replaceMap){
-				stmt.run([v,k], (err)=>{
-					if(err){
-						console.error(updateSql)
-						console.error([v,k])
-						Promise.reject(err);return
-					}
-				})
-			}
-			db.run('COMMIT', (err)=>{
-				if(err){Promise.reject(err);return}
-			})
-		})
+		return Sqlite.serialReplace(db, table, column, replacementPair)
 	}
 
 	public static toObjArr(strArr:string[][]):DictDbRow[]{
@@ -1093,92 +986,19 @@ VALUES (?,?)`)
 		for(let i = 0; i < strArr.length; i++){
 			//let obj = {columnName.char: Util.arrAt(strArr,i,0), "pronounce": strArr[i][1]??''}
 			//let obj:DictDbRow = {char:Util.arrAt(strArr,i,0), code: strArr[i][1]??''}
-			let obj:DictDbRow = {char:Util.nonFalseGet(strArr[i][0]), code: strArr[i][1]??''} //[23.07.31-0931,]
+			let obj:DictDbRow = {char:Ut.nonFalseGet(strArr[i][0]), code: strArr[i][1]??''} //[23.07.31-0931,]
 			result.push(obj)
 		}
 		return result
 	}
 
-	public static async getTableInfo(db:Database, tableName:string, columnName:string):Promise<SqliteTableInfo|undefined>
-	public static async getTableInfo(db:Database, tableName:string):Promise<SqliteTableInfo[]>
-	public static async getTableInfo(db:Database, tableName:string, columnName?:string){
-		const sql = `PRAGMA table_info('${tableName}')`
-		let prms = DictDb.all<SqliteTableInfo>(db,sql)
-		if(columnName){
-			let infos = await prms
-			for(let i = 0; i < infos.length; i++){
-				if(infos[i].name === columnName){
-					return infos[i]
-				}
-			}
-			return undefined
-		}else{
-			
-			return prms
-		}
-
-	}
-
-	public static async isColumnExist(db:Database, tableName:string, columnName:string){
-		let tableInfo = await DictDb.getTableInfo(db, tableName)
-		for(let i = 0; i < tableInfo.length; i++){
-			if(tableInfo[i].name === columnName){
-				return true
-			}
-		}
-		return false
-	}
-
-	public static async qureySqlite_sequence(db:Database){
-		let sql = `SELECT * FROM sqlite_sequence`
-		return /* await */ DictDb.all<DictType.Sqlite_sequence>(db, sql)
-	}
-
-	public static async querySqlite_master(db:Database){
-		let sql = `SELECT * FROM sqlite_master`
-		return /* await */ DictDb.all<DictType.Sqlite_master>(db, sql)
-	}
-
-	public static async dropAllTables(db:Database){
-		let tableNames:string[] = []
-		let info = await DictDb.querySqlite_master(db)
-		//let prms:Promise<any>[] = []
-		for(let i = 0; i < info.length;i++){
-			//prms.push(DictDb.DropTable(db,seqs[i].name))
-			if(info[i].type === 'table' && info[i].name !== 'sqlite_sequence' && info[i].name !== 'sqlite_master')
-			{tableNames.push(info[i].name)}
-		}
-		return DictDb.dropTable(db,tableNames)
-		//return Promise.all(prms)
-	}
-
-	public static async dropTable(db:Database, tableName:string|string[]){
-		if(Array.isArray(tableName)){
-			// let sql = `DROP TABLE ?;`
-			// let v:string[] = tableName
-			// return DictDb.transaction(db, sql, v) <坑>{蓋佔位符ˉ?皆不可㕥代表名}
-			let prms:Promise<any>[] = []
-			for(let i = 0; i < tableName.length; i++){
-				let sql = `DROP TABLE '${tableName[i]}';`
-				//console.log(sql)
-				//DictDb.all(db,sql).then(()=>{})//t
-				prms.push(DictDb.all(db,sql))
-			}
-			//console.log(114514)
-
-			return Promise.all(prms)
-		}else{
-			let sql = `DROP TABLE ${tableName};`
-			return DictDb.all(db, sql)
-		}
-	}
 
 	/**
 	 * 先盡刪表、然後把整個User_Data下的.dict.yaml文件 字表的有效部分添進數據庫
 	 * @param userPath User_Data的絕對路徑
 	 */
 	public static async testAll(db:Database, userPath:string='D:/Program Files/Rime/User_Data'){
-		await DictDb.dropAllTables(db)
+		//await Sqlite.dropAllTables(db)
 		await DictDb.putEssay(db)
 		let paths:string[] = DictRaw.getDictYamlPaths(userPath)
 		let names:string[] = []
@@ -1203,7 +1023,7 @@ VALUES (?,?)`)
 
 	public static selectAll(db:Database, table:string){
 		let sql = `SELECT * FROM '${table}'`
-		return DictDb.all<DictDbRow>(db, sql)
+		return Sqlite.all<DictDbRow>(db, sql)
 	}
 
 	/**
@@ -1212,56 +1032,14 @@ VALUES (?,?)`)
 	 */
 	public static async putEssay(db:Database, path=new DictDb({}).essayPath, essayName='essay'){
 		return new Promise(async(s,j)=>{
-			let b = await DictDb.isTableExist(db, essayName)
+			let b = await Sqlite.isTableExist(db, essayName)
 			//if(!b){await DictDb.quickStart(path,essayName)}
 			if(!b){await DictDb.putNewTable(new DictRaw({srcPath:path, name:essayName}))}
 			s(0)
 		})
 	}
 
-	/**
-	 * 統計表的某列中不重樣的值的數量
-	 * @param tableName 
-	 * @param columnName 不填列名則每一列都會被統計
-	 * @returns 
-	 */
-	public static async countDistinct(db:Database,tableName:string):Promise<{column_name:string, distinct_count:number}[]>
-	public static async countDistinct(db:Database,tableName:string, columnName:string):Promise<number>;
-	
-	public static async countDistinct(db:Database, tableName:string, columnName?:string){
-		if(columnName){
-			let sql = `SELECT COUNT(DISTINCT ${columnName}) AS distinct_count FROM '${tableName}'`
-			let r = (await DictDb.all<{distinct_count:number}>(db, sql))[0].distinct_count
-			return r
-		}else{
-			let tableInfo = await DictDb.getTableInfo(db, tableName)
-			let sql = ''
-			//`SELECT COUNT(DISTINCT ${columnName}) AS distinct_count FROM ${tableName}`
-			for(let i = 0; i < tableInfo.length; i++){
-				//console.log(i)
-				//console.log(tableInfo[i])
-				columnName = tableInfo[i].name
-				sql += `SELECT '${columnName}' AS column_name, COUNT(DISTINCT ${columnName}) AS distinct_count FROM '${tableName}'`
-				if(i !== tableInfo.length-1){sql += ' UNION '}
-				else{/* sql += ORDER BY column_name; */}
-			}
-			
-			return await new Promise<{column_name:string, distinct_count:number}[]>((s,j)=>{
-				
-				db.all(sql, (err, rows:{column_name:string,distinct_count:number}[])=>{
-					if(err || rows.length !== tableInfo.length){
-						console.error('<sql>');console.error(sql);console.error('</sql>')
-						console.error('<tableInfo>');console.error(tableInfo);console.error('</tableInfo>')
-						console.error('<rows>');console.error(rows);console.error('</rows>')
-						console.error('|| rows.length !== tableInfo.length')
-						j(err);
-						return
-					}
-					s(rows)
-				})
-			})
-		}
-	}
+
 
 	public static async get重碼頻數(db:Database, tableName:string){
 		/* 
@@ -1298,7 +1076,7 @@ VALUES (?,?)`)
 	${DictType.cn.freq} < (SELECT MAX(${DictType.cn.freq}) FROM ${tableName} s2 WHERE s1.${DictType.cn.code} = s2.${DictType.cn.code})
 	GROUP BY
 	${DictType.cn.code};`
-		return DictDb.all<{code:string, freq_of_homo:number}>(db, sql1)
+		return Sqlite.all<{code:string, freq_of_homo:number}>(db, sql1)
 
 		/*
   亦可、然更慢*/
@@ -1343,72 +1121,19 @@ HAVING COUNT(*) > 1;`
 		})
 	}
 
-	/**
-	 * 對某列求和、支持字符串轉數字
-	 * @param db 
-	 * @param tableName 
-	 * @param columnName 
-	 * @returns 
-	 */
-	public static async getSum(db:Database, tableName:string, columnName:string):Promise<number>{
-		let sql = `SELECT SUM(CASE \
-WHEN '${tableName}' NOT NULL AND ${columnName} GLOB '*[0-9]*' \
-THEN CAST(${columnName} AS INTEGER) \
-ELSE 0 \
-END) AS sum_result \
-FROM '${tableName}';`
-		return (await DictDb.all<{sum_result:number}>(db, sql))[0].sum_result
-	}
-
-	/**
-	 * 把一列中的null值轉爲指定值
-	 * @param db 
-	 * @param tableName 
-	 * @param columnName 
-	 * @param target 
-	 * @returns 
-	 */
-	public static async castNull(db:Database, tableName:string, columnName:string, target:any){
-		let sql = `UPDATE '${tableName}' SET ${columnName} = \ 
-CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
-		return DictDb.all(db, sql)
-	}
-
-
-	/**
-	 * 封在Promise裏的db.all()、方便在異步函數裏用await取值。
-	 * @param db Database 實例
-	 * @param sql 
-	 * @param params 
-	 * @returns 
-	 */
-	public static all<T>(db:Database, sql:string, params?:any){
-		//console.log(sql)//t
-		return new Promise<T[]>((s,j)=>{
-			db.all(sql, params,(err,rows:T[])=>{
-				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-				//console.log(rows)//t
-				s(rows)
-			})
-		})
-	}
-
-	public static async alterIntoAllowNull(db:Database, tableName:string, columnName:string){
-		let info = await DictDb.getTableInfo(db, tableName, columnName)
-		let type = Util.nonNullableGet(info).type
-		let sql = `ALTER TABLE '${tableName}' MODIFY COLUMN ${columnName} ${type}`
-		return DictDb.all(db, sql)
-	}
 
 	public static async copyTransDb(targetDb:Database, srcDb:Database, srcTableName:string){
 
-		//await DictDb.all(targetDb)
+		//await Sqlite.all(targetDb)
 	}
 
-	public static copyTable(db:Database, newTable:string, oldTable:string){
-		let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}`
-		return DictDb.all(db, sql)
-	}
+
+
+	// public static fullJoinOnEqual(db:Database, fromTable:string, tableB:string, fieldA:string, fieldB:string){
+	// 	function getSql(fromTable:string, tableB:string, fieldA:string, fieldB:string){
+	// 		return ``
+	// 	}
+	// }
 
 	// public static async findMinimalPairs_old(db:Database, tableName:string, columnName:string, phoneme1:string, phoneme2:string){
 	// 	/* 先分別對兩音素 SELECT * 、然後取 返回的行數少 者。假如查詢a音素返回的行數比b少。
@@ -1424,8 +1149,8 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 	// 	let p:string
 	// 	let len:number
 	// 	//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
-	// 	let result1 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
-	// 	let result2 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+	// 	let result1 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+	// 	let result2 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
 	// 	let result:(DictDbRow & {position:number})[]
 	// 	//若result1結果更少、則用result1 音素替換成p2後來查。
 	// 	if(result1.length <= result2.length){
@@ -1468,8 +1193,8 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 			let p:string
 			let len:number
 			//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
-			let result1 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
-			let result2 = await DictDb.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+			let result1 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+			let result2 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
 			console.log(`console.log(result1.length)`)//t
 			console.log(result1.length)
 			console.log(`console.log(result2.length)`)//t
@@ -1489,8 +1214,8 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 			function getStrToBeQueried(result1:(DictDbRow & {position: number;})[], p1:string, p2:string){
 				let strToBeQueriedForP2:string[] = []
 				for(let i = 0; i < result1.length; i++){
-					let s = Util.nonNullableGet(result1[i][columnName])
-					s = Util.spliceStr(s, result1[i].position, phoneme1.length, phoneme2)
+					let s = Ut.nng(result1[i][columnName])
+					s = Ut.spliceStr(s, result1[i].position, phoneme1.length, phoneme2)
 					strToBeQueriedForP2.push(s)
 				}
 				return strToBeQueriedForP2
@@ -1500,7 +1225,7 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 			console.log(strToBeQueriedForP2)//t
 			if(strToBeQueriedForP2.length !== result1.length){Promise.reject('')}
 			let sql = `SELECT * FROM '${tableName}' WHERE ${columnName}=?`
-			return await DictDb.transaction<DictDbRow>(db, sql, strToBeQueriedForP2)
+			return await Sqlite.transaction<DictDbRow>(db, sql, strToBeQueriedForP2)
 		}
 		let r2 = await getR2(phoneme1, phoneme2)
 		console.log(r2.length)
@@ -1510,25 +1235,14 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		// 	console.log(r1[i])
 		// 	console.log(r2[i])
 		// }
-		return Util.transpose([r1,r2])
+		return Ut.transpose([r1,r2])
 			//console.log('r2.length')
 			//console.log(r2.length)
 			//let strToBeQueriedForP1:string[] = getStrToBeQueried(r2, phoneme2, phoneme1)
 	
 	}
 
-	public static async toStrTable(db:Database, table:string, column?:string[]){
-		let sql
-		if(!column){
-			sql = `SELECT * FROM '${table}'`
-		}else{
-			sql = `SELECT ${[...column]} FROM '${table}'`
-		}
-		//console.log(sql)//t
-		let rows = await DictDb.all(db, sql)
-		//console.log(rows)//t
-		return Util.objArrToStrArr(rows)
-	}
+
 
 
 
@@ -1553,9 +1267,9 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		//包含p1音位的音在數據庫中的id
 		let p1Ids:number[][] = []
 		//獲取 整個數據庫中 音 對 id 之映射。緣有同音字、 一 音 可能 對應 多個 id
-		let mapCodeToIds_all = Util.mapFields(rows, 'code', 'id')
+		let mapCodeToIds_all = Ut.mapFields(rows, 'code', 'id')
 		//把上面的map轉成對象數組
-		let codeToIdsArr = Util.mapToObjArr(mapCodeToIds_all)
+		let codeToIdsArr = Ut.mapToObjArr(mapCodeToIds_all)
 		//p1屬性㕥存數據庫中包含p1音位的音、p2屬性即在p1屬性的基礎上把p1音位換成p2
 		let p1vsP2:{p1:string, p2:string}[] = []
 
@@ -1635,10 +1349,10 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 	 */
 	public static async multiMinimalPairs(db:Database, table:string, leftPattern:string, rightPattern:string, phoneme1:string[], phoneme2?:string[], orderBy?:'asc'|'desc'){
 		if(!phoneme2){phoneme2 = phoneme1}
-		let rows = await DictDb.all<DictDbRow>(db, `SELECT * FROM '${table}'`)
-		let freqSum = await DictDb.getSum(db, table, cn.freq)
-		let cartesianProduct = Util.cartesianProduct(phoneme1, phoneme2)
-		cartesianProduct = Util.filterArrLikeSets(cartesianProduct)
+		let rows = await Sqlite.all<DictDbRow>(db, `SELECT * FROM '${table}'`)
+		let freqSum = await Sqlite.getSum(db, table, cn.freq)
+		let cartesianProduct = Ut.cartesianProduct(phoneme1, phoneme2)
+		cartesianProduct = Ut.filterArrLikeSets(cartesianProduct)
 		//console.log(cartesianProduct)
 		//console.log(cartesianProduct.length)
 		//let result:{pair:string[], proportion:number}[] = []

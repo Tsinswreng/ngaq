@@ -39,8 +39,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 邱	kʷʰə		
 蚯	kʷʰə		
 挺	lˁeŋ		
-聽	lʰeŋs		
-他	lʰaj		
+聽	lʰˁeŋs		
+他	lʰˁaj		
 手	nʰuʔ		
 意	ʔəks		
 讀	lˁok		
@@ -55,7 +55,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 風	prəm		
 秋	tsʰiw		
 修	siw		
-下	grˁaʔ	# 舍他音	
+
 馬	mrˁaʔ		
 醉	tsuts		
 詐	tsrˁaks		
@@ -71,7 +71,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 游	ju		
 			
 未	məts		
-調	diws		
+調	dˁiws		
 先	sˁən		
 			
 			
@@ -90,7 +90,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 地	lˁajs		
 结	kˁit		
 合	ɡˁop	# bs	
-皆	krˁij		
+
 世	lʰaps		
 大	lˁats		
 啼	lˁe		
@@ -372,6 +372,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 郎	rˁaŋ
 亮	raŋs
 
+
+暉	hʷəl
 輝	hʷəl
 煇	hʷəl
 俞	jo	# ms
@@ -382,8 +384,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 工	kˁoŋ
 
 公	kjˁoŋ	# ms
-功	kˁoŋʔ	# ts
-攻	kjˁoŋʔ	# ts
+功	kloŋ	# sch
+攻	kˁuŋ	# sch
 界	krˁets
 介	krˁeps	# bs
 屆	krˁits
@@ -443,7 +445,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 越	wˁat
 
 身	nʰin	# bs
-演 janʔ
+演	janʔ
 引	linʔ
 代	lˁəks
 袋	lˁəs
@@ -483,7 +485,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 人	nin	# sch
 仁	niŋ	# bs
 醒	sˁeŋʔ
-姓	seŋs
+
 
 四	slijs	# bs
 肆	sləps	# bs
@@ -491,7 +493,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 繫	kˁes
 怠	lˁəʔ
 殆	lˁəʔ
-偕	krˁi
+偕	krˁij
 載	tsˁəʔ
 擊	kˁik	# bs
 激	kˁewk
@@ -541,10 +543,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 弓	kʷəŋ
 躬	kʷəŋ
 洗	sˁəlʔ
-指	kiʔ
-脂	ki
-旨	kiʔ
-酯	kiʔ
+指	kijʔ
+脂	kij
+旨	kijʔ
+酯	kijʔ
 澤	lrˁak
 擇	lrˁak
 宅	drˁak
@@ -553,6 +555,305 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 藻	tsˁawʔ
 枣	tsˁuʔ
 位	wrəps	
+滯	drats
+愛	ʔˁəps	# bs
+寵	lʰroŋʔ	# ptl
+列	ret	# bs
+烈	rat
+裂	rat
+冽	rat
+洌	rats
+
+喬	ɡaw
+橋	ɡraw
+戒	krˁəks
+
+值	drəks
+守	stuʔ
+優	ʔru
+憂	ʔu
+堅	kˁiŋ	# bs
+泉	dzol	# ms
+惠	wˁits	# sch
+穗	sʷits	# sch
+慧	wˁets	# bs
+遂	sluts
+隧	sluts
+燧	sluts
+鐩	sluts
+璲	sluts
+入	nəp
+田	lˁiŋ
+甸	lˁiŋs
+潛	dzom	# bs
+潭	lˁəm
+譚	lˁəm
+覃	lˁom	# bs
+階	krˁij
+楷	kʰrˁij
+
+造	dzˁuʔ
+告	kˁuk
+試	lʰəks
+鬼	kujʔ
+季	kʷits
+軌	kruʔ
+撅	ɡot	# sch
+闕	kʰot	# sch
+倔	ɡut
+掘	ɡut
+血	mʰˁik	# bs
+冒	mˁuks
+帽	mˁuks
+瑁	mˁuks
+冃	mˁuks
+治	lrəs
+致	trits
+稚	lris	# ms
+遲	lrəj	# bs
+存	dzˁən
+僅	ɡrəls	# bs
+堇	ɡrəl	# bs
+瑾	ɡrəls	# bs
+突	dˁut
+蠻	mrˁon
+尼	nˁəlʔ	# bs
+妮	nri	# ptl
+響	haŋʔ
+泥	nˁəj	# bs
+
+達	lˁat
+適	stek
+展	trans	# bs
+輾	trenʔ
+
+陷	ɡrˁoms	# bs
+
+減	krˁəmʔ
+鹹	ɡrˁom	# bs
+咸	ɡrˁəm
+喊	ɡrˁəmʔ	# ptl
+威	ʔuj
+葳	ʔuj
+畏	ʔujs
+脅	hep	# bs
+增	stˁəŋ
+升	stəŋ
+昇	stəŋ
+陞	stəŋ
+富	pəks
+福	pək
+幅	prək	# ms
+輻	pək
+蝠	pək
+貧	brən
+奪	lˁot
+徹	tʰret	# bs
+撤	lʰret	# ms
+利	rits	# bs
+備	brəks
+少	stewʔ	# bs
+器	kʰrəts
+置	trəks
+呈	lreŋ
+錯	tsʰˁak
+措	tsʰˁaks
+醋	tsʰˁaks
+答	tˁup
+誤	ŋʷˁas
+勿	mət	# ms
+物	mut	# bs
+昔	sAk	# bs
+惜	sak
+夕	zAk	# bs
+席	zak	# sch
+徙	sajʔ
+蝦	ɡrˁa
+霞	ɡrˁa
+瑕	ɡrˁa
+遐	ɡrˁa
+廈	grˁaʔ
+暇	grˁas
+
+仙	san
+僊	san
+鮮	sal
+
+弦	ɡˁin
+舷	ɡˁin
+賢	ɡˁiŋ	# ms
+檢	kramʔ
+
+柬	kˁranʔ	# bs
+揀	kˁranʔ	# bs
+
+影	ʔraŋʔ
+璟	ʔraŋʔ
+映	ʔraŋs
+吸	həp
+附	bos
+復	buk
+覆	pʰuk
+學	grˁuk
+腦	nˁuʔ
+父	baʔ
+輔	braʔ
+腐	boʔ
+負	bəʔ
+婦	bəʔ
+
+髮	pot	# bs
+話	ɡʷrˁats
+活	ɡʷˁat
+佸	ɡʷˁat
+姡	ɡʷˁat
+秳	ɡʷˁat
+𣽅	ɡʷˁat
+䄆	ɡʷˁat
+
+灰	mʰˁə	# bs
+恢	kʰʷˁə
+詼	kʰʷˁə
+火	mʰˁəjʔ	# ms
+翻	pʰan	# ptl
+
+番	pʰal	# bs
+
+費	pʰuts	# bs
+
+延	lan
+筵	lan
+蜒	lan
+厭	ʔems
+饜	ʔems
+猒	ʔems
+
+究	krus
+龜	kʷrə
+鬮	kʷə
+疚	kʷəs
+內	nˁups
+羨	zans
+齊	dzˁi
+濟	tsˁis
+
+劑	dzˁis
+兵	praŋ
+
+淚	rəps
+泪	rəps
+類	ruts
+纍	ruj
+裔	lats
+
+截	dzˁet
+
+號	ɦˁaw	# sch
+號	ɦˁaws	# sch
+兮	ɡˁi	# sch
+朕	lrəmʔ
+考	krʰuʔ
+烤	kʰuʔ
+拷	kʰuʔ
+栲	kʰuʔ
+銬	kʰus
+通	lʰˁoŋ
+捅	lʰˁoŋʔ
+痛	lʰˁoŋs
+隸	rˁəps
+荔	rˁeps
+戾	rˁets
+線	sans
+綫	sans
+
+癬	sanʔ
+蘚	sanʔ
+
+目	muk
+牧	mək
+睦	mruk
+穆	mriwk
+繆	mriwk
+繆	mriws
+鄙	prəʔ
+技	ɡreʔ
+妓	ɡreʔ
+伎	kes
+
+狗	kloʔ	# sch
+苟	koʔ
+出	kʰlut
+處	kʰlas
+處	kʰlaʔ
+䖏	kʰlaʔ
+䖏	kʰlas
+処	kʰlas
+処	kʰlaʔ
+諷	pəms
+巴	prˁa
+巧	kʰrˁuʔ
+削	sewk
+惜	sak	# ms
+錢	dzan
+淺	tsʰanʔ
+付	pos
+隊	lˁuts
+板	prˁanʔ
+員	wrən
+圓	wren
+體	rʰˁiʔ
+拔	bˁots	# bs
+集	dzup	# bs
+雀	tsewk
+隼	sulʔ
+雅	ŋrˁaʔ
+午	ŋjˁaʔ	# ms
+外	ŋˁots	# ms
+陪	bˁə	# ptl
+賠	bˁə	
+
+徘	bˁəj
+背	pˁəks
+背	bˁəks
+輩	pˁəjs
+怫	buts	# bs
+院	wrans
+管	kʷˁanʔ
+算	sˁols	# bs
+狄	lˁek
+迪	lˁiwk
+笛	lˁiwk
+荻	lˁek
+翟	lˁewk
+添	lʰˁim
+抱	bˁuʔ
+除	lra
+湍	tʰˁol
+端	tˁol
+瑞	dols
+畀	pits
+既	kəts
+報	pˁuks
+跨	kʰwˁas
+夸	kʰwrˁa
+胯	kʰwˁas
+姱	kʰwrˁa
+垮	kʰwrˁaʔ
+好	hˁuʔ
+吾	ŋˁa
+梧	ŋˁa
+牙	ŋrˁa
+芽	ŋrˁa
+伢	ŋrˁa
+蚜	ŋrˁa
+訝	ŋrˁas
+過	kʷˁajs
+實	mlit
+護	ɡʷˁaks
+
+
+頡	krˁit	# ptl
+#朁
 # 曾
 # 層
 # 增
@@ -563,8 +864,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 仔
 # 考
 # 烤
-# 式
-# 識
 # 街
 # 圍
 # 韋
@@ -573,7 +872,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 霸
 # 率
 # 帥
-# 邊
+
 # 倒
 # 島
 # 搗
@@ -588,8 +887,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 尬
 # 勃
 # 脖
-# 早
-# 澡
+
 # 導
 # 盜
 # 惠
@@ -597,7 +895,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 晨
 # 臣
 # 辰
-# 值
 # 直
 # 縣
 # 炫
@@ -605,16 +902,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 丹
 # 講
 # 港
-# 狗
-# 苟
-# 呈
-# 程
-# 宜
-# 儀
-# 仙
-# 鮮
-# 發
-# 髮
+
 # 員
 # 圓
 # 症
@@ -637,14 +925,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 址
 # 着
 # 著
-# 優
-# 憂
+
 # 反
 # 返
 # 乘
 # 剩
-# 軸
-# 逐
+
 # 筑
 # 倉
 # 蒼
@@ -656,8 +942,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 撅
 # 尤
 # 郵
-# 肩
-# 堅
+
 # 曹
 # 槽
 # #很
@@ -674,8 +959,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 劵
 # 新
 # 辛
-# 全
-# 泉
+
 # 資
 # 姿
 # 吊
@@ -760,10 +1044,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 羽
 # 八
 # 扒
-# 突
+
 # 凸
-# 宮
-# 弓
+
 # 俊
 # 駿
 # 鞋
@@ -816,17 +1099,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 五
 # 伍
 # 救
-# 究
+# 
 # 編
 # 鞭
 
 
 # 包
 # 胞
-
-
-# 腦
-# 惱
 
 # 探
 # 貪
@@ -866,7 +1145,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #郎			
 馳	draj	# ts	
 顧	kʷrˁas	# ts	
-固	krˁas	# ts	
+固	kʰʷˁas	# ts	
 估	krˁaʔ	# ts	
 鄉	nʰaŋ	# ts	
 享	hraŋʔ	# ts	
@@ -893,7 +1172,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 思	səs	# ts	
 司	tsʰə	# ts	
 淋	rəms	# ts	
-午	ŋrˁaʔ	# ts	
+
 猴	ɡʷˁo	# ts
 梧	ŋrˁa	# ts
 
@@ -990,7 +1269,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 德	tʰˁək	# ts
 伸	lʰinʔ	# ts
 
-吧	pˁa	# ts
+吧	pʰrˁa	# ts
 
 財	tsˁəj	# ts
 材	tsˁəjʔ	# ts
@@ -1006,6 +1285,35 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 例	rets	# ts
 勵	raks	# ts
 狠	hˁənʔ	# ts
-性	sˁeŋs	# ts
+姓	sˁeŋs	# ts
 街	krˁej	# ts
-諧	ɡrˁi	# ts
+諧	ɡrˁij	# ts
+廿	nip	# ts
+
+皆	krˁi	# ts	i 可試讀/iɯ/㕥與ij辨。
+
+雖	suj	# ts
+呢	nej	# ts
+
+餡	ɡrˁomʔ	# ts
+喂	ʔujʔ	# ts
+程	dreŋ	# ts
+
+下	hrˁaʔ	# ts
+臉	ramʔ	# ts
+
+炫	ɡʷˁins	# ts
+
+邊	pˁin	# ts
+返	pʰanʔ	# ts
+
+層	dzˁəŋʔ	# ts
+
+宜	ŋA	# ts
+擠	tsˁiʔ	# ts
+腺	sols	# ts
+版	pʰranʔ	# ts
+
+培	bˁo	# ts
+誇	kʰrˁoj	# ts
+揮	hʷəj	# ts

@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "Txt"
-import Util from 'Util';
+import Ut from 'Ut';
 import { DictDb, DictRaw, Dict, MinimalPairUtil } from "./dict/Dict";
 //import Txt from "../../shared/Txt";
 
