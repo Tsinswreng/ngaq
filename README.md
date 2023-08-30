@@ -27,6 +27,14 @@ npm run build
 
 ## 記錄
 
+### 20230830231029 3.9.0
+
+#### feat:
+
+* `dkz`中`/ij/`一律取消`/-j/`韻尾、慮及只有`/ij/`洏無`/uw/`。
+* 新增`SingleWord2.ts`, `VocaRaw2.ts`, `VocaSqlite.ts`, `config.ts`、係原 背單詞ˉ項目ᵗ版芝誧Sqlite。現已完成解析txt詞表及數據庫ʰ添詞之邏輯。
+
+
 ### 20230816212435 3.8.0
 
 #### feat:

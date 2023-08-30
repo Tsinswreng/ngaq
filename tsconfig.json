@@ -5,11 +5,12 @@
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
 		"declaration": true,
+		"types": ["node"],
 		//"outDir": "../backend-out",
 		"outDir": ".",
 		"rootDir": "./",
 		"allowJs": false,
-		"target": "ES6",
+		"target": "ES2020",
 		//"useDefineForClassFields": true,
 		//"module": "ESNext",
 		"module": "CommonJS", //模塊化ᵗ標準
@@ -33,6 +34,8 @@
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
 		"baseUrl": ".",
 		"paths": {
 			"@root/*": ["./"],
@@ -47,7 +50,7 @@
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"exclude": ["src/frontend/*"],
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"include": ["./config.ts","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 	//"include": ["/*.ts"],
 	
 	// "include": [

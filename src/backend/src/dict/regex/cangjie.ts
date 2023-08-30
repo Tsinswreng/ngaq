@@ -22,7 +22,7 @@ export const replacePair:RegexReplacePair[] = [
 	{regex:/馬/gm, replacement:'S'},
 	{regex:/髟/gm, replacement:'S'},
 	{regex:/革/gm, replacement:'T'},
-	{regex:/糹/gm, replacement:'V'},
+	//{regex:/糹/gm, replacement:'V'},
 	
 	{regex:/齒/gm, replacement:'Y'},
 	{regex:/辛/gm, replacement:'Y'},

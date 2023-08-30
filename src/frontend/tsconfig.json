@@ -64,10 +64,12 @@
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
 		"baseUrl": "./",
-		/* "paths": {
+		"paths": {
 			// "@root/*": ["./*"]
-			"@root": ["."]
-		} */
+			//"@root": ["."]
+			"*":["../shared/*"],
+			//"*": "src/shared/*"
+		}
 	},
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,

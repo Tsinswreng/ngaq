@@ -17,9 +17,13 @@ import { DictDb, DictRaw, Dict, MinimalPairUtil } from "./dict/Dict";
 import { GetCompiledJs } from "./GetCompiledJs";
 import { partial } from 'lodash';
 import { RegexReplacePair } from 'Type';
-import { DictDbRow } from './dict/DictType';
+
 import _ from 'lodash';
+import Sqlite from 'db/Sqlite';
+import * as fs from 'fs'
+import VocaRaw2 from './VocaRaw2';
 const rootDir:string = require('app-root-path').path
+
 Error.stackTraceLimit = 50;
 /* console.log(__dirname)
 const voca:VocaRaw[] = VocaRaw.getObjsByConfig()
@@ -108,11 +112,12 @@ async function debug(){
 }
 //debug()
 async function testfunc(){
-	let r = await DictDb.all(new DictDb({}).db, `SELECT  a.*, b.*
-	FROM  'bsoc' a
-	FULL JOIN saffes b ON a.char=b.char
-	`)
-	console.log(r)
+	//console.log(process.arch)
+	//Sqlite.all(new DictDb({}).db,`SELECT * FROM bsoc WHERE char='a'`).then((d)=>{console.log(d)})
+	//Ut.readFileUtf8('./config.ts').then((d)=>{console.log(d)})
+	let r = new VocaRaw2({_srcFilePath:'./config.ts', _ling:''})
+	await r.assign_text()
+	console.log(r.text)
 }
 
 testfunc()

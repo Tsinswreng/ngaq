@@ -40,7 +40,7 @@ export default class Sqlite{
 		return Sqlite.all(db, sql)
 	}
 
-		/**
+	/**
 	 * 統計表的某列中不重樣的值的數量
 	 * @param tableName 
 	 * @param columnName 不填列名則每一列都會被統計
@@ -335,6 +335,54 @@ ELSE 0 \
 END) AS sum_result \
 FROM '${tableName}';`
 		return (await Sqlite.all<{sum_result:number}>(db, sql))[0].sum_result
+	}
+
+
+	/**
+	 * 
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param value 
+	 */
+	public static countOccurrences(db:Database, table:string, column:string, value:any[]){
+		function getSql(table:string, column:string){
+			return `SELECT COUNT(*) FROM '${table}' WHERE ${column}=?` //寫binary似報錯
+		}
+		//return Sqlite.transaction()
+	}
+
+
+	/**
+	 * 由對象ᵗ鍵與值 產 sql插入語句。
+	 * 若表ᵗ自增主鍵潙id、則obj不宜有id字段。
+	 * @param table 
+	 * @param obj 
+	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
+	 */
+	public static getInsertSql(table:string, obj:Object):[string, any[]]{
+		let keys = Object.keys(obj)
+		const columns = keys.join(', ');
+		const placeholders = keys.map(()=>'?').join(',')
+		let insertSql = `INSERT INTO '${table}' (${columns}) VALUES (${placeholders})`
+		let values = Object.values(obj)
+		return [insertSql,values]
+	}
+
+	/**
+	 * 由對象ᵗ鍵與值 產 sql修改語句。
+	 * 若表ᵗ自增主鍵潙id、則obj不宜有id字段。id當另外傳入作第三個參數。
+	 * @param table 
+	 * @param obj 
+	 * @param id 
+	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
+	 */
+	public static getUpdateByIdSql(table:string, obj:Object, id:number):[string, any[]]{
+		const keys = Object.keys(obj)
+		const values = Object.values(obj)
+		values.push(id)
+		const updateQuery = `UPDATE '${table}' SET ${keys.map(key => `${key} = ?`).join(', ')} WHERE id = ?`;
+		return [updateQuery, values]
 	}
 
 }

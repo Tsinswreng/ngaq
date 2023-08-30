@@ -677,6 +677,78 @@ export default class Ut {
 		return moment().format('YYYYMMDDHHmmssSSS')
 	}
 
+	/**
+	 * 集合取並集
+	 * @param s1 
+	 * @param s2 
+	 * @returns 
+	 */
+	public static union<T>(s1:T[], s2:T[]):T[]
+	public static union<T>(s1:Set<T>, s2:Set<T>):Set<T>
+
+	public static union<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
+		
+		if(Array.isArray(s1)){
+			return Array.from(new Set([...s1, ...s2]))
+		}else{
+			return new Set([...s1, ...s2])
+		}
+		
+	}
+
+	/**
+	 * json字串轉數字數組 如 '["1","2.3"]' --> 
+	 * @param json 
+	 * @returns 
+	 */
+	public static parseJsonNumArr(json:string){
+		let strArr:string[] = JSON.parse(json)
+		if(!Array.isArray(strArr)){
+			console.error(json)
+			throw new Error(`json解析之後不是數組\n${json}`)
+		}
+		let numArr = strArr.map((e)=>{return parseFloat(e)})
+		return numArr
+	}
+
+		/**
+	 * 判斷text中的str1與str2是否配對。若str1與str2皆無亦算已配對。
+	 * @param text 
+	 * @param str1 
+	 * @param str2 
+	 * @returns 
+	 */
+	public static isMatchInPair(text:string, str1:string, str2:string):boolean
+	public static isMatchInPair(text:string, pairs:([string,string])[]):boolean
+
+	public static isMatchInPair(text:string, pairs:([string,string])[]|string, p3?:string){
+		function f(text:string, str1:string, str2:string){
+			const regex = new RegExp(`${str1}|${str2}`, 'g')
+			const matches = text.match(regex)
+			if(!matches||matches.length===0){
+				return true
+			}
+	
+			let stack:string[] = []
+			for(let i = 0; i < matches.length; i++){
+				if(matches[i]===str1){stack.push(str1)}
+				else if(matches[i]===str2){
+					if(stack.length===0){return false}
+					stack.pop()
+				}
+			}
+			return stack.length === 0
+		}
+
+		if(p3!==undefined){
+			return f(text, pairs as string, p3)
+		}else{
+			//......
+		}
+		
+	}
+
+
 }
 
 

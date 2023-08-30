@@ -35,7 +35,7 @@ export default {
 		<button @click="mainB.originUi.startToShow()">始</button>
 		<!-- <input type="text" id="tempPwd" name="tempPwd"> -->
 		<input type="text" id="max_randomBonus" value="0">
-		<input type="text" id="debuffNumerator" value="3600*24*14">
+		<input type="text" id="debuffNumerator" value="3600*24*90">
 		<!-- <button onclick="originUi.addRandomBonus()">addBonus</button> -->
 	</nobr>
 	</div>

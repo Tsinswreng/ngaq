@@ -233,9 +233,9 @@ export let replacePair:RegexReplacePair[] =
 			{regex:/首一(.*?)首二腹一(I)腹二尾一(V)尾二/gm, replacement:'首一$1首二腹一i腹二尾一ms尾二'},
 			{regex:/首一(.*?)首二腹一(I)腹二尾一(P)尾二/gm, replacement:'首一$1首二腹一i腹二尾一p尾二'},
 
-			{regex:/首一(.*?)首二腹一(I)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一i腹二尾一jʔ尾二'},
-			{regex:/首一(.*?)首二腹一(I)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一i腹二尾一j尾二'},
-			{regex:/首一(.*?)首二腹一(I)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一i腹二尾一js尾二'},
+			{regex:/首一(.*?)首二腹一(I)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一i腹二尾一ʔ尾二'},
+			{regex:/首一(.*?)首二腹一(I)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一i腹二尾一尾二'},
+			{regex:/首一(.*?)首二腹一(I)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一i腹二尾一s尾二'},
 
 			{regex:/首一(.*?)首二腹一(I)腹二尾一(U)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一wʔ尾二'},
 			{regex:/首一(.*?)首二腹一(I)腹二尾一(J)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一w尾二'},
@@ -305,9 +305,9 @@ export let replacePair:RegexReplacePair[] =
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(V)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一ms尾二'},
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(P)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一p尾二'},
 
-			{regex:/首一([CVZS])首二腹一(K)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一jʔ尾二'},
-			{regex:/首一([CVZS])首二腹一(K)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一j尾二'},
-			{regex:/首一([CVZS])首二腹一(K)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一js尾二'},
+			{regex:/首一([CVZS])首二腹一(K)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一ʔ尾二'},
+			{regex:/首一([CVZS])首二腹一(K)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一尾二'},
+			{regex:/首一([CVZS])首二腹一(K)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一s尾二'},
 
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一jʔ尾二'},
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一j尾二'},
@@ -665,18 +665,15 @@ export let replacePair:RegexReplacePair[] =
 			{regex:/首一(V)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一tsʰ首二腹一$2腹二尾一$3尾二'},
 			{regex:/首一(W)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一ŋ首二腹一$2腹二尾一$3尾二'},
 			{regex:/首一(X)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一kʰ首二腹一$2腹二尾一$3尾二'},
-			//{regex:/首一(Y)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一y首二腹一$2腹二尾一$3尾二'},
 			{regex:/首一(w)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一w首二腹一$2腹二尾一$3尾二'},
 			{regex:/首一(j)首二腹一ʷ/gm, replacement:'首一w首二腹一'},
 			{regex:/首一(j)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一l首二腹一$2腹二尾一$3尾二'},
 			{regex:/首一(Z)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'首一dz首二腹一$2腹二尾一$3尾二'},
 
-			//{regex:/首一(tsʰ|ts|dz|z)首二腹一(ʷrˁa)腹二尾一(.*?)尾二/gm, replacement:'首一$1首二腹一rˁo腹二尾一$3尾二'},
-			//{regex:/首一(tsʰ|ts|dz|z)首二腹一(ʷˁa)腹二尾一(.*?)尾二/gm, replacement:'首一$1首二腹一ˁo腹二尾一$3尾二'},
-
+			
 			{regex:/首一(wʷ)首二/gm, replacement:'首一w首二'},
 
-			//{regex:/^(.)/gm, replacement:'〇$1'},
+
 			{regex:/首一(.*?)首二腹一(.*?)腹二尾一(.*?)尾二/gm, replacement:'$1$2$3'},
 
 		]
