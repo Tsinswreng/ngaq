@@ -138,17 +138,25 @@ export default class SingleWord2{
 	 * @param obj 
 	 */
 	public static soloParse(obj:Tp.IVocaRow){
-		let sw = new SingleWord2({
-			id:obj.id,
-			wordShape:obj.wordShape,
-			mean:JSON.parse(obj.mean),
-			annotation:JSON.parse(obj.annotation),
-			ling:obj.ling,
-			dates_add:Ut.parseJsonNumArr(obj.dates_add)
-		})
-		sw.dates_rmb = Ut.parseJsonNumArr(obj.dates_rmb)
-		sw.dates_fgt = Ut.parseJsonNumArr(obj.dates_fgt)
-		return sw
+		let sw:SingleWord2
+		try{
+			sw = new SingleWord2({
+				id:obj.id,
+				wordShape:obj.wordShape,
+				mean:JSON.parse(obj.mean),
+				annotation:JSON.parse(obj.annotation),
+				ling:obj.ling,
+				dates_add:Ut.parseJsonNumArr(obj.dates_add)
+			})
+			sw.dates_rmb = Ut.parseJsonNumArr(obj.dates_rmb)
+			sw.dates_fgt = Ut.parseJsonNumArr(obj.dates_fgt)
+			return sw
+		}catch(e){
+			console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
+			console.error(`console.error(e)`);console.error(e);console.error(`/console.error(e)`)
+		}
+		throw new Error()
+		
 	}
 
 	//public static updateFojo(){}
@@ -163,6 +171,62 @@ export default class SingleWord2{
 			id:s1.id
 			wordS
 		}) */
+	}
+
+	/**
+	 * 舊對象轉新對象
+	 * @param objs 
+	 * @returns 
+	 */
+	public static parseOldObj(objs:Tp.Old_IVocaRow[]){
+
+		let lingMap = new Map([
+			['eng', 'english'],
+			['jap', 'japanese'],
+		])
+
+		const r:Tp.IVocaRow[]=[]
+		for(const e of objs){
+			const t = parseOne(e)
+			r.push(t)
+		}
+		return r
+
+		function parseOne(obj:Tp.Old_IVocaRow){
+			let neo:Tp.IVocaRow = {
+				id:obj.id,
+				ling:Ut.nng(lingMap.get(obj.ling)),
+				wordShape:obj.wordShape,
+				mean:JSON.stringify(obj.fullComments),
+				annotation:'[]',
+				dates_add: convertDate(obj.addedDates), //<待改>{}
+				dates_rmb: convertDate(obj.rememberedDates), 
+				dates_fgt: convertDate(obj.forgottenDates),
+				times_add: obj.addedTimes,
+				times_rmb: obj.rememberedTimes,
+				times_fgt: obj.forgottenTimes
+			}
+			/* dates_add: '20230410205700,20210602000000000',
+  dates_rmb: '20230508172108,20230517083331,20230611132803000',
+  dates_fgt: '000',*/
+			return neo
+		}
+
+		
+
+		//YYYYMMDDHHmmss 字串數組 轉 JSON格式ᵗ YYYYMMDDHHmmssSSS 數字數組
+		function convertDate(old:string[]){
+			//let neo = Ut.convertDateFormat(old, 'YYYYMMDDHHmmss', 'YYYYMMDDHHmmssSSS')
+			//return JSON.stringify(neo)
+			let neo:string[] = []
+			for(const e of old){
+				let n = parseInt(e)
+				n *= 1000
+				neo.push(n+'')
+			}
+			return JSON.stringify(neo)
+		}
+
 	}
 
 

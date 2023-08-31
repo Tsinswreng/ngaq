@@ -749,6 +749,33 @@ export default class Ut {
 	}
 
 
+	/**
+	 * 轉換日期格式
+	 * @param oldDate 
+	 * @param oldFormat 
+	 * @param neoFormat 
+	 * @returns 
+	 */
+	public static convertDateFormat(oldDate:string, oldFormat:moment.MomentFormatSpecification, neoFormat:string):string
+	public static convertDateFormat(oldDate:string[], oldFormat:moment.MomentFormatSpecification, neoFormat:string):string[]
+
+	public static convertDateFormat(oldDate:string|string[], oldFormat:moment.MomentFormatSpecification, neoFormat:string){
+		if(typeof(oldDate)==='string'){
+			let obj = moment(oldDate, oldFormat)
+			return obj.format(neoFormat)
+		}else{
+			let oldDates = oldDate
+			let r:string[] = []
+			for(const oldDate of oldDates){
+				let obj = moment(oldDate, oldFormat)
+				r.push(obj.format(neoFormat))
+			}
+			return r
+		}
+		
+	}
+
+
 }
 
 

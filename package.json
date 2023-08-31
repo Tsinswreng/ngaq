@@ -74,6 +74,7 @@
 		"@components": "dist/api/components",
 		"@services": "dist/services",
 		"@root": ".",
+		"@bm":"src/backend/src/module/*",
 		"*": "src/shared/*"
 	},
 	"註釋": {}

@@ -137,3 +137,23 @@ export interface VocaRawConfig{
 		path:string
 	}[]
 }
+
+
+/**
+ * 舊版ᵗ詞表
+ */
+export interface Old_IVocaRow{
+	id?:number //從數據庫中取數據時id必不潙空
+	ling:string //數據庫中本無此字段、㕥存表名。
+	wordShape:string
+	fullComments:string[]
+	//annotation:string //
+	addedTimes:number
+	addedDates:string[]
+	reviewedDates:string[] //皆 空數組也
+	reviewedTimes:number // 皆 0
+	rememberedTimes:number
+	rememberedDates:string[]
+	forgottenTimes:number
+	forgottenDates:string[]
+}

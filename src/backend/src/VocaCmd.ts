@@ -1,8 +1,9 @@
 require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 import SingleWord2 from "./SingleWord2";
+import VocaMysql from "./VocaMysql";
 import VocaRaw2 from "./VocaRaw2";
 import VocaSqlite from "./VocaSqlite";
-
+import * as Tp from 'Type'
 export default class VocaCmd{
 	public static readonly config = VocaRaw2.config
 
@@ -27,6 +28,24 @@ export default class VocaCmd{
 			console.log(`輟辣`)
 		})
 	}
+
+	public static async testOldVocaDb(){
+		const db = new VocaMysql({
+			host:'localhost',
+			user:'root',
+			password: 'admin',
+			database: 'voca'
+		})
+
+		let liteDb = new VocaSqlite({
+			_tableName: 'english'
+		})
+
+		db.toSqliteTable_forOld('eng', liteDb)
+	}
+
 }
 
-VocaCmd.run()
+VocaCmd.testOldVocaDb()
+//VocaCmd.run()
+//測試謬ᵗ日期、試用他ᵗ代碼塊標記。

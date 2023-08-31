@@ -27,6 +27,12 @@ npm run build
 
 ## 記錄
 
+### 20230831191926	3.10.0
+
+#### feat:
+
+* `VocaMysql.ts`、㕥治mysqlᵗ詞表。現已成功能芝舊mysql詞表導出潙sqlite詞表。
+
 ### 20230830231029 3.9.0
 
 #### feat:

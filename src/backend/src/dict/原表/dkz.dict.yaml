@@ -1,5 +1,5 @@
 
-#20230830222419206
+#20230831191258877
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -59,6 +59,7 @@ use_preset_vocabulary: true
 由	liw	
 油	liw	
 悠	jiw	
+攸	jiw	
 遊	ju		
 游	ju		
 未	məts		
@@ -329,10 +330,7 @@ use_preset_vocabulary: true
 俞	jo	
 逾	lo
 倒	tˁawʔ
-工	kˁoŋ
 公	kjˁoŋ	
-功	kloŋ	
-攻	kˁuŋ	
 界	krˁets
 介	krˁeps	
 屆	krˁits
@@ -813,10 +811,8 @@ use_preset_vocabulary: true
 振	təls
 賑	təls
 娠	təls
-診	tənʔ
-珍	tənʔ
-疹	tənʔ
-軫	tənʔ
+疹	trənʔ
+軫	trənʔ
 沾	trem
 桃	lˁaw
 挑	lʰˁew
@@ -1343,6 +1339,13 @@ use_preset_vocabulary: true
 堵	tʰˁalʔ	
 賭	pˁalʔ	
 睹	mˁalʔ	
+普	pʰˁalʔ	
+譜	pˁalʔ	
+工	kˁuŋ	
+攻	kˁuŋs	
+功	kˁuŋʔ	
+診	tənʔ	
+珍	tən	
 純	tunʔ	1%
 崔	dzˁuj	1%
 谷	ɡak	1%
@@ -15601,7 +15604,6 @@ use_preset_vocabulary: true
 圃	pˁaʔ	
 浦	pʰˁaʔ	
 烳	pʰˁaʔ	
-普	pʰˁaʔ	
 溥	pˁak	
 溥	pʰˁaʔ	
 暜	tʰˁes	
@@ -15611,7 +15613,6 @@ use_preset_vocabulary: true
 氆	pʰˁaʔ	
 㹒	pʰrˁok	
 蹼	pˁok	
-譜	pˁaʔ	
 鐠	pʰˁaʔ	
 舖	pʰˁas	
 瀑	bˁaws	
@@ -23933,7 +23934,6 @@ use_preset_vocabulary: true
 醟	wʷreŋs	
 𢆶	ʔu	
 𢆶	ʔriw	
-攸	lu	
 忧	wʷəs	
 呦	ʔriw	
 泑	ʔriw	

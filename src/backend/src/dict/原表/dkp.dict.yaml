@@ -71,6 +71,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 由	liw	# ms	
 油	liw	# ms	
 悠	jiw	# ms	
+攸	jiw	# ms	
 遊	ju		
 游	ju		
 			
@@ -389,11 +390,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 倒	tˁawʔ
 
-工	kˁoŋ
+#工	kˁoŋ
 
 公	kjˁoŋ	# ms
-功	kloŋ	# sch
-攻	kˁuŋ	# sch
+#功	kloŋ	# sch
+#攻	kˁuŋ	# sch
 界	krˁets
 介	krˁeps	# bs
 屆	krˁits
@@ -953,10 +954,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 振	təls
 賑	təls
 娠	təls
-診	tənʔ
-珍	tənʔ
-疹	tənʔ
-軫	tənʔ
+
+疹	trənʔ
+軫	trənʔ
 沾	trem
 
 桃	lˁaw
@@ -1725,3 +1725,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 堵	tʰˁalʔ	# ts
 賭	pˁalʔ	# ts
 睹	mˁalʔ	# ts
+普	pʰˁalʔ	# ts
+譜	pˁalʔ	# ts
+工	kˁuŋ	# ts
+攻	kˁuŋs	# ts
+功	kˁuŋʔ	# ts
+診	tənʔ	# ts
+珍	tən	# ts
