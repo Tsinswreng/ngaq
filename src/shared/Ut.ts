@@ -676,6 +676,9 @@ export default class Ut {
 	public static YYYYMMDDHHmmssSSS(){
 		return moment().format('YYYYMMDDHHmmssSSS')
 	}
+	public static YYYYMMDDHHmmssSSS_withSymbol(){
+		return moment().format('YYYY.MM.DD-HH:mm:ss.SSS')
+	}
 
 	/**
 	 * 集合取並集
@@ -773,6 +776,27 @@ export default class Ut {
 			return r
 		}
 		
+	}
+
+
+	/**
+	 * 數組ᵘ判斷a是否b之真子集
+	 * <待叶:判斷對象>
+	 * @param a 
+	 * @param b 
+	 */
+	public static is_properSubsetOf_<T>(a:T[],b:T[]){
+		let s1 = new Set([...a])
+		let s2 = new Set([...b])
+		if(s1.size >= s2.size){
+			return false;
+		}
+		for(const item of s1){
+			if(!s2.has(item)){
+				return false;
+			}
+		}
+		return true
 	}
 
 

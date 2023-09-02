@@ -4,8 +4,8 @@ export const config:VocaRawConfig = {
 	dbName:"voca",
 	dbPath:"",
 	url:"http://127.0.0.1:1919",
-	dateFormat:'YYYYMMDDHHmmssSSS',
-	dateRegex: '\\d{17}',
+	dateFormat:'YYYY.MM.DD-HH:mm:ss.SSS',
+	dateRegex: '\\d{4}\\.\\d\\d\\.\\d\\d\\-\\d\\d:\\d\\d:\\d\\d\\.\\d{3}', //勿寫^...$
 	dateBlock: ['\\{','\\}'],
 	wordBlock: ['\\[{2}','\\]{2}'],
 	annotation: ['<<','>>'],

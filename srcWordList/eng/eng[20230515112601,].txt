@@ -13618,3 +13618,21 @@ v.	歪曲；曲解；使不公允；影响…的准确性
 
 
 }
+
+23.09.02-2011
+{
+abstain
+( abstaining, abstained, abstains )
+英 [əbˈsteɪn]美 [əbˈsteɪn]
+CET6+ TEM8
+v. 弃权，不投票；戒除，抑制；离开，回避
+
+bludgeon
+美: [ˈblʌdʒən] 
+英: [ˈblʌdʒ(ə)n] 
+v.	用大头棒(不断地)打；威胁
+n.	大头棒
+网络	钝击；敲击
+
+
+}

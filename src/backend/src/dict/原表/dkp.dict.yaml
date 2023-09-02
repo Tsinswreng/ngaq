@@ -1281,7 +1281,38 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 撓	nrˁewʔ	# ptl
 抄	tsʰrˁews	# 舍他音
 鈔	tsʰrˁew
+牢	rˁu
+枚	mˁəj
+玫	mˁəj
+#霉
+昧	mˁuts	# bs
+瞞	mˁol	# bs
+滿	mˁolʔ	# bs+ms
+貓	mraw	# sch
 
+苗	maw
+
+炎	lam
+鹽	jam
+塩	jam
+閻	jam
+閆	jam
+檐	lam
+糕	kˁu
+皋	kˁu
+羔	kˁu
+槔	kˁu
+餻	kˁu
+欽	kʰrəm
+衾	kʰəm
+典	tˁəlʔ
+奶	nrˁəʔ
+協	ɡjˁep	# ms
+駛	srəs	# 舍他音
+軒	hal	# bs
+憲	hals	# bs
+欣	həl
+炘	həls
 # 欄
 # 攔
 # 瀾
@@ -1513,7 +1544,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 嗯	kʰˁən	# ts
 
 嗎	mrˁa	# ts
-嘛	mrˁaʔ	# ts
+嘛	mrˁajs	# ts
 媽	mˁaʔ	# ts
 她	nʰˁaj	# ts
 
@@ -1732,3 +1763,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 功	kˁuŋʔ	# ts
 診	tənʔ	# ts
 珍	tən	# ts
+喵	mAw	# ts
+瞄	maws	# ts
+描	mawʔ	# ts
+叶	kjˁep	# ts

@@ -6,6 +6,7 @@ import Sqlite from 'db/Sqlite';
 import _ from 'lodash';
 import { SingleWord } from './VocaRaw';
 import "reflect-metadata"
+import moment from 'moment';
 export default class SingleWord2{
 
 	/* public constructor(props:Partial<SingleWord2>&{ling:string, wordShape:string, mean:string[]}){
@@ -26,7 +27,7 @@ export default class SingleWord2{
 		wordShape:string,
 		mean:string[],
 		annotation:string[],
-		dates_add:number[]
+		dates_add:string[]
 		//......
 	}){
 		this._id=props.id
@@ -58,21 +59,21 @@ export default class SingleWord2{
 	/**
 	 * add, rmb, fgt 的dates統一用number數組來存、格式如YYYYMMDDHHmmssSSS
 	 */
-	private _dates_add:number[] = []
+	private _dates_add:string[] = []
 	;public get dates_add(){return this._dates_add;};;public set dates_add(v){this._dates_add=v;};
 
 	;public get times_add(){
 		return this.dates_add.length;
 	}
 
-	public _dates_rmb:number[]=[]
+	public _dates_rmb:string[]=[]
 	;public get dates_rmb(){return this._dates_rmb;};;public set dates_rmb(v){this._dates_rmb=v;};
 
 	public get times_rmb(){
 		return this.dates_rmb.length
 	}
 
-	public _dates_fgt:number[] = []
+	public _dates_fgt:string[] = []
 	;public get dates_fgt(){return this._dates_fgt;};;public set dates_fgt(v){this._dates_fgt=v;};
 
 	public get times_fgt(){
@@ -146,10 +147,10 @@ export default class SingleWord2{
 				mean:JSON.parse(obj.mean),
 				annotation:JSON.parse(obj.annotation),
 				ling:obj.ling,
-				dates_add:Ut.parseJsonNumArr(obj.dates_add)
+				dates_add:JSON.parse(obj.dates_add) as string[]
 			})
-			sw.dates_rmb = Ut.parseJsonNumArr(obj.dates_rmb)
-			sw.dates_fgt = Ut.parseJsonNumArr(obj.dates_fgt)
+			sw.dates_rmb = JSON.parse(obj.dates_rmb) as string[]
+			sw.dates_fgt = JSON.parse(obj.dates_fgt) as string[]
 			return sw
 		}catch(e){
 			console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
@@ -199,23 +200,31 @@ export default class SingleWord2{
 				wordShape:obj.wordShape,
 				mean:JSON.stringify(obj.fullComments),
 				annotation:'[]',
-				dates_add: convertDate(obj.addedDates), //<待改>{}
+				dates_add: convertDate(obj.addedDates),
 				dates_rmb: convertDate(obj.rememberedDates), 
 				dates_fgt: convertDate(obj.forgottenDates),
 				times_add: obj.addedTimes,
 				times_rmb: obj.rememberedTimes,
 				times_fgt: obj.forgottenTimes
 			}
-			/* dates_add: '20230410205700,20210602000000000',
-  dates_rmb: '20230508172108,20230517083331,20230611132803000',
-  dates_fgt: '000',*/
+
 			return neo
 		}
 
-		
-
-		//YYYYMMDDHHmmss 字串數組 轉 JSON格式ᵗ YYYYMMDDHHmmssSSS 數字數組
+		//YYYYMMDDHHmmss 字串數組 轉 JSON格式ᵗ YYYY.MM.DD-HH:mm:ss.SSS 數字數組
 		function convertDate(old:string[]){
+			//let neo = Ut.convertDateFormat(old, 'YYYYMMDDHHmmss', 'YYYYMMDDHHmmssSSS')
+			//return JSON.stringify(neo)
+			let neo:string[] = []
+			for(const e of old){
+				let n = moment(e, 'YYYYMMDDHHmmss').format('YYYY.MM.DD-HH:mm:ss.SSS')
+				neo.push(n)
+			}
+			return JSON.stringify(neo)
+		}
+
+		/* //YYYYMMDDHHmmss 字串數組 轉 JSON格式ᵗ YYYYMMDDHHmmssSSS 數字數組
+		function deprecated_convertDate(old:string[]){
 			//let neo = Ut.convertDateFormat(old, 'YYYYMMDDHHmmss', 'YYYYMMDDHHmmssSSS')
 			//return JSON.stringify(neo)
 			let neo:string[] = []
@@ -225,7 +234,7 @@ export default class SingleWord2{
 				neo.push(n+'')
 			}
 			return JSON.stringify(neo)
-		}
+		} */
 
 	}
 
@@ -256,6 +265,23 @@ export default class SingleWord2{
 		o.dates_rmb=Ut.union(w1.dates_rmb, w2.dates_rmb)
 		o.dates_fgt=Ut.union(w1.dates_fgt, w2.dates_fgt)
 		return o
+	}
+
+	/**
+	 * 用JSON.stringfy()比較兩Tp.IVocaRow是否相同
+	 * @param row1 
+	 * @param row2 
+	 * @returns 
+	 */
+	public static isWordsEqual(row1: Tp.IVocaRow, row2:Tp.IVocaRow):boolean
+	public static isWordsEqual(row1: SingleWord2, row2:SingleWord2):boolean
+
+	public static isWordsEqual(row1: Tp.IVocaRow|SingleWord2, row2:Tp.IVocaRow|SingleWord2){
+		return JSON.stringify(row1) === JSON.stringify(row2)
+	}
+
+	public static is_properSetOf_(w1:SingleWord2, w2:SingleWord2){
+		
 	}
 
 /* 

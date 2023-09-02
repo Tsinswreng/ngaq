@@ -5,10 +5,10 @@ import VocaRaw2 from "./VocaRaw2";
 import VocaSqlite from "./VocaSqlite";
 import * as Tp from 'Type'
 export default class VocaCmd{
-	public static readonly config = VocaRaw2.config
+	
 
-	public static async run(cf=this.config){
-
+	public static async run(){
+		let cf=VocaRaw2.defaultConfig
 		let ling = cf.txtTables[0].ling
 		let path = cf.txtTables[0].path
 		let raw = new VocaRaw2({
@@ -16,17 +16,19 @@ export default class VocaCmd{
 			_srcFilePath: path
 		})
 		
+		
+
+		
 		let words = await raw.getAllWords()
+		
 		let db = new VocaSqlite({
 			_tableName: ling
 		})
 		//await db.creatTable(ling)
 
-		let prms = db.addWords(words)
-		Promise.all(prms).then((d)=>{console.log('done')}).catch((e)=>{
-			console.error(e)
-			console.log(`輟辣`)
-		})
+		let ids = await db.addWords(words)
+		console.log(ids)
+
 	}
 
 	public static async testOldVocaDb(){
@@ -44,8 +46,35 @@ export default class VocaCmd{
 		db.toSqliteTable_forOld('eng', liteDb)
 	}
 
+	public static async testReturnId(){
+		let w = new SingleWord2({
+			ling: 'english',
+			wordShape: 'fuck',
+			mean: [],
+			annotation: [],
+			dates_add: []
+		})
+
+		let w2 = new SingleWord2({
+			ling: 'english',
+			wordShape: 'fuckme',
+			mean: ['114514'],
+			annotation: [],
+			dates_add: []
+		})
+
+		let liteDb = new VocaSqlite({
+			_tableName: 'english'
+		})
+
+		liteDb.setWordsByIds(w.ling, [w,w2], [1,2])
+		//VocaSqlite.test_addOneWordDirect(liteDb.db, 'english', w)
+
+	}
+
 }
 
-VocaCmd.testOldVocaDb()
-//VocaCmd.run()
+//VocaCmd.testOldVocaDb()
+VocaCmd.run()
+//VocaCmd.testReturnId()
 //測試謬ᵗ日期、試用他ᵗ代碼塊標記。

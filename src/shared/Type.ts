@@ -157,3 +157,22 @@ export interface Old_IVocaRow{
 	forgottenTimes:number
 	forgottenDates:string[]
 }
+
+
+export class UserColumnName{
+	public static readonly id='id'
+	public static readonly strId='strId'
+	public static readonly userName='userName'
+	public static readonly password='password'
+	public static readonly mail='mail'
+	public static readonly date='date'
+}
+
+export interface IUser{
+	id?:number,
+	strId:string,
+	userName:string,
+	password:string,
+	mail:string
+	date:string
+}

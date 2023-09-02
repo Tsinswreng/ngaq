@@ -1,5 +1,5 @@
 
-#20230831191258877
+#20230902212713697
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1117,6 +1117,35 @@ use_preset_vocabulary: true
 撓	nrˁewʔ	
 抄	tsʰrˁews	
 鈔	tsʰrˁew
+牢	rˁu
+枚	mˁəj
+玫	mˁəj
+昧	mˁuts	
+瞞	mˁol	
+滿	mˁolʔ	
+貓	mraw	
+苗	maw
+炎	lam
+鹽	jam
+塩	jam
+閻	jam
+閆	jam
+檐	lam
+糕	kˁu
+皋	kˁu
+羔	kˁu
+槔	kˁu
+餻	kˁu
+欽	kʰrəm
+衾	kʰəm
+典	tˁəlʔ
+奶	nrˁəʔ
+協	ɡjˁep	
+駛	srəs	
+軒	hal	
+憲	hals	
+欣	həl
+炘	həls
 猶	lu	
 有	wuʔ	
 又	wus	
@@ -1162,7 +1191,7 @@ use_preset_vocabulary: true
 猴	ɡʷˁo	
 嗯	kʰˁən	
 嗎	mrˁa	
-嘛	mrˁaʔ	
+嘛	mrˁajs	
 媽	mˁaʔ	
 她	nʰˁaj	
 另	rˁiŋs	
@@ -1346,6 +1375,10 @@ use_preset_vocabulary: true
 功	kˁuŋʔ	
 診	tənʔ	
 珍	tən	
+喵	mAw	
+瞄	maws	
+描	mawʔ	
+叶	kjˁep	
 純	tunʔ	1%
 崔	dzˁuj	1%
 谷	ɡak	1%
@@ -4927,7 +4960,6 @@ use_preset_vocabulary: true
 癲	tˁen	
 齻	tˁen	
 丶	troʔ	
-典	tˁenʔ	
 𦒻	tˁems	
 𦒻	tˁemʔ	
 䍄	tˁemʔ	
@@ -6694,9 +6726,7 @@ use_preset_vocabulary: true
 筻	krˁaŋs	
 槓	krˁoŋs	
 㤒	kˁaw	
-皋	kˁaw	
 高	kˁaw	
-羔	kˁaw	
 䓘	kˁaw	
 髙	kˁaw	
 𣓌	ɡuʔ	
@@ -6708,7 +6738,6 @@ use_preset_vocabulary: true
 睪	lek	
 睪	nrep	
 㟸	kˁaw	
-槔	kˁaw	
 𨝲	kˁaw	
 睾	kˁaw	
 膏	kˁaw	
@@ -6718,10 +6747,8 @@ use_preset_vocabulary: true
 𡼗	kˁaw	
 橰	kˁaw	
 篙	kˁaw	
-糕	kˁaw	
 䚌	kˁaw	
 䆁	kˁaw	
-餻	kˁaw	
 櫜	kˁaw	
 𧢌	kˁaw	
 鼛	kˁaw	
@@ -11641,7 +11668,6 @@ use_preset_vocabulary: true
 蒗	rˁaŋs	
 䕞	rˁaŋs	
 撈	rˁaw	
-牢	rˁaw	
 窂	rˁaw	
 哰	rˁaw	
 㟉	rˁaw	
@@ -13288,7 +13314,6 @@ use_preset_vocabulary: true
 樠	mˁən	
 樠	mʷan	
 鞔	mˁan	
-瞞	mˁan	
 䅼	mrˁan	
 𦔔	mˁan	
 𦔔	mˁans	
@@ -13308,7 +13333,6 @@ use_preset_vocabulary: true
 㛧	mˁamʔ	
 𥇅	mrˁenʔ	
 𩛎	mˁamʔ	
-滿	mˁanʔ	
 蟎	mˁanʔ	
 𥲈	mˁanʔ	
 䜱	mˁan	
@@ -13404,8 +13428,6 @@ use_preset_vocabulary: true
 𪁪	mrˁoŋʔ	
 𪁪	mˁuŋʔ	
 猫	mraw	
-貓	mraw	
-貓	mrˁaw	
 毛	mˁaw	99%
 矛	mu	
 茆	ruʔ	
@@ -13500,9 +13522,7 @@ use_preset_vocabulary: true
 么	mˁək	
 麽	mˁaj	
 没	mˁut	
-玫	mˁə	
 苺	mˁos	
-枚	mˁə	
 㙁	muk	
 莓	mus	
 莓	mˁə	
@@ -13560,8 +13580,6 @@ use_preset_vocabulary: true
 鎂	mrəjʔ	
 沬	mˁats	
 沬	mʷəjs	
-昧	mˁats	
-昧	mˁəs	
 䀛	mrˁəs	
 䀛	mˁat	
 袂	mets	
@@ -13851,14 +13869,9 @@ use_preset_vocabulary: true
 𥻩	mˁens	
 𩈹	mˁens	
 麵	mˁens	
-喵	mraw	
-苗	mraw	
 䖢	mew	
-描	mraw	
-描	mrˁaw	
 媌	mrˁaw	
 媌	mrˁawʔ	
-瞄	mraw	
 鶓	mraw	
 𪃦	mew	
 杪	mewʔ	
@@ -14223,7 +14236,6 @@ use_preset_vocabulary: true
 螚	nˁəs	
 乃	nˁəʔ	
 艿	nəŋ	
-奶	nrˁeʔ	
 氖	nˁəʔ	
 疓	nˁəʔ	
 㚷	nrˁeʔ	
@@ -16322,7 +16334,6 @@ use_preset_vocabulary: true
 𪙌	tsʰˁit	
 侵	tsʰəm	
 𢔀	tsʰəm	
-衾	kʰəm	
 菳	kʰəm	
 𡩁	tsʰin	
 𥍯	tsʰəm	
@@ -18035,8 +18046,6 @@ use_preset_vocabulary: true
 䒨	ziʔ	
 始	ɕəʔ	
 𦳊	ɕiʔ	
-駛	srəs	
-駛	srəʔ	
 𩢲	srəs	
 𩰢	srəs	
 𩰢	srəʔ	
@@ -21306,7 +21315,6 @@ use_preset_vocabulary: true
 錎	ɡrˁems	
 錎	kʰˁəmʔ	
 𤎡	ɡˁams	
-憲	hans	
 𡒓	hˁamʔ	
 豏	ɡrˁemʔ	
 㽉	ɡrˁams	
@@ -21532,7 +21540,6 @@ use_preset_vocabulary: true
 𥌨	mˁet	
 邪	læ	
 邪	zæ	
-協	ɡˁep	
 奊	ɡˁet	
 拹	hap	
 䀘	ɡʷˁe	
@@ -21701,7 +21708,6 @@ use_preset_vocabulary: true
 忻	hən	
 杺	səm	
 昕	hən	
-欣	hən	
 𣐽	tsrinʔ	
 𨊳	səm	
 訢	hən	
@@ -21730,8 +21736,6 @@ use_preset_vocabulary: true
 阠	srin	
 囟	sins	
 𤜢	sins	
-炘	hən	
-炘	həns	
 軐	sˁins	
 衅	hrins	
 脪	həns	
@@ -22046,7 +22050,6 @@ use_preset_vocabulary: true
 吅	zoŋs	
 咺	hʷanʔ	
 宣	son	
-軒	han	
 揎	son	
 萱	hʷan	
 喧	hʷan	
@@ -22468,7 +22471,6 @@ use_preset_vocabulary: true
 妍	ŋˁen	
 岩	ŋrˁam	
 郔	len	
-炎	wrem	
 㿼	ŋˁen	
 挻	ɕen	
 莚	len	
@@ -22484,14 +22486,12 @@ use_preset_vocabulary: true
 硏	ŋˁen	
 𥆊	tsʰons	
 䀽	len	
-閆	lam	
 訮	hˁen	
 𨕐	len	
 喦	nap	
 嵒	ŋrˁem	
 㺂	ŋrˁem	
 綖	len	
-塩	lam	
 楌	ŋrˁan	
 揅	ŋˁen	
 𥓋	ŋˁen	
@@ -22506,8 +22506,6 @@ use_preset_vocabulary: true
 𤡥	ɡrˁanʔ	
 𤡥	ŋrˁen	
 虤	ŋrˁen	
-閻	lam	
-檐	lam	
 𧇱	ŋrˁem	
 䗡	wren	
 顏	ŋrˁan	
@@ -22529,8 +22527,6 @@ use_preset_vocabulary: true
 䦲	lam	
 㘙	ŋrek	
 巖	ŋrˁam	
-鹽	lam	
-鹽	lams	
 𣡞	lam	
 𡆑	ŋrˁam	
 䉷	ŋam	
@@ -23023,7 +23019,6 @@ use_preset_vocabulary: true
 虵	ʑæ	
 壄	læʔ	
 𡐨	læʔ	
-叶	ɡˁep	
 曳	lets	
 曵	lets	
 抴	lets	
@@ -23651,7 +23646,6 @@ use_preset_vocabulary: true
 寅	lin	
 婬	lim	
 䖐	ŋən	
-欽	kʰəm	
 鄞	ŋrin	
 鄞	ŋən	
 𠪚	kʰˁamʔ	

@@ -1,6 +1,6 @@
 require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 import Ut from 'Ut';
-import { Database } from 'sqlite3';
+import { Database,RunResult } from 'sqlite3';
 import * as Tp from 'Type'
 export default class Sqlite{
 	private constructor(){}
@@ -23,6 +23,26 @@ export default class Sqlite{
 			})
 		})
 	}
+
+
+	/**
+	 * 珩sql、返RunResult
+	 * @param db 
+	 * @param sql 
+	 * @param params 
+	 * @returns     {lastID: number,changes: number}
+	 */
+	public static run(db:Database, sql:string, params?:any){
+		return new Promise<RunResult>((s,j)=>{
+			db.run(sql, params, function(err){
+				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+				s(this)
+			})
+		})
+	}
+	/*<>{run(sql: string, callback?: (this: RunResult, err: Error | null) => void): this;}
+	當回調函數ᵗ定義ʸ有this旹、叶回調函數時形參列表不用再寫this。
+	又 箭頭函數不能有己ʰ向ᵗthisˉ引用、故需用傳統函數㕥叶回調函數。此旹乃可其內ʸ用this㕥取RunResult。*/
 
 	public static async toStrTable(db:Database, table:string, column?:string[]){
 		let sql
