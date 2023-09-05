@@ -1,13 +1,22 @@
 //[23.07.09-2232,]
 //const fs = require('fs')
-import {RegexReplacePair} from 'Type';
+//import {RegexReplacePair} from '';
 import * as fs from 'fs';
 import * as path from 'path'
 import now from 'performance-now';
 import _ from 'lodash'
 import moment from 'moment'
 
-type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
+//type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
+
+/**
+ * 正則表達式替換組。
+ */
+export interface RegexReplacePair{
+	regex:RegExp,
+	replacement:string
+}
+
 export default class Ut {
 	
 	private constructor(){}
@@ -46,7 +55,7 @@ export default class Ut {
 
 	
 
-	public static arrAt<T extends any[]>(arr: T, ...indexPath: number[]): ArrayElementType<T> {
+	/* public static arrAt<T extends any[]>(arr: T, ...indexPath: number[]): ArrayElementType<T> {
 		function traverseArray(currentArray: any[], currentIndexPath: number[]): any {
 			if (currentIndexPath.length === 0) {
 				return currentArray as ArrayElementType<T>;
@@ -66,7 +75,7 @@ export default class Ut {
 		}
 
 		return traverseArray(arr, indexPath);
-	}
+	} */
 
 
 	/**
@@ -99,7 +108,7 @@ export default class Ut {
 		if(v === null){
 			throw new Error(v+' '+null)
 		}
-		return v
+		return v as NonNullable<T>
 	}
 
 /* 	public static nonNullableGetArr<T>(v:T): NonNullable<T>{
@@ -302,13 +311,13 @@ export default class Ut {
 	  }
 
 
-	public static sortMapIntoObj<K,V>(map:Map<K,V>, desc=true){
+	public static sortMapIntoObj<K>(map:Map<K,number>, desc=true){
 		let obj = Ut.mapToObjArr(map)
 		if(desc){
-			obj = obj.sort((a,b)=>{return b.v as number - (a.v as number)})
+			obj = obj.sort((a,b)=>{return b.v - (a.v)})
 		}
 		else{
-			obj = obj.sort((a,b)=>{return a.v as number - (b.v as number)})
+			obj = obj.sort((a,b)=>{return a.v - (b.v)})
 		}
 		return obj
 	}
@@ -390,15 +399,6 @@ export default class Ut {
 		}
 		//console.log(result)
 		return result
-	}
-
-	public static writeFile(path:string, data:string){
-		return new Promise((s,j)=>{
-			fs.writeFile(path, data, 'utf-8', (err)=>{
-				if(err){j(err);return}
-				s(0)
-			})
-		})
 	}
 
 	/**
@@ -563,7 +563,7 @@ export default class Ut {
 			const isLastDimension = depth === dims.length - 1;
 	
 			if (isLastDimension) {
-				return Array(currentDimension).fill(fill) as T;
+				return Array(currentDimension).fill(fill) as unknown as T;
 			} else {
 				const subArray: T[] = [];
 				for (let i = 0; i < currentDimension; i++) {

@@ -1,7 +1,31 @@
 require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-import Ut from 'Ut';
+import Ut from '../Ut';
+import {RegexReplacePair} from '../Ut';
 import { Database,RunResult } from 'sqlite3';
-import * as Tp from 'Type'
+
+
+export interface SqliteTableInfo{
+	cid:number
+	name:string
+	type:string
+	notnull: 0|1
+	dflt_value:number|null//默認值
+	pk:0|1 //主鍵
+}
+
+export interface Sqlite_sequence{
+	name:string
+	seq:number
+}
+
+export interface Sqlite_master{
+	type:string
+	name:string
+	tbl_name:string
+	rootpage:number
+	sql:string
+}
+
 export default class Sqlite{
 	private constructor(){}
 
@@ -156,7 +180,7 @@ export default class Sqlite{
 	 */
 	public static async querySqlite_master(db:Database){
 		let sql = `SELECT * FROM sqlite_master`
-		return /* await */ Sqlite.all<Tp.Sqlite_master>(db, sql)
+		return /* await */ Sqlite.all<Sqlite_master>(db, sql)
 	}
 
 	/**
@@ -166,7 +190,7 @@ export default class Sqlite{
 	 */
 	public static async qureySqlite_sequence(db:Database){
 		let sql = `SELECT * FROM sqlite_sequence`
-		return /* await */ Sqlite.all<Tp.Sqlite_sequence>(db, sql)
+		return /* await */ Sqlite.all<Sqlite_sequence>(db, sql)
 	}
 
 	/**
@@ -188,11 +212,11 @@ export default class Sqlite{
 	 * @param tableName 
 	 * @param columnName 若填此則返回
 	 */
-	public static async getTableInfo(db:Database, tableName:string, columnName:string):Promise<Tp.SqliteTableInfo|undefined>
-	public static async getTableInfo(db:Database, tableName:string):Promise<Tp.SqliteTableInfo[]>
+	public static async getTableInfo(db:Database, tableName:string, columnName:string):Promise<SqliteTableInfo|undefined>
+	public static async getTableInfo(db:Database, tableName:string):Promise<SqliteTableInfo[]>
 	public static async getTableInfo(db:Database, tableName:string, columnName?:string){
 		const sql = `PRAGMA table_info('${tableName}')`
-		let prms = Sqlite.all<Tp.SqliteTableInfo>(db,sql)
+		let prms = Sqlite.all<SqliteTableInfo>(db,sql)
 		if(columnName){
 			let infos = await prms
 			for(let i = 0; i < infos.length; i++){
@@ -207,7 +231,7 @@ export default class Sqlite{
 		}
 	}
 
-	public static async serialReplace(db:Database, table:string, column:string, replacementPair:Tp.RegexReplacePair[]){
+	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
 		let sql = `SELECT ${column} AS result FROM '${table}'`
 		let result = await Sqlite.all<{result?:string}>(db, sql)
 		let strArr:string[] = []
@@ -241,7 +265,7 @@ export default class Sqlite{
 		})
 	}
 
-		/**
+	/**
 	 * 手動封裝的TRANSACTION
 	 * @param db 
 	 * @param sql 
@@ -260,9 +284,7 @@ export default class Sqlite{
 					stmt.each(values[i], (err, row:T)=>{
 						if(err){console.error(sql+'\n'+err+'\n');j(err);return}
 						result.push(row)
-						//console.log(row)//t
 					})
-
 				}
 				db.all('COMMIT', (err,rows)=>{
 					if(err){console.error(sql+'\n'+err+'\n');j(err);return}

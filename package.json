@@ -61,8 +61,8 @@
 		"build2": "vue-tsc && vite build",
 		"preview": "../../node_modules/.bin/vite preview",
 		"out": "tsc -p . ",
-		"srv": "node ./src/backend/src/VocaServer.js",
-		"addWords": "node ./src/backend/src/BackupTable.js",
+		"srv": "nodemon ./out/backend/VocaServer.js",
+		"addWords": "node ./out/backend/BackupTable.js",
 		"all": "npm run addWords && npm run build && npm run out && node ./src/backend/src/VocaServer.js "
 	},
 	"paths": {
@@ -75,7 +75,10 @@
 		"@services": "dist/services",
 		"@root": ".",
 		"@bm":"src/backend/src/module/*",
-		"*": "src/shared/*"
+		"*": "src/shared/*",
+		"@shared": "out/shared/"
 	},
-	"註釋": {}
+	"workspaces": ["common/*"],
+	"註釋": "_moduleAliases 不要写* ?"
+	
 }

@@ -1,14 +1,15 @@
-
+//最外層
 {
 	//"extends": "../src/frontend/tsconfig.json",
 	"compilerOptions": {
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
-		"declaration": true,
+		"declaration": false,
 		"types": ["node"],
-		//"outDir": "../backend-out",
-		"outDir": ".",
-		"rootDir": "./",
+		//"outDir": "./backend-out",
+		"outDir": "./out",
+		//"outDir": ".",
+		"rootDir": "./src",
 		"allowJs": false,
 		"target": "ES2020",
 		//"useDefineForClassFields": true,
@@ -36,11 +37,12 @@
 		"esModuleInterop": true, //用import導入commonJs模塊
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"baseUrl": ".",
+		"baseUrl": "./src",
+		//"allowImportingTsExtensions": true,
 		"paths": {
 			"@root/*": ["./"],
-			"*":["src/shared/*"],
-			"@shared/*": ["src/shared/*"], //不能不寫/*
+			//"*":["src/shared/*"],
+			"@shared/*": ["shared/*"], //不能不寫/*
 			"@frontend/*": ["src/frontend/*"],
 			"@backend/*": ["src/backend/*"],
 			"@@": ["src/shared/Util"], //test
@@ -50,7 +52,8 @@
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"exclude": ["src/frontend/*"],
-	"include": ["./config.ts","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"include": [
+		"src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 	//"include": ["/*.ts"],
 	
 	// "include": [

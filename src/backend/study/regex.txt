@@ -1,0 +1,54 @@
+
+[^ ]$	 
+( )+$	$1
+,	
+\.	
+;	
+!	
+\?	
+-	 
+—	 
+
+(^| )([aeiouàèìòù])	$1ʔ$2
+
+ou	U
+òu	ū
+u	ɯ
+ù	ˁə
+
+
+
+
+ng	ŋ
+ts 	θ 
+ts	tsʰ
+tz	ts
+sh	sr
+ch	tsʰr
+j	tsr
+dj	dzr
+([ptk])h	$1ʰ
+c 	ʔ 
+mp	mʔ
+nt	nʔ
+nk	ŋʔ
+rr	ʔr
+ww	ʔw
+yy	ʔj
+y([ ʔs])	J$1
+y	ɫ
+		y	j
+
+à	ā
+è	ē
+ì	ī
+ò	ō
+ù	ū
+
+ ([aeiouāēīōū])	 ʔ$1
+
+J	j
+U	u
+θ	ts
+
+

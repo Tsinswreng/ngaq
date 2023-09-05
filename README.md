@@ -27,6 +27,23 @@ npm run build
 
 ## 記錄
 
+### 2023.09.05-22:40:27 4.0.0
+
+#### feat:
+
+* 始製 `WordB.ts`, `Recite.ts`、㕥処前端ʸ背單詞之理則。
+
+
+#### refactor:
+
+重構了項目結構。
+* 重新分離ts與js。ts在`/src`、js在`/out`。內部ʸ目錄ᵗ結構層次ˋ同。運行旹、㕥moduleAlias処js ᵗ路徑別名、使ᶦ與tsconfig同但指向out/ 。
+* `backend`中取消`src`子目錄。
+* 今尚未能叶 前後端共享自撰ᵗ模塊、各設shared文件夾、欲共享ᵗ模塊ˇ`backend/shared` ᙆ `frontend/shared` ʰ複製、姑㕥代ᶦ。
+
+
+
+
 ### 2023.09.02-21:28:32 3.11.0
 
 #### feat:

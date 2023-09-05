@@ -5,9 +5,10 @@ import './global.css'
 import voca from './App.vue'
 import './assets/main.css';
 import router from './router'
-import Ut from '../../shared/Ut'
+//import VocaData from '@ts/voca/VocaData';
 
 
+//VocaData.fetchWords().then((d)=>{console.log(d)})
 
 
 

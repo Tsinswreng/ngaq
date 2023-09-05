@@ -32,17 +32,17 @@
 */
 
 // 23.06.06-2031 重構
-
+//前端ᵗ tsconfig
 {
-	"extends": "../../tsconfig.json",
+	//"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"rootDir": "./",
+		"rootDir": "../",
 		"outDir": "../../out",
-		"allowJs": false,
+		"allowJs": true,
 		"target": "ES2015",
 		//"useDefineForClassFields": true,
-		//"module": "ESNext",
-		"module": "commonjs", //模塊化ᵗ標準
+		"module": "ESNext",
+		//"module": "commonjs", //模塊化ᵗ標準
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
 		
@@ -67,12 +67,17 @@
 		"paths": {
 			// "@root/*": ["./*"]
 			//"@root": ["."]
-			"*":["../shared/*"],
+			//"*":["../shared/*"],
+			"@shared/*":["shared/*"],
+			"@ts/*":["src/ts/*"],
+			"@components/*":["src/components/*"],
+			"@views/*":["src/views/*"],
 			//"*": "src/shared/*"
 		}
 	},
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,
+	"allowImportingTsExtensions": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 	"references": 

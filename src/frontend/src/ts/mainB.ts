@@ -3,6 +3,8 @@ import OriginUi from "../ts/Ui";
 import VocaB from "../ts/VocaB";
 import { SingleWordB } from "../ts/VocaB";
 import $ from 'jquery'
+import Ut from '@shared/Ut'
+//console.log(Ut)
 
 export class MainB{
 	vocaB = new VocaB();
