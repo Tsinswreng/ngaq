@@ -79,7 +79,8 @@
 	"allowSyntheticDefaultImports": true,
 	"allowImportingTsExtensions": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	//"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"include": ["./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue"],
 	"references": 
 	[
 		{ "path": "./tsconfig.node.json"}

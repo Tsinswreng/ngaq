@@ -11,6 +11,7 @@ export interface IVocaRow{
 	id?:number //從數據庫中取數據時id必不潙空
 	ling:string //數據庫中本無此字段、㕥存表名。
 	wordShape:string
+	pronounce:string
 	mean:string
 	annotation:string //
 	tag:string
@@ -40,18 +41,24 @@ export default class SingleWord2{
 		id?:number,
 		ling:string,
 		wordShape:string,
+		pronounce?:string[],
 		mean:string[],
-		tag:string[],
-		annotation:string[],
+		tag?:string[],
+		annotation?:string[],
 		dates_add:string[]
+		dates_rmb?:string[]
+		dates_fgt?:string[]
 	}){
 		this._id=props.id
 		this._ling=props.ling
 		this._wordShape=props.wordShape
+		this._pronounce = props.pronounce?.slice()??[]
 		this._mean=props.mean.slice()
-		this._annotation=props.annotation.slice()
-		this._tag=props.tag
+		this._annotation=props.annotation?.slice()??[]
+		this._tag=props.tag?.slice()??[]
 		this._dates_add=props.dates_add.slice()
+		this.dates_rmb = props.dates_rmb?.slice()??[]
+		this.dates_fgt = props.dates_fgt?.slice()??[]
 	}
 
 	private _ling:string
@@ -65,6 +72,9 @@ export default class SingleWord2{
 
 	private _mean:string[] = []
 	;public get mean(){return this._mean;};
+
+	private _pronounce:string[] = []
+	;public get pronounce(){return this._pronounce;};
 
 	/**
 	 * 用戶手動畀單詞加之註、在源txt詞表中用<<>>括着ᵗ部。
@@ -85,14 +95,14 @@ export default class SingleWord2{
 		return this.dates_add.length;
 	}
 
-	private _dates_rmb:string[]=[]
+	public _dates_rmb:string[]=[]
 	;public get dates_rmb(){return this._dates_rmb;};;public set dates_rmb(v){this._dates_rmb=v;};
 
 	public get times_rmb(){
 		return this.dates_rmb.length
 	}
 
-	private _dates_fgt:string[] = []
+	public _dates_fgt:string[] = []
 	;public get dates_fgt(){return this._dates_fgt;};;public set dates_fgt(v){this._dates_fgt=v;};
 
 	public get times_fgt(){
@@ -104,13 +114,21 @@ export default class SingleWord2{
 	 * @param sw 
 	 * @returns 
 	 */
-	public static fieldStringfy(sw:SingleWord2[]){
-		const r:IVocaRow[] = []
-		for(const e of sw){
-			const p = this.soloFieldStringfy(e)
-			r.push(p)
+	public static fieldStringfy(sw:SingleWord2):IVocaRow
+	public static fieldStringfy(sw:SingleWord2[]):IVocaRow[]
+
+	public static fieldStringfy(sw:SingleWord2|SingleWord2[]){
+		if(Array.isArray(sw)){
+			const r:IVocaRow[] = []
+			for(const e of sw){
+				const p = this.soloFieldStringfy(e)
+				r.push(p)
+			}
+			return r
+		}else{
+			return this.soloFieldStringfy(sw)
 		}
-		return r
+
 	}
 
 	/**
@@ -118,11 +136,12 @@ export default class SingleWord2{
 	 * @param sw 
 	 * @returns 
 	 */
-	public static soloFieldStringfy(sw:SingleWord2):IVocaRow{
+	private static soloFieldStringfy(sw:SingleWord2):IVocaRow{
 		let result:IVocaRow = {
 			id:sw.id,
 			ling:sw.ling,
 			wordShape:sw.wordShape,
+			pronounce: JSON.stringify(sw.pronounce),
 			mean:JSON.stringify(sw.mean),
 			annotation:JSON.stringify(sw.annotation),
 			tag: JSON.stringify(sw.tag),
@@ -145,25 +164,34 @@ export default class SingleWord2{
 	 * @param obj 
 	 * @returns 
 	 */
-	public static parse(obj:IVocaRow[]){
-		const r:SingleWord2[] = []
-		for(const e of obj){
-			const p = this.soloParse(e)
-			r.push(p)
+	public static parse(obj:IVocaRow):SingleWord2
+	public static parse(obj:IVocaRow[]):SingleWord2[]
+	
+	public static parse(obj:IVocaRow|IVocaRow[]){
+		if(Array.isArray(obj)){
+			const r:SingleWord2[] = []
+			for(const e of obj){
+				const p = this.soloParse(e)
+				r.push(p)
+			}
+			return r
+		}else{
+			return this.soloParse(obj)
 		}
-		return r
+
 	}
 
 	/**
 	 * 把IVocaRow單詞對象轉成SingWord2對象
 	 * @param obj 
 	 */
-	public static soloParse(obj:IVocaRow){
+	private static soloParse(obj:IVocaRow){
 		let sw:SingleWord2
 		try{
 			sw = new SingleWord2({
 				id:obj.id,
 				wordShape:obj.wordShape,
+				pronounce: JSON.parse(obj.pronounce),
 				mean:JSON.parse(obj.mean),
 				annotation:JSON.parse(obj.annotation),
 				tag:JSON.parse(obj.tag) as string[],

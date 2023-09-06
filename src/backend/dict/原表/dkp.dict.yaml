@@ -350,7 +350,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 遙	jaw
 第	lˁis
-睇	lʰˁi
+睇	lʰˁis
 逮	lˁəps
 帝	tˁeks
 併	peŋs
@@ -369,8 +369,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 槍	tsʰaŋ
 乾	ɡˁal
 干	kˁal
-肝	kˁal
-竿	kˁal
+#肝	kˁal
+#竿	kˁal
 汗	ɡˁals
 盤	bˁan
 繁	ban
@@ -1329,6 +1329,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 疆	ɡaŋʔ	# sch
 施	lʰaj
 謹	kəlʔ
+勤	ɡəl
 
 # 欄
 # 攔
@@ -1528,7 +1529,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 馳	draj	# ts	
 顧	kʷrˁas	# ts	
 固	kʰʷˁas	# ts	
-估	kˁalʔ	# ts	
+估	nʰˁaʔ	# ts	
 鄉	nʰaŋ	# ts	
 享	hraŋʔ	# ts	
 洪	ɡoŋ	# ts	
@@ -1788,3 +1789,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 偕	krˁiʔ	# ts
 媂	tˁes	# ts
 崽	səjʔ	# ts
+唄	bej	# ts
+趕	kˁalʔ
+肝	ŋʷˁal	# ts
+竿	tˁal	
+奸	nʰˁan	# ts
+淼	mAwʔ	# ts
+茫	zˁaŋs	# ts
+芒	zˁaŋʔ	# ts
+忙	zˁaŋ	# ts
+繩	mləŋʔ	# ts

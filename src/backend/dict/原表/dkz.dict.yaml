@@ -1,5 +1,5 @@
 
-#20230905225004942
+#20230906225448745
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -298,7 +298,7 @@ use_preset_vocabulary: true
 姚	law
 遙	jaw
 第	lˁis
-睇	lʰˁi
+睇	lʰˁis
 逮	lˁəps
 帝	tˁeks
 併	peŋs
@@ -315,8 +315,6 @@ use_preset_vocabulary: true
 槍	tsʰaŋ
 乾	ɡˁal
 干	kˁal
-肝	kˁal
-竿	kˁal
 汗	ɡˁals
 盤	bˁan
 繁	ban
@@ -1162,6 +1160,7 @@ use_preset_vocabulary: true
 疆	ɡaŋʔ	
 施	lʰaj
 謹	kəlʔ
+勤	ɡəl
 猶	lu	
 有	wuʔ	
 又	wus	
@@ -1179,7 +1178,7 @@ use_preset_vocabulary: true
 馳	draj	
 顧	kʷrˁas	
 固	kʰʷˁas	
-估	kˁalʔ	
+估	nʰˁaʔ	
 鄉	nʰaŋ	
 享	hraŋʔ	
 洪	ɡoŋ	
@@ -1399,6 +1398,16 @@ use_preset_vocabulary: true
 偕	krˁiʔ	
 媂	tˁes	
 崽	səjʔ	
+唄	bej	
+趕	kˁalʔ
+肝	ŋʷˁal	
+竿	tˁal	
+奸	nʰˁan	
+淼	mAwʔ	
+茫	zˁaŋs	
+芒	zˁaŋʔ	
+忙	zˁaŋ	
+繩	mləŋʔ	
 純	tunʔ	1%
 崔	dzˁuj	1%
 谷	ɡak	1%
@@ -2009,8 +2018,6 @@ use_preset_vocabulary: true
 㶔	brˁəs	
 鐾	bˁes	
 鐾	bes	
-唄	brˁats	
-唄	pˁats	
 奔	pˁən	
 奔	pˁəns	
 逩	pˁəns	
@@ -6682,7 +6689,6 @@ use_preset_vocabulary: true
 稈	kˁanʔ	
 𢽤	kˁamʔ	
 感	kˁəmʔ	
-趕	kˁanʔ	
 澉	kˁamʔ	
 澉	tʰˁams	
 橄	kˁamʔ	
@@ -9315,8 +9321,6 @@ use_preset_vocabulary: true
 駱	rˁak	
 幵	kˁen	
 尖	tsem	
-奸	kˁan	
-奸	krˁan	
 戔	dzˁan	
 㦰	tsem	
 肩	kˁen	
@@ -13387,20 +13391,16 @@ use_preset_vocabulary: true
 鏝	mˁans	
 邙	mˁaŋ	
 邙	mʷaŋ	
-芒	mˁaŋ	
-芒	mʷaŋ	
 吂	mˁaŋ	
 吂	mˁaŋs	
 汒	mˁaŋ	
 汒	mʷaŋs	
-忙	mˁaŋ	
 尨	mrˁoŋ	
 杗	mˁaŋ	
 杗	mʷaŋ	
 𥐞	mˁaŋ	
 甿	mrˁeŋ	
 盲	mrˁaŋ	
-茫	mˁaŋ	
 厖	mrˁoŋ	
 𨛌	mˁaŋ	
 𨛌	mʷaŋ	
@@ -13893,7 +13893,6 @@ use_preset_vocabulary: true
 眇	mewʔ	
 秒	mewʔ	
 𦳥	mewʔ	
-淼	mewʔ	
 渺	mewʔ	
 篎	mews	
 篎	mewʔ	
@@ -16382,7 +16381,6 @@ use_preset_vocabulary: true
 禽	ɡəm	
 雂	ɡrem	
 雂	ɡəm	
-勤	ɡən	
 靲	ɡəm	
 𡎸	kənʔ	
 嗪	dzin	
@@ -17943,7 +17941,6 @@ use_preset_vocabulary: true
 澠	minʔ	
 澠	ʑəŋ	
 憴	ʑəŋ	
-繩	ʑəŋ	
 譝	ʑəŋ	
 鱦	ləŋs	
 鱦	mrˁaŋʔ	

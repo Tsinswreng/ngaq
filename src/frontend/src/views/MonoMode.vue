@@ -14,7 +14,7 @@
 	// 使用 onMounted 鉤子在組件掛載後執行異步操作
 	onMounted(async () => {
 		try {
-			w.value = await VocaData.fetchWords();
+			(w.value as any) = await VocaData.fetchWords();
 			console.log(w.value);
 		} catch (error) {
 			console.error('發生錯誤：', error);
