@@ -17,10 +17,9 @@ import moment from 'moment'
 import express from 'express'
 import bodyParser from "body-parser";
 import path from "path";
-import Ut from "@shared/Ut";
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
-Ut
+
 const rootDir:string = require('app-root-path').path
 
 //console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾

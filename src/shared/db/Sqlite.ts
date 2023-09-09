@@ -2,7 +2,7 @@
 
 import {RegexReplacePair} from '@shared/Ut';
 import { Database,RunResult } from 'sqlite3';
-import {objArrToStrArr,serialReplace,$} from 'shared/Ut'
+import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 const Ut = {
 	objArrToStrArr:objArrToStrArr,
 	serialReplace:serialReplace,

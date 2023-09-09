@@ -1,5 +1,5 @@
 
-#20230909223935489
+#20230909235356907
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1233,6 +1233,9 @@ use_preset_vocabulary: true
 括	kʷˁat
 适	kʷˁat
 聒	kʷˁat
+剔	lʰˁek
+踢	lʰˁek
+惕	lʰˁek
 猶	lu	
 有	wuʔ	
 又	wus	
@@ -19255,11 +19258,9 @@ use_preset_vocabulary: true
 𧈜	dˁəŋ	
 𪒿	dˁoŋ	
 𠜓	tʰˁek	
-剔	tʰˁek	
 梯	tʰˁe	
 㔸	tʰˁe	
 𨁃	tʰˁe	
-踢	tʰˁek	
 銻	dˁe	
 䢰	tʰˁek	
 䖙	dˁe	
@@ -19348,7 +19349,6 @@ use_preset_vocabulary: true
 悌	dˁeʔ	
 逷	tʰˁek	
 悐	tʰˁek	
-惕	tʰˁek	
 屜	tʰˁes	
 𢝹	tʰˁes	
 𡲕	tʰˁes	
