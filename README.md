@@ -27,6 +27,19 @@ npm run build
 
 ## 記錄
 
+### 2023-09-09T23:38:19.000+08:00 4.1.0
+
+#### feat:
+
+* 新建`Tempus.ts`、㕥 統一ᵈ存日期。
+* 初ᵈ製˪`WordWindow.vue`, `WordCard.vue`
+
+#### refactor:
+
+* 重構˪日期ˇᵗ存、皆用`Tempus`。
+* 重構`Ut.ts`、每 函數ˋ皆獨立ᵈ導出。
+* 整ᵗ項目ʸ 擬棄用`moment.js` 洏用`day.js`
+
 ### 2023.09.06-23:07:17 4.0.1
 
 #### feat:

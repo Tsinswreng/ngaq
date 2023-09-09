@@ -1,9 +1,12 @@
-import Ut from '@shared/Ut';
 //import _ from 'lodash';
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
-//import moment from 'moment';
-
+//import moment, { Moment } from 'moment';
+import Tempus from '@shared/Tempus';
+import { union } from '@shared/Ut';
+const Ut = {
+	union : union
+};
 /**
  * 㕥約束數據庫中的行
  */
@@ -21,6 +24,13 @@ export interface IVocaRow{
 	dates_rmb:string
 	times_fgt:number
 	dates_fgt:string
+	source:string
+}
+
+export enum WordEvent{
+	ADD=0,
+	RMB=1,
+	FGT=-1
 }
 
 export default class SingleWord2{
@@ -45,9 +55,10 @@ export default class SingleWord2{
 		mean:string[],
 		tag?:string[],
 		annotation?:string[],
-		dates_add:string[]
-		dates_rmb?:string[]
-		dates_fgt?:string[]
+		dates_add:Tempus[] 
+		dates_rmb?:Tempus[]
+		dates_fgt?:Tempus[]
+		source?:string[]
 	}){
 		this._id=props.id
 		this._ling=props.ling
@@ -57,22 +68,35 @@ export default class SingleWord2{
 		this._annotation=props.annotation?.slice()??[]
 		this._tag=props.tag?.slice()??[]
 		this._dates_add=props.dates_add.slice()
-		this.dates_rmb = props.dates_rmb?.slice()??[]
-		this.dates_fgt = props.dates_fgt?.slice()??[]
+		this._dates_rmb = props.dates_rmb?.slice()??[]
+		this._dates_fgt = props.dates_fgt?.slice()??[]
+		this._source = props.source?.slice()??[]
 	}
 
+	/**
+	 * 語言、當與表名一致
+	 */
 	private _ling:string
 	;public get ling(){return this._ling;};
 
 	private _id?:number
 	;public get id(){return this._id;};
 
+	/**
+	 * 詞形
+	 */
 	private _wordShape:string=''
 	;public get wordShape(){return this._wordShape;};
 
+	/**
+	 * 意
+	 */
 	private _mean:string[] = []
 	;public get mean(){return this._mean;};
 
+	/**
+	 * 音
+	 */
 	private _pronounce:string[] = []
 	;public get pronounce(){return this._pronounce;};
 
@@ -82,32 +106,50 @@ export default class SingleWord2{
 	private _annotation:string[] = []
 	;public get annotation(){return this._annotation;};
 
+	/**
+	 * 標籤。用戶ˋ定ᶦ。可潙四六級詞之屬。
+	 */
 	private _tag:string[] = []
 	;public get tag(){return this._tag;};
 
 	/**
-	 * add, rmb, fgt 的dates統一用number數組來存、格式如YYYYMMDDHHmmssSSS
+	 * 
 	 */
-	private _dates_add:string[] = []
+	private _dates_add:Tempus[] = []
 	;public get dates_add(){return this._dates_add;};
 
+	/**
+	 * 添ᵗ次
+	 */
 	;public get times_add(){
 		return this.dates_add.length;
 	}
 
-	public _dates_rmb:string[]=[]
-	;public get dates_rmb(){return this._dates_rmb;};;public set dates_rmb(v){this._dates_rmb=v;};
+	/**
+	 * remember
+	 */
+	public _dates_rmb:Tempus[]=[]
+	;public get dates_rmb(){return this._dates_rmb;};
 
 	public get times_rmb(){
 		return this.dates_rmb.length
 	}
 
-	public _dates_fgt:string[] = []
-	;public get dates_fgt(){return this._dates_fgt;};;public set dates_fgt(v){this._dates_fgt=v;};
+	/**
+	 * forget
+	 */
+	public _dates_fgt:Tempus[] = []
+	;public get dates_fgt(){return this._dates_fgt;};
 
 	public get times_fgt(){
 		return this.dates_fgt.length
 	}
+
+	/**
+	 * ʃᙆ添。可潙書名等。
+	 */
+	private _source:string[] = []
+	;public get source(){return this._source;};
 
 	/**
 	 * 把SingWord2單詞對象數組轉成IVocaRow對象數組
@@ -145,14 +187,25 @@ export default class SingleWord2{
 			mean:JSON.stringify(sw.mean),
 			annotation:JSON.stringify(sw.annotation),
 			tag: JSON.stringify(sw.tag),
-			dates_add:JSON.stringify(sw.dates_add),
+			dates_add:stringfyDateArr(sw.dates_add),
 			times_add:sw.times_add,
-			dates_rmb:JSON.stringify(sw.dates_rmb),
+			dates_rmb:stringfyDateArr(sw.dates_rmb),
 			times_rmb:sw.times_rmb,
-			dates_fgt:JSON.stringify(sw.dates_fgt),
-			times_fgt:sw.times_fgt
+			dates_fgt:stringfyDateArr(sw.dates_fgt),
+			times_fgt:sw.times_fgt,
+			source: JSON.stringify(sw.source)
 		}
 		return result
+
+		function stringfyDateArr(dates:Tempus[]){
+			let strArr:string[] = []
+			for(const d of dates){
+				let t = d.toISO8601()
+				strArr.push(t)
+			}
+			return JSON.stringify(strArr)
+		}
+
 	}
 
 	public toRowObj(){
@@ -166,7 +219,7 @@ export default class SingleWord2{
 	 */
 	public static parse(obj:IVocaRow):SingleWord2
 	public static parse(obj:IVocaRow[]):SingleWord2[]
-	
+
 	public static parse(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
 			const r:SingleWord2[] = []
@@ -196,11 +249,24 @@ export default class SingleWord2{
 				annotation:JSON.parse(obj.annotation),
 				tag:JSON.parse(obj.tag) as string[],
 				ling:obj.ling,
-				dates_add:JSON.parse(obj.dates_add) as string[]
+				dates_add:parseDateJson(obj.dates_add),
+				dates_rmb : parseDateJson(obj.dates_rmb),
+				dates_fgt : parseDateJson(obj.dates_fgt),
+				source: JSON.parse(obj.source) 
 			})
-			sw.dates_rmb = JSON.parse(obj.dates_rmb) as string[]
-			sw.dates_fgt = JSON.parse(obj.dates_fgt) as string[]
+
 			return sw
+
+			function parseDateJson(datesStr:string){
+				let strArr = JSON.parse(datesStr)
+				const dates:Tempus[] = []
+				for(const s of strArr){
+					let d = new Tempus(s)
+					dates.push(d)
+				}
+				return dates
+			}
+
 		}catch(e){
 			console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
 			console.error(`console.error(e)`);console.error(e);console.error(`/console.error(e)`)
@@ -208,9 +274,6 @@ export default class SingleWord2{
 		throw new Error()
 		
 	}
-
-
-	
 
 
 	/**
@@ -235,10 +298,10 @@ export default class SingleWord2{
 			mean:Ut.union(w1.mean, w2.mean),
 			annotation:Ut.union(w1.annotation, w2.annotation),
 			tag:Ut.union(w1.tag, w2.tag),
-			dates_add:Ut.union(w1.dates_add, w2.dates_add)
+			dates_add:Ut.union(w1.dates_add, w2.dates_add),
+			dates_rmb:Ut.union(w1.dates_rmb, w2.dates_rmb),
+			dates_fgt:Ut.union(w1.dates_fgt, w2.dates_fgt),
 		})
-		o.dates_rmb=Ut.union(w1.dates_rmb, w2.dates_rmb)
-		o.dates_fgt=Ut.union(w1.dates_fgt, w2.dates_fgt)
 		return o
 	}
 
@@ -258,6 +321,22 @@ export default class SingleWord2{
 	public static is_properSetOf_(w1:SingleWord2, w2:SingleWord2){
 		
 	}
+
+	public static getSortedDateToEventsMap(sw:SingleWord2){
+
+	}
+
+	/* public static getDateToEventMap(dates:string[], event:WordEvent){
+		const dateFormat='YYYY.MM.DD-HH:mm:ss.SSS'
+		const moments:Moment[] = []
+		for(const d of dates){
+			const m = moment(d, dateFormat);
+			moments.push(m)
+		}
+
+		const map = new Map<string, WordEvent>()
+		
+	} */
 
 /* 
 	public static intersectTwoWord(w1:IVocaRow, w2:IVocaRow){

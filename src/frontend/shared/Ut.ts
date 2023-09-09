@@ -7,7 +7,7 @@ import now from 'performance-now';
 import _ from 'lodash'
 import moment from 'moment'
 
-type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
+//type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
 /**
  * 正則表達式替換組。
@@ -17,6 +17,259 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+export function nng<T>(v:T): NonNullable<T>{
+	if(v === undefined){
+		throw new Error(v+' '+undefined)
+	}
+	if(v === null){
+		throw new Error(v+' '+null)
+	}
+	return v as NonNullable<T>
+}
+
+/**
+ * 集合取並集
+ * @param s1 
+ * @param s2 
+ * @returns 
+ */
+export function union<T>(s1:T[], s2:T[]):T[]
+export function union<T>(s1:Set<T>, s2:Set<T>):Set<T>
+
+export function union<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
+	
+	if(Array.isArray(s1)){
+		return Array.from(new Set([...s1, ...s2]))
+	}else{
+		return new Set([...s1, ...s2])
+	}
+	
+}
+
+/**
+ * 檢 路徑是存在、若存在則原樣返回
+ * @param dir 
+ * @returns 
+ */
+export function pathAt(dir:string):string{
+	if(!fs.existsSync(dir)){
+		console.error('<absoluteDir>')
+		console.error(path.resolve(dir))
+		console.error('</absoluteDir>')
+		throw new Error('file not found')
+	}
+	return dir
+}
+
+
+export function measureTime(fn:()=>void){
+	const startTime = now();
+	fn();
+	const endTime = now();
+	const executionTime = endTime - startTime;
+	return executionTime;
+}
+
+/**
+ * map轉對象數組
+ * @param map 
+ * @returns 
+ */
+export function mapToObjArr<K,V>(map:Map<K,V>){
+	let objArr:{k:K,v:V}[] = []
+	for(const [mk,mv] of map){
+		objArr.push({k:mk, v:mv})
+	}
+	return objArr
+}
+
+/**
+ * 連續正則表達式ᶤ替換
+ * @param str 
+ * @param regexArr 
+ * @param mode 
+ */
+export function serialReplace(str:string, regexArr:string[][], mode:string):string
+export function serialReplace(str:string, regexArr:RegexReplacePair[]):string
+export function serialReplace(str:string[], regexArr:string[][], mode:string, splitter?:string):string[]
+export function serialReplace(str:string[], regexArr:RegexReplacePair[], splitter?:string):string[]
+
+export function serialReplace(str:string|string[], regexArr:string[][]|RegexReplacePair[], mode?:string, splitter=/* String.fromCharCode(30) */'\n'){
+	let regexObjs:RegexReplacePair[] = []
+	if(Array.isArray(regexArr[0])){ //對應string[][]
+		regexObjs = regexStrArrToObjs(regexArr as string[][], mode!)
+	}else{
+		regexObjs = regexArr as RegexReplacePair[]
+	}
+
+	function replaceStr(str:string, serialRegex:RegexReplacePair[]){
+		let result = str+''
+		for(let i = 0; i < serialRegex.length; i++){
+			result = result.replace(serialRegex[i].regex, serialRegex[i].replacement)
+		}
+		return result
+	}
+
+
+	if(typeof(str)==='string'){
+		return replaceStr(str, regexObjs)
+	}else{
+		let joined:string = str.join(splitter)
+		let processed:string = replaceStr(joined, regexObjs)
+		return processed.split(splitter)
+	}
+}
+
+export function regexStrArrToObjs(regexArr:string[][], mode:string){
+	let result:RegexReplacePair[] = []
+	for(let i = 0; i < regexArr.length; i++){
+		if(typeof(regexArr[i][0]) !== 'string'){
+			throw new Error(`regexArr[i][0]) !== 'string'`)
+		}
+		if(typeof(regexArr[i][1]) !== 'string'){
+			regexArr[i][1] = ''
+		}
+		let left = new RegExp(regexArr[i][0], mode)
+		let right:string = getUnescapeStr(regexArr[i][1])
+		let unus:RegexReplacePair = {regex:left, replacement:right}
+		result.push(unus)
+	}
+	return result
+}
+
+
+export function getUnescapeStr(str:string):string{
+	let result:string = str + ''  //
+	
+	result = result.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\r/g, '\r').replace(/\\\\/g, '\\')
+
+	if(result === undefined/*  || result === 'undefined' */){
+		//console.log('undefined')
+		result = ''
+	}
+	//console.log(result)
+	return result
+}
+
+/**
+ * 統計數組中各元素出現的次數
+ * @param arr 
+ * @returns 元素對出現次數的Map
+ */
+export function mapOccurrenceTimes<T>(arr:T[]):Map<T, number>{
+	let result = new Map<T,number>()
+	for(let i = 0; i < arr.length; i++){
+		let k = result.get(arr[i])
+		if(k){
+			let v = k+1
+			result.set(arr[i], v)
+		}else{
+			result.set(arr[i], 1)
+		}
+	}
+	return result
+}
+
+
+/**
+ * 根據對象數組返回map。例如obj是對象數組、數組中每個元素都有字串name和數字id、則(obj, 'name', 'id')則返回 Map<string, number[]>
+ * @param objArr 對象數組
+ * @param fieldAsK 對象中的字段、該字段的值將作爲map的鍵
+ * @param fieldAsV 對象中的字段、該字段的值將作爲map的值數組中的一個元素。皆只支持當前層級的基本數據類型的字段
+ * @returns 
+ */
+export function mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]> {
+	const isValidObj = (obj: any): obj is T => obj != null && typeof obj === 'object' && fieldAsK in obj && fieldAsV in obj;
+	
+	if (!objArr.every(isValidObj)) {
+		throw new Error(`Some objects in the input array are missing '${fieldAsK.toString()}' or '${fieldAsV.toString()}' properties.`);
+	}
+	
+	let result = new Map<T[K], T[V][]>();
+	
+	for (let i = 0; i < objArr.length; i++) {
+		let v = result.get(objArr[i][fieldAsK]);
+		
+		if (v) {
+		v.push(objArr[i][fieldAsV]);
+		result.set(objArr[i][fieldAsK], v);
+		} else {
+		result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]]);
+		}
+	}
+	
+	return result;
+	}
+
+
+export function sortMapIntoObj<K>(map:Map<K,number>, desc=true){
+	let obj = mapToObjArr(map)
+	if(desc){
+		obj = obj.sort((a,b)=>{return b.v - (a.v)})
+	}
+	else{
+		obj = obj.sort((a,b)=>{return a.v - (b.v)})
+	}
+	return obj
+}
+
+export function spliceStr(str: string, start: number, deleteCount: number, replacement: string = ''): string {
+	return str.slice(0, start) + replacement + str.slice(start + deleteCount);
+}
+
+/**
+ * 二維數組轉置
+ * @param arr 
+ * @param insteadOfUndef 原arr中的undefined元素對應在返回值中將被替換成insteadOfUndef。若不填則會調用isLikeMatrix()檢查arr是否合法
+ * @returns 
+ */
+export function transpose<T>(arr:T[][], insteadOfUndef?){
+	if(insteadOfUndef === undefined){
+		if(!Ut.isLikeMatrix(arr)){throw new Error('!Util.isMatrix(arr)')}
+		return _.zip(...arr) as T[][]
+	}else{
+		return tr(arr, insteadOfUndef)
+	}
+	function tr(arr:T[][], insteadOfUndef){
+		let max2DLength = findLongest2DLength(arr)
+		//let result:T[][] = new Array(max2DLength).fill(new Array(arr.length).fill(undefined))
+		let result:T[][] = [[]]
+		//console.log(result)
+		for(let i = 0; i < max2DLength; i++){
+			result[i] = []
+		}
+		
+		for(let i = 0; i < arr.length; i++){
+			//result[i] = []
+			for(let j = 0; j < max2DLength; j++){
+				let cur = arr[i][j]??insteadOfUndef
+				result[j][i] = cur
+			}
+		}
+		return result
+	}
+	function findLongest2DLength(arr:any[][]){
+		let max=arr[0].length
+		for(let i = 0; i < arr.length; i++){
+			if(arr[i].length>max){max=arr[i].length}
+		}
+		return max
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * [2023-09-09T15:34:49.000+08:00,]<>{欲重構、把各函數各自導出。}
+ */
 export default class Ut {
 	
 	private constructor(){}
@@ -55,7 +308,7 @@ export default class Ut {
 
 	
 
-	public static arrAt<T extends any[]>(arr: T, ...indexPath: number[]): ArrayElementType<T> {
+	/* public static arrAt<T extends any[]>(arr: T, ...indexPath: number[]): ArrayElementType<T> {
 		function traverseArray(currentArray: any[], currentIndexPath: number[]): any {
 			if (currentIndexPath.length === 0) {
 				return currentArray as ArrayElementType<T>;
@@ -75,23 +328,9 @@ export default class Ut {
 		}
 
 		return traverseArray(arr, indexPath);
-	}
+	} */
 
 
-	/**
-	 * 檢 路徑是存在、若存在則原樣返回
-	 * @param dir 
-	 * @returns 
-	 */
-	public static pathAt(dir:string):string{
-		if(!fs.existsSync(dir)){
-			console.error('<absoluteDir>')
-			console.error(path.resolve(dir))
-			console.error('</absoluteDir>')
-			throw new Error('file not found')
-		}
-		return dir
-	}
 
 	public static nonFalseGet<T>(v:T){
 
@@ -99,17 +338,6 @@ export default class Ut {
 		return v
 	}
 
-
-	//non nullable get
-	public static nng<T>(v:T): NonNullable<T>{
-		if(v === undefined){
-			throw new Error(v+' '+undefined)
-		}
-		if(v === null){
-			throw new Error(v+' '+null)
-		}
-		return v
-	}
 
 /* 	public static nonNullableGetArr<T>(v:T): NonNullable<T>{
 		if(v === undefined){
@@ -174,7 +402,7 @@ export default class Ut {
 		let result:T[] = []
 		if(checkBound){
 			for(let i = 0; i < indexes.length; i++){
-				result.push(Ut.nng(arr[indexes[i]]))
+				result.push(nng(arr[indexes[i]]))
 			}
 		}else{
 			for(let i = 0; i < indexes.length; i++){
@@ -187,13 +415,7 @@ export default class Ut {
 
 	
 
-	public static measureTime(fn:()=>void){
-		const startTime = now();
-		fn();
-		const endTime = now();
-		const executionTime = endTime - startTime;
-		return executionTime;
-	}
+	
 
 	public static getCombinationsWithRepetition<T>(set: T[], n: number): T[][] {
 		const result: T[][] = [];
@@ -213,37 +435,9 @@ export default class Ut {
 		return result;
 	}
 
-	/**
-	 * 統計數組中各元素出現的次數
-	 * @param arr 
-	 * @returns 元素對出現次數的Map
-	 */
-	public static mapOccurrenceTimes<T>(arr:T[]):Map<T, number>{
-		let result = new Map<T,number>()
-		for(let i = 0; i < arr.length; i++){
-			let k = result.get(arr[i])
-			if(k){
-				let v = k+1
-				result.set(arr[i], v)
-			}else{
-				result.set(arr[i], 1)
-			}
-		}
-		return result
-	}
 
-	/**
-	 * map轉對象數組
-	 * @param map 
-	 * @returns 
-	 */
-	public static mapToObjArr<K,V>(map:Map<K,V>){
-		let objArr:{k:K,v:V}[] = []
-		for(const [mk,mv] of map){
-			objArr.push({k:mk, v:mv})
-		}
-		return objArr
-	}
+
+
 
 	// public static mapArrToIndexes<T,K,V>(objArr:T[], fieldAsK:keyof T, fieldAsV:keyof T){
 	// 	let result = new Map<any, any[]>()
@@ -280,51 +474,7 @@ export default class Ut {
 	// 	return result;
 	// }
 
-	/**
-	 * 根據對象數組返回map。例如obj是對象數組、數組中每個元素都有字串name和數字id、則(obj, 'name', 'id')則返回 Map<string, number[]>
-	 * @param objArr 對象數組
-	 * @param fieldAsK 對象中的字段、該字段的值將作爲map的鍵
-	 * @param fieldAsV 對象中的字段、該字段的值將作爲map的值數組中的一個元素。皆只支持當前層級的基本數據類型的字段
-	 * @returns 
-	 */
-	public static mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]> {
-		const isValidObj = (obj: any): obj is T => obj != null && typeof obj === 'object' && fieldAsK in obj && fieldAsV in obj;
-		
-		if (!objArr.every(isValidObj)) {
-		  throw new Error(`Some objects in the input array are missing '${fieldAsK.toString()}' or '${fieldAsV.toString()}' properties.`);
-		}
-	  
-		let result = new Map<T[K], T[V][]>();
-	  
-		for (let i = 0; i < objArr.length; i++) {
-		  let v = result.get(objArr[i][fieldAsK]);
-		  
-		  if (v) {
-			v.push(objArr[i][fieldAsV]);
-			result.set(objArr[i][fieldAsK], v);
-		  } else {
-			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]]);
-		  }
-		}
-	  
-		return result;
-	  }
 
-
-	public static sortMapIntoObj<K,V>(map:Map<K,V>, desc=true){
-		let obj = Ut.mapToObjArr(map)
-		if(desc){
-			obj = obj.sort((a,b)=>{return b.v as number - (a.v as number)})
-		}
-		else{
-			obj = obj.sort((a,b)=>{return a.v as number - (b.v as number)})
-		}
-		return obj
-	}
-
-	public static nonUndefGetArr<T>(arr:(T|undefined)[]){
-		
-	}
 
 	public static isLikeMatrix(arr: any[][]): boolean {
 		if (!Array.isArray(arr)) {
@@ -343,63 +493,9 @@ export default class Ut {
 	  }
 
 	
-	/**
-	 * 二維數組轉置
-	 * @param arr 
-	 * @param insteadOfUndef 原arr中的undefined元素對應在返回值中將被替換成insteadOfUndef。若不填則會調用isLikeMatrix()檢查arr是否合法
-	 * @returns 
-	 */
-	public static transpose<T>(arr:T[][], insteadOfUndef?){
-		if(insteadOfUndef === undefined){
-			if(!Ut.isLikeMatrix(arr)){throw new Error('!Util.isMatrix(arr)')}
-			return _.zip(...arr) as T[][]
-		}else{
-			return tr(arr, insteadOfUndef)
-		}
-		function tr(arr:T[][], insteadOfUndef){
-			let max2DLength = findLongest2DLength(arr)
-			//let result:T[][] = new Array(max2DLength).fill(new Array(arr.length).fill(undefined))
-			let result:T[][] = [[]]
-			//console.log(result)
-			for(let i = 0; i < max2DLength; i++){
-				result[i] = []
-			}
-			
-			for(let i = 0; i < arr.length; i++){
-				//result[i] = []
-				for(let j = 0; j < max2DLength; j++){
-					let cur = arr[i][j]??insteadOfUndef
-					// let cur = arr[i][j]
-					// if(cur === undefined){
-					// 	cur = insteadOfUndef
-					// }
-					result[j][i] = cur
-				}
-			}
-			return result
-		}
-		function findLongest2DLength(arr:any[][]){
-			let max=arr[0].length
-			for(let i = 0; i < arr.length; i++){
-				if(arr[i].length>max){max=arr[i].length}
-			}
-			return max
-		}
-		
-	}
 
-	public static getUnescapeStr(str:string):string{
-		let result:string = str + ''  //
-		
-		result = result.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\r/g, '\r')
 
-		if(result === undefined/*  || result === 'undefined' */){
-			//console.log('undefined')
-			result = ''
-		}
-		//console.log(result)
-		return result
-	}
+
 
 	/**
 	 * 用一連串正則表達式給字符串作替換
@@ -428,53 +524,6 @@ export default class Ut {
 		// }
 		// return result
 	//}
-
-	public static serialReplace(str:string, regexArr:string[][], mode:string):string
-	public static serialReplace(str:string, regexArr:RegexReplacePair[]):string
-	public static serialReplace(str:string[], regexArr:string[][], mode:string, splitter?:string):string[]
-	public static serialReplace(str:string[], regexArr:RegexReplacePair[], splitter?:string):string[]
-	public static serialReplace(str:string|string[], regexArr:string[][]|RegexReplacePair[], mode?:string, splitter=/* String.fromCharCode(30) */'\n'){
-		let regexObjs:RegexReplacePair[] = []
-		if(Array.isArray(regexArr[0])){ //對應string[][]
-			regexObjs = this.regexStrArrToObjs(regexArr as string[][], mode!)
-		}else{
-			regexObjs = regexArr as RegexReplacePair[]
-		}
-
-		function replaceStr(str:string, serialRegex:RegexReplacePair[]){
-			let result = str+''
-			for(let i = 0; i < serialRegex.length; i++){
-				result = result.replace(serialRegex[i].regex, serialRegex[i].replacement)
-			}
-			return result
-		}
-
-
-		if(typeof(str)==='string'){
-			return replaceStr(str, regexObjs)
-		}else{
-			let joined:string = str.join(splitter)
-			let processed:string = replaceStr(joined, regexObjs)
-			return processed.split(splitter)
-		}
-	}
-
-	public static regexStrArrToObjs(regexArr:string[][], mode:string){
-		let result:RegexReplacePair[] = []
-		for(let i = 0; i < regexArr.length; i++){
-			if(typeof(regexArr[i][0]) !== 'string'){
-				throw new Error(`regexArr[i][0]) !== 'string'`)
-			}
-			if(typeof(regexArr[i][1]) !== 'string'){
-				regexArr[i][1] = ''
-			}
-			let left = new RegExp(regexArr[i][0], mode)
-			let right:string = this.getUnescapeStr(regexArr[i][1])
-			let unus:RegexReplacePair = {regex:left, replacement:right}
-			result.push(unus)
-		}
-		return result
-	}
 
 	/**
 	 * 
@@ -532,9 +581,7 @@ export default class Ut {
 	// }
 
 
-	public static spliceStr(str: string, start: number, deleteCount: number, replacement: string = ''): string {
-		return str.slice(0, start) + replacement + str.slice(start + deleteCount);
-	}
+
 
 	public static printArr(arr:any[], splitter=''){
 		for(let i = 0; i < arr.length; i++){
@@ -563,7 +610,7 @@ export default class Ut {
 			const isLastDimension = depth === dims.length - 1;
 	
 			if (isLastDimension) {
-				return Array(currentDimension).fill(fill) as T;
+				return Array(currentDimension).fill(fill) as unknown as T;
 			} else {
 				const subArray: T[] = [];
 				for (let i = 0; i < currentDimension; i++) {
@@ -680,24 +727,7 @@ export default class Ut {
 		return moment().format('YYYY.MM.DD-HH:mm:ss.SSS')
 	}
 
-	/**
-	 * 集合取並集
-	 * @param s1 
-	 * @param s2 
-	 * @returns 
-	 */
-	public static union<T>(s1:T[], s2:T[]):T[]
-	public static union<T>(s1:Set<T>, s2:Set<T>):Set<T>
 
-	public static union<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
-		
-		if(Array.isArray(s1)){
-			return Array.from(new Set([...s1, ...s2]))
-		}else{
-			return new Set([...s1, ...s2])
-		}
-		
-	}
 
 	/**
 	 * json字串轉數字數組 如 '["1","2.3"]' --> 
@@ -714,7 +744,7 @@ export default class Ut {
 		return numArr
 	}
 
-		/**
+	/**
 	 * 判斷text中的str1與str2是否配對。若str1與str2皆無亦算已配對。
 	 * @param text 
 	 * @param str1 
@@ -798,6 +828,8 @@ export default class Ut {
 		}
 		return true
 	}
+
+
 
 
 }

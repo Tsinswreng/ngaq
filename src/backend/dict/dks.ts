@@ -2,7 +2,7 @@ require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "@shared/Txt"
-import Ut from '@shared/Ut';
+
 import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "./Dict";
 
 //import Txt from "../../shared/Txt";
@@ -18,6 +18,12 @@ import {replacePair as ocToOc3} from './regex/ocToOc3'
 import { replacePair as cangjieRegex } from './regex/cangjie';
 import moment = require('moment');
 import Sqlite from '@shared/db/Sqlite';
+import { transpose, $ ,YYYYMMDDHHmmssSSS} from '@shared/Ut';
+const Ut = {
+	transpose:transpose,
+	nng:$,
+	YYYYMMDDHHmmssSSS
+}
 
 Error.stackTraceLimit = 50;
 

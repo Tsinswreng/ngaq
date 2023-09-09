@@ -48,7 +48,7 @@
 		
 		/* Bundler mode */
 		//"moduleResolution": "bundler",Option 'bundler' can only be used when 'module' is set to 'es2015' or later.
-		//"allowImportingTsExtensions": true,
+		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true, //不生成編譯後ᵗ文件
@@ -68,11 +68,11 @@
 			// "@root/*": ["./*"]
 			//"@root": ["."]
 			//"*":["../shared/*"],
-			"@shared/*":["shared/*"],
+			"@shared/*":["../shared/*"],
 			"@ts/*":["src/ts/*"],
 			"@components/*":["src/components/*"],
 			"@views/*":["src/views/*"],
-			//"*": "src/shared/*"
+			
 		}
 	},
 	"esModuleInterop": true,
@@ -80,7 +80,7 @@
 	"allowImportingTsExtensions": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	//"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-	"include": ["./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue"],
+	"include": ["./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue", "../shared/**/*.ts"],
 	"references": 
 	[
 		{ "path": "./tsconfig.node.json"}

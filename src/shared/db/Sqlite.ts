@@ -1,8 +1,13 @@
-require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-import Ut from '../Ut';
-import {RegexReplacePair} from '../Ut';
-import { Database,RunResult } from 'sqlite3';
+//require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 
+import {RegexReplacePair} from '@shared/Ut';
+import { Database,RunResult } from 'sqlite3';
+import {objArrToStrArr,serialReplace,$} from 'shared/Ut'
+const Ut = {
+	objArrToStrArr:objArrToStrArr,
+	serialReplace:serialReplace,
+	nng:$
+}
 
 export interface SqliteTableInfo{
 	cid:number

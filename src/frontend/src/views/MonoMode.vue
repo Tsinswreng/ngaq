@@ -8,7 +8,10 @@
 	import BtnPanel from '@components/btnPanel.vue';
 	import MainWord from '@components/mainWord.vue';
 	import VocaData from '@ts/voca/VocaData';
-	
+	import Ut from '@shared/Ut'
+
+	console.log()
+
 	let w = ref([]); // 使用 ref 創建 w 作為響應式數據
 	
 	// 使用 onMounted 鉤子在組件掛載後執行異步操作

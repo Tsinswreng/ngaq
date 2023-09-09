@@ -1,14 +1,16 @@
 require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-import Ut from '@shared/Ut';
 import { Database } from 'sqlite3';
-import * as Tp from '@shared/Type'
 import Sqlite from '@shared/db/Sqlite';
 import _ from 'lodash';
 import SingleWord2 from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
-
+import { $ } from '@shared/Ut';
+import Tempus from '@shared/Tempus';
 const rootDir:string = require('app-root-path').path
+const Ut = {
+	nng:$
+}
 
 
 
@@ -30,6 +32,7 @@ export class VocaTableColumnName{
 	public static readonly times_fgt='times_fgt'
 	public static readonly dates_fgt='dates_fgt'
 	public static readonly ling='ling' //此字段ˋ實ˋ不存。
+	public static readonly source='source'
 }
 
 
@@ -82,7 +85,8 @@ export default class VocaSqlite{
 				${c.times_rmb} INTEGER DEFAULT 0,
 				${c.dates_rmb} TEXT NOT NULL,
 				${c.times_fgt} INTEGER DEFAULT 0,
-				${c.dates_fgt} TEXT NOT NULL
+				${c.dates_fgt} TEXT NOT NULL,
+				${c.source} TEXT NOT NULL,
 			);
 			`
 		}
@@ -99,9 +103,9 @@ export default class VocaSqlite{
 	 * @param newName 
 	 * @returns 
 	 */
-	public static backupTable(db:Database, table:string, newName=table+Ut.YYYYMMDDHHmmssSSS()){
+	public static backupTable(db:Database, table:string, newName=table+new Tempus().time){
 		return Sqlite.copyTable(db, newName, table)
-	}public backupTable(newName=this.tableName+Ut.YYYYMMDDHHmmssSSS()){
+	}public backupTable(newName=this.tableName+new Tempus().time){
 		let table:string = this.tableName
 		return VocaSqlite.backupTable(this.db, table, newName)
 	}
@@ -206,7 +210,7 @@ export default class VocaSqlite{
 			// if(SingleWord2.isRowObjEqual(exsistedWord,SingleWord2.fieldStringfy([word])[0])){
 			// 	return
 			// }
-			let oldSw:SingleWord2|null=SingleWord2.soloParse(exsistedWord);exsistedWord=null
+			let oldSw:SingleWord2|null=SingleWord2.parse(exsistedWord);exsistedWord=null
 			//let swToBeAdd:SingleWord2|null=SingleWord2.soloParse(word)
 			let swToBeAdd:SingleWord2|null=word
 			let united:SingleWord2|null=SingleWord2.intersect(oldSw,swToBeAdd);swToBeAdd=null

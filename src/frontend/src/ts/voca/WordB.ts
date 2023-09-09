@@ -1,4 +1,3 @@
-import Ut from "@shared/Ut";
 import SingleWord2 from "@shared/SingleWord2"
 
 
@@ -16,10 +15,15 @@ export default class WordB{
 	private _priority: number = 0
 	;public get priority(){return this._priority;};
 
+	//private _date_eventMap
+
 
 	public calcPrio(){
 		return 0
 	}
 
+	public static getEventSymbols(){
+
+	}
 
 }

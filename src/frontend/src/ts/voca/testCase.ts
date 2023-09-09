@@ -1,5 +1,6 @@
-import { IVocaRow } from "@shared/SingleWord2"
 import SingleWord2 from "@shared/SingleWord2"
+import Tempus from "@shared/Tempus"
+import WordB from "@ts/voca/WordB"
 
 /* const words:IVocaRow[] = 
 [
@@ -13,8 +14,8 @@ import SingleWord2 from "@shared/SingleWord2"
 ]
  */
 
-const words:SingleWord2[] = []
-let w = new SingleWord2(
+const words:WordB[] = []
+let sw = new SingleWord2(
 	{
 		id:1,
 		ling: 'english',
@@ -28,16 +29,20 @@ let w = new SingleWord2(
 		v. 反对；反对说，反对的理由是`],
 		tag: ['CET-4', 'TEM-4'],
 		annotation: ['對象', '反對', '目標'],
-		dates_add: ['2023.09.06-18:22:13.001', '2023.09.06-18:22:26.002'],
-		dates_fgt: ['2023.09.06-18:25:01.003', '2023.09.06-18:25:11.004'],
-		dates_rmb: ['2023.09.06-18:25:27.005', '2023.09.06-18:25:35.006']
+		dates_add: [new Tempus('2023-09-09T16:28:08+08:00'), new Tempus('2023-09-010T16:28:29+08:00')],
+		dates_fgt: [new Tempus('2023-09-11T16:28:53+08:00'), new Tempus('2023-09-12T16:28:29+08:00')],
+		dates_rmb: [new Tempus('2023-09-13T16:28:08+08:00'), new Tempus('2023-09-14T16:28:29+08:00')],
+		source: ['web']
 	}
 )
+
 for(let i = 0; i < 10; i++){
 	//let e:SingleWord2 = JSON.parse(JSON.stringify(w)) //會失 get方法
-	let e = SingleWord2.parse(SingleWord2.fieldStringfy(w))
+	let e = SingleWord2.parse(SingleWord2.fieldStringfy(sw))
 	e['_id']= i
-	words.push(e)
+	e['_wordShape'] += i
+	let wb = new WordB(e)
+	words.push(wb)
 }
 //console.log(words)
 export default words

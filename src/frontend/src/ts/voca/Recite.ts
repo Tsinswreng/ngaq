@@ -1,14 +1,22 @@
-import Ut from '@shared/Ut';
+import Tempus from '@shared/Tempus';
 import WordB from './WordB'
-
-export enum WordEvent{
-	ADD=0,
-	RMB=1,
-	FGT=-1
-}
+import SingleWord2 from '@shared/SingleWord2'
+import { WordEvent } from '@shared/SingleWord2';
 
 export default class Recite{
-	public constructor (){}
+
+	private static instance:Recite;
+
+	public static getInstance(){
+		if(this.instance === undefined){
+			this.instance = new Recite()
+		}
+		return this.instance;
+	}
+
+	private constructor (){}
+
+	public testClickTimes:number = 0
 
 	private _allWords:WordB[] = []
 	;public get allWords(){return this._allWords;};
@@ -20,7 +28,7 @@ export default class Recite{
 	;public get reviewedWords(){return this._reviewedWords;};
 
 	public trigger(word:WordB, event: WordEvent){
-		let d = Ut.YYYYMMDDHHmmssSSS_withSymbol()
+		let d = new Tempus()
 		if(event===WordEvent.RMB){
 			rmb()
 		}else{

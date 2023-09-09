@@ -9,7 +9,6 @@ const rootDir:string = require('app-root-path').path
 //import 'module-alias/register';
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"
-import Ut from '@shared/Ut';
 import {RegexReplacePair} from '@shared/Ut';
 import * as Tp from '@shared/Type'
 import {Duplication,DictDbRow,DictRawConfig, cn} from '@shared/Type'
@@ -18,7 +17,15 @@ import * as DictType from '@shared/Type'
 import _, { sum } from 'lodash';
 import moment from 'moment'
 import Sqlite from '@shared/db/Sqlite';
-
+// import { transpose, nng ,YYYYMMDDHHmmssSSS, YYYYMMDDHHmmss, printArr} from '@shared/Ut';
+// const Ut = {
+// 	transpose:transpose,
+// 	nng:nng,
+// 	YYYYMMDDHHmmss:YYYYMMDDHHmmss,
+// 	YYYYMMDDHHmmssSSS,
+// 	printArr,
+// }
+import * as Ut from '@shared/Ut'
 //const Txt = require('../../../my_modules/Txt')
 //const Txt = require("@my_modules/Txt")
 //const Txt = require('Txt')
@@ -369,11 +376,11 @@ use_preset_vocabulary: true
 			// console.log("尾1 to 尾2:", tail1);
 			// console.log("調1ʔ to 調2:", tone1);
 			
-			result.onset = Ut.nng(first)
-			result.medial = Ut.nng(intro1)
-			result.vowel = Ut.nng(belly1)
-			result.coda = Ut.nng(tail1)
-			result.tone = Ut.nng(tone1)
+			result.onset = Ut.$(first)
+			result.medial = Ut.$(intro1)
+			result.vowel = Ut.$(belly1)
+			result.coda = Ut.$(tail1)
+			result.tone = Ut.$(tone1)
 
 			// result.p2 = Util.nonNullableGet(intro1+belly1)
 			// result.p3 = Util.nonNullableGet(tail1+tone1)
@@ -401,9 +408,9 @@ use_preset_vocabulary: true
 		let result = new ChieneseSyllable()
 		if(match){
 			const [, 首,,介腹,,尾調] = match;
-			result.onset = Ut.nng(首)
-			result.p2 = Ut.nng(介腹)
-			result.p3 = Ut.nng(尾調)
+			result.onset = Ut.$(首)
+			result.p2 = Ut.$(介腹)
+			result.p3 = Ut.$(尾調)
 		}
 		return Object.assign(oldSyllableObj, result)
 	}
@@ -412,7 +419,7 @@ use_preset_vocabulary: true
 		let strArr:string[] = []
 		for(let i = 0; i < syllables.length; i++){
 			try{
-				let e = Ut.nng(syllables[i][field])
+				let e = Ut.$(syllables[i][field])
 				strArr.push(e)
 			}catch(e){
 				console.error(field)
@@ -437,7 +444,7 @@ use_preset_vocabulary: true
 		this._無重複音節數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
 		this._字頻總和 = await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		await this.assign_重碼頻數()
-		this._加頻重碼率 = Ut.nonFalseGet(this.重碼頻數)! / Ut.nonFalseGet(this.字頻總和)!
+		this._加頻重碼率 = Ut.$(this.重碼頻數)! / Ut.$(this.字頻總和)!
 	}
 
 	public 算加頻重碼率(min?:number){
@@ -883,7 +890,7 @@ ${cn.ratio} VARCHAR(64) \
 // 		//IF NOT EXISTS 
 		
 // 		//this.db.exec(testCreat)
-		return DictDb.creatTable(this.db, Ut.nng(tableName))
+		return DictDb.creatTable(this.db, Ut.$(tableName))
 	}
 
 
@@ -891,7 +898,7 @@ ${cn.ratio} VARCHAR(64) \
 
 	public async insert(data:DictDbRow[]|string[][]){
 		return new Promise((s,j)=>{
-			Ut.nonFalseGet(this.db)
+			Ut.$(this.db)
 		let rowObjs:DictDbRow[] = []
 		if(cn.char in data[0] && cn.code in data[0]){
 			rowObjs = data as DictDbRow[]
@@ -919,7 +926,7 @@ VALUES (?,?)`)
 	}
 
 	public async attachFreq(/* essayTableName='essay' */){
-		Ut.nonFalseGet(this.db)
+		Ut.$(this.db)
 		if(!this.tableName){throw new Error('this.tableName')}
 		DictDb.attachFreq(this.db!, this.tableName)
 	}
@@ -987,7 +994,7 @@ VALUES (?,?)`)
 		for(let i = 0; i < strArr.length; i++){
 			//let obj = {columnName.char: Util.arrAt(strArr,i,0), "pronounce": strArr[i][1]??''}
 			//let obj:DictDbRow = {char:Util.arrAt(strArr,i,0), code: strArr[i][1]??''}
-			let obj:DictDbRow = {char:Ut.nonFalseGet(strArr[i][0]), code: strArr[i][1]??''} //[23.07.31-0931,]
+			let obj:DictDbRow = {char:Ut.$(strArr[i][0]), code: strArr[i][1]??''} //[23.07.31-0931,]
 			result.push(obj)
 		}
 		return result
@@ -1215,7 +1222,7 @@ HAVING COUNT(*) > 1;`
 			function getStrToBeQueried(result1:(DictDbRow & {position: number;})[], p1:string, p2:string){
 				let strToBeQueriedForP2:string[] = []
 				for(let i = 0; i < result1.length; i++){
-					let s = Ut.nng(result1[i][columnName])
+					let s = Ut.$(result1[i][columnName])
 					s = Ut.spliceStr(s, result1[i].position, phoneme1.length, phoneme2)
 					strToBeQueriedForP2.push(s)
 				}
@@ -1417,3 +1424,4 @@ function t20230618094140(){
 
 //t20230618094140()
 
+//

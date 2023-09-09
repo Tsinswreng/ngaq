@@ -7,6 +7,49 @@ import Ut from '@shared/Ut';
 import Txt from '@shared/Txt';
 import SingleWord2 from '@shared/SingleWord2';
 import moment from 'moment';
+import Tempus from './Tempus';
+import dayjs from 'dayjs';
+
+
+export interface VocaRawConfig{
+	dbName:string,
+	dbPath:string,
+	url:string,
+	dateFormat:string,
+	dateRegex:string
+	dateBlock: [string, string]
+	wordBlock: [string, string]
+	annotation: [string, string]
+	txtTables:{
+		ling:string,
+		path:string
+	}[]
+}
+
+export const config:VocaRawConfig = {
+	dbName:"voca",
+	dbPath:"",
+	url:"http://127.0.0.1:1919",
+	dateFormat:'YYYY-MM-DDTHH:mm:ss.SSSZ',
+	dateRegex: '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+08:00', //勿寫^...$
+	dateBlock: ['\\{','\\}'],
+	wordBlock: ['\\[{2}','\\]{2}'],
+	annotation: ['<<','>>'],
+	txtTables: 
+	[
+		{
+			ling:"english",
+			path:".\\srcWordList\\eng\\eng.voca"
+		},
+		{
+			ling:"japanese",
+			path:".\\srcWordList\\jap\\jap[20230515112439,].txt"
+		}
+	]
+}
+
+
+
 
 /**
  * 㕥処理txt單詞源表
@@ -43,8 +86,8 @@ export default class VocaRaw2{
 	 * 日期ˋ數據庫ʸ存ᵗ格式
 	 */
 	private _dateFormat:{format:string, regex: RegExp} = {
-		format: 'YYYY.MM.DD-HH:mm:ss.SSS',
-		regex: /^\d{4}\.\d\d\.\d\d\-\d\d:\d\d:\d\d\.\d{3}$/
+		format: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
+		regex: new RegExp('^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$') //用中時區
 	}
 	;public get dateFormat(){return this._dateFormat;};;public set dateFormat(v){this._dateFormat=v;};
 	
@@ -243,7 +286,7 @@ export default class VocaRaw2{
 	 * @param ling 
 	 * @returns 
 	 */
-	private getWordInWordUnit(wordUnit:string, date:string){
+	private getWordInWordUnit(wordUnit:string, date:Tempus){
 		let ling:string=this.ling, annotation:[string, string]=this.config.annotation
 		//VocaRaw2.checkDate(date)
 		wordUnit = wordUnit.trim()
@@ -270,6 +313,7 @@ export default class VocaRaw2{
 			annotation: annotationStr,
 			tag: [],
 			dates_add: [date],
+			source: [],
 		})
 		//console.log(word)//t
 		return word
@@ -303,11 +347,11 @@ export default class VocaRaw2{
 		let config = this.config
 		let ling = this.ling
 		let rawDate = this.getRawDateInDateBlock(dateBlock)
-		let date = this.parseRawDate(rawDate,config.dateFormat)
+		let tempus:Tempus = this.parseRawDate(rawDate,config.dateFormat)
 		let wordUnits = this.getWordUnitsInDateBlock(dateBlock)
 		const words:SingleWord2[] = []
 		for(const e of wordUnits){
-			const word = this.getWordInWordUnit(e, date)
+			const word = this.getWordInWordUnit(e, tempus)
 			words.push(word)
 		}
 		return words
@@ -327,11 +371,11 @@ export default class VocaRaw2{
 		}
 	} */
 
-	public static parseRawDate(oldDate:string, oldFormat:string, neoFormat:string){
-		let d = moment(oldDate, oldFormat).format(neoFormat)
+	public static parseRawDate(oldDate:string, oldFormat:string){
+		let d = new Tempus(oldDate, oldFormat)
 		return d
 	}public parseRawDate(oldDate:string, oldFormat:string){
-		return VocaRaw2.parseRawDate(oldDate, oldFormat, this.dateFormat.format)
+		return VocaRaw2.parseRawDate(oldDate, oldFormat)
 	}
 
 
