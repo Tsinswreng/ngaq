@@ -5,7 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path'
 import now from 'performance-now';
 import _ from 'lodash'
-import moment from 'moment'
+import dayjs from 'dayjs';
+
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
@@ -17,7 +18,7 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
-export function nng<T>(v:T): NonNullable<T>{
+export function $<T>(v:T): NonNullable<T>{
 	if(v === undefined){
 		throw new Error(v+' '+undefined)
 	}
@@ -258,6 +259,100 @@ export function transpose<T>(arr:T[][], insteadOfUndef?){
 	
 }
 
+export function YYYYMMDDHHmmss(){
+	return dayjs().format('YYYYMMDDHHmmss')
+}
+export function YYYYMMDDHHmmssSSS(){
+	return dayjs().format('YYYYMMDDHHmmssSSS')
+}
+
+export function printArr(arr:any[], splitter=''){
+	for(let i = 0; i < arr.length; i++){
+		process.stdout.write(arr[i])
+		process.stdout.write(splitter)
+	}
+}
+
+/**
+ * 求兩數組的笛卡爾積
+ * @param arr1 
+ * @param arr2 
+ * @returns 
+ */
+export function cartesianProduct<A,B>(arr1: A[], arr2: B[]) {
+	const result: [A,B][] = [];
+	for (const item1 of arr1) {
+		for (const item2 of arr2) {
+			result.push([item1, item2]);
+		}
+	}
+	return result
+}
+
+/**
+ * 用集合的標準過濾數組、例如傳入 [[a,a],[a,b],[b,a],[a,c]] 則返回 [[a,b], [a,c]]
+ * @param arr 
+ * @returns 
+ */
+export function filterArrLikeSets<A,B>(arr: [A, B][]){
+	const seenPairs = new Set<string>();
+	const uniquePairs: [A, B][] = [];
+	for (const pair of arr) {
+		if (pair[0] as any !== pair[1]) { //<待叶>{如何在函數中比較兩個泛型類型是否是同一類型}
+			const sortedPair = pair.slice().sort();
+			const pairKey = `${sortedPair[0]},${sortedPair[1]}`;
+		
+			if (!seenPairs.has(pairKey)) {
+				seenPairs.add(pairKey);
+				uniquePairs.push(pair);
+			}
+		}
+	}
+	
+	return uniquePairs;
+}
+
+
+export function getCombinationsWithRepetition<T>(set: T[], n: number): T[][] {
+	const result: T[][] = [];
+  
+	function generateCombinations(currentCombination: T[]/* , currentIndex: number */) {
+		if (currentCombination.length === n) {
+			result.push(currentCombination);
+			return;
+		}
+
+		for (let i = 0; i < set.length; i++) {
+			generateCombinations([...currentCombination, set[i]]/* , i */);
+		}
+	}
+
+	generateCombinations([]/* , 0 */);
+	return result;
+}
+
+export function objArrToStrArr<T>(objArr:T[]){
+	let result:string[][] = []
+	for(let i = 0; i < objArr.length; i++){
+		let line:string[] = []
+		for(let key in objArr[i]){
+			// console.log(`console.log(key)`)
+			// console.log(key)
+			// console.log(`console.log(objArr[i][key])`)
+			// console.log(objArr[i][key])
+			let e:any = objArr[i][key]
+			if(!e){e=''}
+			line.push(e.toString())
+		}
+		result.push(line)
+	}
+	return result
+}
+
+
+
+
+
 
 
 
@@ -402,7 +497,7 @@ export default class Ut {
 		let result:T[] = []
 		if(checkBound){
 			for(let i = 0; i < indexes.length; i++){
-				result.push(nng(arr[indexes[i]]))
+				result.push($(arr[indexes[i]]))
 			}
 		}else{
 			for(let i = 0; i < indexes.length; i++){
@@ -417,23 +512,6 @@ export default class Ut {
 
 	
 
-	public static getCombinationsWithRepetition<T>(set: T[], n: number): T[][] {
-		const result: T[][] = [];
-	  
-		function generateCombinations(currentCombination: T[]/* , currentIndex: number */) {
-			if (currentCombination.length === n) {
-				result.push(currentCombination);
-				return;
-			}
-	
-			for (let i = 0; i < set.length; i++) {
-				generateCombinations([...currentCombination, set[i]]/* , i */);
-			}
-		}
-
-		generateCombinations([]/* , 0 */);
-		return result;
-	}
 
 
 
@@ -583,12 +661,7 @@ export default class Ut {
 
 
 
-	public static printArr(arr:any[], splitter=''){
-		for(let i = 0; i < arr.length; i++){
-			process.stdout.write(arr[i])
-			process.stdout.write(splitter)
-		}
-	}
+
 
 	/**
 	 * AI寫的創建多維數組並填充(試驗)
@@ -649,44 +722,9 @@ export default class Ut {
 		return result;
 	}
 
-	/**
-	 * 求兩數組的笛卡爾積
-	 * @param arr1 
-	 * @param arr2 
-	 * @returns 
-	 */
-	public static cartesianProduct<A,B>(arr1: A[], arr2: B[]) {
-		const result: [A,B][] = [];
-		for (const item1 of arr1) {
-			for (const item2 of arr2) {
-				result.push([item1, item2]);
-			}
-		}
-		return result
-	}
 
-	/**
-	 * 用集合的標準過濾數組、例如傳入 [[a,a],[a,b],[b,a],[a,c]] 則返回 [[a,b], [a,c]]
-	 * @param arr 
-	 * @returns 
-	 */
-	public static filterArrLikeSets<A,B>(arr: [A, B][]){
-		const seenPairs = new Set<string>();
-		const uniquePairs: [A, B][] = [];
-		for (const pair of arr) {
-		  if (pair[0] as any !== pair[1]) { //<待叶>{如何在函數中比較兩個泛型類型是否是同一類型}
-			const sortedPair = pair.slice().sort();
-			const pairKey = `${sortedPair[0]},${sortedPair[1]}`;
-	  
-			if (!seenPairs.has(pairKey)) {
-			  seenPairs.add(pairKey);
-			  uniquePairs.push(pair);
-			}
-		  }
-		}
-	  
-		return uniquePairs;
-	  }
+
+
 
 
 	/**
@@ -699,33 +737,6 @@ export default class Ut {
 		return arr.map((obj) => obj[field]);
 	}
 
-	public static objArrToStrArr<T>(objArr:T[]){
-		let result:string[][] = []
-		for(let i = 0; i < objArr.length; i++){
-			let line:string[] = []
-			for(let key in objArr[i]){
-				// console.log(`console.log(key)`)
-				// console.log(key)
-				// console.log(`console.log(objArr[i][key])`)
-				// console.log(objArr[i][key])
-				let e:any = objArr[i][key]
-				if(!e){e=''}
-				line.push(e.toString())
-			}
-			result.push(line)
-		}
-		return result
-	}
-
-	public static YYYYMMDDHHmmss(){
-		return moment().format('YYYYMMDDHHmmss')
-	}
-	public static YYYYMMDDHHmmssSSS(){
-		return moment().format('YYYYMMDDHHmmssSSS')
-	}
-	public static YYYYMMDDHHmmssSSS_withSymbol(){
-		return moment().format('YYYY.MM.DD-HH:mm:ss.SSS')
-	}
 
 
 
@@ -789,18 +800,18 @@ export default class Ut {
 	 * @param neoFormat 
 	 * @returns 
 	 */
-	public static convertDateFormat(oldDate:string, oldFormat:moment.MomentFormatSpecification, neoFormat:string):string
-	public static convertDateFormat(oldDate:string[], oldFormat:moment.MomentFormatSpecification, neoFormat:string):string[]
+	public static convertDateFormat(oldDate:string, oldFormat:string, neoFormat:string):string
+	public static convertDateFormat(oldDate:string[], oldFormat:string, neoFormat:string):string[]
 
-	public static convertDateFormat(oldDate:string|string[], oldFormat:moment.MomentFormatSpecification, neoFormat:string){
+	public static convertDateFormat(oldDate:string|string[], oldFormat:string, neoFormat:string){
 		if(typeof(oldDate)==='string'){
-			let obj = moment(oldDate, oldFormat)
+			let obj = dayjs(oldDate, oldFormat)
 			return obj.format(neoFormat)
 		}else{
 			let oldDates = oldDate
 			let r:string[] = []
 			for(const oldDate of oldDates){
-				let obj = moment(oldDate, oldFormat)
+				let obj = dayjs(oldDate, oldFormat)
 				r.push(obj.format(neoFormat))
 			}
 			return r

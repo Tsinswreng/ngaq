@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 import MonoMode from './views/MonoMode.vue'
 import Old_MonoMode from "./views/Old_MonoMode.vue";
 import TypingTest from "./views/TypingTest.vue";
-import MultiMode from '@views/MultiMode.vue';
+import MultiMode from '@views/MultiMode/MultiMode.vue';
 
 /* interface Route{
 	path:string

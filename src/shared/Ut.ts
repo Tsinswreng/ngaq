@@ -203,7 +203,7 @@ export function mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], 
 	}
 
 
-export function sortMapIntoObj<K>(map:Map<K,number>, desc=true){
+export function deprecated_sortMapIntoObj<K>(map:Map<K,number>, desc=true){
 	let obj = mapToObjArr(map)
 	if(desc){
 		obj = obj.sort((a,b)=>{return b.v - (a.v)})

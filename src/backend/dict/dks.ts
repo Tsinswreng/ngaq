@@ -19,6 +19,7 @@ import { replacePair as cangjieRegex } from './regex/cangjie';
 import moment = require('moment');
 import Sqlite from '@shared/db/Sqlite';
 import { transpose, $ ,YYYYMMDDHHmmssSSS} from '@shared/Ut';
+import fenbangToIPA from './regex/fenbangToIPA'
 const Ut = {
 	transpose:transpose,
 	nng:$,
@@ -205,6 +206,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		let dkz = Ut.nng(this.dkz)
 		dkz.assign_pronounceArr()
 		//this.dkz.pronounceArr = this.dkz.pronounceArr.map((e)=>{return e.toUpperCase()})
+		dkz.preprocess(fenbangToIPA)
 		dkz.preprocess(ocToOc3)
 		dkz.pronounceArr = dkz.pronounceArr.map((e)=>{return e.toLowerCase()})
 		//console.log(`console.log(this.dkz.rawObj.validBody)`)
@@ -361,4 +363,41 @@ Dks.run()
 辨音規則: 
 若/r/可選(如白沙擬音中標于括號內之r)、則㕥辨。一般ᵈ較常用者無r、或獨體者無r。如 其/ɡə/ 期/ɡrə/。
 諸家上古擬音中、優先採用分者
+
+原旨:
+ʔ: {}
+ŋ: {月玉言}
+tʰ: {土}
+r: {}
+t: {}
+w: {雨囗}
+<u>
+: {}
+kʷ: {}
+o: {}
+p: {方}
+<a>
+:{}
+s:{心山}
+d:{石}
+f:{片}
+ɡ: {}
+h: {}
+k: {工}
+l: {}
+st: {水}
+z: {}
+x: {車? }
+c: {子足走}
+v: {草}
+b: {}
+n: {人女日耳肉}
+m: {門馬木目}
+nʰ: {手}
+mʰ: {火}
+手	nʰ
+水	st
+月	ŋ
+
 */
+//

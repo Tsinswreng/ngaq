@@ -8,6 +8,7 @@
 #空行:^.*\r\n$
 # 筑紫明朝 謬ᵗ字: 痘 慇
 # 艹 tsʰ, 月 ŋ, 言 ŋ-s, 
+# 原旨上古音義符之聲母["ʔ",[""]],["ŋ",["月","玉", "言"]], ["tʰ", ["土"]], ["r", []], ["t", []]
 
 ---
 name: dkp
@@ -309,7 +310,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 劉	mru	# bs
 
 羊	jaŋ
-洋	jaŋ
+#洋	jaŋ
 陽	laŋ
 
 同	lˁoŋ
@@ -492,8 +493,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 咳	kʰˁəks
 專	ton
 
-平	ben
-#評
+平	breŋ
+
+迎	ŋraŋ
 #必
 畢	pik	# ms
 
@@ -566,8 +568,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 弓	kʷəŋ
 躬	kʷəŋ
 洗	sˁəlʔ
-指	kiʔ
-脂	ki
+
 旨	kiʔ
 酯	kiʔ
 澤	lrˁak
@@ -1059,7 +1060,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 核	ɡrˁək
 臺	dˁə
-擡	dˁə
+擡	dˁə	# 此字ˋ簡體模式ʸ仍原狀洏非「抬」
+抬	lʰrə
 
 苔	lˁə
 控	kʰrˁoŋs	# sch
@@ -1426,7 +1428,31 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 剔	lʰˁek
 踢	lʰˁek
 惕	lʰˁek
-
+拾	dəp
+戈	kjˁoj	# ptl
+鍋	kʷˁaj
+渦	kʷˁaj
+蝸	kʷˁaj
+堝	kʷˁaj
+劇	ɡrak
+姬	kjə
+箕	krə
+棘	krək
+籍	dzAk
+藉	dzAks
+疾	dzit
+屐	ɡrek
+亟	kʰəks	# bs
+腹	pruk
+陀	lˁaj
+坨	lˁaj
+駝	lˁaj
+沱	lˁaj
+砣	lˁaj
+拿	nrˁa
+拏	nrˁa
+挐	nrˁa
+怪	kʷrˁəs
 # 欄
 # 攔
 # 瀾
@@ -1450,8 +1476,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 # 止
 # 址
-# 着
-# 著
 
 # 筑
 # 倉
@@ -1526,8 +1550,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 佐
 # 心
 # 芯
-# 覆
-# 複
 
 # 息
 # 熄
@@ -1583,8 +1605,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #郎			
 馳	draj	# ts	
 顧	kʷrˁas	# ts	
-固	kʰʷˁas	# ts	
+固	wˁas	# ts	
 估	nʰˁaʔ	# ts	
+沽	stˁas	# ts
+菇	tsʰˁa	# ts
 鄉	nʰaŋ	# ts	
 享	hraŋʔ	# ts	
 #洪	ɡoŋ	# ts	
@@ -1832,7 +1856,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 捕	bˁaks	# ts
 堵	tʰˁalʔ	# ts
 賭	pAʔ	# ts
-睹	mʰAʔ	# ts
+睹	mAʔ	# ts
 普	pʰˁalʔ	# ts
 譜	pˁalʔ	# ts
 #工	kˁuŋ	# ts
@@ -1910,7 +1934,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 液	stAk	# ts
 腋	ŋAk	# ts
 江	strˁoŋ	# ts
-肛	ŋrˁoŋ	# ts
+肛	nrˁoŋ	# ts
 #杠	mrˁoŋ	# ts
 扛	nʰrˁoŋ	# ts
 缸	pʰˁoŋ	# ts
@@ -1925,3 +1949,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 翔	wAŋ	# ts
 詳	ŋAŋ	# ts
 洋	stAŋ	# ts
+嗜	ɡris	# ts
+逝	tats	# ts
+拭	nʰək	# ts
+軾	kʰlək	# ts
+飾	zək	# ts
+苹	tsʰreŋ	# ts
+評	ŋreŋ	# ts
+指	手iʔ	# ts
+脂	肉i	# ts

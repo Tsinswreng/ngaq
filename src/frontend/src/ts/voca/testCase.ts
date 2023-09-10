@@ -29,7 +29,7 @@ let sw = new SingleWord2(
 		v. 反对；反对说，反对的理由是`],
 		tag: ['CET-4', 'TEM-4'],
 		annotation: ['對象', '反對', '目標'],
-		dates_add: [new Tempus('2023-09-09T16:28:08+08:00'), new Tempus('2023-09-010T16:28:29+08:00')],
+		dates_add: [new Tempus('2023-09-09T16:28:08+08:00'), new Tempus('2023-09-10T16:28:29+08:00')],
 		dates_fgt: [new Tempus('2023-09-11T16:28:53+08:00'), new Tempus('2023-09-12T16:28:29+08:00')],
 		dates_rmb: [new Tempus('2023-09-13T16:28:08+08:00'), new Tempus('2023-09-14T16:28:29+08:00')],
 		source: ['web']

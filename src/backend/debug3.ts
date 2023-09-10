@@ -51,7 +51,7 @@ let my = {
 	mills: 998
 }
 let t = new Tempus('2023-09-09T16:29:33+08:00')
-console.log(t.time)
+//console.log(t.time)
 //let fun = (a,b)=>{return a+b}
 //console.log(v8.serialize(fun).byteLength)
 //console.log(v8.serialize(t).byteLength)
@@ -62,3 +62,58 @@ console.log(t.time)
 
 //console.log(t.format())
 //console.log(dayjs('2023-09-09T10:46:46+08:00'))
+
+
+let sw = new SingleWord2(
+	{
+		id:1,
+		ling: 'english',
+		wordShape: 'object',
+		pronounce: [`ˈɒbdʒɪkt`, `əbˈdʒekt`],
+		mean: [`n.	目标；物体；目的；东西
+		v.	反对；不同意；不赞成；提出…作为反对的理由
+		网络	对象；物件；宾语`, `英 [ˈɒbdʒɪkt; əbˈdʒekt]美 [ˈɑːbdʒekt]
+		CET4 TEM4
+		n. 物体，实物；目的，目标；宾语；（引发某种情感或行为的）对象；客体；（计算机）对象
+		v. 反对；反对说，反对的理由是`],
+		tag: ['CET-4', 'TEM-4'],
+		annotation: ['對象', '反對', '目標'],
+		dates_add: [new Tempus('2023-09-09T16:28:08+08:00'), new Tempus('2023-09-10T16:28:29+08:00')],
+		dates_fgt: [new Tempus('2023-09-11T16:28:53+08:00'), new Tempus('2023-09-12T16:28:29+08:00')],
+		dates_rmb: [new Tempus('2023-09-13T16:28:08+08:00'), new Tempus('2023-09-14T16:28:29+08:00')],
+		source: ['web']
+	}
+)
+console.log(SingleWord2.parse(SingleWord2.fieldStringfy(sw)))
+//console.log(SingleWord2.fieldStringfy(sw))
+
+// function parseDateJson(datesStr:string){
+// 	let strArr = JSON.parse(datesStr)
+// 	console.log(strArr[0])
+// 	const dates:Tempus[] = []
+// 	for(const s of strArr){
+// 		let d = new Tempus(s)
+// 		dates.push(d)
+// 	}
+// 	return dates
+// }
+// function stringfyDateArr(dates:Tempus[]){
+// 	let strArr:string[] = []
+// 	for(const d of dates){
+// 		let t = Tempus.toISO8601(d)
+// 		console.log(`console.log(t)`)
+// 		console.log(t)
+// 		strArr.push(t)
+// 	}
+// 	console.log(`console.log(strArr)`)
+// 	console.log(strArr)
+// 	return JSON.stringify(strArr)
+// }
+// let tempi = [new Tempus('2023-09-10T10:14:01+08:00')]
+// let jsn = stringfyDateArr(tempi)
+// console.log(`console.log(jsn)`)
+// console.log(jsn)
+// let dateJson = '["\\"2023-09-09T08:28:08.000Z\\"","\\"2023-09-10T08:28:29.000Z\\""]'
+// let tempi:Tempus[] = parseDateJson(dateJson)
+// console.log(`console.log(tempi)`)
+// console.log(tempi)

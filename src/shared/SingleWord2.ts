@@ -2,7 +2,8 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { union } from '@shared/Ut';
+import { mapToObjArr, union } from '@shared/Ut';
+import _ from 'lodash';
 const Ut = {
 	union : union
 };
@@ -72,10 +73,11 @@ export default class SingleWord2{
 		this._source = props.source?.slice()??[]
 	}
 
+
 	/**
 	 * 語言、當與表名一致
 	 */
-	private _ling:string
+	private _ling:string = ''
 	;public get ling(){return this._ling;};
 
 	private _id?:number
@@ -151,7 +153,7 @@ export default class SingleWord2{
 	;public get source(){return this._source;};
 
 	/**
-	 * 把SingWord2單詞對象數組轉成IVocaRow對象數組
+	 * 把SingWord2單詞對象轉成IVocaRow對象
 	 * @param sw 
 	 * @returns 
 	 */
@@ -162,53 +164,51 @@ export default class SingleWord2{
 		if(Array.isArray(sw)){
 			const r:IVocaRow[] = []
 			for(const e of sw){
-				const p = this.soloFieldStringfy(e)
+				const p = soloFieldStringfy(e)
 				r.push(p)
 			}
 			return r
 		}else{
-			return this.soloFieldStringfy(sw)
+			return soloFieldStringfy(sw)
 		}
 
-	}
-
-	/**
-	 * 把SingWord2單詞對象轉成IVocaRow對象
-	 * @param sw 
-	 * @returns 
-	 */
-	private static soloFieldStringfy(sw:SingleWord2):IVocaRow{
-		let result:IVocaRow = {
-			id:sw.id,
-			ling:sw.ling,
-			wordShape:sw.wordShape,
-			pronounce: JSON.stringify(sw.pronounce),
-			mean:JSON.stringify(sw.mean),
-			annotation:JSON.stringify(sw.annotation),
-			tag: JSON.stringify(sw.tag),
-			dates_add:stringfyDateArr(sw.dates_add),
-			times_add:sw.times_add,
-			dates_rmb:stringfyDateArr(sw.dates_rmb),
-			times_rmb:sw.times_rmb,
-			dates_fgt:stringfyDateArr(sw.dates_fgt),
-			times_fgt:sw.times_fgt,
-			source: JSON.stringify(sw.source)
-		}
-		return result
-
-		function stringfyDateArr(dates:Tempus[]){
-			let strArr:string[] = []
-			for(const d of dates){
-				let t = Tempus.toISO8601(d)
-				strArr.push(t)
+		function soloFieldStringfy(sw:SingleWord2):IVocaRow{
+			let result:IVocaRow = {
+				id:sw.id,
+				ling:sw.ling,
+				wordShape:sw.wordShape,
+				pronounce: JSON.stringify(sw.pronounce),
+				mean:JSON.stringify(sw.mean),
+				annotation:JSON.stringify(sw.annotation),
+				tag: JSON.stringify(sw.tag),
+				dates_add:stringfyDateArr(sw.dates_add),
+				times_add:sw.times_add,
+				dates_rmb:stringfyDateArr(sw.dates_rmb),
+				times_rmb:sw.times_rmb,
+				dates_fgt:stringfyDateArr(sw.dates_fgt),
+				times_fgt:sw.times_fgt,
+				source: JSON.stringify(sw.source)
 			}
-			return JSON.stringify(strArr)
+			return result
+	
+			function stringfyDateArr(dates:Tempus[]){
+				let strArr:string[] = []
+				for(const d of dates){
+					let t = Tempus.toISO8601(d)
+					strArr.push(t)
+				}
+				return JSON.stringify(strArr)
+			}
+	
 		}
 
 	}
+
+	
+	
 
 	public toRowObj(){
-		return SingleWord2.soloFieldStringfy(this)
+		return SingleWord2.fieldStringfy(this)
 	}
 
 	/**
@@ -223,55 +223,51 @@ export default class SingleWord2{
 		if(Array.isArray(obj)){
 			const r:SingleWord2[] = []
 			for(const e of obj){
-				const p = this.soloParse(e)
+				const p = soloParse(e)
 				r.push(p)
 			}
 			return r
 		}else{
-			return this.soloParse(obj)
+			return soloParse(obj)
 		}
 
-	}
-
-	/**
-	 * 把IVocaRow單詞對象轉成SingWord2對象
-	 * @param obj 
-	 */
-	private static soloParse(obj:IVocaRow){
-		let sw:SingleWord2
-		try{
-			sw = new SingleWord2({
-				id:obj.id,
-				wordShape:obj.wordShape,
-				pronounce: JSON.parse(obj.pronounce),
-				mean:JSON.parse(obj.mean),
-				annotation:JSON.parse(obj.annotation),
-				tag:JSON.parse(obj.tag) as string[],
-				ling:obj.ling,
-				dates_add:parseDateJson(obj.dates_add),
-				dates_rmb : parseDateJson(obj.dates_rmb),
-				dates_fgt : parseDateJson(obj.dates_fgt),
-				source: JSON.parse(obj.source) 
-			})
-
-			return sw
-
-			function parseDateJson(datesStr:string){
-				let strArr = JSON.parse(datesStr)
-				const dates:Tempus[] = []
-				for(const s of strArr){
-					let d = new Tempus(s)
-					dates.push(d)
+		function soloParse(obj:IVocaRow){
+			let sw:SingleWord2
+			try{
+				sw = new SingleWord2({
+					id:obj.id,
+					wordShape:obj.wordShape,
+					pronounce: JSON.parse(obj.pronounce),
+					mean:JSON.parse(obj.mean),
+					annotation:JSON.parse(obj.annotation),
+					tag:JSON.parse(obj.tag) as string[],
+					ling:obj.ling,
+					dates_add:parseDateJson(obj.dates_add),
+					dates_rmb : parseDateJson(obj.dates_rmb),
+					dates_fgt : parseDateJson(obj.dates_fgt),
+					source: JSON.parse(obj.source) 
+				})
+	
+				return sw
+	
+				function parseDateJson(datesStr:string){
+					let strArr = JSON.parse(datesStr)
+					const dates:Tempus[] = []
+					for(const s of strArr){
+						let d = new Tempus(s)
+						dates.push(d)
+					}
+					return dates
 				}
-				return dates
+	
+			}catch(e){
+				console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
+				console.error(`console.error(e)`);console.error(e);console.error(`/console.error(e)`)
 			}
-
-		}catch(e){
-			console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
-			console.error(`console.error(e)`);console.error(e);console.error(`/console.error(e)`)
+			throw new Error()
+			
 		}
-		throw new Error()
-		
+
 	}
 
 
@@ -321,21 +317,29 @@ export default class SingleWord2{
 		
 	}
 
-	public static getSortedDateToEventsMap(sw:SingleWord2){
-
+	/**
+	 * 對 日期-事件 依日期 排序。
+	 * @param sw 
+	 * @returns 
+	 */
+	public static getSortedDateToEventObjs(sw:SingleWord2){
+		const addMap = SingleWord2.getDateToEventMap(sw.dates_add, WordEvent.ADD)
+		const rmbMap = SingleWord2.getDateToEventMap(sw.dates_rmb, WordEvent.ADD)
+		const fgtMap = SingleWord2.getDateToEventMap(sw.dates_fgt, WordEvent.ADD)
+		const merged = new Map([...addMap, ...rmbMap, ...fgtMap])
+		let mapObj = mapToObjArr(merged)
+		mapObj.sort((a,b)=>{return Tempus.diff_mills(a.k,b.k)})
+		return mapObj
 	}
 
-	/* public static getDateToEventMap(dates:string[], event:WordEvent){
-		const dateFormat='YYYY.MM.DD-HH:mm:ss.SSS'
-		const moments:Moment[] = []
-		for(const d of dates){
-			const m = moment(d, dateFormat);
-			moments.push(m)
-		}
 
-		const map = new Map<string, WordEvent>()
-		
-	} */
+	public static getDateToEventMap(dates:Tempus[], event:WordEvent){
+		const map = new Map<Tempus, WordEvent>()
+		for(const d of dates){
+			map.set(d,event)
+		}
+		return map
+	}
 
 /* 
 	public static intersectTwoWord(w1:IVocaRow, w2:IVocaRow){

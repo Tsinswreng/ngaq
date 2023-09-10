@@ -16,7 +16,7 @@ export default class Recite{
 
 	private constructor (){}
 
-	public testClickTimes:number = 0
+	
 
 	private _allWords:WordB[] = []
 	;public get allWords(){return this._allWords;};

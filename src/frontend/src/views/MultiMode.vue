@@ -1,10 +1,13 @@
 <script setup lang="ts">
 //import { ref, defineProps, withContext } from 'vue';
 
-import WordCard from '@components/WordCard.vue'
+import WordCard from 'cpnt/WordCard.vue'
+import WordWindow from 'cpnt/WordWindow.vue'
+import WordInfo from 'cpnt/WordInfo.vue'
+
 import testCase from '@ts/voca/testCase'
 import Recite from '@ts/voca/Recite';
-import WordWindow from '@components/WordWindow.vue'
+
 import WordB from '@ts/voca/WordB';
 import { ref,Ref} from 'vue';
 //import Ut from '../../../shared/Ut'
@@ -32,7 +35,7 @@ function wordWindow_click(data:boolean){
 </script>
 
 <template>
-	<!-- 毋理此報錯 -->
+	<component :is="WordInfo"></component>
 	<component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component>
 	<div class="cards-box">
 		<div v-for="e in testCase">
@@ -45,7 +48,8 @@ function wordWindow_click(data:boolean){
 
 <style scoped>
 	.cards-box{
-		border: solid 1px red;
+		border: solid 1px red; /* test */
+		margin: 0 500px 0 40px;
 	}
 </style>
 

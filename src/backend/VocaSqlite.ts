@@ -226,7 +226,7 @@ export default class VocaSqlite{
 			let copy = SingleWord2.fieldStringfy([word])[0]
 			delete copy.id
 			delete (copy as any).ling
-			let m = Sqlite.getInsertSql(table, copy)
+			let m = Sqlite.getSql_insert(table, copy)
 			return Sqlite.run(db, m[0], m[1])
 		}
 
@@ -244,7 +244,7 @@ export default class VocaSqlite{
 		let copy = SingleWord2.fieldStringfy([word])[0]
 		delete copy.id
 		delete (copy as any).ling
-		let m = Sqlite.getUpdateByIdSql(table, copy, id)
+		let m = Sqlite.getSql_updateById(table, copy, id)
 		return Sqlite.all(db, m[0], m[1])
 	}
 
@@ -287,7 +287,7 @@ export default class VocaSqlite{
 	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
 		let obj = SingleWord2.fieldStringfy([word])[0]
 		delete obj.id; delete (obj as any).ling
-		return Sqlite.getUpdateByIdSql(table, obj, id)
+		return Sqlite.getSql_updateById(table, obj, id)
 	}
 
 	/**
@@ -299,7 +299,7 @@ export default class VocaSqlite{
 	public static getInsertSql(table: string, word:SingleWord2){
 		let obj = SingleWord2.fieldStringfy([word])[0]
 		delete obj.id; delete (obj as any).ling
-		return Sqlite.getInsertSql(table, obj)
+		return Sqlite.getSql_insert(table, obj)
 	}
 
 
