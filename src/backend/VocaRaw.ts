@@ -898,6 +898,17 @@ export default class VocaRaw{
 		}
 		return val
 	}*/
+
+	public static getAllWords(table:string){
+		const db = this.getDbObj()
+		return new Promise((s,j)=>{
+			db.query(`SELECT * FROM ${table}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+				if(error){throw error}
+				s(results)
+			})
+		})
+
+	}
 	
 
 	

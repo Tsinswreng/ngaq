@@ -9,7 +9,7 @@ import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "./Dict"
 
 
 import { partial } from 'lodash';
-import { RegexReplacePair } from '@shared/Ut';
+import { RegexReplacePair, printArr, regexStrArrToObjs } from '@shared/Ut';
 import { DictDbRow, cn } from '@shared/Type';
 import * as fs from 'fs'
 const rootDir:string = require('app-root-path').path
@@ -133,9 +133,20 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 	getCharOfDkp(){
 		let dkp = this.dkp
+		dkp.assign_pronounceArr()
+		let 義聲 = this.get聲符and義符replacePair()
+		dkp.preprocess(義聲[0])
+		dkp.preprocess(義聲[1])
+		dkp.rawObj.validBody = dkp.recoverBody()
+		//dkp.preprocess(this.get聲符and義符replacePair())//t
+		
 		//console.log(`console.log(dkp.rawObj.validBody)`)
 		//console.log(dkp.rawObj.validBody)
 		let charSet = Ut.transpose(dkp.rawObj.validBody, '')[0]
+		//let recovered = dkp.recoverBody()
+		//for(const e of recovered){console.log(e)}//t
+		//let charSet = Ut.transpose(recovered, '')[0]
+		
 		//charSet = Array.from(new Set([...charSet]))
 		//console.log(`console.log(charSet)`)
 		//Util.printArr(charSet)
@@ -201,12 +212,60 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		fs.writeFileSync(Dks.dkzPath, str)
 	}
 
+	get聲符and義符replacePair(){
+		//const 聲符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/聲符.txt'), 'utf-8')
+		//const 義符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/義符.txt'), 'utf-8')
+
+
+		// function str轉RegexReplacePair(str:string){
+		// 	const strArr = Txt.getTableFromStr(str)
+		// 	const regexReplacePair:RegexReplacePair[] = []
+		// 	for(const e of strArr){
+		// 		const r:RegexReplacePair = {regex:new RegExp(e[0], 'gm'), replacement: e[1]??''}
+		// 		regexReplacePair.push(r)
+		// 	}
+		// 	return regexReplacePair
+		// }
+
+		// const 義符RegexReplacePair = str轉RegexReplacePair(義符str)
+		// const 聲符RegexReplacePair = str轉RegexReplacePair(聲符str)
+		const 義符strArr = this.get義符strArr()
+		const 聲符strArr = this.get聲符strArr()
+		
+		return [regexStrArrToObjs(義符strArr, 'gm'),regexStrArrToObjs(聲符strArr, 'gm')]
+	}
+
+	get聲符strArr(){
+		const 聲符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/聲符.txt'), 'utf-8')
+		let strArr = Txt.getTableFromStr(聲符str)
+		for(let i = 0; i < strArr.length; i++){
+			if(strArr[i].length === 2){
+				strArr[i][0] = strArr[i][0]+'$'
+			}
+		}
+		return strArr
+	}
+
+	get義符strArr(){
+		const 義符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/義符.txt'), 'utf-8')
+		let strArr = Txt.getTableFromStr(義符str)
+		for(let i = 0; i < strArr.length; i++){
+			if(strArr[i].length === 2){
+				strArr[i][0] = '^'+strArr[i][0]
+			}
+		}
+		return strArr
+	}
+
 	updateDks(){
 		this.assign_dkz()
 		let dkz = Ut.nng(this.dkz)
 		dkz.assign_pronounceArr()
 		//this.dkz.pronounceArr = this.dkz.pronounceArr.map((e)=>{return e.toUpperCase()})
-		dkz.preprocess(fenbangToIPA)
+		// let 義聲 = this.get聲符and義符replacePair()
+		// dkz.preprocess(義聲[0])
+		// dkz.preprocess(義聲[1])
+		//for(const e of 聲義){console.log(e)}//t
 		dkz.preprocess(ocToOc3)
 		dkz.pronounceArr = dkz.pronounceArr.map((e)=>{return e.toLowerCase()})
 		//console.log(`console.log(this.dkz.rawObj.validBody)`)
@@ -258,7 +317,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		let dks = new Dict({rawObj:new DictRaw({srcPath:Dks.dksPath})})
 		await AttachCangjie.run(dks, this.輔助碼dictPath, Dict.getSimpleHead(Dks.輔助碼dictName)).then(()=>{console.log(`輔助碼完成`)})
 		// 改left join
-		o.copyDkp()
+		o.copyDkp(); fs.copyFileSync(Dks.dkzPath, "D:\\Program Files\\Rime\\User_Data\\dkz.dict.yaml")
 		o.countRate()
 		o.dropTempTable().then()
 	}
@@ -364,15 +423,17 @@ Dks.run()
 若/r/可選(如白沙擬音中標于括號內之r)、則㕥辨。一般ᵈ較常用者無r、或獨體者無r。如 其/ɡə/ 期/ɡrə/。
 諸家上古擬音中、優先採用分者
 
+
+
 原旨:
 ʔ: {}
-ŋ: {月玉言}
+ŋ: {玉(王)言广(儼)}
 tʰ: {土}
 r: {}
-t: {}
-w: {雨囗}
+t: {竹}
+w: {雨囗羽}
 <u>
-: {}
+ŋʷ: {牛}
 kʷ: {}
 o: {}
 p: {方}
@@ -383,21 +444,23 @@ d:{石}
 f:{片}
 ɡ: {}
 h: {}
-k: {工}
-l: {}
+k: {工金巾}
+l: {田}
 st: {水}
 z: {}
 x: {車? }
 c: {子足走}
 v: {草}
 b: {}
-n: {人女日耳肉}
+n: {人女日耳肉(月)}
 m: {門馬木目}
 nʰ: {手}
 mʰ: {火}
 手	nʰ
 水	st
 月	ŋ
+
+
 
 */
 //

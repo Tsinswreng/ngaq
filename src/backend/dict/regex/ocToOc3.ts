@@ -1,3 +1,4 @@
+//	\{regex:/(.*?)/gm, replacement:'(.*?)'\},?	- xform/$1/$2/
 import { RegexReplacePair } from "@shared/Ut"
 export let replacePair:RegexReplacePair[] = [
 	//{regex:/waj/gm, replacement:'test'},
@@ -36,6 +37,9 @@ export let replacePair:RegexReplacePair[] = [
 
 	{regex:/r(æ|A)/gm, replacement:'腹一H腹二'},
 	{regex:/(æ|A)/gm, replacement:'腹一N腹二'},
+
+	//{regex:/(ɔ|O)/gm, replacement:'腹一,腹二'},
+	//{regex:/r(ɔ|O)/gm, replacement:'腹一.腹二'},
 
 	
 

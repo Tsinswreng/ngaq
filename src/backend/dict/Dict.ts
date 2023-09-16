@@ -444,7 +444,7 @@ use_preset_vocabulary: true
 		this._無重複音節數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
 		this._字頻總和 = await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		await this.assign_重碼頻數()
-		this._加頻重碼率 = Ut.$(this.重碼頻數)! / Ut.$(this.字頻總和)!
+		this._加頻重碼率 = Ut.$(this.重碼頻數, 'this.重碼頻數')! / Ut.$(this.字頻總和, 'this.字頻總和')!
 	}
 
 	public 算加頻重碼率(min?:number){
@@ -482,7 +482,7 @@ use_preset_vocabulary: true
 		let 字 = tr[0]
 		let 浮點頻 = tr[2]
 		//console.log([字, pronounceArr, 浮點頻])//t
-		let 復原
+		let 復原:string[][]
 		if(浮點頻){
 			復原 = Ut.transpose([字, pronounceArr, 浮點頻])
 		}else{

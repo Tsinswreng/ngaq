@@ -31,7 +31,7 @@ export class VocaTableColumnName{
 	public static readonly dates_rmb='dates_rmb'
 	public static readonly times_fgt='times_fgt'
 	public static readonly dates_fgt='dates_fgt'
-	public static readonly ling='ling' //此字段ˋ實ˋ不存。
+	public static readonly table='table' //此字段ˋ實ˋ不存。
 	public static readonly source='source'
 }
 
@@ -43,7 +43,7 @@ export default class VocaSqlite{
 	constructor(props:{
 		_dbName?:string,
 		_dbPath?:string,
-		_tableName:string
+		_tableName?:string
 	}){
 		Object.assign(this, props)
 	}
@@ -69,11 +69,15 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	public static creatTable(db:Database, table:string){
+	public static creatTable(db:Database, table:string, ifNotExists=false){
 		function getSql(table:string){
+			let isExist = ''
+			if(ifNotExists){
+				isExist = 'IF NOT EXISTS'
+			}
 			let c = VocaTableColumnName
 			return `
-			CREATE TABLE '${table}' (
+			CREATE TABLE ${isExist} '${table}' (
 				${c.id} INTEGER PRIMARY KEY,
 				${c.wordShape} TEXT NOT NULL,
 				${c.pronounce} TEXT NOT NULL,
@@ -86,14 +90,14 @@ export default class VocaSqlite{
 				${c.dates_rmb} TEXT NOT NULL,
 				${c.times_fgt} INTEGER DEFAULT 0,
 				${c.dates_fgt} TEXT NOT NULL,
-				${c.source} TEXT NOT NULL,
+				${c.source} TEXT NOT NULL
 			);
 			`
 		}
 		return Sqlite.all(db, getSql(table))
-	}public creatTable(){
+	}public creatTable(ifNotExists=false){
 		let table:string = this.tableName
-		return VocaSqlite.creatTable(this.db, table)
+		return VocaSqlite.creatTable(this.db, table, ifNotExists)
 	}
 
 	/**
@@ -181,7 +185,7 @@ export default class VocaSqlite{
 	 * @param ling 
 	 */
 	public static attachLing(words:IVocaRow[], ling:string){
-		let lingField = VocaTableColumnName.ling
+		let lingField = VocaTableColumnName.table
 		for(let i = 0; i < words.length; i++){
 			words[i][lingField] = ling
 		}
@@ -223,10 +227,7 @@ export default class VocaSqlite{
 		}
 
 		function initAddOneWord(db:Database, table:string, word:SingleWord2){
-			let copy = SingleWord2.fieldStringfy([word])[0]
-			delete copy.id
-			delete (copy as any).ling
-			let m = Sqlite.getSql_insert(table, copy)
+			let m = VocaSqlite.getInsertSql(table, word)
 			return Sqlite.run(db, m[0], m[1])
 		}
 
@@ -241,24 +242,27 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	private static setWordByOneId(db:Database, table:string, word:SingleWord2, id:number){
-		let copy = SingleWord2.fieldStringfy([word])[0]
-		delete copy.id
-		delete (copy as any).ling
-		let m = Sqlite.getSql_updateById(table, copy, id)
+		let m = VocaSqlite.getUpdateByIdSql(table, word, id)
 		return Sqlite.all(db, m[0], m[1])
 	}
 
 
 	/**
 	 * 用transaction批量ᵈ由id蔿行重設詞。
+	 * 緣 取sql語句之函數 需傳SingleWord2故形參擇此。
 	 * @param db 
 	 * @param table 
 	 * @param words 
 	 * @param ids 
 	 * @returns 
 	 */
-	public static setWordsByIds(db:Database, table:string, words:SingleWord2[], ids:number[]){
-
+	public static setWordsByIds(db:Database, table:string, words:SingleWord2[], ids?:number[]){
+		if(ids === undefined){
+			ids = []
+			for(const w of words){
+				ids.push($(w.id))
+			}
+		}
 		if(words.length !== ids.length){
 			throw new Error(`words.length !== ids.length`)
 		}
@@ -277,8 +281,10 @@ export default class VocaSqlite{
 		return VocaSqlite.setWordsByIds(this.db, table, words, ids)
 	}
 
+
 	/**
 	 * 由詞ˉ對象生成 改ᵗsql語句。
+	 * 緣需複製值ⁿ得IVocaRow對象、故形參ᵘ擇SingleWord2。
 	 * @param table 
 	 * @param word 
 	 * @param id 
@@ -286,7 +292,7 @@ export default class VocaSqlite{
 	 */
 	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
 		let obj = SingleWord2.fieldStringfy([word])[0]
-		delete obj.id; delete (obj as any).ling
+		delete obj.id; delete (obj as any)[VocaTableColumnName.table]
 		return Sqlite.getSql_updateById(table, obj, id)
 	}
 
@@ -298,7 +304,7 @@ export default class VocaSqlite{
 	 */
 	public static getInsertSql(table: string, word:SingleWord2){
 		let obj = SingleWord2.fieldStringfy([word])[0]
-		delete obj.id; delete (obj as any).ling
+		delete obj.id; delete ((obj as any)[VocaTableColumnName.table])
 		return Sqlite.getSql_insert(table, obj)
 	}
 
@@ -314,7 +320,43 @@ export default class VocaSqlite{
 		return VocaSqlite.getAllWords(this.db, table)
 	}
 
-	
+
+	/**
+	 * 數據庫ʰ單詞ˇ批量ᵈ依表名ⁿ存。
+	 * @param db 
+	 * @param sws 
+	 * @param table 
+	 * @returns 
+	 */
+	//public static saveWords(db:Database, sws:SingleWord2[], table:string):Promise<unknown[]>
+	public static saveWords(db:Database, sws:SingleWord2[]){
+		const tableToWordsMap = classify(sws)
+		const prms:Promise<unknown>[] = []
+		for(const [table,words] of tableToWordsMap){
+			const pr = this.setWordsByIds(db, table, words)
+			prms.push(pr)
+		}
+		return prms		
+		/**
+		 * 
+		 * @param sws 依table對SingleWord2數組分類
+		 * @returns 
+		 */
+		function classify(sws:SingleWord2[]){
+			const tableToWordsMap = new Map<string, SingleWord2[]>()
+			for(const wordToAdd of sws){
+				const innerWords = tableToWordsMap.get(wordToAdd.table)
+				if(innerWords === void 0){
+					tableToWordsMap.set(wordToAdd.table, [wordToAdd])
+				}else{
+					innerWords.push(wordToAdd)
+					tableToWordsMap.set(wordToAdd.table, innerWords)
+				}
+			}
+			return tableToWordsMap
+		}
+	}
+
 
 }
 

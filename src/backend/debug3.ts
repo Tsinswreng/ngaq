@@ -27,6 +27,9 @@ import dayjs from 'dayjs'
 //import * as inspector from 'node:inspector/promises';
 import v8 from 'v8'
 import Tempus from "@shared/Tempus";
+import { $, nug } from "@shared/Ut";
+const print = console.log
+
 let a:Moment = moment()
 //console.log(a.format('HH:MM:ss.SSS'))
 //console.log(JSON.stringify(a))
@@ -67,7 +70,7 @@ let t = new Tempus('2023-09-09T16:29:33+08:00')
 let sw = new SingleWord2(
 	{
 		id:1,
-		ling: 'english',
+		table: 'english',
 		wordShape: 'object',
 		pronounce: [`ˈɒbdʒɪkt`, `əbˈdʒekt`],
 		mean: [`n.	目标；物体；目的；东西
@@ -84,7 +87,7 @@ let sw = new SingleWord2(
 		source: ['web']
 	}
 )
-console.log(SingleWord2.parse(SingleWord2.fieldStringfy(sw)))
+//console.log(SingleWord2.parse(SingleWord2.fieldStringfy(sw)))
 //console.log(SingleWord2.fieldStringfy(sw))
 
 // function parseDateJson(datesStr:string){
@@ -117,3 +120,37 @@ console.log(SingleWord2.parse(SingleWord2.fieldStringfy(sw)))
 // let tempi:Tempus[] = parseDateJson(dateJson)
 // console.log(`console.log(tempi)`)
 // console.log(tempi)
+
+
+class System{
+	static out = {
+		println:(v?)=>{console.log(v)}
+	}
+}
+
+export default class Main{
+	public static main(args?:string[]):void{
+		System.out.println("Hello world");
+	}
+}
+
+import sortedIndex from 'lodash/sortedIndex';
+
+const sortedArray = [1, 3, 5, 7, 9];
+const insertNumber = 10;
+
+const insertPosition = sortedIndex(sortedArray, insertNumber);
+
+console.log("Insert position:", insertPosition); // 输出 2，因为 4 应该插入到索引 2 处
+
+function sa(){
+	var undefined = 1
+	console.log(undefined === undefined)
+	console.log(undefined === void 0)
+	//var null = 2
+}
+sa()
+
+let e:undefined
+let bs:number|undefined
+bs = e

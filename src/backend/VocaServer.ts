@@ -8,15 +8,20 @@
 require('module-alias/register');
 import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 import VocaSqlite from "./VocaSqlite";
+
 //import Util from "../../shared/Util";
 //import Ut from "Ut"
 //const moment = require('moment')
-import moment from 'moment'
+
 //const cors = require('cors')
 //const express = require('express')
 import express from 'express'
 import bodyParser from "body-parser";
 import path from "path";
+import dayjs from "dayjs";
+import Tempus from "@shared/Tempus";
+import SingleWord2 from "@shared/SingleWord2";
+import { IVocaRow } from "@shared/SingleWord2";
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
 
@@ -35,6 +40,7 @@ jap.tableName = 'jap'*/
 export default class VocaServer{
 	static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	static app = express();
+	public static sqltDbObj = new VocaSqlite({}).db
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static main(){
@@ -60,7 +66,7 @@ export default class VocaServer{
 	
 
 
-		VocaServer.app.get('/eng', (req:any, res:any)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
+		VocaServer.app.get('/eng', (req, res)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
 			const db = VocaServer.vocaObjs[0].getDbConnection()
 			db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				//console.log('results:'+results)//RowDataPacket
@@ -108,18 +114,30 @@ export default class VocaServer{
 			// let path = req.path
 			// console.log('path:'+path)
 			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(rootDir+'/out/frontend/dist/index.html')
+			//res.sendFile(rootDir+'/out/frontend/dist/index.html')
+			res.send(`<h1>404</h1>`)
 
 			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
 			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
 			//res.send('<h1>1919</h1>')
 		})
-		VocaServer.app.post('/post', (req:any, res:any)=>{
+		VocaServer.app.post('/post', (req, res)=>{
 			console.log(req.body)
 			VocaRaw.updateDb(req.body)
 			//VocaRaw.updateDb(JSON.parse(req.body))
-			const timeNow = moment().format(`YYYY.MM.DD-HH:mm:ss`)
+			const timeNow = dayjs().format(`YYYY.MM.DD-HH:mm:ss`)
 			res.send('成功接收到数据'+timeNow)
+		})
+
+		VocaServer.app.post('/saveWords',(req,res)=>{
+			const nunc = new Tempus()
+			console.log(req.path+' '+Tempus.format(nunc))
+			console.log(req.body)
+			//let rows:IVocaRow[] = JSON.parse(req.body)
+			let sws:SingleWord2[] = SingleWord2.parse(req.body as IVocaRow[])
+			VocaSqlite.saveWords(this.sqltDbObj, sws)
+			res.send('receive successfully'+nunc.time)
+			
 		})
 		
 		

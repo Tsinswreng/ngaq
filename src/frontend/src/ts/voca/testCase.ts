@@ -18,7 +18,7 @@ const words:WordB[] = []
 let sw = new SingleWord2(
 	{
 		id:1,
-		ling: 'english',
+		table: 'english',
 		wordShape: 'object',
 		pronounce: [`ˈɒbdʒɪkt`, `əbˈdʒekt`],
 		mean: [`n.	目标；物体；目的；东西

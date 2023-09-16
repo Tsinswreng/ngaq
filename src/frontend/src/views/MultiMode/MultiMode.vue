@@ -2,52 +2,91 @@
 //import { ref, defineProps, withContext } from 'vue';
 
 import WordCard from '@views/MultiMode/cpnt/WordCard.vue'
-import testCase from '@ts/voca/testCase'
-import Recite from '@ts/voca/Recite';
 import WordWindow from '@views/MultiMode/cpnt/WordWindow.vue'
+import WordInfo from './cpnt/WordInfo.vue';
+import CtrlPanel from './cpnt/CtrlPanel.vue'
+//
+
+import Status from './Status';
+import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
-import { ref,Ref} from 'vue';
+import Log from '@shared/Log';
+import { $ } from '@shared/Ut';
+const l = new Log()
+import { ref,Ref, onMounted } from 'vue';
+import VocaClient from '@ts/voca/VocaClient';
+import SingleWord2 from '@shared/SingleWord2';
 //import Ut from '../../../shared/Ut'
 
 //const { words } = defineProps(['words']);
+
 const recite = Recite.getInstance();
+const status = Status.getInstance()
 
-const isShowWordWindow = ref(false);
-let returnedWord = testCase[0]
-//const returnedWordRef = ref<WordB>(testWordB);
+const isShowWordInfo = status.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
+const isSaved = ref(true)
+
+const isShowWordWindow = status.isShowWordWindow
+const isShowCardBox = status.isShowCardBox
+let returnedWord:WordB = status.curWord
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
-
-//const wordInWindow = returnedWord.value
-
-function handleChildClick(data:WordB){
-	returnedWord = data;
-	isShowWordWindow.value=true
-
-	//show()
+function wordCardClick(data:WordB){
+	status.wordCardClick(data)
 }
-function wordWindow_click(data:boolean){
-	isShowWordWindow.value=data
+
+
+async function test(){
+	let sws_r = await VocaClient.fetchWords('/english')
+	let sws = $(sws_r)
+	//l.log(sws[0])
+	let peer = new WordB(sws[0])
+	peer.calcPrio()
+	l.log(peer.priority)
 }
+
+// onMounted(() => {
+// 	start()
+// }),
 
 </script>
 
 <template>
-	<!-- 毋理此報錯 -->
-	<component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component>
-	<div class="cards-box">
-		<div v-for="e in testCase">
-			<component :is="WordCard" :wordData="e" @childClick="handleChildClick" />
+<div class="MultiMode">
+		<!-- <button @click="start()">開始</button> -->
+	<!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
+
+	<!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
+
+	<component :is="WordInfo" :wordB="status.curWord" class="WordInfo" :key="status.curWord.fw.id" v-if="isShowWordInfo"></component>
+	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
+	<div class="cards-box" v-if="isShowCardBox">
+		<div v-for="(e, i) in recite.allWordsToLearn">
+			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="status.wordCardClick(e)" />
 		</div>
 	</div>
-	
-	
+</div>
 </template>
 
 <style scoped>
-	.cards-box{
-		border: solid 1px red; /* test */
-		margin: 0 500px 0 40px;
-	}
+.MultiMode{
+	display: flex;
+}
+
+
+.cards-box{
+	border: solid 1px red; /* test */
+	margin: 0 30% 0 auto;
+	width: 550px;
+	/* position: fixed; */
+	/* left: 30%; */
+}
+.WordInfo{
+	/* display: inline-block; */
+	width: 25%;
+	/* float: right;; */
+	position: fixed;
+	left: 5%
+}
 </style>
 
 component：这是 Vue 提供的内置组件，用于渲染其他组件或模板。它允许你根据特定条件或数据动态地选择要渲染的组件。
@@ -67,4 +106,4 @@ childClick：这是事件的名称，它是您在子组件中使用 $emit 方法
 = 符号：这个等号表示将事件监听器与某个方法或表达式关联起来。
 
 "handleChildClick"：这是在父组件中定义的一个方法的名称。这个方法会在事件触发时被调用。在前面的示例中，我们在父组件的 <script setup> 部分定义了 handleChildClick 方法。
-	  -->
+	  -->./Status

@@ -4,11 +4,13 @@
 import * as fs from 'fs';
 import * as path from 'path'
 import now from 'performance-now';
-import _ from 'lodash'
+import _, { last } from 'lodash'
 import dayjs from 'dayjs';
 
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
+
+
 
 /**
  * 正則表達式替換組。
@@ -18,12 +20,71 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
-export function $<T>(v:T): NonNullable<T>{
-	if(v === undefined){
-		throw new Error(v+' '+undefined)
+export function add(a:number, b:number){
+	return a+b
+}
+
+export function sub(a:number, b:number){
+	return a-b
+}
+
+export function mul(a:number, b:number){
+	return a*b
+}
+
+export function div(a:number, b:number){
+	return a / b
+}
+
+export function eq(a:number, b:number){
+	return a === b
+}
+
+// export function bigger(a:number, b:number){
+
+// }
+
+export function lastOf<T>(arr:T[]):T{
+	return arr[arr.length-1]
+}
+
+/**
+ * nonUndefinedGet
+ * @param v 
+ * @param fn 
+ * @param errMsg 
+ * @returns 
+ */
+export function nug<T, U=undefined>(v: T | undefined, errMsg?:string):Exclude<T, U>{
+	if(v === void 0){
+		throw new Error(errMsg)
+	}
+	return v as Exclude<T, U>
+}
+
+
+// export function nug<T>(v: T | undefined, fn:undefined|((v:T|undefined)=>void), errMsg?:string): Exclude<T, undefined> {
+// 	if(fn === undefined){
+// 		fn = (v)=>{throw new Error(errMsg)}
+// 	}
+// 	if (v === undefined) {
+// 		fn(v)
+// 	}
+// 	return v as Exclude<T, undefined>;
+// }
+
+/**
+ * 判空後返回
+ * @param v 
+ * @param errMsg 
+ * @returns 
+ */
+export function $<T>(v:T, errMsg?:string): NonNullable<T>{
+	if(v === void 0){
+		throw new Error(errMsg)
 	}
 	if(v === null){
-		throw new Error(v+' '+null)
+		throw new Error(errMsg)
 	}
 	return v as NonNullable<T>
 }
@@ -203,7 +264,7 @@ export function mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], 
 	}
 
 
-export function sortMapIntoObj<K>(map:Map<K,number>, desc=true){
+export function deprecated_sortMapIntoObj<K>(map:Map<K,number>, desc=true){
 	let obj = mapToObjArr(map)
 	if(desc){
 		obj = obj.sort((a,b)=>{return b.v - (a.v)})

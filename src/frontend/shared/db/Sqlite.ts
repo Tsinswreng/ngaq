@@ -1,8 +1,13 @@
 //require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-import Ut from '../Ut';
-import {RegexReplacePair} from '../Ut';
-import { Database,RunResult } from 'sqlite3';
 
+import {RegexReplacePair} from '@shared/Ut';
+import { Database,RunResult } from 'sqlite3';
+import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
+const Ut = {
+	objArrToStrArr:objArrToStrArr,
+	serialReplace:serialReplace,
+	$:$
+}
 
 export interface SqliteTableInfo{
 	cid:number
@@ -343,7 +348,7 @@ export default class Sqlite{
 
 	public static async alterIntoAllowNull(db:Database, tableName:string, columnName:string){
 		let info = await Sqlite.getTableInfo(db, tableName, columnName)
-		let type = Ut.nng(info).type
+		let type = Ut.$(info).type
 		let sql = `ALTER TABLE '${tableName}' MODIFY COLUMN ${columnName} ${type}`
 		return Sqlite.all(db, sql)
 	}
@@ -402,7 +407,7 @@ FROM '${tableName}';`
 	 * @param obj 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getInsertSql(table:string, obj:Object):[string, any[]]{
+	public static getSql_insert(table:string, obj:Object):[string, any[]]{
 		let keys = Object.keys(obj)
 		const columns = keys.join(', ');
 		const placeholders = keys.map(()=>'?').join(',')
@@ -419,7 +424,7 @@ FROM '${tableName}';`
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getUpdateByIdSql(table:string, obj:Object, id:number):[string, any[]]{
+	public static getSql_updateById(table:string, obj:Object, id:number):[string, any[]]{
 		const keys = Object.keys(obj)
 		const values = Object.values(obj)
 		values.push(id)

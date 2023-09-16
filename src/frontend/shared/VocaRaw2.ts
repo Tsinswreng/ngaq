@@ -306,7 +306,7 @@ export default class VocaRaw2{
 		}
 
 		let word = new SingleWord2({
-			ling:ling,
+			table:ling,
 			wordShape: wordShape.trim(),
 			pronounce: [],
 			mean:[mean.trim()],

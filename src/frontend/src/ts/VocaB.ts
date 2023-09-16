@@ -308,7 +308,7 @@ export class Priority{
 		
 		priorityObj.dateThen = timeNow;
 		//priorityObj._prio0 = 1; //[,23.06.20-2101]
-		priorityObj._prio0??=1 
+		priorityObj._prio0??=1 //此是何寫法
 		
 		let addEvent_cnt = 0; //計數
 		let tempProcedure:Procedure
