@@ -1,14 +1,32 @@
 //require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 
-import {RegexReplacePair} from '@shared/Ut';
+import {RegexReplacePair, copyIgnoringKeys} from '@shared/Ut';
 import { Database,RunResult } from 'sqlite3';
 import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
+import _ from 'lodash';
 const Ut = {
 	objArrToStrArr:objArrToStrArr,
 	serialReplace:serialReplace,
 	$:$
 }
 
+/**
+ * 訊ˇ格式化˪ᵗ錯誤對象。回調中ᵗerr對象ˋ不含調用堆棧ᵗ訊旹可用此
+ * @param err 
+ * @param msg 
+ * @returns 
+ */
+const sqlErr=(err:Error, ...msg:any[])=>{
+	let e = {
+		name:err.name,
+		message:err.message,
+		stack:err.stack,
+		msg: msg
+	}
+	return new Error(JSON.stringify(e))
+}
+
+//PRAGMA table_info
 export interface SqliteTableInfo{
 	cid:number
 	name:string
@@ -43,11 +61,14 @@ export default class Sqlite{
 	 * @returns 
 	 */
 	public static all<T>(db:Database, sql:string, params?:any){
-		//console.log(sql)//t
 		return new Promise<T[]>((s,j)=>{
-			db.all(sql, params,(err,rows:T[])=>{
-				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
-				//console.log(rows)//t
+			db.all<T>(sql, params,(err,rows:T[])=>{
+				if(err){
+					//console.error(sql+'\n'+err+'\n');j(err);return
+					j(sqlErr(err,sql));return;
+					//throw new Error()
+					//throw sqlErr(err, sql)//t
+				}
 				s(rows)
 			})
 		})
@@ -64,7 +85,10 @@ export default class Sqlite{
 	public static run(db:Database, sql:string, params?:any){
 		return new Promise<RunResult>((s,j)=>{
 			db.run(sql, params, function(err){
-				if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+				if(err){
+					//console.error(sql+'\n'+err+'\n');j(err);return
+					j(sqlErr(err,sql)); return
+				}
 				s(this)
 			})
 		})
@@ -73,6 +97,13 @@ export default class Sqlite{
 	當回調函數ᵗ定義ʸ有this旹、叶回調函數時形參列表不用再寫this。
 	又 箭頭函數不能有己ʰ向ᵗthisˉ引用、故需用傳統函數㕥叶回調函數。此旹乃可其內ʸ用this㕥取RunResult。*/
 
+	/**
+	 * 數據庫中ᵗ表ˇ轉二維數組
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @returns 
+	 */
 	public static async toStrTable(db:Database, table:string, column?:string[]){
 		let sql
 		if(!column){
@@ -84,6 +115,13 @@ export default class Sqlite{
 		return Ut.objArrToStrArr(rows)
 	}
 
+	/**
+	 * 複製表
+	 * @param db 
+	 * @param newTable 
+	 * @param oldTable 
+	 * @returns 
+	 */
 	public static copyTable(db:Database, newTable:string, oldTable:string){
 		let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}`
 		return Sqlite.all(db, sql)
@@ -148,7 +186,6 @@ export default class Sqlite{
 			for(let i = 0; i < tableName.length; i++){
 				let sql = `DROP TABLE '${tableName[i]}';`
 				//console.log(sql)
-				//DictDb.all(db,sql).then(()=>{})//t
 				prms.push(Sqlite.all(db,sql))
 			}
 			//console.log(114514)
@@ -179,7 +216,7 @@ export default class Sqlite{
 	}
 
 	/**
-	 * 
+	 * The only one that must exist is sqlite_master, this is database's schema.
 	 * @param db 
 	 * @returns 
 	 */
@@ -189,7 +226,7 @@ export default class Sqlite{
 	}
 
 	/**
-	 * 
+	 * sqlite_sequence will exist if any table includes the AUTOINCREMENT keyword (which is restricted to only being used for an alias of the rowid column).
 	 * @param db 
 	 * @returns 
 	 */
@@ -236,6 +273,14 @@ export default class Sqlite{
 		}
 	}
 
+	/**
+	 * 一列ˇ正則表達式ᶤ批量ᵈ換
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param replacementPair 
+	 * @returns 
+	 */
 	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
 		let sql = `SELECT ${column} AS result FROM '${table}'`
 		let result = await Sqlite.all<{result?:string}>(db, sql)
@@ -260,39 +305,271 @@ export default class Sqlite{
 					if(err){
 						console.error(updateSql)
 						console.error([v,k])
-						Promise.reject(err);return
+
+						//Promise.reject(err)
+						Promise.reject(sqlErr(err))
+						;return
 					}
 				})
 			}
 			db.run('COMMIT', (err)=>{
-				if(err){Promise.reject(err);return}
+				if(err){
+					//Promise.reject(err);return
+					Promise.reject(sqlErr(err));return
+				}
 			})
 		})
 	}
 
 	/**
-	 * 手動封裝的TRANSACTION
+	 * 手動ᵈ封裝ᵗ事務
+	 * @param db 
+	 * @template T 數據庫中每行ᵗ類型
+	 * @param {{sql:string, values:any[]}[]} sqlToValuePairs 
+	 * @param {'each'|'run'} method statement對象ˋ將調ᵗ函數
+	 * @returns {Promise<[T[][], RunResult[]]>}  第n條sql對應T[n]和RunResult[n]
+	 * @deprecated
+	 * @instance
+	 * 
+	 */
+	public static async deprecated_transaction<T>(
+		db:Database,
+		sqlToValuePairs:{sql:string, values:any[]}[],
+		method: 'each'|'run'
+		){
+		const result:T[][] = []
+		const runResult: RunResult[] = []
+		return new Promise<[T[][], RunResult[]]>((res,rej)=>{
+			db.serialize(()=>{
+				db.run('BEGIN TRANSACTION')
+				for(let i = 0; i < sqlToValuePairs.length; i++){
+					const curSql:string = sqlToValuePairs[i].sql;
+					const curValue:(any|undefined)[] = sqlToValuePairs[i].values
+					const innerResult:T[] = []
+					const stmt = db.prepare(curSql, (err)=>{
+						if(err){rej(sqlErr(err));return}
+						const each = ()=>{
+							stmt.each<T>(curValue, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+								if(err){
+									console.error(curValue)//t
+									rej(sqlErr(err, curSql, curValue));return
+								}//<坑>{err對象中不帶行號與調用堆棧之訊}
+									innerResult.push(row)
+									runResult.push(this)
+							})
+						}
+						const run = ()=>{
+							stmt.run(curValue, function(this, err){
+								if(err){
+									console.error(`console.error(curSql)`)
+									console.error(curSql)//t
+									console.error(`console.error(curValue)`)
+									console.error(curValue)//t
+									rej(sqlErr(err, curSql, curValue));return
+								}
+									//innerResult.push(row)
+									runResult.push(this)
+							})
+						}
+						switch(method){
+							case 'each': each(); break;
+							case 'run': run(); break;
+							default: rej('unmatched method')
+						}
+					})
+					result.push(innerResult)
+				}
+				db.run('COMMIT', function(err){
+					if(err){
+						rej(sqlErr(err, sqlToValuePairs));return
+					}
+					res([result,runResult])
+				})
+			})
+		})
+	}
+
+
+
+
+
+	/**
+	 * 手動ᵈ封裝ᵗ事務 
+	 * @param db 
+	 * @template T 數據庫中每行ᵗ類型 
+	 * @param {{sql:string, values:any[][]}[]} sqlToValuePairs values必須是二維數組、否則報錯
+	 * @param {'each'|'run'} method statement對象ˋ將調ᵗ函數
+	 * @returns {Promise<[T[][], RunResult[]]>}  第n條sql對應T[n]和RunResult[n]
+	 * @instance
+	 * 
+	 */
+	public static async transaction<T>(
+		db:Database,
+		sqlToValuePairs:{sql:string, values:any[][]}[],
+		method: 'each'|'run'
+	){
+		
+		const result:T[][] = []
+		const runResult: RunResult[] = []
+		return new Promise<[T[][], RunResult[]]>((res,rej)=>{
+			db.serialize(()=>{
+				db.run('BEGIN TRANSACTION')
+				for(let i = 0; i < sqlToValuePairs.length; i++){
+					const curSql:string = sqlToValuePairs[i].sql;
+					const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
+					if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
+					const innerResult:T[] = []
+					const stmt = db.prepare(curSql, (err)=>{
+						if(err){rej(sqlErr(err));return}
+						
+						const each = ()=>{
+							for(const value1D of value2D){
+								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+								stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+									if(err){
+										console.error(value2D)//t
+										rej(sqlErr(err, curSql, value2D));return
+									}//<坑>{err對象中不帶行號與調用堆棧之訊}
+										innerResult.push(row)
+										runResult.push(this)
+								})
+							}
+						}
+						const run = ()=>{
+							for(const value1D of value2D){
+								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+								stmt.run(value1D, function(this, err){
+									if(err){
+										console.error(`console.error(curSql)`)
+										console.error(curSql)//t
+										console.error(`console.error(curValue)`)
+										console.error(value2D)//t
+										rej(sqlErr(err, curSql, value2D));return
+									}
+										//innerResult.push(row)
+										runResult.push(this)
+								})
+							}
+							
+						}
+						switch(method){
+							case 'each': each(); break;
+							case 'run': run(); break;
+							default: rej('unmatched method')
+						}
+					})
+					result.push(innerResult)
+				}
+				db.run('COMMIT', function(err){
+					if(err){
+						rej(sqlErr(err, sqlToValuePairs));return
+					}
+					res([result,runResult])
+				})
+			})
+		})
+	}
+
+
+	
+
+
+	// public static async deprecated_transactionAll<T>(
+	// 	db:Database,
+	// 	sqlToValuePairs:{sql:string, values:any[]}[]
+	// 	){
+	// 	//if(sqls.length !== values.length){throw new Error(`sqls.length !== values.length`)}
+	// 	const result:T[][] = []
+	// 	return new Promise<T[][]>((res,rej)=>{
+	// 		db.serialize(()=>{
+	// 			db.run('BEGIN TRANSACTION')
+	// 			for(let i = 0; i < sqlToValuePairs.length; i++){
+	// 				const curSql:string = sqlToValuePairs[i].sql;
+	// 				const curValue:(any|undefined)[] = sqlToValuePairs[i].values
+	// 				//if(Array.isArray(curValue)){}
+	// 				const innerResult:T[] = []
+	// 				const stmt = db.prepare(curSql, (err)=>{
+	// 					for(let j = 0; j < curValue?.length; j++){
+	// 						stmt.each(curValue[j], (err, row:T)=>{
+	// 							if(err){console.error(curSql);rej(err)}
+	// 							innerResult.push(row)
+	// 						})
+	// 					}
+	// 				})
+	// 				result.push(innerResult)
+	// 			}
+	// 			db.all('COMMIT', (err,rows)=>{
+	// 				if(err){console.error(sqlToValuePairs);;rej(err);return}
+	// 				res(result)
+	// 			})
+	// 		})
+	// 	})
+	// }
+
+
+	// public static async transaction<T>(db:Database, sqls:string[], values:any[][]){
+	// 	if(sqls.length !== values.length){throw new Error(`sqls.length !== values.length`)}
+	// 	const result:T[][] = []
+	// 	return new Promise<T[][]>((res,rej)=>{
+	// 		db.serialize(()=>{
+	// 			db.run('BEGIN TRANSACTION')
+	// 			for(let i = 0; i < sqls.length; i++){
+	// 				const curSql:string = sqls[i];
+	// 				const curValue:(any|undefined)[] = values[i]
+	// 				//if(Array.isArray(curValue)){}
+	// 				const innerResult:T[] = []
+	// 				const stmt = db.prepare(curSql, (err)=>{
+	// 					for(let j = 0; j < curValue?.length; j++){
+	// 						stmt.each(curValue[j], (err, row:T)=>{
+	// 							if(err){console.error(curSql);rej(err)}
+	// 							innerResult.push(row)
+	// 						})
+	// 					}
+	// 				})
+	// 				result.push(innerResult)
+	// 			}
+	// 			db.all('COMMIT', (err,rows)=>{
+	// 				if(err){console.error(sqls);;rej(err);return}
+	// 				res(result)
+	// 			})
+	// 		})
+	// 	})
+	// }
+
+	/**
+	 * 手動封裝的TRANSACTION 
+	 * 舊版也。只能珩一條sql
 	 * @param db 
 	 * @param sql 
 	 * @param values 
+	 * @deprecated
 	 * @returns 
 	 */
-	public static async transaction<T>(db:Database, sql:string, values:any[]){
+	public static async deprecated_transactionForOneSql<T>(db:Database, sql:string, values:any[]){
 		let result:T[] = []
 		return new Promise<T[]>((s,j)=>{
 			db.serialize(()=>{
 				db.run('BEGIN TRANSACTION')
 				const stmt = db.prepare(sql, (err)=>{
-					if(err){console.error(sql+'\n'+err+'\n');j(err);return} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
+					if(err){
+						//console.error(sql+'\n'+err+'\n');j(err);return
+						j(sqlErr(err,sql));return
+					} //<坑>{err+''後錯ᵗ訊會丟失行號 勿j(sql+'\n'+err)}
 				})
 				for(let i = 0; i < values.length; i++){
 					stmt.each(values[i], (err, row:T)=>{
-						if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+						if(err){
+							//console.error(sql+'\n'+err+'\n');j(err);return
+							j(sqlErr(err,sql));return
+						}
 						result.push(row)
 					})
 				}
 				db.all('COMMIT', (err,rows)=>{
-					if(err){console.error(sql+'\n'+err+'\n');j(err);return}
+					if(err){
+						//console.error(sql+'\n'+err+'\n');j(err);return
+						j(sqlErr(err,sql));return
+					}
 					s(result)
 				})
 			})
@@ -301,7 +578,7 @@ export default class Sqlite{
 		
 	}
 
-	public static async isTableExist(db:Database, tableName:string){
+	public static async deprecated_isTableExist(db:Database, tableName:string){
 		let sql = `SELECT name FROM sqlite_master WHERE  type='table' AND name='${tableName}';`
 		
 		return new Promise<boolean>((resolve, reject)=>{
@@ -346,6 +623,13 @@ export default class Sqlite{
 		})
 	}
 
+	/**
+	 * 使NOT NULL 之列轉潙 允空值ˌᐪ
+	 * @param db 
+	 * @param tableName 
+	 * @param columnName 
+	 * @returns 
+	 */
 	public static async alterIntoAllowNull(db:Database, tableName:string, columnName:string){
 		let info = await Sqlite.getTableInfo(db, tableName, columnName)
 		let type = Ut.$(info).type
@@ -353,7 +637,7 @@ export default class Sqlite{
 		return Sqlite.all(db, sql)
 	}
 
-		/**
+	/**
 	 * 把一列中的null值轉爲指定值
 	 * @param db 
 	 * @param tableName 
@@ -367,7 +651,7 @@ CASE WHEN ${columnName} IS NULL THEN ${target} ELSE ${columnName} END;`
 		return Sqlite.all(db, sql)
 	}
 
-		/**
+	/**
 	 * 對某列求和、支持字符串轉數字
 	 * @param db 
 	 * @param tableName 
@@ -392,22 +676,26 @@ FROM '${tableName}';`
 	 * @param column 
 	 * @param value 
 	 */
-	public static countOccurrences(db:Database, table:string, column:string, value:any[]){
-		function getSql(table:string, column:string){
-			return `SELECT COUNT(*) FROM '${table}' WHERE ${column}=?` //寫binary似報錯
-		}
-		//return Sqlite.transaction()
-	}
+	// public static countOccurrences(db:Database, table:string, column:string, value:any[]){
+	// 	function getSql(table:string, column:string){
+	// 		return `SELECT COUNT(*) FROM '${table}' WHERE ${column}=?` //寫binary似報錯
+	// 	}
+	// 	//return Sqlite.transaction()
+	// }
 
 
 	/**
 	 * 由對象ᵗ鍵與值 產 sql插入語句。
 	 * 若表ᵗ自增主鍵潙id、則obj不宜有id字段。
+	 * [2023-09-20T09:18:24.000+08:00]{未驗}
 	 * @param table 
 	 * @param obj 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_insert(table:string, obj:Object):[string, any[]]{
+	public static getSql_insert(table:string, obj:Object, ignoredKeys?:string[]):[string, any[]]{
+		if(ignoredKeys !== void 0){
+			obj = copyIgnoringKeys(obj, ignoredKeys)
+		}
 		let keys = Object.keys(obj)
 		const columns = keys.join(', ');
 		const placeholders = keys.map(()=>'?').join(',')
@@ -419,17 +707,23 @@ FROM '${tableName}';`
 	/**
 	 * 由對象ᵗ鍵與值 產 sql修改語句。
 	 * 若表ᵗ自增主鍵潙id、則obj不宜有id字段。id當另外傳入作第三個參數。
+	 * [2023-09-20T09:18:49.000+08:00]{未驗}
 	 * @param table 
 	 * @param obj 
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_updateById(table:string, obj:Object, id:number):[string, any[]]{
+	public static getSql_updateById(table:string, obj:Object, id:number, ignoredKeys?:string[]):[string, any[]]{
+		if(ignoredKeys !== void 0){
+			obj = copyIgnoringKeys(obj, ignoredKeys)
+		}
 		const keys = Object.keys(obj)
 		const values = Object.values(obj)
 		values.push(id)
 		const updateQuery = `UPDATE '${table}' SET ${keys.map(key => `${key} = ?`).join(', ')} WHERE id = ?`;
 		return [updateQuery, values]
 	}
+
+
 
 }

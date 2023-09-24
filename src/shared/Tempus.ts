@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from "dayjs"
+//import dayjs, { Dayjs } from "dayjs"
+import moment from "moment"
 
 /* export interface ITempus{
 	static rely: any
@@ -10,14 +11,14 @@ import dayjs, { Dayjs } from "dayjs"
  */
 export default class Tempus{
 	
-	private static readonly rely = dayjs
+	private static readonly rely = moment
 	public static ISO8601FULLdATEfORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
 	public static REGEXPoFiSO8601FULLdATEfORMAT_ZERO = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z'
 
 	public constructor(date?:string, format?:string){
 		this._time = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
 		if(this.time === null){
-			console.error(date);console.error(format)
+			console.error(Tempus.rely);console.error(date);console.error(format)
 			throw new Error(`date format is not proper`)
 		}
 		// if(!new RegExp('^'+Tempus.REGEXPoFiSO8601FULLdATEfORMAT_ZERO+'$').test(this.time)){

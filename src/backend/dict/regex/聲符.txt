@@ -27,6 +27,8 @@
 度	ˁas
 召	aw
 卓	awk
+各	ˁawk
+路	ˁawk
 喿	ˁaws
 者	aʔ
 古	ˁaʔ
@@ -68,6 +70,7 @@
 谷	ok
 賣	ˁok
 雚	ˁol
+奄	omʔ
 夗	onʔ
 宛	onʔ
 容	oŋ
@@ -93,8 +96,6 @@
 倉	rˁaŋ
 牙	rˁas
 兆	raw
-各	rˁawk
-路	rˁawk
 巨	raʔ
 馬	rˁaʔ
 其	rə

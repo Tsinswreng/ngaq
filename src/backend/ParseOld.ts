@@ -1,6 +1,6 @@
 require('module-alias/register');
 import { IVocaRow } from "@shared/SingleWord2"
-import Ut, { $ } from "@shared/Ut"
+import Ut, { $, $a } from "@shared/Ut"
 import moment from "moment"
 import VocaSqlite from "./VocaSqlite"
 import SingleWord2 from "@shared/SingleWord2"
@@ -15,7 +15,7 @@ export interface Old_IVocaRow{
 	id?:number //從數據庫中取數據時id必不潙空
 	ling:string //數據庫中本無此字段、㕥存表名。
 	wordShape:string
-	fullComments:string[]
+	fullComments:string
 	//annotation:string //
 	addedTimes:number
 	addedDates:string
@@ -27,22 +27,43 @@ export interface Old_IVocaRow{
 	forgottenDates:string
 }
 
+//<蠹>{盡刪表後加詞只能加一個, 既有表 重複加詞旹times_add益增}
 export default class ParseOld{
 
 	public static async tableMigrate(oldTable:string, neoTable:string){
 		const oldWords = await VocaRaw.getAllWords(oldTable)
 		const neoWords = ParseOld.parseOldObj(oldWords as any, neoTable)
+		$a(neoWords)
+		//console.log(`console.log(neoWords[0])`)
+		//console.log(neoWords[0])//t
 		const lite = new VocaSqlite({
 			_dbName: 'voca',
 			_tableName: neoTable
 		})
-		await lite.creatTable(true)
-		lite.addWords(SingleWord2.parse(neoWords))
+		await lite.creatTable(lite.tableName,true)
+		//console.log(`console.log(SingleWord2.parse(neoWords)[0])`)
+		//console.log(SingleWord2.parse(neoWords)[0])//t
+		return lite.addWordsOfSameTable(SingleWord2.parse(neoWords))
 	}
 
 	public static async run(){
-		ParseOld.tableMigrate('eng', 'migrate_english')
-		ParseOld.tableMigrate('jap', 'migrate_japanese')
+		try{
+			let engIds = await ParseOld.tableMigrate('eng', 'migrate_english').catch((e)=>{console.error(e)})
+			console.log(`console.log(engIds[0])`)
+			console.log(engIds[0])
+			console.log(`console.log(engIds[1])`)
+			console.log(engIds[1])
+			let japIds = await ParseOld.tableMigrate('jap', 'migrate_japanese')
+			console.log(`console.log(japIds[0])`)
+			console.log(japIds[0])
+			console.log(`console.log(japIds[1])`)
+			console.log(japIds[1])
+			console.log(`done`)
+		}catch(e){
+			console.error(e)
+			//throw e
+		}
+
 	}
 
 
@@ -72,7 +93,8 @@ export default class ParseOld{
 				//table: $(lingMap.get(obj.ling)),
 				table: neoTableName,
 				wordShape:obj.wordShape,
-				mean:JSON.stringify(obj.fullComments),
+				//mean:JSON.stringify(obj.fullComments),
+				mean: obj.fullComments,
 				annotation:'[]',
 				tag: '[]',
 				dates_add: convertDate(obj.addedDates),

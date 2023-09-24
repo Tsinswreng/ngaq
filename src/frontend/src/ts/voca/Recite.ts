@@ -6,13 +6,22 @@ import Log from '@shared/Log';
 import VocaClient from '@ts/voca/VocaClient';
 const l = new Log()
 
+/**
+ * 既複習ᵗ詞
+ */
 class ReviewedWords{
 
 	public constructor(){}
 
+	/**
+	 * id對既憶ᵗ單詞 之映射
+	 */
 	private _rmb_idToWordsMap:Map<number, WordB> = new Map()
 	;public get rmb_idToWordsMap(){return this._rmb_idToWordsMap;};
 
+	/**
+	 * id對既忘ᵗ單詞 之映射
+	 */
 	private _fgt_idToWordsMap:Map<number, WordB> = new Map()
 	;public get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
 
@@ -40,12 +49,16 @@ export default class Recite{
 	private _isSaved:boolean = true
 	;public get isSaved(){return this._isSaved;};;public set isSaved(v){this._isSaved=v;};
 
+	
 	private _allWordsToLearn:WordB[] = []
 	;public get allWordsToLearn(){return this._allWordsToLearn;};
 
-	private _allIdToWordsMap:Map<number, WordB> = new Map()
-	;public get allIdToWordsMap(){return this._allIdToWordsMap;};
+	//private _allIdToWordsMap:Map<number, WordB> = new Map()
+	//;public get allIdToWordsMap(){return this._allIdToWordsMap;};
 
+	/**
+	 * current word
+	 */
 	private _curWord?:WordB
 	;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
 
@@ -56,11 +69,11 @@ export default class Recite{
 	 * 使諸詞各算權重
 	 * @param wbs 
 	 */
-	public calcAllPrio(wbs:WordB[]=this.allWordsToLearn){
-		for(let i = 0; i < wbs.length; i++){
-			wbs[i].calcPrio()
-		}
-	}
+	// public calcAllPrio(wbs:WordB[]=this.allWordsToLearn){
+	// 	for(let i = 0; i < wbs.length; i++){
+	// 		wbs[i].calcPrio()
+	// 	}
+	// }
 
 
 	/**
@@ -68,34 +81,55 @@ export default class Recite{
 	 * @param sws 
 	 * @returns 
 	 */
-	public filter(sws:SingleWord2[]){
-		let filtered:SingleWord2[] = []
-		for(const sw of sws){
-			if(sw.times_add >= 2){
-				filtered.push(sw)
+	public filterByAddTimes(){
+		this._allWordsToLearn = this._allWordsToLearn.filter(wb=>wb.fw.times_add>=2)
+	}
+
+	/**
+	 * 由路徑從服務器取詞
+	 * @param path 
+	 */
+	public async fetchAndStoreWords(path:string){
+		let sws = await VocaClient.fetchWords(path)
+		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
+	}
+
+	/**
+	 * 使諸詞各算權重並降序ᵈ排
+	 * @param wbs 
+	 */
+	public static calcAndDescSortPriority(wbs:WordB[]){
+		for(const w of wbs){
+			if(w.priority.procedures.length === 0){
+				w.calcPrio()
 			}
 		}
-		return filtered
+		wbs.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
+	}public calcAndDescSortPriority(){
+		Recite.calcAndDescSortPriority(this.allWordsToLearn)
 	}
 
-
-
-	public async start(path:string){
-		//const client = VocaClient.getInstance()
-		let sws = await VocaClient.fetchWords(path)
-		sws = this.filter($(sws))
-		let wbs = $(sws).map((e)=>{return new WordB(e)})
+	// public async start(path:string){
+	// 	//const client = VocaClient.getInstance()
+	// 	let sws = await VocaClient.fetchWords(path)
+	// 	sws = this.filter($(sws))
+	// 	let wbs = $(sws).map((e)=>{return new WordB(e)})
 		
-		this.calcAllPrio(wbs)
-		//l.warn(wbs)//t
-		wbs.sort((a,b)=>{return b.priority.prio0num - a.priority.prio0num})
-		this.allWordsToLearn.length = 0
-		this.allWordsToLearn.push(...wbs)
-		//this.isSaved = false
-		//console.log(`console.log(this.isSaved)`)
-		//console.log(this.isSaved)//t
-	}
+	// 	this.calcAllPrio(wbs)
+	// 	//l.warn(wbs)//t
+	// 	wbs.sort((a,b)=>{return b.priority.prio0num - a.priority.prio0num})
+	// 	this.allWordsToLearn.length = 0
+	// 	this.allWordsToLearn.push(...wbs)
+	// 	//this.isSaved = false
+	// 	//console.log(`console.log(this.isSaved)`)
+	// 	//console.log(this.isSaved)//t
+	// }
 
+	/**
+	 * 觸發單詞事件
+	 * @param wb 
+	 * @param event 
+	 */
 	public trigger(wb:WordB, event:WordEvent){
 		//console.log(`console.log(event)`)
 		//console.log(event)//t
@@ -145,6 +179,10 @@ export default class Recite{
 		l.log('操作成功')
 	}
 
+	/**
+	 * get all reviewed words
+	 * @returns 
+	 */
 	public getAllRvwWords(){
 		let rvwWords:WordB[] = Array.from(this.rvwObj.rmb_idToWordsMap.values())
 		rvwWords.push(  ...Array.from(this.rvwObj.fgt_idToWordsMap.values())  )
@@ -163,11 +201,10 @@ export default class Recite{
 		const rows:IVocaRow[] = this.getToSavedWords().map((e)=>{return SingleWord2.fieldStringfy(e.fw)})
 		let res = await VocaClient.saveWords(rows)//.then((d)=>{l.log(d); this.isSaved = true})
 		this.isSaved = true
+		l.log(`l.log(res)`)
 		l.log(res)
-		l.log('保存成功')
+		
+		
 	}
 
-
-
-	
 }

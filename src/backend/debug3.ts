@@ -3,7 +3,7 @@
 function add(x: number, y: number): number {
 	return x + y;
   }
-  
+  https://hxvnz1.ykjsmo.com/details?id=174093
   function double(x: number): number {
 	return x * 2;
   }
@@ -27,7 +27,11 @@ import dayjs from 'dayjs'
 //import * as inspector from 'node:inspector/promises';
 import v8 from 'v8'
 import Tempus from "@shared/Tempus";
-import { $, nug } from "@shared/Ut";
+import { $, $a, nug } from "@shared/Ut";
+import VocaSqlite from "./VocaSqlite";
+import Sqlite from "@shared/db/Sqlite";
+import * as fs from 'fs'
+import VocaRaw2 from "@shared/VocaRaw2";
 const print = console.log
 
 let a:Moment = moment()
@@ -87,70 +91,84 @@ let sw = new SingleWord2(
 		source: ['web']
 	}
 )
-//console.log(SingleWord2.parse(SingleWord2.fieldStringfy(sw)))
-//console.log(SingleWord2.fieldStringfy(sw))
 
-// function parseDateJson(datesStr:string){
-// 	let strArr = JSON.parse(datesStr)
-// 	console.log(strArr[0])
-// 	const dates:Tempus[] = []
-// 	for(const s of strArr){
-// 		let d = new Tempus(s)
-// 		dates.push(d)
-// 	}
-// 	return dates
+// async function testF(){
+// 	const sqlt = new VocaSqlite({_tableName:'english'})
+// 	//let rows = await sqlt.getAllWords()
+// 	//console.log(rows)
+// 	let objs = [
+// 		{sql:`SELECT * FROM 'english' WHERE wordShape = ?`, values: ['leakus']},
+// 		{sql:`SELECT * FROM 'english' WHERE id = ?`, values: [1,2]},
+		
+// 	]
+// 	let [r, runResult] = await Sqlite.transaction(sqlt.db, objs)
+// 	console.log(r)
+// 	console.log(runResult)
 // }
-// function stringfyDateArr(dates:Tempus[]){
-// 	let strArr:string[] = []
-// 	for(const d of dates){
-// 		let t = Tempus.toISO8601(d)
-// 		console.log(`console.log(t)`)
-// 		console.log(t)
-// 		strArr.push(t)
-// 	}
-// 	console.log(`console.log(strArr)`)
-// 	console.log(strArr)
-// 	return JSON.stringify(strArr)
+
+//testF()
+
+// async function testG(){
+// 	const sqlt = new VocaSqlite({_tableName:'english'})
+// 	let r = await VocaSqlite.qryWordByWordShape(sqlt.db, 'english', ['leak', 'fuck', 'peer'])
+// 	console.log(r)
+// 	//console.log(r[1])
+// 	//console.log(r[1].length)
 // }
-// let tempi = [new Tempus('2023-09-10T10:14:01+08:00')]
-// let jsn = stringfyDateArr(tempi)
-// console.log(`console.log(jsn)`)
-// console.log(jsn)
-// let dateJson = '["\\"2023-09-09T08:28:08.000Z\\"","\\"2023-09-10T08:28:29.000Z\\""]'
-// let tempi:Tempus[] = parseDateJson(dateJson)
-// console.log(`console.log(tempi)`)
-// console.log(tempi)
+
+// testG()
 
 
-class System{
-	static out = {
-		println:(v?)=>{console.log(v)}
+// let arr = [['peer'], [], ['leak', 'leak']]
+
+function asy(){
+	return new Promise((res,rej)=>{
+		setTimeout(()=>{
+			console.log(500);
+			//res(0)
+			rej(-1)
+		}, 500)
+	})
+}
+
+function asy2(){
+	return new Promise((res,rej)=>{
+		setTimeout(()=>{
+			console.log(500);
+			//res(0)
+			throw new Error('-1')
+			//rej(-1)
+		}, 500)
+	})
+}
+
+async function testH(){
+	console.log('start')
+	//await asy().catch((err)=>{console.error(err)}) // < -1
+	// try {
+	// 	await asy()
+	// } catch (e) {
+	// 	console.log(e) // < -1
+	// }
+	//await asy2() // < 一般ᵈ報錯
+	//await asy2().catch((err)=>{console.error(err)}) // 亦報錯如上。
+	try {
+		await asy2()
+	} catch (e) {
+		console.error(e) //仍報錯。不被try catch 捕。
+		console.log(114514)
 	}
+	console.log(3)
 }
 
-export default class Main{
-	public static main(args?:string[]):void{
-		System.out.println("Hello world");
-	}
-}
+testH()
 
-import sortedIndex from 'lodash/sortedIndex';
+let ass = []
 
-const sortedArray = [1, 3, 5, 7, 9];
-const insertNumber = 10;
 
-const insertPosition = sortedIndex(sortedArray, insertNumber);
+// async function test20230921225553(){
+// 	const srcStr = await fs.promises.readFile("D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\srcWordList\\eng\\eng.voca", 'utf-8')
+// 	VocaRaw2.parseConfig(srcStr)
+// }
+// test20230921225553()
 
-console.log("Insert position:", insertPosition); // 输出 2，因为 4 应该插入到索引 2 处
-
-function sa(){
-	var undefined = 1
-	console.log(undefined === undefined)
-	console.log(undefined === void 0)
-	//var null = 2
-}
-sa()
-
-let e:undefined
-let bs:number|undefined
-bs = e

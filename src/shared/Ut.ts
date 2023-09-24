@@ -6,7 +6,7 @@ import * as path from 'path'
 import now from 'performance-now';
 import _, { last } from 'lodash'
 import dayjs from 'dayjs';
-
+import * as readline from 'readline'
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
@@ -19,6 +19,38 @@ export interface RegexReplacePair{
 	regex:RegExp,
 	replacement:string
 }
+
+
+export function readLine(query:string){
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+	return new Promise<string>((res,rej)=>{
+		rl.question(query, (answer)=>{
+			res(answer)
+		})
+	})
+
+}
+
+/**
+ * 複製對象、忽略指定ᵗ鍵
+ * @param obj 
+ * @param ignoredKeys 
+ * @returns 
+ */
+export function copyIgnoringKeys(obj:Object, ignoredKeys?:string[]){
+	obj = _.cloneDeep(obj)
+	if(ignoredKeys !== void 0){
+		for(const k of ignoredKeys){
+			delete obj[k]
+		}
+	}
+	return obj
+}
+
+
 
 export function add(a:number, b:number){
 	return a+b
@@ -46,6 +78,35 @@ export function eq(a:number, b:number){
 
 export function lastOf<T>(arr:T[]):T{
 	return arr[arr.length-1]
+}
+
+
+
+// export function nno<T>(v:T|undefined|null|{}){
+
+// }
+
+
+/**
+ * nonNullable Array
+ * 數組或字符串判空後返回。
+ * @param v 
+ * @param errMsg 
+ * @returns 
+ */
+export function $a<T>(v:T[]|undefined|null, errMsg?:string):T[]
+export function $a<T>(v:string|undefined|null, errMsg?:string):string
+
+export function $a<T>(v:T[]|string|undefined|null, errMsg?:string){
+	if(v === void 0){throw new Error(errMsg)}
+	if(v === null){throw new Error(errMsg)}
+	if(v.length === 0){throw new Error(errMsg)}
+	if(typeof v === 'string'){
+		return v as string
+	}else{
+		return v as T[]
+	}
+	
 }
 
 /**
@@ -89,16 +150,24 @@ export function $<T>(v:T, errMsg?:string): NonNullable<T>{
 	return v as NonNullable<T>
 }
 
+export function deduplicate<T>(arr:T[],criteria:(...param:any[])=>any){
+
+}
+
+export function union<T>(s1:T[], s2:T[], criteria:(...param:any[])=>any){
+	const b = criteria()
+}
+
 /**
  * 集合取並集
  * @param s1 
  * @param s2 
  * @returns 
  */
-export function union<T>(s1:T[], s2:T[]):T[]
-export function union<T>(s1:Set<T>, s2:Set<T>):Set<T>
+export function simpleUnion<T>(s1:T[], s2:T[]):T[]
+export function simpleUnion<T>(s1:Set<T>, s2:Set<T>):Set<T>
 
-export function union<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
+export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 	
 	if(Array.isArray(s1)){
 		return Array.from(new Set([...s1, ...s2]))

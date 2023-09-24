@@ -3,7 +3,7 @@
 	import { ref, Ref } from 'vue';
 	import { WordEvent } from '@shared/SingleWord2';
 	import Recite from '@ts/voca/Recite';
-	import Status from '../Status';
+	import Status from '../MultiMode';
 
 	//let word = defineProps<SingleWord2>()
 	//console.log(words)

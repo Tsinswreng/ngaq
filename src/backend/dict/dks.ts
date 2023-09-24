@@ -158,7 +158,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		await DictDb.creatTable(Dks.db.db, this.tempTable)
 		let columns = cn.char+','+cn.code+','+cn.ratio
 		let sql = `INSERT INTO '${this.tempTable}' (${columns}) VALUES (?,?,?)`
-		return Sqlite.transaction(Dks.db.db, sql, body)
+		return Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
 	}
 	
 	async putDkzInDb(){
@@ -175,7 +175,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		await DictDb.creatTable(Dks.db.db, tempTable)
 		let columns = cn.char+','+cn.code+','+cn.ratio
 		let sql = `INSERT INTO '${tempTable}' (${columns}) VALUES (?,?,?)`
-		await Sqlite.transaction(Dks.db.db, sql, body)
+		await Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
 		return tempTable
 	}
 
@@ -189,7 +189,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 	async removeCharsInDb(table:string, chars:string[]){
 		let sql = `DELETE FROM '${table}' WHERE ${cn.char}=?`
-		return Sqlite.transaction(Dks.db.db, sql, chars)
+		return Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, chars)
 	}
 
 	async dropTempTable(){

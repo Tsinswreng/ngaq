@@ -2,12 +2,13 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, div, lastOf, mapToObjArr, mul, union } from '@shared/Ut';
-import _, { last } from 'lodash';
+import { $, div, lastOf, mapToObjArr, mul, simpleUnion } from '@shared/Ut';
+//import _, { last } from 'lodash';
 import Log from '@shared/Log'
+
 const l = new Log()
 const Ut = {
-	union : union
+	union : simpleUnion
 };
 /**
  * 㕥約束數據庫中的行
@@ -49,11 +50,13 @@ export interface IVocaRow{
 } */
 
 
-
+/**
+ * 單詞事件枚舉
+ */
 export enum WordEvent{
-	ADD=0,
-	RMB=1,
-	FGT=-1
+	ADD=0, // add
+	RMB=1, // remember
+	FGT=-1	// forget
 }
 
 export default class SingleWord2{
@@ -66,12 +69,15 @@ export default class SingleWord2{
 		Object.assign(this,props)
 	} */
 
+	/**
+	 * 空例
+	 */
 	public static readonly example = new SingleWord2({
 		table:'', wordShape: '', mean:[],dates_add:[]
 	})
 
 	/**
-	 * 此構造函數用于從txt單詞源表創建單詞對象、故無rmb、fgt之屬。
+	 * 
 	 * @param props 
 	 */
 	public constructor(props:{
@@ -102,7 +108,7 @@ export default class SingleWord2{
 
 
 	/**
-	 * 
+	 * 所屬ᵗ表
 	 */
 	private _table:string = ''
 	;public get table(){return this._table;};
@@ -141,7 +147,7 @@ export default class SingleWord2{
 	;public get tag(){return this._tag;};
 
 	/**
-	 * 
+	 * 添ᵗ日期
 	 */
 	private _dates_add:Tempus[] = []
 	;public get dates_add(){return this._dates_add;};
@@ -182,10 +188,10 @@ export default class SingleWord2{
 	/**
 	 * 把SingWord2單詞對象轉成IVocaRow對象
 	 * @param sw 
-	 * @returns 
+	 * @param ignoredKeys 忽略之字段
 	 */
-	public static fieldStringfy(sw:SingleWord2):IVocaRow
-	public static fieldStringfy(sw:SingleWord2[]):IVocaRow[]
+	public static fieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
+	public static fieldStringfy(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
 
 	public static fieldStringfy(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
@@ -199,7 +205,7 @@ export default class SingleWord2{
 			return soloFieldStringfy(sw)
 		}
 
-		function soloFieldStringfy(sw:SingleWord2):IVocaRow{
+		function soloFieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow{
 			let result:IVocaRow = {
 				id:sw.id,
 				table:sw.table,
@@ -216,6 +222,11 @@ export default class SingleWord2{
 				times_fgt:sw.times_fgt,
 				source: JSON.stringify(sw.source)
 			}
+			if(ignoredKeys !== void 0){
+				for(const k of ignoredKeys){
+					delete result[k]
+				}
+			}
 			return result
 	
 			function stringfyDateArr(dates:Tempus[]){
@@ -231,13 +242,12 @@ export default class SingleWord2{
 
 	}
 
-
-	public toRowObj(){
-		return SingleWord2.fieldStringfy(this)
-	}
+	// public toRowObj(){
+	// 	return SingleWord2.fieldStringfy(this)
+	// }
 
 	/**
-	 * 把IVocaRow單詞對象數組轉成SingWord2對象數組
+	 * 把IVocaRow單詞對象轉成SingWord2對象
 	 * @param obj 
 	 * @returns 
 	 */
@@ -297,6 +307,21 @@ export default class SingleWord2{
 
 
 	/**
+	 * 複製對象
+	 * @param o 
+	 */
+	public static clone(o:SingleWord2):SingleWord2
+	public static clone(o:IVocaRow):IVocaRow
+	public static clone(o:SingleWord2|IVocaRow){
+		if(o instanceof SingleWord2){
+			return SingleWord2.parse(SingleWord2.fieldStringfy(o))
+		}else{
+			return SingleWord2.fieldStringfy(SingleWord2.parse(o))
+		}
+	}
+
+
+	/**
 	 * 合併兩個同詞形之單詞對象、id取前者。
 	 * @param w1 
 	 * @param w2 
@@ -318,29 +343,95 @@ export default class SingleWord2{
 			mean:Ut.union(w1.mean, w2.mean),
 			annotation:Ut.union(w1.annotation, w2.annotation),
 			tag:Ut.union(w1.tag, w2.tag),
-			dates_add:Ut.union(w1.dates_add, w2.dates_add),
-			dates_rmb:Ut.union(w1.dates_rmb, w2.dates_rmb),
-			dates_fgt:Ut.union(w1.dates_fgt, w2.dates_fgt),
+			dates_add:tempusUnion(w1.dates_add, w2.dates_add),
+			dates_rmb:tempusUnion(w1.dates_rmb, w2.dates_rmb),
+			dates_fgt:tempusUnion(w1.dates_fgt, w2.dates_fgt),
 		})
 		return o
+
+		function tempusUnion(a:Tempus[], b:Tempus[]){
+			const aStrArr = a.map(e=>e.time)
+			const bStrArr = b.map(e=>e.time)
+			const uni = Ut.union(aStrArr, bStrArr)
+			return uni.map(e=>new Tempus(e))
+		}
 	}
 
 	/**
-	 * 用JSON.stringfy()比較兩IVocaRow是否相同
-	 * @param row1 
-	 * @param row2 
+	 * 批量合併單詞數組
+	 * @param ws 
 	 * @returns 
 	 */
-	public static isWordsEqual(row1: IVocaRow, row2:IVocaRow):boolean
-	public static isWordsEqual(row1: SingleWord2, row2:SingleWord2):boolean
-
-	public static isWordsEqual(row1: IVocaRow|SingleWord2, row2:IVocaRow|SingleWord2){
-		return JSON.stringify(row1) === JSON.stringify(row2)
+	public static merge(ws:SingleWord2[]){
+		let map = new Map<string, SingleWord2>()
+		for(const neoWord of ws){
+			let old = map.get(neoWord.wordShape)
+			if(old !== void 0){
+				let united = SingleWord2.intersect(old,neoWord)
+				map.set(united.wordShape, united)
+			}else{
+				map.set(neoWord.wordShape, neoWord)
+			}
+		}
+		return Array.from(map.values())
 	}
 
-	public static is_properSetOf_(w1:SingleWord2, w2:SingleWord2){
+	/**
+	 * 複製成IVocaRow並刪id後 用JSON.stringfy()比較兩IVocaRow是否相同
+	 * @param row1 
+	 * @param row2 
+	 * @param ignoredKeys 忽略之字段
+	 */
+	public static isWordsEqual(row1: IVocaRow, row2:IVocaRow, ignoredKeys?:string[]):boolean
+	public static isWordsEqual(row1: SingleWord2, row2:SingleWord2,ignoredKeys?:string[]):boolean
+
+	public static isWordsEqual(row1: IVocaRow|SingleWord2, row2:IVocaRow|SingleWord2, ignoredKeys?:string[]){
+		let c1:IVocaRow
+		let c2:IVocaRow
+		if(row1 instanceof SingleWord2){
+			c1 = SingleWord2.fieldStringfy(row1)
+			c2 = SingleWord2.fieldStringfy(row2 as SingleWord2)
+		}else{
+			c1 = this.clone(row1)
+			c2 = this.clone(row2 as IVocaRow)
+		}
+		if(ignoredKeys !== void 0){
+			for(const k of ignoredKeys){
+				//console.log(k)//t
+				delete (c1)[k]
+				delete (c2)[k]
+			}
+			
+		}
+
+		return JSON.stringify(c1) === JSON.stringify(c2)
+	}
+
+
+
+
+	/**
+	 * 
+	 * @param sws 依table對SingleWord2數組分類
+	 * @returns 
+	 */
+	public static classify(sws:SingleWord2[]){
+		const tableToWordsMap = new Map<string, SingleWord2[]>()
+		for(const wordToAdd of sws){
+			const innerWords = tableToWordsMap.get(wordToAdd.table)
+			if(innerWords === void 0){
+				tableToWordsMap.set(wordToAdd.table, [wordToAdd])
+			}else{
+				innerWords.push(wordToAdd)
+				tableToWordsMap.set(wordToAdd.table, innerWords)
+			}
+		}
+		return tableToWordsMap
+	}
+
+	// public static is_properSetOf_(w1:SingleWord2, w2:SingleWord2){
 		
-	}
+	// }
 
 	/**
 	 * 對 日期-事件 依日期 排序。
@@ -362,7 +453,12 @@ export default class SingleWord2{
 		return mapObj
 	}
 
-
+	/**
+	 * 取日期對事件之映射
+	 * @param dates 
+	 * @param event 
+	 * @returns 
+	 */
 	public static getDateToEventMap(dates:Tempus[], event:WordEvent){
 		const map = new Map<Tempus, WordEvent>()
 		for(const d of dates){
@@ -398,7 +494,7 @@ export default class SingleWord2{
 	//public static 
 
 	/**
-	 * (試用)根據事件ⁿ珩函數。
+	 * 根據事件ⁿ珩函數數組
 	 * @param event 
 	 * @param fn 
 	 */
@@ -413,12 +509,18 @@ export default class SingleWord2{
 
 }
 
+/**
+ * 日期對事件
+ */
 class Tempus_Event{
 	public constructor(public tempus:Tempus, public event:WordEvent){
 
 	}
 }
 
+/**
+ * 㕥錄權重ˇ算ᵗ程
+ */
 class Procedure{
 
 	//public constructor()
@@ -431,21 +533,28 @@ class Procedure{
 		Object.assign(this, props)
 	}
 
-	private _tempus_event:Tempus_Event = void 0 as any
+	private _tempus_event:Tempus_Event = void 0 as any // 姑ᵈ賦ᵗ初值、實則㕥構造函數創對象則此字段不應潙空
 	;public get tempus_event(){return this._tempus_event;};;public set tempus_event(v){this._tempus_event=v;};
 
-
-	private _after:number = 0 //隨賦ᵗ值
+	/**
+	 * 歷ᵣ當前ᵗ_tempus_event後 權重變後ᵗ量
+	 */
+	private _after:number = 0 
 	;public get after(){return this._after;};;public set after(v){this._after=v;};
 
 
 
 }
 
+/**
+ * 背單詞旹 出詞ᵗ權重
+ */
 export class Priority{
 
 	private _config = {
-		addWeight : 200,
+		//默認ᵗ 添ᵗ權重
+		addWeight : 0x100, 
+		//
 		debuffNumerator : 1000*3600*24*90
 	}
 	;public get config(){return this._config;};;public set config(v){this._config=v;};
@@ -453,7 +562,11 @@ export class Priority{
 	private _procedures:Procedure[] = []
 	;public get procedures(){return this._procedures;};;public set procedures(v){this._procedures=v;};
 
-	public get prio0num(){return lastOf(this.procedures).after}
+	/**
+	 * 初權重
+	 * @see lastOf(this.procedures)?.after??-1
+	 */
+	public get prio0num(){return lastOf(this.procedures)?.after??-1}
 
 	// public solo_calcPrio0(neoTempus_eventMap:Tempus_Event){
 
@@ -477,11 +590,19 @@ export class Priority{
 
 	// }
 
+	/**
+	 * 蔿 @see SingleWord2 對象算初權重
+	 * @param {SingleWord2} sw 
+	 */
 	public calcPrio0(sw:SingleWord2){
 		this.procedures = this.getPrio0Procedures(sw)
-		//console.log(this.procedures) //-
 	}
 
+	/**
+	 * 蔿 @see SingleWord2 對象算並返@see Procedures 對象數組
+	 * @param {SingleWord2} sw 
+	 * @returns 
+	 */
 	public getPrio0Procedures(sw:SingleWord2){
 		
 		const nunc = new Tempus()
@@ -497,10 +618,14 @@ export class Priority{
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
 			procedures.push(unusProcedure)
 		}
-
+		/**
+		 * @see rmb
+		 * @name rmb
+		 * @param tempus_event 
+		 */
 		const rmb = (tempus_event:Tempus_Event)=>{
 			lastProcedure = lastOf(procedures)
-			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)}
+			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = div(prio0,1.1)
 			}else{
@@ -510,6 +635,7 @@ export class Priority{
 			}
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
+			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
 			prio0 = div(prio0, debuff)
 

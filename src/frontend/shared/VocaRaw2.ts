@@ -1,51 +1,44 @@
-import 'module-alias/register';
-//import {config} from '@root/config'
 
-import * as Tp from '@shared/Type'
-import * as fs from 'fs'
-import Ut from '@shared/Ut';
+import Ut, { $, $a } from '@shared/Ut';
 import Txt from '@shared/Txt';
 import SingleWord2 from '@shared/SingleWord2';
-import moment from 'moment';
-import Tempus from './Tempus';
-import dayjs from 'dayjs';
+import Tempus from '@shared/Tempus';
+import _ from 'lodash';
+
 
 
 export interface VocaRawConfig{
 	dbName:string,
 	dbPath:string,
-	url:string,
+	tableName:string,
 	dateFormat:string,
 	dateRegex:string
 	dateBlock: [string, string]
 	wordBlock: [string, string]
 	annotation: [string, string]
-	txtTables:{
-		ling:string,
-		path:string
-	}[]
 }
 
 export const config:VocaRawConfig = {
 	dbName:"voca",
 	dbPath:"",
-	url:"http://127.0.0.1:1919",
+	tableName: '',
+	//url:"http://127.0.0.1:1919",
 	dateFormat:'YYYY-MM-DDTHH:mm:ss.SSSZ',
 	dateRegex: '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+08:00', //勿寫^...$
 	dateBlock: ['\\{','\\}'],
 	wordBlock: ['\\[{2}','\\]{2}'],
 	annotation: ['<<','>>'],
-	txtTables: 
-	[
-		{
-			ling:"english",
-			path:".\\srcWordList\\eng\\eng.voca"
-		},
-		{
-			ling:"japanese",
-			path:".\\srcWordList\\jap\\jap[20230515112439,].txt"
-		}
-	]
+	// txtTables: 
+	// [
+	// 	{
+	// 		ling:"english",
+	// 		path:".\\srcWordList\\eng\\eng.voca"
+	// 	},
+	// 	{
+	// 		ling:"japanese",
+	// 		path:".\\srcWordList\\jap\\jap[20230515112439,].txt"
+	// 	}
+	// ]
 }
 
 
@@ -56,30 +49,37 @@ export const config:VocaRawConfig = {
  */
 export default class VocaRaw2{
 
-	public constructor(p:{
-		_srcFilePath:string,
-		_ling:string,
-	}){
-		Object.assign(this,p)
-		//this.assign_text()
+	/**
+	 * 
+	 * @param _text 詞表txt原表ᵗ內容(頭部可含配置ˉ訊)
+	 * @param configPatch 修正ᵗ配置、優先級: @see configPatch > text頭部ʸᵗ配置 > @see VocaRaw2.defaultConfig
+	 */
+	public constructor(_text:string, configPatch?:VocaRawConfig){
+		this._text = _text
+		let c = VocaRaw2.parseConfig(_text)
+		const mergedConfig:VocaRawConfig = (_ as any).merge({},VocaRaw2.defaultConfig,c,configPatch)
+		if(_.isEmpty(mergedConfig)){throw new Error(`_.isEmpty(mergedConfig)`)}
+		this._config = mergedConfig
 	}
 
-	public static readonly defaultConfig:Tp.VocaRawConfig=require('@root/config').config
+	private static readonly defaultConfig:VocaRawConfig=config
 
-	private _config:Tp.VocaRawConfig=VocaRaw2.defaultConfig
+	private static readonly _configTagName = 'config'
+
+	private _config:VocaRawConfig=VocaRaw2.defaultConfig
 	;public get config(){return this._config;};
 
-	private _srcFilePath:string=''
-	;public get srcFilePath(){return this._srcFilePath;};
+	// private _srcFilePath:string=''
+	// ;public get srcFilePath(){return this._srcFilePath;};
 
-	private _encoding:BufferEncoding = 'utf-8'
-	;public get encoding(){return this._encoding;};;public set encoding(v){this._encoding=v;};
+	//private _encoding:BufferEncoding = 'utf-8'
+	//;public get encoding(){return this._encoding;};;public set encoding(v){this._encoding=v;};
 
-	private _ling:string=''
-	;public get ling(){return this._ling;};
+	//private _table:string=''
+	//;public get table(){return this._table;};
 
 	private _text:string=''
-	;public get text(){return this._text;};;public set text(v){this._text=v;};
+	;private get text(){return this._text;};;private set text(v){this._text=v;};
 
 
 	/**
@@ -89,10 +89,36 @@ export default class VocaRaw2{
 		format: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
 		regex: new RegExp('^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$') //用中時區
 	}
-	;public get dateFormat(){return this._dateFormat;};;public set dateFormat(v){this._dateFormat=v;};
+	;private get dateFormat(){return this._dateFormat;};;private set dateFormat(v){this._dateFormat=v;};
 	
-	public async assign_text(){
-		this.text = await fs.promises.readFile(this.srcFilePath, {encoding:this._encoding})
+	// public async assign_text(){
+	// 	this.text = await fs.promises.readFile(this.srcFilePath, {encoding:this._encoding})
+	// }
+
+	/**
+	 * 從字串解析ᵣ詞。
+	 * @param text 
+	 * @param configPatch 
+	 * @returns 
+	 */
+	private static parseWords(text:string, configPatch?:VocaRawConfig){
+		const raw = new VocaRaw2(text, configPatch)
+		return raw.getAllWords()
+	}public parseWords(){
+		return this.getAllWords()
+	}
+
+	private static parseConfig(srcStr:string):Partial<VocaRawConfig>|undefined{
+		const matches = srcStr.match(/^<config>(.+?)<\/config>/s)
+		if(matches === null || matches.length === 0){
+			//throw new Error(`Cannot load config`)
+			return undefined
+		}
+		let configStr = $($a(matches)[1],`$(nna(matches)[1])`)
+		configStr = `config =`+configStr
+		let config = {}
+		eval(configStr)
+		return config
 	}
 
 
@@ -104,8 +130,8 @@ export default class VocaRaw2{
 	 * @param ling 
 	 * @returns 
 	 */
-	public getAllWordsFromText(text:string=this.text){
-		let ling:string=this.ling, config:Tp.VocaRawConfig=this.config
+	private getAllWordsFromText(text:string=this.text, table:string){
+		let config:VocaRawConfig=this.config
 		
 		VocaRaw2.checkBracesMatch(text, config.dateBlock)
 		text = this.processRawText(text)
@@ -114,21 +140,21 @@ export default class VocaRaw2{
 		// console.log(dateBlocks)//t
 		const words:SingleWord2[] = []
 		for(const e of dateBlocks){
-			const partWords = this.getWordsInDateBlock(e)
+			const partWords = this.getWordsInDateBlock(e,table)
 			words.push(...partWords)
 		}
 		//console.log(words)//t -
 		return words
-	}public async getAllWords(){
-		await this.assign_text()
-		return this.getAllWordsFromText()
+	}private getAllWords(){
+		//await this.assign_text()
+		return this.getAllWordsFromText(this.text, this.config.tableName)
 	}
 
 	/**
 	 * 檢查大括號是否匹配
 	 * @param text 
 	 */
-	public static checkBracesMatch(text:string, blocks:[string, string]){
+	private static checkBracesMatch(text:string, blocks:[string, string]){
 		
 		let b = Ut.isMatchInPair(text, blocks[0], blocks[1])
 		if(!b){
@@ -286,8 +312,8 @@ export default class VocaRaw2{
 	 * @param ling 
 	 * @returns 
 	 */
-	private getWordInWordUnit(wordUnit:string, date:Tempus){
-		let ling:string=this.ling, annotation:[string, string]=this.config.annotation
+	private getWordInWordUnit(wordUnit:string, date:Tempus, table:string){
+		let annotation:[string, string]=this.config.annotation
 		//VocaRaw2.checkDate(date)
 		wordUnit = wordUnit.trim()
 		//let wordShape = wordUnit.replace(/(.+?)\n/, '$1')
@@ -306,7 +332,7 @@ export default class VocaRaw2{
 		}
 
 		let word = new SingleWord2({
-			table:ling,
+			table:table,
 			wordShape: wordShape.trim(),
 			pronounce: [],
 			mean:[mean.trim()],
@@ -343,15 +369,14 @@ export default class VocaRaw2{
 	 * @param ling 
 	 * @returns 
 	 */
-	private getWordsInDateBlock(dateBlock:string){
+	private getWordsInDateBlock(dateBlock:string, table:string){
 		let config = this.config
-		let ling = this.ling
 		let rawDate = this.getRawDateInDateBlock(dateBlock)
 		let tempus:Tempus = this.parseRawDate(rawDate,config.dateFormat)
 		let wordUnits = this.getWordUnitsInDateBlock(dateBlock)
 		const words:SingleWord2[] = []
 		for(const e of wordUnits){
-			const word = this.getWordInWordUnit(e, tempus)
+			const word = this.getWordInWordUnit(e, tempus,table)
 			words.push(word)
 		}
 		return words
@@ -371,10 +396,10 @@ export default class VocaRaw2{
 		}
 	} */
 
-	public static parseRawDate(oldDate:string, oldFormat:string){
+	private static parseRawDate(oldDate:string, oldFormat:string){
 		let d = new Tempus(oldDate, oldFormat)
 		return d
-	}public parseRawDate(oldDate:string, oldFormat:string){
+	}private parseRawDate(oldDate:string, oldFormat:string){
 		return VocaRaw2.parseRawDate(oldDate, oldFormat)
 	}
 
@@ -434,7 +459,7 @@ export default class VocaRaw2{
 	 * @param chara 
 	 * @returns 
 	 */
-	public static addCharAroundPattern(text:string, pattern:string, chara:string, groupIdx:number){
+	private static addCharAroundPattern(text:string, pattern:string, chara:string, groupIdx:number){
 		let regex = new RegExp(`${pattern}`,'g')
 		return text.replace(regex, `${chara}$${groupIdx}${chara}`)
 	}
@@ -445,17 +470,18 @@ export default class VocaRaw2{
 	 * @returns 
 	 */
 	public static merge(ws:SingleWord2[]){
-		let map = new Map<string, SingleWord2>()
-		for(const word of ws){
-			let g = map.get(word.wordShape)
-			if(g){
-				let m = SingleWord2.intersect(g,word)
-				map.set(m.wordShape, m)
-			}else{
-				map.set(word.wordShape, word)
-			}
-		}
-		return Array.from(map.values())
+		// let map = new Map<string, SingleWord2>()
+		// for(const neoWord of ws){
+		// 	let old = map.get(neoWord.wordShape)
+		// 	if(old !== void 0){
+		// 		let united = SingleWord2.intersect(old,neoWord)
+		// 		map.set(united.wordShape, united)
+		// 	}else{
+		// 		map.set(neoWord.wordShape, neoWord)
+		// 	}
+		// }
+		// return Array.from(map.values())
+		return SingleWord2.merge(ws)
 	}
 }
 

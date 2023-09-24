@@ -9,7 +9,8 @@ export default defineConfig({
 	resolve:{
 		alias:{
 			'@root': '.',
-			'@shared': '../shared',
+			//'@shared': '../shared',
+			'@shared': '/shared',
 			'@ts': '/src/ts',
 			'@components': '/src/components',
 			'@views': '/src/views',

@@ -42,7 +42,7 @@ export default class VocaMysql{
 		let allWordsInMysql:Tp.Old_IVocaRow[]|null = await VocaMysql.getAllWords<Tp.Old_IVocaRow>(pool, table)
 		let neoObjs: Tp.IVocaRow[]|null = SingleWord2.parseOldObj(allWordsInMysql); allWordsInMysql=null
 		let neoInst: SingleWord2[]|null = SingleWord2.parse(neoObjs); neoObjs=null
-		return liteInst.addWords(neoInst)
+		return liteInst.addWords_old(neoInst)
 	}
 
 	public async toSqliteTable_forOld(table:string, liteInst:VocaSqlite){

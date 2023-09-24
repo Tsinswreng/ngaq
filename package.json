@@ -58,14 +58,14 @@
 	"scripts": {
 		"start": "../../node_modules/.bin/webpack serve --open",
 		"dev": "cd src/frontend && vite",
-		"build": "cd src/frontend && vue-tsc && vite build",
-		"註": "//npm run build不效。手動cd到前端目錄再vite build 可行。",
+		"build": "cd src/frontend && vite build",
 		"build2": "vue-tsc && vite build",
 		"preview": "../../node_modules/.bin/vite preview",
 		"out": "tsc -p . ",
-		"srv": "nodemon ./out/backend/VocaServer.js",
+		"srvmon": "nodemon ./out/backend/VocaServer.js",
+		"srv": "node ./out/backend/VocaServer.js",
 		"addWords": "node ./out/backend/BackupTable.js",
-		"all": "npm run addWords && npm run build && npm run out && node ./src/backend/src/VocaServer.js "
+		"buildAll": "npm run build && npm run out"
 	},
 	"paths": {
 		"@my_modules/*": [

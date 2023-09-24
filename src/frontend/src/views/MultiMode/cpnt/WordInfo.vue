@@ -3,7 +3,7 @@
 import { $ } from '@shared/Ut';
 import WordB from '@ts/voca/WordB';
 import CtrlPanel from './CtrlPanel.vue'
-import Status from '../Status';
+import Status from '../MultiMode';
 const status = Status.getInstance()
 const props = defineProps<{
 	wordB: WordB,
@@ -17,7 +17,7 @@ const wordB_nn = $(props.wordB)
 		<CtrlPanel class="CtrlPanel" @CtrlPanel:start="status.isShowCardBox.value=true;"></CtrlPanel>
 		<h2>{{ wordB_nn.fw.wordShape }}</h2>
 		<div>{{ 'id='+wordB_nn.fw.id }}</div>
-		<div>{{ wordB_nn.fw.mean }}</div>
+		<div class="w-mean"> {{wordB_nn.formattedMean}}</div>
 	</div>
 </template>
 <style scoped>
@@ -28,5 +28,8 @@ const wordB_nn = $(props.wordB)
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
 	/* display: block; */
 	margin: 0 auto 0 auto;
+}
+.w-mean{
+	white-space: pre-wrap;
 }
 </style>

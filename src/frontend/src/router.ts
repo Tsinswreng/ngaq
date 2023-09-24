@@ -5,6 +5,7 @@ import MonoMode from './views/MonoMode.vue'
 import Old_MonoMode from "./views/Old_MonoMode.vue";
 import TypingTest from "./views/TypingTest.vue";
 import MultiMode from '@views/MultiMode/MultiMode.vue';
+import Manage from '@views/Manage/Manage.vue';
 
 /* interface Route{
 	path:string
@@ -20,6 +21,10 @@ const routes:RouteRecordRaw[] =
 	{
 		path: '/login',
 		component: login
+	},
+	{
+		path: '/Manage',
+		component: Manage
 	},
 	{
 		path: '/MultiMode',

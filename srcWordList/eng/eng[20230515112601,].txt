@@ -1,3 +1,4 @@
+
 23.05.15-2053
 {
 charge
@@ -15127,6 +15128,124 @@ sanitize
 ( sanitizing, sanitized, sanitizes )
 英 [ˈsænɪtaɪz]美 [ˈsænɪtaɪz]
 vt. 使……无害；给……消毒；对……采取卫生措施
+
+
+}
+
+23.09.17-1957
+{
+rudimentary
+美: [ˌrudəˈment(ə)ri] 
+英: [ˌruːdɪˈment(ə)ri] 
+adj.	基础的；基本的；未充分发展的；原始的
+网络	初步的；未发展的；初级的
+
+
+}
+
+23.09.19-0815
+{
+oral
+美: [ˈɔrəl] 
+英: [ˈɔːrəl] 
+adj.	口头的；用口的；口腔的；口服的
+n.	（尤指外语考试中的）口试；（大学里的）口试
+网络	口述的；口腔(oralcavity)；口语的
+
+petroleum
+英 [pəˈtrəʊliəm]美 [pəˈtroʊliəm]
+CET4 TEM4
+n. 石油，原油
+
+derive
+美: [dɪˈraɪv] 
+英: [dɪ'raɪv] 
+v.	导出；追寻起源；<<推究>>；由来
+网络	得到；派生；得自
+}
+
+23.09.20-2128
+{
+exponent
+英 [ɪkˈspəʊnənt]美 [ɪkˈspoʊnənt]
+CET6+ TEM8
+n. 拥护者，倡导者；代表人物；<<指数，幂>>；大师，行家；成分；说明者，说明物
+adj. 说明的
+}
+
+23.09.21-2146
+{
+bad rap
+英 [bæd ræp]美 [bæd ræp]
+坏名声：指一个人或事物因为误解或不公平的原因而获得的负面评价。
+
+terseness
+英 [ˈtɜːsnəs]美 [ˈtɜːrsnəs]
+n. 简洁；精练
+
+terse
+( terser, tersest )
+英 [tɜːs]美 [tɜːrs]
+TEM8
+adj. 简洁的，精练的，扼要的
+
+compelling
+英 [kəmˈpelɪŋ]美 [kəmˈpelɪŋ]
+adj. 令人信服的，有说服力的；引人入胜的，扣人心弦的；非常强烈的，不可抗拒的
+v. 强迫，迫使；使发生，促使（compel 的现在分词形式）
+
+interoperability
+英 [ˌɪntərˌɒpərəˈbɪləti]美 [ˌɪntərˌɑːpərəˈbɪləti]
+n. [计] 互操作性；互用性
+
+codify
+( codifying, codified, codifies )
+英 [ˈkəʊdɪfaɪ]美 [ˈkɑːdɪfaɪ]
+vt. 编纂；将……编成法典；编成法典
+
+spec
+英 [spek]美 [spek]
+n. 规格说明（specification 的简称）；投机，碰运气（on spec）；<非正式>眼镜（specs）
+v. 给……定规格，按照规定标准建造
+
+misnomer
+英 [ˌmɪsˈnəʊmə(r)]美 [ˌmɪsˈnoʊmər]
+n. 用词不当；误称；写错姓名
+
+bloat
+英 [bləʊt]美 [bloʊt]
+adj. 肿胀的，鼓起的；饮食过度的，胃胀的
+v. 使膨胀，肿胀；腌制；溢出
+n. 膨胀；过度，过量；（牛、羊等的）胃气胀
+
+
+}
+
+
+23.09.23-0940
+{
+octet
+美: [ɑkˈtet] 
+英: [ɒkˈtet] 
+n.	八个一组的东西；【乐】八重唱(曲)；八重奏(曲)
+网络	位组；字节；八位字节
+
+megabyte
+美: [ˈmeɡəˌbaɪt] 
+英: ['meɡə.baɪt] 
+n.	【计】兆字节
+网络	位元组；百万字节；百万位元组
+
+
+}
+
+23.09.23-1957
+{
+caveat
+美: [ˈkeɪviˌæt] 
+英: ['keɪvi.æt] 
+n.	警告；【法】中止诉讼的申请；〈美〉保护发明特许权的请求书
+网络	注意事项；禁令；警告说明
 
 
 }

@@ -3,8 +3,17 @@ import SingleWord2 from "@shared/SingleWord2";
 import VocaMysql from "./VocaMysql";
 import VocaRaw2 from "@shared/VocaRaw2";
 import VocaSqlite from "./VocaSqlite";
-import * as Tp from 'Type'
+import Log from "@shared/Log";
+import { readLine } from "@shared/Ut";
+const l = new Log()
+
 export default class VocaCmd{
+
+
+	public static async addWords(){
+		const inputStr = await readLine(`Please input the path of your words table`)
+
+	}
 	
 
 	public static async run(){
@@ -12,7 +21,7 @@ export default class VocaCmd{
 		let ling = cf.txtTables[0].ling
 		let path = cf.txtTables[0].path
 		let raw = new VocaRaw2({
-			_ling: ling,
+			_table: ling,
 			_srcFilePath: path
 		})
 		
@@ -26,7 +35,7 @@ export default class VocaCmd{
 		})
 		//await db.creatTable(ling)
 
-		let ids = await db.addWords(words)
+		let ids = await db.addWords_old(words)
 		console.log(ids)
 
 	}
@@ -75,6 +84,7 @@ export default class VocaCmd{
 }
 
 //VocaCmd.testOldVocaDb()
-VocaCmd.run()
+//VocaCmd.run()
 //VocaCmd.testReturnId()
 //測試謬ᵗ日期、試用他ᵗ代碼塊標記。
+

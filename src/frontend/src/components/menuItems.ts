@@ -43,6 +43,15 @@ export default{
 		},
 		{
 			id: i++,
+			title: 'Manage',
+			// <font-awesome-icon icon="fa-solid fa-info" />
+			icon: 'fa-info',
+			onClick() {
+				window.location.href = '/Manage'
+			}
+		},
+		{
+			id: i++,
 			title: 'MultiMode',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',

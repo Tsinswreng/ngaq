@@ -74,7 +74,7 @@ export class MinimalPairUtil{
 		}
 
 		async function objTo2DArr(numArr:number[]){
-			let r = await Sqlite.transaction<{freq:number}>(db, sql, numArr)
+			let r = await Sqlite.deprecated_transactionForOneSql<{freq:number}>(db, sql, numArr)
 			let arr:number[] = []
 			for(let i = 0; i < r.length; i++){
 				arr.push(r[i].freq) 
@@ -855,7 +855,7 @@ export class DictDb{
 		//写一个同步的typescript函数、判断一个sqlite数据库是否含有某表
 		if(!this.db){throw new Error('!this.db')}
 		if(!tableName){return false}
-		return Sqlite.isTableExist(this.db, tableName)
+		return Sqlite.deprecated_isTableExist(this.db, tableName)
 	}
 
 	public static async creatTable(db:Database, tableName:string){
@@ -1040,7 +1040,7 @@ VALUES (?,?)`)
 	 */
 	public static async putEssay(db:Database, path=new DictDb({}).essayPath, essayName='essay'){
 		return new Promise(async(s,j)=>{
-			let b = await Sqlite.isTableExist(db, essayName)
+			let b = await Sqlite.deprecated_isTableExist(db, essayName)
 			//if(!b){await DictDb.quickStart(path,essayName)}
 			if(!b){await DictDb.putNewTable(new DictRaw({srcPath:path, name:essayName}))}
 			s(0)
@@ -1233,7 +1233,7 @@ HAVING COUNT(*) > 1;`
 			console.log(strToBeQueriedForP2)//t
 			if(strToBeQueriedForP2.length !== result1.length){Promise.reject('')}
 			let sql = `SELECT * FROM '${tableName}' WHERE ${columnName}=?`
-			return await Sqlite.transaction<DictDbRow>(db, sql, strToBeQueriedForP2)
+			return await Sqlite.deprecated_transactionForOneSql<DictDbRow>(db, sql, strToBeQueriedForP2)
 		}
 		let r2 = await getR2(phoneme1, phoneme2)
 		console.log(r2.length)

@@ -7,7 +7,7 @@ import WordInfo from './cpnt/WordInfo.vue';
 import CtrlPanel from './cpnt/CtrlPanel.vue'
 //
 
-import Status from './Status';
+import Status from './MultiMode';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import Log from '@shared/Log';
@@ -57,7 +57,9 @@ async function test(){
 
 	<!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
 
-	<component :is="WordInfo" :wordB="status.curWord" class="WordInfo" :key="status.curWord.fw.id" v-if="isShowWordInfo"></component>
+	<div class="WordInfo-container">
+		<component :is="WordInfo" :wordB="status.curWord" class="WordInfo" :key="status.curWord.fw.id" v-if="isShowWordInfo"></component>
+	</div>
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox">
 		<div v-for="(e, i) in recite.allWordsToLearn">
@@ -68,6 +70,10 @@ async function test(){
 </template>
 
 <style scoped>
+
+.WordInfo-container{
+	width: 30%
+}
 .MultiMode{
 	display: flex;
 }
@@ -75,7 +81,7 @@ async function test(){
 
 .cards-box{
 	border: solid 1px red; /* test */
-	margin: 0 30% 0 auto;
+	/* margin: 0 30% 0 auto; */
 	width: 550px;
 	/* position: fixed; */
 	/* left: 30%; */
