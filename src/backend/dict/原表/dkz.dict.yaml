@@ -1,5 +1,5 @@
 
-#20230924193056344
+#20230925182412344
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1298,6 +1298,8 @@ use_preset_vocabulary: true
 婕	tsap	
 睫	tsap	
 楫	tsəp	
+刪	srˁen	
+捐	wen	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -1573,6 +1575,11 @@ use_preset_vocabulary: true
 喂	kʰujs	
 猴	kʰʷˁo	
 述	lʰut	
+洛	strˁak	
+絡	srˁak	
+烙	mʰrˁaks	
+駱	mrˁaks	
+酪	lrˁaks	
 拎	nʰrˁeŋ	
 伶	drˁeŋ	
 泠	strˁeŋ	
@@ -1670,6 +1677,8 @@ use_preset_vocabulary: true
 崙	kʷrun	
 論	ŋrun	
 慕	zˁaks	
+ 		
+ 		
 純	tunʔ	1%
 崔	dzˁuj	1%
 堵	tæʔ	1%
@@ -9463,7 +9472,6 @@ use_preset_vocabulary: true
 幏	krˁaj	
 幏	krˁajs	
 稼	krˁajs	
-駱	rˁak	
 幵	kˁen	
 尖	tsem	
 戔	dzˁan	
@@ -10627,7 +10635,6 @@ use_preset_vocabulary: true
 𦮌	kʷˁen	
 㳙	kʷˁen	
 姢	ʔon	
-捐	lon	
 𦮻	kʷˁen	
 涓	kʷˁen	
 娟	ʔon	
@@ -11838,8 +11845,6 @@ use_preset_vocabulary: true
 䝤	trˁawʔ	
 䵏	rˁawʔ	
 𣠼	rˁawʔ	
-烙	rˁak	
-酪	rˁak	
 嫪	rˁaw	
 嫪	rˁaws	
 澇	rˁaw	
@@ -13203,7 +13208,6 @@ use_preset_vocabulary: true
 曪	rˁajʔ	
 𤼠	rˁojʔ	
 㓢	rˁak	
-洛	rˁak	
 珞	rˁak	
 𣧳	rˁak	
 㪾	krˁak	
@@ -13211,7 +13215,6 @@ use_preset_vocabulary: true
 䀩	rak	
 𤽥	rˁak	
 笿	rˁak	
-絡	rˁak	
 𤽼	rˁak	
 摞	rˁoj	
 摞	rˁojs	
@@ -17587,7 +17590,6 @@ use_preset_vocabulary: true
 邖	srˁen	
 芟	srˁam	
 杉	srˁem	
-刪	srˁan	
 苫	ɕam	
 苫	ɕams	
 䀐	srˁams	

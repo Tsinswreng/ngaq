@@ -7,6 +7,7 @@ export default class Manage{
 
 	public static readonly id_wordSrcStr = 'wordSrcStr'
 	public static readonly id_neoTableName = 'neoTableName'
+	public static readonly id_sqlInsert = 'sqlInsert'
 
 	private static _instance: Manage
 	private constructor(){}

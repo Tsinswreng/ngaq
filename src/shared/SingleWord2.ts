@@ -647,7 +647,7 @@ export class Priority{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
 			//prio0 /= weight
-			prio0 = div(prio0, weight) 
+			prio0 = mul(prio0, weight) 
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
 			procedures.push(unusProcedure)
 		}

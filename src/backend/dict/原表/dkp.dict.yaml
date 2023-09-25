@@ -1517,6 +1517,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 婕	tsap
 睫	tsap
 楫	tsəp
+刪	srˁen
+捐	wen
+
+
+
 # 欄
 # 攔
 # 瀾
@@ -2064,6 +2069,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 喂	口ujs
 猴	犬ˁo
 述	lʰut	#ts
+洛	strˁak	# ts
+絡	srˁak	# ts
+烙	mʰrˁaks	# ts
+駱	mrˁaks	# ts
+酪	lrˁaks	# ts
+
 #<整字拆>
 
 # #容	@容
@@ -3257,3 +3268,122 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
+# -- select  * from  OC_schuesslerOC, saffes where OC_schuesslerOC.kanji = saffes.kanji
+
+# -- SELECT OC_schuesslerOC.*, saffes.*
+# -- FROM OC_schuesslerOC
+# -- left JOIN saffes ON OC_schuesslerOC.kanji = saffes.kanji;
+
+
+# -- alter table  OC_schuesslerOC add column freq varchar(64)
+
+# --INSERT  INTO  OC_schuesslerOC (freq)
+# --SELECT OC_schuesslerOC.*, essay.*
+# -- UPDATE OC_schuesslerOC
+# -- SET freq = COALESCE(essay.pronounce, '')
+# -- FROM essay
+# -- WHERE OC_schuesslerOC.kanji = essay.kanji;
+
+# -- PRAGMA  table_info (saffes)
+
+# -- SELECT COUNT(DISTINCT id) AS distinct_count FROM OC_schuesslerOC
+# -- PRAGMA table_info('cangjie7-1')
+
+# -- SELECT kanji, pronounce, freq, COUNT(*) AS count
+# -- FROM 'kana'
+# -- GROUP BY kanji, pronounce, freq
+# -- HAVING COUNT(*) > 1;
+
+# --DELETE FROM  'kana' WHERE  ID   NOT  IN (SELECT  MAX(ID) FROM 'kana' GROUP BY kanji, pronounce, freq)
+
+# -- SELECT SUM(CASE
+# --            WHEN freq NOT NULL AND freq GLOB '*[0-9]*'
+# --            THEN CAST(freq AS INTEGER)
+# --            ELSE 0
+# --          END) AS sum_result
+# -- FROM saffes;
+
+# --ALTER TABLE 'saffes' ADD COLUMN 'freq' VARCHAR(64), ADD COLUMN 'essay_id' INTEGER REFERENCES essay(id) ON DELETE SET NULL
+
+# -- SELECT  *  from saffes, essay WHERE saffes.essay_id = essay.id ORDER BY  CAST(essay.pronounce AS INTEGER) DESC
+
+# --SELECT  * FROM 'saffes' WHERE BINARY pronounce = 'gss'
+
+# -- SELECT  * FROM(
+# --     SELECT  saffes.id as id, saffes.kanji as kanji, saffes.pronounce as pronounce, essay.pronounce as freq  from saffes, essay WHERE saffes.essay_id = essay.id ORDER BY  CAST(essay.pronounce AS INTEGER) DESC
+# --             )
+# -- WHERE freq = null
+
+# -- Begin the transaction
+
+
+
+ # -- SELECT  code, SUM(freq) FROM  saffes GROUP BY code
+
+# /*
+# SELECT
+  # code,
+  # SUM(freq) AS total_freq
+# FROM
+  # saffes s1
+# WHERE
+  # freq < (SELECT MAX(freq) FROM saffes s2 WHERE s1.code = s2.code)
+# GROUP BY
+  # code;*/
+
+# -- SELECT
+# --   code,
+# --   SUM(freq) AS total_freq
+# -- FROM (
+# --   SELECT
+# --     code,
+# --     freq,
+# --     ROW_NUMBER() OVER (PARTITION BY code ORDER BY freq DESC) AS rn
+# --   FROM
+# --     saffes
+# -- ) AS s
+# -- WHERE
+# --   rn > 1
+# -- GROUP BY
+# --   code;
+
+# --三家上古對比
+# SELECT bsoc.char, sch.char, msoeg.char, bsoc.full, sch.code AS sch_code, msoeg.code AS msoeg_code
+# FROM bsoc
+# FULL JOIN OC_schuesslerOC sch ON sch.char = bsoc.char
+# FULL JOIN OC_msoeg msoeg ON msoeg.char = bsoc.char;
+
+# -- DELETE  FROM saffes WHERE  char='temp'
+
+# -- SELECT code, COUNT(*) -1 AS occurrences
+# -- FROM saffesNoHead
+# -- GROUP BY code
+# -- ORDER BY occurrences DESC;
+
+# --SELECT *,( INSTR(code, 'tʃ')-1) AS position FROM OC_msoeg WHERE code LIKE '%tʃ%';
+
+# --UPDATE 'OC_msoeg' SET code = (CASE WHEN code=? THEN ? END)
+
+# -- SELECT  a.*, b.code as b_code
+# -- FROM  'bsoc' a
+# -- FULL JOIN saffes b ON a.char=b.char
+
+# --CREATE TABLE 'temp20230815185607' AS SELECT a.*, b.code as b_code FROM 'temp20230815185606' a FULL JOIN 'temp20230815185603' b ON a.char=b.char
+ # --SELECT a.*, b.code as b_code FROM 'temp20230815185606' a LEFT JOIN 'temp20230815185603' b ON a.char=b.char
+
+
+# --ALTER TABLE  saffes ADD  COLUMN  p3 VARCHAR(64)
+
+# --UPDATE saffes SET p1 = SUBSTR(code, 1, 1);
+
+# --ALTER TABLE  bsoc ADD COLUMN  full VARCHAR(64)
+
+# --UPDATE  bsoc SET "full" = code
+
+# -- SELECT  a.*, b.*
+# -- FROM essay2 a
+# -- FULL JOIN dks b ON a.char=b.char
+
+# --CREATE  TABLE  essay2  AS SELECT  * FROM essay
+
+# --SELECT *,  SUM(freq) s FROM  dks GROUP BY code ORDER BY  s DESC

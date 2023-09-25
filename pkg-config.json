@@ -1,0 +1,8 @@
+{
+	"name": "voca",
+	"version": "1.0.0",
+	"scripts": "out\\backend\\VocaServer.js",
+	"targets": [
+		"node14-win-x64"
+	]
+}

@@ -1,6 +1,6 @@
 //require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 
-import {RegexReplacePair, copyIgnoringKeys} from '@shared/Ut';
+import {$a, RegexReplacePair, copyIgnoringKeys} from '@shared/Ut';
 import { Database,RunResult } from 'sqlite3';
 import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 import _ from 'lodash';
@@ -42,10 +42,10 @@ export interface Sqlite_sequence{
 }
 
 export interface Sqlite_master{
-	type:string
-	name:string
-	tbl_name:string
-	rootpage:number
+	type:string 
+	name:string //存储了数据库对象的名称，包括表、视图、索引等。
+	tbl_name:string //也存储了数据库对象的名称，但通常用于描述表（table）对象的名称。
+	rootpage:number //rootpage 用于标识一个 B-Tree 的根节点在数据库文件中的页码
 	sql:string
 }
 
@@ -122,9 +122,37 @@ export default class Sqlite{
 	 * @param oldTable 
 	 * @returns 
 	 */
-	public static copyTable(db:Database, newTable:string, oldTable:string){
-		let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}`
-		return Sqlite.all(db, sql)
+	public static async copyTable(db:Database, newTable:string, oldTable:string){
+		//let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}` //<坑>{新表ᵗ自增主鍵ˋ不會隨原表}
+		//return Sqlite.all(db, sql)
+		const creatSqlFun = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(db,oldTable)
+		const creatSql = creatSqlFun(newTable)
+		//console.log(creatSql)//t
+		//console.log(`console.log(creatSql)`)
+		await Sqlite.all(db, creatSql)
+		const insertSql = `INSERT INTO '${newTable}' SELECT * FROM '${oldTable}'`
+		return Sqlite.all(db, insertSql)
+		//return new Promise(()=>{})
+	}
+
+	/**
+	 * 從sqlite_master査一表之sql字段。返回一個函數作潙建表sql語句之字串模板。
+	 * @param db 
+	 * @param table 
+	 * @returns 
+	 */
+	public static async getCreatTableSqlTemplateFromSqlite_master(db:Database, table:string){
+		const sql = `SELECT sql from 'sqlite_master' WHERE type='table' AND name=?`
+		const pair = {sql:sql, values:[[table]]}
+		const r = await Sqlite.transaction(db, [pair], 'each')
+		const originSql:string = $a(  ((r[0][0][0] as any ).sql)as string  )
+		if(typeof(originSql)!=='string'){throw new Error(`typeof(originSql)!=='string'`)}
+		const oldTable = table
+		const sqlTemplateFunction:(table:string)=>string = (table:string)=>{
+			const targetSql = originSql.replace(new RegExp(`^CREATE TABLE "${oldTable}"`), `CREATE TABLE "${table}"`)
+			return targetSql
+		}
+		return sqlTemplateFunction
 	}
 
 	/**

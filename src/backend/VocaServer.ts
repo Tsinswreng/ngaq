@@ -171,6 +171,7 @@ export default class VocaServer{
 				//console.log(sws[0])//t
 				
 				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqltDbObj, sws)
+				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
@@ -195,11 +196,24 @@ export default class VocaServer{
 			}
 		})
 
+		VocaServer.app.post('/backup',async (req,res)=>{
+			const nunc = new Tempus()
+			console.log(req.path+' '+Tempus.format(nunc))
+			try{
+				const tableName:string = $((req.body).tableName)
+				//await this.sqlt.creatTable(tableName, false)
+				//res.send('creat table successfully\n'+Tempus.format(nunc)) //t
+			}catch(e){
+				console.error(e)
+				res.send('creat table failed\n'+Tempus.format(nunc)) //t
+			}
+		})
+
 		VocaServer.app.post('/creatTable',async (req,res)=>{
 			const nunc = new Tempus()
 			console.log(req.path+' '+Tempus.format(nunc))
-			const tableName:string = $((req.body).tableName)
 			try{
+				const tableName:string = $((req.body).tableName)
 				await this.sqlt.creatTable(tableName, false)
 				res.send('creat table successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){

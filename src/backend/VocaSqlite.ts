@@ -97,7 +97,7 @@ export default class VocaSqlite{
 			`
 		}
 		return Sqlite.all(db, getSql(table))
-	}public creatTable(table=$(this.tableName), ifNotExists=false){
+	}public creatTable(table=$a(this.tableName), ifNotExists=false){
 		return VocaSqlite.creatTable(this.db, table, ifNotExists)
 	}
 
@@ -110,8 +110,8 @@ export default class VocaSqlite{
 	 */
 	public static backupTable(db:Database, table:string, newName=table+new Tempus().time){
 		return Sqlite.copyTable(db, $(newName), table)
-	}public backupTable(newName=this.tableName+new Tempus().time){
-		let table:string = $(this.tableName)
+	}public backupTable(oldTable=this.tableName, newName=oldTable+new Tempus().time){
+		let table:string = $a(oldTable)
 		return VocaSqlite.backupTable(this.db, table, newName)
 	}
 

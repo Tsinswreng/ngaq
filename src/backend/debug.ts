@@ -3,6 +3,8 @@ require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
 import { simpleUnion } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
+import Sqlite from "@shared/db/Sqlite";
+import VocaSqlite from "./VocaSqlite";
 
 let text = 
 `
@@ -38,9 +40,12 @@ int.	操；滚；单独使用
 // let words = raw.parseWords()
 // console.log(words)
 
-function asf(a:any=1, b='2'){
-	console.log(a)
-	console.log(b)
+async function t20230925190348(){
+	const sqlt = new VocaSqlite({})
+	//const fun = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(sqlt.db, 'english')
+	//let r = fun('jap')
+	//console.log(r)
+	sqlt.backupTable('english')
 }
 
-asf(null, '3')
+t20230925190348()

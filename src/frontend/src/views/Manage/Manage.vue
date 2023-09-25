@@ -4,17 +4,7 @@ import {ref} from 'vue'
 const manage = Manage.getInstance()
 const tip = 
 `
-添單詞之格式:
-//tableName替換成你實際的表名、如果沒有表則應先新建。
-<config>
-{
-	tableName: 'english' 
-}
-</config>
-
-
-
-
+<config>{tableName:'english'}</config>
 `
 const tipRef = ref(tip)
 
@@ -25,8 +15,14 @@ const tipRef = ref(tip)
 		<button @click="manage.addInDb()">添新詞</button>
 		<textarea name="" :id="Manage.id_wordSrcStr" cols="30" rows="10"></textarea>
 		<button @click="manage.backupAllTables()">備份所有表</button>
-		<button @click="manage.creatTable()">新建表</button>
-		<input type="text" :id="Manage.id_neoTableName">
+		<div>
+			<button @click="manage.creatTable()">新建表</button>
+			<input type="text" :id="Manage.id_neoTableName">
+		</div>
+		<div>
+			<button>sql注入</button>
+			<input type="text" :id="Manage.id_sqlInsert">
+		</div>
 		<div class="tip">
 			{{ tipRef }}
 		</div>
