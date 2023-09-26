@@ -4,6 +4,7 @@
 	import { WordEvent } from '@shared/SingleWord2';
 	import Recite from '@ts/voca/Recite';
 	import Status from '../MultiMode';
+import { lastOf } from '@shared/Ut';
 
 	//let word = defineProps<SingleWord2>()
 	//console.log(words)
@@ -84,7 +85,8 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 		<span class="w-priority">{{ (props.wordB.priority.prio0num).toFixed(2) }}</span>
 		<span class="w-lastRvwDate">{{ props.wordB.getLastRvwDate() }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
-		<span class="w-eventsSymbols">{{props.wordB.getEventSymbols() }}</span>
+		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>
+		<span>{{ lastOf(props.wordB.getEventSymbols()) }}</span>
 
 		<!-- <span class="upper">
 			upper
@@ -137,7 +139,8 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 .w-eventsSymbols{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
 	width: auto;
-	font-size: 12px;
+	font-size: 16px;
+	white-space: pre;
 }
 
 .w-lastRvwDate{

@@ -75,29 +75,39 @@ export function eq(a:number, b:number){
 // export function bigger(a:number, b:number){
 
 // }
+export function lastOf<T>(arr:T[]):T
+export function lastOf<T>(arr:string):string
 
-export function lastOf<T>(arr:T[]):T{
+export function lastOf<T>(arr:T[]|string):T|string{
 	return arr[arr.length-1]
 }
-
 
 
 // export function nno<T>(v:T|undefined|null|{}){
 
 // }
 
+
 /**
  * nonNullable Array
- * 數組判空後返回。
+ * 數組或字符串判空後返回。
  * @param v 
  * @param errMsg 
  * @returns 
  */
-export function $a<T>(v:T[]|undefined|null, errMsg?:string){
+export function $a<T>(v:T[]|undefined|null, errMsg?:string):T[]
+export function $a<T>(v:string|undefined|null, errMsg?:string):string
+
+export function $a<T>(v:T[]|string|undefined|null, errMsg?:string){
 	if(v === void 0){throw new Error(errMsg)}
 	if(v === null){throw new Error(errMsg)}
 	if(v.length === 0){throw new Error(errMsg)}
-	return v
+	if(typeof v === 'string'){
+		return v as string
+	}else{
+		return v as T[]
+	}
+	
 }
 
 /**

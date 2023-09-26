@@ -1,5 +1,5 @@
 
-#20230925182412344
+#20230926121917546
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1300,6 +1300,13 @@ use_preset_vocabulary: true
 楫	tsəp	
 刪	srˁen	
 捐	wen	
+恰	kʰrˁəp	
+奧	ʔˁuk	
+澳	ʔˁuks	
+懊	ʔˁuks	
+襖	ʔˁuks	
+沃	ʔˁawk	
+海	mʰˁəʔ	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -1352,10 +1359,11 @@ use_preset_vocabulary: true
 她	lʰˁajʔ	
 挪	nʰˁaj	
 另	rˁiŋs	
+壟	tʰroŋʔ	
 咬	ŋrˁewʔ	
 怕	pʰrˁaks	
 哦	ʔo	
-啦	kʰrˁəp	
+啦	jˁa	
 郊	kʰrˁew	
 仇	ɡʷu	
 館	kʷˁanʔ	
@@ -1944,7 +1952,6 @@ use_preset_vocabulary: true
 𩑤	ŋˁawʔ	
 媼	ʔˁawʔ	
 𦽀	ŋˁawʔ	
-襖	ʔˁawʔ	
 𪁾	ʔˁawʔ	
 䯠	ʔˁawʔ	
 坳	ʔrˁaw	
@@ -1954,13 +1961,7 @@ use_preset_vocabulary: true
 奥	ʔˁaws	
 嫯	ŋˁaw	
 嫯	ŋˁaws	
-奧	ʔˁaws	
 嶴	ʔˁaws	
-澳	ʔˁaws	
-澳	ʔuk	2%
-懊	ʔˁaws	
-懊	ʔˁawʔ	
-懊	ʔuk	
 䐿	ʔˁaws	
 䐿	ʔˁawʔ	
 䐿	ʔuk	
@@ -7742,7 +7743,6 @@ use_preset_vocabulary: true
 䠽	ɡˁə	
 䱺	ɡˁə	
 胲	kˁə	
-海	hˁəʔ	
 醢	hˁəʔ	
 亥	ɡˁəʔ	
 㧡	ɡˁəʔ	
@@ -12875,7 +12875,6 @@ use_preset_vocabulary: true
 隴	roŋʔ	
 壠	roŋʔ	
 攏	rˁoŋʔ	
-壟	roŋʔ	
 𢤱	rˁoŋʔ	
 竉	rˁoŋʔ	
 㳥	rˁoŋs	
@@ -15959,7 +15958,6 @@ use_preset_vocabulary: true
 㓣	kʰrˁep	
 帢	kʰrˁep	
 洽	ɡrˁep	
-恰	kʰrˁep	
 𢼣	kʰrˁet	
 𠳌	kʰrˁajs	
 𢂿	kʰrˁep	
@@ -20476,7 +20474,6 @@ use_preset_vocabulary: true
 𥟿	ʔˁoj	
 𥟿	ʔˁojʔ	
 肟	ʔˁas	
-沃	ʔˁuk	
 臥	ŋˁojs	
 𥄗	ʔˁot	
 𦯏	ʔrˁok	

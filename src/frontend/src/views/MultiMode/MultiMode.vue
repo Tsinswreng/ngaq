@@ -7,7 +7,7 @@ import WordInfo from './cpnt/WordInfo.vue';
 import CtrlPanel from './cpnt/CtrlPanel.vue'
 //
 
-import Status from './MultiMode';
+import MultiMode from './MultiMode';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import Log from '@shared/Log';
@@ -21,17 +21,17 @@ import SingleWord2 from '@shared/SingleWord2';
 //const { words } = defineProps(['words']);
 
 const recite = Recite.getInstance();
-const status = Status.getInstance()
+const multiMode = MultiMode.getInstance()
 
-const isShowWordInfo = status.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
+const isShowWordInfo = multiMode.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
 const isSaved = ref(true)
 
-const isShowWordWindow = status.isShowWordWindow
-const isShowCardBox = status.isShowCardBox
-let returnedWord:WordB = status.curWord
+const isShowWordWindow = multiMode.isShowWordWindow
+const isShowCardBox = multiMode.isShowCardBox
+let returnedWord:WordB = multiMode.curWord
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
 function wordCardClick(data:WordB){
-	status.wordCardClick(data)
+	multiMode.wordCardClick(data)
 }
 
 
@@ -58,12 +58,12 @@ async function test(){
 	<!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
 
 	<div class="WordInfo-container">
-		<component :is="WordInfo" :wordB="status.curWord" class="WordInfo" :key="status.curWord.fw.id" v-if="isShowWordInfo"></component>
+		<component :is="WordInfo" :wordB="multiMode.curWord" class="WordInfo" :key="multiMode.curWord.fw.id" v-if="isShowWordInfo"></component>
 	</div>
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox">
 		<div v-for="(e, i) in recite.allWordsToLearn">
-			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="status.wordCardClick(e)" />
+			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" />
 		</div>
 	</div>
 </div>
@@ -72,7 +72,10 @@ async function test(){
 <style scoped>
 
 .WordInfo-container{
-	width: 30%
+	width: 30%;
+	/* overflow-y: scroll; */
+	/* outline: 1px gray; */
+	border: solid 1px red; /* test */
 }
 .MultiMode{
 	display: flex;
@@ -89,8 +92,11 @@ async function test(){
 .WordInfo{
 	/* display: inline-block; */
 	width: 25%;
+	height: 90%;
 	/* float: right;; */
 	position: fixed;
+	/* overflow: auto; 创建滚动条 */
+	overflow: scroll;
 	left: 5%
 }
 </style>

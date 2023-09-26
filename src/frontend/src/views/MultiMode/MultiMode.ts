@@ -1,6 +1,6 @@
 import {Ref, ref} from 'vue'
 import WordB from '@ts/voca/WordB'
-import SingleWord2 from '@shared/SingleWord2'
+import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
 import Log from '@shared/Log'
 const l = new Log()
@@ -27,6 +27,9 @@ export default class MultiMode{
 
 	private _isShowWordInfo = ref(true)
 	;public get isShowWordInfo(){return this._isShowWordInfo;};;public set isShowWordInfo(v){this._isShowWordInfo=v;};
+
+	private _debuffNumerator = ref(Priority.defaultConfig.debuffNumerator)
+	;public get debuffNumerator(){return this._debuffNumerator;};;public set debuffNumerator(v){this._debuffNumerator=v;};
 
 	private _curWord:WordB = new WordB(SingleWord2.example)
 	;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
@@ -69,8 +72,7 @@ export default class MultiMode{
 		}
 		//console.log(recite.allWordsToLearn)
 		recite.filterByAddTimes()
-		recite.calcAndDescSortPriority()
-		
+		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
 		this._isShowCardBox.value = true
 
 		//console.log(this.isShowCardBox.value)

@@ -75,11 +75,12 @@ export function eq(a:number, b:number){
 // export function bigger(a:number, b:number){
 
 // }
+export function lastOf<T>(arr:T[]):T
+export function lastOf<T>(arr:string):string
 
-export function lastOf<T>(arr:T[]):T{
+export function lastOf<T>(arr:T[]|string):T|string{
 	return arr[arr.length-1]
 }
-
 
 
 // export function nno<T>(v:T|undefined|null|{}){

@@ -601,21 +601,32 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	//public static saveWords(db:Database, sws:SingleWord2[], table:string):Promise<unknown[]>
 	public static saveWords(db:Database, sws:SingleWord2[]){
-		const tableToWordsMap = classify(sws)
-		const prms:Promise<unknown>[] = []
-		for(const [table,words] of tableToWordsMap){
-			const pr = this.setWordsByIds(db, table, words)
+		const tableToWordsMap = SingleWord2.classify(sws)
+		const prms:Promise<number[][]>[] = []
+		for(const [table, words] of tableToWordsMap){
+			const pr = this.addWordsOfSameTable(db, words)
 			prms.push(pr)
 		}
 		return prms
-
-		function classify(sws:SingleWord2[]){
-
-			return SingleWord2.classify(sws)
-		}
 	}
+
+
+	//public static saveWords(db:Database, sws:SingleWord2[], table:string):Promise<unknown[]>
+	// public static saveWords(db:Database, sws:SingleWord2[]){
+	// 	const tableToWordsMap = classify(sws)
+	// 	const prms:Promise<unknown>[] = []
+	// 	for(const [table,words] of tableToWordsMap){
+	// 		const pr = this.setWordsByIds(db, table, words)
+	// 		//const pr = VocaSqlite.addWordsOfSameTable()
+	// 		prms.push(pr)
+	// 	}
+	// 	return prms
+
+	// 	function classify(sws:SingleWord2[]){
+	// 		return SingleWord2.classify(sws)
+	// 	}
+	// }
 
 
 }

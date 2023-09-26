@@ -169,9 +169,9 @@ export default class VocaServer{
 				const config:VocaRawConfig = $(req.body[1])
 				const sws = SingleWord2.parse(rows)
 				//console.log(sws[0])//t
-				
-				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqltDbObj, sws)
 				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
+				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqltDbObj, sws)
+				
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t

@@ -4,6 +4,7 @@ import SingleWord2, { IVocaRow, WordEvent } from '@shared/SingleWord2';
 import { $ } from '@shared/Ut';
 import Log from '@shared/Log';
 import VocaClient from '@ts/voca/VocaClient';
+import { Priority } from 'shared/SingleWord2';
 const l = new Log()
 
 /**
@@ -24,6 +25,8 @@ class ReviewedWords{
 	 */
 	private _fgt_idToWordsMap:Map<number, WordB> = new Map()
 	;public get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
+
+	
 
 }
 
@@ -98,15 +101,17 @@ export default class Recite{
 	 * 使諸詞各算權重並降序ᵈ排
 	 * @param wbs 
 	 */
-	public static calcAndDescSortPriority(wbs:WordB[]){
+	public static calcAndDescSortPriority(wbs:WordB[],config?:Partial<typeof Priority.defaultConfig>){
 		for(const w of wbs){
 			if(w.priority.procedures.length === 0){
+				//w.priority.config.debuffNumerator = 
+				if(config !== void 0){w.priority.config = config}
 				w.calcPrio()
 			}
 		}
 		wbs.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
-	}public calcAndDescSortPriority(){
-		Recite.calcAndDescSortPriority(this.allWordsToLearn)
+	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
+		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
 	}
 
 	// public async start(path:string){
@@ -208,3 +213,4 @@ export default class Recite{
 	}
 
 }
+

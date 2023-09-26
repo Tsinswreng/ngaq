@@ -5,6 +5,7 @@ import Tempus from '@shared/Tempus';
 import { $, div, lastOf, mapToObjArr, mul, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
+import _ from 'lodash';
 
 const l = new Log()
 const Ut = {
@@ -551,13 +552,19 @@ class Procedure{
  */
 export class Priority{
 
-	private _config = {
+	public static defaultConfig = {
 		//默認ᵗ 添ᵗ權重
 		addWeight : 0x100, 
 		//
 		debuffNumerator : 1000*3600*24*90
 	}
-	;public get config(){return this._config;};;public set config(v){this._config=v;};
+
+	private _config:typeof Priority.defaultConfig = Priority.defaultConfig
+	;public get config():typeof Priority.defaultConfig{return this._config;};//<疑>{不顯式標明get方法ᵗ返ˡ值ᵗ類型、則其返ˡ值ᵗ類型ˋ自動被推斷潙類型芝同於set方法ᵗ入參ᵗ類型者}
+
+	;public set config(v:Partial<typeof Priority.defaultConfig>){
+		this._config=_.merge({}, Priority.defaultConfig, v);
+	};
 
 	private _procedures:Procedure[] = []
 	;public get procedures(){return this._procedures;};;public set procedures(v){this._procedures=v;};
@@ -638,7 +645,7 @@ export class Priority{
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
 			prio0 = div(prio0, debuff)
-
+			console.log(debuff)//t
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
 			procedures.push(unusProcedure)
 		}

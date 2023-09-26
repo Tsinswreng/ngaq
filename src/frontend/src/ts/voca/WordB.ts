@@ -88,6 +88,34 @@ export default class WordB{
 		return result
 	}
 
+	public getEventSymbolCnt(add='😋',rmb='✅',fgt='❌'){
+		const cntObj = this.countWordEvents()
+		//let result = `${add}*${cntObj.add} `+`${rmb}*${cntObj.rmb} `+`${fgt}*${cntObj.fgt}`
+		let result = cntObj.add+':'+cntObj.rmb+':'+cntObj.fgt
+		return result
+	}
+
+	/**
+	 * 取 三事件ᵗ數
+	 * @returns 
+	 */
+	public countWordEvents(){
+		const dateToEventObjs = this.sortedTempus_eventInsts
+		const result = {
+			add:0,rmb:0,fgt:0
+		}
+		for(const obj of dateToEventObjs){
+			switch (obj.event){
+				case WordEvent.ADD: result.add++;break;
+				case WordEvent.RMB: result.rmb++;break;
+				case WordEvent.FGT: result.fgt++;break;
+			}
+		}
+		return result
+	}
+
+
+
 	/**
 	 * 簡化ˢ日期ᵗ示 如YYMMDD
 	 * @param tempus 
@@ -155,7 +183,7 @@ export default class WordB{
 		//r = r.replace(/\r\n/gm,'\n')
 		//r = r.replace(/\n{2,}/gm, '\\n\n')
 		r=r.replace(/([^\n])\n([^\n])/g, '$1\r$2')
-		r = r.replace(/(\n+)(\n)/g, '$1\r')
+		r=r.replace(/(\n+)(\n)/g, '$1\r')
 		r=r.replace(/\n/g, '\\n')
 		r=r.replace(/\r/g, '\n')
 		//console.log(r)//t

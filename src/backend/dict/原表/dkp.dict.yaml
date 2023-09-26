@@ -1519,7 +1519,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 楫	tsəp
 刪	srˁen
 捐	wen
+恰	kʰrˁəp
 
+奧	ʔˁuk
+澳	ʔˁuks
+懊	ʔˁuks
+襖	ʔˁuks
+沃	ʔˁawk
+海	mʰˁəʔ
 
 
 # 欄
@@ -1728,6 +1735,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 她	lʰˁajʔ	# ts
 挪	手ˁaj	# ts
 另	rˁiŋs	# ts
+壟	tʰroŋʔ	# ts
 
 # 鈴	reŋ	# ts
 # 齡	reŋs	# ts
@@ -1739,7 +1747,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 咬	ŋrˁewʔ	# ts
 怕	pʰrˁaks	# ts
 哦	ʔo	# ts
-啦	kʰrˁəp	# ts
+啦	jˁa	# ts
 郊	kʰrˁew	# ts
 仇	ɡʷu	# ts
 館	kʷˁanʔ	# ts
