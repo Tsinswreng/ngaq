@@ -127,12 +127,12 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 
 .w-priority{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
-	width: 60px;
+	width: 80px;
 }
 
 .w-dates_add{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
-	width: 250px;
+	width: 260px;
 	font-size: 6px;
 }
 

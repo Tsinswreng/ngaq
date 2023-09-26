@@ -52,6 +52,7 @@ export default class MultiMode{
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		l.log(`l.log(data)`)
 		l.log(data)
+		l.log(data.priority.procedures)
 		//console.log(data.formattedMean)//t
 		
 	}

@@ -528,7 +528,7 @@ class Procedure{
 	//public constructor(_tempus_event:Tempus_Event, after:number)
 
 	public constructor(props:{
-		_tempus_event:Tempus_Event, _after:number
+		_tempus_event:Tempus_Event, _after:number, _weight:number, _debuff?:number
 	}){
 		//this._tempus_event = _.cloneDeep(_tempus_event)
 		Object.assign(this, props)
@@ -543,7 +543,11 @@ class Procedure{
 	private _after:number = 0 
 	;public get after(){return this._after;};;public set after(v){this._after=v;};
 
+	private _weight:number = -1
+	;public get weight(){return this._weight;};;public set weight(v){this._weight=v;};
 
+	private _debuff?:number
+	;public get debuff(){return this._debuff;};;public set debuff(v){this._debuff=v;};
 
 }
 
@@ -622,7 +626,7 @@ export class Priority{
 			lastProcedure = lastOf(procedures)
 			add_cnt++
 			prio0 = mul(prio0, this.config.addWeight) 
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
+			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight: this.config.addWeight})
 			procedures.push(unusProcedure)
 		}
 		/**
@@ -632,14 +636,18 @@ export class Priority{
 		 */
 		const rmb = (tempus_event:Tempus_Event)=>{
 			lastProcedure = lastOf(procedures)
+			let weight = 1.1
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = div(prio0,1.1)
+				
 			}else{
-				let weight = getWeight(lastProcedure.tempus_event, tempus_event)
+				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = div(prio0, div(weight,2))
+				prio0 = div(prio0, div(innerWeight,2))
+				weight = innerWeight
 			}
+			
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
@@ -648,7 +656,7 @@ export class Priority{
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
+			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
 			procedures.push(unusProcedure)
 		}
 
@@ -657,7 +665,7 @@ export class Priority{
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
 			//prio0 /= weight
 			prio0 = mul(prio0, weight) 
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0})
+			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight})
 			procedures.push(unusProcedure)
 		}
 
