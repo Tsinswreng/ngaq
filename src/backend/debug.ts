@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { simpleUnion } from "@shared/Ut"
+import { getShuffle, group, simpleRandomArr, simpleUnion } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -49,7 +49,7 @@ async function t20230925190348(){
 	console.log(getDateWeight(diff/1000))
 }
 
-t20230925190348()
+//t20230925190348()
 
 function getDateWeight(dateDif:number):number{
 	let result = (1/25)*Math.pow(dateDif, 1/2)
@@ -58,3 +58,26 @@ function getDateWeight(dateDif:number):number{
 	}
 	return result;
 }
+
+function testRandom(){
+	let r = simpleRandomArr(1, 20, 10, 'int')
+	console.log(r)
+}
+
+//testRandom()
+
+function testGroup(){
+	let arr = [0,1,2,3,4,5,6,7,8,9,10]
+	let g = group(arr, 5)
+	console.log(g)
+}
+
+//testGroup()
+
+function test_getShuffle(){
+	let arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+	let s = getShuffle(arr, 5, 4)
+	console.log(s)
+	console.log(s.length)
+}
+test_getShuffle()

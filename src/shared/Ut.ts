@@ -10,17 +10,108 @@ import * as readline from 'readline'
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
-
-
-
-
-
 /**
  * 正則表達式替換組。
  */
 export interface RegexReplacePair{
 	regex:RegExp,
 	replacement:string
+}
+
+/**
+ * 取打亂後ᵗ數組
+ * 整體ᵗ思想: 從整ᵗ數組中隨機取 @see totalDisorderAmount 個元素。把數組按 @see groupMemberAmount-1 個一組 分成若干組(末ʸ不足者自成一組)、再把前ʸ隨機取出ᵗ元素均ᵈ分予各組、插入到各組ᵗ末。若分配後猶有餘則皆予末組。
+ * @param arr 
+ * @param groupMemberAmount 每組幾個元素
+ * @param totalDisorderAmount 總ᵗ亂序ᵗ元素ᵗ數
+ * @instance
+ * let arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+ * let s = getShuffle(arr, 5, 4)
+ * [
+  0,  2,  3,  4, 15,  5,  6,
+  8,  9, 17, 10, 11, 12, 13,
+  1, 14, 16, 18, 19,  7, 20
+]  //
+ * @returns 
+ */
+export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
+	const copy:(T|null)[] = arr.slice()
+	const maxIndex = arr.length -1
+	//
+	const randomIndexs = simpleRandomArr(0, maxIndex, totalDisorderAmount, 'int', false)
+	//每組最多能得幾個亂序元素
+	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groupMemberAmount)
+	//在copy中把曩ʸ取出ᵗ元素ᵗ處ʸ設null
+	for(let i = 0; i < randomIndexs.length; i++){
+		copy[randomIndexs[i]] = null
+	}
+	const copyWithoutNull:T[] = []
+	for(const c of copy){
+		if(c!==null){
+			copyWithoutNull.push(c)
+		}
+	}
+	//對copyWithoutNull分組、每組groupMemberAmount-1個元素。末ʸ不足者自成一組。
+	const groups = group(copyWithoutNull, groupMemberAmount-1)
+	let k = 0
+	//遍歷groups、disorderAmountForEachGroup個ᵗ曩取出ᵗ亂序元素ˇ添ᵣ每組之末ʸ
+	for(let i = 0; i < groups.length; i++){
+		for(let j = 0; j < disorderAmountForEachGroup; j++){
+			if(randomIndexs[k]===void 0){break}
+			groups[i].push(arr[randomIndexs[k]])
+			k++
+		}
+	}
+	//曩取出ᵗ亂序元素芝未盡分配者ˇ全ᵈ予末ᵗ組
+	for(;randomIndexs[k]!==void 0;k++){
+		groups[groups.length-1].push(arr[randomIndexs[k]])
+	}
+	const result:T[] = []
+	for(const g of groups){
+		result.push(...g)
+	}
+	return result
+}
+
+/**
+ * 按索引交換數組兩元素
+ * @param arr 
+ * @param index1 
+ * @param index2 
+ */
+export function swapArrEle<T>(arr:T[], index1:number, index2:number){
+	[arr[index1], arr[index2]] = [arr[index2], arr[index1]]; //解构赋值
+}
+
+/**
+ * 數組分組
+ * @param arr 
+ * @param memberAmount 足夠分旹每組元素ᵗ數。不足旹餘者作一組。
+ * @returns 
+ * @instance
+ * 
+ * 	let arr = [0,1,2,3,4,5,6,7,8,9,10]
+ * 	let g = group(arr, 5)
+ * [ [ 0, 1, 2, 3, 4 ], [ 5, 6, 7, 8, 9 ], [ 10 ] ]
+ * 
+ */
+export function group<T>(arr:T[], memberAmount:number){
+	const result:T[][] = []
+	let unusGroup:T[] = []
+	for(let i=0,j=0; ; i++,j++){
+		unusGroup.push(arr[i])
+		if(unusGroup.length===memberAmount){
+			result.push(unusGroup)
+			unusGroup = []
+		}
+		if(i===arr.length-1){
+			if(unusGroup.length!==0){
+				result.push(unusGroup)
+			}
+			break
+		}
+	}
+	return result
 }
 
 /**
@@ -83,6 +174,7 @@ export function simpleRandomArr(min:number, max:number, howMany:number, type:'in
 	}
 
 	function non_duplicateInt(min:number, max:number, howMany:number){
+		if(max - min + 1 < howMany){throw new Error(`max - min + 1 < howMany`)}
 		const result = new Set<number>()
 		for(let i = 0; ; i++){
 			let unusRandom = Number(max-min)* Math.random()+Number(min)

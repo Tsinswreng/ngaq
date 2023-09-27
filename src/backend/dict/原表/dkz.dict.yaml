@@ -1,5 +1,5 @@
 
-#20230926121917546
+#20230927153729248
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1307,6 +1307,8 @@ use_preset_vocabulary: true
 襖	ʔˁuks	
 沃	ʔˁawk	
 海	mʰˁəʔ	
+貪	lʰˁəm	
+閃	lʰamʔ	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -17636,8 +17638,6 @@ use_preset_vocabulary: true
 㚒	ɕamʔ	
 炶	ɡˁam	
 陝	ɕamʔ	
-閃	ɕams	
-閃	ɕamʔ	
 𧴭	ɕamʔ	
 𧵏	ɕamʔ	
 𡟨	ɕamʔ	
@@ -18982,7 +18982,6 @@ use_preset_vocabulary: true
 鈦	tʰˁats	
 坍	tʰˁam	
 㘱	tʰˁam	
-貪	tʰˁəm	
 痑	tˁajs	
 痑	tʰˁaj	
 痑	tʰˁan	
