@@ -74,6 +74,7 @@ export default class MultiMode{
 		//console.log(recite.allWordsToLearn)
 		recite.filterByAddTimes()
 		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
+		recite.shuffleWords()
 		this._isShowCardBox.value = true
 
 		//console.log(this.isShowCardBox.value)

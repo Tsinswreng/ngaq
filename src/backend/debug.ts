@@ -1,11 +1,12 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, simpleRandomArr, simpleUnion } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
 import Tempus from "@shared/Tempus";
+import { randomInt } from "crypto";
 
 let text = 
 `
@@ -60,7 +61,7 @@ function getDateWeight(dateDif:number):number{
 }
 
 function testRandom(){
-	let r = simpleRandomArr(1, 20, 10, 'int')
+	let r = deprecated_simpleRandomArr(1, 20, 10, 'int')
 	console.log(r)
 }
 
@@ -80,4 +81,16 @@ function test_getShuffle(){
 	console.log(s)
 	console.log(s.length)
 }
-test_getShuffle()
+//test_getShuffle()
+
+
+function test_random(){
+	let arr:number[] = []
+	for(let i = 571; i>=0; i--){
+		arr.push(i)
+	}
+	//console.log(arr)
+	let sh = getShuffle(arr, 8, (571/8))
+	console.log(sh)
+}
+test_random()

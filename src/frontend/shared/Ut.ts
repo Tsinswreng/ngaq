@@ -38,9 +38,8 @@ export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAm
 	const copy:(T|null)[] = arr.slice()
 	const maxIndex = arr.length -1
 	//
-	const randomIndexs = simpleRandomArr(0, maxIndex, totalDisorderAmount, 'int', false)
-	//每組最多能得幾個亂序元素
-	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groupMemberAmount)
+	const randomIndexs = randomIntArr(0, maxIndex, totalDisorderAmount, false)
+
 	//在copy中把曩ʸ取出ᵗ元素ᵗ處ʸ設null
 	for(let i = 0; i < randomIndexs.length; i++){
 		copy[randomIndexs[i]] = null
@@ -53,6 +52,8 @@ export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAm
 	}
 	//對copyWithoutNull分組、每組groupMemberAmount-1個元素。末ʸ不足者自成一組。
 	const groups = group(copyWithoutNull, groupMemberAmount-1)
+	//每組最多能得幾個亂序元素
+	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groups.length)
 	let k = 0
 	//遍歷groups、disorderAmountForEachGroup個ᵗ曩取出ᵗ亂序元素ˇ添ᵣ每組之末ʸ
 	for(let i = 0; i < groups.length; i++){
@@ -114,6 +115,38 @@ export function group<T>(arr:T[], memberAmount:number){
 	return result
 }
 
+
+export function randomIntArr(min:number, max:number, howMany:number, allowDuplicate=true){
+	if(allowDuplicate===false){
+		return non_duplicateInt(min, max, howMany)
+	}else{
+		return duplicateInt(min, max, howMany)
+	}
+	function duplicateInt(min:number, max:number, howMany:number){
+		const result:number[] = []
+		for(let i = 0; i < howMany; i++){
+			let unusRandom = Number(max-min)* Math.random()+Number(min)
+			result.push(Math.floor(unusRandom))
+		}
+		return result
+	}
+	/**
+	 * GPT寫的
+	 */
+	function non_duplicateInt(min: number, max: number, howMany: number) {
+		if (max - min + 1 < howMany) {
+			throw new Error(`max - min + 1 < howMany`);
+		}
+		//创建一个包含从 min 到 max 的所有整数的数组。
+		const integerArray = Array.from({ length: max - min + 1 }, (_, index) => index + min);
+		for (let i = integerArray.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[integerArray[i], integerArray[j]] = [integerArray[j], integerArray[i]];
+		}
+		return integerArray.slice(0, howMany);
+	}
+}
+
 /**
  * 生成隨機數數組 不支持bigint
  * @param min 含
@@ -123,7 +156,7 @@ export function group<T>(arr:T[], memberAmount:number){
  * @param allowDuplicate 
  * @returns 
  */
-export function simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){
+export function deprecated_simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){
 	
 	if(type === 'int'){
 		if(allowDuplicate===true){

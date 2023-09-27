@@ -1,7 +1,7 @@
 import Tempus from '@shared/Tempus';
 import WordB from './WordB';
 import SingleWord2, { IVocaRow, WordEvent } from '@shared/SingleWord2';
-import { $ } from '@shared/Ut';
+import { $, getShuffle } from '@shared/Ut';
 import Log from '@shared/Log';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
@@ -208,8 +208,16 @@ export default class Recite{
 		this.isSaved = true
 		l.log(`l.log(res)`)
 		l.log(res)
-		
-		
+	}
+
+	/**
+	 * 打亂
+	 * @param everyN 
+	 * @see getShuffle
+	 */
+	public shuffleWords(everyN=8){
+		console.log(this.allWordsToLearn.length)//t
+		this._allWordsToLearn = getShuffle(this.allWordsToLearn, everyN, this.allWordsToLearn.length/everyN)
 	}
 
 }

@@ -617,12 +617,13 @@ export class Priority{
 	public getPrio0Procedures(sw:SingleWord2){
 		
 		const nunc = new Tempus()
+		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
 		let procedures:Procedure[] = []
 		let lastProcedure = lastOf(procedures)
 		let add_cnt = 0
 		let prio0 = 1
 
-		const add = (tempus_event:Tempus_Event)=>{
+		const add = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			add_cnt++
 			prio0 = mul(prio0, this.config.addWeight) 
@@ -634,7 +635,7 @@ export class Priority{
 		 * @name rmb
 		 * @param tempus_event 
 		 */
-		const rmb = (tempus_event:Tempus_Event)=>{
+		const rmb = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = 1.1
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
@@ -660,7 +661,7 @@ export class Priority{
 			procedures.push(unusProcedure)
 		}
 
-		const fgt = (tempus_event:Tempus_Event)=>{
+		const fgt = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
 			//prio0 /= weight
@@ -669,7 +670,7 @@ export class Priority{
 			procedures.push(unusProcedure)
 		}
 
-		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
+
 
 		for(let i = 0; i < dateToEventObjs.length; i++){
 			const dateToEvent = dateToEventObjs[i]
@@ -685,9 +686,9 @@ export class Priority{
 			// console.log(lastOf(procedures))
 			
 			switch (dateToEvent.event){
-				case WordEvent.ADD: add(dateToEvent);break;
-				case WordEvent.RMB: rmb(dateToEvent);break;
-				case WordEvent.FGT: fgt(dateToEvent);break
+				case WordEvent.ADD: add(dateToEvent, i);break;
+				case WordEvent.RMB: rmb(dateToEvent, i);break;
+				case WordEvent.FGT: fgt(dateToEvent, i);break
 				default: throw new Error('default');
 			}
 		}
