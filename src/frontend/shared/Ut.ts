@@ -12,6 +12,9 @@ import * as readline from 'readline'
 
 
 
+
+
+
 /**
  * 正則表達式替換組。
  */
@@ -19,6 +22,96 @@ export interface RegexReplacePair{
 	regex:RegExp,
 	replacement:string
 }
+
+/**
+ * 生成隨機數數組 不支持bigint
+ * @param min 含
+ * @param max 含
+ * @param howMany 
+ * @param type 'int'|'float'
+ * @param allowDuplicate 
+ * @returns 
+ */
+export function simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){
+	
+	if(type === 'int'){
+		if(allowDuplicate===true){
+			return duplicateInt(min, max, howMany)
+		}else{
+			return non_duplicateInt(min, max, howMany)
+		}
+	}else if(type === 'float'){
+		if(allowDuplicate===true){
+			return duplicateFloat(min, max, howMany)
+		}else{
+			return non_duplicateFloat(min, max, howMany)
+		}
+	}else{
+		throw new Error()
+	}
+	function duplicateFloat(min:number, max:number, howMany:number){
+		const result:number[] = []
+		for(let i = 0; i < howMany; i++){
+			let unusRandom = Number(max-min)* Math.random()+Number(min)
+			result.push(unusRandom)
+		}
+		return result
+	}
+
+	function duplicateInt(min:number, max:number, howMany:number){
+		const result:number[] = []
+		for(let i = 0; i < howMany; i++){
+			let unusRandom = Number(max-min)* Math.random()+Number(min)
+			result.push(Math.floor(unusRandom))
+		}
+		return result
+	}
+
+	function non_duplicateFloat(min:number, max:number, howMany:number){
+		const result = new Set<number>()
+		for(let i = 0; ; i++){
+			let unusRandom = Number(max-min)* Math.random()+Number(min)
+			if(result.has(unusRandom)){
+
+			}else{
+				result.add(unusRandom)
+			}
+			if(result.size===howMany){break}
+			
+		}
+		return [...result]
+	}
+
+	function non_duplicateInt(min:number, max:number, howMany:number){
+		const result = new Set<number>()
+		for(let i = 0; ; i++){
+			let unusRandom = Number(max-min)* Math.random()+Number(min)
+			unusRandom = Math.floor(unusRandom)
+			if(result.has(unusRandom)){
+
+			}else{
+				result.add(unusRandom)
+			}
+			if(result.size===howMany){break}
+			
+		}
+		return [...result]
+	}
+}
+
+/**
+ * 生成隨機數 數組
+ * @param min 最小值(含)
+ * @param max 最大值(含)
+ * @param howMany 數量
+ * @param type 填'int'或'float'或'bigint'
+ * @param allowDuplicate 是否允許重複 默認true
+ * @return number[]
+ */
+// export function randomArr(min:number|bigint, max:number|bigint, howMany:number|bigint, type:'int'|'float'|'bigint', allowDuplicate=true){
+//TODO
+// }
+
 
 
 export function readLine(query:string){

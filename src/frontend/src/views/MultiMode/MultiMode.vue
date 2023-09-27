@@ -63,7 +63,7 @@ async function test(){
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox">
 		<div v-for="(e, i) in recite.allWordsToLearn">
-			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" />
+			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
 	</div>
 </div>
@@ -89,6 +89,11 @@ async function test(){
 	/* position: fixed; */
 	/* left: 30%; */
 }
+
+.WordCard:hover{
+	outline: white 1px;
+}
+
 .WordInfo{
 	/* display: inline-block; */
 	width: 25%;

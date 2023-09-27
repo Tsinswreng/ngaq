@@ -647,6 +647,7 @@ export class Priority{
 				prio0 = div(prio0, div(innerWeight,2))
 				weight = innerWeight
 			}
+			
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
@@ -655,7 +656,7 @@ export class Priority{
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:innerHeight, _debuff:debuff})
+			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
 			procedures.push(unusProcedure)
 		}
 
