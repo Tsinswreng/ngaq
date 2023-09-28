@@ -1,7 +1,7 @@
 import Tempus from '@shared/Tempus';
 import WordB from './WordB';
 import SingleWord2, { IVocaRow, WordEvent } from '@shared/SingleWord2';
-import { $, getShuffle } from '@shared/Ut';
+import { $, $a, getShuffle } from '@shared/Ut';
 import Log from '@shared/Log';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
@@ -202,6 +202,16 @@ export default class Recite{
 		return rvwWords
 	}
 
+	public mergeSelfWords(){
+		// const ws = Array.from(this.rvwObj.rmb_idToWordsMap.values())
+		// ws.push(...Array.from(this.rvwObj.fgt_idToWordsMap.values()))
+		for(let i = 0; i < this.allWordsToLearn.length; i++){
+			this.allWordsToLearn[i].mergeDates()
+			this.allWordsToLearn[i] = new WordB(this.allWordsToLearn[i].fw) //<坑>{若只併日期則wordB中尚有他ᵗ屬性ˋ不隨ᶦ更新、故需重新創對象}
+		}
+		//console.log(ws)//t
+	}
+
 	public async saveWords(){
 		const rows:IVocaRow[] = this.getToSavedWords().map((e)=>{return SingleWord2.fieldStringfy(e.fw)})
 		let res = await VocaClient.saveWords(rows)//.then((d)=>{l.log(d); this.isSaved = true})
@@ -216,8 +226,8 @@ export default class Recite{
 	 * @see getShuffle
 	 */
 	public shuffleWords(everyN=8){
-		console.log(this.allWordsToLearn.length)//t
-		this._allWordsToLearn = getShuffle(this.allWordsToLearn, everyN, this.allWordsToLearn.length/everyN)
+		//console.log(this.allWordsToLearn.length)//t
+		this._allWordsToLearn = getShuffle($a(this.allWordsToLearn), everyN, this.allWordsToLearn.length/everyN)
 	}
 
 }

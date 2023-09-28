@@ -1,5 +1,5 @@
 
-#20230927153729248
+#20230927230352053
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -737,6 +737,9 @@ use_preset_vocabulary: true
 螞	mrˁaʔ	
 獁	mrˁaʔ	
 頡	krˁit	
+頡	ɡrˁit	
+戛	krˁik	
+嘎	krˁik	
 接	tsap	
 曹	dzˁuw	
 漕	dzˁu	
@@ -1257,7 +1260,7 @@ use_preset_vocabulary: true
 拏	nrˁa	
 挐	nrˁa	
 怪	kʷrˁəs	
-頁	ɡˁit	
+頁	ɡˁet	
 筆	prut	
 蔗	tAks	
 炙	tAks	
@@ -6771,7 +6774,6 @@ use_preset_vocabulary: true
 旮	krˁaj	
 伽	ɡraj	
 呷	hrˁap	
-嘎	krˁet	
 尜	krˁat	
 噶	kˁat	
 尕	krˁajʔ	
@@ -9425,7 +9427,6 @@ use_preset_vocabulary: true
 恝	krˁet	
 莢	kˁep	
 唊	kˁep	
-戛	krˁet	
 䀫	krˁep	
 脥	kʰamʔ	
 袷	kap	

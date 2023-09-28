@@ -891,6 +891,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 獁	mrˁaʔ
 
 頡	krˁit	# ptl
+頡	ɡrˁit	# ptl
+戛	krˁik	# bs
+嘎	krˁik	# bs
 接	tsap
 曹	dzˁuw	# ts
 
@@ -1474,7 +1477,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 拏	nrˁa
 挐	nrˁa
 怪	kʷrˁəs
-頁	ɡˁit	# ptl
+#頁	ɡˁit	# ptl
+頁	ɡˁet
 筆	prut
 蔗	tAks
 炙	tAks

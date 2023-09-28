@@ -64,9 +64,6 @@ function undo(){
 	}
 }
 
-function testPrintPrio(wb:WordB){
-	console.log(wb.priority.procedures)
-}
 
 let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 

@@ -93,4 +93,11 @@ function test_random(){
 	let sh = getShuffle(arr, 8, (571/8))
 	console.log(sh)
 }
-test_random()
+//test_random()
+
+
+function test_sh(){
+	let a = getShuffle([], 0, 0)
+	console.log(a)
+}
+test_sh()

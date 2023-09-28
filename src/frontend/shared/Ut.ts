@@ -35,6 +35,7 @@ export interface RegexReplacePair{
  * @returns 
  */
 export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
+	$a(arr, '')
 	const copy:(T|null)[] = arr.slice()
 	const maxIndex = arr.length -1
 	//
@@ -154,6 +155,7 @@ export function randomIntArr(min:number, max:number, howMany:number, allowDuplic
  * @param howMany 
  * @param type 'int'|'float'
  * @param allowDuplicate 
+ * @deprecated
  * @returns 
  */
 export function deprecated_simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){

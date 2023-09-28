@@ -2,9 +2,10 @@
 //import {ref} from 'vue'
 import Log from '@shared/Log';
 import MultiMode from '../MultiMode';
+import Recite from '@ts/voca/Recite';
 const multiMode = MultiMode.getInstance()
 import {ref} from 'vue'
-
+const recite = Recite.getInstance()
 //import { setInterval } from 'timers/promises';
 //const recite = Recite.getInstance()
 
@@ -25,6 +26,15 @@ import {ref} from 'vue'
 const checkedTables = multiMode.checkedTables
 const isSaved = multiMode.isSaved
 const debuffNumerator = multiMode.debuffNumerator
+
+let tempShape = ref('')
+function search(shape:string){
+	for(const w of recite.allWordsToLearn){
+		if(w.fw.wordShape === shape){
+			console.log(w)
+		}
+	}
+}
 </script>
 
 <template>
@@ -41,10 +51,14 @@ const debuffNumerator = multiMode.debuffNumerator
 		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label>
 
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
-		<button @click="multiMode.start()">重開</button>
+		<button @click="multiMode.start()">始</button>
+		<button @click="multiMode.restart()">重開</button>
 		<button @click="multiMode.save()">存</button>
 		<!-- 坑{v-model與value=""不兼容} -->
-		<div><input type="text" v-model="debuffNumerator" id="debuffNumerator"></div>
+		<div>
+			<input type="text" v-model="debuffNumerator" id="debuffNumerator">
+			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
+		</div>
 		<!-- <button></button> -->
 		<div>{{ isSaved? '':'未保存' }}</div>
 	</div>

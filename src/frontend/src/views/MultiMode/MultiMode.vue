@@ -61,7 +61,7 @@ async function test(){
 		<component :is="WordInfo" :wordB="multiMode.curWord" class="WordInfo" :key="multiMode.curWord.fw.id" v-if="isShowWordInfo"></component>
 	</div>
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
-	<div class="cards-box" v-if="isShowCardBox">
+	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">
 		<div v-for="(e, i) in recite.allWordsToLearn">
 			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
@@ -78,6 +78,7 @@ async function test(){
 	border: solid 1px red; /* test */
 }
 .MultiMode{
+
 	display: flex;
 }
 

@@ -20,9 +20,9 @@ const wordB_nn = $(props.wordB)
 			<h2>{{ wordB_nn.fw.wordShape }}</h2>
 			<div>{{ 'id='+wordB_nn.fw.id }}</div>
 			<div class="w-eventSymbols">{{ wordB_nn.getEventSymbols() }}</div>
+			<div>{{ wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation }}</div>
 			<div class="w-mean"> {{wordB_nn.formattedMean}}</div>
 		</div>
-		
 	</div>
 </template>
 <style scoped>

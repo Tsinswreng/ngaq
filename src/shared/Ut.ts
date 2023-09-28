@@ -35,6 +35,7 @@ export interface RegexReplacePair{
  * @returns 
  */
 export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
+	$a(arr, '')
 	const copy:(T|null)[] = arr.slice()
 	const maxIndex = arr.length -1
 	//

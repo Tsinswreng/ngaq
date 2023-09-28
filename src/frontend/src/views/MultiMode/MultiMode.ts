@@ -28,6 +28,9 @@ export default class MultiMode{
 	private _isShowWordInfo = ref(true)
 	;public get isShowWordInfo(){return this._isShowWordInfo;};;public set isShowWordInfo(v){this._isShowWordInfo=v;};
 
+	private _multiMode_key = ref(0)
+	;public get multiMode_key(){return this._multiMode_key;};
+
 	private _debuffNumerator = ref(Priority.defaultConfig.debuffNumerator)
 	;public get debuffNumerator(){return this._debuffNumerator;};;public set debuffNumerator(v){this._debuffNumerator=v;};
 
@@ -50,9 +53,8 @@ export default class MultiMode{
 	
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
-		l.log(`l.log(data)`)
-		l.log(data)
-		l.log(data.priority.procedures)
+		console.log(data)
+		console.log(data.priority.procedures)
 		//console.log(data.formattedMean)//t
 		
 	}
@@ -78,13 +80,30 @@ export default class MultiMode{
 		this._isShowCardBox.value = true
 
 		//console.log(this.isShowCardBox.value)
+	}
 
+	public restart(){
+		if(this.isSaved.value!==true){
+			throw new Error(`未保存旹不得重開`)
+		}
+		
+		const recite = this.recite
+		recite.mergeSelfWords()
+		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
+		recite.shuffleWords()
+		// let temp = recite.allWordsToLearn.slice()
+		// recite.allWordsToLearn.length=0
+		// recite.allWordsToLearn.push(...temp)//t
+		this.multiMode_key.value++ //刷新組件
+		//this._isShowCardBox.value = false
+		//this._isShowCardBox.value = true
 	}
 
 	public async save(){
 		await this.recite.saveWords()
 		this.isSaved.value = true
 	}
+
 
 
 
