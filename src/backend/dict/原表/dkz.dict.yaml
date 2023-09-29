@@ -1,5 +1,5 @@
 
-#20230927230352053
+#20230928225345436
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1312,6 +1312,11 @@ use_preset_vocabulary: true
 海	mʰˁəʔ	
 貪	lʰˁəm	
 閃	lʰamʔ	
+墮	jˁojs	
+惰	jˁojʔ	
+憜	jˁojʔ	
+隨	joj	
+隋	jˁoj	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -1568,7 +1573,7 @@ use_preset_vocabulary: true
 肛	ŋʷrˁoŋ	
 閱	mot	
 靈	wrˁeŋs	
-伙	dˁəjʔ	
+伙	nˁəjʔ	
 桶	lʰoŋʔ	
 捅	lʰoŋʔ	
 諜	ŋˁep	
@@ -1638,13 +1643,6 @@ use_preset_vocabulary: true
 抵	tˁiʔ	
 底	tˁiʔ	
 牴	tˁiʔ	
-娘	jraŋ	
-郎	braŋ	
-廊	kʷraŋ	
-狼	kʰʷraŋ	
-浪	straŋ	
-琅	wraŋ	
-朗	ŋʷraŋ	
 僉	tsʰam	
 簽	tsʰam	
 籤	tsʰam	
@@ -5784,8 +5782,6 @@ use_preset_vocabulary: true
 𤬾	dˁojʔ	
 𣵻	dˁajʔ	
 舵	dˁajʔ	
-惰	dˁojs	
-惰	dˁojʔ	
 媠	dˁojs	
 媠	tʰˁojʔ	
 跺	tˁojs	
@@ -5793,11 +5789,7 @@ use_preset_vocabulary: true
 跢	tˁajs	
 䅜	dˁojʔ	
 䅜	dojs	
-憜	dˁojʔ	
 䙃	dˁojs	
-墮	dˁojʔ	
-墮	hoj	10%
-墮	tʰˁojʔ	10%
 嶞	dˁojʔ	
 嫷	dˁojʔ	
 嫷	tʰˁojs	
@@ -11774,12 +11766,16 @@ use_preset_vocabulary: true
 爤	rˁans	
 糷	rˁans	
 啷	rˁaŋ	
+郎	rˁaŋ	
 㟍	rˁaŋ	
+狼	rˁaŋ	
 㝗	rˁaŋ	
 㝗	rˁaŋʔ	
 欴	rˁaŋ	
+琅	rˁaŋ	
 蓈	rˁaŋ	
 桹	rˁaŋ	
+廊	rˁaŋ	
 瑯	rˁaŋ	
 榔	rˁaŋ	
 榔	rˁaŋʔ	
@@ -11802,10 +11798,13 @@ use_preset_vocabulary: true
 𪁜	rˁaŋ	
 𩷕	rˁaŋ	
 悢	raŋs	
+朗	rˁaŋʔ	
 朖	rˁaŋʔ	
 誏	rˁaŋʔ	
 埌	rˁaŋs	
 崀	rˁaŋʔ	
+浪	rˁaŋ	
+浪	rˁaŋs	
 蒗	rˁaŋs	
 䕞	rˁaŋs	
 撈	rˁaw	
@@ -14551,6 +14550,7 @@ use_preset_vocabulary: true
 唸	tˁens	
 𦁇	nˁems	
 𦁤	nˁems	
+娘	nraŋ	
 𥽬	nraŋs	
 釀	nraŋs	
 䖆	naŋʔ	
@@ -18736,10 +18736,7 @@ use_preset_vocabulary: true
 濉	suj	
 䪎	sroj	
 䪎	sˁuj	
-隋	tʰˁojʔ	
-隋	zoj	
 綏	suj	
-隨	zoj	
 𥶻	zoj	
 𣿂	sojʔ	
 䭉	sojʔ	

@@ -135,7 +135,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 
 .w-eventsSymbols{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
-	width: auto;
+	width: 55px;
 	font-size: 16px;
 	white-space: pre;
 }
