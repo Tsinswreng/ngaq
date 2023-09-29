@@ -100,4 +100,20 @@ function test_sh(){
 	let a = getShuffle([], 0, 0)
 	console.log(a)
 }
-test_sh()
+//test_sh()
+
+function py(a:number, b:number){
+	let i = 1;
+	let result:number[] = []
+	while(true){
+		let p = Math.pow(2,i)
+		if(p<a){}
+		else if(p>=a && p<=b){
+			result.push(p)
+		}else{break}
+		i++
+	}
+	return result
+}
+
+console.log(py(5,20))
