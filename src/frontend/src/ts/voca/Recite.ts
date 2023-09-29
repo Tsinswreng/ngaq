@@ -80,12 +80,12 @@ export default class Recite{
 
 
 	/**
-	 * times_add >= 2之詞ˇ篩
+	 * 篩詞、加ᵗ次ˋ不止一次 或 有 註釋 之詞ˇ留、餘者ˇ去。
 	 * @param sws 
 	 * @returns 
 	 */
-	public filterByAddTimes(){
-		this._allWordsToLearn = this._allWordsToLearn.filter(wb=>wb.fw.times_add>=2)
+	public filter(){
+		this._allWordsToLearn = this._allWordsToLearn.filter(wb=>wb.fw.times_add>=2||wb.fw.annotation.length>0)
 	}
 
 	/**

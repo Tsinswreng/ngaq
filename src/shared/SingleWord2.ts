@@ -691,6 +691,13 @@ export class Priority{
 				case WordEvent.FGT: fgt(dateToEvent, i);break
 				default: throw new Error('default');
 			}
+			//若末ᵗ事件潙添則再乘一次加ˡ權重
+			if(i===dateToEventObjs.length-1){
+				if(dateToEvent.event===WordEvent.ADD){
+					procedures[procedures.length-1].after *= this.config.addWeight
+					//console.log(procedures[procedures.length-1].after)//t
+				}
+			}
 		}
 
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){
