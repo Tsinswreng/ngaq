@@ -7,6 +7,7 @@ import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
 import Tempus from "@shared/Tempus";
 import { randomInt } from "crypto";
+import _ from 'lodash'
 
 let text = 
 `
@@ -116,4 +117,18 @@ function py(a:number, b:number){
 	return result
 }
 
-console.log(py(5,20))
+function testForceMerge(){
+	const a = { x: 1, y: { z: 2 } };
+	const b = { x:void 0 , y: { z: 3, w: undefined }, w: 5 };
+
+	function customMerge(objValue: any, srcValue: any) {
+		if (_.isUndefined(srcValue)|| !objValue) {
+			return srcValue;
+		}
+	}
+	_.mergeWith()
+	const result = (_ as any).mergeWith({}, a, b, customMerge);
+	
+	console.log(result);
+}
+testForceMerge()

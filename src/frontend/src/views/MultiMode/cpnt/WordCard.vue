@@ -84,6 +84,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>
 		<span>{{ lastOf(props.wordB.getEventSymbols()) }}</span>
+		<!-- <span>{{ reciteStatusRef }}</span> -->
 
 		<!-- <span class="upper">
 			upper

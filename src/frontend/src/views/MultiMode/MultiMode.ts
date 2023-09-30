@@ -60,7 +60,8 @@ export default class MultiMode{
 	}
 
 	public async start(){
-		// /console.log(this.checkedTables.value)
+		
+
 		const selectedTables:string[] = []
 		const recite = this.recite
 		for(let i = 0; i < this.checkedTables.value.length; i++){
@@ -73,12 +74,12 @@ export default class MultiMode{
 		for(const st of selectedTables){
 			await recite.fetchAndStoreWords(st)
 		}
-		//console.log(recite.allWordsToLearn)
 		recite.filter()
 		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
 		recite.shuffleWords()
-		this._isShowCardBox.value = true
 
+		this._isShowCardBox.value = true
+		
 		//console.log(this.isShowCardBox.value)
 	}
 
@@ -88,6 +89,7 @@ export default class MultiMode{
 		}
 		
 		const recite = this.recite
+		recite.reset()
 		recite.mergeSelfWords()
 		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
 		recite.shuffleWords()

@@ -707,8 +707,8 @@ export class Priority{
 		}
 
 		//if(procedures.length >=2){console.log(procedures)}//t
-
 		return procedures
+		
 		
 	}
 

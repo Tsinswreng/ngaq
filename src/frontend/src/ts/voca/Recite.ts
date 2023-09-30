@@ -5,6 +5,7 @@ import { $, $a, getShuffle } from '@shared/Ut';
 import Log from '@shared/Log';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
+import _ from 'lodash';
 const l = new Log()
 
 /**
@@ -26,7 +27,6 @@ class ReviewedWords{
 	private _fgt_idToWordsMap:Map<number, WordB> = new Map()
 	;public get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
 
-	
 
 }
 
@@ -35,13 +35,13 @@ class ReviewedWords{
  */
 export default class Recite{
 
-	private static instance:Recite;
+	private static _instance:Recite;
 
 	public static getInstance(){
-		if(this.instance === undefined){
-			this.instance = new Recite()
+		if(this._instance === undefined){
+			this._instance = new Recite()
 		}
-		return this.instance;
+		return this._instance;
 	}
 
 	private constructor (){}
@@ -69,15 +69,14 @@ export default class Recite{
 	;public get rvwObj(){return this._rvwObj;};
 
 	/**
-	 * 使諸詞各算權重
-	 * @param wbs 
+	 * 重置(測試)
 	 */
-	// public calcAllPrio(wbs:WordB[]=this.allWordsToLearn){
-	// 	for(let i = 0; i < wbs.length; i++){
-	// 		wbs[i].calcPrio()
-	// 	}
-	// }
-
+	public static reset(){
+		//<待改>{lodash之merge會忽略undefined、洏余需ˌundefiend值ˋˋ亦可覆蓋ᵣ。}
+		_.merge(Recite._instance, new Recite())
+	}public reset(){
+		Recite.reset()
+	}
 
 	/**
 	 * 篩詞、加ᵗ次ˋ不止一次 或 有 註釋 之詞ˇ留、餘者ˇ去。
@@ -144,11 +143,14 @@ export default class Recite{
 		const rmb = ()=>{
 			wb.neoDates_rmb.push(nunc)
 			this.rvwObj.rmb_idToWordsMap.set($(wb.fw.id), wb)
-			
+			console.log('rmb:')
+			console.log(wb.fw.wordShape)//
 		}
 		const fgt = ()=>{
 			wb.neoDates_fgt.push(nunc)
 			this.rvwObj.fgt_idToWordsMap.set($(wb.fw.id), wb)
+			console.log('fgt:')
+			console.log(wb.fw.wordShape)//
 		}
 		
 		const funs:Function[] = [()=>{}, rmb, fgt]
@@ -164,6 +166,8 @@ export default class Recite{
 	 * @returns 
 	 */
 	public undo(wb:WordB){
+		console.log(`undo:`)
+		console.log(wb.fw.wordShape)//t
 		let rmbWord = this.rvwObj.rmb_idToWordsMap.get($(wb.fw.id))
 		let fgtWord = this.rvwObj.fgt_idToWordsMap.get($(wb.fw.id))
 		if(rmbWord!==void 0 && fgtWord!==void 0){
