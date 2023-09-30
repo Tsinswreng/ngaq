@@ -6,7 +6,7 @@
 
 //require('tsconfig-paths/register');
 require('module-alias/register');
-import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
+//import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 import VocaSqlite from "./VocaSqlite";
 
 //import Util from "../../shared/Util";
@@ -40,7 +40,7 @@ jap.tableName = 'jap'*/
 //let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
 export default class VocaServer{
-	static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
+	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	static app = express();
 	public static sqlt = new VocaSqlite({})
 	public static sqltDbObj = VocaServer.sqlt.db
@@ -72,30 +72,30 @@ export default class VocaServer{
 	
 
 
-		VocaServer.app.get('/eng', (req, res)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
-			const db = VocaServer.vocaObjs[0].getDbConnection()
-			db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
-				//console.log('results:'+results)//RowDataPacket
-				res.setHeader('content-type','text/html;charset=utf-8')
-				res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
-				//console.log(results['600']['wordShape'])
-				//return results//蜮不效
-			})
-		})
+		// VocaServer.app.get('/eng', (req, res)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
+		// 	const db = VocaServer.vocaObjs[0].getDbConnection()
+		// 	db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+		// 		//console.log('results:'+results)//RowDataPacket
+		// 		res.setHeader('content-type','text/html;charset=utf-8')
+		// 		res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
+		// 		//console.log(results['600']['wordShape'])
+		// 		//return results//蜮不效
+		// 	})
+		// })
 		
-		VocaServer.app.get('/jap', (req:any, res:any)=>{
-			let path = req.path
-			console.log('path:'+path)//t
-			const db = VocaServer.vocaObjs[1].getDbConnection()
-			db.query(`SELECT * FROM ${VocaServer.vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
+		// VocaServer.app.get('/jap', (req:any, res:any)=>{
+		// 	let path = req.path
+		// 	console.log('path:'+path)//t
+		// 	const db = VocaServer.vocaObjs[1].getDbConnection()
+		// 	db.query(`SELECT * FROM ${VocaServer.vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
 				
-				//console.log('results:'+results)//RowDataPacket
-				res.setHeader('content-type','text/html;charset=utf-8')
-				res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
-				//console.log(results['600']['wordShape'])
-				//return results//蜮不效
-			})
-		})
+		// 		//console.log('results:'+results)//RowDataPacket
+		// 		res.setHeader('content-type','text/html;charset=utf-8')
+		// 		res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
+		// 		//console.log(results['600']['wordShape'])
+		// 		//return results//蜮不效
+		// 	})
+		// })
 		this.app.get('/english', async (req,res)=>{
 			let path = req.path
 			console.log('path:'+path)//t

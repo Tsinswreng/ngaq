@@ -58,6 +58,7 @@
     "addWords": "node ./out/backend/BackupTable.js",
     "buildAll": "npm run build && npm run out"
   },
+  "bin": "bundle/bundle.js",
   "paths": {
     "@my_modules/*": [
       "my_modules/*"
@@ -70,6 +71,12 @@
     "@bm": "src/backend/src/module/*",
     "*": "src/shared/*",
     "@shared": "out/shared/"
+  },
+  "pkg": {
+    "scripts": "bundle/bundle.js",
+    "assets": "db/**/*",
+    "targets": [ "node18-win-x64" ],
+    "outputPath": "dist"
   },
   "workspaces": [
     "common/*"
