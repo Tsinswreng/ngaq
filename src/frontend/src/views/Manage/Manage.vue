@@ -23,6 +23,11 @@ const tipRef = ref(tip)
 			<button>sql注入</button>
 			<input type="text" :id="Manage.id_sqlInsert">
 		</div>
+		<div>
+			<button @click="manage.testWriteLocalStorage()">設路徑</button>
+			<input type="text" :id="Manage.id_dbPath">
+			<button @click="manage.testReadLocalStorage()">讀路徑</button>
+		</div>
 		<div class="tip">
 			{{ tipRef }}
 		</div>

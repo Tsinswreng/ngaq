@@ -17,10 +17,13 @@ const wordB_nn = $(props.wordB)
 	<div class="container">
 		<div class="wordInfo">
 			<CtrlPanel class="CtrlPanel" @CtrlPanel:start="multiMode.isShowCardBox.value=true;"></CtrlPanel>
-			<h2>{{ wordB_nn.fw.wordShape }}</h2>
+			<div class="w-shape">{{ wordB_nn.fw.wordShape }}</div>
+			<hr class="w-hr">
 			<div>{{ 'id='+wordB_nn.fw.id }}</div>
 			<div class="w-eventSymbols">{{ wordB_nn.getEventSymbols() }}</div>
+			<div>{{ WordB.style_getAddDates(wordB_nn) }}</div>
 			<div>{{ wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation }}</div>
+			<hr class="w-hr">
 			<div class="w-mean"> {{wordB_nn.formattedMean}}</div>
 		</div>
 	</div>
@@ -29,6 +32,19 @@ const wordB_nn = $(props.wordB)
 /* .wordInfo{
 	overflow: scroll;
 } */
+
+.w-hr{
+	/* color: gray; 不效、需改界ᵗ色*/
+	border-color: gray;
+	margin: 0;
+}
+
+.w-shape{
+	font-size: 32px;
+	font-weight: 600;
+	
+}
+
 .container{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
 }

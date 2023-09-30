@@ -8,6 +8,7 @@ export default class Manage{
 	public static readonly id_wordSrcStr = 'wordSrcStr'
 	public static readonly id_neoTableName = 'neoTableName'
 	public static readonly id_sqlInsert = 'sqlInsert'
+	public static readonly id_dbPath = 'dbPath'
 
 	private static _instance: Manage
 	private constructor(){}
@@ -44,5 +45,17 @@ export default class Manage{
 		if(!neoTableName){console.error(`!neoTableName`)}
 		return VocaClient.creatTable($a(neoTableName))
 	}
+
+	public testWriteLocalStorage(){
+		const input = document.getElementById(Manage.id_dbPath) as HTMLTextAreaElement
+		const path = input.value
+		localStorage.setItem('dbPath',path)
+	}
+
+	public testReadLocalStorage(){
+		console.log(localStorage.getItem('dbPath'))
+	}
+
+
 
 }

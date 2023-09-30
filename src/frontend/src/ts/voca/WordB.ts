@@ -152,10 +152,10 @@ export default class WordB{
 	 * @param wb 
 	 * @returns 
 	 */
-	public static getAddDates(wb:WordB){
+	public static style_getAddDates(wb:WordB){
 		return WordB.getSimplifiedDate(wb.fw.dates_add)
-	}public getAddDates(){
-		return WordB.getAddDates(this)
+	}public style_getAddDates(){
+		return WordB.style_getAddDates(this)
 	}
 
 	/**
