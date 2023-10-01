@@ -15,6 +15,14 @@ const Ut = {
 }
 
 
+export class VocaLog{
+	public static readonly id = 'id'
+	public static readonly date = 'date'
+	public static readonly origin_table = 'origin_table'
+}
+
+
+
 
 /**
  * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
@@ -610,6 +618,11 @@ export default class VocaSqlite{
 		}
 		return prms
 	}
+
+	// public static async censusByDate(db:Database, table:string){
+	// 	const allRows:IVocaRow[] = await VocaSqlite.getAllWords(db, table)
+
+	// }
 
 
 	//public static saveWords(db:Database, sws:SingleWord2[], table:string):Promise<unknown[]>

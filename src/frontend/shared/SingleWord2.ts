@@ -698,6 +698,10 @@ export class Priority{
 					//console.log(procedures[procedures.length-1].after)//t
 				}
 			}
+			//若該詞有註則增權重、乘以加ˡ權重之半
+			if(sw.annotation.length>0){
+				procedures[procedures.length-1].after *= (this.config.addWeight/2)
+			}
 		}
 
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){
