@@ -60,10 +60,15 @@ export default class MultiMode{
 	}
 
 	public async start(){
-		
-
-		const selectedTables:string[] = []
 		const recite = this.recite
+		if(this.isSaved.value!==true){
+			throw new Error(`未保存旹不得重開`)
+		}
+		if(recite.allWordsToLearn.length>0){
+			throw new Error(`不得重複開始`)
+		}
+		const selectedTables:string[] = []
+		
 		for(let i = 0; i < this.checkedTables.value.length; i++){
 			let cur = this.checkedTables.value[i]
 			if(cur === true){
@@ -99,6 +104,15 @@ export default class MultiMode{
 		this.multiMode_key.value++ //刷新組件
 		//this._isShowCardBox.value = false
 		//this._isShowCardBox.value = true
+	}
+
+	public sortByRmb(){
+		if(this.isSaved.value!==true){
+			throw new Error(`未保存`)
+		}
+		const recite = this.recite
+		recite.sortByRmb()
+		this.multiMode_key.value++
 	}
 
 	public async save(){

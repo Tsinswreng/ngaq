@@ -113,6 +113,26 @@ export default class Recite{
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
 	}
 
+	/**
+	 * 依憶ᵗ次 排序。若同則加ᵗ次ˋ多者在前、若又同則忘ᵗ次ˋ多者在前。
+	 * @param wb 
+	 */
+	public static sortByRmb(wb:WordB[]){
+		function add(w:WordB){return w.fw.times_add}
+		function rmb(w:WordB){return w.fw.times_rmb}
+		function fgt(w:WordB){return w.fw.times_fgt}
+		
+		wb.sort((a,b)=>{
+			const rmbDiff = rmb(a)-rmb(b)
+			const addDiff = add(b)-add(a)
+			const fgtDiff = fgt(b)-fgt(a)
+			if(rmbDiff !== 0){return rmbDiff}
+			else if(addDiff !== 0){return addDiff}
+			else{return fgtDiff}
+		})
+	}public sortByRmb(){
+		Recite.sortByRmb(this.allWordsToLearn)
+	}
 	// public async start(path:string){
 	// 	//const client = VocaClient.getInstance()
 	// 	let sws = await VocaClient.fetchWords(path)

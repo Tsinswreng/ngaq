@@ -17,11 +17,11 @@ const wordB_nn = $(props.wordB)
 	<div class="container">
 		<div class="wordInfo">
 			<CtrlPanel class="CtrlPanel" @CtrlPanel:start="multiMode.isShowCardBox.value=true;"></CtrlPanel>
-			<div class="w-shape">{{ wordB_nn.fw.wordShape }}</div>
-			<hr class="w-hr">
 			<div>{{ 'id='+wordB_nn.fw.id }}</div>
 			<div class="w-eventSymbols">{{ wordB_nn.getEventSymbols() }}</div>
 			<div>{{ WordB.style_getAddDates(wordB_nn) }}</div>
+			<hr class="w-hr">
+			<div class="w-shape">{{ wordB_nn.fw.wordShape }}</div>
 			<div>{{ wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation }}</div>
 			<hr class="w-hr">
 			<div class="w-mean"> {{wordB_nn.formattedMean}}</div>

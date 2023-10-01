@@ -54,11 +54,12 @@ function search(shape:string){
 		<button @click="multiMode.start()">始</button>
 		<button @click="multiMode.restart()">重開</button>
 		<button @click="multiMode.save()">存</button>
+		<button @click="multiMode.sortByRmb()">添ᶤ排序</button>
 		<!-- 坑{v-model與value=""不兼容} -->
-		<div>
+		<span>
 			<input type="text" v-model="debuffNumerator" id="debuffNumerator">
 			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
-		</div>
+		</span>
 		<!-- <button></button> -->
 		<div>{{ isSaved? '':'未保存' }}</div>
 	</div>
