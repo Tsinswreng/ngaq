@@ -61,7 +61,7 @@ function search(shape:string){
 			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
 		</span>
 		<!-- <button></button> -->
-		<div>{{ isSaved? '':'未保存' }}</div>
+		<span>{{ isSaved? '':'未保存' }}</span>
 	</div>
 </template>
 <!-- <坑>{若欲父組件ʸ子組件ᵗ樣式ˇ設、則子組件須有唯一根節點。} -->

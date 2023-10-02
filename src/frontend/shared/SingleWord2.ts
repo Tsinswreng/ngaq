@@ -560,7 +560,8 @@ export class Priority{
 		//默認ᵗ 添ᵗ權重
 		addWeight : 0x100, 
 		//
-		debuffNumerator : 1000*3600*24*90
+		debuffNumerator : 1000*3600*24*90,
+		//denominator: 25
 	}
 
 	private _config:typeof Priority.defaultConfig = Priority.defaultConfig
@@ -724,7 +725,7 @@ export class Priority{
 	 * @returns 
 	 */
 	public static getDateWeight(dateDif:number):number{
-		let result = (1/25)*Math.pow(dateDif, 1/2)
+		let result = (1/100)*Math.pow(dateDif, 1/2)
 		if(result <= 1){
 			result = 1.01;
 		}

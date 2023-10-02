@@ -15,14 +15,6 @@ const Ut = {
 }
 
 
-export class VocaLog{
-	public static readonly id = 'id'
-	public static readonly date = 'date'
-	public static readonly origin_table = 'origin_table'
-}
-
-
-
 
 /**
  * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
@@ -146,6 +138,11 @@ export default class VocaSqlite{
 	}
 
 
+	/**
+	 * 檢ᵣ詞ᵗ數組ᵗtable屬性
+	 * @param table 
+	 * @param words 
+	 */
 	public static checkTable(table:string, words:SingleWord2[]){
 		for(const w of words){
 			if(w.table !== table){
