@@ -1,3 +1,0 @@
-D:/_/mmf/PROGRAM/_Cak/voca/cmake-build-debug/CMakeFiles/voca.dir
-D:/_/mmf/PROGRAM/_Cak/voca/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/_/mmf/PROGRAM/_Cak/voca/cmake-build-debug/CMakeFiles/rebuild_cache.dir

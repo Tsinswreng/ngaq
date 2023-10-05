@@ -835,7 +835,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 員	wrən
 圓	wren
 體	rʰˁiʔ
-拔	bˁots	# bs
+拔	bˁot	# bs
 集	dzup	# bs
 雀	tsewk
 隼	sulʔ
@@ -896,7 +896,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 嘎	krˁik	# bs
 接	tsap
 曹	dzˁuw	# ts
-
+槽	dzˁu
 漕	dzˁu
 嘈	dzˁu
 
@@ -1036,8 +1036,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 素	sˁas	# ms
 隔	krˁek
 革	krˁək
-認	nəls	# ms
-忍	nəlʔ	# ms
+#認	nəls	# ms
+#忍	nəlʔ	# ms
+涊	nənʔ
+忍	nənʔ
+刃	nəns
+韌	nəns
+仞	nəns
+認	nəns
+瓜	kʷrˁa
 免	mrolʔ	# bs
 晚	molʔ	# bs
 挽	malʔ
@@ -1314,7 +1321,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 湄	mri
 楣	mri
 嵋	mri
-旬	win	# ptl
+#旬	win	# ptl
+旬	zin	# ts
+勻	win
 循	mlunʔ	# ptl 舍他音
 遁	lˁuns
 盾	lˁunʔ
@@ -1540,6 +1549,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 隨	joj	# ms
 隋	jˁoj	# ms
 砭	prams	# ptl
+
+慰	ʔuts
+慶	kʰraŋs
+醜	kʰluʔ	# ptl
+宦	ɡʷrˁans
+竊	tsʰˁet
+蕁	lˁəm
 # 欄
 # 攔
 # 瀾
@@ -2270,7 +2286,26 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 屠	尸者
 # 豬	豕者
 # 箸	竹者
+者	tAʔ
+#書	聿者
+#暑	日者
+#諸	言者
+#睹	目者
+睹	mAʔ	# ts
 
+賭	mAʔ	# ts
+煮	mʰAʔ	# ts
+渚	stAʔ	# ts
+#儲	nAʔ	# ts
+#堵	土者
+#屠	尸者
+#豬	豕者
+#箸	竹者
+
+睹	taʔ
+賭	taʔ
+煮	taʔ
+渚	taʔ
 # #睘	@睘
 # 還	辵睘
 # 環	玉睘

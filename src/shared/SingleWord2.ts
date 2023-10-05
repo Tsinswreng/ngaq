@@ -2,7 +2,7 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, div, lastOf, mapToObjArr, mul, simpleUnion } from '@shared/Ut';
+import { $, $n, div, lastOf, lodashMerge, mapToObjArr, mul, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
@@ -564,11 +564,15 @@ export class Priority{
 	}
 
 	private _config:typeof Priority.defaultConfig = Priority.defaultConfig
-	;public get config():typeof Priority.defaultConfig{return this._config;};//<疑>{不顯式標明get方法ᵗ返ˡ值ᵗ類型、則其返ˡ值ᵗ類型ˋ自動被推斷潙類型芝同於set方法ᵗ入參ᵗ類型者}
-
-	;public set config(v:Partial<typeof Priority.defaultConfig>){
-		this._config=_.merge({}, Priority.defaultConfig, v);
-	};
+	;public get config(){return this._config;};//<疑>{不顯式標明get方法ᵗ返ˡ值ᵗ類型、則其返ˡ值ᵗ類型ˋ自動被推斷潙類型芝同於set方法ᵗ入參ᵗ類型者}
+	public setConfig(v:Partial<typeof Priority.defaultConfig>){
+		this._config=lodashMerge({}, Priority.defaultConfig, v);
+	}
+	
+	// ;public set config(v:Partial<typeof Priority.defaultConfig>){
+	// 	//this._config=_.merge({}, Priority.defaultConfig, v);
+	// 	this._config=lodashMerge({}, Priority.defaultConfig, v);
+	// };
 
 	private _procedures:Procedure[] = []
 	;public get procedures(){return this._procedures;};;public set procedures(v){this._procedures=v;};
@@ -626,7 +630,7 @@ export class Priority{
 		const add = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			add_cnt++
-			prio0 = mul(prio0, this.config.addWeight) 
+			prio0 = $n( mul(prio0, this.config.addWeight) )
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight: this.config.addWeight})
 			procedures.push(unusProcedure)
 		}
@@ -645,7 +649,7 @@ export class Priority{
 			}else{
 				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = div(prio0, div(innerWeight,2))
+				prio0 = $n( div(prio0, div(innerWeight,2)) )
 				weight = innerWeight
 			}
 			
@@ -653,7 +657,7 @@ export class Priority{
 			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
-			prio0 = div(prio0, debuff)
+			prio0 = $n( div(prio0, debuff) )
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
@@ -665,7 +669,7 @@ export class Priority{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
 			//prio0 /= weight
-			prio0 = mul(prio0, weight) 
+			prio0 = $n( mul(prio0, weight) ) 
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight})
 			procedures.push(unusProcedure)
 		}
@@ -728,12 +732,12 @@ export class Priority{
 		if(result <= 1){
 			result = 1.01;
 		}
-		return result;
+		return $n(result)
 	}
 
 	public static getDebuff(mills:number, numerator:number){
 		let debuff = (numerator/mills) + 1
-		return debuff
+		return $n(debuff)
 	}
 
 

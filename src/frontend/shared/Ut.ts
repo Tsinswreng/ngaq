@@ -18,6 +18,24 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+
+
+/**
+ * 手動封裝之 lodash之merge
+ * 2023-10-05T11:48:48.000+08:00
+ * I found that ts-node checks more strictly than tsc.
+ * The reason why `_` needs to be asserted into `any` is that:
+ * If I run my code with ts-node, it reports:
+ * Property 'merge' does not exist on type 'LoDashStatic' _.merge(object, ...otherArgs)
+ * but if I compile my code with tsc, there would not be error here, nor vscode would report the error here.
+ * The same situation occurs when the 'get' and 'set' accessors do not have the same type.
+ * @param object 
+ * @param otherArgs 
+ */
+export function lodashMerge<T>(object: any, ...otherArgs: any[]){
+	return (_ as any).merge(object, ...otherArgs) as T
+}
+
 /**
  * 取打亂後ᵗ數組
  * 整體ᵗ思想: 從整ᵗ數組中隨機取 @see totalDisorderAmount 個元素。把數組按 @see groupMemberAmount-1 個一組 分成若干組(末ʸ不足者自成一組)、再把前ʸ隨機取出ᵗ元素均ᵈ分予各組、插入到各組ᵗ末。若分配後猶有餘則皆予末組。
@@ -155,7 +173,6 @@ export function randomIntArr(min:number, max:number, howMany:number, allowDuplic
  * @param howMany 
  * @param type 'int'|'float'
  * @param allowDuplicate 
- * @deprecated
  * @returns 
  */
 export function deprecated_simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){
@@ -307,6 +324,19 @@ export function lastOf<T>(arr:T[]|string):T|string{
 
 // }
 
+/**
+ * valid number
+ * @param v 
+ * @param toThrow 
+ * @returns 
+ */
+export function $n(v:number, errMsg?:string){
+	//if(isNaN(v)){throw toThrow}
+	//if(!isFinite(v)){throw toThrow}
+	if(isNaN(v)){throw new Error(errMsg)}
+	if(!isFinite(v)){throw new Error(errMsg)}
+	return v
+}
 
 /**
  * nonNullable Array

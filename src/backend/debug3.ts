@@ -161,9 +161,9 @@ async function testH(){
 	console.log(3)
 }
 
-testH()
+//testH()
 
-let ass = []
+//let ass = []
 
 
 // async function test20230921225553(){
@@ -172,3 +172,28 @@ let ass = []
 // }
 // test20230921225553()
 
+// import Ut, { lodashMerge } from "@shared/Ut";
+// import _ from "lodash";
+
+
+// export type ClientConfig = typeof Client.defaultConfig
+
+// export default class Client{
+// 	public static readonly defaultConfig = {
+// 		baseUrl: 'http://127.0.0.1:1919'
+// 	}
+
+// 	public constructor(config?:Partial<ClientConfig>){
+// 		(_ as any).merge(this._config, config)
+// 		//lodashMerge(this._config, config)
+		
+// 	}
+
+// 	private _config:ClientConfig = Client.defaultConfig
+// 	;public get config(){return this._config;};
+// }
+
+
+// let c = new Client({baseUrl:'sssss'})
+
+// console.log(c.config)

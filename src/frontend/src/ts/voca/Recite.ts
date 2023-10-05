@@ -104,7 +104,7 @@ export default class Recite{
 		for(const w of wbs){
 			if(w.priority.procedures.length === 0){
 				//w.priority.config.debuffNumerator = 
-				if(config !== void 0){w.priority.config = config}
+				if(config !== void 0){w.priority.setConfig(config) }
 				w.calcPrio()
 			}
 		}

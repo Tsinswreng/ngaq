@@ -11,3 +11,8 @@ src/**/*.js
 out/
 src/backend/src/study/*
 src/**/*.d.ts
+lib/*
+build/*
+cmake-build-debug/
+cmake-build-debug/
+cmake-build-debug/*

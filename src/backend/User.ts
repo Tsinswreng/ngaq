@@ -1,5 +1,4 @@
-import * as Tp from 'Type'
-import Ut from 'Ut';
+
 
 export default class User{
 

@@ -126,9 +126,48 @@ function testForceMerge(){
 			return srcValue;
 		}
 	}
-	_.mergeWith()
+	//_.mergeWith()
 	const result = (_ as any).mergeWith({}, a, b, customMerge);
 	
 	console.log(result);
 }
-testForceMerge()
+//testForceMerge()
+
+async function test_copyCrossDb(){
+	let vs = new VocaSqlite({
+
+	})
+	let vs2 = new VocaSqlite({
+		_dbPath: './voca2.db'
+	})
+	console.log(vs2.dbPath)
+	console.log(vs2.db)
+	await Sqlite.copyTableCrossDb(vs.db, 'english', vs2.db)
+	//let words = await vs2.getAllWords('japanese')
+	//console.log(words)
+	console.log('done')
+}
+
+//test_copyCrossDb()
+
+
+
+// type nonArr = Record<string, any>
+
+// let ff : nonArr = {d:2, e:3}
+// let gg :nonArr = []
+// type NotArray = (object | string | bigint | number | boolean) & { length?: never; };
+//let ga:NotArray 
+/*NotArray & { length?: never; } 中的 & 运算符表示类型的交集，也就是将两个类型合并为一个类型。在这种情况下，它合并了 NotArray 类型和 { length?: never; } 类型。
+
+{ length?: never; } 是一个对象类型字面量，它指定了一个名为 length 的属性，但这个属性的类型是 never，并且还包含了一个可选的 ? 标记。
+
+length 属性的类型为 never 表示这个属性可以存在，但它永远不会被赋予任何有效的值。never 是 TypeScript 中的一个特殊类型，表示永远不存在的值，通常用于表示不可到达的代码路径或不可能发生的情况。
+
+? 标记表示 length 属性是可选的，也就是说，它可以存在，也可以不存在。
+
+因此，NotArray & { length?: never; } 表示一个类型，该类型包含了 NotArray 类型的所有成员，并且还包含一个可选的 length 属性，但这个属性的类型永远是 never，因此它实际上表示了一个不会具有有效 length 属性的类型。
+
+这个类型别名的目的是排除那些具有有效 length 属性的对象，例如数组，从而只保留那些没有 length 属性的对象或基本数据类型。*/
+
+

@@ -1,5 +1,5 @@
 
-#20230930191935384
+#20231004161938501
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -687,7 +687,7 @@ use_preset_vocabulary: true
 員	wrən	
 圓	wren	
 體	rʰˁiʔ	
-拔	bˁots	
+拔	bˁot	
 集	dzup	
 雀	tsewk	
 隼	sulʔ	
@@ -742,6 +742,7 @@ use_preset_vocabulary: true
 嘎	krˁik	
 接	tsap	
 曹	dzˁuw	
+槽	dzˁu	
 漕	dzˁu	
 嘈	dzˁu	
 糟	tsˁu	
@@ -863,8 +864,13 @@ use_preset_vocabulary: true
 素	sˁas	
 隔	krˁek	
 革	krˁək	
-認	nəls	
-忍	nəlʔ	
+涊	nənʔ	
+忍	nənʔ	
+刃	nəns	
+韌	nəns	
+仞	nəns	
+認	nəns	
+瓜	kʷrˁa	
 免	mrolʔ	
 晚	molʔ	
 挽	malʔ	
@@ -1108,7 +1114,8 @@ use_preset_vocabulary: true
 湄	mri	
 楣	mri	
 嵋	mri	
-旬	win	
+旬	zin	
+勻	win	
 循	mlunʔ	
 遁	lˁuns	
 盾	lˁunʔ	
@@ -1318,6 +1325,12 @@ use_preset_vocabulary: true
 隨	joj	
 隋	jˁoj	
 砭	prams	
+慰	ʔuts	
+慶	kʰraŋs	
+醜	kʰluʔ	
+宦	ɡʷrˁans	
+竊	tsʰˁet	
+蕁	lˁəm	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -1628,6 +1641,15 @@ use_preset_vocabulary: true
 幕	kˁaks	
 膜	ŋʷˁak	
 漠	stˁak	
+者	tAʔ	
+睹	mAʔ	
+賭	mAʔ	
+煮	mʰAʔ	
+渚	stAʔ	
+睹	taʔ	
+賭	taʔ	
+煮	taʔ	
+渚	taʔ	
 聾	nrˁoŋ	
 瓏	wrˁoŋ	
 朧	ŋʷrˁoŋ	
@@ -3179,8 +3201,6 @@ use_preset_vocabulary: true
 蓸	dzˁaw	
 慒	zu	
 慒	dzˁuŋ	
-槽	tsˁaw	
-槽	dzˁaw	
 䐬	dzˁaw	
 䄚	dzˁaw	
 褿	dzˁaw	
@@ -4091,7 +4111,6 @@ use_preset_vocabulary: true
 吜	tʰruʔ	
 杽	tʰruʔ	
 瞅	tsʰruʔ	
-醜	tʰuʔ	
 𩋄	tsʰruʔ	
 𩌄	tsʰruʔ	
 𧃝	tʰuʔ	
@@ -5578,9 +5597,7 @@ use_preset_vocabulary: true
 帾	tˁaʔ	
 暏	tˁaʔ	
 𤬂	tˁuk	
-睹	tˁaʔ	
 覩	tˁaʔ	
-賭	tˁaʔ	
 篤	tˁuk	
 芏	tʰˁaʔ	
 𤬪	dˁaʔ	
@@ -7343,7 +7360,6 @@ use_preset_vocabulary: true
 痼	kˁas	
 錮	kˁas	
 鯝	kˁas	
-瓜	krˁoj	
 𠯑	ɡrˁot	
 㧓	krˁoj	
 苽	kˁa	
@@ -8651,7 +8667,6 @@ use_preset_vocabulary: true
 䀓	ɡˁons	
 𤴯	ɡˁons	
 奐	hˁons	
-宦	ɡrˁons	
 圂	ɡˁuns	
 浣	ɡˁonʔ	
 患	ɡrˁons	
@@ -16080,7 +16095,6 @@ use_preset_vocabulary: true
 𥮒	dzˁin	
 𥮒	dzem	
 𥮓	dzˁin	
-蕁	dˁəm	
 羬	ɡrem	
 羬	ŋrˁem	
 黔	ɡrem	
@@ -16352,7 +16366,6 @@ use_preset_vocabulary: true
 䌌	tsʰep	
 鯜	tsʰep	
 鯜	tsep	
-竊	tsʰˁit	
 𣠺	tsʰep	
 𪙇	tsʰˁit	
 𪙌	tsʰˁit	
@@ -16512,7 +16525,6 @@ use_preset_vocabulary: true
 靘	tsʰˁeŋ	
 靘	tsʰˁeŋs	
 箐	tseŋ	
-慶	kʰreŋs	
 磬	kʰˁeŋs	
 親	tsʰin	
 親	tsʰins	
@@ -17038,13 +17050,9 @@ use_preset_vocabulary: true
 𢆉	nimʔ	
 荵	ninʔ	
 栠	nimʔ	
-涊	nˁenʔ	
-涊	ninʔ	
 棯	nimʔ	
 稔	nimʔ	
 䭃	nimʔ	
-刃	nins	
-仞	nins	
 㠴	nit	
 杒	nins	
 牣	nins	
@@ -17060,7 +17068,6 @@ use_preset_vocabulary: true
 袵	nimʔ	
 䇮	nimʔ	
 腍	nimʔ	
-韌	nins	
 絍	nims	
 餁	nimʔ	
 扔	nəŋ	
@@ -20308,7 +20315,6 @@ use_preset_vocabulary: true
 蝟	wʷəjs	
 𦩝	wʷəjs	
 犚	ʔʷəjs	
-慰	ʔʷəjs	
 緭	wʷəjs	
 璏	drets	
 璏	wʷat	
@@ -24589,7 +24595,6 @@ use_preset_vocabulary: true
 馧	ʔˁut	
 馧	ʔun	
 贇	ʔrun	
-勻	lun	
 匀	lun	
 䢵	wən	
 芸	wən	
@@ -25317,7 +25322,6 @@ use_preset_vocabulary: true
 襵	tap	
 襵	trep	
 䝕	tap	
-者	tæʔ	
 赭	tæʔ	
 鍺	tˁojʔ	
 𦯍	trep	
@@ -26056,9 +26060,7 @@ use_preset_vocabulary: true
 䘢	traʔ	
 陼	taʔ	
 䍆	traʔ	
-渚	taʔ	
 煑	taʔ	
-煮	taʔ	
 詝	traʔ	
 𤲑	traʔ	
 麈	toʔ	

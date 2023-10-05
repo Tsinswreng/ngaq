@@ -28,6 +28,10 @@ const tipRef = ref(tip)
 			<input type="text" :id="Manage.id_dbPath">
 			<button @click="manage.testReadLocalStorage()">讀路徑</button>
 		</div>
+		<div>
+			<button>設配置</button>
+			<textarea name="" id="" cols="30" rows="10"></textarea>
+		</div>
 		<div class="tip">
 			{{ tipRef }}
 		</div>
@@ -37,5 +41,8 @@ const tipRef = ref(tip)
 <style scoped>
 .tip{
 	white-space: pre-wrap;
+}
+textarea{
+	height: 20px;
 }
 </style>

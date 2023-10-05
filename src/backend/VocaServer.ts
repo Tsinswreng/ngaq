@@ -15,8 +15,9 @@ import VocaSqlite from "./VocaSqlite";
 
 //const cors = require('cors')
 //const express = require('express')
-import express, { raw } from 'express'
+import express, { raw, Request, Response } from 'express'
 import bodyParser from "body-parser";
+import cookieParser from 'cookie-parser'
 import path from "path";
 import dayjs from "dayjs";
 import Tempus from "@shared/Tempus";
@@ -24,10 +25,26 @@ import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
 import { $ } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
+import session from 'express-session'
+
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
 
 const rootDir:string = require('app-root-path').path
+const tempUserName = '114'
+const tempPassword = '514'
+const oneDaySec = 3600*24
+
+//<{}, any, any, QueryString.ParsedQs, Record<string, any>>
+// type a = Express.Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>
+// interface Req extends Express.Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>{
+// 	session?:string
+// }
+
+interface MyReq extends Request{
+	session?:string
+}
+
 
 //console.log(path.dirname(path.dirname(__dirname)))輸出項目根文件夾
 /*const eng = new VocaRaw();
@@ -41,10 +58,10 @@ jap.tableName = 'jap'*/
 
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
-	static app = express();
+	public static readonly app = express();
 	public static sqlt = new VocaSqlite({})
 	public static sqltDbObj = VocaServer.sqlt.db
-	
+	public static session
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static main(){
@@ -66,6 +83,13 @@ export default class VocaServer{
 		VocaServer.app.use(bodyParser.json({limit:'64MB'}))
 		//VocaServer.app.use(express.bodyParser({limit: '50mb'}));
 		VocaServer.app.use(bodyParser.json());//??{}??
+		VocaServer.app.use(session({
+			secret: 'hocEstMeusSecretusKeyus114514810893shitJeanPinkGetDown',
+			cookie: {maxAge: oneDaySec},
+			saveUninitialized:true,
+			resave: false
+		}))
+		VocaServer.app.use(cookieParser())
 		//VocaServer.app.use(cors)
 		
 		//eng.addSingleWordsToDb()
@@ -97,6 +121,7 @@ export default class VocaServer{
 		// 	})
 		// })
 		this.app.get('/english', async (req,res)=>{
+			
 			let path = req.path
 			console.log('path:'+path)//t
 			let eng = new VocaSqlite({_tableName:'english'})
@@ -125,20 +150,7 @@ export default class VocaServer{
 			res.sendFile('/index.html')
 		}) */
 
-		VocaServer.app.get('*', (req, res)=>{
-			//console.log(`console.log(rootDir+'/out/frontend/dist/index.html')//t`)
-			//console.log(rootDir+'/out/frontend/dist/index.html')//t
-			// console.log(req.ip)
-			// let path = req.path
-			// console.log('path:'+path)
-			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(rootDir+'/out/frontend/dist/index.html')
-			//res.send(`<h1>404</h1>`)
 
-			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
-			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
-			//res.send('<h1>1919</h1>')
-		})
 		VocaServer.app.post('/post', (req, res)=>{
 			console.log(req.body)
 			VocaRaw.updateDb(req.body)
@@ -221,7 +233,45 @@ export default class VocaServer{
 				res.send('creat table failed\n'+Tempus.format(nunc)) //t
 			}
 		})
-		
+
+		// VocaServer.app.get('/login',async (req:MyReq,res)=>{
+		// 	const nunc = new Tempus()
+		// 	console.log(req.path+' '+Tempus.format(nunc))
+		// 	res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+		// })
+
+
+		VocaServer.app.post('/user/login',async (req:MyReq,res)=>{
+			const nunc = new Tempus()
+			console.log(req.path+' '+Tempus.format(nunc))
+			console.log(req.body)
+			console.log(req.body.username)
+			console.log(req.body.password)
+			if(req.body.username === tempUserName && req.body.password === tempPassword){
+				VocaServer.session = req.session
+				VocaServer.session.userid = req.body.username
+				res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+			}else{
+				res.send('Invalid username or password');
+			}
+		})
+
+		VocaServer.app.get('*', (req:MyReq, res)=>{
+			VocaServer.session=req.session??''
+			if(VocaServer.session.userid && req.path==='/login'){
+				console.log(114514)//t
+				res.setHeader('content-type','text;charset=utf-8')
+				res.sendFile(rootDir+'/out/frontend/dist/index.html')
+			}else{
+				res.sendFile(rootDir+'/out/frontend/dist/index.html')
+				//res.redirect('/login')
+				//console.log(`res.redirect('/login')`)//t
+			}
+		})
+					//res.send(`<h1>404</h1>`)
+			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
+			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
+			//res.send('<h1>1919</h1>')
 		
 		/* VocaServer.app.get('/login', (req:any, res:any)=>{
 			console.log(req.body)

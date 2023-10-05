@@ -48,6 +48,9 @@ export default class VocaSqlite{
 		_tableName?:string
 	}){
 		Object.assign(this, props)
+		this._db = new sqlite3.Database(this.dbPath, (err)=>{
+			if(err){throw err}
+		})
 	}
 
 	private _dbName = 'voca';
@@ -62,6 +65,8 @@ export default class VocaSqlite{
 
 	private _db:Database = new sqlite3.Database(this.dbPath, (err)=>{
 		if(err){throw err}
+		//console.log(`console.log(this.dbPath)`)
+		//console.log(this.dbPath)//t
 	})
 	;public get db(){return this._db;};
 
@@ -593,9 +598,9 @@ export default class VocaSqlite{
 		let r = await Sqlite.all<IVocaRow>(db, sql)
 		VocaSqlite.attachTableName(r, table)
 		return r
-	}public getAllWords(){
-		let table=this.tableName
-		return VocaSqlite.getAllWords(this.db, $(table))
+	}public getAllWords(table?:string){
+		let table_=table??this.tableName
+		return VocaSqlite.getAllWords(this.db, $(table_))
 	}
 
 

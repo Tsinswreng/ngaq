@@ -65,7 +65,9 @@ export default class Sqlite{
 			db.all<T>(sql, params,(err,rows:T[])=>{
 				if(err){
 					//console.error(sql+'\n'+err+'\n');j(err);return
-					j(sqlErr(err,sql));return;
+					//j(sqlErr(err,sql));
+					j(err)
+					return;
 					//throw new Error()
 					//throw sqlErr(err, sql)//t
 				}
@@ -720,7 +722,7 @@ FROM '${tableName}';`
 	 * @param obj 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_insert(table:string, obj:Object, ignoredKeys?:string[]):[string, any[]]{
+	public static getSql_insert(table:string, obj:object&{length?:never}, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
@@ -741,15 +743,41 @@ FROM '${tableName}';`
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_updateById(table:string, obj:Object, id:number, ignoredKeys?:string[]):[string, any[]]{
+	public static getSql_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
 		const keys = Object.keys(obj)
-		const values = Object.values(obj)
+		const values:any[] = Object.values(obj) //不寫:any[] vscode不報錯、但ts-node報錯
 		values.push(id)
 		const updateQuery = `UPDATE '${table}' SET ${keys.map(key => `${key} = ?`).join(', ')} WHERE id = ?`;
 		return [updateQuery, values]
+	}
+
+	/**
+	 * 跨數據庫複製表
+	 * 不分批、表太大則可能爆內存
+	 * @param srcDb 
+	 * @param srcTable 
+	 * @param targetDb 
+	 * @param neoName 
+	 * @returns 
+	 */
+	public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
+		const fn_creatSql = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(srcDb, srcTable)
+		const creatSql = fn_creatSql(neoName)
+		await Sqlite.all(targetDb, creatSql)
+		const fn_selectAll = (table:string)=>{return `SELECT * FROM '${table}'`}
+		const srcRows = await Sqlite.all<object>(srcDb, fn_selectAll(srcTable))
+		//console.log(srcRows)//t
+		let insertSql = Sqlite.getSql_insert(neoName, srcRows[0])[0]
+		//console.log(insertSql)//t
+		const values:any[] = []
+		for(const row of srcRows){
+			const v:any[] = Sqlite.getSql_insert(neoName, row)[1]
+			values.push(v)
+		}
+		return Sqlite.transaction(targetDb, [{sql:insertSql, values:values}], 'run')
 	}
 
 

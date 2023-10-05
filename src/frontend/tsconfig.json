@@ -48,7 +48,7 @@
 		
 		/* Bundler mode */
 		//"moduleResolution": "bundler",Option 'bundler' can only be used when 'module' is set to 'es2015' or later.
-		"allowImportingTsExtensions": true,
+		//"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true, //不生成編譯後ᵗ文件
