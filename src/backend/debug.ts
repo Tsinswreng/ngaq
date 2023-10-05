@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -151,6 +151,12 @@ async function test_copyCrossDb(){
 //test_copyCrossDb()
 
 
+async function t20231005204331(){
+	//creatFileSync('./ASD', true)
+	let vs = new VocaSqlite({_dbPath:'./SSS'})
+	console.log(vs.dbPath)
+}
+t20231005204331()
 
 // type nonArr = Record<string, any>
 

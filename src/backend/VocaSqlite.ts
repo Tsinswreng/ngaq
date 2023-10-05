@@ -7,8 +7,9 @@ import _, { add } from 'lodash';
 import SingleWord2 from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
-import { $, $a } from '@shared/Ut';
+import { $, $a, creatFileSync, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
+import * as fs from 'fs'
 const rootDir:string = require('app-root-path').path
 const Ut = {
 	$:$
@@ -45,30 +46,45 @@ export default class VocaSqlite{
 	constructor(props:{
 		_dbName?:string,
 		_dbPath?:string,
-		_tableName?:string
-	}){
+		_tableName?:string,
+		
+	},creatNewIfNotExist=true){
 		Object.assign(this, props)
-		this._db = new sqlite3.Database(this.dbPath, (err)=>{
-			if(err){throw err}
-		})
+		if(creatNewIfNotExist){
+			VocaSqlite.creatDbFileSync(this.dbPath, true)
+		}
+		this.dbPath = this._dbPath
 	}
 
 	private _dbName = 'voca';
 	public get dbName(){return this._dbName}public set dbName(v){this._dbName=v}
 
 	private _dbPath = rootDir+'/db/'+this._dbName+'.db' 
-	;public get dbPath(){return this._dbPath;};;public set dbPath(v){this._dbPath=v;};
+	;public get dbPath(){return this._dbPath;};
+	;public set dbPath(v){
+		this._dbPath=v;
+		this._db = new sqlite3.Database(pathAt(this.dbPath), (err)=>{
+			if(err){throw err}
+		})
+	};
 
 	private _tableName?:string 
 	;public get tableName(){return this._tableName;};;public set tableName(v){this._tableName=v;};
 
 
-	private _db:Database = new sqlite3.Database(this.dbPath, (err)=>{
+	private _db:Database = new sqlite3.Database(pathAt(this.dbPath), (err)=>{
 		if(err){throw err}
-		//console.log(`console.log(this.dbPath)`)
-		//console.log(this.dbPath)//t
 	})
 	;public get db(){return this._db;};
+
+
+
+
+	public static creatDbFileSync(path:string, ifNotExists=false){
+		creatFileSync(path, ifNotExists)
+	}public creatDbFileSync(ifNotExists=false){
+		VocaSqlite.creatDbFileSync(this.dbPath, ifNotExists)
+	}
 
 	/**
 	 * 創建單詞表

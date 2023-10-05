@@ -18,7 +18,23 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
-
+/**
+ * 新建文件
+ * @param path 
+ * @param ifNotExists 默認潙假、即文件既存旹報錯
+ * @returns 
+ */
+export function creatFileSync(path:string, ifNotExists=false){
+	if(fs.existsSync(path)){
+		if(ifNotExists){
+			return
+		}else{
+			throw new Error()
+		}
+	}else{
+		fs.appendFileSync(path,'')
+	}
+}
 
 /**
  * 手動封裝之 lodash之merge
@@ -433,12 +449,12 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
  * @param dir 
  * @returns 
  */
-export function pathAt(dir:string):string{
+export function pathAt(dir:string, errMsg?:string):string{
 	if(!fs.existsSync(dir)){
 		console.error('<absoluteDir>')
 		console.error(path.resolve(dir))
 		console.error('</absoluteDir>')
-		throw new Error('file not found')
+		throw new Error(errMsg)
 	}
 	return dir
 }
