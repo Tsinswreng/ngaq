@@ -52,9 +52,13 @@ function search(shape:string){
 
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
 		<button @click="multiMode.start()">始</button>
-		<button @click="multiMode.restart()">重開</button>
 		<button @click="multiMode.save()">存</button>
+		<button>改</button>
+		<button @click="multiMode.restart()">重開</button>
 		<button @click="multiMode.sortByRmb()">添ᶤ排序</button>
+		<button @click="multiMode.sortBylastRvwDate()">期ᶤ排序</button>
+		
+		
 		<!-- 坑{v-model與value=""不兼容} -->
 		<span>
 			<input type="text" v-model="debuffNumerator" id="debuffNumerator">

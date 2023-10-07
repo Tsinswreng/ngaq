@@ -79,7 +79,11 @@ export default class VocaSqlite{
 
 
 
-
+	/**
+	 * 新建數據庫
+	 * @param path 
+	 * @param ifNotExists 
+	 */
 	public static creatDbFileSync(path:string, ifNotExists=false){
 		creatFileSync(path, ifNotExists)
 	}public creatDbFileSync(ifNotExists=false){
@@ -459,6 +463,9 @@ export default class VocaSqlite{
 			return r
 		}
 	}
+	// public async qryWordByWordShape(table=$a(this.tableName), wordShape:string|string[]){
+	// 	return VocaSqlite.qryWordByWordShape(this.db, table, wordShape)
+	// }
 
 	/**
 	 * 畀words增ling字段。直ᵈ改原數組、無返。

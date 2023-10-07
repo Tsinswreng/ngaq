@@ -115,6 +115,17 @@ export default class MultiMode{
 		this.multiMode_key.value++
 	}
 
+	public sortBylastRvwDate(){
+		if(this.isSaved.value!==true){
+			throw new Error(`未保存`)
+		}
+		const recite = this.recite
+		recite.sortBylastRvwDate()
+		this.multiMode_key.value++
+	}
+
+
+
 	public async save(){
 		await this.recite.saveWords()
 		this.isSaved.value = true

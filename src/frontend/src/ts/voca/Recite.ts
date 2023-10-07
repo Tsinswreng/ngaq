@@ -1,12 +1,11 @@
 import Tempus from '@shared/Tempus';
 import WordB from './WordB';
 import SingleWord2, { IVocaRow, WordEvent } from '@shared/SingleWord2';
-import { $, $a, getShuffle } from '@shared/Ut';
-import Log from '@shared/Log';
+import { $, $a, getShuffle, lastOf } from '@shared/Ut';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
 import _ from 'lodash';
-const l = new Log()
+const l = console
 
 /**
  * 既複習ᵗ詞
@@ -111,6 +110,22 @@ export default class Recite{
 		wbs.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
 	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
+	}
+
+	/**
+	 * 依 末次複習ᵗ期 排序
+	 * @param wb 
+	 */
+	public static sortBylastRvwDate(wb:WordB[]){
+		const nunc = new Tempus()
+		function lastTempus(w:WordB){return lastOf(w.sortedTempus_eventInsts).tempus}
+		//function millsToNow(t:Tempus){return Tempus.diff_mills(nunc, t)}
+		
+		wb.sort((a,b)=>{
+			return Tempus.diff_mills(lastTempus(a), lastTempus(b))
+		})
+	}public sortBylastRvwDate(){
+		return Recite.sortBylastRvwDate(this.allWordsToLearn)
 	}
 
 	/**

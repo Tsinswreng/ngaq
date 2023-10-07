@@ -40,6 +40,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 天	lʰˁin		
 #還	wrˁen		
 還	wˁen	# sch
+圜	wrˁen
+寰	wrˁen
 牛	ŋʷə		
 三	sˁəm	# ms,sch	
 三	srum	# bs	
@@ -96,7 +98,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 羣	gul		
 			
 連	ran		
-掩	ʔramʔ		
+掩	ʔromʔ		
 抑	ʔik		
 訴	sˁaks		
 低	tˁi		
@@ -305,6 +307,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 羊	jaŋ
 洋	jaŋ
+佯	jaŋ
 陽	laŋ
 
 同	lˁoŋ
@@ -342,6 +345,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 求	ɡu
 球	ɡru
+
+
+歡	hʷˁal
+獾	hʷˁal
+驩	hʷˁal
 
 觀	kʷˁal
 官	kʷˁan
@@ -449,6 +457,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 商	staŋ
 填	dˁin
 田	lˁin
+鈿	lˁins
 成	deŋ
 盛	deŋs
 傍	bˁaŋs
@@ -473,6 +482,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 引	linʔ
 代	lˁəks
 袋	lˁəs
+黛	lˁəs
+岱	lˁəs
+
 捲	kronʔ
 權	ɡʷral
 科	kʰˁoj
@@ -506,6 +518,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #瓶
 屏	peŋ
 也	lAjʔ	# bs
+迤	lajʔ
+
 野	lAʔ	# bs
 人	nin	# sch
 仁	niŋ	# bs
@@ -566,7 +580,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 謀	mə
 某	məʔ
 眉	mrəl	# bs
-媚	mrəjs	# bs
+媚	mrəls	# bs
 弓	kʷəŋ
 躬	kʷəŋ
 洗	sˁəlʔ
@@ -845,9 +859,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 外	ŋˁots	# ms
 
 賠	bˁə	
-# 俳	brəj
-# 輫	brəj
-# 徘	bˁəj
+俳	brəj
+輫	brəj
+徘	bˁəj
 背	pˁəks
 背	bˁəks
 輩	pˁəjs
@@ -1086,6 +1100,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 抬	lʰrə
 
 苔	lˁə
+胎	lʰˁə
 控	kʰrˁoŋs	# sch
 凹	ʔrˁəp	# ptl
 浥	ʔrip	# bs
@@ -1273,6 +1288,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 虔	ɡran
 淹	ʔom	# bs
 奄	ʔomʔ	# bs
+俺	ʔˁomʔ	# ts
 # 俺	
 # 餣
 # 淹	ʔom
@@ -1319,9 +1335,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 躋	tsˁi
 遣	kʰenʔ	# 舍他音
 譴	kʰens
-湄	mri
-楣	mri
-嵋	mri
+湄	mrəl
+楣	mrəl
+嵋	mrəl
 #旬	win	# ptl
 旬	zin	# ts
 勻	win
@@ -1557,6 +1573,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 宦	ɡʷrˁans
 竊	tsʰˁet
 蕁	lˁəm
+占	tem
+占	tems
+闊	kʰʷˁat
+蛞	kʰʷˁat
+筈	kʰʷˁat
 # 欄
 # 攔
 # 瀾
@@ -1858,7 +1879,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 案	ʔˁanʔ	# ts
 篇	pʰˁen	# ts
 
-吵	tsʰrˁawʔ	# ts
+吵	tsʰrˁewʔ
 牌	bˁej # ts
 刻	kˁək	# ts
 #磚	tonʔ	# ts
@@ -2045,6 +2066,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 投	手ˁo	
 #指	手iʔ	# ts
 脂	肉i	# ts
+脂	ki
 評	言reŋ	# ts
 苹	艸reŋ	# ts
 拭	手ək	# ts
@@ -2249,14 +2271,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #莫	@莫
 #模	木莫
-摸	手莫
-摹	手莫
+#摸	手莫
+#摹	手莫
 #慕	心莫
 #墓	土莫
 墓	tʰˁaks
 幕	kˁaks
-膜	肉莫
-漠	水莫
+#膜	肉莫
+#漠	水莫
 #寞	宀莫
 #暮	日莫
 #募	力莫
@@ -2294,7 +2316,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #睹	目者
 睹	mAʔ	# ts
 
-賭	mAʔ	# ts
+賭	pAʔ	# ts
 煮	mʰAʔ	# ts
 渚	stAʔ	# ts
 #儲	nAʔ	# ts

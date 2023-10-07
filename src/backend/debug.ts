@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -156,7 +156,17 @@ async function t20231005204331(){
 	let vs = new VocaSqlite({_dbPath:'./SSS'})
 	console.log(vs.dbPath)
 }
-t20231005204331()
+//t20231005204331()
+
+async function t20231006112813(){
+	let vs = new VocaSqlite({_tableName:'japanese'})
+	const rows = await VocaSqlite.qryWordByWordShape(vs.db, $a(vs.tableName), 'どころか')
+	let row = rows[0]
+	console.log(row)
+	console.log(JSON.parse(row.mean)[0])
+
+}
+t20231006112813()
 
 // type nonArr = Record<string, any>
 
