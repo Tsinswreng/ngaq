@@ -1,5 +1,5 @@
 
-#20231007211045938
+#20231007225051439
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -744,6 +744,7 @@ use_preset_vocabulary: true
 蚜	ŋrˁa	
 訝	ŋrˁas	
 過	kʷˁajs	
+禍	ɡʷˁajʔ	
 實	mlit	
 護	ɡʷˁaks	
 罵	mrˁas	
@@ -759,6 +760,9 @@ use_preset_vocabulary: true
 槽	dzˁu	
 漕	dzˁu	
 嘈	dzˁu	
+遭	tsˁu	
+醩	tsˁu	
+蹧	tsˁu	
 糟	tsˁu	
 竈	tsˁuks	
 滑	ɡrˁut	
@@ -777,6 +781,7 @@ use_preset_vocabulary: true
 妾	tsʰap	
 妻	tsʰˁəj	
 淒	tsʰˁi	
+妻	tsʰˁi	
 胃	wəts	
 彙	wəts	
 渭	wəts	
@@ -9001,7 +9006,6 @@ use_preset_vocabulary: true
 湱	hʷrˁak	
 湱	hʷrˁek	
 𢝇	hʷrˁak	
-禍	ɡˁojʔ	
 嗀	hrˁok	
 嗀	hˁok	
 𥇙	hʷˁək	
@@ -24830,13 +24834,10 @@ use_preset_vocabulary: true
 臟	dzˁaŋs	
 𦵩	tsˁaw	
 𦵩	dzu	
-遭	tsˁaw	
 㡟	tsˁaw	
 㡟	tsʰˁaw	
 𣩒	tsˁaw	
 㷮	tsˁaw	
-醩	tsˁaw	
-蹧	tsˁaw	
 𣪻	tsˁuk	
 𣫞	dzˁak	
 鑿	tsˁak	

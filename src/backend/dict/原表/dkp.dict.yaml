@@ -898,6 +898,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蚜	ŋrˁa
 訝	ŋrˁas
 過	kʷˁajs
+禍	ɡʷˁajʔ
 實	mlit
 護	ɡʷˁaks
 罵	mrˁas
@@ -914,6 +915,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 槽	dzˁu
 漕	dzˁu
 嘈	dzˁu
+遭	tsˁu
+醩	tsˁu
+蹧	tsˁu
 
 糟	tsˁu
 竈	tsˁuks
@@ -935,6 +939,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 妾	tsʰap
 妻	tsʰˁəj	# bs
 淒	tsʰˁi	# ptl
+妻	tsʰˁi
 
 
 胃	wəts

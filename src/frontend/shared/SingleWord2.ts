@@ -728,7 +728,7 @@ export class Priority{
 	 * @returns 
 	 */
 	public static getDateWeight(dateDif:number):number{
-		let result = (1/25)*Math.pow(dateDif, 1/2)
+		let result = (1/100)*Math.pow(dateDif, 1/2)
 		if(result <= 1){
 			result = 1.01;
 		}
