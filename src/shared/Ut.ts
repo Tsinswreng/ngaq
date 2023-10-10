@@ -134,7 +134,7 @@ export function swapArrEle<T>(arr:T[], index1:number, index2:number){
 export function group<T>(arr:T[], memberAmount:number){
 	const result:T[][] = []
 	let unusGroup:T[] = []
-	for(let i=0,j=0; ; i++,j++){
+	for(let i=0; ; i++){
 		unusGroup.push(arr[i])
 		if(unusGroup.length===memberAmount){
 			result.push(unusGroup)
@@ -460,7 +460,23 @@ export function pathAt(dir:string, errMsg?:string):string{
 }
 
 
-export function measureTime(fn:()=>void){
+export function measureFunctionTime<T=any>(fn:()=>T):[number, T]{
+	const startTime = now();
+	const result =  fn();
+	const endTime = now();
+	const executionTime = endTime - startTime;
+	return [executionTime, result]
+}
+
+export async function measurePromiseTime<T=any>(promise:Promise<T>):Promise<[number, T]>{
+	const startTime = now();
+	const result = await promise;
+	const endTime = now();
+	const executionTime = endTime - startTime;
+	return [executionTime, result]
+}
+
+export function deprecated_measureTime(fn:()=>void){
 	const startTime = now();
 	fn();
 	const endTime = now();

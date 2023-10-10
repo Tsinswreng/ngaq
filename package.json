@@ -21,6 +21,7 @@
     "jquery": "^3.7.0",
     "lodash": "^4.17.21",
     "mariadb": "^3.1.2",
+    "mathjs": "^11.11.1",
     "module-alias": "^2.2.3",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",

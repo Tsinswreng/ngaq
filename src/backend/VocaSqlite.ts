@@ -2,7 +2,7 @@ require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就
 import sqlite3 from 'sqlite3';
 sqlite3.verbose()
 import { Database, RunResult } from 'sqlite3';
-import Sqlite from '@shared/db/Sqlite';
+import Sqlite, { SqlToValuePair } from '@shared/db/Sqlite';
 import _, { add } from 'lodash';
 import SingleWord2 from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
@@ -183,9 +183,8 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @param word 
 	 */
-	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[]>
-	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[]>
-
+	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[][][]>
+	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[][][]>
 	private static async initAddWord(db:Database, table:string, word:SingleWord2|SingleWord2[]){
 		let w:SingleWord2[]
 		if(Array.isArray(word)){
@@ -209,6 +208,30 @@ export default class VocaSqlite{
 			return Sqlite.transaction(db, pairs, 'run')
 		}
 	}
+
+/* 	private static async initAddWord(db:Database, table:string, word:SingleWord2|SingleWord2[]){
+		let w:SingleWord2[]
+		if(Array.isArray(word)){
+			w = word
+		}else{
+			w = [word]
+		}
+		VocaSqlite.checkTable(table, w)
+		let [r, runResult] = await forArr(db, table, w)
+		return runResult
+		function forArr(db:Database, table:string, words:SingleWord2[]){
+			const pairs:{sql:string, values:any[][]}[] = []
+			for(const w of words){
+				const [sql, value] = VocaSqlite.getInsertSql(table, w)
+				const unusPair = {sql:sql, values:[value]}
+				//console.log(`console.log(unusPair)`)
+				//console.log(unusPair)//t
+				pairs.push(unusPair)
+			}
+
+			return Sqlite.old_transaction(db, pairs, 'run')
+		}
+	} */
 
 
 // 	private static async deprecated_addWords(db:Database, table:string, words:SingleWord2[]){
@@ -310,7 +333,8 @@ export default class VocaSqlite{
 			
 			if(wordsToInitAdd.length !== 0){
 				
-				runResult1 = await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
+				let d3 = await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
+				runResult1 = d3.flat(2)
 			}
 			if(wordsToUpdate.length !== 0){
 				
@@ -440,13 +464,9 @@ export default class VocaSqlite{
 		if(typeof wordShape === 'string'){
 			return forOne(db, table, wordShape)
 		}else{
-			const sqlToValuePairs:{sql:string, values:any[]}[] = []
-			for(const curShape of wordShape){
-				const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
-				const pair:{sql:string, values:any[][]} = {sql: sql, values: [[curShape]]}
-				sqlToValuePairs.push(pair)
-			}
-			let [r, runResult] = await Sqlite.transaction<IVocaRow>(db, sqlToValuePairs, 'each')
+			
+			let d2 = await Sqlite.qryValuesInColumn<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
+			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
 					VocaSqlite.attachTableName(r[i], table)
@@ -463,6 +483,34 @@ export default class VocaSqlite{
 			return r
 		}
 	}
+
+	// public static async qryWordByWordShape(db:Database, table:string, wordShape:string|string[]){
+	// 	if(typeof wordShape === 'string'){
+	// 		return forOne(db, table, wordShape)
+	// 	}else{
+	// 		const sqlToValuePairs:{sql:string, values:any[]}[] = []
+	// 		for(const curShape of wordShape){
+	// 			const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
+	// 			const pair:{sql:string, values:any[][]} = {sql: sql, values: [[curShape]]}
+	// 			sqlToValuePairs.push(pair)
+	// 		}
+	// 		let [r, runResult] = await Sqlite.old_transaction<IVocaRow>(db, sqlToValuePairs, 'each')
+	// 		for(let i = 0; i < r.length; i++){
+	// 			if(r[i].length !== 0){
+	// 				VocaSqlite.attachTableName(r[i], table)
+	// 			}
+	// 		}
+	// 		return r
+	// 	}
+
+	// 	async function forOne(db:Database, table:string, wordShape:string){
+	// 		const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
+	// 		let r = await Sqlite.all<IVocaRow>(db, sql, wordShape)
+	// 		//if(r.length === 0 || r === void 0){return undefined}
+	// 		VocaSqlite.attachTableName(r, table)
+	// 		return r
+	// 	}
+	// }
 	// public async qryWordByWordShape(table=$a(this.tableName), wordShape:string|string[]){
 	// 	return VocaSqlite.qryWordByWordShape(this.db, table, wordShape)
 	// }

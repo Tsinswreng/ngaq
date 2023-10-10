@@ -49,6 +49,13 @@ export interface Sqlite_master{
 	sql:string
 }
 
+export class SqlToValuePair{
+	constructor(
+		public sql:string,
+		public values:any[][]
+	){}
+}
+
 export default class Sqlite{
 	private constructor(){}
 
@@ -147,7 +154,7 @@ export default class Sqlite{
 		const sql = `SELECT sql from 'sqlite_master' WHERE type='table' AND name=?`
 		const pair = {sql:sql, values:[[table]]}
 		const r = await Sqlite.transaction(db, [pair], 'each')
-		const originSql:string = $a(  ((r[0][0][0] as any ).sql)as string  )
+		const originSql:string = $a(  ((r[0][0][0][0] as any ).sql)as string  )
 		if(typeof(originSql)!=='string'){throw new Error(`typeof(originSql)!=='string'`)}
 		const oldTable = table
 		const sqlTemplateFunction:(table:string)=>string = (table:string)=>{
@@ -420,9 +427,6 @@ export default class Sqlite{
 	}
 
 
-
-
-
 	/**
 	 * 手動ᵈ封裝ᵗ事務 
 	 * @param db 
@@ -430,12 +434,14 @@ export default class Sqlite{
 	 * @param {{sql:string, values:any[][]}[]} sqlToValuePairs values必須是二維數組、否則報錯
 	 * @param {'each'|'run'} method statement對象ˋ將調ᵗ函數
 	 * @returns {Promise<[T[][], RunResult[]]>}  第n條sql對應T[n]和RunResult[n]
+	 * @deprecated
 	 * @instance
 	 * 
 	 */
-	public static async transaction<T>(
+	public static async old_transaction<T>(
 		db:Database,
-		sqlToValuePairs:{sql:string, values:any[][]}[],
+		//sqlToValuePairs:{sql:string, values:any[][]}[],
+		sqlToValuePairs:SqlToValuePair[],
 		method: 'each'|'run'
 	){
 		
@@ -447,10 +453,11 @@ export default class Sqlite{
 				for(let i = 0; i < sqlToValuePairs.length; i++){
 					const curSql:string = sqlToValuePairs[i].sql;
 					const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
+					//[[1],[2],[3]]
 					if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
 					const innerResult:T[] = []
 					const stmt = db.prepare(curSql, (err)=>{
-						if(err){rej(sqlErr(err));return}
+						if(err){rej((err));return}
 						
 						const each = ()=>{
 							for(const value1D of value2D){
@@ -501,7 +508,93 @@ export default class Sqlite{
 	}
 
 
-	
+	/**
+	 * 手動ᵈ封裝ᵗ事務 
+	 * @param db 
+	 * @template T 數據庫中每行ᵗ類型 
+	 * @param {{sql:string, values:any[][]}[]} sqlToValuePairs values必須是二維數組、否則報錯
+	 * @param {'each'|'run'} method statement對象ˋ將調ᵗ函數
+	 * @returns {Promise<[T[][][], RunResult[][][]]>}  第n條sql對應T[n]和RunResult[n]
+	 * @instance
+	 * 
+	 */
+	public static async transaction<T>(
+		db:Database,
+		//sqlToValuePairs:{sql:string, values:any[][]}[],
+		sqlToValuePairs:SqlToValuePair[],
+		method: 'each'|'run'
+	){
+		
+		const result3D:T[][][] = []
+		const runResult3D: RunResult[][][] = []
+		return new Promise<[T[][][], RunResult[][][]]>((res,rej)=>{
+			db.serialize(()=>{
+				db.run('BEGIN TRANSACTION')
+				//<遍歷sql>
+				for(let i = 0; i < sqlToValuePairs.length; i++){
+					const curSql:string = sqlToValuePairs[i].sql;
+					const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
+					//[[1],[2],[3]]
+					if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
+					const result2D:T[][] = []
+					const runResult2D:RunResult[][] = []
+					const stmt = db.prepare(curSql, (err)=>{
+						if(err){rej((err));return}
+						const each = ()=>{
+							for(const value1D of value2D){
+								const result1D:T[] = []
+								const runResult1D:RunResult[] = []
+								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+								stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+									if(err){
+										console.error(value2D)//t
+										rej(sqlErr(err, curSql, value2D));return
+									}//<坑>{err對象中不帶行號與調用堆棧之訊}
+									result1D.push(row)
+									runResult1D.push(this)
+								})
+								result2D.push(result1D)
+								runResult2D.push(runResult1D)
+							}
+						}
+						const run = ()=>{
+							for(const value1D of value2D){
+								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+								const runResult1D:RunResult[] = []
+								stmt.run(value1D, function(this, err){
+									if(err){
+										console.error(`console.error(curSql)`)
+										console.error(curSql)//t
+										console.error(`console.error(curValue)`)
+										console.error(value2D)//t
+										rej(sqlErr(err, curSql, value2D));return
+									}
+										//innerResult.push(row)
+										runResult1D.push(this)
+								})
+								runResult2D.push(runResult1D)
+							}
+							
+						}
+						switch(method){
+							case 'each': each(); break;
+							case 'run': run(); break;
+							default: rej('unmatched method')
+						}
+					})
+					result3D.push(result2D)
+					runResult3D.push(runResult2D)
+				}
+				//</遍歷sql>
+				db.run('COMMIT', function(err){
+					if(err){
+						rej(sqlErr(err, sqlToValuePairs));return
+					}
+					res([result3D,runResult3D])
+				})
+			})
+		})
+	}
 
 
 	// public static async deprecated_transactionAll<T>(
@@ -780,6 +873,60 @@ FROM '${tableName}';`
 		return Sqlite.transaction(targetDb, [{sql:insertSql, values:values}], 'run')
 	}
 
+	// public static async qryByOneId<T>(db:Database, table:string, id:number, idColumnName='id'):Promise<T[]>{
+	// 	const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
+	// 	const pair = {sql:sql, values:[[id]]}
+	// 	const r = await Sqlite.old_transaction<T>(db, [pair], 'each')
+	// 	return r[0][0]
+	// }
 
+	/**
+	 * 由id數組查詢行
+	 * @param db 
+	 * @param table 
+	 * @param id 
+	 * @param idColumnName 
+	 * @returns 
+	 */
+	public static qryByIds<T>(db:Database, table:string, id:number[], idColumnName='id'):Promise<T[][]>{
+		// const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
+		// const ids:[number][] = id.map(e=>[e])
+		// const pair = {sql:sql, values:ids}
+		// const r = await Sqlite.transaction<T>(db, [pair], 'each')
+		// return r[0][0]
+		return Sqlite.qryValuesInColumn(db, table, idColumnName, id)
+	}
+
+	/**
+	 * 在columnˉ列中尋values
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param values 
+	 * @returns 
+	 */
+	public static async qryValuesInColumn<T>(db:Database, table:string, column:string, values:any[]){
+		const vs = values.map(e=>[e])
+		const sql = `SELECT * FROM '${table}' WHERE ${column}=?`
+		const sqlPair = new SqlToValuePair(sql, vs)
+		const [rows, runResults] = await Sqlite.transaction<T>(db, [sqlPair], 'each')
+		return rows[0]
+	}
+
+	// public static async qryById<T>(db:Database, table:string, id:number|number[], idColumnName='id'){
+	// 	const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
+	// 	async function porUnus(id:number){
+	// 		const pair = {sql:sql, values:[[id]]}
+	// 		const r = await Sqlite.transaction(db, [pair], 'each')
+	// 		return r[0]
+	// 	}
+	// 	let ids:number[] = []
+	// 	if(typeof id === 'number'){ids=[id]}
+	// 	else{ids=id}
+		
+	// 	const pair = {sql:sql, values:[ids]}
+	// 	const r = await Sqlite.transaction<T>(db, [pair], 'each')
+	// 	return r[0]
+	// }
 
 }

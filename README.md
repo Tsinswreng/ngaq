@@ -46,6 +46,17 @@ npm run srv
 
 ## 記錄
 
+### 2023-10-10T18:38:11.000+08:00 4.7.2
+
+#### feat:
+
+* `Ut`測時 ᵗ函數; `Sqlite.ts`簡單ᵗ尋
+
+#### refactor:
+
+* `Sqlite.ts`重寫`transaction`;
+* `VocaSqlite`改用新transaction
+
 ### 2023-10-05T16:20:59.000+08:00 4.7.1
 
 #### feat:

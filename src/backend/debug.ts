@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -166,8 +166,60 @@ async function t20231006112813(){
 	console.log(JSON.parse(row.mean)[0])
 
 }
-t20231006112813()
+//t20231006112813()
 
+async function test_grout(){
+	let arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+	let r = group(arr, 3)
+	console.log(r)
+}
+//test_grout()
+
+// async function test_qryByIdTime(){
+// 	let id1To2000:number[] = []
+// 	for(let k = 0; k < 50; k++){
+// 		for(let i = 1; i < 2001; i++){
+// 			id1To2000.push(i)
+// 		}
+// 	}
+	
+	
+// 	let ids = [1,2,3]
+// 	let id = 1
+// 	const vs = new VocaSqlite({_tableName: 'english'})
+// 	let r,rs:any
+// 	//r = await Sqlite.qryByOneId(vs.db, vs.tableName??'', id)
+// 	let fn = Sqlite.qryByIds(vs.db, vs.tableName??'', id1To2000)
+// 	let test = Sqlite.test(vs.db, vs.tableName??'', id1To2000)
+// 	let test2 = Sqlite.qryByIds(vs.db, vs.tableName??'', id1To2000)
+// 	const t = await measurePromiseTime(fn)
+// 	const d = await measurePromiseTime(test)
+// 	const te2 = await measurePromiseTime(test2)
+// 	//console.log(t[1])
+// 	console.log(t[0])
+// 	console.log(t[1][0].length)
+// 	console.log()
+// 	console.log(d[0])
+// 	console.log(d[1].length)
+// 	console.log()
+// 	console.log(te2[0])
+// }
+//test_qryByIdTime()
+
+async function test_qryById(){
+	//console.log(11)
+	const vs = new VocaSqlite({_tableName: 'english'})
+	let r = await Sqlite.qryByIds(vs.db, vs.tableName??'', [1,2,3])
+	console.log(r)
+}
+//test_qryById()
+
+async function test_qryWordShape(){
+	const vs = new VocaSqlite({_tableName: 'english'})
+	const r = await VocaSqlite.qryWordByWordShape(vs.db, vs.tableName??'', ['peer', 'leak'])
+	console.log(r)
+}
+test_qryWordShape()
 // type nonArr = Record<string, any>
 
 // let ff : nonArr = {d:2, e:3}
