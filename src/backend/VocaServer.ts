@@ -187,7 +187,10 @@ export default class VocaServer{
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				res.send('receive successfully\n'+Tempus.format(nunc)) //t
+				const addedWords_init:string[] = await VocaSqlite.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, init)
+				const addedWords_modified:string[] = await VocaSqlite.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, modified)
+				const addedWords = [...addedWords_init,...addedWords_modified]
+				res.send(addedWords+'\nreceive successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){
 				console.error(e)
 				//console.log(114514)
@@ -291,6 +294,10 @@ export default class VocaServer{
 	
 }
 VocaServer.main()
+
+async function getWordShapesByIds(){
+
+}
 
 
 

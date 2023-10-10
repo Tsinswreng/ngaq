@@ -714,7 +714,25 @@ export default class VocaSqlite{
 	// 	}
 	// }
 
+	/**
+	 * 由id數組取詞形數組
+	 * 作此函數只蔿 每添詞後返前端ʰʃ添ᵗ詞ᵗ詞形ˇ
+	 * @param db 
+	 * @param table 
+	 * @param ids 
+	 * @returns 
+	 */
+	public static async getWordShapesByIds(db:Database, table:string, ids:number[]){
+		const rows2d = await Sqlite.qryByIds<IVocaRow>(db, table, ids)
+		const rows = rows2d.flat(1)
+		return rows.map(e=>e.wordShape)
+	}
 
 }
 
 
+export namespace VocaSqliteUtil{
+	function getWordShapeByIds(){
+
+	}
+}
