@@ -3,7 +3,7 @@
 	import { ref, Ref } from 'vue';
 	import { WordEvent } from '@shared/SingleWord2';
 	import Recite from '@ts/voca/Recite';
-	import Status from '../MultiMode';
+	import MultiMode from '../MultiMode';
 import { lastOf } from '@shared/Ut';
 
 	//let word = defineProps<SingleWord2>()
@@ -18,6 +18,7 @@ const props = defineProps<{
 const emits = defineEmits(['WordCardClick']);
 
 const recite = Recite.getInstance()
+const multiMode = MultiMode.getInstance()
 function returnWordToParent(){
 	const wordToSend = props.wordB
 	emits('WordCardClick', wordToSend); // 第一個參數是事件ᵗ名、第二個是將傳ᵗ訊。
@@ -25,8 +26,9 @@ function returnWordToParent(){
 	//reciteStatus.value = 'rmb'
 };
 
-const reciteStatus = Status.getInstance()
+const reciteStatus = MultiMode.getInstance()
 function handleWordEvent(event:WordEvent){
+	multiMode.showNextRandomBg()
 	reciteStatus.isSaved.value = false
 	if(reciteStatusRef.value === 'nil'){
 		recite.trigger(props.wordB, event)
@@ -84,6 +86,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>
 		<span>{{ lastOf(props.wordB.getEventSymbols()) }}</span>
+		
 		<!-- <span>{{ reciteStatusRef }}</span> -->
 
 		<!-- <span class="upper">
@@ -158,11 +161,16 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
 .rmb{
-	background-color: rgb(0, 64, 0);
+	background-color: rgb(0, 80, 0, 0.5);
+	/* box-sizing: border-box;
+	border: rgb(0, 64, 0, 0.5) solid 10px; */
 }
 
 .fgt{
-	background-color: rgb(64, 0, 0);
+	background-color: rgb(80, 0, 0, 0.5);
+}
+*{
+	opacity: 0.95;
 }
 </style>
 

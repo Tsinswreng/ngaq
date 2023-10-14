@@ -23,9 +23,10 @@ import dayjs from "dayjs";
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $ } from "@shared/Ut";
+import { $, fileToBase64 } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
 import session from 'express-session'
+import RandomImg from "./Img";
 
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
@@ -34,6 +35,14 @@ const rootDir:string = require('app-root-path').path
 const tempUserName = '114'
 const tempPassword = '514'
 const oneDaySec = 3600*24
+
+const dirs:string[] = []
+dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`)
+dirs.push(`D:\\_\\視聽\\圖`)
+// dirs.push(`D:\\_\\視聽\\圖\\bili`)
+// dirs.push(`D:\\_\\視聽\\圖\\qqero`)
+// dirs.push(`D:\\_\\視聽\\圖\\貼吧ᙆᵗ圖`)
+
 
 //<{}, any, any, QueryString.ParsedQs, Record<string, any>>
 // type a = Express.Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>
@@ -62,9 +71,17 @@ export default class VocaServer{
 	public static sqlt = new VocaSqlite({})
 	public static sqltDbObj = VocaServer.sqlt.db
 	public static session
+	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
-	public static main(){
+	public static async main(){
+
+		let ri :RandomImg|undefined = undefined
+		try{
+			ri = await RandomImg.konstructor(dirs)
+		}catch(e){
+			console.error(`尋不見路徑`)
+		}
 		
 		VocaServer.app.use((req:any, res:any, next:any)=>{
 			res.header("Access-Control-Allow-Origin", "*");
@@ -257,6 +274,18 @@ export default class VocaServer{
 			}else{
 				res.send('Invalid username or password');
 			}
+		})
+
+		VocaServer.app.post('/randomImg', async (req,res)=>{
+			if(!ri){return}
+			const nunc = new Tempus()
+			console.log(req.path+' '+Tempus.format(nunc))
+			//res.sendFile(ri.oneRandomFile())
+			const path = ri.oneRandomFile()
+			const pair:[string, string] = [path, await fileToBase64(path)]
+			
+			//res.send(JSON.stringify(pair))
+			res.json(pair)
 		})
 
 		VocaServer.app.get('*', (req:MyReq, res)=>{

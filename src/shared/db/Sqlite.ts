@@ -369,62 +369,62 @@ export default class Sqlite{
 	 * @instance
 	 * 
 	 */
-	public static async deprecated_transaction<T>(
-		db:Database,
-		sqlToValuePairs:{sql:string, values:any[]}[],
-		method: 'each'|'run'
-		){
-		const result:T[][] = []
-		const runResult: RunResult[] = []
-		return new Promise<[T[][], RunResult[]]>((res,rej)=>{
-			db.serialize(()=>{
-				db.run('BEGIN TRANSACTION')
-				for(let i = 0; i < sqlToValuePairs.length; i++){
-					const curSql:string = sqlToValuePairs[i].sql;
-					const curValue:(any|undefined)[] = sqlToValuePairs[i].values
-					const innerResult:T[] = []
-					const stmt = db.prepare(curSql, (err)=>{
-						if(err){rej(sqlErr(err));return}
-						const each = ()=>{
-							stmt.each<T>(curValue, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
-								if(err){
-									console.error(curValue)//t
-									rej(sqlErr(err, curSql, curValue));return
-								}//<坑>{err對象中不帶行號與調用堆棧之訊}
-									innerResult.push(row)
-									runResult.push(this)
-							})
-						}
-						const run = ()=>{
-							stmt.run(curValue, function(this, err){
-								if(err){
-									console.error(`console.error(curSql)`)
-									console.error(curSql)//t
-									console.error(`console.error(curValue)`)
-									console.error(curValue)//t
-									rej(sqlErr(err, curSql, curValue));return
-								}
-									//innerResult.push(row)
-									runResult.push(this)
-							})
-						}
-						switch(method){
-							case 'each': each(); break;
-							case 'run': run(); break;
-							default: rej('unmatched method')
-						}
-					})
-					result.push(innerResult)
-				}
-				db.run('COMMIT', function(err){
-					if(err){
-						rej(sqlErr(err, sqlToValuePairs));return
-					}
-					res([result,runResult])
-				})
-			})
-		})
-	}
+	// public static async deprecated_transaction<T>(
+	// 	db:Database,
+	// 	sqlToValuePairs:{sql:string, values:any[]}[],
+	// 	method: 'each'|'run'
+	// 	){
+	// 	const result:T[][] = []
+	// 	const runResult: RunResult[] = []
+	// 	return new Promise<[T[][], RunResult[]]>((res,rej)=>{
+	// 		db.serialize(()=>{
+	// 			db.run('BEGIN TRANSACTION')
+	// 			for(let i = 0; i < sqlToValuePairs.length; i++){
+	// 				const curSql:string = sqlToValuePairs[i].sql;
+	// 				const curValue:(any|undefined)[] = sqlToValuePairs[i].values
+	// 				const innerResult:T[] = []
+	// 				const stmt = db.prepare(curSql, (err)=>{
+	// 					if(err){rej(sqlErr(err));return}
+	// 					const each = ()=>{
+	// 						stmt.each<T>(curValue, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+	// 							if(err){
+	// 								console.error(curValue)//t
+	// 								rej(sqlErr(err, curSql, curValue));return
+	// 							}//<坑>{err對象中不帶行號與調用堆棧之訊}
+	// 								innerResult.push(row)
+	// 								runResult.push(this)
+	// 						})
+	// 					}
+	// 					const run = ()=>{
+	// 						stmt.run(curValue, function(this, err){
+	// 							if(err){
+	// 								console.error(`console.error(curSql)`)
+	// 								console.error(curSql)//t
+	// 								console.error(`console.error(curValue)`)
+	// 								console.error(curValue)//t
+	// 								rej(sqlErr(err, curSql, curValue));return
+	// 							}
+	// 								//innerResult.push(row)
+	// 								runResult.push(this)
+	// 						})
+	// 					}
+	// 					switch(method){
+	// 						case 'each': each(); break;
+	// 						case 'run': run(); break;
+	// 						default: rej('unmatched method')
+	// 					}
+	// 				})
+	// 				result.push(innerResult)
+	// 			}
+	// 			db.run('COMMIT', function(err){
+	// 				if(err){
+	// 					rej(sqlErr(err, sqlToValuePairs));return
+	// 				}
+	// 				res([result,runResult])
+	// 			})
+	// 		})
+	// 	})
+	// }
 
 
 	/**
@@ -438,74 +438,74 @@ export default class Sqlite{
 	 * @instance
 	 * 
 	 */
-	public static async old_transaction<T>(
-		db:Database,
-		//sqlToValuePairs:{sql:string, values:any[][]}[],
-		sqlToValuePairs:SqlToValuePair[],
-		method: 'each'|'run'
-	){
+	// public static async old_transaction<T>(
+	// 	db:Database,
+	// 	//sqlToValuePairs:{sql:string, values:any[][]}[],
+	// 	sqlToValuePairs:SqlToValuePair[],
+	// 	method: 'each'|'run'
+	// ){
 		
-		const result:T[][] = []
-		const runResult: RunResult[] = []
-		return new Promise<[T[][], RunResult[]]>((res,rej)=>{
-			db.serialize(()=>{
-				db.run('BEGIN TRANSACTION')
-				for(let i = 0; i < sqlToValuePairs.length; i++){
-					const curSql:string = sqlToValuePairs[i].sql;
-					const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
-					//[[1],[2],[3]]
-					if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
-					const innerResult:T[] = []
-					const stmt = db.prepare(curSql, (err)=>{
-						if(err){rej((err));return}
+	// 	const result:T[][] = []
+	// 	const runResult: RunResult[] = []
+	// 	return new Promise<[T[][], RunResult[]]>((res,rej)=>{
+	// 		db.serialize(()=>{
+	// 			db.run('BEGIN TRANSACTION')
+	// 			for(let i = 0; i < sqlToValuePairs.length; i++){
+	// 				const curSql:string = sqlToValuePairs[i].sql;
+	// 				const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
+	// 				//[[1],[2],[3]]
+	// 				if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
+	// 				const innerResult:T[] = []
+	// 				const stmt = db.prepare(curSql, (err)=>{
+	// 					if(err){rej((err));return}
 						
-						const each = ()=>{
-							for(const value1D of value2D){
-								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
-								stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
-									if(err){
-										console.error(value2D)//t
-										rej(sqlErr(err, curSql, value2D));return
-									}//<坑>{err對象中不帶行號與調用堆棧之訊}
-										innerResult.push(row)
-										runResult.push(this)
-								})
-							}
-						}
-						const run = ()=>{
-							for(const value1D of value2D){
-								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
-								stmt.run(value1D, function(this, err){
-									if(err){
-										console.error(`console.error(curSql)`)
-										console.error(curSql)//t
-										console.error(`console.error(curValue)`)
-										console.error(value2D)//t
-										rej(sqlErr(err, curSql, value2D));return
-									}
-										//innerResult.push(row)
-										runResult.push(this)
-								})
-							}
+	// 					const each = ()=>{
+	// 						for(const value1D of value2D){
+	// 							if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+	// 							stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+	// 								if(err){
+	// 									console.error(value2D)//t
+	// 									rej(sqlErr(err, curSql, value2D));return
+	// 								}//<坑>{err對象中不帶行號與調用堆棧之訊}
+	// 									innerResult.push(row)
+	// 									runResult.push(this)
+	// 							})
+	// 						}
+	// 					}
+						// const run = ()=>{
+						// 	for(const value1D of value2D){
+						// 		if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+						// 		stmt.run(value1D, function(this, err){
+						// 			if(err){
+						// 				console.error(`console.error(curSql)`)
+						// 				console.error(curSql)//t
+						// 				console.error(`console.error(curValue)`)
+						// 				console.error(value2D)//t
+						// 				rej(sqlErr(err, curSql, value2D));return
+						// 			}
+						// 				//innerResult.push(row)
+						// 				runResult.push(this)
+						// 		})
+						// 	}
 							
-						}
-						switch(method){
-							case 'each': each(); break;
-							case 'run': run(); break;
-							default: rej('unmatched method')
-						}
-					})
-					result.push(innerResult)
-				}
-				db.run('COMMIT', function(err){
-					if(err){
-						rej(sqlErr(err, sqlToValuePairs));return
-					}
-					res([result,runResult])
-				})
-			})
-		})
-	}
+						// }
+	// 					switch(method){
+	// 						case 'each': each(); break;
+	// 						case 'run': run(); break;
+	// 						default: rej('unmatched method')
+	// 					}
+	// 				})
+	// 				result.push(innerResult)
+	// 			}
+	// 			db.run('COMMIT', function(err){
+	// 				if(err){
+	// 					rej(sqlErr(err, sqlToValuePairs));return
+	// 				}
+	// 				res([result,runResult])
+	// 			})
+	// 		})
+	// 	})
+	// }
 
 
 	/**

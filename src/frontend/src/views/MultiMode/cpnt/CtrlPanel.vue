@@ -35,6 +35,9 @@ function search(shape:string){
 		}
 	}
 }
+function switchRandomImg(){
+	multiMode.isShowRandomBg.value = !multiMode.isShowRandomBg.value
+}
 </script>
 
 <template>
@@ -57,6 +60,8 @@ function search(shape:string){
 		<button @click="multiMode.restart()">重開</button>
 		<button @click="multiMode.sortByRmb()">添ᶤ排序</button>
 		<button @click="multiMode.sortBylastRvwDate()">期ᶤ排序</button>
+		<button @click="switchRandomImg()">開圖</button>
+		<button @click="multiMode.showNextRandomBg()">圖</button>
 		
 		
 		<!-- 坑{v-model與value=""不兼容} -->

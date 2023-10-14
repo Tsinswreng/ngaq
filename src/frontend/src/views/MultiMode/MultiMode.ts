@@ -3,6 +3,8 @@ import WordB from '@ts/voca/WordB'
 import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
 import Log from '@shared/Log'
+import { $, blobToBase64_fr } from '@shared/Ut'
+import VocaClient from '@ts/voca/VocaClient'
 const l = new Log()
 export default class MultiMode{
 	
@@ -14,6 +16,24 @@ export default class MultiMode{
 		}
 		return MultiMode._instance
 	}
+
+	private _id_bg = ref('bg')
+	;public get id_bg(){return this._id_bg;};
+
+	private _id_bg_next = ref('bg_next')
+	;public get id_bg_next(){return this._id_bg_next;};
+
+	private _class_bg = ref('bg')
+	;public get class_bg(){return this._class_bg;};
+
+	private _class_bg_next = ref('bg_next')
+	;public get class_bg_next(){return this._class_bg_next;};
+
+	// private _nextBg:string = ''
+	// ;public get nextBg(){return this._nextBg;};;public set nextBg(v){this._nextBg=v;};
+
+	private _isShowRandomBg = ref(false)
+	;public get isShowRandomBg(){return this._isShowRandomBg;};
 
 	private _isSaved = ref(true)
 	;public get isSaved(){return this._isSaved;};;public set isSaved(v){this._isSaved=v;};
@@ -131,8 +151,77 @@ export default class MultiMode{
 		this.isSaved.value = true
 	}
 
+	private async _showNextRandomBg(){
+		const getIdByClass=(className:string)=>{
+			// const klass = document.getElementsByClassName(className)
+			// return klass[0].id
+			// console.log(`console.log(className)`)
+			// console.log(className)
+			if(className === this.id_bg.value){
+				return this.id_bg_next.value
+			}else{
+				return this.id_bg.value
+			}
+		}
+		let temp = this.class_bg_next.value
+		this.class_bg_next.value = this.class_bg.value
+		this.class_bg.value = temp;
+		// let temp = this.id_bg_next.value
+		// this.id_bg_next.value = this.id_bg.value
+		// this.id_bg.value = temp;
+		//[this._id_bg, this._id_bg_next] = [this._id_bg_next, this._id_bg]
 
+		// const inst = this.getInstance()
+		// inst.setBgByBase64(inst.nextBg)
+		//console.log(114514)//t
+		let bg: string|null = await MultiMode.getRandomBase64Img()
+		//console.log(114515)//t
+		//MultiMode.setBgByBase64(bg.src, this.id_bg.value)
+		let nextBgId = getIdByClass(this.class_bg.value)
+		// console.log(`console.log(nextBgId)`)
+		// console.log(nextBgId)//t
+		//console.log(114514)//t
+		MultiMode.setBgByBase64(bg, nextBgId)
+		//console.log(114515)//t
+		//console.log(this.id_bg_next.value)//t
+		//console.log(bg.src.length)//t
+		// inst.nextBg=bg.src
+		bg=null
+		// let fn = ()=>{MultiMode._showNextRandomBg().then()}
+		//setTimeout(fn, 1)
 
+	}public showNextRandomBg(){
+		if(this.isShowRandomBg.value===true){
+			return this._showNextRandomBg()
+		}
+		//console.log(114514)//t
+	}
+
+	public static async getRandomBase64Img(){
+		let pair: [string, string]|null = $( await VocaClient.fetchRandomImg() )
+		//let base64 = await blobToBase64_fr(pair)
+		console.log(`下張圖片ᵗ路徑:`)
+		console.log(pair[0])
+		let base64 = pair[1]
+		pair = null
+		return base64
+		// let img = new Image()
+		// //img.src = "data:image/jpeg;base64," + base64;
+		// img.src = base64+''
+		// base64 = ''
+		// return img
+	}
+
+	public static setBgByBase64(img:string, id:string){
+		//console.log(img.slice(0,999))
+		const prefix = `data:image/png;base64,`
+		let bg: HTMLImageElement|null  = document.getElementById(id) as HTMLImageElement
+		$(bg)
+		bg.src = prefix+''+img;
+		//console.log(bg.src);//t
+		(img as any)=null;
+		(bg as any)=null
+	}
 
 
 }

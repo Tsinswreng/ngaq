@@ -398,9 +398,6 @@ export default class VocaSqlite{
 	}
 	
 	
-	
-
-
 
 	/**
 	 * 添加單詞數組。返回變更˪ᵗid數組。

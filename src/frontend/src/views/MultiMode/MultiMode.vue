@@ -52,6 +52,7 @@ async function test(){
 
 <template>
 <div class="MultiMode">
+
 		<!-- <button @click="start()">開始</button> -->
 	<!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
 
@@ -66,6 +67,10 @@ async function test(){
 			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
 	</div>
+	<img src="" alt="" :class="multiMode.class_bg.value" :id="multiMode.id_bg.value">
+	<img src="" alt="" :class="multiMode.class_bg_next.value" :id="multiMode.id_bg_next.value">
+	<!-- <img src="../../assets/uys.jpg" alt="" class="bg">
+	<img src="../../assets/dfq.jpg" alt="" class="bg"> -->
 </div>
 </template>
 
@@ -105,6 +110,37 @@ async function test(){
 	overflow: scroll;
 	left: 5%
 }
+
+.bg{
+	position: fixed;
+	margin: 0;
+	/* width: 100%; */
+	height: 100%;
+	right: 0;
+	background: transparent;
+	z-index: -1;
+	filter: brightness(0.5);
+}
+
+.bg:hover{
+	position: fixed;
+	margin: 0;
+	/* width: 100%; */
+	height: 100%;
+	right: 0;
+	background: transparent;
+	z-index: -1;
+	filter: brightness(1);
+}
+
+.bg_next{
+	position: fixed;
+	left: 0;
+	width: 1px;
+	/* width: 1px;
+	height: 1px; */
+}
+
 </style>
 
 component：这是 Vue 提供的内置组件，用于渲染其他组件或模板。它允许你根据特定条件或数据动态地选择要渲染的组件。

@@ -19,6 +19,34 @@ export interface RegexReplacePair{
 }
 
 /**
+ * 只支持node環境
+ * @param path 
+ * @returns 
+ */
+export async function fileToBase64(path:string){
+	const data  = await fs.promises.readFile(path)
+	return data.toString('base64')
+}
+
+/**
+ * 只支持前端環境
+ * @param blob 
+ * @returns 
+ */
+export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
+	return new Promise((res, rej)=>{
+		const reader = new FileReader()
+		reader.onload = function(){
+			res(reader.result)
+		}
+		reader.onerror = function(){
+			rej(new Error())
+		}
+		reader.readAsDataURL(blob)
+	})
+}
+
+/**
  * 新建文件
  * @param path 
  * @param ifNotExists 默認潙假、即文件既存旹報錯
@@ -134,7 +162,7 @@ export function swapArrEle<T>(arr:T[], index1:number, index2:number){
 export function group<T>(arr:T[], memberAmount:number){
 	const result:T[][] = []
 	let unusGroup:T[] = []
-	for(let i=0,j=0; ; i++,j++){
+	for(let i=0; ; i++){
 		unusGroup.push(arr[i])
 		if(unusGroup.length===memberAmount){
 			result.push(unusGroup)
@@ -445,6 +473,21 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 }
 
 /**
+ * 批量ᵈ檢ᵣ文件ˋ存否
+ * @param paths 
+ * @returns 
+ */
+export function areFilesExist(paths:string[]){
+	let result = true
+	for(const p of paths){
+		const b = fs.existsSync(p)
+		result = result && b
+		if(result === false){break}
+	}
+	return result
+}
+
+/**
  * 檢 路徑是存在、若存在則原樣返回
  * @param dir 
  * @returns 
@@ -460,7 +503,23 @@ export function pathAt(dir:string, errMsg?:string):string{
 }
 
 
-export function measureTime(fn:()=>void){
+export function measureFunctionTime<T=any>(fn:()=>T):[number, T]{
+	const startTime = now();
+	const result =  fn();
+	const endTime = now();
+	const executionTime = endTime - startTime;
+	return [executionTime, result]
+}
+
+export async function measurePromiseTime<T=any>(promise:Promise<T>):Promise<[number, T]>{
+	const startTime = now();
+	const result = await promise;
+	const endTime = now();
+	const executionTime = endTime - startTime;
+	return [executionTime, result]
+}
+
+export function deprecated_measureTime(fn:()=>void){
 	const startTime = now();
 	fn();
 	const endTime = now();

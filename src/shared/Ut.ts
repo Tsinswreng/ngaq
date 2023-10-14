@@ -19,6 +19,34 @@ export interface RegexReplacePair{
 }
 
 /**
+ * 只支持node環境
+ * @param path 
+ * @returns 
+ */
+export async function fileToBase64(path:string){
+	const data  = await fs.promises.readFile(path)
+	return data.toString('base64')
+}
+
+/**
+ * 只支持前端環境
+ * @param blob 
+ * @returns 
+ */
+export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
+	return new Promise((res, rej)=>{
+		const reader = new FileReader()
+		reader.onload = function(){
+			res(reader.result)
+		}
+		reader.onerror = function(){
+			rej(new Error())
+		}
+		reader.readAsDataURL(blob)
+	})
+}
+
+/**
  * 新建文件
  * @param path 
  * @param ifNotExists 默認潙假、即文件既存旹報錯
@@ -442,6 +470,23 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 		return new Set([...s1, ...s2])
 	}
 	
+}
+
+
+
+/**
+ * 批量ᵈ檢ᵣ文件ˋ存否
+ * @param paths 
+ * @returns 
+ */
+export function areFilesExist(paths:string[]){
+	let result = true
+	for(const p of paths){
+		const b = fs.existsSync(p)
+		result = result && b
+		if(result === false){break}
+	}
+	return result
 }
 
 /**

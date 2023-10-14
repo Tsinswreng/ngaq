@@ -1,13 +1,14 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
 import Tempus from "@shared/Tempus";
 import { randomInt } from "crypto";
 import _ from 'lodash'
+import RandomImg from "./Img";
 
 let text = 
 `
@@ -175,6 +176,8 @@ async function test_grout(){
 }
 //test_grout()
 
+
+
 // async function test_qryByIdTime(){
 // 	let id1To2000:number[] = []
 // 	for(let k = 0; k < 50; k++){
@@ -219,7 +222,7 @@ async function test_qryWordShape(){
 	const r = await VocaSqlite.qryWordByWordShape(vs.db, vs.tableName??'', ['peer', 'leak'])
 	console.log(r)
 }
-test_qryWordShape()
+//test_qryWordShape()
 // type nonArr = Record<string, any>
 
 // let ff : nonArr = {d:2, e:3}
@@ -238,6 +241,11 @@ length 属性的类型为 never 表示这个属性可以存在，但它永远不
 
 这个类型别名的目的是排除那些具有有效 length 属性的对象，例如数组，从而只保留那些没有 length 属性的对象或基本数据类型。*/
 
-
-
-
+async function test_Img(){
+	const dir = `C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`//
+	const ri = await RandomImg.konstructor([dir])
+	for(let i = 0; i < 10; i++){
+		console.log(ri.oneRandomFile())
+	}
+}
+test_Img()

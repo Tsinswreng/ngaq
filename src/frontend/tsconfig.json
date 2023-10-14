@@ -68,6 +68,7 @@
 			// "@root/*": ["./*"]
 			//"@root": ["."]
 			//"*":["../shared/*"],
+			"@root":["./"],
 			"@shared/*":["../shared/*"],
 			"@ts/*":["src/ts/*"],
 			"@components/*":["src/components/*"],

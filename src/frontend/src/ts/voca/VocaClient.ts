@@ -13,6 +13,24 @@ export default class VocaClient{
 		return VocaClient._instance
 	}
 
+	public static async fetchRandomImg(){
+		try{
+			const url = new URL('/randomImg', VocaClient.baseUrl)
+			const requestOptions: RequestInit = {
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+				},
+				body: '', // 将数据对象转换为 JSON 字符串
+			};
+			const res = await fetch(url, requestOptions)
+			if(!res.ok){throw new Error()}
+			const result:[string, string] = await res.json()
+			//console.log(result[1].slice(0,999))
+			return result
+		}catch(e){console.error(e);}
+	}
+
 	public static async fetchWords(path:string):Promise<SingleWord2[] | undefined>{
 
 		try{
@@ -157,7 +175,5 @@ export default class VocaClient{
 			// 在这里处理错误情况
 		}
 	}
-
-	
 
 }
