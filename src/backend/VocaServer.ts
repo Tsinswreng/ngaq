@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, fileToBase64 } from "@shared/Ut";
+import { $, fileToBase64, measurePromiseTime } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
 import session from 'express-session'
 import RandomImg from "./Img";
@@ -39,6 +39,8 @@ const oneDaySec = 3600*24
 const dirs:string[] = []
 dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`)
 dirs.push(`D:\\_\\視聽\\圖`)
+//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene\\银河系.png`)
+//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene`)
 // dirs.push(`D:\\_\\視聽\\圖\\bili`)
 // dirs.push(`D:\\_\\視聽\\圖\\qqero`)
 // dirs.push(`D:\\_\\視聽\\圖\\貼吧ᙆᵗ圖`)
@@ -282,7 +284,9 @@ export default class VocaServer{
 			console.log(req.path+' '+Tempus.format(nunc))
 			//res.sendFile(ri.oneRandomFile())
 			const path = ri.oneRandomFile()
-			const pair:[string, string] = [path, await fileToBase64(path)]
+			const [time, base64] = await measurePromiseTime(fileToBase64(path))
+			console.log(`fileToBase64 耗時: `+time)
+			const pair:[string, string] = [path, base64]
 			
 			//res.send(JSON.stringify(pair))
 			res.json(pair)

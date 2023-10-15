@@ -1,5 +1,5 @@
 
-#20231014121909189
+#20231015211918300
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -255,6 +255,7 @@ use_preset_vocabulary: true
 務	mos	
 霧	mros	
 令	riŋs	
+令	reŋs	
 零	rˁiŋ	
 〇	rˁiŋ	
 屎	hiʔ	
@@ -995,6 +996,11 @@ use_preset_vocabulary: true
 右	wəs	
 韻	ɡʷrins	
 顛	tˁin	
+滇	tˁin	
+癲	tˁin	
+巔	tˁin	
+顚	tˁin	
+巓	tˁin	
 偷	lʰˁo	
 膳	ɡens	
 繕	ɡens	
@@ -1252,6 +1258,7 @@ use_preset_vocabulary: true
 傳	dron	
 常	dAŋ	
 命	mriŋs	
+命	mreŋs	
 淦	kˁəms	
 懲	drəŋ	
 藤	tsʰˁəŋ	
@@ -1411,6 +1418,9 @@ use_preset_vocabulary: true
 壽	duʔ	
 壽	tʰuʔ	
 趁	tʰrəns	
+墜	lruts	
+鑿	dzˁawk	
+危	ŋoj	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -1422,11 +1432,13 @@ use_preset_vocabulary: true
 使	srə	
 何	ɡˁajʔ	
 行	ɡˁaŋs	
+航	ɡˁaŋ	
 航	ɡˁaŋs	
 啊	ʔajs	
 男	nˁom	
 詞	səʔ	
 乎	ɡas	
+乎	hrˁa	
 里	mʰrə	
 理	mʰrəʔ	
 馳	draj	
@@ -1480,10 +1492,14 @@ use_preset_vocabulary: true
 疫	wˁek	
 打	trˁaŋʔ	
 胖	pʰˁaŋs	
-糧	mʰrˁaŋs	
 梁	mʰrˁaŋ	
+梁	raŋ	
 粱	mʰrˁaŋʔ	
+粱	raŋ	
+領	riŋʔ	
+嶺	riŋʔ	
 冷	rˁiŋʔ	
+冷	rˁeŋʔ	
 稀	hrəj	
 渝	lro	
 哥	kʰˁaj	
@@ -1671,6 +1687,7 @@ use_preset_vocabulary: true
 捅	lʰˁoŋʔ	
 諜	ŋˁep	
 涼	strˁaŋ	
+涼	rˁaŋ	
 輛	kʰlraŋs	
 晾	nrˁaŋs	
 校	kʰrˁews	
@@ -5213,23 +5230,15 @@ use_preset_vocabulary: true
 𦕒	tˁem	
 厧	tˁen	
 傎	tˁen	
-滇	dˁen	20%
-滇	tˁen	
-滇	tʰˁens	20%
 槙	tˁen	
 𩬑	tˁem	
 瘨	tˁen	
 𧽍	dˁens	
 𧽍	tˁen	
 蹎	tˁen	
-顚	tˁen	
-顚	tʰˁens	10%
 𩥄	tˁen	
 㒹	tˁen	
 𠑘	tˁen	
-巔	tˁen	
-巓	tˁen	
-癲	tˁen	
 齻	tˁen	
 丶	troʔ	
 𦒻	tˁems	
@@ -12386,6 +12395,7 @@ use_preset_vocabulary: true
 䝶	raŋ	
 𩗬	raŋ	
 𩗬	raŋs	
+糧	raŋ	
 冫	pəŋ	
 𠓜	raŋʔ	
 両	raŋʔ	
@@ -12774,8 +12784,6 @@ use_preset_vocabulary: true
 龗	rˁeŋ	
 岭	rˁeŋ	
 𦊓	rˁeŋʔ	
-領	reŋʔ	
-嶺	reŋʔ	
 呤	rˁeŋ	
 㳅	ru	
 裗	ru	
@@ -20145,7 +20153,6 @@ use_preset_vocabulary: true
 朢	mʷaŋs	
 䤑	ʔʷˁaŋs	
 𧫢	mʷaŋs	
-危	ŋroj	
 𢼸	mʷəj	
 烓	kʰʷˁeŋʔ	
 烓	ʔʷˁe	
@@ -24847,10 +24854,6 @@ use_preset_vocabulary: true
 㷮	tsˁaw	
 𣪻	tsˁuk	
 𣫞	dzˁak	
-鑿	tsˁak	
-鑿	tsʰˁaws	
-鑿	dzˁak	
-鑿	dzˁok	
 蚤	tsˁawʔ	
 棗	tsˁawʔ	
 璅	tsˁawʔ	
@@ -26256,7 +26259,6 @@ use_preset_vocabulary: true
 膇	drojs	
 䃍	dˁujs	
 𦥻	tojs	
-墜	drujs	
 綴	trots	
 綴	trot	
 醊	trots	

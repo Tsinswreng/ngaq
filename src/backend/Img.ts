@@ -50,6 +50,7 @@ export default class RandomImg{
 
 	public static oneRandomFile(files:string[]){
 		let index = randomIntArr(0, files.length-1, 1)[0]
+		//console.log(index)//t
 		return files[index]
 	}public oneRandomFile(){
 		return RandomImg.oneRandomFile(this.files)

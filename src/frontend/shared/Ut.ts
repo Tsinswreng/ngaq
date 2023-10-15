@@ -19,6 +19,17 @@ export interface RegexReplacePair{
 }
 
 /**
+ * 延時。手動用promise封裝setTimeout
+ * @param mills 
+ * @returns 
+ */
+export const delay=(mills:number)=>{
+	return new Promise<void>((res,rej)=>{
+		setTimeout(()=>{res()},mills)
+	})
+}
+
+/**
  * 只支持node環境
  * @param path 
  * @returns 
@@ -377,6 +388,7 @@ export function lastOf<T>(arr:T[]|string):T|string{
 export function $n(v:number, errMsg?:string){
 	//if(isNaN(v)){throw toThrow}
 	//if(!isFinite(v)){throw toThrow}
+	if(typeof v !== 'number'){throw new Error(errMsg)}
 	if(isNaN(v)){throw new Error(errMsg)}
 	if(!isFinite(v)){throw new Error(errMsg)}
 	return v
@@ -472,6 +484,8 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 	
 }
 
+
+
 /**
  * 批量ᵈ檢ᵣ文件ˋ存否
  * @param paths 
@@ -502,10 +516,25 @@ export function pathAt(dir:string, errMsg?:string):string{
 	return dir
 }
 
+/**
+ * 測量同步函數執行耗時並返回結果
+ * 注意this亂指、若傳入成員方法則最好 measureFunctionTime(myObj.myMethod.bind(myObj), ...)
+ * @param fn 
+ * @param args 
+ * @returns [executionTime, result]
+ */
+// export function measureFunctionTime<Return=any>(fn:()=>Return, ...args:Parameters<typeof fn>):[number, Return]
+// export function measureFunctionTime<A, Return=any>(fn:(a:A)=>Return, ...args:Parameters<typeof fn>):[number, Return]
+// export function measureFunctionTime<A,B, Return=any>(fn:(a:A,b:B)=>Return, ...args:Parameters<typeof fn>):[number, Return]
+// export function measureFunctionTime<A,B,C, Return=any>(fn:(a:A,b:B,c:C)=>Return, ...args:Parameters<typeof fn>):[number, Return]
+// export function measureFunctionTime<A,B,C,D, Return=any>(fn:(a:A,b:B,c:C,d:D)=>Return, ...args:Parameters<typeof fn>):[number, Return]
+// export function measureFunctionTime<A,B,C,D,E, Return=any>(fn:(a:A,b:B,c:C,d:D,e:E)=>Return, ...args:Parameters<typeof fn>):[number, Return]
 
-export function measureFunctionTime<T=any>(fn:()=>T):[number, T]{
+// export function measureFunctionTime<Return=any>(fn:(...args)=>Return, args:any[]):[number, Return]
+export const measureFunctionTime = <Return=any>(fn:(...args)=>Return, ...args:Parameters<typeof fn>):[number, Return]=>{
 	const startTime = now();
-	const result =  fn();
+	const result =  fn(...args);
+	
 	const endTime = now();
 	const executionTime = endTime - startTime;
 	return [executionTime, result]

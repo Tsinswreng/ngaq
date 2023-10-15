@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -9,7 +9,7 @@ import Tempus from "@shared/Tempus";
 import { randomInt } from "crypto";
 import _ from 'lodash'
 import RandomImg from "./Img";
-
+import * as mathjs from 'mathjs'
 let text = 
 `
 2023-09-23T19:27:15.001+08:00
@@ -248,4 +248,35 @@ async function test_Img(){
 		console.log(ri.oneRandomFile())
 	}
 }
-test_Img()
+//test_Img()
+
+function test_measure(){
+	function fn(a:number, b:string, c:boolean){
+		return a+b+c
+	}
+	function sixParams(a:number, b:string, c:number, d:string, e:number, f:string, g:number){
+		return a+g
+	}
+	let [time, result] = measureFunctionTime(fn, 1, '2', true)
+	let six = measureFunctionTime(sixParams, 1,2,3,4,5,6,7)
+	console.log(time)
+	console.log(result)
+	console.log(six)
+}
+//test_measure()
+
+async function t20231014232256(){
+	let p = new Promise((res, rej)=>{
+		setTimeout(()=>{res(0)}, 1000)
+	})
+	let r = await measurePromiseTime(p)
+	console.log(r)
+}
+//t20231014232256()
+
+function matheval(){
+	let r = mathjs.evaluate(`60*60`)
+	console.log(r)
+	console.log(typeof r)
+}
+matheval()

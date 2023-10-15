@@ -1,4 +1,4 @@
-import Ut, { lodashMerge } from "@shared/Ut";
+import Ut, {lodashMerge} from "@shared/Ut";
 import _ from "lodash";
 
 

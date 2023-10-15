@@ -25,7 +25,7 @@ const recite = Recite.getInstance()
 
 const checkedTables = multiMode.checkedTables
 const isSaved = multiMode.isSaved
-const debuffNumerator = multiMode.debuffNumerator
+const debuffNumerator = multiMode.debuffNumerator_str
 
 let tempShape = ref('')
 function search(shape:string){
@@ -58,7 +58,7 @@ function switchRandomImg(){
 		<button @click="multiMode.save()">存</button>
 		<button>改</button>
 		<button @click="multiMode.restart()">重開</button>
-		<button @click="multiMode.sortByRmb()">添ᶤ排序</button>
+		<button @click="multiMode.sortByRmb()">憶ᶤ排序</button>
 		<button @click="multiMode.sortBylastRvwDate()">期ᶤ排序</button>
 		<button @click="switchRandomImg()">開圖</button>
 		<button @click="multiMode.showNextRandomBg()">圖</button>
@@ -77,6 +77,8 @@ function switchRandomImg(){
 <style scoped>
 #debuffNumerator{
 	background: transparent;
-	width: 64px
+	width: 64px;
+	font-size: 12px; /* 最小只能調到12 */
+	overflow: visible; /* 允许文本超出边框 不效 */
 }
 </style>

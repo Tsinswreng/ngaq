@@ -119,7 +119,7 @@ async function test(){
 	right: 0;
 	background: transparent;
 	z-index: -1;
-	filter: brightness(0.5);
+	filter: brightness(0.65);
 }
 
 .bg:hover{

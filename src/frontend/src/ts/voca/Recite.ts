@@ -1,7 +1,7 @@
 import Tempus from '@shared/Tempus';
 import WordB from './WordB';
 import SingleWord2, { IVocaRow, WordEvent } from '@shared/SingleWord2';
-import { $, $a, getShuffle, lastOf } from '@shared/Ut';
+import { $, $a, getShuffle, lastOf, measurePromiseTime } from '@shared/Ut';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
 import _ from 'lodash';
@@ -91,7 +91,9 @@ export default class Recite{
 	 * @param path 
 	 */
 	public async fetchAndStoreWords(path:string){
-		let sws = await VocaClient.fetchWords(path)
+		let [time, sws] = await measurePromiseTime(VocaClient.fetchWords(path))
+		console.log(`後端ᙆ取詞之耗時: `+time)
+		//let sws = await VocaClient.fetchWords(path)
 		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
 	}
 

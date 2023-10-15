@@ -3,8 +3,9 @@ import WordB from '@ts/voca/WordB'
 import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
 import Log from '@shared/Log'
-import { $, blobToBase64_fr } from '@shared/Ut'
+import { $, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
 import VocaClient from '@ts/voca/VocaClient'
+import * as mathjs from 'mathjs'
 const l = new Log()
 export default class MultiMode{
 	
@@ -51,8 +52,10 @@ export default class MultiMode{
 	private _multiMode_key = ref(0)
 	;public get multiMode_key(){return this._multiMode_key;};
 
-	private _debuffNumerator = ref(Priority.defaultConfig.debuffNumerator)
-	;public get debuffNumerator(){return this._debuffNumerator;};;public set debuffNumerator(v){this._debuffNumerator=v;};
+	private _debuffNumerator_str = ref(this.get_debuffNumerator_str()+'')
+	;public get debuffNumerator_str(){return this._debuffNumerator_str;};;public set debuffNumerator_str(v){this._debuffNumerator_str=v;};
+
+	public get debuffNumerator(){return $n(mathjs.evaluate(this.debuffNumerator_str.value))}
 
 	private _curWord:WordB = new WordB(SingleWord2.example)
 	;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
@@ -65,6 +68,32 @@ export default class MultiMode{
 
 	private _checkedTables:Ref<(boolean|undefined)[]> = ref([])
 	;public get checkedTables(){return this._checkedTables;};;public set checkedTables(v){this._checkedTables=v;};
+
+	/**
+	 * ls short for localStorage
+	 */
+	public static ls_debuffNumerator = 'debuffNumerator'
+
+	public get_debuffNumerator_str(){
+		let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)
+		if(expressionStr === null || expressionStr.length===0){
+			expressionStr = Priority.defaultConfig.debuffNumerator+''
+		}
+		let resultNum = mathjs.evaluate(expressionStr) as number
+		$n(resultNum)
+		return expressionStr
+	}
+
+	public get_debuffNumerator_num(){
+		let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)??Priority.defaultConfig.debuffNumerator+''
+		let resultNum = mathjs.evaluate(expressionStr) as number
+		$n(resultNum)
+		return resultNum
+	}
+
+	public set_debuffNumerator(n:string){
+		localStorage.setItem(MultiMode.ls_debuffNumerator, n+'')
+	}
 
 	public wordCardClick(data:WordB){
 
@@ -80,6 +109,7 @@ export default class MultiMode{
 	}
 
 	public async start(){
+		
 		const recite = this.recite
 		if(this.isSaved.value!==true){
 			throw new Error(`未保存旹不得重開`)
@@ -100,7 +130,11 @@ export default class MultiMode{
 			await recite.fetchAndStoreWords(st)
 		}
 		recite.filter()
-		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
+		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
+		//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
+		//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
+		let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
+		console.log(`calcAndDescSortPriority耗時: `+time)
 		recite.shuffleWords()
 
 		this._isShowCardBox.value = true
@@ -109,6 +143,7 @@ export default class MultiMode{
 	}
 
 	public restart(){
+		this.set_debuffNumerator(this.debuffNumerator_str.value+'')
 		if(this.isSaved.value!==true){
 			throw new Error(`未保存旹不得重開`)
 		}
@@ -116,7 +151,7 @@ export default class MultiMode{
 		const recite = this.recite
 		recite.reset()
 		recite.mergeSelfWords()
-		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator.value})
+		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
 		recite.shuffleWords()
 		// let temp = recite.allWordsToLearn.slice()
 		// recite.allWordsToLearn.length=0
@@ -166,6 +201,7 @@ export default class MultiMode{
 		let temp = this.class_bg_next.value
 		this.class_bg_next.value = this.class_bg.value
 		this.class_bg.value = temp;
+		//await delay(100)//t
 		// let temp = this.id_bg_next.value
 		// this.id_bg_next.value = this.id_bg.value
 		// this.id_bg.value = temp;
@@ -181,7 +217,8 @@ export default class MultiMode{
 		// console.log(`console.log(nextBgId)`)
 		// console.log(nextBgId)//t
 		//console.log(114514)//t
-		MultiMode.setBgByBase64(bg, nextBgId)
+		let [time] = measureFunctionTime(MultiMode.setBgByBase64.bind(MultiMode),bg, nextBgId)
+		console.log(`setBgByBase64耗時: `+time)
 		//console.log(114515)//t
 		//console.log(this.id_bg_next.value)//t
 		//console.log(bg.src.length)//t
@@ -190,9 +227,11 @@ export default class MultiMode{
 		// let fn = ()=>{MultiMode._showNextRandomBg().then()}
 		//setTimeout(fn, 1)
 
-	}public showNextRandomBg(){
+	}public async showNextRandomBg(){
 		if(this.isShowRandomBg.value===true){
-			return this._showNextRandomBg()
+			let [time] = await measurePromiseTime(this._showNextRandomBg.bind(this)())
+			console.log(`showNextRandomBg耗時: `+time)
+			return 
 		}
 		//console.log(114514)//t
 	}

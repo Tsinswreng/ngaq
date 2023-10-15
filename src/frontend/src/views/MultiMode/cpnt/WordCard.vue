@@ -26,10 +26,9 @@ function returnWordToParent(){
 	//reciteStatus.value = 'rmb'
 };
 
-const reciteStatus = MultiMode.getInstance()
 function handleWordEvent(event:WordEvent){
 	multiMode.showNextRandomBg()
-	reciteStatus.isSaved.value = false
+	multiMode.isSaved.value = false
 	if(reciteStatusRef.value === 'nil'){
 		recite.trigger(props.wordB, event)
 		if(event === WordEvent.RMB){
@@ -72,8 +71,8 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 </script>
 
 <template>
-	<div class="word-card" :class="reciteStatusRef">
-		<span class="w-shape" @click="handleWordEvent(WordEvent.RMB)" @contextmenu="rightClick">
+	<div class="word-card">
+		<span class="w-shape" @click="handleWordEvent(WordEvent.RMB)" @contextmenu="rightClick" :class="reciteStatusRef">
 			{{ props.wordB.fw.wordShape }}
 		</span>
 		<span class="w-index" @click="handleWordEvent(WordEvent.FGT)">{{ props.loopIndex }}</span>
@@ -99,11 +98,14 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 </template>
 
 <style scoped>
+
+
 .word-card{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
 	display: flex;
 	/* align-items: stretch; 默认值，使左右两个子元素的高度相同 */
 	align-items: right;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* 添加黑色边框 */
 }
 
 

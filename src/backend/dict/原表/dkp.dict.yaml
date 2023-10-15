@@ -299,6 +299,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 霧	mros
 
 令	riŋs
+令	reŋs
 零	rˁiŋ
 〇	rˁiŋ
 #靈	rˁeŋ
@@ -1181,6 +1182,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 右	wəs
 韻	ɡʷrins	# bs
 顛	tˁin
+滇	tˁin
+癲	tˁin
+巔	tˁin
+顚	tˁin
+巓	tˁin
+
 偷	lʰˁo
 膳	ɡens
 繕	ɡens
@@ -1469,6 +1476,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 傳	dron
 常	dAŋ	# sch
 命	mriŋs	# bs
+命	mreŋs
 淦	kˁəms
 懲	drəŋ
 
@@ -1639,7 +1647,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 壽	duʔ
 壽	tʰuʔ	# ts
 趁	tʰrəns
-
+墜	lruts
+鑿	dzˁawk
+危	ŋoj
 #損
 # 欄
 # 攔
@@ -1792,12 +1802,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 使	srə	# ts	
 何	ɡˁajʔ	# ts	
 行	ɡˁaŋs	# ts	
+航	ɡˁaŋ
 航	ɡˁaŋs	# ts	
 啊	ʔajs	# ts	
 
 男	nˁom	# ts	
 詞	səʔ	# ts	
 乎	ɡas	# ts	
+乎	hrˁa	# ts	
 里	mʰrə	# ts	
 理	mʰrəʔ	# ts	
 #郎			
@@ -1880,15 +1892,20 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 胖	pʰˁaŋs	# ts
 
 
-糧	mʰrˁaŋs	# ts
+#糧	mʰrˁaŋs	# ts
+
 梁	mʰrˁaŋ	# ts
+梁	raŋ
 粱	mʰrˁaŋʔ	# ts
+粱	raŋ
 
 
 
 
-
+領	riŋʔ
+嶺	riŋʔ
 冷	rˁiŋʔ	# ts
+冷	rˁeŋʔ	# ts
 稀	hrəj	# ts
 渝	lro	# ts
 哥	kʰˁaj	# ts
@@ -2164,6 +2181,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 諜	言ˁep	# ts
 #肝	肉ˁal	# ts
 涼	水rˁaŋ	# ts
+涼	rˁaŋ
 #狼	犬raŋʔ	# ts
 #廊	广raŋ	# ts
 輛	車raŋs	# ts
