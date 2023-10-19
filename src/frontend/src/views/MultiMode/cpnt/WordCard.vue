@@ -84,7 +84,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 		<span class="w-lastRvwDate">{{ props.wordB.getLastRvwDate() }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>
-		<span>{{ lastOf(props.wordB.getEventSymbols()) }}</span>
+		<span class="w-lastEvent">{{ lastOf(props.wordB.getEventSymbols()) }}</span>
 		
 		<!-- <span>{{ reciteStatusRef }}</span> -->
 
@@ -144,11 +144,16 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 	width: 55px;
 	font-size: 16px;
 	white-space: pre;
+	
 }
 
 .w-lastRvwDate{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
 	width: 55px;
+}
+
+.w-lastEvent{
+	opacity: 0.5;
 }
 .upper{
 	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */

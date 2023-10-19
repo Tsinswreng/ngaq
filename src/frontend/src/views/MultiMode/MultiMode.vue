@@ -141,6 +141,13 @@ async function test(){
 	height: 1px; */
 }
 
+/* @media (min-aspect-ratio: 1/1) {
+  .bg, .bg:hover {
+    width: 100%;
+    height: auto;
+  }
+} */
+
 </style>
 
 component：这是 Vue 提供的内置组件，用于渲染其他组件或模板。它允许你根据特定条件或数据动态地选择要渲染的组件。

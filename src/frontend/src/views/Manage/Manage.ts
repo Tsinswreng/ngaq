@@ -1,6 +1,7 @@
 import SingleWord2 from "@shared/SingleWord2"
 import { $a } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2"
+import { alertEtThrow } from "@ts/frut"
 import VocaClient from "@ts/voca/VocaClient"
 const vocaClient = VocaClient.getInstance()
 export default class Manage{
@@ -28,22 +29,33 @@ export default class Manage{
 	}
 
 	public addInDb(){
-		let srcText = this.getSrcStr()
-		const raw = new VocaRaw2(srcText)
-		let words = raw.parseWords()
-		let rows = SingleWord2.fieldStringfy(words)
-		VocaClient.addWords(rows, raw.config)
+		try{
+			let srcText = this.getSrcStr()
+			const raw = new VocaRaw2(srcText)
+			let words = raw.parseWords()
+			let rows = SingleWord2.fieldStringfy(words)
+			VocaClient.addWords(rows, raw.config)
+		}catch(e){
+			alertEtThrow(e)
+		}
+		
 	}
 
 	public backupAllTables(){
-		return VocaClient.backupAllTables()
+		alertEtThrow(`已棄用`)
+		//return VocaClient.backupAllTables()
 	}
 
 	public creatTable(){
-		const input = document.getElementById(Manage.id_neoTableName) as HTMLTextAreaElement
-		const neoTableName = input.value
-		if(!neoTableName){console.error(`!neoTableName`)}
-		return VocaClient.creatTable($a(neoTableName))
+		
+		try {
+			const input = document.getElementById(Manage.id_neoTableName) as HTMLTextAreaElement
+			const neoTableName = input.value
+			if(!neoTableName){console.error(`!neoTableName`)}
+			return VocaClient.creatTable($a(neoTableName))
+		} catch (e) {
+			alertEtThrow(e)
+		}
 	}
 
 	public testWriteLocalStorage(){

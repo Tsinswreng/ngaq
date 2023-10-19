@@ -180,14 +180,14 @@ export default class Recite{
 		const rmb = ()=>{
 			wb.neoDates_rmb.push(nunc)
 			this.rvwObj.rmb_idToWordsMap.set($(wb.fw.id), wb)
-			console.log('rmb:')
-			console.log(wb.fw.wordShape)//
+			//console.log('rmb:')
+			//console.log(wb.fw.wordShape)//
 		}
 		const fgt = ()=>{
 			wb.neoDates_fgt.push(nunc)
 			this.rvwObj.fgt_idToWordsMap.set($(wb.fw.id), wb)
-			console.log('fgt:')
-			console.log(wb.fw.wordShape)//
+			//console.log('fgt:')
+			//console.log(wb.fw.wordShape)//
 		}
 		
 		const funs:Function[] = [()=>{}, rmb, fgt]

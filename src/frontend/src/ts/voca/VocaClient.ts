@@ -1,6 +1,7 @@
 import { IVocaRow } from "@shared/SingleWord2"
 import SingleWord2 from "@shared/SingleWord2"
 import { VocaRawConfig } from "@shared/VocaRaw2"
+import { alert, alertEtThrow } from "@ts/frut"
 
 export default class VocaClient{
 	private static _instance?:VocaClient
@@ -49,7 +50,8 @@ export default class VocaClient{
 			//console.log(SingleWord2.parse(words))
 			return SingleWord2.parse(words)
 		}catch(e){
-			console.error(e)
+			//console.error(e)
+			alertEtThrow(e)
 		}
 	}
 
@@ -102,7 +104,9 @@ export default class VocaClient{
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-			response.text().then(d=>console.log(d))//t
+			response.text().then((d)=>{
+				alert(d)
+			})//t
 			return response
 			
 			//const data = await response.json(); // 解析响应数据为 JSON

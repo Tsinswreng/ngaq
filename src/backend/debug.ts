@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime, delay } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -279,4 +279,20 @@ function matheval(){
 	console.log(r)
 	console.log(typeof r)
 }
-matheval()
+//matheval()
+
+async function asyfn(){
+	await delay(500)
+	console.log(`asyfn`)
+}
+
+
+
+function test_promise(){
+	//asyfn()
+	new Promise((res,rej)=>{
+		setTimeout(()=>{console.log(`setTimeout`);res(0)})
+	})
+	console.log(`test_promise`)
+}
+test_promise()

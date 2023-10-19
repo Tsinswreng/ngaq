@@ -6,6 +6,8 @@ import Log from '@shared/Log'
 import { $, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
 import VocaClient from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
+import { alertEtThrow } from '@ts/frut'
+
 const l = new Log()
 export default class MultiMode{
 	
@@ -110,60 +112,69 @@ export default class MultiMode{
 
 	public async start(){
 		
-		const recite = this.recite
-		if(this.isSaved.value!==true){
-			throw new Error(`未保存旹不得重開`)
-		}
-		if(recite.allWordsToLearn.length>0){
-			throw new Error(`不得重複開始`)
-		}
-		const selectedTables:string[] = []
-		
-		for(let i = 0; i < this.checkedTables.value.length; i++){
-			let cur = this.checkedTables.value[i]
-			if(cur === true){
-				selectedTables.push(this.tables[i])
+		try {
+			const recite = this.recite
+			if(this.isSaved.value!==true){
+				//throw new Error(`未保存旹不得重開`)
+				alertEtThrow(`未保存旹不得重開`)
 			}
+			if(recite.allWordsToLearn.length>0){
+				//throw new Error(`不得重複開始`)
+				alertEtThrow(`不得重複開始`)
+			}
+			const selectedTables:string[] = []
+			
+			for(let i = 0; i < this.checkedTables.value.length; i++){
+				let cur = this.checkedTables.value[i]
+				if(cur === true){
+					selectedTables.push(this.tables[i])
+				}
+			}
+	
+			for(const st of selectedTables){
+				await recite.fetchAndStoreWords(st)
+			}
+			recite.filter()
+			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
+			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
+			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
+			let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
+			console.log(`calcAndDescSortPriority耗時: `+time)
+			recite.shuffleWords()
+			this._isShowCardBox.value = true
+		} catch (e) {
+			alertEtThrow(e)
 		}
-
-		for(const st of selectedTables){
-			await recite.fetchAndStoreWords(st)
-		}
-		recite.filter()
-		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
-		//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
-		//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
-		let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
-		console.log(`calcAndDescSortPriority耗時: `+time)
-		recite.shuffleWords()
-
-		this._isShowCardBox.value = true
-		
-		//console.log(this.isShowCardBox.value)
 	}
 
 	public restart(){
-		this.set_debuffNumerator(this.debuffNumerator_str.value+'')
-		if(this.isSaved.value!==true){
-			throw new Error(`未保存旹不得重開`)
+		try {
+			this.set_debuffNumerator(this.debuffNumerator_str.value+'')
+			if(this.isSaved.value!==true){
+				//throw new Error(`未保存旹不得重開`)
+				alertEtThrow(`未保存旹不得重開`)
+			}
+			
+			const recite = this.recite
+			recite.reset()
+			recite.mergeSelfWords()
+			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
+			recite.shuffleWords()
+			// let temp = recite.allWordsToLearn.slice()
+			// recite.allWordsToLearn.length=0
+			// recite.allWordsToLearn.push(...temp)//t
+			this.multiMode_key.value++ //刷新組件
+			//this._isShowCardBox.value = false
+			//this._isShowCardBox.value = true
+		} catch (e) {
+			alertEtThrow(e)
 		}
-		
-		const recite = this.recite
-		recite.reset()
-		recite.mergeSelfWords()
-		recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
-		recite.shuffleWords()
-		// let temp = recite.allWordsToLearn.slice()
-		// recite.allWordsToLearn.length=0
-		// recite.allWordsToLearn.push(...temp)//t
-		this.multiMode_key.value++ //刷新組件
-		//this._isShowCardBox.value = false
-		//this._isShowCardBox.value = true
 	}
 
 	public sortByRmb(){
 		if(this.isSaved.value!==true){
-			throw new Error(`未保存`)
+			//throw new Error(`未保存`)
+			alertEtThrow(`未保存`)
 		}
 		const recite = this.recite
 		recite.sortByRmb()
@@ -172,7 +183,8 @@ export default class MultiMode{
 
 	public sortBylastRvwDate(){
 		if(this.isSaved.value!==true){
-			throw new Error(`未保存`)
+			//throw new Error(`未保存`)
+			alertEtThrow(`未保存`)
 		}
 		const recite = this.recite
 		recite.sortBylastRvwDate()

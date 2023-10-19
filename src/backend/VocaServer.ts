@@ -287,7 +287,6 @@ export default class VocaServer{
 			const [time, base64] = await measurePromiseTime(fileToBase64(path))
 			console.log(`fileToBase64 耗時: `+time)
 			const pair:[string, string] = [path, base64]
-			
 			//res.send(JSON.stringify(pair))
 			res.json(pair)
 		})
