@@ -116,6 +116,8 @@ async function test(){
 	margin: 0;
 	/* width: 100%; */
 	height: 100%;
+	width: auto;
+	/* height: auto; */
 	right: 0;
 	background: transparent;
 	z-index: -1;
@@ -123,13 +125,6 @@ async function test(){
 }
 
 .bg:hover{
-	position: fixed;
-	margin: 0;
-	/* width: 100%; */
-	height: 100%;
-	right: 0;
-	background: transparent;
-	z-index: -1;
 	filter: brightness(1);
 }
 

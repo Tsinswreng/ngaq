@@ -11,10 +11,45 @@ const l = new Log()
 const Ut = {
 	union : simpleUnion
 };
+
+
+export class VocaDbTable{
+	public static readonly id='id'
+	public static readonly wordShape='wordShape'
+	public static readonly pronounce='pronounce'
+	public static readonly mean='mean'
+	public static readonly annotation='annotation'
+	public static readonly tag='tag'
+	public static readonly times_add='times_add'
+	public static readonly dates_add='dates_add'
+	public static readonly times_rmb='times_rmb'
+	public static readonly dates_rmb='dates_rmb'
+	public static readonly times_fgt='times_fgt'
+	public static readonly dates_fgt='dates_fgt'
+	public static readonly table='table' //此字段ˋ實ˋ不存。
+	public static readonly source='source'
+	public constructor(
+		public table:string //數據庫中本無此字段、㕥存表名。
+		,public wordShape:string
+		,public pronounce:string
+		,public mean:string
+		,public annotation:string //
+		,public tag:string
+		,public times_add:number
+		,public dates_add:string
+		,public times_rmb:number
+		,public dates_rmb:string
+		,public times_fgt:number
+		,public dates_fgt:string
+		,public source:string
+		,public id?:number //從數據庫中取數據時id必不潙空
+	){}
+}
+
 /**
  * 㕥約束數據庫中的行
  */
-export interface IVocaRow{
+/* export interface IVocaRow{
 	id?:number //從數據庫中取數據時id必不潙空
 	table:string //數據庫中本無此字段、㕥存表名。
 	wordShape:string
@@ -29,7 +64,10 @@ export interface IVocaRow{
 	times_fgt:number
 	dates_fgt:string
 	source:string
-}
+} */
+
+export type IVocaRow = VocaDbTable
+
 
 /* export class IVocaRow{
 	public constructor(
@@ -739,7 +777,6 @@ export class Priority{
 		let debuff = (numerator/mills) + 1
 		return $n(debuff)
 	}
-
 
 }
 

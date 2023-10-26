@@ -4,7 +4,7 @@ sqlite3.verbose()
 import { Database, RunResult } from 'sqlite3';
 import Sqlite, { SqlToValuePair } from '@shared/db/Sqlite';
 import _, { add } from 'lodash';
-import SingleWord2 from '@shared/SingleWord2';
+import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
 import { $, $a, creatFileSync, pathAt } from '@shared/Ut';
@@ -17,11 +17,12 @@ const Ut = {
 
 
 
-/**
- * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
- * 畀表增字段: 改VocaTableColumnName, 改IVocaRow, 改SingleWord2字段, 改SingleWord2構造器, 改 創表之sql函數, 改 parse與stringfy, VocaRaw2ʸ改getWordInWordUnit, 改ᵣ既存ᵗ表, 同步 shared
- */
-export class VocaTableColumnName{
+
+
+//export type VocaTableColumnName = VocaDbTable
+const VocaTableColumnName = VocaDbTable
+
+/* export class VocaTableColumnName{
 	public static readonly id='id'
 	public static readonly wordShape='wordShape'
 	public static readonly pronounce='pronounce'
@@ -36,7 +37,7 @@ export class VocaTableColumnName{
 	public static readonly dates_fgt='dates_fgt'
 	public static readonly table='table' //此字段ˋ實ˋ不存。
 	public static readonly source='source'
-}
+} */
 
 
 
@@ -724,6 +725,17 @@ export default class VocaSqlite{
 		const rows = rows2d.flat(1)
 		return rows.map(e=>e.wordShape)
 	}
+
+	// public static async traverseTempus(db:Database, table:string){
+	// 	//const tempi:Tempus[] = []
+	// 	//鍵: Tempus;  值: [id, 列名]
+	// 	//const map_tempusToIdEtEvent = new Map<string, [number, string]>()
+
+	// 	let rows = await this.getAllWords(db, table)
+	// 	for(const r of rows){
+
+	// 	}
+	// }
 
 }
 

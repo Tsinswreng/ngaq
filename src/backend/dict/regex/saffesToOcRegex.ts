@@ -285,6 +285,11 @@ export let replacePair:RegexReplacePair[] =
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(X)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一ŋs尾二'},
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(K)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一k尾二'},
 
+			{regex:/首一([PFBMKXGWQH])首二腹一(K)腹二尾一(E)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一nʔ尾二'},
+			{regex:/首一([PFBMKXGWQH])首二腹一(K)腹二尾一(D)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一n尾二'},
+			{regex:/首一([PFBMKXGWQH])首二腹一(K)腹二尾一(C)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一ns尾二'},
+			{regex:/首一([PFBMKXGWQH])首二腹一(K)腹二尾一(T)尾二/gm, replacement:'首一$1首二腹一rə腹二尾一t尾二'},
+
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(E)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一nʔ尾二'},
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(D)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一n尾二'},
 			{regex:/首一(.*?)首二腹一(K)腹二尾一(C)尾二/gm, replacement:'首一$1首二腹一ri腹二尾一ns尾二'},

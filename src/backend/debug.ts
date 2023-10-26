@@ -1,7 +1,7 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
-import SingleWord2 from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime, delay } from "@shared/Ut"
+import SingleWord2, { VocaDbTable } from "@shared/SingleWord2"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime, delay, readLine } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
 import Sqlite from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
@@ -10,6 +10,12 @@ import { randomInt } from "crypto";
 import _ from 'lodash'
 import RandomImg from "./Img";
 import * as mathjs from 'mathjs'
+import { Readline } from "node:readline/promises";
+import * as fs from 'fs'
+import * as mht from 'mhtml-parser'
+import mht2 from 'mhtml-parser'
+import {parse} from 'mhtml-parser'
+import VocaTempus from "@shared/VocaTempus";
 let text = 
 `
 2023-09-23T19:27:15.001+08:00
@@ -295,4 +301,55 @@ function test_promise(){
 	})
 	console.log(`test_promise`)
 }
-test_promise()
+//test_promise()
+
+function py20231021100923(){
+	let result = 0;
+	for(let i = 1; i <= 996; i++){
+		if(i%2==0){
+			result-=i;
+		}else{
+			result+=i
+		}
+	}
+	console.log(result)
+}
+//py20231021100923()
+
+async function py20231021101421(){
+	const username = 'Kate'
+	const password = '666666'
+	for(let i = 0; i < 3; i++){
+		let input_username = await readLine()
+		let input_password = await readLine()
+		if(input_username===username && input_password===password){
+			console.log(`登录成功`)
+			break
+		}
+		if(i==2){
+			console.log(`3次用户名或者密码均有误！退出程序。`)
+		}
+	}
+	
+	
+}
+//py20231021101421()
+
+async function testMht(){
+	const path = "D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\out\\为什么伊朗可以爆发伊斯兰革命逆世俗化___兴汉的小仙女_的回答___知乎_zhihu.com_139773979.mht"
+	const str = await fs.promises.readFile(path, 'utf-8')
+	const parsed = mht.parse(str)
+	console.log(parsed.text())
+	console.log(114514)
+}
+//testMht()
+
+async function test_vocaTempus(){
+	const eng = new VocaSqlite({_tableName:'english'})
+	const rows = await eng.getAllWords()
+	const sws = SingleWord2.parse(rows)
+	const r = VocaTempus.parse(sws)
+	console.log(r)
+}
+const[t]=measureFunctionTime(test_vocaTempus)
+console.log(t)

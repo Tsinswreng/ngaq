@@ -11,10 +11,53 @@ const l = new Log()
 const Ut = {
 	union : simpleUnion
 };
+
+/**
+ * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
+ * 畀表增字段: 改VocaTableColumnName, 改IVocaRow, 改SingleWord2字段, 改SingleWord2構造器, 改 創表之sql函數, 改 parse與stringfy, VocaRaw2ʸ改getWordInWordUnit, 改ᵣ既存ᵗ表, 同步 shared
+ */
+
+/**
+ * 㕥約束數據庫ᵗ表中ᵗ行
+ * 原ᵗ VocaTableColumnName 與 IVocaRow皆由此代。
+ */
+export class VocaDbTable{
+	public static readonly id='id'
+	public static readonly wordShape='wordShape'
+	public static readonly pronounce='pronounce'
+	public static readonly mean='mean'
+	public static readonly annotation='annotation'
+	public static readonly tag='tag'
+	public static readonly times_add='times_add'
+	public static readonly dates_add='dates_add'
+	public static readonly times_rmb='times_rmb'
+	public static readonly dates_rmb='dates_rmb'
+	public static readonly times_fgt='times_fgt'
+	public static readonly dates_fgt='dates_fgt'
+	public static readonly table='table' //此字段ˋ實ˋ不存。
+	public static readonly source='source'
+	public constructor(
+		public table:string //數據庫中本無此字段、㕥存表名。
+		,public wordShape:string
+		,public pronounce:string
+		,public mean:string
+		,public annotation:string //
+		,public tag:string
+		,public times_add:number
+		,public dates_add:string
+		,public times_rmb:number
+		,public dates_rmb:string
+		,public times_fgt:number
+		,public dates_fgt:string
+		,public source:string
+		,public id?:number //從數據庫中取數據時id必不潙空
+	){}
+}
+
 /**
  * 㕥約束數據庫中的行
  */
-export interface IVocaRow{
+/* export interface IVocaRow{
 	id?:number //從數據庫中取數據時id必不潙空
 	table:string //數據庫中本無此字段、㕥存表名。
 	wordShape:string
@@ -29,7 +72,10 @@ export interface IVocaRow{
 	times_fgt:number
 	dates_fgt:string
 	source:string
-}
+} */
+
+export type IVocaRow = VocaDbTable
+
 
 /* export class IVocaRow{
 	public constructor(
@@ -739,7 +785,6 @@ export class Priority{
 		let debuff = (numerator/mills) + 1
 		return $n(debuff)
 	}
-
 
 }
 

@@ -24,6 +24,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
   - chineseDict
 ...
 
+錋	bls
+
 拔	bbt	1%
 純	aye	1%
 崔	zoh	1%

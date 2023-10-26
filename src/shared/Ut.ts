@@ -58,21 +58,24 @@ export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
 }
 
 /**
- * 新建文件
- * @param path 
+ * 新建文件 
+ * @param filePath 
  * @param ifNotExists 默認潙假、即文件既存旹報錯
  * @returns 
  */
-export function creatFileSync(path:string, ifNotExists=false){
-	if(fs.existsSync(path)){
+export function creatFileSync(filePath:string, ifNotExists=false){
+	const absolutePath = path.resolve(filePath);
+	if(fs.existsSync(filePath)){
 		if(ifNotExists){
-			return
+			return absolutePath
 		}else{
 			throw new Error()
 		}
 	}else{
-		fs.appendFileSync(path,'')
+		fs.appendFileSync(filePath,'')
+		//fs.writeFileSync(filePath, '')
 	}
+	return absolutePath
 }
 
 /**
@@ -313,17 +316,17 @@ export function deprecated_simpleRandomArr(min:number, max:number, howMany:numbe
 
 
 
-export function readLine(query:string){
+export function readLine(query:string=''){
 	const rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
 	});
 	return new Promise<string>((res,rej)=>{
 		rl.question(query, (answer)=>{
+			rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
 			res(answer)
 		})
 	})
-
 }
 
 /**
