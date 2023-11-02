@@ -56,7 +56,7 @@ export let replacePair:RegexReplacePair[] = [
 
 	//{regex:/首一(p|pʰ|m)ʷ首二/gm, replacement:'首一$1首二'},
 	//{regex:/首一(ts|tsʰ|dz)ʷ首二/gm, replacement:'首一$1首二'},
-	{regex:/首一(kʰ|k|ɡ|ŋ|ʔ|h)ʷ首二/gm, replacement:'首一$1合首二'},
+	{regex:/首一(kʰ|k|ɡ|ŋ|ʔ|h|s)ʷ首二/gm, replacement:'首一$1合首二'},
 	{regex:/首一(.*)ʷ首二/gm, replacement:'首一$1首二'},
 	{regex:/首一(.*)合首二/gm, replacement:'首一$1ʷ首二'},
 	
@@ -121,6 +121,8 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/首一stʰ首二/gm, replacement:'首一;首二'},
 	{regex:/首一st首二/gm, replacement:'首一;首二'},
 	{regex:/首一sk首二/gm, replacement:'首一K首二'},
+	{regex:/首一sʷ首二/gm, replacement:'首一,首二'},
+	{regex:/首一ʍ首二/gm, replacement:'首一,首二'},
 	{regex:/首一ɦ首二/gm, replacement:'首一U首二'},
 	{regex:/首一rʰ首二/gm, replacement:'首一E首二'},
 	{regex:/首一(kj)首二/gm, replacement:'首一I首二'},

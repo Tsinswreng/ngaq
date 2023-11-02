@@ -3,6 +3,15 @@ import SingleWord2, {VocaDbTable} from "@shared/SingleWord2"
 import { $ } from "./Ut";
 //VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt
 
+export class Db_VocaTempus{
+	public constructor(
+		public id				:number
+		,public unix_time		:bigint //int64 ? 如何取
+		,public table			:string
+		,public word_id			:number
+	){}
+}
+
 export default class VocaTempus{
 	public constructor(
 		public tempus:Tempus,
@@ -80,4 +89,15 @@ export default class VocaTempus{
 		}
 		return result
 	}
+
+	public static sort(insts:VocaTempus[]){
+		insts.sort((a,b)=>{
+			return Tempus.diff_mills(a.tempus,b.tempus)
+		})
+	}
+
+	public static groupByDay(){
+
+	}
+
 }

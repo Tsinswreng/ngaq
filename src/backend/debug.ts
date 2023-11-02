@@ -349,7 +349,152 @@ async function test_vocaTempus(){
 	const rows = await eng.getAllWords()
 	const sws = SingleWord2.parse(rows)
 	const r = VocaTempus.parse(sws)
+	
+	//console.log(r.length)
+	VocaTempus.sort(r)
 	console.log(r)
 }
-const[t]=measureFunctionTime(test_vocaTempus)
-console.log(t)
+//const[t]=measureFunctionTime(test_vocaTempus)
+//console.log(t)
+
+async function test_bigintId(){
+	const i64table = new VocaSqlite({_tableName: 'test_int64'})
+	const sql = `SELECT * FROM '${i64table.tableName}'`
+	const r = await Sqlite.all(i64table.db, sql)
+	//console.log(r)
+	let i64 = r[1] as any
+	console.log(typeof(i64))
+	console.log(i64)
+	console.log(Object.keys(i64))
+	console.log(i64.int64)
+}
+//test_bigintId()
+
+async function py4_1(){
+	function f(n:number){
+		if(n===1||n===2){return 1}
+		return f(n-1)+f(n-2)
+	}
+	let n = await readLine()
+	console.log(f(parseFloat(n)))
+}
+//py4_1()
+
+function test_instanceof(){
+
+	class Homo{
+		constructor(
+			name?:string
+			,age?:number
+		){}
+	}
+
+	class PersonClass{
+		constructor(
+			name?:string
+			,age?:number
+		){}
+	}
+
+	
+
+	interface IPerson{
+		name?:string
+		age?:number
+	}
+
+	//const personC:PersonClass = new PersonClass('jack', 18)
+	const personI:IPerson = {name: 'jack', age:18}
+	const personI2:IPerson = new PersonClass('jack', 18)
+	console.log((personI as any).__proto__)
+	console.log(personI instanceof PersonClass)
+	console.log(personI2 instanceof PersonClass);
+	//Object.setPrototypeOf(personI, personI2)
+	(personI as any).__proto__ = PersonClass.prototype
+	console.log(personI instanceof PersonClass)
+	console.log((personI as any).__proto__)
+	//@ts-ignore
+	console.log(personI.__proto__)
+	console.log(PersonClass.prototype)
+	console.log(personI2 instanceof Homo)
+	console.log(Object.getPrototypeOf(personI))
+}
+//test_instanceof()
+// declare global {
+// 	interface Number {
+// 	  double(): number;
+// 	}
+//   }
+  
+//   Number.prototype.double = function () {
+// 	return this as number * 2;
+//   };
+  
+//   let myNumber: number = 5;
+//   let result = myNumber.double(); // TypeScript 現在知道 double 方法存在，不會報錯
+//   console.log(result); // 將輸出 10
+function test_protoType(){
+	let str = ''
+	console.log(Object.getPrototypeOf(str))
+	let num = 0
+	console.log(Object.getPrototypeOf(num))
+	console.log(num as any instanceof Number) //false
+	// Number.prototype.double = function() {
+	// 	return this * 2;
+	// };
+	
+	// // 現在你可以使用這個方法
+	// let myNumber = 5;
+	// console.log(myNumber.double()); // 將輸出 10
+	//num.double()
+}
+//test_protoType()
+
+
+function t20231101153919(){
+	const usedPort = ['1', '2']
+	const set_usedPort = new Set<string>(...usedPort)
+	let randomInts = randomIntArr(1, 10, 10, false)
+	let strArrRandomInts = randomInts.map(e=>e+'')
+	for(const s of strArrRandomInts){
+		set_usedPort.add(s)
+	}
+	console.log(set_usedPort)
+
+}//t20231101153919()
+
+function t20231101155232(){
+	let randomInts = randomIntArr(0, 99999998, 9999999, true)
+	//console.log(randomInts)
+
+	let 數組 = randomInts.slice()
+	let 集合 = new Set(randomInts)
+	const measureArr = ()=>{
+		return 數組.includes(114514)
+	}
+	const measureSet = ()=>{
+		return 集合.has(114514)
+	}
+	const [集合查找耗時] = measureFunctionTime(measureSet)
+	const [數組查找耗時] = measureFunctionTime(measureArr)
+	console.log(`console.log(集合查找耗時)`)
+	console.log(集合查找耗時)
+	console.log(`console.log(數組查找耗時)`)
+	console.log(數組查找耗時)
+
+}
+//t20231101155232()
+
+async function t20231101222851(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'test_int64'})
+	const sql = `INSERT INTO '${vocaSqlite.tableName}' (int64) VALUES (?)`
+	//await Sqlite.all(vocaSqlite.db, sql, `10000000000000003`)
+	//console.log(`number done`)
+	//await Sqlite.all(vocaSqlite.db, sql, 10000000000000003n)
+	//console.log(`bigint done`)
+
+	const slect = `SELECT CAST(* AS TEXT) FROM '${vocaSqlite.tableName}'`
+	const r = await Sqlite.all(vocaSqlite.db, slect)
+	console.log(r)
+
+}t20231101222851()

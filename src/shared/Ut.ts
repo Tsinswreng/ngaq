@@ -18,6 +18,27 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+export function safeIntStr(numStr:string, errMsg?){
+	let num = parseFloat(numStr)
+	if(num+'' !== numStr){
+		throw new Error(errMsg)
+	}
+	return safeInt(num)
+}
+
+export function safeInt(n:number, errMsg?){
+	if(!Number.isInteger(n)){
+		throw new Error(errMsg)
+	}
+	if(n>Number.MAX_SAFE_INTEGER ){
+		throw new Error(errMsg)
+	}
+	if(n<Number.MIN_SAFE_INTEGER){
+		throw new Error(errMsg)
+	}
+	return $n(n);
+}
+
 /**
  * 延時。手動用promise封裝setTimeout
  * @param mills 

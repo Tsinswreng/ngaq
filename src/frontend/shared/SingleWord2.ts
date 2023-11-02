@@ -12,7 +12,15 @@ const Ut = {
 	union : simpleUnion
 };
 
+/**
+ * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
+ * 畀表增字段: 改VocaTableColumnName, 改IVocaRow, 改SingleWord2字段, 改SingleWord2構造器, 改 創表之sql函數, 改 parse與stringfy, VocaRaw2ʸ改getWordInWordUnit, 改ᵣ既存ᵗ表, 同步 shared
+ */
 
+/**
+ * 㕥約束數據庫ᵗ表中ᵗ行
+ * 原ᵗ VocaTableColumnName 與 IVocaRow皆由此代。
+ */
 export class VocaDbTable{
 	public static readonly id='id'
 	public static readonly wordShape='wordShape'
@@ -664,6 +672,7 @@ export class Priority{
 		let lastProcedure = lastOf(procedures)
 		let add_cnt = 0
 		let prio0 = 1
+		let cnt_rmb = 0;
 
 		const add = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
@@ -679,6 +688,7 @@ export class Priority{
 		 */
 		const rmb = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
+			cnt_rmb++
 			let weight = 1.1
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
@@ -692,9 +702,10 @@ export class Priority{
 			}
 			
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
+			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
+			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
 			prio0 = $n( div(prio0, debuff) )
 			// console.log(debuff)//t
 			// console.log('final')
@@ -706,6 +717,7 @@ export class Priority{
 		const fgt = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
+			if(weight < 1.5){weight = 1.5}//修正
 			//prio0 /= weight
 			prio0 = $n( mul(prio0, weight) ) 
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight})

@@ -672,6 +672,7 @@ export class Priority{
 		let lastProcedure = lastOf(procedures)
 		let add_cnt = 0
 		let prio0 = 1
+		let cnt_rmb = 0;
 
 		const add = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
@@ -687,6 +688,7 @@ export class Priority{
 		 */
 		const rmb = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
+			cnt_rmb++
 			let weight = 1.1
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
@@ -700,9 +702,10 @@ export class Priority{
 			}
 			
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator)
+			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
+			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
 			prio0 = $n( div(prio0, debuff) )
 			// console.log(debuff)//t
 			// console.log('final')
@@ -714,6 +717,7 @@ export class Priority{
 		const fgt = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
+			if(weight < 1.5){weight = 1.5}//修正
 			//prio0 /= weight
 			prio0 = $n( mul(prio0, weight) ) 
 			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight})

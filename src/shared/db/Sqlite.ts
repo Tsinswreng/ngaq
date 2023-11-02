@@ -1,3 +1,5 @@
+
+
 //require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 
 import {$a, RegexReplacePair, copyIgnoringKeys} from '@shared/Ut';
@@ -56,6 +58,12 @@ export class SqlToValuePair{
 	){}
 }
 
+
+/**
+ * 此庫是sqlite3庫之封裝。
+ * 
+ *
+ */
 export default class Sqlite{
 	private constructor(){}
 
@@ -83,6 +91,8 @@ export default class Sqlite{
 		})
 	}
 
+	
+
 
 	/**
 	 * 珩sql、返RunResult
@@ -108,6 +118,8 @@ export default class Sqlite{
 
 	/**
 	 * 數據庫中ᵗ表ˇ轉二維數組
+	 * 無整數安全
+	 * @deprecated
 	 * @param db 
 	 * @param table 
 	 * @param column 
@@ -819,7 +831,13 @@ FROM '${tableName}';`
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
+		
 		let keys = Object.keys(obj)
+		// for(const k of keys){
+		// 	if(	typeof (obj[k]) === 'string'	){
+		// 		obj[k] = obj[k]+''
+		// 	}
+		// }
 		const columns = keys.join(', ');
 		const placeholders = keys.map(()=>'?').join(',')
 		let insertSql = `INSERT INTO '${table}' (${columns}) VALUES (${placeholders})`
