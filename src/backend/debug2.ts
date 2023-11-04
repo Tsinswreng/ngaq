@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register'
 /* require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
@@ -42,3 +43,10 @@ test_findMinimalPairs()
 // ]
 
 // console.log(Util.mapFields(os, 'char', 'code')) */
+
+//import {config} from '@root/config'
+//console.log(config)
+import * as config from '@root/config'
+console.log(config)
+config.config.dbPath
+//D:\_\mmf\PROGRAM\_Cak\voca\out\backend\debug2.js

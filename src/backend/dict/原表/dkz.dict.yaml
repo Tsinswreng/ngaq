@@ -1,5 +1,5 @@
 
-#20231101211855505
+#20231104093555891
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -237,6 +237,8 @@ use_preset_vocabulary: true
 熊	wəm	
 吐	tʰˁas	
 兔	lʰˁas	
+菟	lʰˁas	
+堍	lʰˁas	
 卻	kʰak	
 却	kʰak	
 眼	ŋrˁənʔ	
@@ -260,7 +262,7 @@ use_preset_vocabulary: true
 咽	ʔˁin	
 咽	ʔˁins	
 噎	ʔˁit	
-衣	ʔrəj	
+依	ʔrəj	
 唐	jˁaŋ	
 糖	lˁaŋ	
 塘	lˁaŋ	
@@ -536,6 +538,7 @@ use_preset_vocabulary: true
 仁	niŋ	
 醒	sˁeŋʔ	
 四	slis	
+卌	sip	
 亖	slis	
 肆	sləps	
 系	ɡˤeks	
@@ -829,6 +832,7 @@ use_preset_vocabulary: true
 孝	hrˁus	
 哮	hrˁus	
 涍	hrˁus	
+靠	kʰˁuks	
 啡	pʰˁəjʔ	
 通	lʰˁoŋ	
 痛	lʰˁoŋs	
@@ -869,6 +873,7 @@ use_preset_vocabulary: true
 罷	brˁajʔ	
 罷	braj	
 罷	brajʔ	
+擺	prˁajʔ	
 昊	ɡˁuʔ	
 皓	ɡˁuʔ	
 浩	ɡˁuʔ	
@@ -880,6 +885,9 @@ use_preset_vocabulary: true
 惜	sak	
 錢	dzan	
 淺	tsʰanʔ	
+牋	tsˁan	
+箋	tsˁan	
+帴	tsˁan	
 付	pos	
 隊	lˁuts	
 板	prˁanʔ	
@@ -970,6 +978,7 @@ use_preset_vocabulary: true
 攬	rˁamʔ	
 攬	nʰrˁamʔ	
 薦	tsˁəls	
+韉	tsˁəl	
 英	ʔraŋ	
 瑛	ʔraŋ	
 渶	ʔraŋ	
@@ -1515,6 +1524,7 @@ use_preset_vocabulary: true
 括	kʷˁat	
 适	kʷˁat	
 聒	kʷˁat	
+刮	kʷrˁat	
 剔	lʰˁek	
 踢	lʰˁek	
 惕	lʰˁek	
@@ -1878,6 +1888,7 @@ use_preset_vocabulary: true
 購	kʷrˁos	
 購	prˁos	
 車	kʰra	
+車	kʰA	
 支	ke	
 枝	kej	
 肢	kej	
@@ -1942,7 +1953,7 @@ use_preset_vocabulary: true
 掏	lʰˁu	
 台	lˁə	
 探	lʰˁəms	
-赤	kʰrak	
+赤	kʰlak	
 斥	tʰak	
 掉	dˁewks	
 仔	tsəjʔ	
@@ -2672,7 +2683,6 @@ use_preset_vocabulary: true
 柏	prˁak	
 栢	prˁak	
 捭	prˁeʔ	
-擺	prˁeʔ	
 襬	pʰajs	
 襬	paj	
 庍	həns	
@@ -7857,7 +7867,6 @@ use_preset_vocabulary: true
 𠯑	ɡrˁot	
 㧓	krˁoj	
 苽	kˁa	
-刮	krˁot	
 䒷	kˁot	
 𠜵	krˁet	
 𨀩	krˁojʔ	
@@ -10003,7 +10012,6 @@ use_preset_vocabulary: true
 虃	tsem	
 䶢	kʰrˁep	
 䶢	krˁep	
-韉	tsˁin	
 鑯	tsem	
 𩎀	kan	
 𪒹	krˁem	
@@ -10017,11 +10025,6 @@ use_preset_vocabulary: true
 趼	kˁenʔ	
 趼	ŋˁen	
 趼	ŋˁens	
-帴	tsˁin	
-帴	tsenʔ	
-帴	sˁans	
-帴	srˁet	
-帴	dzˁan	
 剪	tsenʔ	
 湕	kanʔ	
 堿	krˁemʔ	
@@ -11497,7 +11500,6 @@ use_preset_vocabulary: true
 䯪	kʰˁawʔ	
 𧋓	kʰˁaws	
 犒	kʰˁaws	
-靠	kʰˁaws	
 𩝝	kʰˁaws	
 苛	ɡˁaj	
 珂	kʰˁaj	
@@ -20018,9 +20020,6 @@ use_preset_vocabulary: true
 土	tʰˁaʔ	99%
 圡	tʰˁaʔ	
 釷	tʰˁaʔ	
-堍	tʰˁas	
-菟	dˁa	
-菟	tʰˁas	
 鵵	tʰˁas	
 煓	tʰˁon	
 貒	tʰˁon	
@@ -21155,7 +21154,6 @@ use_preset_vocabulary: true
 躧	sreʔ	
 𩎉	sreʔ	
 匸	hˁeʔ	
-卌	səp	
 呬	hrəjs	
 忥	həjs	
 㰥	hˁes	
@@ -23222,8 +23220,9 @@ use_preset_vocabulary: true
 弌	ʔit	
 衤	ʔəj	
 伊	ʔi	
+衣	ʔəj	
+衣	ʔəjs	
 医	ʔˁes	
-依	ʔəj	
 䧇	ʔəj	
 咿	ʔi	
 㛄	ʔəj	

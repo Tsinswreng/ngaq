@@ -1,6 +1,7 @@
 import Ut, {lodashMerge} from "@shared/Ut";
 import _ from "lodash";
-
+//import Config from '@shared/Config'
+//const config = Config.getInstance()
 
 export type ClientConfig = typeof Client.defaultConfig
 
@@ -16,7 +17,8 @@ export default class Client{
 	}
 
 	public static readonly defaultConfig = {
-		baseUrl: 'http://127.0.0.1:1919'
+		//baseUrl: `http://127.0.0.1:${config.config.port}`
+		baseUrl: window.location.origin
 	}
 
 	public constructor(config?:Partial<ClientConfig>){

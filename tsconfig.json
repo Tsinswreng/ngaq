@@ -11,6 +11,7 @@
 		//"outFile": "bundle.js",
 		//"outDir": ".",
 		"rootDir": "./src",
+		
 		"allowJs": false,
 		"target": "ESNext",
 		//"useDefineForClassFields": true,
@@ -42,7 +43,7 @@
 		"baseUrl": "./src",
 		//"allowImportingTsExtensions": true,
 		"paths": {
-			"@root/*": ["./"],
+			"@root/*": ["../*"],
 			//"*":["src/shared/*"],
 			"@shared/*": ["shared/*"], //不能不寫/*
 			"@frontend/*": ["src/frontend/*"],
@@ -54,8 +55,7 @@
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
 	"exclude": ["src/frontend/*"],
-	"include": [
-		"src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "config.ts"],
 	//"include": ["/*.ts"],
 	
 	// "include": [

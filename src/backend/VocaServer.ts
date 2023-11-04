@@ -8,7 +8,6 @@
 require('module-alias/register');
 //import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 import VocaSqlite from "./VocaSqlite";
-
 //import Util from "../../shared/Util";
 //import Ut from "Ut"
 //const moment = require('moment')
@@ -27,18 +26,21 @@ import { $, fileToBase64, measurePromiseTime } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
 import session from 'express-session'
 import RandomImg from "./Img";
-
+import Config from "@shared/Config";
+const config = Config.getInstance()
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
 
-const rootDir:string = require('app-root-path').path
+//const rootDir:string = require('app-root-path').path
+const rootDir = process.cwd()
 const tempUserName = '114'
 const tempPassword = '514'
 const oneDaySec = 3600*24
 
 const dirs:string[] = []
-dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`)
-dirs.push(`D:\\_\\視聽\\圖`)
+//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`)
+//dirs.push(`D:\\_\\視聽\\圖`)
+dirs.push(...(config.config.randomImgDir??[]))
 //dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene\\银河系.png`)
 //dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene`)
 // dirs.push(`D:\\_\\視聽\\圖\\bili`)
@@ -317,19 +319,10 @@ export default class VocaServer{
 			}
 		}) */
 		
-		VocaServer.app.listen(1919, ()=>{
-			console.log('at\nhttp://127.0.0.1:1919')
+		VocaServer.app.listen(config.config.port, ()=>{
+			console.log(`at\nhttp://127.0.0.1:${config.config.port}`)
 		})
-		
-		
 	}
 	
 }
-VocaServer.main()
-
-async function getWordShapesByIds(){
-
-}
-
-
-
+//VocaServer.main()

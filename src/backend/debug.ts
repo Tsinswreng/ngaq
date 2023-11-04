@@ -497,4 +497,5 @@ async function t20231101222851(){
 	const r = await Sqlite.all(vocaSqlite.db, slect)
 	console.log(r)
 
-}t20231101222851()
+}//t20231101222851()
+

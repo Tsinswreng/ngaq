@@ -15,10 +15,6 @@ const Ut = {
 	$:$
 }
 
-
-
-
-
 //export type VocaTableColumnName = VocaDbTable
 const VocaTableColumnName = VocaDbTable
 
@@ -60,7 +56,7 @@ export default class VocaSqlite{
 	private _dbName = 'voca';
 	public get dbName(){return this._dbName}public set dbName(v){this._dbName=v}
 
-	private _dbPath = rootDir+'/db/'+this._dbName+'.db' 
+	private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
 	;public get dbPath(){return this._dbPath;};
 	;public set dbPath(v){
 		this._dbPath=v;

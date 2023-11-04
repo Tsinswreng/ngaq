@@ -2,10 +2,11 @@ import { IVocaRow } from "@shared/SingleWord2"
 import SingleWord2 from "@shared/SingleWord2"
 import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
-
+//import Config from '@shared/Config'
+//const config = Config.getInstance()
 export default class VocaClient{
 	private static _instance?:VocaClient
-	public static readonly baseUrl = 'http://127.0.0.1:1919'
+	public static readonly baseUrl = window.location.origin //`http://127.0.0.1:${config.config.port}`
 	private constructor(){}
 	public static getInstance(){
 		if(VocaClient._instance === undefined){
