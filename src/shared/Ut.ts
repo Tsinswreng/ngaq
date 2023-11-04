@@ -18,6 +18,45 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+/**
+ * 遍歷諸文件夾
+ * @param directoryPath 
+ * @returns 
+ */
+export async function traverseDirs(directoryPath: string[]) { 
+	const result:string[] = []
+	for(const d of directoryPath){
+		const files = await forOne(d)
+		result.push(...files)
+	}
+
+	return result
+	async function forOne(directoryPath:string){
+		const filePaths: string[] = [];
+
+		async function readDirectory(dir: string) {
+			const files = await fs.promises.readdir(dir);
+	
+			for (const file of files) {
+				const filePath = path.join(dir, file);
+				const stat = await fs.promises.stat(filePath);
+	
+				if (stat.isDirectory()) {
+					// 如果是子目录，递归读取子目录中的文件
+					await readDirectory(filePath);
+				} else {
+					// 如果是文件，将文件路径添加到数组中
+					filePaths.push(filePath);
+				}
+			}
+		}
+	
+		await readDirectory(directoryPath);
+		return filePaths;
+	}
+}
+
+
 export function safeIntStr(numStr:string, errMsg?){
 	let num = parseFloat(numStr)
 	if(num+'' !== numStr){

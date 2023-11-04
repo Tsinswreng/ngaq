@@ -116,7 +116,7 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/首一lʰ首二/gm, replacement:'首一O首二'},
 	{regex:/首一nʰ首二/gm, replacement:'首一,首二'},
 	{regex:/首一mʰ首二/gm, replacement:'首一.首二'},
-	{regex:/首一sn首二/gm, replacement:'首一;首二'},
+	{regex:/首一sn首二/gm, replacement:'首一,首二'},
 	{regex:/首一sŋ首二/gm, replacement:'首一;首二'},
 	{regex:/首一stʰ首二/gm, replacement:'首一;首二'},
 	{regex:/首一st首二/gm, replacement:'首一;首二'},

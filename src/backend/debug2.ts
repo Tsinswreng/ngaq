@@ -1,4 +1,7 @@
 import 'tsconfig-paths/register'
+import Build from './Build'
+import { measurePromiseTime } from '@shared/Ut'
+import path from 'path'
 /* require('tsconfig-paths/register');
 import 'module-alias/register';
 //import Txt from "@shared/Txt"
@@ -46,7 +49,27 @@ test_findMinimalPairs()
 
 //import {config} from '@root/config'
 //console.log(config)
-import * as config from '@root/config'
-console.log(config)
-config.config.dbPath
 //D:\_\mmf\PROGRAM\_Cak\voca\out\backend\debug2.js
+
+
+
+async function test_findNativeAddons(){
+	const result = await measurePromiseTime(Build.findNativeAddons())
+	console.log(result[1])
+	console.log(result[0])
+}//test_findNativeAddons()
+
+async function test_resolve(){
+	let build = new Build()
+	const prms = build.run()
+	// for(const p of prms){
+	// 	console.log(p)
+	// 	await p;
+	// }
+	// Promise.all(
+	// 	build.run()
+	// ).then(()=>{
+	// 	console.log(`done`)
+	// })
+
+}test_resolve()
