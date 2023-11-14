@@ -1,9 +1,9 @@
 //require('module-alias/register');
 require('tsconfig-paths/register');
 import SingleWord2, { VocaDbTable } from "@shared/SingleWord2"
-import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime, delay, readLine } from "@shared/Ut"
+import { getShuffle, group, deprecated_simpleRandomArr, simpleUnion, randomIntArr, creatFileSync, $a, deprecated_measureTime, measurePromiseTime, blobToBase64_fr, measureFunctionTime, delay, readLine, $ } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2";
-import Sqlite from "@shared/db/Sqlite";
+import Sqlite, { SqlToValuePair } from "@shared/db/Sqlite";
 import VocaSqlite from "./VocaSqlite";
 import Tempus from "@shared/Tempus";
 import { randomInt } from "crypto";
@@ -149,7 +149,7 @@ async function test_copyCrossDb(){
 	})
 	console.log(vs2.dbPath)
 	console.log(vs2.db)
-	await Sqlite.copyTableCrossDb(vs.db, 'english', vs2.db)
+	await Sqlite.copyTableCrossDbNonBatch(vs.db, 'english', vs2.db)
 	//let words = await vs2.getAllWords('japanese')
 	//console.log(words)
 	console.log('done')
@@ -218,7 +218,7 @@ async function test_grout(){
 async function test_qryById(){
 	//console.log(11)
 	const vs = new VocaSqlite({_tableName: 'english'})
-	let r = await Sqlite.qryByIds(vs.db, vs.tableName??'', [1,2,3])
+	let r = await Sqlite.qryByIds_unsafeInt(vs.db, vs.tableName??'', [1,2,3])
 	console.log(r)
 }
 //test_qryById()
@@ -499,3 +499,158 @@ async function t20231101222851(){
 
 }//t20231101222851()
 
+
+async function test_stream1(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'testStream'})
+	//const words = await vocaSqlite.getAllWords()
+	
+	//VocaSqlite.getInsertSql($(vocaSqlite.tableName), SingleWord2.parse(words[0]))
+	//Sqlite.transaction(vocaSqlite.db, [{sql:}])
+	const neoTable = 'testStream2'
+	const creatSql = `CREATE TABLE ${neoTable} AS SELECT * FROM ${vocaSqlite.tableName}`
+	//await Sqlite.run(vocaSqlite.db, creatSql)
+	const sql = `INSERT INTO ${neoTable} SELECT * FROM ${vocaSqlite.tableName}`
+	//await Sqlite.run(vocaSqlite.db, sql)
+	const pairs:SqlToValuePair[] = []
+	for(let i = 0; i < 9000 ; i++){
+		let unus = new SqlToValuePair(sql, [[],[]])
+		pairs.push(unus)
+	}
+	//console.log(pairs)
+	await Sqlite.transaction_complex(vocaSqlite.db, pairs, 'run')
+	console.log(`done1`)
+}
+//test_stream1()
+
+// async function test_stream2(){
+// 	const vocaSqlite = new VocaSqlite({_tableName: 'testStream2'})
+// 	// const result = await measurePromiseTime(vocaSqlite.getAllWords())
+// 	// console.log(result[0])
+// 	// const words = result[1]
+// 	// console.log(words.length)
+// 	//console.log(`done`)
+
+	
+	
+// 	//const stre = await Sqlite.testReadStream(vocaSqlite.db, $(vocaSqlite.tableName))
+// 	//console.log(stre)
+// 	Sqlite.testReadStream(vocaSqlite.db, $(vocaSqlite.tableName)).then(d=>{console.log(d)})
+// 	for(let i = 0; i < 20; i++){
+// 		console.log(i)
+// 		await delay(100)
+// 	}
+// 	await readLine(`done`)
+	
+// }
+//test_stream2()
+
+
+async function test_statement(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'testStream2'})
+	const sql = `SELECT * FROM '${vocaSqlite.tableName}'`
+	const stmt = vocaSqlite.db.prepare(sql)
+	for(let i = 0 ; i < 10; i++){
+		stmt.get((err, row)=>{
+			if(err){throw err}
+			console.log(row)
+		})
+	}
+}//test_statement()
+
+// async function test_stream3(){
+// 	const vocaSqlite = new VocaSqlite({_tableName: 'testStream2'})
+// 	const stream = Sqlite.testReadStream2(vocaSqlite.db, $(vocaSqlite.tableName))
+// 	let cnt = 0;
+// 	stream.on('data', (chunk)=>{
+// 		console.log(
+// 			JSON.parse(chunk)
+// 		)
+// 		cnt++
+// 		console.log(cnt)
+// 		if(cnt === 99){
+// 			stream.destroy()
+// 		}
+// 	})
+// }
+//test_stream3()
+
+import { Sqlite_master, SqliteTableInfo } from "@shared/db/Sqlite";
+import { Database } from "sqlite3";
+
+async function test_safeIntSql(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'testStream2'})
+	const table = $(vocaSqlite.tableName)
+	const db = vocaSqlite.db
+	const tableInfo = await Sqlite.meta.getTableInfo(vocaSqlite.db, table)
+	//console.log(tableInfo)
+	const master = await Sqlite.meta.querySqlite_master_unsafeInt(db)
+	//console.log(master)
+
+	const r = await Sqlite.getSql_columnCastToText(db, table)
+	//console.log(r)
+	const r2 = await Sqlite.isTableExist(db, 'englishs')
+	//console.log(r2)
+
+	const fullSafeSql = await Sqlite.getSql_SelectAllIntSafe(db, table)
+	console.log(fullSafeSql)
+
+}//test_safeIntSql()
+
+async function test_statement2(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'english'})
+	const table = $(vocaSqlite.tableName)
+	const db = vocaSqlite.db
+	let safeIntColumns = await Sqlite.getSql_columnCastToText(db, table)
+	const sql = `SELECT ${safeIntColumns} FROM '${table}' WHERE id = ?`
+	const stmt = db.prepare(sql)
+	for(let i = 0; i < 3000; i++){
+		stmt.get(i, function(err, row){
+			if(i%100===0){
+				console.log(row)
+			}
+		})
+	}
+}
+//test_statement2()
+import sqlite3 from 'sqlite3';
+const sqlt = sqlite3.verbose()
+async function test_copyTable(){
+	const vocaSqlite = new VocaSqlite({_tableName: 'english'})
+	const neoDbPath = creatFileSync('./test.db', true)
+	const neoDb = new sqlt.Database(neoDbPath)
+	
+	try {
+		console.log(114514)
+		const r = await measurePromiseTime(
+			Sqlite.copyTableCrossDbNonBatch(vocaSqlite.db, $(vocaSqlite.tableName), neoDb, 'neo'+new Tempus().time)
+		)
+		console.log(r[1])
+		console.log(r[0])
+	} catch (e) {
+		console.error(`console.error(e)`)
+		console.error(e)
+	}
+
+	
+}
+test_copyTable()
+
+
+async function test_verbose(){
+	//const db = new Database('./aaa.db')
+	const vocaSqlite = new VocaSqlite({_tableName: 'japanese'})
+	//db.run('select', (err)=>{console.error(err)})
+	// try {
+	// 	db.run('select')
+	// } catch (e) {
+	// 	console.log(e)
+	// }
+	//const stmt = db.prepare('select')
+	//await Sqlite.all(db, 'select')
+	return new Promise(async (res,rej)=>{
+		const stmt = Sqlite.prepare(vocaSqlite.db, `INSERT INTO ${vocaSqlite.tableName} (id) VALUES ('a')`)
+		await Sqlite.stmtRun(stmt)
+		res(0)
+	})
+	
+}//test_verbose()

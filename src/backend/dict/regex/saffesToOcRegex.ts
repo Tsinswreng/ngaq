@@ -604,9 +604,9 @@ export let replacePair:RegexReplacePair[] =
 			{regex:/首一(.*?)首二腹一(Y)腹二尾一(C)尾二/gm, replacement:'首一$1首二腹一u腹二尾一ns尾二'},
 			{regex:/首一(.*?)首二腹一(Y)腹二尾一(T)尾二/gm, replacement:'首一$1首二腹一u腹二尾一t尾二'},
 
-			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一jʔ尾二'},
-			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一j尾二'},
-			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一js尾二'},
+			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一ʔ尾二'},
+			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一尾二'},
+			{regex:/首一([KXGWQH])首二腹一(Y)腹二尾一(N)尾二/gm, replacement:'首一$1首二腹一ʷi腹二尾一s尾二'},
 
 			{regex:/首一(.*?)首二腹一(Y)腹二尾一(Y)尾二/gm, replacement:'首一$1首二腹一u腹二尾一jʔ尾二'},
 			{regex:/首一(.*?)首二腹一(Y)腹二尾一(H)尾二/gm, replacement:'首一$1首二腹一u腹二尾一j尾二'},

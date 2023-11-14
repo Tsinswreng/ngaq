@@ -1,17 +1,23 @@
-<script lang="ts">
-	import {MainB} from "../ts/mainB";
-	const mainB = new MainB()
+<script lang="ts" setup>
+import D3Chart from "@views/光電效應/D3Chart.vue";
 
-	export default {
-		data(){
-			return{
-				mainB
-			}
-		}
-	}
 </script>
 
 <template>
-	<button onclick="mainB.assignWordsFromServ()">測試onclick</button>
-	<button @click="mainB.assignWordsFromServ()">測試@click</button>
+	<div class="root">
+		<D3Chart/>
+	</div>
+
+	
+
 </template>
+
+<style scoped>
+	*{
+		background-color: white;
+	}
+	.root{
+		background-color: white;
+		color: black;
+	}
+</style>

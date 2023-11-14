@@ -1,9 +1,13 @@
 require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
 import sqlite3 from 'sqlite3';
-sqlite3.verbose()
-import { Database, RunResult } from 'sqlite3';
+
+const sqlt = sqlite3.verbose()
+
+type Database = sqlite3.Database
+type Statement = sqlite3.Statement
+import { RunResult } from 'sqlite3';
 import Sqlite, { SqlToValuePair } from '@shared/db/Sqlite';
-import _, { add } from 'lodash';
+import _ from 'lodash';
 import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
@@ -60,7 +64,7 @@ export default class VocaSqlite{
 	;public get dbPath(){return this._dbPath;};
 	;public set dbPath(v){
 		this._dbPath=v;
-		this._db = new sqlite3.Database(pathAt(this.dbPath), (err)=>{
+		this._db = new sqlt.Database(pathAt(this.dbPath), (err)=>{
 			if(err){throw err}
 		})
 	};
@@ -69,7 +73,7 @@ export default class VocaSqlite{
 	;public get tableName(){return this._tableName;};;public set tableName(v){this._tableName=v;};
 
 
-	private _db:Database = new sqlite3.Database(pathAt(this.dbPath), (err)=>{
+	private _db:Database = new sqlt.Database(pathAt(this.dbPath), (err)=>{
 		if(err){throw err}
 	})
 	;public get db(){return this._db;};
@@ -145,7 +149,7 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public static async backAllTables(db:Database, neoNamePostfix=new Tempus().time){
-		const master = await Sqlite.querySqlite_master(db)
+		const master = await Sqlite.querySqlite_master_unsafeInt(db)
 		const tbl_names = master.map(e=>e.tbl_name)
 		const neoNames = tbl_names.map(e=>e+=neoNamePostfix)
 		const prms:Promise<unknown>[] = []
@@ -179,9 +183,47 @@ export default class VocaSqlite{
 	 * @param db 
 	 * @param table 
 	 * @param word 
+	 * @deprecated
 	 */
-	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[][][]>
-	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[][][]>
+	// private static initAddWord_deprecated(db:Database, table:string, word:SingleWord2):Promise<RunResult[][][]>
+	// private static initAddWord_deprecated(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[][][]>
+	// private static async initAddWord_deprecated(db:Database, table:string, word:SingleWord2|SingleWord2[]){
+	// 	let w:SingleWord2[]
+	// 	if(Array.isArray(word)){
+	// 		w = word
+	// 	}else{
+	// 		w = [word]
+	// 	}
+	// 	VocaSqlite.checkTable(table, w)
+	// 	let [r, runResult] = await forArr(db, table, w)
+	// 	return runResult
+
+	// 	function forArr2(db:Database, table:string, words:SingleWord2[]){
+			
+	// 	}
+
+	// 	function forArr(db:Database, table:string, words:SingleWord2[]){
+	// 		const pairs:{sql:string, values:any[][]}[] = []
+	// 		for(const w of words){
+	// 			const [sql, value] = VocaSqlite.getInsertSql(table, w)
+	// 			const unusPair = {sql:sql, values:[value]}
+	// 			//console.log(`console.log(unusPair)`)
+	// 			//console.log(unusPair)//t
+	// 			pairs.push(unusPair)
+	// 		}
+	// 		return Sqlite.transaction_complex(db, pairs, 'run')
+	// 	}
+	// }
+
+	/**
+	 * 數據庫ʸ原ᵈ無ᵗ詞ˇ添入庫
+	 * @param db 
+	 * @param table 
+	 * @param word 
+	 * @deprecated
+	 */
+	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[]>
+	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[]>
 	private static async initAddWord(db:Database, table:string, word:SingleWord2|SingleWord2[]){
 		let w:SingleWord2[]
 		if(Array.isArray(word)){
@@ -190,22 +232,29 @@ export default class VocaSqlite{
 			w = [word]
 		}
 		VocaSqlite.checkTable(table, w)
-		let [r, runResult] = await forArr(db, table, w)
-		return runResult
-		function forArr(db:Database, table:string, words:SingleWord2[]){
-			const pairs:{sql:string, values:any[][]}[] = []
+		//let [r, runResult] = await forArr(db, table, w)
+		const forArr2=async(db:Database, table:string, words:SingleWord2[])=>{
+			const [sql,] = VocaSqlite.getInsertSql(table, words[0])
+			const stmt = Sqlite.prepare(db, sql)
+			const runResult:RunResult[] = []
 			for(const w of words){
 				const [sql, value] = VocaSqlite.getInsertSql(table, w)
-				const unusPair = {sql:sql, values:[value]}
-				//console.log(`console.log(unusPair)`)
-				//console.log(unusPair)//t
-				pairs.push(unusPair)
+				const r = await Sqlite.stmtRun(stmt, value)
+				runResult.push(r)
 			}
-
-			return Sqlite.transaction(db, pairs, 'run')
+			return runResult
 		}
+
+		const fn = async()=>{
+			return forArr2(db, table, w)
+		}
+
+		const runResult:RunResult[] = await Sqlite.transaction(db, fn)
+		return runResult
 	}
 
+
+	
 /* 	private static async initAddWord(db:Database, table:string, word:SingleWord2|SingleWord2[]){
 		let w:SingleWord2[]
 		if(Array.isArray(word)){
@@ -330,8 +379,9 @@ export default class VocaSqlite{
 			
 			if(wordsToInitAdd.length !== 0){
 				
-				let d3 = await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
-				runResult1 = d3.flat(2)
+				//let d3 = await VocaSqlite.initAddWord_deprecated(db, table, wordsToInitAdd)
+				//runResult1 = d3.flat(2)
+				runResult1 = await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
 			}
 			if(wordsToUpdate.length !== 0){
 				
@@ -459,7 +509,7 @@ export default class VocaSqlite{
 			return forOne(db, table, wordShape)
 		}else{
 			
-			let d2 = await Sqlite.qryValuesInColumn<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
+			let d2 = await Sqlite.qryValuesInColumn_unsafeInt<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
 			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
@@ -576,7 +626,6 @@ export default class VocaSqlite{
 	// 	return Sqlite.all(db, m[0], m[1])
 	// }
 
-
 	/**
 	 * 用transaction批量ᵈ由id蔿行重設詞。
 	 * 緣 取sql語句之函數 需傳SingleWord2故形參擇此。
@@ -604,23 +653,68 @@ export default class VocaSqlite{
 		let sql = VocaSqlite.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
 		//console.log(`console.log(sql)`)
 		//console.log(sql)//t
-		const values:any[][] = []
-		const sqlPair:{sql:string, values:any[]}[] = []
-		for(let i = 0; i  <words.length; i++){
-			let w = words[i]; let id = ids[i]
-			let v = VocaSqlite.getUpdateByIdSql(table, w, id)[1]
-			
-			values.push(v)
+
+		
+		const fn = async()=>{
+			const stmt = Sqlite.prepare(db, sql)
+			const runResult:RunResult[] = []
+			for(let i = 0; i < words.length; i++){
+				let w = words[i]; let id = $(ids)[i]
+				let [,v] = VocaSqlite.getUpdateByIdSql(table, w, id)
+				const r = await Sqlite.stmtRun(stmt, v)
+				runResult.push(r)
+			}
+			return runResult
 		}
-		//let a:any[] = []
-		//let b:any[][] = []
+		return Sqlite.transaction(db, fn)
+	}
+
+	/**
+	 * 用transaction批量ᵈ由id蔿行重設詞。
+	 * 緣 取sql語句之函數 需傳SingleWord2故形參擇此。
+	 * @param db 
+	 * @param table 
+	 * @param words 
+	 * @param ids 
+	 * @returns 
+	 */
+	// public static setWordsByIds_deprecated(db:Database, table:string, words:SingleWord2[], ids?:number[]){
+	// 	//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
-		//return Sqlite.deprecated_transactionForOneSql(db, sql, values)
-		//console.log(`console.log([{sql:sql, values:values}])`)
-		//console.log([{sql:sql, values:values}])//t
-		return Sqlite.transaction(db, [{sql:sql, values:values}], 'run')
+	// 	VocaSqlite.checkTable(table, words)
+	// 	$a(words)
+	// 	if(ids === void 0){
+	// 		ids = []
+	// 		for(const w of words){
+	// 			ids.push($(w.id))
+	// 		}
+	// 	}
+	// 	if(words.length !== ids.length){
+	// 		throw new Error(`words.length !== ids.length`)
+	// 	}
+
+	// 	let sql = VocaSqlite.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
+	// 	//console.log(`console.log(sql)`)
+	// 	//console.log(sql)//t
+	// 	const values:any[][] = []
+	// 	const sqlPair:{sql:string, values:any[]}[] = []
+	// 	for(let i = 0; i  <words.length; i++){
+	// 		let w = words[i]; let id = ids[i]
+	// 		let v = VocaSqlite.getUpdateByIdSql(table, w, id)[1]
+			
+	// 		values.push(v)
+	// 	}
+	// 	//let a:any[] = []
+	// 	//let b:any[][] = []
 		
-	}public setWordsByIds(words:SingleWord2[], ids:number[]){
+	// 	//return Sqlite.deprecated_transactionForOneSql(db, sql, values)
+	// 	//console.log(`console.log([{sql:sql, values:values}])`)
+	// 	//console.log([{sql:sql, values:values}])//t
+	// 	return Sqlite.transaction_complex(db, [{sql:sql, values:values}], 'run')
+		
+	// }
+	
+	public setWordsByIds(words:SingleWord2[], ids:number[]){
 		let table:string=$(this.tableName)
 		return VocaSqlite.setWordsByIds(this.db, table, words, ids)
 	}
@@ -717,7 +811,7 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public static async getWordShapesByIds(db:Database, table:string, ids:number[]){
-		const rows2d = await Sqlite.qryByIds<IVocaRow>(db, table, ids)
+		const rows2d = await Sqlite.qryByIds_unsafeInt<IVocaRow>(db, table, ids)
 		const rows = rows2d.flat(1)
 		return rows.map(e=>e.wordShape)
 	}
@@ -740,4 +834,12 @@ export namespace VocaSqliteUtil{
 	function getWordShapeByIds(){
 
 	}
+}
+
+function reverseMap<K,V>(map:Map<K,V>){
+	const result = new Map<V,K>()
+	for(const [k,v] of map){
+		result.set(v, k)
+	}
+	return result
 }

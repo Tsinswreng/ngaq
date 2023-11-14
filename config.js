@@ -1,6 +1,6 @@
 
 ({
-	port: 1920
+	port: 1919
 	//待添: 隨機圖之路徑, 數據庫ᵗ路徑
 	,randomImgDir:[
 		`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`

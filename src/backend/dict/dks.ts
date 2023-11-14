@@ -201,7 +201,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		
 		let charsToBeRemoved = this.getCharOfDkp()
 		await this.removeCharsInDb(this.tempTable, charsToBeRemoved)
-		let strArr = await Sqlite.toStrTable(Dks.db.db, this.tempTable, [cn.char, cn.code, cn.ratio])
+		let strArr = await Sqlite.toStrTable_unsafeInt(Dks.db.db, this.tempTable, [cn.char, cn.code, cn.ratio])
 		let dkpBody = this.dkp.rawObj.validBody
 		let dkpStr = Txt.mergeArrIntoStr(dkpBody)
 		//console.log(dkpStr)//t
@@ -364,7 +364,7 @@ class AttachCangjie{
 	}
 
 	async toTargetBody(){
-		let strArr = await Sqlite.toStrTable(this.db.db, this.tempTable_Join, [cn.char, cn.code, 'b_code', cn.ratio])
+		let strArr = await Sqlite.toStrTable_unsafeInt(this.db.db, this.tempTable_Join, [cn.char, cn.code, 'b_code', cn.ratio])
 		let 合併列:string[][] =[]
 		for(let i = 0; i < strArr.length; i++){
 			// for(let j = 0; j < strArr[i].length; i++){
