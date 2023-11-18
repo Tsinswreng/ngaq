@@ -336,7 +336,7 @@ export default class SingleWord2{
 					let strArr = JSON.parse(datesStr)
 					const dates:Tempus[] = []
 					for(const s of strArr){
-						let d = new Tempus(s)
+						let d = Tempus.new(s)
 						dates.push(d)
 					}
 					return dates
@@ -397,10 +397,10 @@ export default class SingleWord2{
 		return o
 
 		function tempusUnion(a:Tempus[], b:Tempus[]){
-			const aStrArr = a.map(e=>e.time)
-			const bStrArr = b.map(e=>e.time)
+			const aStrArr = a.map(e=>e.iso)
+			const bStrArr = b.map(e=>e.iso)
 			const uni = Ut.union(aStrArr, bStrArr)
-			return uni.map(e=>new Tempus(e))
+			return uni.map(e=>Tempus.new(e))
 		}
 	}
 
@@ -493,6 +493,7 @@ export default class SingleWord2{
 		//let mapObj = mapToObjArr(merged)
 		let mapObj:Tempus_Event[] = []
 		for(const [k,v] of merged){
+			//let unus = Tempus.new_Event(k,v)
 			let unus = new Tempus_Event(k,v)
 			mapObj.push(unus)
 		}
@@ -666,7 +667,7 @@ export class Priority{
 	 */
 	public getPrio0Procedures(sw:SingleWord2){
 		
-		const nunc = new Tempus()
+		const nunc = Tempus.new()
 		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
 		let procedures:Procedure[] = []
 		let lastProcedure = lastOf(procedures)

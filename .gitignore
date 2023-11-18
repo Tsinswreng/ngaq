@@ -20,3 +20,4 @@ test/
 src/backend/debug/
 bundle/
 *.exe
+crawler/

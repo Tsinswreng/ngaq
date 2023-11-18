@@ -402,7 +402,7 @@ export default class VocaRaw2{
 	} */
 
 	private static parseRawDate(oldDate:string, oldFormat:string){
-		let d = new Tempus(oldDate, oldFormat)
+		let d = Tempus.new(oldDate, oldFormat)
 		return d
 	}private parseRawDate(oldDate:string, oldFormat:string){
 		return VocaRaw2.parseRawDate(oldDate, oldFormat)

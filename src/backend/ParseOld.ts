@@ -120,8 +120,8 @@ export default class ParseOld{
 			for(const e of oldArr){
 				//console.log(`console.log(e)//t`)
 				//console.log(e)//t
-				let t = new Tempus(e, 'YYYYMMDDHHmmss')
-				neo.push(t.time)
+				let t = Tempus.new(e, 'YYYYMMDDHHmmss')
+				neo.push(t.iso)
 			}
 			return JSON.stringify(neo)
 		}

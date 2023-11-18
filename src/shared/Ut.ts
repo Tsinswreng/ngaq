@@ -18,6 +18,68 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+const util = require('util');
+
+/**
+ * 這是sqlite3庫 trace.js裏的代碼、偷過來研究
+ * 將指定對象的指定方法進行擴展，以捕獲和處理錯誤堆棧信息。
+ * @param object 欲擴展的對象
+ * @param property 欲擴展的方法名
+ * @param pos 替換回調函數的位置，預設為最後一個參數
+ */
+export function extendTrace(object:Object, property:string, pos?:number) {
+	
+	const old:Function = object[property];// 保存原始方法
+	object[property] = function() {
+		const error = new Error();
+		// 構建方法名和參數的字符串表示
+		const name = object.constructor.name + '#' + property + '(' +
+			Array.prototype.slice.call(arguments).map(function(el) { // 傳統函數內ᵗarguments即傳入ᵗ參數
+				return util.inspect(el, false, 0);
+			}).join(', ') + ')';
+
+		// 如果未指定替換回調函數的位置，預設為最後一個參數
+		if (typeof pos === 'undefined') pos = -1;
+		if (pos < 0) pos += arguments.length;
+		// 獲取回調函數
+		const cb = arguments[pos];
+		// 如果回調是函數，則進行替換處理
+        if (typeof arguments[pos] === 'function') {
+            arguments[pos] = function replacement() {
+                const err = arguments[0];
+				// 如果錯誤存在並且尚未處理過，則進行錯誤堆棧的擴充和替換
+                if (err && err.stack && !err.__augmented) {
+                    err.stack = filter(err).join('\n');
+                    err.stack += '\n--> in ' + name;
+                    err.stack += '\n' + filter(error).slice(1).join('\n');
+                    err.__augmented = true;
+                }
+				// 調用原始回調函數
+                return cb.apply(this, arguments);
+            };
+        }
+		// 調用原始方法
+        return old.apply(this, arguments);
+    };
+}
+//exports.extendTrace = extendTrace;
+
+
+function filter(error) {
+	return error.stack.split('\n').filter(function(line) {
+		return line.indexOf(__filename) < 0;
+	});
+}
+
+
+
+
+
+
+
+
+
+
 /**
  * 遍歷諸文件夾
  * @param directoryPath 
@@ -117,6 +179,26 @@ export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
 	})
 }
 
+
+/**
+ * 新建一級目錄
+ * @param dir 
+ * @param ifNotExists 默認潙假、即目录既存旹報錯
+ */
+export function mkdir(dir:string, ifNotExists=false){
+	const absolutePath = path.resolve(dir);
+	if(fs.existsSync(dir)){
+		if(ifNotExists){
+			return absolutePath
+		}else{
+			throw new Error(absolutePath+' already exists')
+		}
+	}else{
+		fs.mkdirSync(dir)
+	}
+	return absolutePath
+}
+
 /**
  * 新建文件 
  * @param filePath 
@@ -129,7 +211,7 @@ export function creatFileSync(filePath:string, ifNotExists=false){
 		if(ifNotExists){
 			return absolutePath
 		}else{
-			throw new Error()
+			throw new Error(absolutePath+' already exists')
 		}
 	}else{
 		fs.appendFileSync(filePath,'')

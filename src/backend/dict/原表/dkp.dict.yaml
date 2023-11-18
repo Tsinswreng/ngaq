@@ -164,6 +164,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 醉	tsuts		
 詐	tsrˁaks		
 乍	dzrˁaks		
+咋	tsrˁaks
+榨	tsrˁaks
+笮	tsrˁaks
+
 忽	mʰˁut	# bs	
 聞	mun	# bs	
 問	muns	# bs	
@@ -195,10 +199,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 抑	ʔrik		
 益	ʔik
 嗌	ʔik
-謚	ʔik
 齸	ʔik
 膉	ʔik
 隘	ʔrˁiks
+
+謚	ʔik
+謚	mlis
+諡	mlis
+
 
 廁	tsʰrəks
 
@@ -1253,6 +1261,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 箋	tsˁan
 帴	tsˁan
 
+盞	tsrˁanʔ
+琖	tsrˁanʔ
+醆	tsrˁanʔ
+𧣴	tsrˁanʔ
+
+漱	sˁoks
+欶	sˁoks
 
 付	pos
 隊	lˁuts
@@ -1509,7 +1524,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 溺	nˁewk
 魂	wˁən
 魂	wˁun
-渾	ɡˁul
+#渾	ɡˁul	# bs
+渾	ɡʷˁəl
 濯	lrˁewks
 擢	lrˁewk
 綽	tʰawk
@@ -2230,6 +2246,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 涣	hʷˁans
 焕	hʷˁans
 寬	kʰʷˁan
+寬	kʰʷˁon	# ts
+寬	kʰˁon	# ts
 唬	hrˁas
 雕	tˁiw
 凋	tˁiw
@@ -2328,6 +2346,17 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 碗	ʔʷˁanʔ
 椀	ʔʷˁanʔ
+
+惋	ʔʷˁans
+腕	ʔʷˁans
+琬	ʔʷˁans
+捥	ʔʷˁans
+睕	ʔʷˁans
+
+剜	ʔʷˁan
+蜿	ʔʷˁan
+豌	ʔʷˁan
+帵	ʔʷˁan
 
 佩	bˁəks	# bs
 佩	bˁəs

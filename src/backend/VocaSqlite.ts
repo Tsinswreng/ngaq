@@ -6,7 +6,7 @@ const sqlt = sqlite3.verbose()
 type Database = sqlite3.Database
 type Statement = sqlite3.Statement
 import { RunResult } from 'sqlite3';
-import Sqlite, { SqlToValuePair } from '@shared/db/Sqlite';
+import Sqlite from '@shared/db/Sqlite';
 import _ from 'lodash';
 import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2 from '@shared/VocaRaw2';
@@ -14,10 +14,8 @@ import { IVocaRow } from '@shared/SingleWord2';
 import { $, $a, creatFileSync, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import * as fs from 'fs'
-const rootDir:string = require('app-root-path').path
-const Ut = {
-	$:$
-}
+//const rootDir:string = require('app-root-path').path
+
 
 //export type VocaTableColumnName = VocaDbTable
 const VocaTableColumnName = VocaDbTable
@@ -39,22 +37,41 @@ const VocaTableColumnName = VocaDbTable
 	public static readonly source='source'
 } */
 
-
-
-
 export default class VocaSqlite{
 
-	constructor(props:{
-		_dbName?:string,
-		_dbPath?:string,
-		_tableName?:string,
-		
-	},creatNewIfNotExist=true){
-		Object.assign(this, props)
-		if(creatNewIfNotExist){
-			VocaSqlite.creatDbFileSync(this.dbPath, true)
+
+	// 廢棄˪ᵗ構造函數
+	// constructor(props:{
+	// 	_dbName?:string,
+	// 	_dbPath?:string,
+	// 	_tableName?:string,
+	// 	_backupDbPath?:string
+	// },creatNewIfNotExist=true){
+	// 	Object.assign(this, props)
+	// 	if(creatNewIfNotExist){
+	// 		VocaSqlite.creatDbFileSync(this.dbPath, true)
+	// 	}
+	// 	this.dbPath = this._dbPath
+	// }
+
+	private constructor(){
+	}
+
+	static new(
+		props:{
+			_dbName?:string,
+			_dbPath?:string,
+			_tableName?:string,
+			_backupDbPath?:string
+			,mode?:number
 		}
-		this.dbPath = this._dbPath
+	){
+		const o = new this()
+		Object.assign(this, props)
+		if(props._dbPath !== void 0){
+			o._db = Sqlite.newDatabaseAsync(props._dbPath, props.mode)
+		}
+		return o
 	}
 
 	private _dbName = 'voca';
@@ -62,23 +79,25 @@ export default class VocaSqlite{
 
 	private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
 	;public get dbPath(){return this._dbPath;};
-	;public set dbPath(v){
-		this._dbPath=v;
-		this._db = new sqlt.Database(pathAt(this.dbPath), (err)=>{
-			if(err){throw err}
-		})
-	};
+	// ;public set dbPath(v){
+	// 	this._dbPath=v;
+	// 	this._db = new sqlt.Database(pathAt(this.dbPath), (err)=>{
+	// 		if(err){throw err}
+	// 	})
+	// };
 
 	private _tableName?:string 
 	;public get tableName(){return this._tableName;};;public set tableName(v){this._tableName=v;};
 
 
-	private _db:Database = new sqlt.Database(pathAt(this.dbPath), (err)=>{
-		if(err){throw err}
-	})
+	// private _db:Database = new sqlt.Database(pathAt(this.dbPath), (err)=>{
+	// 	if(err){throw err}
+	// })
+	private _db = Sqlite.newDatabaseAsync(this.dbPath)
 	;public get db(){return this._db;};
 
-
+	private _backupDbPath = this.dbPath
+	;public get backupDbPath(){return this._backupDbPath;};;public set backupDbPath(v){this._backupDbPath=v;};
 
 	/**
 	 * 新建數據庫
@@ -128,17 +147,33 @@ export default class VocaSqlite{
 	}
 
 	/**
-	 * 備份表、默認表名 newName=table+Ut.YYYYMMDDHHmmssSSS()
+	 * 跨數據庫備份表
+	 * @param srcDb 
+	 * @param srcTable 
+	 * @param targetDb 
+	 * @param neoName 
+	 * @returns 
+	 */
+	public static backupTable(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable+Tempus.new().iso){
+		return Sqlite.table.copyTableCrossDb(srcDb, srcTable, targetDb, neoName)
+		//return Sqlite.copyTableCrossDb(srcDb, srcTable, targetDb, neoName)
+	}
+	public backupTable(srcDb = this.db, srcTable = $a(this.tableName), targetDb=Sqlite.newDatabaseAsync(this.backupDbPath), neoName=this.tableName+Tempus.new().iso){
+		return VocaSqlite.backupTable( srcDb, srcTable , targetDb, neoName)
+	}
+
+	/**
+	 * 在當前數據庫內備份表、默認表名 @see {table + Tempus.new().iso}
 	 * @param db 
 	 * @param table 
 	 * @param newName 
 	 * @returns 
 	 */
-	public static backupTable(db:Database, table:string, newName=table+new Tempus().time){
+	public static backupTableInDb(db:Database, table:string, newName=table+Tempus.new().iso){
 		return Sqlite.copyTable(db, $(newName), table)
-	}public backupTable(oldTable=this.tableName, newName=oldTable+new Tempus().time){
+	}public backupTableInDb(oldTable=this.tableName, newName=oldTable+Tempus.new().iso){
 		let table:string = $a(oldTable)
-		return VocaSqlite.backupTable(this.db, table, newName)
+		return VocaSqlite.backupTableInDb(this.db, table, newName)
 	}
 
 
@@ -146,20 +181,26 @@ export default class VocaSqlite{
 	 * 備份所有表
 	 * @param db 
 	 * @param neoNamePostfix 原表名ᵗ後ʸᵗʃ添
+	 * @deprecated
 	 * @returns 
 	 */
-	public static async backAllTables(db:Database, neoNamePostfix=new Tempus().time){
+	public static async backAllTables(db:Database, neoNamePostfix=Tempus.new().iso){
 		const master = await Sqlite.querySqlite_master_unsafeInt(db)
 		const tbl_names = master.map(e=>e.tbl_name)
 		const neoNames = tbl_names.map(e=>e+=neoNamePostfix)
 		const prms:Promise<unknown>[] = []
 		for(let i = 0; i < tbl_names.length; i++){
 			const oldName = tbl_names[i]; const neoName = neoNames[i]
-			const p = this.backupTable(db, oldName, neoName)
+			const p = this.backupTableInDb(db, oldName, neoName)
 			prms.push(p)
 		}
 		return prms
-	}public backAllTables(){
+	}
+	/**
+	 * @deprecated
+	 * @returns 
+	 */
+	public backAllTables(){
 		return VocaSqlite.backAllTables(this.db)
 	}
 
@@ -235,7 +276,7 @@ export default class VocaSqlite{
 		//let [r, runResult] = await forArr(db, table, w)
 		const forArr2=async(db:Database, table:string, words:SingleWord2[])=>{
 			const [sql,] = VocaSqlite.getInsertSql(table, words[0])
-			const stmt = Sqlite.prepare(db, sql)
+			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			for(const w of words){
 				const [sql, value] = VocaSqlite.getInsertSql(table, w)
@@ -656,7 +697,7 @@ export default class VocaSqlite{
 
 		
 		const fn = async()=>{
-			const stmt = Sqlite.prepare(db, sql)
+			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			for(let i = 0; i < words.length; i++){
 				let w = words[i]; let id = $(ids)[i]
@@ -830,16 +871,16 @@ export default class VocaSqlite{
 }
 
 
-export namespace VocaSqliteUtil{
-	function getWordShapeByIds(){
+// namespace VocaSqliteUtil{
+// 	function getWordShapeByIds(){
 
-	}
-}
+// 	}
+// }
 
-function reverseMap<K,V>(map:Map<K,V>){
-	const result = new Map<V,K>()
-	for(const [k,v] of map){
-		result.set(v, k)
-	}
-	return result
-}
+// function reverseMap<K,V>(map:Map<K,V>){
+// 	const result = new Map<V,K>()
+// 	for(const [k,v] of map){
+// 		result.set(v, k)
+// 	}
+// 	return result
+// }

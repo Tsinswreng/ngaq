@@ -2,13 +2,7 @@
 import { areFilesExist, pathAt, randomIntArr } from '@shared/Ut';
 import * as fs from 'fs'
 import path from 'path';
-
-
-
 export default class RandomImg{
-
-
-
 	private constructor(){}
 
 	public static async konstructor(_dirs:string[]){

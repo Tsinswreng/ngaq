@@ -1,17 +1,10 @@
-
-
-//require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-
 import {$a, RegexReplacePair, copyIgnoringKeys, delay, lodashMerge} from '@shared/Ut';
 import sqlite3 from 'sqlite3';
-const sqlt = sqlite3.verbose()
-
-
+const sqltVb = sqlite3.verbose()
 //import { Database,RunResult, Statement } from 'sqlite3';
 import { RunResult } from 'sqlite3';
 type Database = sqlite3.Database
 type Statement = sqlite3.Statement
-
 import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 import _ from 'lodash';
 import * as fs from 'fs'
@@ -29,14 +22,29 @@ const Ut = {
  * @param msg 
  * @returns 
  */
-const sqlErr=(err:Error, ...msg:any[])=>{
+const sqlErr=(err:Error, msg?:any)=>{
+	let e = {
+		name:err?.name,
+		message:err?.message,
+		stack:err?.stack,
+		msg: msg
+	}
+	return new Error(JSON.stringify(e, null, 2)) 
+	//console.log(e)
+	//return err
+	//return new Error()
+}
+
+const raise = (err:Error, ...msg:any[])=>{
 	let e = {
 		name:err.name,
 		message:err.message,
 		stack:err.stack,
 		msg: msg
 	}
-	return new Error(JSON.stringify(e))
+	throw new Error(
+		JSON.stringify(e)
+	)
 }
 
 //PRAGMA table_info
@@ -62,12 +70,12 @@ export interface Sqlite_master{
 	sql:string
 }
 
-export class SqlToValuePair{
-	constructor(
-		public sql:string,
-		public values:any[][]
-	){}
-}
+// export class SqlToValuePair{
+// 	constructor(
+// 		public sql:string,
+// 		public values:any[][]
+// 	){}
+// }
 
 
 /**
@@ -77,6 +85,21 @@ export class SqlToValuePair{
  */
 export default class Sqlite{
 	private constructor(){}
+
+	static sqltVb = sqltVb
+
+	public static readonly openMode = {
+		CREATE : sqltVb.OPEN_CREATE // 不能只寫此、否則無讀ᵗ權
+		,READONLY :  sqltVb.OPEN_READONLY
+		,READWRITE: sqltVb.OPEN_READWRITE
+		,FULLMUTEX: sqltVb.OPEN_FULLMUTEX //確保同一時間只有一個連接可以寫入數據庫。
+		,SHAREDCACHE: sqltVb.OPEN_SHAREDCACHE //允許多個連接共享緩存。這樣可以提高性能，但要小心多個連接同時寫入數據庫可能會引起問題。
+		,PRIVATECACHE: sqltVb.OPEN_PRIVATECACHE //每個連接都有自己的緩存，不與其他連接共享。
+		,URI: sqltVb.OPEN_URI //設置這個選項可以讓數據庫支持 URI 文件名。
+
+		,DEFAULT: sqltVb.OPEN_READWRITE | sqltVb.OPEN_CREATE | sqltVb.OPEN_FULLMUTEX
+		,DEFAULT_CREATE : sqltVb.OPEN_READWRITE | sqltVb.OPEN_CREATE | sqltVb.OPEN_FULLMUTEX|sqltVb.OPEN_CREATE
+	}
 
 	public static readonly meta ={
 		querySqlite_master_unsafeInt:Sqlite.querySqlite_master_unsafeInt
@@ -123,18 +146,72 @@ export default class Sqlite{
 	}
 
 	/**
+	 * 封裝之 無回調ₐ new Database
+	 * 異步者也。
+	 * @param filePath 
+	 * @deprecated
+	 * @returns 
+	 */
+	public static newDatabaseAsync(filePath:string, mode?:number){
+		return new sqltVb.Database(filePath, mode, (err)=>{
+			if(err){
+				//throw err
+				throw sqlErr(err)
+			}
+		})
+	}
+
+	/**
+	 * 以promise封裝之 無回調ₐ new Database
+	 * @param filePath 
+	 * @param mode 
+	 * @returns 
+	 */
+	public static newDatabase(filePath:string, mode?:number){
+		return new Promise<sqlite3.Database>((res, rej)=>{
+			const db = new sqltVb.Database(filePath, mode, (err)=>{
+				if(err){
+					throw sqlErr(err)
+				}
+				res(db)
+			})
+		})
+	}
+
+	/**
 	 * 不用回調㕥処錯旹、縱已啓用verbose、抛錯旹亦無調用堆棧之訊。
+	 * 異步者也、會立即返Statement實例但若有錯則不會立即報錯
+	 * @param db 
+	 * @param sql 
+	 * @param params 
+	 * @deprecated
+	 * @returns 
+	 */
+	public static prepareAsync(db:Database, sql:string, params?:any){
+		return db.prepare(sql, params, (err)=>{
+			if(err){
+				//throw err
+				throw sqlErr(err)
+			}
+		})
+	}
+
+	/**
+	 * promise封裝的db.prepare
 	 * @param db 
 	 * @param sql 
 	 * @param params 
 	 * @returns 
 	 */
 	public static prepare(db:Database, sql:string, params?:any){
-		//<疑>{異步乎?若非異步則胡用回調㕥処錯?}
-		return db.prepare(sql, params, (err)=>{
-			if(err){
-				throw err
-			}
+		return new Promise<Statement>((res, rej)=>{
+			const stmt = db.prepare(sql, params, (err)=>{
+				if(err){
+					//throw err
+					throw sqlErr(err)
+				}
+				res(stmt)
+			})
 		})
 	}
 	
@@ -151,8 +228,8 @@ export default class Sqlite{
 				if(err){
 					//console.error(sql+'\n'+err+'\n');j(err);return
 					//j(sqlErr(err,sql));
-					j(err)
-					return;
+					//j(err)
+					throw sqlErr(err)
 					//throw new Error()
 					//throw sqlErr(err, sql)//t
 				}
@@ -173,7 +250,8 @@ export default class Sqlite{
 			db.run(sql, params, function(err){
 				if(err){
 					//console.error(sql+'\n'+err+'\n');j(err);return
-					j(err); return
+					//j(err); return
+					throw sqlErr(err)
 				}
 				s(this)
 			})
@@ -186,7 +264,10 @@ export default class Sqlite{
 	public static stmtAll<T>(stmt:Statement, params?:any){
 		return new Promise<[RunResult,T[]]>((res, rej)=>{
 			stmt.all<T>(params, function(err, rows){
-				if(err){rej(err);return}
+				if(err){
+					//rej(err);return
+					throw sqlErr(err)
+				}
 				const this_runResult = this
 				res([this_runResult,rows])
 			})
@@ -200,7 +281,10 @@ export default class Sqlite{
 		if(params !== void 0){
 			return new Promise<[RunResult,T|undefined]>((res, rej)=>{
 				stmt.get<T>(params, function(err, rows){
-					if(err){rej(err);return}
+					if(err){
+						//rej(err);return
+						throw sqlErr(err)
+					}
 					const this_runResult = this
 					res([this_runResult,rows])
 				})
@@ -209,7 +293,10 @@ export default class Sqlite{
 		else{
 			return new Promise<(T|undefined)>((res, rej)=>{
 				stmt.get<T>(function(err, rows){
-					if(err){rej(err);return}
+					if(err){
+						//rej(err);return
+						throw sqlErr(err)
+					}
 					res(rows)
 					//res([this_runResult,rows])
 				})
@@ -218,12 +305,20 @@ export default class Sqlite{
 
 	}
 
+	
 	public static stmtRun(stmt:Statement, params?:any){
 		return new Promise<RunResult>((res, rej)=>{
 			stmt.run(params, function(err){
 				if(err){
-					console.error(err)//t
-					rej(err);return
+					//rej(err);return
+					//console.log(new Error())//t
+					//console.error(err)
+					//console.log(`調用堆棧ᵗ訊ˋ泯`)
+					//似當錯潙 SQLITE_BUSY 旹 則 必無調用堆棧之訊
+					//throw err
+					//throw sqlErr(err)
+					//rej(sqlErr(err))
+					throw sqlErr(err)
 				}
 				const this_runResult = this
 				res(this_runResult)
@@ -232,14 +327,21 @@ export default class Sqlite{
 	}
 
 
+
 	public static async stream_readAll(db:Database, table:string){
 		const sql_selectAll = await Sqlite.getSql_SelectAllIntSafe(db, table)
-		const stmt = Sqlite.prepare(db, sql_selectAll)
+		const stmt = Sqlite.prepareAsync(db, sql_selectAll)
 		return Sqlite.readStream(stmt)
 	}
 
 
-
+	/**
+	 * 
+	 * @param stmt 
+	 * @param opts 
+	 * @deprecated
+	 * @returns 
+	 */
 	public static readStream(stmt:Statement, opts?:Stream.ReadableOptions){
 		const readStream = new Stream.Readable(opts)
 		if(opts!== void 0 &&'read' in opts){}
@@ -262,7 +364,7 @@ export default class Sqlite{
 
 	public static async getStmt_selectAllSafe(db:Database, table:string){
 		const sql = await Sqlite.getSql_SelectAllIntSafe(db, table)
-		const stmt = Sqlite.prepare(db, sql)
+		const stmt = await Sqlite.prepare(db, sql)
 		return stmt
 	}
 
@@ -277,7 +379,7 @@ export default class Sqlite{
 	 */
 	public static async getManyRows_transaction<T=any>(db:Database, table:string, amount:number){
 		const sql = await Sqlite.getSql_SelectAllIntSafe(db, table)
-		const stmt = Sqlite.prepare(db, sql)
+		const stmt = await Sqlite.prepare(db, sql)
 		return Sqlite.stmtGetRows_transaction<T>(db, stmt, amount)
 		// const fn=async()=>{
 		// 	const result:(T|undefined)[] = []
@@ -316,19 +418,6 @@ export default class Sqlite{
 		return fn
 	}
 
-	public static testWriteStream(stmt:Statement, params?:any, opts?:Stream.WritableOptions){
-		const readStream = new Stream.Writable(opts)
-		if(opts!== void 0 &&'write' in opts){}
-		else{
-			readStream._write = function(){
-				const this_write = this
-				stmt.run(params, function(err){
-					const this_runResult = this
-				})
-			}
-		}
-		return readStream
-	}
 
 	/**
 	 * 插入對象
@@ -340,9 +429,10 @@ export default class Sqlite{
 	 */
 	public static async dbInsertObjs(db:Database, table:string, objs:Object[], ignoredKeys?:string[]){
 		const [insertSql, ] = Sqlite.getSql_insert(table, objs[0], ignoredKeys)
-		const stmt = db.prepare(insertSql, function(err){
-			if(err){throw err}
-		})
+		// const stmt = db.prepare(insertSql, function(err){
+		// 	if(err){throw err}
+		// })
+		const stmt = await Sqlite.prepare(db, insertSql)
 		const runResults:RunResult[] =[]
 		for(const o of objs){
 			const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
@@ -354,9 +444,10 @@ export default class Sqlite{
 
 	public static async getStmt_insertObj(db:Database, table:string, objs:Object, ignoredKeys?:string[]){
 		const [insertSql, ] = Sqlite.getSql_insert(table, objs, ignoredKeys)
-		const stmt = db.prepare(insertSql, function(err){
-			if(err){throw err}
-		})
+		// const stmt = db.prepare(insertSql, function(err){
+		// 	if(err){throw err}
+		// })
+		const stmt = await Sqlite.prepare(db, insertSql)
 		return stmt
 	}
 
@@ -391,7 +482,7 @@ export default class Sqlite{
 		const fn = async()=>{
 			for(const o of objs){
 				const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
-				const runResult = await Sqlite.stmtRun(stmt, params)
+				const runResult = await Sqlite.stmtRun(stmt, params) //*
 				runResults.push(runResult)
 			}
 			return runResults
@@ -625,6 +716,7 @@ export default class Sqlite{
 	 * @param table 
 	 * @param column 
 	 * @param replacementPair 
+	 * @deprecated
 	 * @returns 
 	 */
 	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
@@ -689,7 +781,10 @@ export default class Sqlite{
 	 */
 	public static beginTransaction(db:Database){
 		db.run(`BEGIN TRANSACTION`, function(err){
-			if(err){throw err}
+			if(err){
+				//throw err
+				throw sqlErr(err)
+			}
 		})
 	}
 
@@ -699,7 +794,10 @@ export default class Sqlite{
 	 */
 	public static commit(db:Database){
 		db.run(`COMMIT`, function(err){
-			if(err){throw err}
+			if(err){
+				//throw err
+				throw sqlErr(err)
+			}
 		})
 	}
 
@@ -715,82 +813,82 @@ export default class Sqlite{
 	 * @instance
 	 * 
 	 */
-	public static async transaction_complex<T>(
-		db:Database,
-		//sqlToValuePairs:{sql:string, values:any[][]}[],
-		sqlToValuePairs:SqlToValuePair[],
-		method: 'each'|'run'
-	){
-		const result3D:T[][][] = []
-		const runResult3D: RunResult[][][] = []
-		return new Promise<[T[][][], RunResult[][][]]>((res,rej)=>{
-			db.serialize(()=>{
-				db.run('BEGIN TRANSACTION')
-				//<遍歷sql>
-				for(let i = 0; i < sqlToValuePairs.length; i++){
-					const curSql:string = sqlToValuePairs[i].sql;
-					const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
-					//[[1],[2],[3]]
-					if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
-					const result2D:T[][] = []
-					const runResult2D:RunResult[][] = []
-					const stmt = db.prepare(curSql, (err)=>{
-						if(err){rej((err));return}
-						const each = ()=>{
-							for(const value1D of value2D){
-								const result1D:T[] = []
-								const runResult1D:RunResult[] = []
-								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
-								stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
-									if(err){
-										console.error(value2D)//t
-										rej(sqlErr(err, curSql, value2D));return
-									}//<坑>{err對象中不帶行號與調用堆棧之訊}
-									result1D.push(row)
-									runResult1D.push(this)
-								})
-								result2D.push(result1D)
-								runResult2D.push(runResult1D)
-							}
-						}
-						const run = ()=>{
-							for(const value1D of value2D){
-								if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
-								const runResult1D:RunResult[] = []
-								stmt.run(value1D, function(this, err){
-									if(err){
-										console.error(`console.error(curSql)`)
-										console.error(curSql)//t
-										console.error(`console.error(curValue)`)
-										console.error(value2D)//t
-										rej(sqlErr(err, curSql, value2D));return
-									}
-										//innerResult.push(row)
-										runResult1D.push(this)
-								})
-								runResult2D.push(runResult1D)
-							}
+	// public static async transaction_complex<T>(
+	// 	db:Database,
+	// 	//sqlToValuePairs:{sql:string, values:any[][]}[],
+	// 	sqlToValuePairs:SqlToValuePair[],
+	// 	method: 'each'|'run'
+	// ){
+	// 	const result3D:T[][][] = []
+	// 	const runResult3D: RunResult[][][] = []
+	// 	return new Promise<[T[][][], RunResult[][][]]>((res,rej)=>{
+	// 		db.serialize(()=>{
+	// 			db.run('BEGIN TRANSACTION')
+	// 			//<遍歷sql>
+	// 			for(let i = 0; i < sqlToValuePairs.length; i++){
+	// 				const curSql:string = sqlToValuePairs[i].sql;
+	// 				const value2D:(any|undefined)[][] = sqlToValuePairs[i].values
+	// 				//[[1],[2],[3]]
+	// 				if(!Array.isArray(value2D)){throw new Error(`!Array.isArray(value2D)`)}
+	// 				const result2D:T[][] = []
+	// 				const runResult2D:RunResult[][] = []
+	// 				const stmt = db.prepare(curSql, (err)=>{
+	// 					if(err){rej((err));return}
+	// 					const each = ()=>{
+	// 						for(const value1D of value2D){
+	// 							const result1D:T[] = []
+	// 							const runResult1D:RunResult[] = []
+	// 							if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+	// 							stmt.each<T>(value1D, function(this, err, row:T){ // AI謂ˌ査無果旹不珩回調。
+	// 								if(err){
+	// 									console.error(value2D)//t
+	// 								rej(sqlErr(err, [curSql, value2D]));return
+	// 								}//<坑>{err對象中不帶行號與調用堆棧之訊}
+	// 								result1D.push(row)
+	// 								runResult1D.push(this)
+	// 							})
+	// 							result2D.push(result1D)
+	// 							runResult2D.push(runResult1D)
+	// 						}
+	// 					}
+	// 					const run = ()=>{
+	// 						for(const value1D of value2D){
+	// 							if(!Array.isArray(value1D)){throw new Error(`!Array.isArray(value1D)`)}
+	// 							const runResult1D:RunResult[] = []
+	// 							stmt.run(value1D, function(this, err){
+	// 								if(err){
+	// 									console.error(`console.error(curSql)`)
+	// 									console.error(curSql)//t
+	// 									console.error(`console.error(curValue)`)
+	// 									console.error(value2D)//t
+	// 									rej(sqlErr(err, [curSql, value2D]));return
+	// 								}
+	// 									//innerResult.push(row)
+	// 									runResult1D.push(this)
+	// 							})
+	// 							runResult2D.push(runResult1D)
+	// 						}
 							
-						}
-						switch(method){
-							case 'each': each(); break;
-							case 'run': run(); break;
-							default: rej('unmatched method')
-						}
-					})
-					result3D.push(result2D)
-					runResult3D.push(runResult2D)
-				}
-				//</遍歷sql>
-				db.run('COMMIT', function(err){
-					if(err){
-						rej(sqlErr(err, sqlToValuePairs));return
-					}
-					res([result3D,runResult3D])
-				})
-			})
-		})
-	}
+	// 					}
+	// 					switch(method){
+	// 						case 'each': each(); break;
+	// 						case 'run': run(); break;
+	// 						default: rej('unmatched method')
+	// 					}
+	// 				})
+	// 				result3D.push(result2D)
+	// 				runResult3D.push(runResult2D)
+	// 			}
+	// 			//</遍歷sql>
+	// 			db.run('COMMIT', function(err){
+	// 				if(err){
+	// 					rej(sqlErr(err, sqlToValuePairs));return
+	// 				}
+	// 				res([result3D,runResult3D])
+	// 			})
+	// 		})
+	// 	})
+	// }
 
 
 	/**
@@ -1000,12 +1098,8 @@ FROM '${tableName}';`
 	 * @returns 
 	 */
 	public static async copyTableStructureCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
-		
 		const fn_creatSql = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(srcDb, srcTable)
 		const creatSql = fn_creatSql(neoName)
-		//console.log(neoName)//t
-		//console.log(creatSql)//t
-		//console.log(fn_creatSql('114514'))
 		return Sqlite.all(targetDb, creatSql)
 	}
 
@@ -1036,8 +1130,8 @@ FROM '${tableName}';`
 			values.push(v)
 		}
 
-		const stmt_select = Sqlite.prepare(srcDb, selectAll_safe)
-		const stmt_insert = Sqlite.prepare(targetDb, insertSql)
+		const stmt_select = await Sqlite.prepare(srcDb, selectAll_safe)
+		const stmt_insert = await Sqlite.prepare(targetDb, insertSql)
 
 		const fn = async()=>{
 			for(const v of values){
@@ -1061,18 +1155,23 @@ FROM '${tableName}';`
 	 * @param batchAmount 每批ᵗ行數、默認8192
 	 */
 	public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable, batchAmount=8192){
+		
 		await Sqlite.copyTableStructureCrossDb(srcDb, srcTable, targetDb, neoName)
+		//console.log('modor')
+		//return //t
 		const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
 		const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, firstRow)
-		const stmt_get = Sqlite.prepare(srcDb, await Sqlite.sql.getSql_SelectAllIntSafe(srcDb, srcTable))
+		const sql = await Sqlite.sql.getSql_SelectAllIntSafe(srcDb, srcTable)
+		//console.log(sql)//t 如sql謬則有調用堆棧
+		const stmt_get = await Sqlite.prepare(srcDb, sql)
 		// 注意 事務不能嵌套
 		// srcDb 和targetDb不是同一個db、不能放在同一個transaction裏
 
 		for(let i = 0;;i++){
-			//console.log(i)//t
+			
 			process.stdout.write(`\r${i}`)
 			const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
-			await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows)
+			await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
 			if(rows.length !== batchAmount){break}
 		}
 		//const getRowFn = Sqlite.stmtGetRows_fn(stmt_get, batchAmount)
@@ -1263,7 +1362,7 @@ FROM '${tableName}';`
 		//const vs = values.map(e=>[e])
 
 		const sql = `SELECT * FROM '${table}' WHERE ${column}=?`
-		const stmt = Sqlite.prepare(db, sql)
+		const stmt = await Sqlite.prepare(db, sql)
 		const fn=async()=>{
 			const result:T[][] = []
 			for(const v of values){
@@ -1334,22 +1433,6 @@ FROM '${tableName}';`
 		const sql = `SELECT ${part} FROM '${table}'`
 		return sql
 	}
-
-	// public static async qryById<T>(db:Database, table:string, id:number|number[], idColumnName='id'){
-	// 	const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
-	// 	async function porUnus(id:number){
-	// 		const pair = {sql:sql, values:[[id]]}
-	// 		const r = await Sqlite.transaction(db, [pair], 'each')
-	// 		return r[0]
-	// 	}
-	// 	let ids:number[] = []
-	// 	if(typeof id === 'number'){ids=[id]}
-	// 	else{ids=id}
-		
-	// 	const pair = {sql:sql, values:[ids]}
-	// 	const r = await Sqlite.transaction<T>(db, [pair], 'each')
-	// 	return r[0]
-	// }
 
 }
 

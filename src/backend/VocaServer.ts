@@ -6,27 +6,24 @@
 
 //require('tsconfig-paths/register');
 require('module-alias/register');
-//import VocaRaw from "./VocaRaw";//導包之後會立即執行某語句?
 import VocaSqlite from "./VocaSqlite";
-//import Util from "../../shared/Util";
-//import Ut from "Ut"
-//const moment = require('moment')
-
 //const cors = require('cors')
 //const express = require('express')
 import express, { raw, Request, Response } from 'express'
 import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser'
 import path from "path";
-import dayjs from "dayjs";
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, fileToBase64, measurePromiseTime } from "@shared/Ut";
+import { $, delay, fileToBase64, measurePromiseTime } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
+import Sqlite from "@shared/db/Sqlite";
+
+Error.stackTraceLimit = 99
 const config = Config.getInstance()
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
@@ -72,14 +69,16 @@ jap.tableName = 'jap'*/
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
-	public static sqlt = new VocaSqlite({})
+	public static sqlt = VocaSqlite.new({})
 	public static sqltDbObj = VocaServer.sqlt.db
 	public static session
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
-
+		// console.log(114514)//t
+		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
+		// console.log(514114)
 		let ri :RandomImg|undefined = undefined
 		try{
 			ri = await RandomImg.konstructor(dirs)
@@ -145,7 +144,7 @@ export default class VocaServer{
 			
 			let path = req.path
 			console.log('path:'+path)//t
-			let eng = new VocaSqlite({_tableName:'english'})
+			let eng = VocaSqlite.new({_tableName:'english'})
 			let words = await eng.getAllWords()
 			//console.log(words)
 			//console.log(JSON.stringify(words))
@@ -157,7 +156,7 @@ export default class VocaServer{
 		this.app.get('/japanese', async (req,res)=>{
 			let path = req.path
 			console.log('path:'+path)//t
-			let sqlt = new VocaSqlite({_tableName:'japanese'})
+			let sqlt = VocaSqlite.new({_tableName:'japanese'})
 			let words = await sqlt.getAllWords()
 			res.setHeader('content-type','text/html;charset=utf-8')
 			res.end(JSON.stringify(words))
@@ -172,26 +171,26 @@ export default class VocaServer{
 		}) */
 
 
-		VocaServer.app.post('/post', (req, res)=>{
-			console.log(req.body)
-			VocaRaw.updateDb(req.body)
-			//VocaRaw.updateDb(JSON.parse(req.body))
-			const timeNow = dayjs().format(`YYYY.MM.DD-HH:mm:ss`)
-			res.send('成功接收到数据'+timeNow)
-		})
+		// VocaServer.app.post('/post', (req, res)=>{
+		// 	console.log(req.body)
+		// 	VocaRaw.updateDb(req.body)
+		// 	//VocaRaw.updateDb(JSON.parse(req.body))
+		// 	const timeNow = Tempus.new().iso
+		// 	res.send('成功接收到数据'+timeNow)
+		// })
 
 		VocaServer.app.post('/saveWords',(req,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			//console.log(req.body)
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:SingleWord2[] = SingleWord2.parse(req.body as IVocaRow[])
 			VocaSqlite.saveWords(this.sqltDbObj, sws)
-			res.send('receive successfully'+nunc.time)
+			res.send('receive successfully'+nunc.iso)
 		})
 
 		VocaServer.app.post('/addWords',async (req,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			//console.log(req.body)
 			//let rows:IVocaRow[] = JSON.parse(req.body)
@@ -199,29 +198,39 @@ export default class VocaServer{
 			//const [rows, config] = req.body
 			try{
 				const rows:IVocaRow[] = $(req.body[0])
-				const config:VocaRawConfig = $(req.body[1])
+				const config2:VocaRawConfig = $(req.body[1])
 				const sws = SingleWord2.parse(rows)
 				//console.log(sws[0])//t
-				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
+				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
+				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
+				//console.log(1)//t
+				const backupDb = VocaSqlite.new({
+						_dbPath:config.config.backupDbPath
+						, mode:Sqlite.openMode.DEFAULT_CREATE
+				})
+				//console.log(2)//t
+				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table, backupDb.db) //* 無調用堆棧
+				//throw new Error('mis')
+				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
+				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
+				//console.log(3)//t *
 				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqltDbObj, sws)
-				
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
 				const addedWords_init:string[] = await VocaSqlite.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, init)
 				const addedWords_modified:string[] = await VocaSqlite.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
-				res.send(addedWords+'\nreceive successfully\n'+Tempus.format(nunc)) //t
+				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){
+				console.log(`console.error(e)`)//t
 				console.error(e)
-				//console.log(114514)
 				res.send('add failed\n'+Tempus.format(nunc)) //t
 			}
-
 		})
 
 		VocaServer.app.post('/backupAll',async (req,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
 				await this.sqlt.backAllTables()
@@ -233,7 +242,7 @@ export default class VocaServer{
 		})
 
 		VocaServer.app.post('/backup',async (req,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
 				const tableName:string = $((req.body).tableName)
@@ -246,7 +255,7 @@ export default class VocaServer{
 		})
 
 		VocaServer.app.post('/creatTable',async (req,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
 				const tableName:string = $((req.body).tableName)
@@ -259,14 +268,14 @@ export default class VocaServer{
 		})
 
 		// VocaServer.app.get('/login',async (req:MyReq,res)=>{
-		// 	const nunc = new Tempus()
+		// 	const nunc = Tempus.new()
 		// 	console.log(req.path+' '+Tempus.format(nunc))
 		// 	res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
 		// })
 
 
 		VocaServer.app.post('/user/login',async (req:MyReq,res)=>{
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			console.log(req.body)
 			console.log(req.body.username)
@@ -282,7 +291,7 @@ export default class VocaServer{
 
 		VocaServer.app.post('/randomImg', async (req,res)=>{
 			if(!ri){return}
-			const nunc = new Tempus()
+			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			//res.sendFile(ri.oneRandomFile())
 			const path = ri.oneRandomFile()
@@ -325,4 +334,3 @@ export default class VocaServer{
 	}
 	
 }
-//VocaServer.main()

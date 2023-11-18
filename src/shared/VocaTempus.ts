@@ -6,14 +6,38 @@ import { $ } from "./Ut";
 export class Db_VocaTempus{
 	public constructor(
 		public id				:number
-		,public unix_time		:bigint //int64 ? 如何取
+		//要不要加Tempus?
+		,public unix_time		:string //int64
 		,public table			:string
 		,public word_id			:number
+		,public event			:string
 	){}
+	static readonly id = `id`
+	static readonly unix_time = `unix_time`
+	static readonly table = `table`
+	static readonly word_id = `word_id`
+	static readonly event = `event`
 }
 
+/**
+ * 統計。主ᵈ考察時間與事件。
+ */
 export default class VocaTempus{
-	public constructor(
+
+	/**
+	 * 㕥代構造函數、蔿方便此類增減字段。
+	 */
+	public static VocaTempus(
+		tempus:Tempus,
+		table:string,
+		id:number,
+		event: string
+	){
+		let o = new this(tempus, table, id, event)
+		return o
+	}
+	
+	private constructor(
 		public tempus:Tempus,
 		public table:string,
 		public id:number,
@@ -21,7 +45,7 @@ export default class VocaTempus{
 		 * 必潙 @see VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt 三者之一
 		 */
 		public event: string
-	){}
+	){} // what is this constructor for?
 
 	public static checkEvent(events:string[]){
 		for(const event of events){
@@ -30,7 +54,7 @@ export default class VocaTempus{
 		}
 	}
 
-	public static parse(singleWord2s:SingleWord2[]){
+	public static analyse(singleWord2s:SingleWord2[]){
 		const result:VocaTempus[] = []
 
 		function add(sw:SingleWord2){
@@ -96,8 +120,20 @@ export default class VocaTempus{
 		})
 	}
 
-	public static groupByDay(){
-
+	public static groupByDay(insts:VocaTempus[]){
+		const day__vocaTempus = new Map<string, VocaTempus[]>()
+		for(const u of insts){
+			let tempus = u.tempus.iso
+			tempus = tempus.replace(/^(.*)T(.*)$/g, '$1') //2023-11-17T00:05:25.000Z -> 2023-11-17
+			const v = day__vocaTempus.get(tempus)
+			if(v == void 0){
+				day__vocaTempus.set(tempus, [u])
+			}else{
+				v.push(u)
+				day__vocaTempus.set(tempus, v)
+			}
+		}
+		return day__vocaTempus
 	}
 
 }
