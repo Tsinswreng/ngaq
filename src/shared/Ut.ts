@@ -7,6 +7,9 @@ import now from 'performance-now';
 import _, { last } from 'lodash'
 import dayjs from 'dayjs';
 import * as readline from 'readline'
+import { Sros } from './Sros';
+import util from 'util'
+import * as ts from 'typescript'
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
@@ -18,7 +21,20 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
-const util = require('util');
+
+export function compileTs(tsCode:string, compilerOptions:ts.CompilerOptions){
+	const result = ts.transpileModule(tsCode, {compilerOptions:compilerOptions})
+	//const result = ts.transpile(tsCode, tsconfig)
+	if (result.diagnostics && result.diagnostics.length > 0) {
+		throw new Error(ts.formatDiagnostics(result.diagnostics, {
+		  getCanonicalFileName: (fileName) => fileName,
+		  getCurrentDirectory: ts.sys.getCurrentDirectory,
+		  getNewLine: () => ts.sys.newLine,
+		}));
+	  }
+	
+	  return result.outputText;
+}
 
 /**
  * 這是sqlite3庫 trace.js裏的代碼、偷過來研究
@@ -70,14 +86,6 @@ function filter(error) {
 		return line.indexOf(__filename) < 0;
 	});
 }
-
-
-
-
-
-
-
-
 
 
 /**
@@ -456,9 +464,30 @@ export function deprecated_simpleRandomArr(min:number, max:number, howMany:numbe
 //TODO
 // }
 
+export function createReadLineInterface(){
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+	return rl
+}
 
+export function readLine(rl:readline.Interface, query=''){
+	return new Promise<string>((res,rej)=>{
+		rl.question(query, (answer)=>{
+			//rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
+			res(answer)
+		})
+	})
+}
 
-export function readLine(query:string=''){
+/**
+ * 多次調用則病
+ * @param query 
+ * @returns 
+ * @deprecated
+ */
+export function readLine_deprecated(query:string=''){
 	const rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
@@ -489,25 +518,25 @@ export function copyIgnoringKeys(obj:Object, ignoredKeys?:string[]){
 
 
 
-export function add(a:number, b:number){
-	return a+b
-}
+// export function add(a:number, b:number){
+// 	return a+b
+// }
 
-export function sub(a:number, b:number){
-	return a-b
-}
+// export function sub(a:number, b:number){
+// 	return a-b
+// }
 
-export function mul(a:number, b:number){
-	return a*b
-}
+// export function mul(a:number, b:number){
+// 	return a*b
+// }
 
-export function div(a:number, b:number){
-	return a / b
-}
+// export function div(a:number, b:number){
+// 	return a / b
+// }
 
-export function eq(a:number, b:number){
-	return a === b
-}
+// export function eq(a:number, b:number){
+// 	return a === b
+// }
 
 // export function bigger(a:number, b:number){
 
@@ -533,8 +562,8 @@ export function lastOf<T>(arr:T[]|string):T|string{
 export function $n(v:number, errMsg?:string){
 	//if(isNaN(v)){throw toThrow}
 	//if(!isFinite(v)){throw toThrow}
-	if(typeof v !== 'number'){throw new Error(errMsg)}
-	if(isNaN(v)){throw new Error(errMsg)}
+	// if(typeof v !== 'number'){throw new Error(errMsg)}
+	// // if(isNaN(v)){throw new Error(errMsg)}
 	if(!isFinite(v)){throw new Error(errMsg)}
 	return v
 }

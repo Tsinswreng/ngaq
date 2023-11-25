@@ -103,7 +103,7 @@ export default class Recite{
 	 */
 	public static calcAndDescSortPriority(wbs:WordB[],config?:Partial<typeof Priority.defaultConfig>){
 		for(const w of wbs){
-			if(w.priority.procedures.length === 0){
+			if(w.priority.changeRecord.length === 0){
 				//w.priority.config.debuffNumerator = 
 				if(config !== void 0){w.priority.setConfig(config) }
 				w.calcPrio()
@@ -119,7 +119,7 @@ export default class Recite{
 	 * @param wb 
 	 */
 	public static sortBylastRvwDate(wb:WordB[]){
-		const nunc = new Tempus()
+		const nunc = Tempus.new()
 		function lastTempus(w:WordB){return lastOf(w.sortedTempus_eventInsts).tempus}
 		//function millsToNow(t:Tempus){return Tempus.diff_mills(nunc, t)}
 		
@@ -175,7 +175,7 @@ export default class Recite{
 		//console.log(`console.log(event)`)
 		//console.log(event)//t
 		this.isSaved = false
-		const nunc = new Tempus()
+		const nunc = Tempus.new()
 
 		const rmb = ()=>{
 			wb.neoDates_rmb.push(nunc)

@@ -8,37 +8,25 @@ import _ from 'lodash';
 
 
 export interface VocaRawConfig{
-	dbName:string,
-	dbPath:string,
-	tableName:string,
-	dateFormat:string,
-	dateRegex:string
-	dateBlock: [string, string]
-	wordBlock: [string, string]
-	annotation: [string, string]
+	dbName:string, //數據庫的名稱、暫未啓用
+	dbPath:string, //數據庫的路徑、暫未啓用
+	tableName:string, // 表名、必填、即使不填使用默認值(空字串)也會報錯
+	dateFormat:string, //日期格式 
+	dateRegex:string, //用來匹配日期的正則表達式、不準有捕獲組
+	dateBlock: [string, string], // 日期塊起始和結束的字符標記
+	wordBlock: [string, string], // 有空行單詞塊起始和結束的字符標記
+	annotation: [string, string], // 用戶批註(不是註釋)的起始和結束的字符標記
 }
 
 export const config:VocaRawConfig = {
 	dbName:"voca",
 	dbPath:"",
 	tableName: '',
-	//url:"http://127.0.0.1:1919",
 	dateFormat:'YYYY-MM-DDTHH:mm:ss.SSSZ',
-	dateRegex: '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\+08:00', //勿寫^...$
+	dateRegex: (/\d{4}\-\d{2}\-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}(?:Z|\+\d{2}:\d{2})/g).source, //勿寫^...$ <坑>{此處ᵗ日期正則ˋ不得有捕獲組}
 	dateBlock: ['\\{','\\}'],
 	wordBlock: ['\\[{2}','\\]{2}'],
 	annotation: ['<<','>>'],
-	// txtTables: 
-	// [
-	// 	{
-	// 		ling:"english",
-	// 		path:".\\srcWordList\\eng\\eng.voca"
-	// 	},
-	// 	{
-	// 		ling:"japanese",
-	// 		path:".\\srcWordList\\jap\\jap[20230515112439,].txt"
-	// 	}
-	// ]
 }
 
 
@@ -191,9 +179,16 @@ export default class VocaRaw2{
 	 * @returns 
 	 */
 	private getDateBlocks(text:string){
-		let dateBlock:[string, string]=this.config.dateBlock, dateRegex:string=this.config.dateRegex
+		let dateBlock:[string, string]=this.config.dateBlock, dateRegex=this.config.dateRegex
 		const regex = new RegExp(`(${dateRegex}\\s*?${dateBlock[0]}.*?${dateBlock[1]})`, 'gs')
 		const matches = text.match(regex)
+
+		// console.log(`console.log(matches)`)
+		// console.log(matches)//t
+		// console.log(`console.log(regex)`)
+		// console.log(regex)//t
+		// console.log(`console.log(matches?.length)`)
+		// console.log(matches?.length)
 		if(!matches){return [] as string[]}
 		//全局模式旹matches[0]代表第一個捕獲組
 		return matches as string[]
@@ -205,7 +200,7 @@ export default class VocaRaw2{
 	 * @returns 
 	 */
 	private getRawDateInDateBlock(dateBlock:string){
-		let dateRegex:string=this.config.dateRegex
+		let dateRegex=this.config.dateRegex
 		dateBlock=dateBlock.trim()
 		const regex = new RegExp(`\\s*?(${dateRegex})`) //不開全局模式
 		let match = dateBlock.match(regex)
@@ -224,11 +219,16 @@ export default class VocaRaw2{
 		let dateBlock:[string, string]=this.config.dateBlock, dateRegex:string=this.config.dateRegex,wordBlock:[string, string]=this.config.wordBlock
 		dateBlockStr = dateBlockStr.trim()
 		//let date = VocaRaw2.getRawDateInDateBlock(dateBlock)
-
+		//console.log(`console.log(dateBlockStr)`)
+		//console.log(dateBlockStr)//t
 		//除 日期 與 dateBlock、只取其內ᐪ。
 		const inner = new RegExp(`${dateRegex}\\s*?${dateBlock[0]}(.+?)${dateBlock[1]}`, 'gs')
+		console.log(`console.log(inner)`)
+		console.log(inner)//t
 		dateBlockStr = dateBlockStr.replace(inner, '$1')
 		dateBlockStr = dateBlockStr.trim()
+		//console.log(`console.log(dateBlockStr)`)
+		//console.log(dateBlockStr)//t
 		let wordUnits:string[] = []
 
 		let s = getMarkedWordBlock(dateBlockStr); wordUnits.push(...s)
@@ -372,8 +372,13 @@ export default class VocaRaw2{
 	private getWordsInDateBlock(dateBlock:string, table:string){
 		let config = this.config
 		let rawDate = this.getRawDateInDateBlock(dateBlock)
+		// console.log(`console.log(rawDate)`)
+		// console.log(rawDate)//t
 		let tempus:Tempus = this.parseRawDate(rawDate,config.dateFormat)
-		let wordUnits = this.getWordUnitsInDateBlock(dateBlock)
+		//console.log(tempus)
+		let wordUnits = this.getWordUnitsInDateBlock(dateBlock) // -
+		//console.log(`console.log(wordUnits)`)
+		//console.log(wordUnits)//t
 		const words:SingleWord2[] = []
 		for(const e of wordUnits){
 			const word = this.getWordInWordUnit(e, tempus,table)
@@ -397,7 +402,7 @@ export default class VocaRaw2{
 	} */
 
 	private static parseRawDate(oldDate:string, oldFormat:string){
-		let d = new Tempus(oldDate, oldFormat)
+		let d = Tempus.new(oldDate, oldFormat)
 		return d
 	}private parseRawDate(oldDate:string, oldFormat:string){
 		return VocaRaw2.parseRawDate(oldDate, oldFormat)

@@ -67,7 +67,7 @@ export default class VocaSqlite{
 		}
 	){
 		const o = new this()
-		Object.assign(this, props)
+		Object.assign(o, props)
 		if(props._dbPath !== void 0){
 			o._db = Sqlite.newDatabaseAsync(props._dbPath, props.mode)
 		}
@@ -79,20 +79,10 @@ export default class VocaSqlite{
 
 	private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
 	;public get dbPath(){return this._dbPath;};
-	// ;public set dbPath(v){
-	// 	this._dbPath=v;
-	// 	this._db = new sqlt.Database(pathAt(this.dbPath), (err)=>{
-	// 		if(err){throw err}
-	// 	})
-	// };
 
 	private _tableName?:string 
-	;public get tableName(){return this._tableName;};;public set tableName(v){this._tableName=v;};
+	;get tableName(){return this._tableName;};;set tableName(v){this._tableName=v;};
 
-
-	// private _db:Database = new sqlt.Database(pathAt(this.dbPath), (err)=>{
-	// 	if(err){throw err}
-	// })
 	private _db = Sqlite.newDatabaseAsync(this.dbPath)
 	;public get db(){return this._db;};
 

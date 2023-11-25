@@ -9,7 +9,12 @@
  */
 export function alertEtThrow(msg?:any){
 	alert(msg)
-	throw new Error(msg)
+	if(typeof msg === 'string'){
+		throw new Error(msg)
+	}else{
+		throw msg
+	}
+
 }
 
 export function alert(msg?:any){

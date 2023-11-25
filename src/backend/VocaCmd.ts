@@ -4,14 +4,14 @@ import VocaMysql from "./VocaMysql";
 import VocaRaw2 from "@shared/VocaRaw2";
 import VocaSqlite from "./VocaSqlite";
 import Log from "@shared/Log";
-import { readLine } from "@shared/Ut";
+import { readLine_deprecated } from "@shared/Ut";
 const l = new Log()
 
 export default class VocaCmd{
 
 
 	public static async addWords(){
-		const inputStr = await readLine(`Please input the path of your words table`)
+		const inputStr = await readLine_deprecated(`Please input the path of your words table`)
 
 	}
 	

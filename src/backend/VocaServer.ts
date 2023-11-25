@@ -16,13 +16,14 @@ import path from "path";
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, delay, fileToBase64, measurePromiseTime } from "@shared/Ut";
+import { $, compileTs, delay, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import { VocaRawConfig } from "@shared/VocaRaw2";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
 import Sqlite from "@shared/db/Sqlite";
-
+import json5 from 'json5'
+import * as fs from 'fs'
 Error.stackTraceLimit = 99
 const config = Config.getInstance()
 //const bodyParser = require('body-parser')
@@ -142,14 +143,20 @@ export default class VocaServer{
 		// })
 		this.app.get('/english', async (req,res)=>{
 			
-			let path = req.path
-			console.log('path:'+path)//t
-			let eng = VocaSqlite.new({_tableName:'english'})
-			let words = await eng.getAllWords()
-			//console.log(words)
-			//console.log(JSON.stringify(words))
-			res.setHeader('content-type','text/html;charset=utf-8')
-			res.end(JSON.stringify(words))
+			try {
+				let path = req.path
+				console.log('path:'+path)//t
+				let eng = VocaSqlite.new({_tableName:'english'})
+				//console.log(eng.tableName)//t *
+				let words = await eng.getAllWords()
+				//console.log(words)
+				//console.log(JSON.stringify(words))
+				res.setHeader('content-type','text/html;charset=utf-8')
+				res.end(JSON.stringify(words))
+			} catch (error) {
+				const err = error as Error
+				console.error(err)
+			}
 			
 		})
 		
@@ -264,6 +271,27 @@ export default class VocaServer{
 			}catch(e){
 				console.error(e)
 				res.send('creat table failed\n'+Tempus.format(nunc)) //t
+			}
+		})
+
+		VocaServer.app.post('/compileTs', async(req, res)=>{
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			try {
+				//const [tsCode, tsconfigStr] = req.body
+				const body = JSON.parse(req.body)
+				const tsCode:string = $( body[0] )
+				const tsconfig0_str:string = $( body[1] )
+				const tsconfig1_str = await fs.promises.readFile('./tsconfig.json', 'utf-8')
+				const tsconfig0 = json5.parse(tsconfig0_str)
+				const tsconfig1 = json5.parse(tsconfig1_str)
+				const tsconfig:any = lodashMerge({}, tsconfig1, tsconfig0)
+				const jsCode = compileTs(tsCode, tsconfig.compilerOptions)
+				res.send(jsCode)
+			} catch (error) {
+				const err = error as Error
+				console.error(err)
+				res.send(Tempus.format(nunc)+'\n'+err.message)
 			}
 		})
 

@@ -63,6 +63,7 @@ async function test(){
 	</div>
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">
+		{{ VocaClient.baseUrl }}
 		<div v-for="(e, i) in recite.allWordsToLearn">
 			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>

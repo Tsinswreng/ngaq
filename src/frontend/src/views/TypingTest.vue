@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import D3Chart from "@views/光電效應/D3Chart.vue";
+
 
 </script>
 
 <template>
 	<div class="root">
-		<D3Chart/>
+		
 	</div>
 
 	

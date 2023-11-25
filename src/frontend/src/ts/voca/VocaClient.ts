@@ -4,15 +4,25 @@ import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
 //import Config from '@shared/Config'
 //const config = Config.getInstance()
+// 此處用單例模式更佳抑靜態類更佳?
 export default class VocaClient{
 	private static _instance?:VocaClient
-	public static readonly baseUrl = window.location.origin //`http://127.0.0.1:${config.config.port}`
+	public static baseUrl = localStorage.getItem('baseUrl')??window.location.origin //`http://127.0.0.1:${config.config.port}`
 	private constructor(){}
 	public static getInstance(){
 		if(VocaClient._instance === undefined){
 			VocaClient._instance = new VocaClient()
 		}
 		return VocaClient._instance
+	}
+
+	/**
+	 * 便于在dev模式調試
+	 * @param baseUrl 
+	 */
+	public static set_baseUrl(baseUrl:string){
+		VocaClient.baseUrl = baseUrl
+		localStorage.setItem('baseUrl', baseUrl)
 	}
 
 	public static async fetchRandomImg(){
@@ -30,7 +40,7 @@ export default class VocaClient{
 			const result:[string, string] = await res.json()
 			//console.log(result[1].slice(0,999))
 			return result
-		}catch(e){console.error(e);}
+		}catch(e){alertEtThrow(e);}
 	}
 
 	public static async fetchWords(path:string):Promise<SingleWord2[] | undefined>{
@@ -82,7 +92,7 @@ export default class VocaClient{
 			//return data
 			// 在这里处理后端响应的数据
 		} catch (error) {
-			console.error('发生错误：', error);
+			alertEtThrow(error);
 			// 在这里处理错误情况
 		}
 	}
@@ -114,7 +124,7 @@ export default class VocaClient{
 			//return data
 			// 在这里处理后端响应的数据
 		} catch (error) {
-			console.error('发生错误：', error);
+			alertEtThrow(error);
 			// 在这里处理错误情况
 		}
 	}
@@ -144,7 +154,7 @@ export default class VocaClient{
 			//return data
 			// 在这里处理后端响应的数据
 		} catch (error) {
-			console.error('发生错误：', error);
+			alertEtThrow(error);
 			// 在这里处理错误情况
 		}
 	}
@@ -176,8 +186,31 @@ export default class VocaClient{
 			//return data
 			// 在这里处理后端响应的数据
 		} catch (error) {
-			console.error('发生错误：', error);
+			alertEtThrow(error);
 			// 在这里处理错误情况
+		}
+	}
+
+	public static async compileTs(tsCode:string, tsconfig?:string){
+		try {
+			const url = new URL('/compileTs', this.baseUrl)
+			const requestOptions: RequestInit = {
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+				},
+				body: JSON.stringify(
+					[tsCode, tsconfig]
+				), // 将数据对象转换为 JSON 字符串
+			};
+			const resp = await fetch(url, requestOptions)
+			if(!resp.ok){
+				throw new Error(`!resp.ok`)
+			}
+			return await resp.text()
+			
+		} catch (error) {
+			alertEtThrow(error)
 		}
 	}
 

@@ -2,11 +2,15 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, $n, div, lastOf, lodashMerge, mapToObjArr, mul, simpleUnion } from '@shared/Ut';
+import { $, lastOf, lodashMerge, mapToObjArr, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
-
+import { Sros, Sros_big, Sros_number } from '@shared/Sros';
+//const sros = Sros.new<Sros_number>()
+const sros = Sros.new()
+const s = sros.short
+const $n = Sros.toNumber
 const l = new Log()
 const Ut = {
 	union : simpleUnion
@@ -242,12 +246,13 @@ export default class SingleWord2{
 
 	public static fieldStringfy(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
-			const r:IVocaRow[] = []
-			for(const e of sw){
-				const p = soloFieldStringfy(e)
-				r.push(p)
-			}
-			return r
+			// const r:IVocaRow[] = []
+			// for(const e of sw){
+			// 	const p = soloFieldStringfy(e)
+			// 	r.push(p)
+			// }
+			// return r
+			return sw.map(e=>soloFieldStringfy(e))
 		}else{
 			return soloFieldStringfy(sw)
 		}
@@ -277,11 +282,11 @@ export default class SingleWord2{
 			return result
 	
 			function stringfyDateArr(dates:Tempus[]){
-				let strArr:string[] = []
-				for(const d of dates){
-					let t = Tempus.toISO8601(d)
-					strArr.push(t)
-				}
+				let strArr:string[] = dates.map(e=>Tempus.toISO8601(e))
+				// for(const d of dates){
+				// 	let t = Tempus.toISO8601(d)
+				// 	strArr.push(t)
+				// }
 				return JSON.stringify(strArr)
 			}
 	
@@ -303,12 +308,13 @@ export default class SingleWord2{
 
 	public static parse(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
-			const r:SingleWord2[] = []
-			for(const e of obj){
-				const p = soloParse(e)
-				r.push(p)
-			}
-			return r
+			// const r:SingleWord2[] = []
+			// for(const e of obj){
+			// 	const p = soloParse(e)
+			// 	r.push(p)
+			// }
+			// return r
+			return obj.map(e=>soloParse(e))
 		}else{
 			return soloParse(obj)
 		}
@@ -333,20 +339,23 @@ export default class SingleWord2{
 				return sw
 	
 				function parseDateJson(datesStr:string){
-					let strArr = JSON.parse(datesStr)
-					const dates:Tempus[] = []
-					for(const s of strArr){
-						let d = Tempus.new(s)
-						dates.push(d)
+					let strArr:string[] = JSON.parse(datesStr)
+					if(!Array.isArray(strArr)){
+						throw new TypeError(`!Array.isArray(strArr)`)
 					}
-					return dates
+					// const dates:Tempus[] = []
+					// for(const s of strArr){
+					// 	let d = Tempus.new(s)
+					// 	dates.push(d)
+					// }
+					return strArr.map(e=>Tempus.new(e))
 				}
 	
 			}catch(e){
 				console.error(`console.error(obj)`);console.error(obj);console.error(`/console.error(obj)`)
 				console.error(`console.error(e)`);console.error(e);console.error(`/console.error(e)`)
 			}
-			throw new Error()
+			throw new Error() //怎麼寫在外面
 			
 		}
 
@@ -453,9 +462,6 @@ export default class SingleWord2{
 
 		return JSON.stringify(c1) === JSON.stringify(c2)
 	}
-
-
-
 
 	/**
 	 * 
@@ -569,7 +575,7 @@ class Tempus_Event{
 /**
  * 㕥錄權重ˇ算ᵗ程
  */
-class Procedure{
+class ChangeRecord{
 
 	//public constructor()
 	//public constructor(_tempus_event:Tempus_Event, after:number)
@@ -603,6 +609,8 @@ class Procedure{
  */
 export class Priority{
 
+	//static sros = Sros.new<Sros_number>({number:'number'})
+
 	public static defaultConfig = {
 		//默認ᵗ 添ᵗ權重
 		addWeight : 0x100, 
@@ -621,14 +629,18 @@ export class Priority{
 	// 	this._config=lodashMerge({}, Priority.defaultConfig, v);
 	// };
 
-	private _procedures:Procedure[] = []
-	;public get procedures(){return this._procedures;};;public set procedures(v){this._procedures=v;};
+	private _changeRecord:ChangeRecord[] = []
+	get changeRecord(){return this._changeRecord;}; 
+	set changeRecord(v){this._changeRecord=v;};
+
+	private _procedure:Function[] = [] //
+	get procedure(){return this._procedure}
 
 	/**
 	 * 初權重
 	 * @see lastOf(this.procedures)?.after??-1
 	 */
-	public get prio0num(){return lastOf(this.procedures)?.after??-1}
+	public get prio0num(){return lastOf(this.changeRecord)?.after??-1}
 
 	// public solo_calcPrio0(neoTempus_eventMap:Tempus_Event){
 
@@ -657,7 +669,7 @@ export class Priority{
 	 * @param {SingleWord2} sw 
 	 */
 	public calcPrio0(sw:SingleWord2){
-		this.procedures = this.getPrio0Procedures(sw)
+		this.changeRecord = this.getPrio0Procedures(sw)
 	}
 
 	/**
@@ -666,20 +678,31 @@ export class Priority{
 	 * @returns 
 	 */
 	public getPrio0Procedures(sw:SingleWord2){
-		
+		//const s = Priority.sros.short
+		//Promise.reject(new Error('114'))
 		const nunc = Tempus.new()
 		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
-		let procedures:Procedure[] = []
+		let procedures:ChangeRecord[] = []
 		let lastProcedure = lastOf(procedures)
 		let add_cnt = 0
 		let prio0 = 1
 		let cnt_rmb = 0;
+		let validRmbCnt = 0 //憶ᵗ次、若遇加ˡ事件則置零
+
+		let finalAddEventOrder = 0
+		for(let i = dateToEventObjs.length-1; i>=0; i--){
+			if(dateToEventObjs[i].event === WordEvent.ADD){
+				finalAddEventOrder = i;
+				break
+			}
+		}
 
 		const add = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			add_cnt++
-			prio0 = $n( mul(prio0, this.config.addWeight) )
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight: this.config.addWeight})
+			validRmbCnt = 0
+			prio0 = $n( s.m(prio0, this.config.addWeight) )
+			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight: this.config.addWeight})
 			procedures.push(unusProcedure)
 		}
 		/**
@@ -690,38 +713,42 @@ export class Priority{
 		const rmb = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			cnt_rmb++
+			validRmbCnt++
 			let weight = 1.1
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
-				prio0 = div(prio0,1.1)
+				prio0 = $n( s.d(prio0,1.1) )
 				
 			}else{
 				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = $n( div(prio0, div(innerWeight,2)) )
+				prio0 = $n( s.d(prio0, s.d(innerWeight,2)) )
 				weight = innerWeight
 			}
 			
+			if(i<finalAddEventOrder){
+				return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
+			}
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
 			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
-			prio0 = $n( div(prio0, debuff) )
+			prio0 = $n( s.d(prio0, debuff) )
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
+			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
 			procedures.push(unusProcedure)
 		}
 
 		const fgt = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
-			if(weight < 1.5){weight = 1.5}//修正
+			if( s.c(weight, 1.5)<0 ){weight = 1.5}//修正
 			//prio0 /= weight
-			prio0 = $n( mul(prio0, weight) ) 
-			let unusProcedure = new Procedure({_tempus_event: tempus_event, _after:prio0, _weight:weight})
+			prio0 = $n( s.m(prio0, weight) ) 
+			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight})
 			procedures.push(unusProcedure)
 		}
 
@@ -729,17 +756,6 @@ export class Priority{
 
 		for(let i = 0; i < dateToEventObjs.length; i++){
 			const dateToEvent = dateToEventObjs[i]
-			// console.log(i)
-			// console.log(`console.log(dateToEvent)`)
-			// console.log(dateToEvent)//t
-			// console.log(`console.log(procedures)`)
-			// console.log(procedures)//t
-			// console.log(`console.log(lastProcedure)`)
-			// console.log(lastProcedure)//t
-			// //console.log(procedures[procedures.length-1])
-			// console.log(`console.log(lastOf(procedures))`)
-			// console.log(lastOf(procedures))
-			
 			switch (dateToEvent.event){
 				case WordEvent.ADD: add(dateToEvent, i);break;
 				case WordEvent.RMB: rmb(dateToEvent, i);break;
@@ -762,7 +778,9 @@ export class Priority{
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){
 			let timeDiff = Tempus.diff_mills(curTempus_event.tempus, lastTempus_event.tempus)
 			if(timeDiff <=0){throw new Error(`timeDiff <=0`)}
-			return Priority.getDateWeight(div(timeDiff,1000))
+			return Priority.getDateWeight(
+				$n( s.d(timeDiff,1000) )
+			)
 		}
 
 		//if(procedures.length >=2){console.log(procedures)}//t
@@ -779,18 +797,24 @@ export class Priority{
 	 * @returns 
 	 */
 	public static getDateWeight(dateDif:number):number{
-		let result = (1/100)*Math.pow(dateDif, 1/2)
-		if(result <= 1){
-			result = 1.01;
-		}
-		return $n(result)
+		let ans = s.n(dateDif)
+		ans = sros.pow(ans, 1/2)
+		ans = s.d(ans, 100)
+		return $n(ans)
+		// let result = (1/100)*Math.pow(dateDif, 1/2)
+		// if(result <= 1){
+		// 	result = 1.01;
+		// }
+		// return $n(result)
 	}
 
 	public static getDebuff(mills:number, numerator:number){
-		let debuff = (numerator/mills) + 1
+		//let debuff = (numerator/mills) + 1
+		let debuff = s.n(numerator)
+		debuff = s.d(debuff, numerator)
+		debuff = s.a(debuff, 1)
 		return $n(debuff)
 	}
-
 }
 
 

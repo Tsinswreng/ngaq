@@ -7,6 +7,9 @@ import now from 'performance-now';
 import _, { last } from 'lodash'
 import dayjs from 'dayjs';
 import * as readline from 'readline'
+import { Sros } from './Sros';
+import util from 'util'
+import * as ts from 'typescript'
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
@@ -16,6 +19,133 @@ import * as readline from 'readline'
 export interface RegexReplacePair{
 	regex:RegExp,
 	replacement:string
+}
+
+
+export function compileTs(tsCode:string, compilerOptions:ts.CompilerOptions){
+	const result = ts.transpileModule(tsCode, {compilerOptions:compilerOptions})
+	//const result = ts.transpile(tsCode, tsconfig)
+	if (result.diagnostics && result.diagnostics.length > 0) {
+		throw new Error(ts.formatDiagnostics(result.diagnostics, {
+		  getCanonicalFileName: (fileName) => fileName,
+		  getCurrentDirectory: ts.sys.getCurrentDirectory,
+		  getNewLine: () => ts.sys.newLine,
+		}));
+	  }
+	
+	  return result.outputText;
+}
+
+/**
+ * 這是sqlite3庫 trace.js裏的代碼、偷過來研究
+ * 將指定對象的指定方法進行擴展，以捕獲和處理錯誤堆棧信息。
+ * @param object 欲擴展的對象
+ * @param property 欲擴展的方法名
+ * @param pos 替換回調函數的位置，預設為最後一個參數
+ */
+export function extendTrace(object:Object, property:string, pos?:number) {
+	
+	const old:Function = object[property];// 保存原始方法
+	object[property] = function() {
+		const error = new Error();
+		// 構建方法名和參數的字符串表示
+		const name = object.constructor.name + '#' + property + '(' +
+			Array.prototype.slice.call(arguments).map(function(el) { // 傳統函數內ᵗarguments即傳入ᵗ參數
+				return util.inspect(el, false, 0);
+			}).join(', ') + ')';
+
+		// 如果未指定替換回調函數的位置，預設為最後一個參數
+		if (typeof pos === 'undefined') pos = -1;
+		if (pos < 0) pos += arguments.length;
+		// 獲取回調函數
+		const cb = arguments[pos];
+		// 如果回調是函數，則進行替換處理
+        if (typeof arguments[pos] === 'function') {
+            arguments[pos] = function replacement() {
+                const err = arguments[0];
+				// 如果錯誤存在並且尚未處理過，則進行錯誤堆棧的擴充和替換
+                if (err && err.stack && !err.__augmented) {
+                    err.stack = filter(err).join('\n');
+                    err.stack += '\n--> in ' + name;
+                    err.stack += '\n' + filter(error).slice(1).join('\n');
+                    err.__augmented = true;
+                }
+				// 調用原始回調函數
+                return cb.apply(this, arguments);
+            };
+        }
+		// 調用原始方法
+        return old.apply(this, arguments);
+    };
+}
+//exports.extendTrace = extendTrace;
+
+
+function filter(error) {
+	return error.stack.split('\n').filter(function(line) {
+		return line.indexOf(__filename) < 0;
+	});
+}
+
+
+/**
+ * 遍歷諸文件夾
+ * @param directoryPath 
+ * @returns 
+ */
+export async function traverseDirs(directoryPath: string[]) { 
+	const result:string[] = []
+	for(const d of directoryPath){
+		const files = await forOne(d)
+		result.push(...files)
+	}
+
+	return result
+	async function forOne(directoryPath:string){
+		const filePaths: string[] = [];
+
+		async function readDirectory(dir: string) {
+			const files = await fs.promises.readdir(dir);
+	
+			for (const file of files) {
+				const filePath = path.join(dir, file);
+				const stat = await fs.promises.stat(filePath);
+	
+				if (stat.isDirectory()) {
+					// 如果是子目录，递归读取子目录中的文件
+					await readDirectory(filePath);
+				} else {
+					// 如果是文件，将文件路径添加到数组中
+					filePaths.push(filePath);
+				}
+			}
+		}
+	
+		await readDirectory(directoryPath);
+		return filePaths;
+	}
+}
+
+
+export function safeIntStr(numStr:string, errMsg?){
+	let num = parseFloat(numStr)
+	if(num+'' !== numStr){
+		throw new Error(errMsg)
+	}
+	return safeInt(num)
+}
+
+export function safeInt(n:number, errMsg?){
+	if(!Number.isInteger(n)){
+		throw new Error(errMsg)
+	}
+	if(n>Number.MAX_SAFE_INTEGER ){
+		throw new Error(errMsg)
+	}
+	if(n<Number.MIN_SAFE_INTEGER){
+		throw new Error(errMsg)
+	}
+	return $n(n);
 }
 
 /**
@@ -57,22 +187,45 @@ export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
 	})
 }
 
+
 /**
- * 新建文件
- * @param path 
+ * 新建一級目錄
+ * @param dir 
+ * @param ifNotExists 默認潙假、即目录既存旹報錯
+ */
+export function mkdir(dir:string, ifNotExists=false){
+	const absolutePath = path.resolve(dir);
+	if(fs.existsSync(dir)){
+		if(ifNotExists){
+			return absolutePath
+		}else{
+			throw new Error(absolutePath+' already exists')
+		}
+	}else{
+		fs.mkdirSync(dir)
+	}
+	return absolutePath
+}
+
+/**
+ * 新建文件 
+ * @param filePath 
  * @param ifNotExists 默認潙假、即文件既存旹報錯
  * @returns 
  */
-export function creatFileSync(path:string, ifNotExists=false){
-	if(fs.existsSync(path)){
+export function creatFileSync(filePath:string, ifNotExists=false){
+	const absolutePath = path.resolve(filePath);
+	if(fs.existsSync(filePath)){
 		if(ifNotExists){
-			return
+			return absolutePath
 		}else{
-			throw new Error()
+			throw new Error(absolutePath+' already exists')
 		}
 	}else{
-		fs.appendFileSync(path,'')
+		fs.appendFileSync(filePath,'')
+		//fs.writeFileSync(filePath, '')
 	}
+	return absolutePath
 }
 
 /**
@@ -311,19 +464,40 @@ export function deprecated_simpleRandomArr(min:number, max:number, howMany:numbe
 //TODO
 // }
 
+export function createReadLineInterface(){
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+	return rl
+}
 
+export function readLine(rl:readline.Interface, query=''){
+	return new Promise<string>((res,rej)=>{
+		rl.question(query, (answer)=>{
+			//rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
+			res(answer)
+		})
+	})
+}
 
-export function readLine(query:string){
+/**
+ * 多次調用則病
+ * @param query 
+ * @returns 
+ * @deprecated
+ */
+export function readLine_deprecated(query:string=''){
 	const rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
 	});
 	return new Promise<string>((res,rej)=>{
 		rl.question(query, (answer)=>{
+			rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
 			res(answer)
 		})
 	})
-
 }
 
 /**
@@ -344,25 +518,25 @@ export function copyIgnoringKeys(obj:Object, ignoredKeys?:string[]){
 
 
 
-export function add(a:number, b:number){
-	return a+b
-}
+// export function add(a:number, b:number){
+// 	return a+b
+// }
 
-export function sub(a:number, b:number){
-	return a-b
-}
+// export function sub(a:number, b:number){
+// 	return a-b
+// }
 
-export function mul(a:number, b:number){
-	return a*b
-}
+// export function mul(a:number, b:number){
+// 	return a*b
+// }
 
-export function div(a:number, b:number){
-	return a / b
-}
+// export function div(a:number, b:number){
+// 	return a / b
+// }
 
-export function eq(a:number, b:number){
-	return a === b
-}
+// export function eq(a:number, b:number){
+// 	return a === b
+// }
 
 // export function bigger(a:number, b:number){
 
@@ -388,8 +562,8 @@ export function lastOf<T>(arr:T[]|string):T|string{
 export function $n(v:number, errMsg?:string){
 	//if(isNaN(v)){throw toThrow}
 	//if(!isFinite(v)){throw toThrow}
-	if(typeof v !== 'number'){throw new Error(errMsg)}
-	if(isNaN(v)){throw new Error(errMsg)}
+	// if(typeof v !== 'number'){throw new Error(errMsg)}
+	// // if(isNaN(v)){throw new Error(errMsg)}
 	if(!isFinite(v)){throw new Error(errMsg)}
 	return v
 }

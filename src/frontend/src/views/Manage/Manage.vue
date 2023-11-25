@@ -12,6 +12,10 @@ const tipRef = ref(tip)
 
 <template>
 	<div>
+		<button @click="manage.set_baseUrl()">改baseUrl</button>
+		<input type="text" :id="Manage.id_inputBaseUrl">
+	</div>
+	<div>
 		<button @click="manage.addInDb()">添新詞</button>
 		<textarea name="" :id="Manage.id_wordSrcStr" cols="30" rows="10"></textarea>
 		<button @click="manage.backupAllTables()">備份所有表</button>
@@ -27,6 +31,10 @@ const tipRef = ref(tip)
 			<button @click="manage.testWriteLocalStorage()">設路徑</button>
 			<input type="text" :id="Manage.id_dbPath">
 			<button @click="manage.testReadLocalStorage()">讀路徑</button>
+		</div>
+		<div>
+			<button @click="manage.getCompiledJs()">設權重算法</button>
+			<textarea cols="30" rows="10" :id="Manage.id_wordPriorityAlgorithm"></textarea>
 		</div>
 		<div>
 			<button>設配置</button>

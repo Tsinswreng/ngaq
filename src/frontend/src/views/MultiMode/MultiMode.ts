@@ -105,13 +105,12 @@ export default class MultiMode{
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		console.log(data)
-		console.log(data.priority.procedures)
+		console.log(data.priority.changeRecord)
 		//console.log(data.formattedMean)//t
 		
 	}
 
 	public async start(){
-		
 		try {
 			const recite = this.recite
 			if(this.isSaved.value!==true){
@@ -123,19 +122,20 @@ export default class MultiMode{
 				alertEtThrow(`不得重複開始`)
 			}
 			const selectedTables:string[] = []
-			
 			for(let i = 0; i < this.checkedTables.value.length; i++){
 				let cur = this.checkedTables.value[i]
 				if(cur === true){
 					selectedTables.push(this.tables[i])
 				}
 			}
-	
+
 			for(const st of selectedTables){
 				await recite.fetchAndStoreWords(st)
 			}
 			recite.filter()
-			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
+			//throw new Error('114')
+			
+			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator}) // 此函數中報錯亦失調用堆棧ᵗ訊
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
 			let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
@@ -143,6 +143,8 @@ export default class MultiMode{
 			recite.shuffleWords()
 			this._isShowCardBox.value = true
 		} catch (e) {
+			//throw e
+			//console.log(e)
 			alertEtThrow(e)
 		}
 	}

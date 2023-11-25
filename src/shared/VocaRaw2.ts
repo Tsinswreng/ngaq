@@ -223,8 +223,6 @@ export default class VocaRaw2{
 		//console.log(dateBlockStr)//t
 		//除 日期 與 dateBlock、只取其內ᐪ。
 		const inner = new RegExp(`${dateRegex}\\s*?${dateBlock[0]}(.+?)${dateBlock[1]}`, 'gs')
-		console.log(`console.log(inner)`)
-		console.log(inner)//t
 		dateBlockStr = dateBlockStr.replace(inner, '$1')
 		dateBlockStr = dateBlockStr.trim()
 		//console.log(`console.log(dateBlockStr)`)
