@@ -11,6 +11,10 @@ import { Sros } from './Sros';
 import util from 'util'
 import * as ts from 'typescript'
 
+export namespace type{
+	export type NonArrObj = object&{length?:never}
+}
+
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
 
 /**
@@ -21,6 +25,12 @@ export interface RegexReplacePair{
 	replacement:string
 }
 
+
+export function delKeys(obj:type.NonArrObj, keys:string[]){
+	for(const k of keys){
+		delete obj[k]
+	}
+}
 
 export function compileTs(tsCode:string, compilerOptions:ts.CompilerOptions){
 	const result = ts.transpileModule(tsCode, {compilerOptions:compilerOptions})
@@ -716,7 +726,7 @@ export const measureFunctionTime = <Return=any>(fn:(...args)=>Return, ...args:Pa
 
 export async function measurePromiseTime<T=any>(promise:Promise<T>):Promise<[number, T]>{
 	const startTime = now();
-	const result = await promise;
+	const result:T = await promise;
 	const endTime = now();
 	const executionTime = endTime - startTime;
 	return [executionTime, result]

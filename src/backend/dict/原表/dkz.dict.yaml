@@ -1,5 +1,5 @@
 
-#20231125001821365
+#20231125112532045
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1375,6 +1375,10 @@ use_preset_vocabulary: true
 譬	pʰeks	
 湯	lʰˁaŋ	
 盪	lʰˁaŋ	
+年	nˁin	
+秊	nˁin	
+佞	nˁiŋs	
+淵	ʔʷˁin	
 擋	tˁaŋs	
 當	tˁaŋ	
 諸	ta	
@@ -15078,8 +15082,6 @@ use_preset_vocabulary: true
 拈	nˁem	
 蔫	ʔan	
 蔫	ʔren	
-年	nˁen	
-秊	nˁen	
 𨛲	nˁen	
 𨛲	nˁeŋ	
 䊀	ɡˁa	
@@ -15241,7 +15243,6 @@ use_preset_vocabulary: true
 鸋	nˁeŋs	
 擰	nˁeŋʔ	
 𩕳	nˁeŋʔ	
-佞	nˁeŋs	
 寗	nˁeŋs	
 䔭	nˁeŋʔ	
 濘	nˁes	
@@ -24565,7 +24566,6 @@ use_preset_vocabulary: true
 葾	ʔʷan	
 𨓯	ʔʷˁen	
 㾓	ʔʷˁen	
-淵	ʔʷˁen	
 惌	ʔʷan	
 惌	ʔʷanʔ	
 蒬	ʔʷan	

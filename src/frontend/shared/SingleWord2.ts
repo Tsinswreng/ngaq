@@ -678,7 +678,6 @@ export class Priority{
 	 * @returns 
 	 */
 	public getPrio0Procedures(sw:SingleWord2){
-		//寫計網作業
 		// if(sw.wordShape === 'prosecute'){
 		// 	debugger
 		// }

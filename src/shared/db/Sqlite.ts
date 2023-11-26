@@ -5,6 +5,12 @@ const sqltVb = sqlite3.verbose()
 import { RunResult } from 'sqlite3';
 type Database = sqlite3.Database
 type Statement = sqlite3.Statement
+export namespace SqliteType {
+	export type Database = sqlite3.Database
+	export type Statement = sqlite3.Statement
+	export type RunResult = sqlite3.RunResult
+	export type NonArrObj = object&{length?:never}
+}
 import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 import _ from 'lodash';
 import * as fs from 'fs'
@@ -108,11 +114,11 @@ export default class Sqlite{
 	}
 
 	public static readonly sql = {
-		getSql_SelectAllIntSafe : Sqlite.getSql_SelectAllIntSafe
-		, getSql_columnCastToText:Sqlite.getSql_columnCastToText
-		, getSql_insert:Sqlite.getSql_insert
-		, getSql_updateById:Sqlite.getSql_updateById
-		, getCreatTableSqlTemplateFromSqlite_master: Sqlite.getCreatTableSqlTemplateFromSqlite_master
+		genSql_SelectAllIntSafe : Sqlite.genSql_SelectAllIntSafe
+		, genSql_columnCastToText:Sqlite.genSql_columnCastToText
+		, genSql_insert:Sqlite.genSql_insert
+		, genSql_updateById:Sqlite.genSql_updateById
+		, getCreateTableSqlTemplateFromSqlite_master: Sqlite.getCreateTableSqlTemplateFromSqlite_master
 	}
 
 	public static readonly stmt = {
@@ -127,6 +133,7 @@ export default class Sqlite{
 		getManyRows: Sqlite.getManyRows_transaction
 		, stmtGetRows: Sqlite.stmtGetRows_transaction
 		,stmtInsertObjs :Sqlite.stmtInsertObjs_transaction
+		,dbInsertObjs:Sqlite.dbInsertObjs_transaction
 	}
 
 	public static readonly fn = {
@@ -329,7 +336,7 @@ export default class Sqlite{
 
 
 	public static async stream_readAll(db:Database, table:string){
-		const sql_selectAll = await Sqlite.getSql_SelectAllIntSafe(db, table)
+		const sql_selectAll = await Sqlite.genSql_SelectAllIntSafe(db, table)
 		const stmt = Sqlite.prepareAsync(db, sql_selectAll)
 		return Sqlite.readStream(stmt)
 	}
@@ -363,7 +370,7 @@ export default class Sqlite{
 	}
 
 	public static async getStmt_selectAllSafe(db:Database, table:string){
-		const sql = await Sqlite.getSql_SelectAllIntSafe(db, table)
+		const sql = await Sqlite.genSql_SelectAllIntSafe(db, table)
 		const stmt = await Sqlite.prepare(db, sql)
 		return stmt
 	}
@@ -378,7 +385,7 @@ export default class Sqlite{
 	 * @returns 
 	 */
 	public static async getManyRows_transaction<T=any>(db:Database, table:string, amount:number){
-		const sql = await Sqlite.getSql_SelectAllIntSafe(db, table)
+		const sql = await Sqlite.genSql_SelectAllIntSafe(db, table)
 		const stmt = await Sqlite.prepare(db, sql)
 		return Sqlite.stmtGetRows_transaction<T>(db, stmt, amount)
 		// const fn=async()=>{
@@ -427,23 +434,31 @@ export default class Sqlite{
 	 * @param ignoredKeys 
 	 * @returns 
 	 */
-	public static async dbInsertObjs(db:Database, table:string, objs:Object[], ignoredKeys?:string[]){
-		const [insertSql, ] = Sqlite.getSql_insert(table, objs[0], ignoredKeys)
+	public static async dbInsertObjs(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
+		const [insertSql, ] = Sqlite.genSql_insert(table, objs[0], ignoredKeys)
 		// const stmt = db.prepare(insertSql, function(err){
 		// 	if(err){throw err}
 		// })
 		const stmt = await Sqlite.prepare(db, insertSql)
 		const runResults:RunResult[] =[]
 		for(const o of objs){
-			const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
+			const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
 			const runResult = await Sqlite.stmtRun(stmt, params)
 			runResults.push(runResult)
 		}
 		return runResults
 	}
 
-	public static async getStmt_insertObj(db:Database, table:string, objs:Object, ignoredKeys?:string[]){
-		const [insertSql, ] = Sqlite.getSql_insert(table, objs, ignoredKeys)
+	public static async dbInsertObjs_transaction(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
+		const fn = async()=>{
+			const ans = await C.dbInsertObjs(db, table, objs, ignoredKeys)
+			return ans
+		}
+		return C.transaction(db, fn)
+	}
+
+	public static async getStmt_insertObj(db:Database, table:string, objs:SqliteType.NonArrObj, ignoredKeys?:string[]){
+		const [insertSql, ] = Sqlite.genSql_insert(table, objs, ignoredKeys)
 		// const stmt = db.prepare(insertSql, function(err){
 		// 	if(err){throw err}
 		// })
@@ -457,7 +472,7 @@ export default class Sqlite{
 			
 		}
 		for(const o of objs){
-			const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
+			const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
 			const runResult = await Sqlite.stmtRun(stmt, params)
 			runResults.push(runResult)
 		}
@@ -468,7 +483,7 @@ export default class Sqlite{
 		const runResults:RunResult[] =[]
 		const fn = async()=>{
 			for(const o of objs){
-				const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
+				const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
 				const runResult = await Sqlite.stmtRun(stmt, params)
 				runResults.push(runResult)
 			}
@@ -481,7 +496,7 @@ export default class Sqlite{
 		const runResults:RunResult[] =[]
 		const fn = async()=>{
 			for(const o of objs){
-				const [,params] = Sqlite.getSql_insert(table, o, ignoredKeys)
+				const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
 				const runResult = await Sqlite.stmtRun(stmt, params) //*
 				runResults.push(runResult)
 			}
@@ -521,7 +536,7 @@ export default class Sqlite{
 	public static async copyTable(db:Database, newTable:string, oldTable:string){
 		//let sql = `CREATE TABLE '${newTable}' AS SELECT * FROM ${oldTable}` //<坑>{新表ᵗ自增主鍵ˋ不會隨原表}
 		//return Sqlite.all(db, sql)
-		const creatSqlFun = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(db,oldTable)
+		const creatSqlFun = await Sqlite.getCreateTableSqlTemplateFromSqlite_master(db,oldTable)
 		const creatSql = creatSqlFun(newTable)
 		//console.log(creatSql)//t
 		//console.log(`console.log(creatSql)`)
@@ -538,7 +553,7 @@ export default class Sqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	public static async getCreatTableSqlTemplateFromSqlite_master(db:Database, table:string){
+	public static async getCreateTableSqlTemplateFromSqlite_master(db:Database, table:string){
 		const sql = `SELECT sql from 'sqlite_master' WHERE type='table' AND name=?`
 		const r = await Sqlite.all<any>(db, sql, table)
 		const originSql:string = $a(r[0].sql as string)
@@ -759,17 +774,17 @@ export default class Sqlite{
 	}
 
 	/**
-	 * 
+	 * 若不同db對象指向同一數據庫 則在fn中調用 由別的db產生的statement實例好像也可以
 	 * @param db 
 	 * @param fn 
 	 * @returns 
 	 */
-	public static async transaction<T=any>(db:Database, fn:()=>T){
+	public static async transaction<T=any>(db:Database, fn:()=>T):Promise<Awaited<T>>{
 		return new Promise<Awaited<T>>((res, rej)=>{
 			db.serialize(async()=>{
-				Sqlite.beginTransaction(db)
+				await Sqlite.beginTransaction(db)
 				const result: Awaited<T> = await fn() // 須寫await、否則慢如蕪事務
-				Sqlite.commit(db)
+				await Sqlite.commit(db)
 				res(result)
 			})
 		})
@@ -780,6 +795,40 @@ export default class Sqlite{
 	 * @param db 
 	 */
 	public static beginTransaction(db:Database){
+		return new Promise<void>((res,rej)=>{
+			db.run(`BEGIN TRANSACTION`, function(err){
+				if(err){
+					//throw err
+					throw sqlErr(err)
+				}
+				res()
+			})
+		})
+	}
+
+	/**
+	 * 始事務
+	 * @param db 
+	 */
+	public static commit(db:Database){
+		return new Promise<void>((res,rej)=>{
+			db.run(`COMMIT`, function(err){
+				if(err){
+					//throw err
+					throw sqlErr(err)
+				}
+				res()
+			})
+		})
+
+	}
+
+	/**
+	 * 始事務
+	 * @param db 
+	 * @deprecated
+	 */
+	public static beginTransactionAsync(db:Database){
 		db.run(`BEGIN TRANSACTION`, function(err){
 			if(err){
 				//throw err
@@ -791,8 +840,9 @@ export default class Sqlite{
 	/**
 	 * 提交事務
 	 * @param db 
+	 * @deprecated
 	 */
-	public static commit(db:Database){
+	public static commitAsync(db:Database){
 		db.run(`COMMIT`, function(err){
 			if(err){
 				//throw err
@@ -1047,11 +1097,12 @@ FROM '${tableName}';`
 	 * 由對象ᵗ鍵與值 產 sql插入語句。
 	 * 若表ᵗ自增主鍵潙id、則obj不宜有id字段。
 	 * [2023-09-20T09:18:24.000+08:00]{未驗}
+	 * obj:object&{length?:never}
 	 * @param table 
 	 * @param obj 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_insert(table:string, obj:object&{length?:never}, ignoredKeys?:string[]):[string, any[]]{
+	public static genSql_insert(table:string, obj:SqliteType.NonArrObj, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
@@ -1078,7 +1129,7 @@ FROM '${tableName}';`
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static getSql_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
+	public static genSql_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
@@ -1098,7 +1149,7 @@ FROM '${tableName}';`
 	 * @returns 
 	 */
 	public static async copyTableStructureCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
-		const fn_creatSql = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(srcDb, srcTable)
+		const fn_creatSql = await Sqlite.getCreateTableSqlTemplateFromSqlite_master(srcDb, srcTable)
 		const creatSql = fn_creatSql(neoName)
 		return Sqlite.all(targetDb, creatSql)
 	}
@@ -1113,19 +1164,19 @@ FROM '${tableName}';`
 	 * @returns 
 	 */
 	public static async copyTableCrossDbNonBatch(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
-		const fn_creatSql = await Sqlite.getCreatTableSqlTemplateFromSqlite_master(srcDb, srcTable)
+		const fn_creatSql = await Sqlite.getCreateTableSqlTemplateFromSqlite_master(srcDb, srcTable)
 		const creatSql = fn_creatSql(neoName)
 		await Sqlite.all(targetDb, creatSql)
 		//const fn_selectAll = (table:string)=>{return `SELECT * FROM '${table}'`}
-		const selectAll_safe = await Sqlite.getSql_SelectAllIntSafe(srcDb, srcTable)
+		const selectAll_safe = await Sqlite.genSql_SelectAllIntSafe(srcDb, srcTable)
 		//const srcRows = await Sqlite.all<object>(srcDb, fn_selectAll(srcTable))
 		const srcRows = await Sqlite.all<object>(srcDb, selectAll_safe)
 		//console.log(srcRows)//t
-		let insertSql = Sqlite.getSql_insert(neoName, srcRows[0])[0]
+		let insertSql = Sqlite.genSql_insert(neoName, srcRows[0])[0]
 		//console.log(insertSql)//t
 		const values:any[] = []
 		for(const row of srcRows){
-			const v:any[] = Sqlite.getSql_insert(neoName, row)[1]
+			const v:any[] = Sqlite.genSql_insert(neoName, row)[1]
 			//console.log(v)//t
 			values.push(v)
 		}
@@ -1161,7 +1212,7 @@ FROM '${tableName}';`
 		//return //t
 		const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
 		const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, firstRow)
-		const sql = await Sqlite.sql.getSql_SelectAllIntSafe(srcDb, srcTable)
+		const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
 		//console.log(sql)//t 如sql謬則有調用堆棧
 		const stmt_get = await Sqlite.prepare(srcDb, sql)
 		// 注意 事務不能嵌套
@@ -1385,7 +1436,7 @@ FROM '${tableName}';`
 	 * @param needToBeCastedToText =['INT', 'INTEGER']
 	 * @returns 
 	 */
-	public static async getSql_columnCastToText(db:Database, table:string,needToBeCastedToText=['INT', 'INTEGER']){
+	public static async genSql_columnCastToText(db:Database, table:string,needToBeCastedToText=['INT', 'INTEGER']){
 		const tableInfos = await Sqlite.getTableInfo(db, table)
 		const [columns, types] = map_columnToType(tableInfos)
 		let casted = cast(columns, types,needToBeCastedToText)
@@ -1428,11 +1479,27 @@ FROM '${tableName}';`
 	 * @param needToBeCastedToText =['INT', 'INTEGER']
 	 * @returns 
 	 */
-	public static async getSql_SelectAllIntSafe(db:Database, table:string, needToBeCastedToText=['INT', 'INTEGER']){
-		let part = await Sqlite.getSql_columnCastToText(db, table, needToBeCastedToText)
+	public static async genSql_SelectAllIntSafe(db:Database, table:string, needToBeCastedToText=['INT', 'INTEGER']){
+		let part = await Sqlite.genSql_columnCastToText(db, table, needToBeCastedToText)
 		const sql = `SELECT ${part} FROM '${table}'`
 		return sql
 	}
 
-}
 
+
+	/**把索引學完再來寫
+	 * 創索引
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param indexName 
+	 * @returns 
+	 */
+	// public static createIndex(db:Database, table:string, column:string, indexName:string=column){
+	// 	const sql = `CREATE INDEX '${indexName}' ON '${table}' (${column})`
+	// 	return C.run(db, sql)
+	// }
+
+}
+const C = Sqlite;
+type C = Sqlite

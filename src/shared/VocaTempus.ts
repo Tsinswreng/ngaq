@@ -4,13 +4,14 @@ import { $ } from "./Ut";
 //VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt
 
 export class Db_VocaTempus{
-	public constructor(
-		public id				:number
+	private constructor(
+		public id				:number|undefined
 		//要不要加Tempus?
+		,public word_id			:number
 		,public unix_time		:string //int64
 		,public table			:string
-		,public word_id			:number
 		,public event			:string
+		
 	){}
 	static readonly id = `id`
 	static readonly unix_time = `unix_time`
@@ -27,31 +28,87 @@ export default class VocaTempus{
 	/**
 	 * 㕥代構造函數、蔿方便此類增減字段。
 	 */
-	public static VocaTempus(
-		tempus:Tempus,
-		table:string,
-		id:number,
-		event: string
+	public static new(
+		props:{
+			tempus:Tempus,
+			table:string,
+			word_id:number,
+			event: string
+			id?:number //id
+		}
 	){
-		let o = new this(tempus, table, id, event)
+		let o = new this(props.tempus, props.table, props.word_id, props.event, props.id)
 		return o
 	}
 	
 	private constructor(
 		public tempus:Tempus,
 		public table:string,
-		public id:number,
+		public word_id:number, //單詞ᵗid
 		/**
 		 * 必潙 @see VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt 三者之一
 		 */
 		public event: string
+		,public id?:number
 	){} // what is this constructor for?
 
-	public static checkEvent(events:string[]){
-		for(const event of events){
+
+	public static toDbObj(jsObj:C):Db_VocaTempus
+	public static toDbObj(jsObj:C[]):Db_VocaTempus[]
+	public static toDbObj(jsObj:C|C[]){
+		function forOne(jso:C){
+			const ans:Db_VocaTempus = {
+				id: jso.id
+				,unix_time: Tempus.toUnixTime(jso.tempus, 'bigint')+''
+				,word_id:jso.word_id
+				,table:jso.table
+				,event: C.checkEvent(jso.event)
+			}
+			return ans
+		}
+		if(Array.isArray(jsObj)){
+			return jsObj.map(e=>forOne(e))
+		}else{
+			return forOne(jsObj)
+		}
+	}
+
+	public static toJsObj(dbObj:Db_VocaTempus):C
+	public static toJsObj(dbObj:Db_VocaTempus[]):C[]
+	public static toJsObj(dbObj:Db_VocaTempus|Db_VocaTempus[]){
+		function forOne(dbObj:Db_VocaTempus){
+			const ans = C.new({
+				tempus: Tempus.new(
+					BigInt(dbObj.unix_time)
+				)
+				,id: dbObj.id
+				,table: dbObj.table
+				,word_id: dbObj.word_id
+				,event: dbObj.event
+			})
+			return ans
+		}
+		if(Array.isArray(dbObj)){
+			return dbObj.map(e=>forOne(e))
+		}else{
+			return forOne(dbObj)
+		}
+	}
+
+	public static checkEvent(event:string):string
+	public static checkEvent(event:string[]):string[]
+	public static checkEvent(event:string|string[]){
+		function forOne(event:string){
 			if(event === VocaDbTable.dates_add || event === VocaDbTable.dates_rmb || event===VocaDbTable.dates_fgt){}
 			else{throw new Error()}
+			return event as string
 		}
+		if(typeof event === 'string'){
+			return forOne(event)
+		}else{
+			return event.map(e=>forOne(e))
+		}
+		
 	}
 
 	public static analyse(singleWord2s:SingleWord2[]){
@@ -65,7 +122,7 @@ export default class VocaTempus{
 				{
 					tempus:tempus,
 					table:sw.table,
-					id:$(sw.id),
+					word_id:$(sw.id),
 					event:VocaDbTable.dates_add
 				}
 				partResult.push(unus)
@@ -77,11 +134,11 @@ export default class VocaTempus{
 			const partResult:VocaTempus[] = []
 			for(const tempus of sw.dates_rmb){
 				
-				let unus:VocaTempus = 
+				const unus:VocaTempus = 
 				{
 					tempus:tempus,
 					table:sw.table,
-					id:$(sw.id),
+					word_id:$(sw.id),
 					event:VocaDbTable.dates_rmb
 				}
 				partResult.push(unus)
@@ -97,7 +154,7 @@ export default class VocaTempus{
 				{
 					tempus:tempus,
 					table:sw.table,
-					id:$(sw.id),
+					word_id:$(sw.id),
 					event:VocaDbTable.dates_fgt
 				}
 				partResult.push(unus)
@@ -137,3 +194,5 @@ export default class VocaTempus{
 	}
 
 }
+const C = VocaTempus
+type C = VocaTempus

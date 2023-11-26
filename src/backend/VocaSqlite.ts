@@ -57,6 +57,28 @@ export default class VocaSqlite{
 	private constructor(){
 	}
 
+	static async neW(
+		props:{
+			_dbName?:string,
+			_dbPath?:string,
+			_tableName?:string,
+			_backupDbPath?:string
+			,mode?:number
+		}
+	){
+		const o = new this()
+		Object.assign(o, props)
+		if(props._dbPath !== void 0){
+			o._db = await Sqlite.newDatabase(props._dbPath, props.mode)
+		}
+		return o
+	}
+
+	/**
+	 * @deprecated
+	 * @param props 
+	 * @returns 
+	 */
 	static new(
 		props:{
 			_dbName?:string,
@@ -764,7 +786,7 @@ export default class VocaSqlite{
 		const c = VocaTableColumnName
 		let obj = SingleWord2.fieldStringfy($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.getSql_updateById(table, obj, id)
+		return Sqlite.genSql_updateById(table, obj, id)
 	}
 
 	/**
@@ -778,7 +800,7 @@ export default class VocaSqlite{
 		const c = VocaTableColumnName
 		let obj = SingleWord2.fieldStringfy($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.getSql_insert(table, obj)
+		return Sqlite.genSql_insert(table, obj)
 	}
 
 
