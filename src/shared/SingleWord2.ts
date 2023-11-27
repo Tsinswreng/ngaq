@@ -158,6 +158,10 @@ export default class SingleWord2{
 		this._source = props.source?.slice()??[]
 	}
 
+	// public static new(props:Parameters<SingleWord2>){
+	// 	return new this()
+	// }
+
 
 	/**
 	 * 所屬ᵗ表

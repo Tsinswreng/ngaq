@@ -485,6 +485,7 @@ export default class VocaRaw2{
 		// }
 		// return Array.from(map.values())
 		return SingleWord2.merge(ws)
+
 	}
 }
 

@@ -65,6 +65,14 @@ function undo(){
 	}
 }
 
+function fmtNum(num:number, fix:number){
+	let exp = num.toExponential()
+	let [baseStr, exponentialStr] = exp.split('e')
+	const base = parseFloat(baseStr)
+	baseStr = base.toFixed(fix)
+	return baseStr + 'e' + exponentialStr
+}
+
 
 let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 
@@ -80,7 +88,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 			{{ props.wordB.fw.id }}
 		</span> -->
 
-		<span class="w-priority">{{ (props.wordB.priority.prio0num).toFixed(2) }}</span>
+		<span class="w-priority">{{ fmtNum(props.wordB.priority.prio0num,4) }}</span>
 		<span class="w-lastRvwDate">{{ props.wordB.getLastRvwDate() }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>

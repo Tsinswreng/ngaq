@@ -1,6 +1,7 @@
 import Client from "@ts/Client";
+import VocaClient from "@ts/voca/VocaClient";
 const client = Client.getInstance()
-const baseUrl = client.config.baseUrl
+const baseUrl = VocaClient.baseUrl
 export default class Login{
 
 	public static readonly loginPath = '/user/login'

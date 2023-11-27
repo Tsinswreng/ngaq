@@ -38,8 +38,8 @@
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+		//"emitDecoratorMetadata": true,
+		//"experimentalDecorators": true,
 		"baseUrl": "./src",
 		//"allowImportingTsExtensions": true,
 		"paths": {

@@ -1,19 +1,21 @@
 <script setup lang="ts">
+import VocaClient from '@ts/voca/VocaClient';
 import Manage from './Manage'
 import {ref} from 'vue'
 const manage = Manage.getInstance()
+
 const tip = 
 `
 <config>{tableName:'english'}</config>
 `
 const tipRef = ref(tip)
-
+const baseUrlRef = ref(VocaClient.baseUrl)
 </script>
 
 <template>
 	<div>
 		<button @click="manage.set_baseUrl()">改baseUrl</button>
-		<input type="text" :id="Manage.id_inputBaseUrl">
+		<input type="text" :id="Manage.id_inputBaseUrl" :value="VocaClient.baseUrl">
 	</div>
 	<div>
 		<button @click="manage.addInDb()">添新詞</button>

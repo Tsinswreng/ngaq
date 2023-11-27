@@ -1,5 +1,5 @@
 
-#20231125112532045
+#20231127210653362
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -457,7 +457,6 @@ use_preset_vocabulary: true
 佼	krˁewʔ	
 膠	krˁiw	
 攪	krˁuʔ	
-鵝	ŋˁal	
 求	ɡuw	
 球	ɡru	
 仇	ɡu	
@@ -1533,6 +1532,8 @@ use_preset_vocabulary: true
 摔	srut	
 帥	sruts	
 霸	prˁaks	
+壩	prˁaks	
+灞	prˁaks	
 把	prˁaʔ	
 靶	prˁas	
 氧	jaŋʔ	
@@ -2023,6 +2024,8 @@ use_preset_vocabulary: true
 詫	tʰrˁaks	
 侘	tʰrˁaks	
 姹	tʰrˁaks	
+緒	slAʔ	
+敘	slas	
 資	tsi	
 資	pil	
 咨	tsi	
@@ -2951,8 +2954,6 @@ use_preset_vocabulary: true
 覇	prˁajs	
 矲	brˁeʔ	
 𩹏	brˁajs	
-壩	prˁajs	
-灞	prˁajs	
 欛	prˁajs	
 掰	prˁə	
 掰	prˁek	
@@ -6636,6 +6637,7 @@ use_preset_vocabulary: true
 魤	ŋˁoj	
 頟	ŋrˁak	
 騀	ŋˁajʔ	
+鵝	ŋˁaj	
 額	ŋrˁak	
 䩹	ŋrˁak	
 䩹	ŋrˁek	
@@ -22239,7 +22241,6 @@ use_preset_vocabulary: true
 酗	hos	
 勖	hok	
 勗	hok	
-敘	zaʔ	
 烼	hut	
 𣸃	sut	
 𡲁	zas	
@@ -22273,7 +22274,6 @@ use_preset_vocabulary: true
 銊	sut	
 𤲸	huk	
 漵	zaʔ	
-緒	zaʔ	
 㗵	hut	
 稸	huk	
 稸	tʰruk	

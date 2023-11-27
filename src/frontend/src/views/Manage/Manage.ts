@@ -92,7 +92,6 @@ export default class Manage{
 		if(neo?.length>0){
 			VocaClient.set_baseUrl(neo)
 		}
-		console.log(VocaClient.baseUrl)
 	}
 
 	

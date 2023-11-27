@@ -211,7 +211,7 @@ export default class VocaServer{
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
 				//console.log(1)//t
-				const backupDb = VocaSqlite.new({
+				const backupDb = await VocaSqlite.neW({
 						_dbPath:config.config.backupDbPath
 						, mode:Sqlite.openMode.DEFAULT_CREATE
 				})

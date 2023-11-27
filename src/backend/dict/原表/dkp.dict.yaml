@@ -571,7 +571,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 膠	krˁiw
 攪	krˁuʔ
 
-鵝	ŋˁal	# bs
+#鵝	ŋˁal	# bs
 
 求	ɡuw	
 球	ɡru
@@ -1880,6 +1880,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 摔	srut
 帥	sruts
 霸	prˁaks
+壩	prˁaks
+灞	prˁaks
 把	prˁaʔ
 靶	prˁas
 氧	jaŋʔ
@@ -2445,6 +2447,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 詫	tʰrˁaks
 侘	tʰrˁaks
 姹	tʰrˁaks
+
+緒	slAʔ	# ts
+敘	slas	# ts
+
 
 資	tsi
 資	pil	# ts

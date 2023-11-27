@@ -28,6 +28,7 @@
     "jquery": "^3.7.0",
     "jsdom": "^22.1.0",
     "json5": "^2.2.3",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mariadb": "^3.1.2",
     "mathjs": "^11.11.1",
