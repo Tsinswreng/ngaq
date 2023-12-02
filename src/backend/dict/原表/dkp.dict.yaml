@@ -7,7 +7,7 @@
 #詞:[^\x00-\xff]{2,}.*
 #空行:^.*\r\n$
 # 筑紫明朝 謬ᵗ字: 痘 慇
-# 艹 tsʰ, 月 ŋ, 言 ŋ-s, 
+# 艹 tsʰ, 月 ŋ, 言 ŋ-s,
 # 原旨上古音義符之聲母["ʔ",[""]],["ŋ",["月","玉", "言"]], ["tʰ", ["土"]], ["r", []], ["t", []]
 # 除 民 身 堅 訊 信 等字外、中古之/-n/不作/-ŋ/
 ---
@@ -41,23 +41,23 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
-不	pə		
-爲	waj		
+不	pə
+爲	waj
 為	waj		0%
-爲	wajs		
+爲	wajs
 為	wajs	0%
 潙	wraj	# ts
 蔿	wrajs	# ts
-的	tˁewks		
-明	mraŋ		
-朙	mraŋ		
+的	tˁewks
+明	mraŋ
+朙	mraŋ
 皿	mraŋʔ
 萎	ʔojs
-悲	prəj		
-快	kʰʷrˁets		
-筷	kʰʷrˁets		
+悲	prəj
+快	kʰʷrˁets
+筷	kʰʷrˁets
 筷	kʰrˁots	# ts
-需	sno		
+需	sno
 襄	snaŋ
 鑲	snaŋ
 
@@ -71,7 +71,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 粽	tsˁuŋs
 
 
-今	kəm		
+今	kəm
 今	kum	# 仿bs
 吟	ŋəm
 吟	ŋum
@@ -90,14 +90,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 猱	nˁu
 淦	kˁəms
 淦	kˁums
-金	krəm	
+金	krəm
 金	krum	# 仿bs
 
-禁	krəms		
+禁	krəms
 月	ŋot	# ms
 月	ŋʷat	# bs sch
-天	lʰˁin		
-#還	wrˁen		
+天	lʰˁin
+#還	wrˁen
 還	wˁen	# sch
 旋	sʷen
 旋	sʷens
@@ -108,16 +108,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 圜	wrˁen
 寰	wrˁen
-牛	ŋʷə		
-三	sˁəm	# ms,sch	
-三	srum	# bs	
-仨	srum	# bs	
-弎	srum	# bs	
+牛	ŋʷə
+三	sˁəm	# ms,sch
+三	srum	# bs
+仨	srum	# bs
+弎	srum	# bs
 
-夫	pa		
-丘	kʷʰə		
-邱	kʷʰə		
-蚯	kʷʰə		
+夫	pa
+丘	kʷʰə
+邱	kʷʰə
+蚯	kʷʰə
 挺	lʰˁeŋʔ
 艇	lˁeŋʔ
 鋌	lˁeŋʔ
@@ -129,82 +129,82 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 涎	slan
 
-聽	lʰˁeŋs		
-他	lʰˁaj		
-手	nʰuʔ		
-意	ʔəks		
-讀	lˁok		
-犢	lˁok		
-瀆	lˁok		
-牘	lˁok		
+聽	lʰˁeŋs
+他	lʰˁaj
+手	nʰuʔ
+意	ʔəks
+讀	lˁok
+犢	lˁok
+瀆	lˁok
+牘	lˁok
 
 黯	ʔrˁəm
 
 
-件	granʔ		
-家	krˁa		
-軍	kʷəl		
-皸	kʷəl		
+件	granʔ
+家	krˁa
+軍	kʷəl
+皸	kʷəl
 
-君	kul		
-羣	ɡul		
-群	ɡul		
-降	krˁuŋs		
-夜	jAks		
+君	kul
+羣	ɡul
+群	ɡul
+降	krˁuŋs
+夜	jAks
 
-風	prəm		
-秋	tsʰiw		
-鍬	tsʰˁiw		
-鍫	tsʰˁiw		
-篍	tsʰˁiw		
+風	prəm
+秋	tsʰiw
+鍬	tsʰˁiw
+鍫	tsʰˁiw
+篍	tsʰˁiw
 
-修	siw		
+修	siw
 
-馬	mrˁaʔ		
-醉	tsuts		
-詐	tsrˁaks		
-乍	dzrˁaks		
+馬	mrˁaʔ
+醉	tsuts
+詐	tsrˁaks
+乍	dzrˁaks
 咋	tsrˁaks
 榨	tsrˁaks
 笮	tsrˁaks
 
-忽	mʰˁut	# bs	
-聞	mun	# bs	
-問	muns	# bs	
-移	laj		
-由	liw	# ms	
+忽	mʰˁut	# bs
+聞	mun	# bs
+問	muns	# bs
+移	laj
+由	liw	# ms
 由	liwʔ	# ts
 釉	liws
 鼬	liws
-油	liw	# ms	
-鈾	liw	# ms	
-蚰	liw	# ms	
+油	liw	# ms
+鈾	liw	# ms
+蚰	liw	# ms
 
-悠	jiw	# ms	
-攸	jiw	# ms	
-遊	ju		
-游	ju		
-蝣	ju	
+悠	jiw	# ms
+攸	jiw	# ms
+遊	ju
+游	ju
+蝣	ju
 斿	ju
-			
-未	məts		
+
+未	məts
 寐	mis
 寐	mits
 魅	mrəts
-調	dˁiws		
-先	sˁən		
-			
-			
-紙	keʔ		
-氏	ɡeʔ		
-運	wəls		
-羣	gul		
-			
-連	ran		
+調	dˁiws
+先	sˁən
+
+
+紙	keʔ
+氏	ɡeʔ
+運	wəls
+羣	gul
+
+連	ran
 蓮	ran	# ts
 蓮	rˁen	# bs
-掩	ʔromʔ		
-抑	ʔrik		
+掩	ʔromʔ
+抑	ʔrik
 益	ʔik
 嗌	ʔik
 齸	ʔik
@@ -220,31 +220,31 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 閾	hʷək
 
-訴	sˁaks		
-低	tˁi		
-信	nʰiŋs		
-限	ɡrˁənʔ		
+訴	sˁaks
+低	tˁi
+信	nʰiŋs
+限	ɡrˁənʔ
 艱	krˁən
 
-地	lˁajs		
-結	kˁit		
-髻	kˁits		
+地	lˁajs
+結	kˁit
+髻	kˁits
 
-合	ɡˁop	# bs	
+合	ɡˁop	# bs
 
-世	lʰaps		
-大	lˁats		
-啼	lˁe		
-弟	lˁiʔ		
+世	lʰaps
+大	lˁats
+啼	lˁe
+弟	lˁiʔ
 梯	lʰˁi
-遞	lˁeʔ		
-			
-級	kəp		
-急	krəp		
-然	nan		
-服	bək		
-伏	bək		
-伏	bəks	
+遞	lˁeʔ
+
+級	kəp
+急	krəp
+然	nan
+服	bək
+伏	bək
+伏	bəks
 
 稽	kˁi
 
@@ -255,51 +255,51 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 邐	rajʔ
 
 庶	staks
-			
-電	lˁins		
-殿	tˁəns		
-澱	dˁəns		
-路	rˁas		
-露	rˁaks		
-川	kʰun		
-			
-場	lraŋ		
-暢	lʰraŋs		
-計	kˁis		
-係	kˁeks		
-釋	lʰAk		
-變	prons		
-即	tsik		
-唧	tsik		
-			
-唯	wiʔ		
+
+電	lˁins
+殿	tˁəns
+澱	dˁəns
+路	rˁas
+露	rˁaks
+川	kʰun
+
+場	lraŋ
+暢	lʰraŋs
+計	kˁis
+係	kˁeks
+釋	lʰAk
+變	prons
+即	tsik
+唧	tsik
+
+唯	wiʔ
 唯	kʰi	# ts
-維	wuj	# bs	
-惟	wi		
-嘆	nʰˁans		
-歎	nʰˁans		
-炭	lʰˁans		
-億	ʔək		
-憶	ʔrək		
-亦	jak		
-易	leks		
-書	sta		
-十	ɡip		
-			
-兄	mʰraŋ		
-願	ŋons		
-替	nʰˁits		
-西	sˁəl		
+維	wuj	# bs
+惟	wi
+嘆	nʰˁans
+歎	nʰˁans
+炭	lʰˁans
+億	ʔək
+憶	ʔrək
+亦	jak
+易	leks
+書	sta
+十	ɡip
+
+兄	mʰraŋ
+願	ŋons
+替	nʰˁits
+西	sˁəl
 栖	sˁəj
 西	sˁəj
 洗	sˁəjʔ
-道	lˁuʔ		
+道	lˁuʔ
 
-明	mraŋ		
-箭	tsens		
-濺	tsans		
-山	sran		
-期	ɡrə		
+明	mraŋ
+箭	tsens
+濺	tsans
+山	sran
+期	ɡrə
 奇	kaj
 奇	ɡaj
 竒	ɡaj
@@ -308,54 +308,54 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 琦	ɡraj
 錡	ɡraj
 
-陰	ʔum	# bs	
-隂	ʔum	# bs	
-蔭	ʔums	# bs	
-較	krˁews	# 舍他音	
-裏	mrəʔ	# bs	
-裡	mrəʔ	# bs	
-赴	pʰoks		
-飛	pəl	# bs	
-氣	kʰəps	# bs	
-气	kʰəps	# bs	
-炁	kʰəps	# bs	
-汽	kʰəps	# bs	
-汽	kʰəjs	# ts	
+陰	ʔum	# bs
+隂	ʔum	# bs
+蔭	ʔums	# bs
+較	krˁews	# 舍他音
+裏	mrəʔ	# bs
+裡	mrəʔ	# bs
+赴	pʰoks
+飛	pəl	# bs
+氣	kʰəps	# bs
+气	kʰəps	# bs
+炁	kʰəps	# bs
+汽	kʰəps	# bs
+汽	kʰəjs	# ts
 
-池	lraj		
-			
-雇	kʷˁas		
-僱	kʷˁas		
+池	lraj
 
-況	mʰaŋs		
-向	nʰaŋs		
+雇	kʷˁas
+僱	kʷˁas
 
-荒	mʰˁaŋ		
-謊	mʰˁaŋʔ		
-相	saŋs	# 舍他音	
-符	bo		
-鳧	bo		
-苻	bo		
+況	mʰaŋs
+向	nʰaŋs
 
-妹	mˁəts		
-烘	hˁoŋ	# 舍他音	
-裝	tsraŋ	# 舍他音	
-磨	mˁajs	# 舍他音	
-麼	mˁajʔ		
+荒	mʰˁaŋ
+謊	mʰˁaŋʔ
+相	saŋs	# 舍他音
+符	bo
+鳧	bo
+苻	bo
+
+妹	mˁəts
+烘	hˁoŋ	# 舍他音
+裝	tsraŋ	# 舍他音
+磨	mˁajs	# 舍他音
+麼	mˁajʔ
 門	mˁən
 們	mˁəl
-鶴	ɡˁawk		
-脫	lʰˁot		
-舊	ɡʷəs		
-匶	ɡʷəs		
-柩	ɡʷəs		
+鶴	ɡˁawk
+脫	lʰˁot
+舊	ɡʷəs
+匶	ɡʷəs
+柩	ɡʷəs
 
 舅	ɡʷəʔ
 臼	ɡʷəʔ
 桕	ɡʷəʔ
 
-尚	daŋs	# 舍他音	
-上	daŋʔ	# 舍他音	
+尚	daŋs	# 舍他音
+上	daŋʔ	# 舍他音
 云	wul	# ts
 雲	wun	# ts
 芸	wun	# ts
@@ -363,17 +363,17 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 紜	wun	# ts
 蕓	wun	# ts
 
-但	dˁans	# 舍他音	
-#彈	dˁan	# 舍他音	
-對	tˁups		
+但	dˁans	# 舍他音
+#彈	dˁan	# 舍他音
+對	tˁups
 沒	mˁət	# ms
 歿	mˁut	# bs
-竟	kraŋs		
+竟	kraŋs
 
-競	ɡraŋs		
-京	kraŋ		
-景	kraŋʔ		
-華	wrˁa	# 舍他音	
+競	ɡraŋs
+京	kraŋ
+景	kraŋʔ
+華	wrˁa	# 舍他音
 樺	wrˁa
 嘩	wrˁa
 
@@ -381,71 +381,71 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 曄	wraps
 
 
-雄	wəŋ		
-熊	wəm		
-吐	tʰˁas	# 舍他音	
-兔	lʰˁas		
-菟	lʰˁas		
-堍	lʰˁas		
-卻	kʰak	# 舍他音	
-却	kʰak	# 舍他音	
-眼	ŋrˁənʔ		
-米	mˁiʔ		
-迷	mˁi		
-離	raj		
-璃	raj		
-籬	raj		
-漓	raj		
-縭	raj		
+雄	wəŋ
+熊	wəm
+吐	tʰˁas	# 舍他音
+兔	lʰˁas
+菟	lʰˁas
+堍	lʰˁas
+卻	kʰak	# 舍他音
+却	kʰak	# 舍他音
+眼	ŋrˁənʔ
+米	mˁiʔ
+迷	mˁi
+離	raj
+璃	raj
+籬	raj
+漓	raj
+縭	raj
 
 
-忘	maŋs	# 舍他音	
-放	paŋs	# 舍他音	
-王	waŋ	# 舍他音	
-或	wˁək		
-辯	brenʔ		
-辦	brˁens		
-煙	ʔˁin		
-烟	ʔˁin		
-湮	ʔˁin		
-胭	ʔˁin		
+忘	maŋs	# 舍他音
+放	paŋs	# 舍他音
+王	waŋ	# 舍他音
+或	wˁək
+辯	brenʔ
+辦	brˁens
+煙	ʔˁin
+烟	ʔˁin
+湮	ʔˁin
+胭	ʔˁin
 
-咽	ʔˁin		
-咽	ʔˁins		
+咽	ʔˁin
+咽	ʔˁins
 噎	ʔˁit
 
 
 
-依	ʔrəj		
-唐	jˁaŋ		
-糖	lˁaŋ		
-塘	lˁaŋ		
-唐	lˁaŋ		
-醣	lˁaŋ		
-搪	lˁaŋ		
-餹	lˁaŋ		
-了	rˁewʔ	# 舍他音	
-太	lʰˁats		
-#泰	tʰˁats		
+依	ʔrəj
+唐	jˁaŋ
+糖	lˁaŋ
+塘	lˁaŋ
+唐	lˁaŋ
+醣	lˁaŋ
+搪	lˁaŋ
+餹	lˁaŋ
+了	rˁewʔ	# 舍他音
+太	lʰˁats
+#泰	tʰˁats
 
-朝	traw	# 舍他音	
+朝	traw	# 舍他音
 品	pʰrumʔ
 品	pʰrəmʔ
-臨	rum	# bs	
-霰	sˁens		
-見	kˁens	# 舍他音	
-視	ɡiʔ		
-示	ɡis		
-覺	krˁuk		
-角	krˁok		
-確	kʰrˁawk		
-榷	krˁawk		
+臨	rum	# bs
+霰	sˁens
+見	kˁens	# 舍他音
+視	ɡiʔ
+示	ɡis
+覺	krˁuk
+角	krˁok
+確	kʰrˁawk
+榷	krˁawk
 
 九	kuʔ
-久	kʷəʔ		
-玖	kʷəʔ		
-灸	kʷəʔ		
-串	kʰrˁons		
+久	kʷəʔ
+玖	kʷəʔ
+灸	kʷəʔ
+串	kʰrˁons
 廳	lʰˁeŋ
 原	ŋol	# ms
 
@@ -573,7 +573,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #鵝	ŋˁal	# bs
 
-求	ɡuw	
+求	ɡuw
 球	ɡru
 仇	ɡu
 
@@ -620,8 +620,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 張	traŋ
 
-譯	lAk	
-驛	lak	
+譯	lAk
+驛	lak
 役	wek
 弈	jak
 腋	jak
@@ -762,8 +762,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 身	nʰiŋ	# bs
-寅	jəl	
-寅	jan	
+寅	jəl
+寅	jan
 演	janʔ
 衍	janʔ
 衍	lanʔ
@@ -776,6 +776,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 捲	kronʔ
 權	ɡʷral
 科	kʰˁoj
+科	kʰjˁoj	# ts
 課	kʰˁojs
 在	dzˁəʔ
 
@@ -906,8 +907,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 眉	mrəl	# bs
 媚	mrəls	# bs
 弓	kʷəŋ
-躬	kʷəŋ
+#躬	kʷəŋ	躳 又從弓
 洗	sˁəlʔ
+
+踏	lʰˁəp
+沓	lʰəp
+
+
 
 旨	kiʔ
 酯	kiʔ
@@ -920,7 +926,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 澡	tsˁawʔ
 藻	tsˁawʔ
 枣	tsˁuʔ
-位	wrəps	
+位	wrəps
 滯	drats
 愛	ʔˁəps	# bs
 噯	ʔˁəps	# bs
@@ -1096,7 +1102,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 措	tsʰˁaks
 醋	tsʰˁaks
 答	tˁup	# bs
-搭	tˁap	# ts
+撘	tˁəp
+#搭	tʰˁap
+搭	nʰˁap	# ts
+塔	tʰˁap
+
 誤	ŋʷˁas
 勿	mət	# ms
 物	mut	# bs
@@ -1119,10 +1129,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 僊	san
 鮮	sal
 
+切	tsʰˁit
+#切	tsʰˁits
+砌	tsʰˁits
+
 弦	ɡˁin
 舷	ɡˁin
 賢	ɡˁiŋ	# ms
-檢	kramʔ
+#檢	kramʔ
+瞼	kramʔ
+檢	kamʔ
+儉	ɡramʔ
+儉	ɡamʔ
+
 #險	hramʔ
 險	hamʔ
 嶮	hramʔ
@@ -1167,7 +1186,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 番	pʰal	# bs
 
 費	pʰuts	# bs
-費	pʰəts	
+費	pʰəts
 
 
 延	lan
@@ -1334,8 +1353,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 雅	ŋrˁaʔ
 午	ŋjˁaʔ	# ms
 外	ŋˁots	# ms
-#果	kjˁojʔ	# 
-賠	bˁə	
+#果	kjˁojʔ	#
+賠	bˁə
 俳	brəj
 輫	brəj
 徘	bˁəj
@@ -1509,7 +1528,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
-#旋	
+#旋
 臣	ɡin
 
 辰	dəl
@@ -1544,6 +1563,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 冤	ʔon
 矣	ʔəʔ
 規	kʷe
+窺	kʰʷe
+闚	kʰʷe
 #査 査廣韻 應是aj韻
 # 査	dzrˁa
 # 碴
@@ -1696,7 +1717,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 臂	peks
 閉	pˁits
 譬	pʰeks
-湯	lʰˁaŋ	
+湯	lʰˁaŋ
 盪	lʰˁaŋ
 
 #年	nˁiŋ
@@ -1762,7 +1783,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 饘	tanʔ
 溜	rus	# ptl
 針	kim	#ms
-廖	rˁiws	
+廖	rˁiws
 留	ru
 硫	riw
 遛	rus
@@ -1866,7 +1887,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 魏	ŋujs
 巍	ŋuj
 犩	ŋuj
-#柏	
+#柏
 六	kruk	# bs
 戮	riwk
 蓼	riwk
@@ -1901,11 +1922,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 俺	ʔˁomʔ	# ts
 阉	ʔrom
 腌	ʔop
-# 俺	
+# 俺
 # 餣
 # 淹	ʔom
 # 掩	手omʔ
-# 閹	
+# 閹
 殷	ʔəl	# bs
 柚	liwks	# ptl
 舳	lriwk
@@ -1938,9 +1959,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 芍	dewk
 杓	dewk
 
-#托	
-#託	
-乇	trˁak	
+#托
+#託
+乇	trˁak
 嫡	tˁek	# 舍他音
 #誦訟
 #虧	kʷʰaj
@@ -1975,7 +1996,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 玫	mˁəj
 #霉
 昧	mˁuts	# bs
-昧	mˁəj	
+昧	mˁəj
 
 瞞	mˁol	# bs
 蹣	mˁol	# bs
@@ -2105,7 +2126,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 撞	drˁoŋs	# 舍他音
 侗	lˁoŋs
 瘋	pəm
-願	ŋols	
+願	ŋols
 洚	ɡrˁuŋ
 夅	ɡrˁuŋ
 跭	ɡrˁuŋ
@@ -2124,6 +2145,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 惕	lʰˁek
 拾	dəp
 戈	kjˁoj	# ptl
+戈	kˁoj
 鍋	kʷˁaj
 渦	kʷˁaj
 蝸	kʷˁaj
@@ -2220,7 +2242,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 沃	ʔˁawk
 海	mʰˁəʔ
 悔	mʰˁujʔ	# ts
-# 梅	
+# 梅
 # 酶
 # 莓
 # 脢
@@ -2269,7 +2291,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #籲
 
 曳	lets	#未改
-洩	lets	
+洩	lets
 
 屣	srajʔ
 蓰	srajʔ
@@ -2568,8 +2590,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 騙
 # 偏
 
-# 術	
-# 述	
+# 術
+# 述
 # 中
 # 忠
 
@@ -2621,7 +2643,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 五
 # 伍
 # 救
-# 
+#
 # 編
 # 鞭
 # 探
@@ -2650,40 +2672,40 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #@
 
-猶	lu	# ts	
-有	wuʔ	# ts	
-又	wus	# ts	
-聯	ron	# ts	
-給	krop	# ts	
-使	srə	# ts	
-何	ɡˁajʔ	# ts	
-行	ɡˁaŋs	# ts	
+猶	lu	# ts
+有	wuʔ	# ts
+又	wus	# ts
+聯	ron	# ts
+給	krop	# ts
+使	srə	# ts
+何	ɡˁajʔ	# ts
+行	ɡˁaŋs	# ts
 航	ɡˁaŋ
-航	ɡˁaŋs	# ts	
-啊	ʔajs	# ts	
+航	ɡˁaŋs	# ts
+啊	ʔajs	# ts
 
-男	nˁom	# ts	
-詞	səʔ	# ts	
-乎	ɡas	# ts	
-乎	hrˁa	# ts	
-里	mʰrə	# ts	
-理	mʰrəʔ	# ts	
-#郎			
-馳	draj	# ts	
-顧	kʷrˁas	# ts	
-顧	kʷrˁas	# ts	
+男	nˁom	# ts
+詞	səʔ	# ts
+乎	ɡas	# ts
+乎	hrˁa	# ts
+里	mʰrə	# ts
+理	mʰrəʔ	# ts
+#郎
+馳	draj	# ts
+顧	kʷrˁas	# ts
+顧	kʷrˁas	# ts
 
-固	wˁas	# ts	
-估	nʰˁaʔ	# ts	
+固	wˁas	# ts
+估	nʰˁaʔ	# ts
 估	kˁaʔ
 沽	kˁaʔ
 沽	stˁas	# ts
 菇	kˁa
 菇	tsʰˁa	# ts
-鄉	nʰaŋ	# ts	
+鄉	nʰaŋ	# ts
 鄉	hAŋ	# ptl
 郷	hAŋ	# ptl
-#曏	# 
+#曏	#
 
 飨	hAŋʔ	# ptl
 饗	hAŋʔ	# ptl
@@ -2692,38 +2714,38 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
-享	hraŋʔ	# ts	
-洪	ɡoŋ	# ts	
-#虹	ɡrˁoŋ	# ts	
-#鴻	ɡrˁoŋʔ	# ts	
-莊	tsraŋʔ	# ts	
-妝	dzraŋʔ	# ts	
+享	hraŋʔ	# ts
+洪	ɡoŋ	# ts
+#虹	ɡrˁoŋ	# ts
+#鴻	ɡrˁoŋʔ	# ts
+莊	tsraŋʔ	# ts
+妝	dzraŋʔ	# ts
 什	dəms	# ts	「甚」之轉
-什	ɡrip	# ts	
-#閣	krˁaks	# ts	
-#們	mˁən	# ts	
-漢	hˁans	# ts	
-嘗	drAŋ	# ts	
+什	ɡrip	# ts
+#閣	krˁaks	# ts
+#們	mˁən	# ts
+漢	hˁans	# ts
+嘗	drAŋ	# ts
 嘗	daŋ
-甞	drAŋ	# ts	
+甞	drAŋ	# ts
 甞	daŋ
-嚐	drAŋs	# ts	
+嚐	drAŋs	# ts
 嚐	daŋ
 
-償	staŋs	# ts	
-鏡	ɡraŋʔ	# ts 	
-#帖	lʰˁep	# ts	
+償	staŋs	# ts
+鏡	ɡraŋʔ	# ts
+#帖	lʰˁep	# ts
 望	mˁaŋs	# ts	或用mAŋs
-#妄	pʰˁaŋs	# ts	
-惑	wrˁək	# ts	
-辨	prenʔ	# ts	
+#妄	pʰˁaŋs	# ts
+惑	wrˁək	# ts
+辨	prenʔ	# ts
 
-伺	tsʰəs	# ts	
-思	səs	# ts	
-司	tsʰə	# ts	
+伺	tsʰəs	# ts
+思	səs	# ts
+司	tsʰə	# ts
 淋	rəm
-淋	rəms	# ts	
-淋	strəm	# ts	
+淋	rəms	# ts
+淋	strəm	# ts
 
 #猴	ɡʷˁo	# ts
 #梧	ŋrˁa	# ts
@@ -3004,8 +3026,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 趕	kˁalʔ
 趕	kˁanʔ
 
-竿	tˁal	
-竿	kˁan	
+竿	tˁal
+竿	kˁan
 奸	nʰˁan	# ts
 奸	kˁan
 淼	mAwʔ	# ts
@@ -3055,7 +3077,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 儲	drA	# ts
 量	rAŋs	# ts
 
-#犯	
+#犯
 
 謇
 
@@ -3102,7 +3124,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 肛	肉rˁoŋ	# ts
 肛	krˁoŋ
 閱	門ot	# ts
-閱	lot	
+閱	lot
 靈	wrˁeŋs	# ts
 靈	wrˁeŋ	# ts
 靈	rˁeŋ
@@ -3175,7 +3197,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 熔	火容
 # 榕	木容
 
-齡	tʰrˁeŋ	# ts
+#齡	tʰrˁeŋ	# ts
 齡	tʰrˁiŋ	# ts
 齡	rˁeŋ
 丙	praŋʔ
@@ -3623,7 +3645,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 忙	心亡
 # 茫	艸亡	# p
 # 芒	艸亡
-# # 罔	
+# # 罔
 # # 網
 # # 惘
 # # 魍
@@ -3723,7 +3745,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 估	人古
 # 胡	月古
 
-# #胡	
+# #胡
 
 
 # #奴	@奴
@@ -3858,7 +3880,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 譏	言幾
 譏	kəj
 譏	ŋəj	# ts
-# # 息	
+# # 息
 # # 熄
 # # 媳
 # # 螅
@@ -3874,7 +3896,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #祚	衣乍
 
 
-# # 兼	
+# # 兼
 # # 簾
 # # 廉
 # # 鐮
@@ -4012,8 +4034,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 魔	鬼麻	# p
 # 摩	手麻	# p
 # 蘑	艸麻	# p
-# #麽	
-# #麼	
+# #麽
+# #麼
 # 嬤	女麻	# p
 
 # #竟
@@ -4221,15 +4243,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 遑	辵皇
 # 徨	彳皇
 # 隍	阜皇
-皇	wˁaŋ		
-煌	wˁaŋ		
-凰	wˁaŋ		
-惶	wˁaŋ		
-蝗	wˁaŋ		
-遑	wˁaŋ		
-徨	wˁaŋ		
-篁	wˁaŋ		
-隍	wˁaŋ		
+皇	wˁaŋ
+煌	wˁaŋ
+凰	wˁaŋ
+惶	wˁaŋ
+蝗	wˁaŋ
+遑	wˁaŋ
+徨	wˁaŋ
+篁	wˁaŋ
+隍	wˁaŋ
 
 
 # #岡	@岡
@@ -4481,7 +4503,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 麟	他粦
 麟	rən
 # 鱗	魚粦
-鱗	rən	
+鱗	rən
 # 璘	玉粦
 璘	rən
 # 粼	他粦

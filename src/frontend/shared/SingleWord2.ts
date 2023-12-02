@@ -16,6 +16,7 @@ const Ut = {
 	union : simpleUnion
 };
 
+
 /**
  * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
  * 畀表增字段: 改VocaTableColumnName, 改IVocaRow, 改SingleWord2字段, 改SingleWord2構造器, 改 創表之sql函數, 改 parse與stringfy, VocaRaw2ʸ改getWordInWordUnit, 改ᵣ既存ᵗ表, 同步 shared
@@ -47,17 +48,17 @@ export class VocaDbTable{
 		,public mean:string
 		,public annotation:string //
 		,public tag:string
-		,public times_add:number
+		,public times_add:number|string
 		,public dates_add:string
-		,public times_rmb:number
+		,public times_rmb:number|string
 		,public dates_rmb:string
-		,public times_fgt:number
+		,public times_fgt:number|string
 		,public dates_fgt:string
 		,public source:string
-		,public id?:number //從數據庫中取數據時id必不潙空
+		,public id?:number|string //從數據庫中取數據時id必不潙空
 	){}
 }
-export type IVocaRow = VocaDbTable
+
 /**
  * 㕥約束數據庫中的行
  */
@@ -78,7 +79,7 @@ export type IVocaRow = VocaDbTable
 	source:string
 } */
 
-
+export type IVocaRow = VocaDbTable
 
 
 /* export class IVocaRow{
@@ -156,6 +157,10 @@ export default class SingleWord2{
 		this._dates_fgt = props.dates_fgt?.slice()??[]
 		this._source = props.source?.slice()??[]
 	}
+
+	// public static new(props:Parameters<SingleWord2>){
+	// 	return new this()
+	// }
 
 
 	/**
@@ -241,10 +246,10 @@ export default class SingleWord2{
 	 * @param sw 
 	 * @param ignoredKeys 忽略之字段
 	 */
-	public static fieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
-	public static fieldStringfy(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
+	public static toDbObj(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
+	public static toDbObj(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
 
-	public static fieldStringfy(sw:SingleWord2|SingleWord2[]){
+	public static toDbObj(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
 			// const r:IVocaRow[] = []
 			// for(const e of sw){
@@ -303,10 +308,10 @@ export default class SingleWord2{
 	 * @param obj 
 	 * @returns 
 	 */
-	public static parse(obj:IVocaRow):SingleWord2
-	public static parse(obj:IVocaRow[]):SingleWord2[]
+	public static toJsObj(obj:IVocaRow):SingleWord2
+	public static toJsObj(obj:IVocaRow[]):SingleWord2[]
 
-	public static parse(obj:IVocaRow|IVocaRow[]){
+	public static toJsObj(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
 			// const r:SingleWord2[] = []
 			// for(const e of obj){
@@ -320,11 +325,17 @@ export default class SingleWord2{
 		}
 
 		function soloParse(obj:IVocaRow){
+			const num = (n:number|string|undefined)=>{
+				if(typeof n === 'string'){
+					return parseFloat(n)
+				}
+				return n
+			}
 			let sw:SingleWord2
 			try{
 				sw = new SingleWord2({
-					id:obj.id,
-					wordShape:obj.wordShape,
+					id:num(obj.id)
+					,wordShape:obj.wordShape,
 					pronounce: JSON.parse(obj.pronounce),
 					mean:JSON.parse(obj.mean),
 					annotation:JSON.parse(obj.annotation),
@@ -370,9 +381,9 @@ export default class SingleWord2{
 	public static clone(o:IVocaRow):IVocaRow
 	public static clone(o:SingleWord2|IVocaRow){
 		if(o instanceof SingleWord2){
-			return SingleWord2.parse(SingleWord2.fieldStringfy(o))
+			return SingleWord2.toJsObj(SingleWord2.toDbObj(o))
 		}else{
-			return SingleWord2.fieldStringfy(SingleWord2.parse(o))
+			return SingleWord2.toDbObj(SingleWord2.toJsObj(o))
 		}
 	}
 
@@ -445,8 +456,8 @@ export default class SingleWord2{
 		let c1:IVocaRow
 		let c2:IVocaRow
 		if(row1 instanceof SingleWord2){
-			c1 = SingleWord2.fieldStringfy(row1)
-			c2 = SingleWord2.fieldStringfy(row2 as SingleWord2)
+			c1 = SingleWord2.toDbObj(row1)
+			c2 = SingleWord2.toDbObj(row2 as SingleWord2)
 		}else{
 			c1 = this.clone(row1)
 			c2 = this.clone(row2 as IVocaRow)
@@ -678,12 +689,8 @@ export class Priority{
 	 * @returns 
 	 */
 	public getPrio0Procedures(sw:SingleWord2){
-		// if(sw.wordShape === 'prosecute'){
-		// 	debugger
-		// }
 		//const s = Priority.sros.short
-		//throw new Error('tes')
-		//Promise.reject('tes')
+		//Promise.reject(new Error('114'))
 		const nunc = Tempus.new()
 		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
 		let procedures:ChangeRecord[] = []
@@ -697,7 +704,6 @@ export class Priority{
 		for(let i = dateToEventObjs.length-1; i>=0; i--){
 			if(dateToEventObjs[i].event === WordEvent.ADD){
 				finalAddEventOrder = i;
-				//console.log(i)//t
 				break
 			}
 		}
@@ -732,16 +738,14 @@ export class Priority{
 			}
 			
 			if(i<finalAddEventOrder){
-				//console.log(i, finalAddEventOrder)//t
 				return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
 			}
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*validRmbCnt)
+			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
 			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
 			prio0 = $n( s.d(prio0, debuff) )
-			
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
@@ -792,7 +796,8 @@ export class Priority{
 
 		//if(procedures.length >=2){console.log(procedures)}//t
 		return procedures
-
+		
+		
 	}
 
 	
@@ -806,9 +811,6 @@ export class Priority{
 		let ans = s.n(dateDif)
 		ans = sros.pow(ans, 1/2)
 		ans = s.d(ans, 100)
-		if(s.c(ans, 1)<0){
-			ans = s.n(1.01)
-		}
 		return $n(ans)
 		// let result = (1/100)*Math.pow(dateDif, 1/2)
 		// if(result <= 1){
@@ -820,7 +822,7 @@ export class Priority{
 	public static getDebuff(mills:number, numerator:number){
 		//let debuff = (numerator/mills) + 1
 		let debuff = s.n(numerator)
-		debuff = s.d(debuff, mills)
+		debuff = s.d(debuff, numerator)
 		debuff = s.a(debuff, 1)
 		return $n(debuff)
 	}

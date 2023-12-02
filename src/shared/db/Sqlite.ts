@@ -178,7 +178,9 @@ export default class Sqlite{
 		return new Promise<sqlite3.Database>((res, rej)=>{
 			const db = new sqltVb.Database(filePath, mode, (err)=>{
 				if(err){
-					throw sqlErr(err)
+					//throw sqlErr(err)
+					rej(err)
+					return
 				}
 				res(db)
 			})
@@ -199,6 +201,7 @@ export default class Sqlite{
 			if(err){
 				//throw err
 				throw sqlErr(err)
+				//rej(err)
 			}
 		})
 	}
@@ -215,7 +218,9 @@ export default class Sqlite{
 			const stmt = db.prepare(sql, params, (err)=>{
 				if(err){
 					//throw err
-					throw sqlErr(err)
+					//throw sqlErr(err)
+					rej(err)//若throw則可能捕不到
+					return
 				}
 				res(stmt)
 			})
@@ -235,8 +240,8 @@ export default class Sqlite{
 				if(err){
 					//console.error(sql+'\n'+err+'\n');j(err);return
 					//j(sqlErr(err,sql));
-					//j(err)
-					throw sqlErr(err)
+					j(err);return
+					//throw sqlErr(err)
 					//throw new Error()
 					//throw sqlErr(err, sql)//t
 				}
@@ -257,8 +262,8 @@ export default class Sqlite{
 			db.run(sql, params, function(err){
 				if(err){
 					//console.error(sql+'\n'+err+'\n');j(err);return
-					//j(err); return
-					throw sqlErr(err)
+					j(err); return
+					//throw sqlErr(err)
 				}
 				s(this)
 			})
@@ -272,8 +277,8 @@ export default class Sqlite{
 		return new Promise<[RunResult,T[]]>((res, rej)=>{
 			stmt.all<T>(params, function(err, rows){
 				if(err){
-					//rej(err);return
-					throw sqlErr(err)
+					rej(err);return
+					//throw sqlErr(err)
 				}
 				const this_runResult = this
 				res([this_runResult,rows])
@@ -289,8 +294,8 @@ export default class Sqlite{
 			return new Promise<[RunResult,T|undefined]>((res, rej)=>{
 				stmt.get<T>(params, function(err, rows){
 					if(err){
-						//rej(err);return
-						throw sqlErr(err)
+						rej(err);return
+						//throw sqlErr(err)
 					}
 					const this_runResult = this
 					res([this_runResult,rows])
@@ -301,8 +306,8 @@ export default class Sqlite{
 			return new Promise<(T|undefined)>((res, rej)=>{
 				stmt.get<T>(function(err, rows){
 					if(err){
-						//rej(err);return
-						throw sqlErr(err)
+						rej(err);return
+						//throw sqlErr(err)
 					}
 					res(rows)
 					//res([this_runResult,rows])
@@ -325,7 +330,9 @@ export default class Sqlite{
 					//throw err
 					//throw sqlErr(err)
 					//rej(sqlErr(err))
-					throw sqlErr(err)
+					//throw sqlErr(err)
+					rej(err)
+					return
 				}
 				const this_runResult = this
 				res(this_runResult)
@@ -343,13 +350,12 @@ export default class Sqlite{
 
 
 	/**
-	 * 
+	 * read方法中只get一次。若改成一次get多行也快不了幾多
 	 * @param stmt 
 	 * @param opts 
-	 * @deprecated
 	 * @returns 
 	 */
-	public static readStream(stmt:Statement, opts?:Stream.ReadableOptions){
+	public static readStream(stmt:Statement, opts?:Stream.ReadableOptions){ 
 		const readStream = new Stream.Readable(opts)
 		if(opts!== void 0 &&'read' in opts){}
 		else{
@@ -360,7 +366,7 @@ export default class Sqlite{
 						this.push(null)
 					}else{
 						this.push(
-							JSON.stringify(row)
+							JSON.stringify(row)+'\n'
 						)
 					}
 				})
@@ -368,6 +374,24 @@ export default class Sqlite{
 		}
 		return readStream
 	}
+
+	// public static readStream_testMultiRows(db:Database, stmt:Statement, opts?:Stream.ReadableOptions, rowsAmount=64){
+	// 	const readStream = new Stream.Readable(opts)
+	// 	if(opts!== void 0 &&'read' in opts){}
+	// 	else{
+	// 		readStream._read = async function(){
+	// 			const rows = await Sqlite.transactions.stmtGetRows(db, stmt, rowsAmount)
+	// 			if(rows.length === 0){
+	// 				this.push(null)
+	// 			}else{
+	// 				this.push(
+	// 					JSON.stringify(rows)+'\n'
+	// 				)
+	// 			}
+	// 		}
+	// 	}
+	// 	return readStream
+	// }
 
 	public static async getStmt_selectAllSafe(db:Database, table:string){
 		const sql = await Sqlite.genSql_SelectAllIntSafe(db, table)
@@ -379,6 +403,7 @@ export default class Sqlite{
 	 * 取amount個之 數據庫中完整之行
 	 * 取盡時則返、故結果之長未必等於amount
 	 * 每次調用旹皆從頭始取
+	 * 整數安全
 	 * @param db 
 	 * @param table 
 	 * @param amount 

@@ -94,6 +94,8 @@ export default class Manage{
 		}
 	}
 
-	
+	public testJson(){
+		vocaClient.testJson()
+	}
 
 }

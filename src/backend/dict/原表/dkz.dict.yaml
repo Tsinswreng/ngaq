@@ -1,5 +1,5 @@
 
-#20231127210653362
+#20231201211226361
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -608,6 +608,7 @@ use_preset_vocabulary: true
 捲	kronʔ	
 權	ɡʷral	
 科	kʰˁoj	
+科	kʰjˁoj	
 課	kʰˁojs	
 在	dzˁəʔ	
 炒	tsʰrˁewʔ	
@@ -711,8 +712,9 @@ use_preset_vocabulary: true
 眉	mrəl	
 媚	mrəls	
 弓	kʷəŋ	
-躬	kʷəŋ	
 洗	sˁəlʔ	
+踏	lʰˁəp	
+沓	lʰəp	
 旨	kiʔ	
 酯	kiʔ	
 指	kijʔ	
@@ -875,7 +877,9 @@ use_preset_vocabulary: true
 措	tsʰˁaks	
 醋	tsʰˁaks	
 答	tˁup	
-搭	tˁap	
+撘	tˁəp	
+搭	nʰˁap	
+塔	tʰˁap	
 誤	ŋʷˁas	
 勿	mət	
 物	mut	
@@ -895,10 +899,15 @@ use_preset_vocabulary: true
 仙	san	
 僊	san	
 鮮	sal	
+切	tsʰˁit	
+砌	tsʰˁits	
 弦	ɡˁin	
 舷	ɡˁin	
 賢	ɡˁiŋ	
-檢	kramʔ	
+瞼	kramʔ	
+檢	kamʔ	
+儉	ɡramʔ	
+儉	ɡamʔ	
 險	hamʔ	
 嶮	hramʔ	
 玁	hramʔ	
@@ -1255,6 +1264,8 @@ use_preset_vocabulary: true
 冤	ʔon	
 矣	ʔəʔ	
 規	kʷe	
+窺	kʰʷe	
+闚	kʰʷe	
 貶	promʔ	
 貴	kujs	
 抛	pʰrˁew	
@@ -1745,6 +1756,7 @@ use_preset_vocabulary: true
 惕	lʰˁek	
 拾	dəp	
 戈	kjˁoj	
+戈	kˁoj	
 鍋	kʷˁaj	
 渦	kʷˁaj	
 蝸	kʷˁaj	
@@ -5596,7 +5608,6 @@ use_preset_vocabulary: true
 褡	tˁap	
 褡	tˁəp	
 墶	dˁat	
-撘	tˁəp	
 噠	tˁat	
 𩝣	tˁap	
 䪚	tˁap	
@@ -7907,6 +7918,7 @@ use_preset_vocabulary: true
 恭	koŋ	
 蚣	toŋ	
 蚣	kˁoŋ	
+躬	kuŋ	
 宮	kuŋ	
 𤱨	koŋ	
 匑	kʰuŋ	
@@ -10267,7 +10279,6 @@ use_preset_vocabulary: true
 戩	tsenʔ	
 𢵈	krenʔ	
 𦺍	tsenʔ	
-儉	ɡremʔ	
 翦	tsenʔ	
 䵤	ɡˁenʔ	
 䵤	tˁenʔ	
@@ -10278,7 +10289,6 @@ use_preset_vocabulary: true
 襇	krˁens	
 襉	krˁens	
 繭	kˁenʔ	
-瞼	kremʔ	
 簡	krˁenʔ	
 𥳑	krˁenʔ	
 𥳒	krˁemʔ	
@@ -12050,11 +12060,9 @@ use_preset_vocabulary: true
 𡐠	kʰʷˁe	
 𡐠	kʷrˁes	
 𡐠	kʷrˁeʔ	
-窺	kʰoj	
 顝	kʰˁuj	
 顝	kʰˁujʔ	
 顝	kʰˁut	
-闚	kʰoj	
 蘬	kʰruj	
 蘬	kʰrujʔ	
 蘬	kʰʷəj	
@@ -16390,7 +16398,6 @@ use_preset_vocabulary: true
 契	kʰˁes	
 契	kʰˁet	
 契	kʰət	
-砌	tsʰˁes	
 䀙	tsʰˁes	
 咠	tsʰəp	
 咠	tsəp	
@@ -16801,8 +16808,6 @@ use_preset_vocabulary: true
 竅	kʰˁews	
 𪑊	tsʰews	
 㚁	kʰraws	
-切	tsʰˁes	
-切	tsʰˁit	
 㛗	tsʰʷa	
 㛗	sˁoj	
 𠋧	kʰraj	
@@ -19313,13 +19318,11 @@ use_preset_vocabulary: true
 𧪦	tʰˁap	
 㯚	tˁəp	
 蹹	dˁəp	
-塔	tʰˁap	
 獺	tʰˁat	
 獺	tʰrˁat	
 𩥑	tʰˁap	
 鰨	tʰˁap	
 𣥂	tʰˁat	
-沓	dˁəp	
 𦍒	tʰˁat	
 荅	tˁəp	
 𦐇	tʰˁap	
@@ -19349,7 +19352,6 @@ use_preset_vocabulary: true
 㒓	tʰˁat	
 撻	tʰˁat	
 𨌭	tʰˁəp	
-踏	tʰˁəp	
 䑜	tʰˁep	
 誻	dˁəp	
 澾	tʰˁat	

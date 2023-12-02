@@ -1,6 +1,5 @@
 
 <script setup lang="ts">
-//TODO 釋義框不能向下滾動; debuff似不效
 import { $ } from '@shared/Ut';
 import WordB from '@ts/voca/WordB';
 import MultiMode from '../MultiMode';

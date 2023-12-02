@@ -188,6 +188,19 @@ export default class VocaSqlite{
 		return VocaSqlite.backupTableInDb(this.db, table, newName)
 	}
 
+	/**
+	 * 取 整個詞表之 可讀流
+	 * @param db 
+	 * @param table 
+	 * @returns 
+	 */
+	public static async readStream(db:Database, table:string){
+		const stmt = await Sqlite.stmt.getStmt_selectAllSafe(db, table)
+		return Sqlite.readStream(stmt)
+	}public readStream(){
+		return C.readStream(this.db, $a(this.tableName))
+	}
+
 
 	/**
 	 * 備份所有表
@@ -461,7 +474,7 @@ export default class VocaSqlite{
 				if(existedRows[i].length === 0){
 					neoWord_existedWordMap.set(curNeoWord, undefined)
 				}else if (existedRows[i].length === 1){
-					const curExistedWord = SingleWord2.parse(existedRows[i][0])
+					const curExistedWord = SingleWord2.toJsObj(existedRows[i][0])
 					neoWord_existedWordMap.set(curNeoWord, curExistedWord)
 				}else{
 					throw new Error(`${existedRows[i][0].wordShape}在數據庫中有重複項`)
@@ -784,7 +797,7 @@ export default class VocaSqlite{
 	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
 		VocaSqlite.checkTable(table, [word])
 		const c = VocaTableColumnName
-		let obj = SingleWord2.fieldStringfy($(word))
+		let obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genSql_updateById(table, obj, id)
 	}
@@ -798,7 +811,7 @@ export default class VocaSqlite{
 	public static getInsertSql(table: string, word:SingleWord2){
 		VocaSqlite.checkTable(table, [word])
 		const c = VocaTableColumnName
-		let obj = SingleWord2.fieldStringfy($(word))
+		let obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genSql_insert(table, obj)
 	}
@@ -881,6 +894,8 @@ export default class VocaSqlite{
 	// }
 
 }
+const C = VocaSqlite
+type C = VocaSqlite
 
 
 // namespace VocaSqliteUtil{

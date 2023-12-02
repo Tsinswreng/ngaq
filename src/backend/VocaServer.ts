@@ -67,6 +67,53 @@ jap.tableName = 'jap'*/
 
 //let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
+const dc = <This, Args extends any[], Return>(
+	old: (this: This, ...args: Args) => Return
+	,neo: typeof old
+)=>{
+	
+}
+
+/**
+ * 処 get請求之回調
+ * @param old 
+ * @returns 
+ */
+const get = <R>(old:(req:Request, res:Response)=>R)=>{
+	const neoFn = async(req:Request, res:Response)=>{
+		const nunc = Tempus.new()
+		console.log(req.path+' '+Tempus.format(nunc))
+		try {
+			const ans: Awaited<R> = await old(req, res)
+			return ans
+		} catch (error) {
+			const err = error as Error
+			console.error(err)
+			console.error(nunc.iso)
+			res.send(err)
+		}
+	}
+	return neoFn
+}
+
+const post = <R>(old:(req:Request, res:Response)=>R)=>{
+	const neoFn = async(req:Request, res:Response)=>{
+		const nunc = Tempus.new()
+		console.log(req.path+' '+Tempus.format(nunc))
+		try {
+			const ans: Awaited<R> = await old(req, res)
+			return ans
+		} catch (error) {
+			const err = error as Error
+			console.error(err)
+			console.error(nunc.iso)
+			res.send(err)
+		}
+	}
+	return neoFn
+}
+
+
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
@@ -141,6 +188,10 @@ export default class VocaServer{
 		// 		//return results//蜮不效
 		// 	})
 		// })
+
+		/**
+		 * @deprecated
+		 */
 		this.app.get('/english', async (req,res)=>{
 			
 			try {
@@ -160,6 +211,9 @@ export default class VocaServer{
 			
 		})
 		
+		/**
+		 * @deprecated
+		 */
 		this.app.get('/japanese', async (req,res)=>{
 			let path = req.path
 			console.log('path:'+path)//t
@@ -191,7 +245,7 @@ export default class VocaServer{
 			console.log(req.path+' '+Tempus.format(nunc))
 			//console.log(req.body)
 			//let rows:IVocaRow[] = JSON.parse(req.body)
-			let sws:SingleWord2[] = SingleWord2.parse(req.body as IVocaRow[])
+			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
 			VocaSqlite.saveWords(this.sqltDbObj, sws)
 			res.send('receive successfully'+nunc.iso)
 		})
@@ -206,7 +260,7 @@ export default class VocaServer{
 			try{
 				const rows:IVocaRow[] = $(req.body[0])
 				const config2:VocaRawConfig = $(req.body[1])
-				const sws = SingleWord2.parse(rows)
+				const sws = SingleWord2.toJsObj(rows)
 				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
@@ -235,6 +289,8 @@ export default class VocaServer{
 				res.send('add failed\n'+Tempus.format(nunc)) //t
 			}
 		})
+
+		
 
 		VocaServer.app.post('/backupAll',async (req,res)=>{
 			const nunc = Tempus.new()
@@ -295,6 +351,47 @@ export default class VocaServer{
 			}
 		})
 
+		// C.app.get('/tables',async(req, res)=>{
+		// 	const nunc = Tempus.new()
+		// 	console.log(req.path+' '+Tempus.format(nunc))
+		// 	try {
+		// 		config.reload()
+		// 		res.send(
+		// 			JSON.stringify(
+		// 				config.config.tables
+		// 			)
+		// 		)
+		// 	} catch (error) {
+		// 		const err = error as Error
+		// 		console.error(err)
+		// 		res.send(Tempus.format(nunc)+'\n'+err.message)
+		// 	}
+		// })
+
+		C.app.get('/tables', get(async(req, res)=>{
+			config.reload()
+			res.send(
+				JSON.stringify(
+					config.config.tables
+				)
+			)
+		}))
+
+		C.app.get('/words', get(async(req, res)=>{
+			const table0 = req.query.table
+			console.log(table0)
+			if(typeof table0 !== 'string'){
+				throw new Error(`typeof table0 !== 'string'`)
+			}
+			const table:string = table0
+			const vsqlt = await VocaSqlite.neW({_tableName:table})
+			const stream = await vsqlt.readStream()
+			res.setHeader('Content-Type', 'application/octet-stream');
+			stream.pipe(res)
+
+
+		}))
+
 		// VocaServer.app.get('/login',async (req:MyReq,res)=>{
 		// 	const nunc = Tempus.new()
 		// 	console.log(req.path+' '+Tempus.format(nunc))
@@ -330,17 +427,22 @@ export default class VocaServer{
 			res.json(pair)
 		})
 
-		VocaServer.app.get('*', (req:MyReq, res)=>{
-			VocaServer.session=req.session??''
-			if(VocaServer.session.userid && req.path==='/login'){
-				console.log(114514)//t
-				res.setHeader('content-type','text;charset=utf-8')
-				res.sendFile(rootDir+'/out/frontend/dist/index.html')
-			}else{
-				res.sendFile(rootDir+'/out/frontend/dist/index.html')
-				//res.redirect('/login')
-				//console.log(`res.redirect('/login')`)//t
+
+
+		C.app.get('/testStream', async(req, res)=>{
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			try {
+				const vsqlt = await VocaSqlite.neW({_tableName:'english'})
+				const stream = await vsqlt.readStream()
+				res.setHeader('Content-Type', 'application/octet-stream');
+				stream.pipe(res)
+			} catch (error) {
+				const err = error as Error
+				console.error(err)
+				res.send(Tempus.format(nunc)+'\n'+err.message)
 			}
+			
 		})
 					//res.send(`<h1>404</h1>`)
 			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
@@ -355,10 +457,27 @@ export default class VocaServer{
 				console.log('密碼錯誤')
 			}
 		}) */
-		
+
+		/**
+		 * 此須寫于䀬之末
+		 */
+		VocaServer.app.get('*', (req:MyReq, res)=>{
+			VocaServer.session=req.session??''
+			if(VocaServer.session.userid && req.path==='/login'){
+				console.log(114514)//t
+				res.setHeader('content-type','text;charset=utf-8')
+				res.sendFile(rootDir+'/out/frontend/dist/index.html')
+			}else{
+				res.sendFile(rootDir+'/out/frontend/dist/index.html')
+				//res.redirect('/login')
+				//console.log(`res.redirect('/login')`)//t
+			}
+		})
 		VocaServer.app.listen(config.config.port, ()=>{
 			console.log(`at\nhttp://127.0.0.1:${config.config.port}`)
 		})
 	}
 	
 }
+const C = VocaServer
+type C = VocaServer

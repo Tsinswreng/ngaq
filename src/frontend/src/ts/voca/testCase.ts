@@ -38,7 +38,7 @@ let sw = new SingleWord2(
 
 for(let i = 0; i < 10; i++){
 	//let e:SingleWord2 = JSON.parse(JSON.stringify(w)) //會失 get方法
-	let e = SingleWord2.parse(SingleWord2.fieldStringfy(sw))
+	let e = SingleWord2.toJsObj(SingleWord2.fieldStringfy(sw))
 	e['_id']= i
 	e['_wordShape'] += i
 	let wb = new WordB(e)

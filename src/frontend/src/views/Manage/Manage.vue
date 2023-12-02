@@ -42,6 +42,10 @@ const baseUrlRef = ref(VocaClient.baseUrl)
 			<button>設配置</button>
 			<textarea name="" id="" cols="30" rows="10"></textarea>
 		</div>
+		<div>
+			<button @click="manage.testJson()">test</button>
+
+		</div>
 		<div class="tip">
 			{{ tipRef }}
 		</div>

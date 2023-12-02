@@ -5,9 +5,10 @@
 
 /**
  * alert and throw
+ * 若傳入之msg潙Error對象則alert後直ᵈ抛
  * @param msg 
  */
-export function alertEtThrow(msg?:any){
+export function alertEtThrow(msg?:any|Error){
 	alert(msg)
 	if(typeof msg === 'string'){
 		throw new Error(msg)

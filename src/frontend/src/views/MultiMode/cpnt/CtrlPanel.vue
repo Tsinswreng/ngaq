@@ -47,12 +47,12 @@ function switchRandomImg(){
 			<label :for="'checkbox-' + index">{{ item }}</label>
 		</span> -->
 		<!-- <p>已選項目: {{ selectedItems }}</p> -->
-		<input type="checkbox" v-model="checkedTables[0]" id="english"><label for="english">英</label>
+		<!-- <input type="checkbox" v-model="checkedTables[0]" id="english"><label for="english">英</label>
 		&nbsp;
-		<input type="checkbox" v-model="checkedTables[1]" id="japanese"><label for="japanese">日</label>
-		&nbsp;
-		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label>
-
+		<input type="checkbox" v-model="checkedTables[1]" id="japanese"><label for="japanese">日</label> -->
+		<!-- &nbsp;
+		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label> -->
+		
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
 		<button @click="multiMode.start()">始</button>
 		<button @click="multiMode.save()">存</button>

@@ -8,7 +8,7 @@ import VocaClient from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
 
-const l = new Log()
+const vocaClient = VocaClient.getInstance()
 export default class MultiMode{
 	
 	private constructor(){}
@@ -132,6 +132,10 @@ export default class MultiMode{
 			for(const st of selectedTables){
 				await recite.fetchAndStoreWords(st)
 			}
+			
+			const sws = await vocaClient.getAllTablesWords()
+			
+			recite.addWordsToLearn(sws)
 			recite.filter()
 			//throw new Error('114')
 			

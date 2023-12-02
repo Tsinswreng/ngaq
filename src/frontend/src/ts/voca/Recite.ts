@@ -89,11 +89,19 @@ export default class Recite{
 	/**
 	 * 由路徑從服務器取詞
 	 * @param path 
+	 * @deprecated
 	 */
 	public async fetchAndStoreWords(path:string){
 		let [time, sws] = await measurePromiseTime(VocaClient.fetchWords(path))
 		console.log(`後端ᙆ取詞之耗時: `+time)
 		//let sws = await VocaClient.fetchWords(path)
+		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
+	}
+
+	/***
+	 * 添加待背之詞
+	 */
+	public addWordsToLearn(sws:SingleWord2[]){
 		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
 	}
 

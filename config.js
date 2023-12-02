@@ -6,4 +6,11 @@
 		`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
 		,`D:\\_\\視聽\\圖`
 	]
+	,tables:[
+		`english`
+		,`japanese`
+		,`latin`
+		
+	]
+
 })

@@ -43,7 +43,7 @@ export default class ParseOld{
 		await lite.creatTable(lite.tableName,true)
 		//console.log(`console.log(SingleWord2.parse(neoWords)[0])`)
 		//console.log(SingleWord2.parse(neoWords)[0])//t
-		return lite.addWordsOfSameTable(SingleWord2.parse(neoWords))
+		return lite.addWordsOfSameTable(SingleWord2.toJsObj(neoWords))
 	}
 
 	public static async run(){

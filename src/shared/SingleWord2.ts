@@ -48,14 +48,14 @@ export class VocaDbTable{
 		,public mean:string
 		,public annotation:string //
 		,public tag:string
-		,public times_add:number
+		,public times_add:number|string
 		,public dates_add:string
-		,public times_rmb:number
+		,public times_rmb:number|string
 		,public dates_rmb:string
-		,public times_fgt:number
+		,public times_fgt:number|string
 		,public dates_fgt:string
 		,public source:string
-		,public id?:number //從數據庫中取數據時id必不潙空
+		,public id?:number|string //從數據庫中取數據時id必不潙空
 	){}
 }
 
@@ -246,10 +246,10 @@ export default class SingleWord2{
 	 * @param sw 
 	 * @param ignoredKeys 忽略之字段
 	 */
-	public static fieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
-	public static fieldStringfy(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
+	public static toDbObj(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
+	public static toDbObj(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
 
-	public static fieldStringfy(sw:SingleWord2|SingleWord2[]){
+	public static toDbObj(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
 			// const r:IVocaRow[] = []
 			// for(const e of sw){
@@ -308,10 +308,10 @@ export default class SingleWord2{
 	 * @param obj 
 	 * @returns 
 	 */
-	public static parse(obj:IVocaRow):SingleWord2
-	public static parse(obj:IVocaRow[]):SingleWord2[]
+	public static toJsObj(obj:IVocaRow):SingleWord2
+	public static toJsObj(obj:IVocaRow[]):SingleWord2[]
 
-	public static parse(obj:IVocaRow|IVocaRow[]){
+	public static toJsObj(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
 			// const r:SingleWord2[] = []
 			// for(const e of obj){
@@ -325,11 +325,17 @@ export default class SingleWord2{
 		}
 
 		function soloParse(obj:IVocaRow){
+			const num = (n:number|string|undefined)=>{
+				if(typeof n === 'string'){
+					return parseFloat(n)
+				}
+				return n
+			}
 			let sw:SingleWord2
 			try{
 				sw = new SingleWord2({
-					id:obj.id,
-					wordShape:obj.wordShape,
+					id:num(obj.id)
+					,wordShape:obj.wordShape,
 					pronounce: JSON.parse(obj.pronounce),
 					mean:JSON.parse(obj.mean),
 					annotation:JSON.parse(obj.annotation),
@@ -375,9 +381,9 @@ export default class SingleWord2{
 	public static clone(o:IVocaRow):IVocaRow
 	public static clone(o:SingleWord2|IVocaRow){
 		if(o instanceof SingleWord2){
-			return SingleWord2.parse(SingleWord2.fieldStringfy(o))
+			return SingleWord2.toJsObj(SingleWord2.toDbObj(o))
 		}else{
-			return SingleWord2.fieldStringfy(SingleWord2.parse(o))
+			return SingleWord2.toDbObj(SingleWord2.toJsObj(o))
 		}
 	}
 
@@ -450,8 +456,8 @@ export default class SingleWord2{
 		let c1:IVocaRow
 		let c2:IVocaRow
 		if(row1 instanceof SingleWord2){
-			c1 = SingleWord2.fieldStringfy(row1)
-			c2 = SingleWord2.fieldStringfy(row2 as SingleWord2)
+			c1 = SingleWord2.toDbObj(row1)
+			c2 = SingleWord2.toDbObj(row2 as SingleWord2)
 		}else{
 			c1 = this.clone(row1)
 			c2 = this.clone(row2 as IVocaRow)
