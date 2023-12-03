@@ -52,7 +52,8 @@ export default class Config{
 	public static readOuterConfig(path:string){
 		//
 		const outerConfigStr = fs.readFileSync(path, 'utf-8')
-		const outerConfig = eval(`(${outerConfigStr})`)
+		const configFn = new Function(`return (${outerConfigStr})`)
+		const outerConfig = configFn()
 		return outerConfig
 	}
 

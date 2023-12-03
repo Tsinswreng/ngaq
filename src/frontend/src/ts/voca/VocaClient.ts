@@ -230,17 +230,19 @@ export default class VocaClient{
 		}
 	}
 
-	public static async compileTs(tsCode:string, tsconfig?:string){
+	public static async compileTs(tsCode:string, tsconfig:string=`{}`){
 		try {
 			const url = new URL('/compileTs', this.baseUrl)
+			const body = JSON.stringify(
+				[tsCode, tsconfig]
+			)
+			//console.log(body)//t
 			const requestOptions: RequestInit = {
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json', // 设置请求头为 JSON 格式
 				},
-				body: JSON.stringify(
-					[tsCode, tsconfig]
-				), // 将数据对象转换为 JSON 字符串
+				body: body // 将数据对象转换为 JSON 字符串
 			};
 			const resp = await fetch(url, requestOptions)
 			if(!resp.ok){

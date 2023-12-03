@@ -9,15 +9,14 @@ require('module-alias/register');
 import VocaSqlite from "./VocaSqlite";
 //const cors = require('cors')
 //const express = require('express')
-import express, { raw, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser'
-import path from "path";
+//import path from "path";
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, compileTs, delay, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
-import { VocaRawConfig } from "@shared/VocaRaw2";
+import { $, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
@@ -67,12 +66,12 @@ jap.tableName = 'jap'*/
 
 //let vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 
-const dc = <This, Args extends any[], Return>(
-	old: (this: This, ...args: Args) => Return
-	,neo: typeof old
-)=>{
+// const dc = <This, Args extends any[], Return>(
+// 	old: (this: This, ...args: Args) => Return
+// 	,neo: typeof old
+// )=>{
 	
-}
+// }
 
 /**
  * 処 get請求之回調
@@ -259,7 +258,7 @@ export default class VocaServer{
 			//const [rows, config] = req.body
 			try{
 				const rows:IVocaRow[] = $(req.body[0])
-				const config2:VocaRawConfig = $(req.body[1])
+				//const config2:VocaRawConfig = $(req.body[1])
 				const sws = SingleWord2.toJsObj(rows)
 				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
@@ -308,7 +307,7 @@ export default class VocaServer{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
-				const tableName:string = $((req.body).tableName)
+				//const tableName:string = $((req.body).tableName)
 				//await this.sqlt.creatTable(tableName, false)
 				//res.send('creat table successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){
@@ -330,26 +329,21 @@ export default class VocaServer{
 			}
 		})
 
-		VocaServer.app.post('/compileTs', async(req, res)=>{
-			const nunc = Tempus.new()
-			console.log(req.path+' '+Tempus.format(nunc))
-			try {
-				//const [tsCode, tsconfigStr] = req.body
-				const body = JSON.parse(req.body)
-				const tsCode:string = $( body[0] )
-				const tsconfig0_str:string = $( body[1] )
-				const tsconfig1_str = await fs.promises.readFile('./tsconfig.json', 'utf-8')
-				const tsconfig0 = json5.parse(tsconfig0_str)
-				const tsconfig1 = json5.parse(tsconfig1_str)
-				const tsconfig:any = lodashMerge({}, tsconfig1, tsconfig0)
-				const jsCode = compileTs(tsCode, tsconfig.compilerOptions)
-				res.send(jsCode)
-			} catch (error) {
-				const err = error as Error
-				console.error(err)
-				res.send(Tempus.format(nunc)+'\n'+err.message)
-			}
-		})
+		//請求頭潙'Content-Type': 'application/json'旹 res.body潙 解析json˪ᵗ js對象、無需再手動解析
+		VocaServer.app.post('/compileTs', post(async(req, res)=>{
+			//const [tsCode, tsconfigStr] = req.body
+			//console.log(req.body)//t
+			//const body = JSON.parse(req.body)
+			const body = req.body
+			const tsCode:string = $( body[0] )
+			const tsconfig0_str:string = $( body[1] )
+			const tsconfig1_str = await fs.promises.readFile('./tsconfig.json', 'utf-8')
+			const tsconfig0 = json5.parse(tsconfig0_str)
+			const tsconfig1 = json5.parse(tsconfig1_str)
+			const tsconfig:any = lodashMerge({}, tsconfig1, tsconfig0)
+			const jsCode = compileTs(tsCode, tsconfig.compilerOptions)
+			res.send(jsCode)
+	}))
 
 		// C.app.get('/tables',async(req, res)=>{
 		// 	const nunc = Tempus.new()

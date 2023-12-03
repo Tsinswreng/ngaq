@@ -2,11 +2,11 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, lastOf, lodashMerge, mapToObjArr, simpleUnion } from '@shared/Ut';
+import { $, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
-import { Sros, Sros_big, Sros_number } from '@shared/Sros';
+import { Sros} from '@shared/Sros';
 //const sros = Sros.new<Sros_number>()
 const sros = Sros.new()
 const s = sros.short
@@ -578,7 +578,10 @@ export default class SingleWord2{
  * 日期對事件
  */
 class Tempus_Event{
-	public constructor(public tempus:Tempus, public event:WordEvent){
+	public constructor(
+		public tempus:Tempus
+		,public event:WordEvent
+	){
 
 	}
 }
@@ -822,7 +825,7 @@ export class Priority{
 	public static getDebuff(mills:number, numerator:number){
 		//let debuff = (numerator/mills) + 1
 		let debuff = s.n(numerator)
-		debuff = s.d(debuff, numerator)
+		debuff = s.d(debuff, mills)
 		debuff = s.a(debuff, 1)
 		return $n(debuff)
 	}

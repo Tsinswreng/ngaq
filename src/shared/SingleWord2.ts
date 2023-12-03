@@ -2,11 +2,11 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, lastOf, lodashMerge, mapToObjArr, simpleUnion } from '@shared/Ut';
+import { $, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
-import { Sros, Sros_big, Sros_number } from '@shared/Sros';
+import { Sros} from '@shared/Sros';
 //const sros = Sros.new<Sros_number>()
 const sros = Sros.new()
 const s = sros.short
@@ -689,6 +689,7 @@ export class Priority{
 	 * @returns 
 	 */
 	public getPrio0Procedures(sw:SingleWord2){
+		const self = this
 		//const s = Priority.sros.short
 		//Promise.reject(new Error('114'))
 		const nunc = Tempus.new()
@@ -741,7 +742,7 @@ export class Priority{
 				return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
 			}
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-			let debuff = Priority.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
+			let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
 			//prio0 /= debuff
 			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
@@ -789,7 +790,7 @@ export class Priority{
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){
 			let timeDiff = Tempus.diff_mills(curTempus_event.tempus, lastTempus_event.tempus)
 			if(timeDiff <=0){throw new Error(`timeDiff <=0`)}
-			return Priority.getDateWeight(
+			return self.getDateWeight(
 				$n( s.d(timeDiff,1000) )
 			)
 		}
@@ -807,7 +808,7 @@ export class Priority{
 	 * @param dateDif 
 	 * @returns 
 	 */
-	public static getDateWeight(dateDif:number):number{
+	public getDateWeight(dateDif:number):number{
 		let ans = s.n(dateDif)
 		ans = sros.pow(ans, 1/2)
 		ans = s.d(ans, 100)
@@ -819,10 +820,10 @@ export class Priority{
 		// return $n(result)
 	}
 
-	public static getDebuff(mills:number, numerator:number){
+	public getDebuff(mills:number, numerator:number){
 		//let debuff = (numerator/mills) + 1
 		let debuff = s.n(numerator)
-		debuff = s.d(debuff, numerator)
+		debuff = s.d(debuff, mills)
 		debuff = s.a(debuff, 1)
 		return $n(debuff)
 	}
