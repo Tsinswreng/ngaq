@@ -14,6 +14,7 @@ import { IVocaRow } from '@shared/SingleWord2';
 import { $, $a, creatFileSync, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import * as fs from 'fs'
+import Stream from 'stream';
 //const rootDir:string = require('app-root-path').path
 
 
@@ -194,9 +195,9 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	public static async readStream(db:Database, table:string){
+	public static async readStream(db:Database, table:string, opts?:Stream.ReadableOptions){
 		const stmt = await Sqlite.stmt.getStmt_selectAllSafe(db, table)
-		return Sqlite.readStream(stmt)
+		return Sqlite.readStream_json(stmt, opts, {assign:false,fn:(row:VocaDbTable)=>{C.attachTableName([row], table)}})
 	}public readStream(){
 		return C.readStream(this.db, $a(this.tableName))
 	}
@@ -315,7 +316,7 @@ export default class VocaSqlite{
 			return forArr2(db, table, w)
 		}
 
-		const runResult:RunResult[] = await Sqlite.transaction(db, fn)
+		const runResult:RunResult[] = await fn() //await Sqlite.transaction(db, fn)
 		return runResult
 	}
 
@@ -571,11 +572,13 @@ export default class VocaSqlite{
 	public static async qryWordByWordShape(db:Database, table:string, wordShape:string[]):Promise<(IVocaRow)[][]>
 
 	public static async qryWordByWordShape(db:Database, table:string, wordShape:string|string[]){
+		const cl = VocaDbTable
 		if(typeof wordShape === 'string'){
 			return forOne(db, table, wordShape)
 		}else{
-			
-			let d2 = await Sqlite.qryValuesInColumn_unsafeInt<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
+			const fn = await Sqlite.fn.qryValuesInColumn_fn<IVocaRow>(db, table, cl.wordShape, wordShape)
+			//let d2 = await Sqlite.qryValuesInColumn_unsafeInt_transaction<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
+			let d2 = await fn()
 			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
@@ -693,7 +696,7 @@ export default class VocaSqlite{
 	// }
 
 	/**
-	 * 用transaction批量ᵈ由id蔿行重設詞。
+	 * 批量ᵈ由id蔿行重設詞。
 	 * 緣 取sql語句之函數 需傳SingleWord2故形參擇此。
 	 * @param db 
 	 * @param table 
@@ -732,7 +735,8 @@ export default class VocaSqlite{
 			}
 			return runResult
 		}
-		return Sqlite.transaction(db, fn)
+		//return Sqlite.transaction(db, fn)
+		return fn()
 	}
 
 	/**
@@ -877,7 +881,9 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public static async getWordShapesByIds(db:Database, table:string, ids:number[]){
-		const rows2d = await Sqlite.qryByIds_unsafeInt<IVocaRow>(db, table, ids)
+		const cl = VocaDbTable
+		const rows2d_fn = await Sqlite.qryValuesInColumn_fn<IVocaRow>(db, table, cl.id ,ids)
+		const rows2d = await rows2d_fn()
 		const rows = rows2d.flat(1)
 		return rows.map(e=>e.wordShape)
 	}

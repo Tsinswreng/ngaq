@@ -18,15 +18,17 @@ class ReviewedWords{
 	 * id對既憶ᵗ單詞 之映射
 	 */
 	private _rmb_idToWordsMap:Map<number, WordB> = new Map()
-	;public get rmb_idToWordsMap(){return this._rmb_idToWordsMap;};
+	get rmb_idToWordsMap(){return this._rmb_idToWordsMap;};
 
 	/**
 	 * id對既忘ᵗ單詞 之映射
 	 */
 	private _fgt_idToWordsMap:Map<number, WordB> = new Map()
-	;public get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
+	get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
 
-
+	public merge(){
+		return new Map([...this.rmb_idToWordsMap, ...this.fgt_idToWordsMap])
+	}
 }
 
 /**
@@ -55,26 +57,68 @@ export default class Recite{
 	private _allWordsToLearn:WordB[] = []
 	;public get allWordsToLearn(){return this._allWordsToLearn;};
 
+	private _id__allWordsToLearn:Map<number, WordB> = new Map()
+	get id__allWordsToLearn(){return this._id__allWordsToLearn}
+
+	// private _id__posInWordsArr:Map<number, number> = new Map()
+	// get id__posInWordsArr(){return this._id__posInWordsArr}
+
 	//private _allIdToWordsMap:Map<number, WordB> = new Map()
 	//;public get allIdToWordsMap(){return this._allIdToWordsMap;};
 
 	/**
 	 * current word
 	 */
-	private _curWord?:WordB
-	;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
+	// private _curWord?:WordB
+	// ;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
 
 	private _rvwObj = new ReviewedWords()
 	;public get rvwObj(){return this._rvwObj;};
 
 	/**
 	 * 重置(測試)
+	 * @deprecated
 	 */
 	public static reset(){
 		//<待改>{lodash之merge會忽略undefined、洏余需ˌundefiend值ˋˋ亦可覆蓋ᵣ。}
 		_.merge(Recite._instance, new Recite())
-	}public reset(){
+	}
+	/**
+	 * @deprecated
+	 */
+	public reset(){
 		Recite.reset()
+	}
+
+	public static restart(){
+		const o = C.getInstance()
+	}
+
+	public restart(){
+		this.flushAllWordsToLearn()
+	}
+
+
+	public flushAllWordsToLearn(){
+		const id__reviewedWord = this.rvwObj.merge()
+		for(let i = 0; i < this.allWordsToLearn.length; i++){
+			const u = this.allWordsToLearn[i]
+			const id = $(u.fw.id)
+			const gotV:WordB|undefined = id__reviewedWord.get(id)
+			if(gotV === void 0){continue}
+			console.log(u.priority.prio0num)//t
+			const neoSw = SingleWord2.intersect(u.fw, gotV.fw)
+			gotV.fw = neoSw
+			//this.allWordsToLearn[i].fw = gotV.fw
+			Object.assign(u.fw, gotV.fw)
+			Object.assign(u, gotV)
+			Object.assign(u, new WordB(u.fw))
+			//this.allWordsToLearn[i] = gotV
+			u.mergeDates()
+			u.calcPrio()
+
+			console.log(u.priority.prio0num)//t
+		}
 	}
 
 	/**
@@ -96,6 +140,11 @@ export default class Recite{
 		console.log(`後端ᙆ取詞之耗時: `+time)
 		//let sws = await VocaClient.fetchWords(path)
 		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
+		this.id__allWordsToLearn.clear()
+
+		this.allWordsToLearn.map(e=>{
+			this.id__allWordsToLearn.set($(e.fw.id), e)
+		})
 	}
 
 	/***
@@ -121,6 +170,10 @@ export default class Recite{
 		wbs.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
 	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
+	}
+
+	public descSortByPrio(){
+		this.allWordsToLearn.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
 	}
 
 	/**
@@ -282,3 +335,5 @@ export default class Recite{
 
 }
 
+const C = Recite
+type C = Recite

@@ -1,5 +1,5 @@
 
-#20231203201730212
+#20231204185126258
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2074,6 +2074,13 @@ use_preset_vocabulary: true
 宰	tsˁəʔ	
 災	tsˁə	
 灾	tsˁə	
+皺	tsrˁos	
+縐	tsrˁos	
+䐢	tsrˁos	
+鄒	tsrˁo	
+騶	tsrˁo	
+陬	tsrˁo	
+搊	tsrˁoʔ	
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
@@ -2456,7 +2463,9 @@ use_preset_vocabulary: true
 蜂	pʰroŋ	
 誠	ŋeŋ	
 城	tʰeŋ	
+霉	mˁə	
 誨	mʰˁəs	
+晦	mʰˁəks	
 侮	moʔ	
 模	mˁa	
 模	mˁa	
@@ -4893,9 +4902,6 @@ use_preset_vocabulary: true
 𠌪	tʰˁaw	
 紬	dru	
 㨨	tʰru	
-搊	tsʰru	
-搊	tsruʔ	
-搊	tsro	
 㮲	tsʰru	
 醔	tsʰru	
 篘	tsʰru	
@@ -9551,7 +9557,6 @@ use_preset_vocabulary: true
 彗	wrots	
 彗	zots	
 彗	zujs	
-晦	hˁujs	
 㑰	laŋs	
 喙	hʷats	
 𣨶	hʷats	
@@ -14215,7 +14220,6 @@ use_preset_vocabulary: true
 酶	mˁə	
 塺	mˁajs	
 塺	mˁə	
-霉	mˁə	
 鋂	mˁə	
 䤂	mˁə	
 矀	mrəj	
@@ -26082,13 +26086,10 @@ use_preset_vocabulary: true
 駎	drus	
 䈙	druʔ	
 僽	dzrus	
-皺	tsrus	
 噣	tok	
 噣	trus	
 噣	trˁok	
 噣	tˁos	
-縐	tsʰrˁaws	
-縐	tsrus	
 𥣙	dzruʔ	
 籀	drus	
 帚	tuʔ	
@@ -26131,7 +26132,6 @@ use_preset_vocabulary: true
 櫧	ta	
 櫫	tra	
 鼄	tro	
-騶	tsru	
 䃴	ta	
 蠩	ta	
 𦬸	drut	
@@ -26230,8 +26230,6 @@ use_preset_vocabulary: true
 𡪄	traʔ	
 翥	tas	
 𡻠	tas	
-䐢	tsʰros	
-䐢	tsrus	
 㾻	dra	
 㾻	dras	
 㾻	tʰras	
@@ -26709,9 +26707,6 @@ use_preset_vocabulary: true
 縱	tsoŋs	
 𣀒	dzˁoŋs	
 郰	tsru	
-陬	tsru	
-陬	tsˁo	
-陬	tso	
 掫	tsruʔ	
 掫	tsˁo	
 掫	tso	
@@ -26724,7 +26719,6 @@ use_preset_vocabulary: true
 棷	tsru	
 棷	tsˁo	
 棷	sˁoʔ	
-鄒	tsru	
 箃	tsru	
 緅	tsru	
 緅	tsˁo	

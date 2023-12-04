@@ -90,6 +90,7 @@ const get = <R>(old:(req:Request, res:Response)=>R)=>{
 			console.error(err)
 			console.error(nunc.iso)
 			res.send(err)
+			throw err
 		}
 	}
 	return neoFn
@@ -107,6 +108,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 			console.error(err)
 			console.error(nunc.iso)
 			res.send(err)
+			throw err
 		}
 	}
 	return neoFn
@@ -123,6 +125,7 @@ export default class VocaServer{
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
+		C.sqlt = await VocaSqlite.neW({})
 		// console.log(114514)//t
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
 		// console.log(514114)
@@ -239,15 +242,20 @@ export default class VocaServer{
 		// 	res.send('成功接收到数据'+timeNow)
 		// })
 
-		VocaServer.app.post('/saveWords',(req,res)=>{
-			const nunc = Tempus.new()
-			console.log(req.path+' '+Tempus.format(nunc))
+		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//console.log(req.body)
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
-			VocaSqlite.saveWords(this.sqltDbObj, sws)
-			res.send('receive successfully'+nunc.iso)
-		})
+			//console.log(sws)//t
+			const prms = await VocaSqlite.saveWords(this.sqltDbObj, sws)
+			const fn = ()=>{
+				return Promise.all(prms)
+			}
+			await Sqlite.transaction(C.sqltDbObj, fn)
+			// for(const p of prms){
+			// 	await p
+			// }//並行則有transaction嵌套之謬?
+		}))
 
 		VocaServer.app.post('/addWords',async (req,res)=>{
 			const nunc = Tempus.new()
@@ -270,6 +278,7 @@ export default class VocaServer{
 				})
 				//console.log(2)//t
 				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table, backupDb.db) //* 無調用堆棧
+				//console.log(114)//t
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧

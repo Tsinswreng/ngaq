@@ -129,16 +129,12 @@ export default class Sqlite{
 		, getStmt_insertObj: Sqlite.getStmt_insertObj
 	}
 
-	public static readonly transactions = {
-		getManyRows: Sqlite.getManyRows_transaction
-		, stmtGetRows: Sqlite.stmtGetRows_transaction
-		,stmtInsertObjs :Sqlite.stmtInsertObjs_transaction
-		,dbInsertObjs:Sqlite.dbInsertObjs_transaction
-	}
 
 	public static readonly fn = {
 		stmtGetRows: Sqlite.stmtGetRows_fn
-		, stmtInsertObjs_fn: Sqlite.stmtInsertObjs_fn
+		, stmtInsertObjs: Sqlite.stmtInsertObjs_fn
+		,dbInsertObjs_fn: Sqlite.dbInsertObjs_fn
+		,qryValuesInColumn_fn: Sqlite.qryValuesInColumn_fn
 	}
 
 	public static readonly table = {
@@ -146,10 +142,7 @@ export default class Sqlite{
 		, isColumnExist: Sqlite.isColumnExist
 		, isTableExist : Sqlite.isTableExist
 		, copyTableStructureCrossDb : Sqlite.copyTableStructureCrossDb
-		, copyTableCrossDbNonBatch : Sqlite.copyTableCrossDbNonBatch
 		, copyTableCrossDb : Sqlite.copyTableCrossDb
-		, qryByIds_unsafeInt: Sqlite.qryByIds_unsafeInt
-		, qryValuesInColumn_unsafeInt : Sqlite.qryValuesInColumn_unsafeInt
 	}
 
 	/**
@@ -163,7 +156,8 @@ export default class Sqlite{
 		return new sqltVb.Database(filePath, mode, (err)=>{
 			if(err){
 				//throw err
-				throw sqlErr(err)
+				//throw sqlErr(err)
+				throw err
 			}
 		})
 	}
@@ -199,8 +193,8 @@ export default class Sqlite{
 	public static prepareAsync(db:Database, sql:string, params?:any){
 		return db.prepare(sql, params, (err)=>{
 			if(err){
-				//throw err
-				throw sqlErr(err)
+				throw err
+				//throw sqlErr(err)
 				//rej(err)
 			}
 		})
@@ -294,7 +288,8 @@ export default class Sqlite{
 			return new Promise<[RunResult,T|undefined]>((res, rej)=>{
 				stmt.get<T>(params, function(err, rows){
 					if(err){
-						rej(err);return
+						
+						rej( sqlErr(err) );return //此處抛錯會失調用堆棧ᵗ訊
 						//throw sqlErr(err)
 					}
 					const this_runResult = this
@@ -345,7 +340,7 @@ export default class Sqlite{
 	public static async stream_readAll(db:Database, table:string){
 		const sql_selectAll = await Sqlite.genSql_SelectAllIntSafe(db, table)
 		const stmt = Sqlite.prepareAsync(db, sql_selectAll)
-		return Sqlite.readStream(stmt)
+		return Sqlite.readStream_json(stmt)
 	}
 
 
@@ -355,22 +350,64 @@ export default class Sqlite{
 	 * @param opts 
 	 * @returns 
 	 */
-	public static readStream(stmt:Statement, opts?:Stream.ReadableOptions){ 
+	public static readStream_json(
+		stmt:Statement
+		, opts?:Stream.ReadableOptions
+		, preproccess:{
+			assign: boolean
+			,fn?:Function
+		}={
+			assign: false
+			,fn:(x)=>{return x}
+		}
+	){ 
 		const readStream = new Stream.Readable(opts)
 		if(opts!== void 0 &&'read' in opts){}
 		else{
-			readStream._read = function(){
-				stmt.get((err,row)=>{ //勿傳params、如 若params潙undefined、則get只返表之首行
-					if(err){throw err} //AI之寫法:this.emit('error', err); // 如果出现错误，发出错误事件
-					if(row == void 0){
-						this.push(null)
-					}else{
-						this.push(
-							JSON.stringify(row)+'\n'
-						)
-					}
-				})
+			if(preproccess !== void 0 && preproccess.fn !== void 0 && preproccess.assign){
+				readStream._read = function(){
+					stmt.get((err,row)=>{ //勿傳params、如 若params潙undefined、則get只返表之首行
+						if(err){throw err} //AI之寫法:this.emit('error', err); // 如果出现错误，发出错误事件
+						if(row == void 0){
+							this.push(null)
+						}else{
+							row = preproccess.fn!(row)
+							this.push(
+								JSON.stringify(row)+'\n'
+							)
+						}
+					})
+				}
+			}else if (preproccess !== void 0 && preproccess.fn !== void 0 && preproccess.assign===false){
+				readStream._read = function(){
+					stmt.get((err,row)=>{ //勿傳params、如 若params潙undefined、則get只返表之首行
+						if(err){throw err} //AI之寫法:this.emit('error', err); // 如果出现错误，发出错误事件
+						if(row == void 0){
+							this.push(null)
+						}else{
+							preproccess.fn!(row)
+							this.push(
+								JSON.stringify(row)+'\n'
+							)
+						}
+					})
+				}
 			}
+			else{
+				readStream._read = function(){
+					stmt.get((err,row)=>{ //勿傳params、如 若params潙undefined、則get只返表之首行
+						if(err){throw err} //AI之寫法:this.emit('error', err); // 如果出现错误，发出错误事件
+						if(row == void 0){
+							this.push(null)
+						}else{
+							this.push(
+								JSON.stringify(row)+'\n'
+							)
+						}
+					})
+				}
+			}
+			
 		}
 		return readStream
 	}
@@ -407,12 +444,13 @@ export default class Sqlite{
 	 * @param db 
 	 * @param table 
 	 * @param amount 
+	 * @deprecated
 	 * @returns 
 	 */
-	public static async getManyRows_transaction<T=any>(db:Database, table:string, amount:number){
+	public static async getManyRows_stmt<T=any>(db:Database, table:string, amount:number){
 		const sql = await Sqlite.genSql_SelectAllIntSafe(db, table)
 		const stmt = await Sqlite.prepare(db, sql)
-		return Sqlite.stmtGetRows_transaction<T>(db, stmt, amount)
+		return stmt
 		// const fn=async()=>{
 		// 	const result:(T|undefined)[] = []
 		// 	for(let i = 0; i < amount; i++){
@@ -424,6 +462,24 @@ export default class Sqlite{
 		// const result = await Sqlite.transaction(db, fn)
 		// return result
 	}
+
+
+
+	// public static async getManyRows_transaction<T=any>(db:Database, table:string, amount:number){
+	// 	const sql = await Sqlite.genSql_SelectAllIntSafe(db, table)
+	// 	const stmt = await Sqlite.prepare(db, sql)
+	// 	return Sqlite.stmtGetRows_transaction<T>(db, stmt, amount)
+	// 	// const fn=async()=>{
+	// 	// 	const result:(T|undefined)[] = []
+	// 	// 	for(let i = 0; i < amount; i++){
+	// 	// 		const row = (await Sqlite.stmtGet<T>(stmt))[1]
+	// 	// 		result.push(row)
+	// 	// 	}
+	// 	// 	return result
+	// 	// }
+	// 	// const result = await Sqlite.transaction(db, fn)
+	// 	// return result
+	// }
 
 	/**
 	 * 取盡時則返、故結果之長未必等於amount
@@ -474,13 +530,22 @@ export default class Sqlite{
 		return runResults
 	}
 
-	public static async dbInsertObjs_transaction(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
+
+	public static dbInsertObjs_fn(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
 		const fn = async()=>{
 			const ans = await C.dbInsertObjs(db, table, objs, ignoredKeys)
 			return ans
 		}
-		return C.transaction(db, fn)
+		return fn
 	}
+
+	// public static async dbInsertObjs_transaction(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
+	// 	const fn = async()=>{
+	// 		const ans = await C.dbInsertObjs(db, table, objs, ignoredKeys)
+	// 		return ans
+	// 	}
+	// 	return C.transaction(db, fn)
+	// }
 
 	public static async getStmt_insertObj(db:Database, table:string, objs:SqliteType.NonArrObj, ignoredKeys?:string[]){
 		const [insertSql, ] = Sqlite.genSql_insert(table, objs, ignoredKeys)
@@ -517,18 +582,18 @@ export default class Sqlite{
 		return fn
 	}
 
-	public static async stmtInsertObjs_transaction(db:Database, stmt:Statement, table:string, objs:Object[], ignoredKeys?:string[]){
-		const runResults:RunResult[] =[]
-		const fn = async()=>{
-			for(const o of objs){
-				const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
-				const runResult = await Sqlite.stmtRun(stmt, params) //*
-				runResults.push(runResult)
-			}
-			return runResults
-		}
-		return Sqlite.transaction(db, fn)
-	}
+	//public static async stmtInsertObjs_transaction(db:Database, stmt:Statement, table:string, objs:Object[], ignoredKeys?:string[]){
+	//	const runResults:RunResult[] =[]
+	//	const fn = async()=>{
+	//		for(const o of objs){
+	//			const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
+	//			const runResult = await Sqlite.stmtRun(stmt, params) //*
+	//			runResults.push(runResult)
+	//		}
+	//		return runResults
+	//	}
+	//	return Sqlite.transaction(db, fn)
+	//}
 
 	/**
 	 * 數據庫中ᵗ表ˇ轉二維數組
@@ -824,7 +889,8 @@ export default class Sqlite{
 			db.run(`BEGIN TRANSACTION`, function(err){
 				if(err){
 					//throw err
-					throw sqlErr(err)
+					//throw sqlErr(err)
+					rej(err)
 				}
 				res()
 			})
@@ -1188,7 +1254,8 @@ FROM '${tableName}';`
 	 * @param neoName 
 	 * @returns 
 	 */
-	public static async copyTableCrossDbNonBatch(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
+
+	public static async copyTableCrossDbNonBatch_fn(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
 		const fn_creatSql = await Sqlite.getCreateTableSqlTemplateFromSqlite_master(srcDb, srcTable)
 		const creatSql = fn_creatSql(neoName)
 		await Sqlite.all(targetDb, creatSql)
@@ -1216,14 +1283,19 @@ FROM '${tableName}';`
 			}
 		}
 		
-		return Sqlite.transaction(targetDb, fn)
-
-		
-		//return Sqlite.transaction(targetDb, [{sql:insertSql, values:values}], 'run')
+		return fn
 	}
 
+
+
+	// public static async copyTableCrossDbNonBatch_transaction(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
+	// 	const fn = await C.copyTableCrossDbNonBatch_fn(srcDb, srcTable, targetDb, neoName)
+	// 	return Sqlite.transaction(targetDb, fn)
+	// }
+
 	/**
-	 * 分批跨數據庫複製表
+	 * 分批跨數據庫複製表 有transaction
+	 * 不能複製空表
 	 * @param srcDb 
 	 * @param srcTable 
 	 * @param targetDb 
@@ -1232,46 +1304,85 @@ FROM '${tableName}';`
 	 */
 	public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable, batchAmount=8192){
 		
-		await Sqlite.copyTableStructureCrossDb(srcDb, srcTable, targetDb, neoName)
-		//console.log('modor')
-		//return //t
-		const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
-		const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, firstRow)
-		const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
-		//console.log(sql)//t 如sql謬則有調用堆棧
-		const stmt_get = await Sqlite.prepare(srcDb, sql)
-		// 注意 事務不能嵌套
-		// srcDb 和targetDb不是同一個db、不能放在同一個transaction裏
-
-		for(let i = 0;;i++){
+		try {
+			await Sqlite.copyTableStructureCrossDb(srcDb, srcTable, targetDb, neoName)
+			//console.log('modor')
+			//return //t
+			let stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
+			//const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
+			const firstRow = await Sqlite.stmt.get<Object>(stmt_selectAllSafe)
 			
-			process.stdout.write(`\r${i}`)
-			const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
-			await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
-			if(rows.length !== batchAmount){break}
-		}
-		//const getRowFn = Sqlite.stmtGetRows_fn(stmt_get, batchAmount)
-		
-		// const fn = async()=>{
-		// 	for(;;){
-		// 		//const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
-		// 		//await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows)
-		// 		const rows = await getRowFn() //fast
-		// 		//console.log(`console.log(rows.length)`)
-		// 		//console.log(rows.length)
-		// 		//const insertFn = Sqlite.stmtInsertObjs_fn(targetDb, stmt_insert, neoName, rows)
-		// 		//await insertFn()
-		// 		for(const r of rows){
-		// 			const [,v] = Sqlite.sql.getSql_insert(neoName, r)
-		// 			await Sqlite.stmtRun(stmt_insert, v)
-		// 		}
+			const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, $(firstRow))
+			const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
+			//console.log(sql)//t 如sql謬則有調用堆棧
+			const stmt_get = await Sqlite.prepare(srcDb, sql)
+			// 注意 事務不能嵌套
+			// srcDb 和targetDb不是同一個db、不能放在同一個transaction裏
+	
+			stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
+			const fn_stmtGet = await Sqlite.fn.stmtGetRows(stmt_selectAllSafe, batchAmount)
+			
+			for(let i = 0;;i++){
 				
-		// 		if(rows.length !== batchAmount){break}
-		// 	}
-			
-		// }
-		// return Sqlite.transaction(targetDb, fn)
+				process.stdout.write(`\r${i}`)
+				//const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
+				//const rows = await Sqlite.stmt.get(stmt_selectAllSafe, batchAmount) //此處抛錯則泯調用堆棧訊
+				const rows = await Sqlite.transaction(srcDb, fn_stmtGet)
+				//await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
+				const fn_insert = await Sqlite.fn.stmtInsertObjs(targetDb, stmt_insert, neoName, rows)
+				//await Sqlite.stmt.run(stmt_insert, rows)
+				await Sqlite.transaction(targetDb, fn_insert)
+				if(rows.length !== batchAmount){break}
+			}
+		} catch (error) {
+			//console.log(error)
+			throw error
+		}
+
 	}
+
+	// public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable, batchAmount=8192){
+		
+	// 	await Sqlite.copyTableStructureCrossDb(srcDb, srcTable, targetDb, neoName)
+	// 	//console.log('modor')
+	// 	//return //t
+	// 	const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
+	// 	const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, firstRow)
+	// 	const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
+	// 	//console.log(sql)//t 如sql謬則有調用堆棧
+	// 	const stmt_get = await Sqlite.prepare(srcDb, sql)
+	// 	// 注意 事務不能嵌套
+	// 	// srcDb 和targetDb不是同一個db、不能放在同一個transaction裏
+
+	// 	for(let i = 0;;i++){
+			
+	// 		process.stdout.write(`\r${i}`)
+	// 		const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
+	// 		await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
+	// 		if(rows.length !== batchAmount){break}
+	// 	}
+	// 	//const getRowFn = Sqlite.stmtGetRows_fn(stmt_get, batchAmount)
+		
+	// 	// const fn = async()=>{
+	// 	// 	for(;;){
+	// 	// 		//const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
+	// 	// 		//await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows)
+	// 	// 		const rows = await getRowFn() //fast
+	// 	// 		//console.log(`console.log(rows.length)`)
+	// 	// 		//console.log(rows.length)
+	// 	// 		//const insertFn = Sqlite.stmtInsertObjs_fn(targetDb, stmt_insert, neoName, rows)
+	// 	// 		//await insertFn()
+	// 	// 		for(const r of rows){
+	// 	// 			const [,v] = Sqlite.sql.getSql_insert(neoName, r)
+	// 	// 			await Sqlite.stmtRun(stmt_insert, v)
+	// 	// 		}
+				
+	// 	// 		if(rows.length !== batchAmount){break}
+	// 	// 	}
+			
+	// 	// }
+	// 	// return Sqlite.transaction(targetDb, fn)
+	// }
 
 	// public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
 	// 	const isNeoNameExist = await Sqlite.isTableExist(targetDb, neoName)
@@ -1407,37 +1518,9 @@ FROM '${tableName}';`
 	// 	return r[0][0]
 	// }
 
-	/**
-	 * 由id數組查詢行
-	 * 無整數安全
-	 * @param db 
-	 * @param table 
-	 * @param id 
-	 * @param idColumnName 
-	 * @returns 
-	 */
-	public static qryByIds_unsafeInt<T>(db:Database, table:string, id:number[], idColumnName='id'):Promise<T[][]>{
-		// const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
-		// const ids:[number][] = id.map(e=>[e])
-		// const pair = {sql:sql, values:ids}
-		// const r = await Sqlite.transaction<T>(db, [pair], 'each')
-		// return r[0][0]
-		return Sqlite.qryValuesInColumn_unsafeInt(db, table, idColumnName, id)
-	}
-
-	/**
-	 * 在columnˉ列中尋values
-	 * 無整數安全
-	 * @param db 
-	 * @param table 
-	 * @param column 
-	 * @param values 
-	 * @returns 
-	 */
-	public static async qryValuesInColumn_unsafeInt<T>(db:Database, table:string, column:string, values:any[]){
-		//const vs = values.map(e=>[e])
-
-		const sql = `SELECT * FROM '${table}' WHERE ${column}=?`
+	public static async qryValuesInColumn_fn<T>(db:Database, table:string, column:string, values:any[]){
+		const selector = await Sqlite.sql.genSql_columnCastToText(db, table)
+		const sql = `SELECT ${selector} FROM '${table}' WHERE ${column}=?`
 		const stmt = await Sqlite.prepare(db, sql)
 		const fn=async()=>{
 			const result:T[][] = []
@@ -1448,11 +1531,70 @@ FROM '${tableName}';`
 			
 			return result
 		}
-		const result = await Sqlite.transaction(db, fn)
-		//const sqlPair = new SqlToValuePair(sql, vs)
-		//const [rows, runResults] = await Sqlite.transaction_complex<T>(db, [sqlPair], 'each')
-		return result
+		return fn
 	}
+
+	/**
+	 * 由id數組查詢行
+	 * 無整數安全
+	 * @param db 
+	 * @param table 
+	 * @param id 
+	 * @param idColumnName 
+	 * @returns 
+	 */
+	// public static qryByIds_unsafeInt_transaction<T>(db:Database, table:string, id:number[], idColumnName='id'):Promise<T[][]>{
+	// 	// const sql = `SELECT * FROM '${table}' WHERE ${idColumnName}=?`
+	// 	// const ids:[number][] = id.map(e=>[e])
+	// 	// const pair = {sql:sql, values:ids}
+	// 	// const r = await Sqlite.transaction<T>(db, [pair], 'each')
+	// 	// return r[0][0]
+	// 	return Sqlite.qryValuesInColumn_unsafeInt_transaction(db, table, idColumnName, id)
+	// }
+
+	/**
+	 * 在columnˉ列中尋values
+	 * 無整數安全
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param values 
+	 * @returns 
+	 */
+
+	// public static async qryValuesInColumn_unsafeInt_fn<T>(db:Database, table:string, column:string, values:any[]){
+	// 	//const vs = values.map(e=>[e])
+
+	// 	const sql = `SELECT * FROM '${table}' WHERE ${column}=?`
+	// 	const stmt = await Sqlite.prepare(db, sql)
+	// 	const fn=async()=>{
+	// 		const result:T[][] = []
+	// 		for(const v of values){
+	// 			const [,rows] = await Sqlite.stmtAll<T>(stmt, v)
+	// 			result.push(rows)
+	// 		}
+			
+	// 		return result
+	// 	}
+		
+	// 	//const sqlPair = new SqlToValuePair(sql, vs)
+	// 	//const [rows, runResults] = await Sqlite.transaction_complex<T>(db, [sqlPair], 'each')
+	// 	return fn
+	// }
+
+
+	/**
+	 * 
+	 * @param db 
+	 * @param table 
+	 * @param column 
+	 * @param values 
+	 * @returns 
+	 */
+	// public static async qryValuesInColumn_unsafeInt_transaction<T>(db:Database, table:string, column:string, values:any[]){
+	// 	const fn = await C.qryValuesInColumn_unsafeInt_fn<T>(db, table, column, values)
+	// 	return Sqlite.transaction(db, fn)
+	// }
 
 	/**
 	 * id, name, age -> CAST(id AS TEXT)AS id, name, CAST(age AS TEXT)AS age

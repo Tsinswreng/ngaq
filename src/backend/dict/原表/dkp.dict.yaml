@@ -2530,6 +2530,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 災	tsˁə
 灾	tsˁə
 
+皺	tsrˁos
+縐	tsrˁos
+䐢	tsrˁos
+
+鄒	tsrˁo
+騶	tsrˁo
+陬	tsrˁo
+
+搊	tsrˁoʔ
 # 份
 # 斌
 # 彬
@@ -3328,7 +3337,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 霉	雨每
 # 侮	人每
 # 誨	言每
+霉	mˁə	# ts
 誨	mʰˁəs
+晦	mʰˁəks	# bs
 侮	moʔ
 
 

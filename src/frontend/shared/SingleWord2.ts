@@ -773,13 +773,16 @@ export class Priority{
 			}else{
 				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = $n( s.d(prio0, s.d(innerWeight,2)) )
+				prio0 = $n(
+					 s.d(
+						prio0
+						,s.d(innerWeight,2)
+					)
+				)
 				weight = innerWeight
 			}
 			
-			if(i<finalAddEventOrder){
-				return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
-			}
+
 			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 			let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
 			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
@@ -789,6 +792,9 @@ export class Priority{
 			// console.log(debuff)//t
 			// console.log('final')
 			// console.log(this.config.debuffNumerator)//t
+			if(i<finalAddEventOrder){
+				debuff = 1 //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
+			}
 			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
 			procedures.push(unusProcedure)
 		}
@@ -851,6 +857,9 @@ export class Priority{
 		let ans = s.n(dateDif)
 		ans = sros.pow(ans, 1/2)
 		ans = s.d(ans, 100)
+		if( s.c(ans,1) < 0 ){
+			ans = s.n(1.01)
+		}
 		return $n(ans)
 		// let result = (1/100)*Math.pow(dateDif, 1/2)
 		// if(result <= 1){

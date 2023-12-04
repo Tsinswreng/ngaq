@@ -1,8 +1,9 @@
-import { IVocaRow } from "@shared/SingleWord2"
+import { IVocaRow, VocaDbTable } from "@shared/SingleWord2"
 import SingleWord2 from "@shared/SingleWord2"
 import { NetworkError, $ } from "@shared/Ut"
 import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
+import WordB from "./WordB"
 
 /**
  * local storage item names
@@ -114,7 +115,7 @@ export default class VocaClient{
 	}
 
 	public static async saveWords(rows:IVocaRow[]){
-
+		//console.log(114)
 		const stringfiedRows = JSON.stringify(rows)
 		const requestOptions: RequestInit = {
 			method: 'POST',
@@ -126,8 +127,8 @@ export default class VocaClient{
 		
 		// 后端 API 的 URL
 		const apiUrl = new URL('/saveWords', this.baseUrl)
-		console.log(`console.log(stringfiedRows.length)`)
-		console.log(stringfiedRows.length)//t
+		//console.log(`console.log(stringfiedRows.length)`)
+		//console.log(stringfiedRows.length)//t
 		try {
 			const response = await fetch(apiUrl, requestOptions);
 			
@@ -324,9 +325,17 @@ export default class VocaClient{
 		
 		const text = await resp.text()
 		const jsonArr = text.trim().split('\n')
-		const words = jsonArr.map((e,)=>{
-			return JSON.parse(e)
-		})
+		//console.log(jsonArr)
+		//debugger
+		const words:VocaDbTable[] = []
+		for(let i = 0; i < jsonArr.length; i++){
+			if(jsonArr[i]===''){continue}
+			const o = JSON.parse(jsonArr[i])
+			words.push(o)
+		}
+		// const words = jsonArr.map((e,)=>{
+		// 	return JSON.parse(e)
+		// })
 		return SingleWord2.toJsObj(words)
 	}
 

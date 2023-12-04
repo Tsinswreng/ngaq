@@ -173,16 +173,20 @@ export default class MultiMode{
 			}
 			
 			const recite = this.recite
-			recite.reset()
-			recite.mergeSelfWords()
-			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
-			recite.shuffleWords()
+			// recite.reset()
+			// recite.mergeSelfWords()
+			// recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
+			// recite.shuffleWords()
+			recite.flushAllWordsToLearn()
+			recite.descSortByPrio()
 			// let temp = recite.allWordsToLearn.slice()
 			// recite.allWordsToLearn.length=0
 			// recite.allWordsToLearn.push(...temp)//t
 			this.multiMode_key.value++ //刷新組件
+
 			//this._isShowCardBox.value = false
 			//this._isShowCardBox.value = true
+			//this._isShowCardBox.value = ! this._isShowCardBox.value
 		} catch (e) {
 			alertEtThrow(e)
 		}

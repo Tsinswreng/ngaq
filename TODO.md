@@ -1,6 +1,50 @@
+## 2023-12-04T23:19:32.000+08:00
+- [ ] 覺 以流代select * 之後 前端點開始 比曩 慢不少
+- [ ] 調用堆棧ᵗ訊ˋ泯
+``` ts
+	public static async copyTableCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable, batchAmount=8192){
+		
+		try {
+			await Sqlite.copyTableStructureCrossDb(srcDb, srcTable, targetDb, neoName)
+			//console.log('modor')
+			//return //t
+			let stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
+			//const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
+			const firstRow = await Sqlite.stmt.get<Object>(stmt_selectAllSafe)
+			
+			const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, $(firstRow))
+			const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
+			//console.log(sql)//t 如sql謬則有調用堆棧
+			const stmt_get = await Sqlite.prepare(srcDb, sql)
+			// 注意 事務不能嵌套
+			// srcDb 和targetDb不是同一個db、不能放在同一個transaction裏
+	
+			stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
+			
+			for(let i = 0;;i++){
+				
+				process.stdout.write(`\r${i}`)
+				//const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
+				const rows = await Sqlite.stmt.get(stmt_selectAllSafe, batchAmount) //此處抛錯則泯調用堆棧訊
+				//await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
+				await Sqlite.stmt.run(stmt_insert, rows)
+				if(rows.length !== batchAmount){break}
+			}
+		} catch (error) {
+			//console.log(error)
+			throw error
+		}
+
+	}
+```
+
+
 ## 2023-12-04T16:48:44.000+08:00
 
 - [ ] 重開旹 于未變之詞 不必重算權重
+- [ ] 保存成功旹彈窗提示
+- [ ] Sqlite.ts 增雙工流 直ᵈ存js對象、不轉json、其中用await stmt.get、前端亦直ᵈ解析原始ᵗ對象。
+- [ ] 流中添多個js對象如何分隔
 
 
 ## 2023-12-03T20:31:53.000+08:00
