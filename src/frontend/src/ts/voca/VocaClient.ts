@@ -4,6 +4,14 @@ import { NetworkError, $ } from "@shared/Ut"
 import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
 
+/**
+ * local storage item names
+ */
+export class LsItemNames{
+	static readonly priorityAlgorithmTs = `priorityAlgorithmTs`
+	static readonly priorityAlgorithmJs = `priorityAlgorithmJs`
+}
+
 //import Config from '@shared/Config'
 //const config = Config.getInstance()
 // 此處用單例模式更佳抑靜態類更佳?

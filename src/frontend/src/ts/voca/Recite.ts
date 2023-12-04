@@ -110,6 +110,7 @@ export default class Recite{
 	 * @param wbs 
 	 */
 	public static calcAndDescSortPriority(wbs:WordB[],config?:Partial<typeof Priority.defaultConfig>){
+		//wbs.map(e=>console.log(e.priority.prio0num))//t
 		for(const w of wbs){
 			if(w.priority.changeRecord.length === 0){
 				//w.priority.config.debuffNumerator = 
@@ -262,7 +263,7 @@ export default class Recite{
 	}
 
 	public async saveWords(){
-		const rows:IVocaRow[] = this.getToSavedWords().map((e)=>{return SingleWord2.fieldStringfy(e.fw)})
+		const rows:IVocaRow[] = this.getToSavedWords().map((e)=>{return SingleWord2.toDbObj(e.fw)})
 		let res = await VocaClient.saveWords(rows)//.then((d)=>{l.log(d); this.isSaved = true})
 		this.isSaved = true
 		l.log(`l.log(res)`)

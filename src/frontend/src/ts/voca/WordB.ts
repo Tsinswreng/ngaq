@@ -11,6 +11,7 @@ export default class WordB{
 		
 	}
 
+
 	/**
 	 * father word 原 單詞對象。此處取組合洏舍繼承。
 	 */
@@ -19,7 +20,7 @@ export default class WordB{
 	/**
 	 * 出詞權重對象
 	 */
-	private _priority: Priority = new Priority()
+	private _priority: Priority = Priority.newChild()
 	;public get priority(){return this._priority;};
 
 	/**

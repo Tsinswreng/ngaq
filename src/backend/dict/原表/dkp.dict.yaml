@@ -664,6 +664,18 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #攻	kˁuŋ	# sch
 界	krˁets
 介	krˁeps	# bs
+
+尬	krˁets
+价	krˁets
+芥	krˁets
+蚧	krˁets
+疥	krˁets
+
+誡	krˁəks
+悈	krˁəks
+
+
+
 屆	krˁits
 届	krˁits
 
@@ -2998,6 +3010,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 螄	lri	# ts
 藍	hrˁam	# ts
 哇	waw	# ts
+哇	ʔrˁe
 消	sAw	# ts
 拓	tʰrAk	# ts
 捕	bˁaks	# ts
@@ -3699,6 +3712,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 牴	tˁiʔ
 牴	ŋʷˁiʔ	# ts
+
+
 
 
 #白	@白

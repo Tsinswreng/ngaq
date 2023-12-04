@@ -1,10 +1,21 @@
+## 2023-12-04T16:48:44.000+08:00
+
+- [ ] 重開旹 于未變之詞 不必重算權重
+
+
+## 2023-12-03T20:31:53.000+08:00
+
+* 寫 getShuffle之就地版本
+* compileTs 當ts代碼有錯旹不報錯
+
 ## 2023-12-02T10:15:41.000+08:00
 
-* fetch 後得ᵗ response對象、 調用response.json()旹、 無論 用 try catch await 抑 .then() .catch 皆致 錯誤對象之調用堆棧ᵗ訊ˋ失
+- [ ] fetch 後得ᵗ response對象、 調用response.json()旹、 無論 用 try catch await 抑 .then() .catch 皆致 錯誤對象之調用堆棧ᵗ訊ˋ失
 
 * ConfigError
 * 把設置頁做成彈窗 不另由路由跳轉
-* 自定義權重算法 eval 或 Function
+- [o] 自定義權重算法 eval 或 Function
+
 
 ## 2023-11-20T00:24:49.000+08:00
 

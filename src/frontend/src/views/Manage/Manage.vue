@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import VocaClient from '@ts/voca/VocaClient';
+import VocaClient, { LsItemNames } from '@ts/voca/VocaClient';
 import Manage from './Manage'
 import {ref} from 'vue'
 const manage = Manage.getInstance()
@@ -10,6 +10,11 @@ const tip =
 `
 const tipRef = ref(tip)
 const baseUrlRef = ref(VocaClient.baseUrl)
+
+function lsGet(key:string){
+	return localStorage.getItem(key)
+}
+
 </script>
 
 <template>
@@ -35,8 +40,8 @@ const baseUrlRef = ref(VocaClient.baseUrl)
 			<button @click="manage.testReadLocalStorage()">讀路徑</button>
 		</div>
 		<div>
-			<button @click="manage.getCompiledJs()">設權重算法</button>
-			<textarea cols="30" rows="10" :id="Manage.id_wordPriorityAlgorithm"></textarea>
+			<button @click="manage.set_PriorityClass()">設權重算法</button>
+			<textarea cols="30" rows="10" :id="Manage.id_wordPriorityAlgorithm" :value="lsGet(LsItemNames.priorityAlgorithmTs)??''"></textarea>
 		</div>
 		<div>
 			<button>設配置</button>

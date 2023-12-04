@@ -1,5 +1,5 @@
 
-#20231201211226361
+#20231203201730212
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -528,6 +528,13 @@ use_preset_vocabulary: true
 公	kjˁoŋ	
 界	krˁets	
 介	krˁeps	
+尬	krˁets	
+价	krˁets	
+芥	krˁets	
+蚧	krˁets	
+疥	krˁets	
+誡	krˁəks	
+悈	krˁəks	
 屆	krˁits	
 届	krˁits	
 卷	kronʔ	
@@ -2291,6 +2298,7 @@ use_preset_vocabulary: true
 螄	lri	
 藍	hrˁam	
 哇	waw	
+哇	ʔrˁe	
 消	sAw	
 拓	tʰrAk	
 捕	bˁaks	
@@ -2428,7 +2436,6 @@ use_preset_vocabulary: true
 駱	mrˁaks	
 駱	rˁak	
 酪	lrˁaks	
-齡	tʰrˁeŋ	
 齡	tʰrˁiŋ	
 齡	rˁeŋ	
 丙	praŋʔ	
@@ -7561,7 +7568,6 @@ use_preset_vocabulary: true
 尜	krˁat	
 噶	kˁat	
 尕	krˁajʔ	
-尬	krˁəs	
 侅	ɡˁəʔ	
 侅	ɡrˁəʔ	
 侅	kˁə	
@@ -10150,7 +10156,6 @@ use_preset_vocabulary: true
 瘕	krˁajʔ	
 檟	krˁajʔ	
 𩌍	krˁap	
-价	krˁəs	
 𦙺	krˁajs	
 𢱈	krˁajs	
 𢉤	krˁajs	
@@ -10744,7 +10749,6 @@ use_preset_vocabulary: true
 檞	krˁeʔ	
 丯	krˁəs	
 𠨴	krˁəs	
-芥	krˁəs	
 㠹	krˁəs	
 忦	krˁet	
 㝏	krˁəs	
@@ -10754,12 +10758,8 @@ use_preset_vocabulary: true
 砎	ɡrˁat	
 砎	krˁəs	
 砎	krˁet	
-疥	krˁəs	
 衸	ɡrˁəs	
 衸	krˁəs	
-蚧	krˁəs	
-悈	kək	
-悈	krˁəs	
 㾏	krˁes	
 蛶	rˁot	
 蛶	rot	
@@ -10768,7 +10768,6 @@ use_preset_vocabulary: true
 䯰	krˁəs	
 𩡺	krˁəs	
 犗	krˁats	
-誡	krˁəs	
 䲸	krˁəs	
 魪	krˁəs	
 褯	dzæs	

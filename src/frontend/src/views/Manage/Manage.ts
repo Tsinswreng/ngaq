@@ -1,9 +1,12 @@
-import SingleWord2 from "@shared/SingleWord2"
-import { $a } from "@shared/Ut"
+import SingleWord2, { Priority } from "@shared/SingleWord2"
+import { $, $a } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2"
 import { alertEtThrow } from "@ts/frut"
-import VocaClient from "@ts/voca/VocaClient"
+import VocaClient, { LsItemNames } from "@ts/voca/VocaClient"
 const vocaClient = VocaClient.getInstance()
+
+
+
 export default class Manage{
 
 	public static readonly id_wordSrcStr = 'wordSrcStr'
@@ -35,7 +38,7 @@ export default class Manage{
 			let srcText = this.getSrcStr()
 			const raw = new VocaRaw2(srcText)
 			let words = raw.parseWords()
-			let rows = SingleWord2.fieldStringfy(words)
+			let rows = SingleWord2.toDbObj(words)
 			VocaClient.addWords(rows, raw.config)
 		}catch(e){
 			alertEtThrow(e)
@@ -75,11 +78,32 @@ export default class Manage{
 		return input.value
 	}
 
+
 	public async getCompiledJs(){
 		const tsCode = this.get_wordPriorityAlgorithm()
 		const jsCode = await VocaClient.compileTs(tsCode)
-		console.log(jsCode)//t
+		//console.log(jsCode)//t
 		return jsCode
+	}
+
+	public async set_PriorityClass(){
+		let code = this.get_wordPriorityAlgorithm()??''
+		code = code.trim()
+		const ls_ts = LsItemNames.priorityAlgorithmTs
+		const ls_js = LsItemNames.priorityAlgorithmJs
+		if(code.length === 0){
+			const oldCode = localStorage.getItem(ls_ts)??''
+			const input = document.getElementById(Manage.id_wordPriorityAlgorithm) as HTMLTextAreaElement
+			input.value = oldCode
+		}else{
+			localStorage.setItem(ls_ts, code)
+			const jsCode_ = await VocaClient.compileTs(code)
+			const jsCode = $(jsCode_)
+			localStorage.setItem(ls_js, jsCode)
+			const fn = Priority.custom_js((jsCode))
+			fn()
+		}
+
 	}
 
 	public get_inputBaseUrl(){
@@ -97,5 +121,7 @@ export default class Manage{
 	public testJson(){
 		vocaClient.testJson()
 	}
+
+
 
 }

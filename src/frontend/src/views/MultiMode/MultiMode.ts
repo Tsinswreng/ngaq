@@ -4,7 +4,7 @@ import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
 import Log from '@shared/Log'
 import { $, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
-import VocaClient from '@ts/voca/VocaClient'
+import VocaClient, { LsItemNames } from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
 
@@ -110,8 +110,19 @@ export default class MultiMode{
 		
 	}
 
+	public customPriorityAlgorithm(){
+		
+		const jsCode = localStorage.getItem(LsItemNames.priorityAlgorithmJs)
+		if(jsCode==null || 0 === jsCode.length){
+			return
+		}
+		const fn = Priority.custom_js(jsCode)
+		return fn()
+	}
+
 	public async start(){
 		try {
+			this.customPriorityAlgorithm()
 			const recite = this.recite
 			if(this.isSaved.value!==true){
 				//throw new Error(`未保存旹不得重開`)

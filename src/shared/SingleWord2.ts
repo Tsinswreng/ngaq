@@ -2,7 +2,7 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
+import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
@@ -622,6 +622,45 @@ export class Priority{
 
 	//static sros = Sros.new<Sros_number>({number:'number'})
 
+	protected constructor(){}
+
+	static new(){
+		return new this()
+	}
+
+	static newChild(){
+		return new this()
+	}
+
+
+	/**
+	 * 用new Function動態生成函數。
+	 * 可用於自定義Priority子類
+	 * @param code js代碼
+	 * @returns 
+	 */
+	static custom_js<R=Priority>(code:string){
+		const dependencyObj = {
+			Sros:Sros
+			,ChangeRecord:ChangeRecord
+			,Tempus:Tempus
+			,Priority:Priority
+			,WordEvent:WordEvent
+		}
+		const dependencyMap = new Map(Object.entries(dependencyObj));
+		const keys = dependencyMap.keys()
+		const values = dependencyMap.values()
+		
+		const f = new Function(
+			...keys
+			,code
+		)
+		return () => {
+			return f(...values) as R
+		}
+		
+	}
+
 	public static defaultConfig = {
 		//默認ᵗ 添ᵗ權重
 		addWeight : 0x100, 
@@ -629,7 +668,7 @@ export class Priority{
 		debuffNumerator : 1000*3600*24*90
 	}
 
-	private _config:typeof Priority.defaultConfig = Priority.defaultConfig
+	protected _config:typeof Priority.defaultConfig = Priority.defaultConfig
 	;public get config(){return this._config;};//<疑>{不顯式標明get方法ᵗ返ˡ值ᵗ類型、則其返ˡ值ᵗ類型ˋ自動被推斷潙類型芝同於set方法ᵗ入參ᵗ類型者}
 	public setConfig(v:Partial<typeof Priority.defaultConfig>){
 		this._config=lodashMerge({}, Priority.defaultConfig, v);
@@ -640,11 +679,11 @@ export class Priority{
 	// 	this._config=lodashMerge({}, Priority.defaultConfig, v);
 	// };
 
-	private _changeRecord:ChangeRecord[] = []
+	protected _changeRecord:ChangeRecord[] = []
 	get changeRecord(){return this._changeRecord;}; 
 	set changeRecord(v){this._changeRecord=v;};
 
-	private _procedure:Function[] = [] //
+	protected _procedure:Function[] = [] //
 	get procedure(){return this._procedure}
 
 	/**
@@ -827,6 +866,40 @@ export class Priority{
 		debuff = s.a(debuff, 1)
 		return $n(debuff)
 	}
+
+	
 }
 
+/**
+ * 自定義算法權重類: 先用定義Priority類之子類
+ * 然後直接修改父類(即Priority)之newChild 靜態方法、使之返回子類實例
+ * 最後返回自定義的子類
+ * @returns 
+ */
+const f = ()=>{
+	const Cl = class SubPriority extends Priority{
+	
+		protected constructor(){
+			super()
+		}
+	
+		public static override new(){
+			// const o = new this() //如是則創父類之實例?
+			const o = new SubPriority()
+			console.log(o.prio0num)
+			console.log(this)
+			console.log(o instanceof Priority, o instanceof SubPriority)
+			return o
+		}
+		override get prio0num(){return 100}
 
+		override calcPrio0(sw: SingleWord2): void {
+			super._changeRecord = []
+		}
+	
+	}
+	Priority.newChild = Cl.new
+	console.log(Tempus.new())
+	return Cl
+	
+}
