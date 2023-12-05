@@ -132,22 +132,25 @@ export default class MultiMode{
 				//throw new Error(`不得重複開始`)
 				alertEtThrow(`不得重複開始`)
 			}
-			const selectedTables:string[] = []
-			for(let i = 0; i < this.checkedTables.value.length; i++){
-				let cur = this.checkedTables.value[i]
-				if(cur === true){
-					selectedTables.push(this.tables[i])
-				}
-			}
+			// const selectedTables:string[] = []
+			// for(let i = 0; i < this.checkedTables.value.length; i++){
+			// 	let cur = this.checkedTables.value[i]
+			// 	if(cur === true){
+			// 		selectedTables.push(this.tables[i])
+			// 	}
+			// }
 
-			for(const st of selectedTables){
-				await recite.fetchAndStoreWords(st)
-			}
+			// for(const st of selectedTables){
+			// 	await recite.fetchAndStoreWords(st)
+			// }
 			
 			const sws = await vocaClient.getAllTablesWords()
-			
+			if(sws.length === 0){
+				throw new Error(`無可背單詞`)
+			}
 			recite.addWordsToLearn(sws)
 			recite.filter()
+			
 			//throw new Error('114')
 			
 			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator}) // 此函數中報錯亦失調用堆棧ᵗ訊

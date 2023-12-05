@@ -1,3 +1,9 @@
+## 2023-12-05T00:40:26.000+08:00
+- [ ] /db下胡無vocaBackup.db
+- [ ] 予config.js 增 ts-check
+- [ ] 事件循環
+- [ ] 日誌
+
 ## 2023-12-04T23:19:32.000+08:00
 - [ ] 覺 以流代select * 之後 前端點開始 比曩 慢不少
 - [ ] 調用堆棧ᵗ訊ˋ泯
@@ -11,6 +17,7 @@
 			let stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
 			//const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
 			const firstRow = await Sqlite.stmt.get<Object>(stmt_selectAllSafe)
+			
 			
 			const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, $(firstRow))
 			const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)

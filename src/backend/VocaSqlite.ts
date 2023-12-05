@@ -5,16 +5,18 @@ const sqlt = sqlite3.verbose()
 
 type Database = sqlite3.Database
 type Statement = sqlite3.Statement
-import { RunResult } from 'sqlite3';
-import Sqlite from '@shared/db/Sqlite';
+type RunResult = SqliteType.RunResult
+//import { RunResult } from 'sqlite3';
+import Sqlite, { SqliteTableInfo, SqliteType } from '@shared/db/Sqlite';
 import _ from 'lodash';
 import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
-import VocaRaw2 from '@shared/VocaRaw2';
+import VocaRaw2, { config } from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
-import { $, $a, creatFileSync, pathAt } from '@shared/Ut';
+import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import * as fs from 'fs'
 import Stream from 'stream';
+import lodash from 'lodash'
 //const rootDir:string = require('app-root-path').path
 
 
@@ -70,6 +72,7 @@ export default class VocaSqlite{
 		const o = new this()
 		Object.assign(o, props)
 		if(props._dbPath !== void 0){
+			
 			o._db = await Sqlite.newDatabase(props._dbPath, props.mode)
 		}
 		return o
@@ -97,10 +100,14 @@ export default class VocaSqlite{
 		return o
 	}
 
-	private _dbName = 'voca';
+	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 
+
+	//private _dbName = 'voca';
+	private _dbName?:string
 	public get dbName(){return this._dbName}public set dbName(v){this._dbName=v}
 
-	private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
+	//private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
+	private _dbPath:string = ''
 	;public get dbPath(){return this._dbPath;};
 
 	private _tableName?:string 
@@ -198,8 +205,8 @@ export default class VocaSqlite{
 	public static async readStream(db:Database, table:string, opts?:Stream.ReadableOptions){
 		const stmt = await Sqlite.stmt.getStmt_selectAllSafe(db, table)
 		return Sqlite.readStream_json(stmt, opts, {assign:false,fn:(row:VocaDbTable)=>{C.attachTableName([row], table)}})
-	}public readStream(){
-		return C.readStream(this.db, $a(this.tableName))
+	}public readStream(table:string=$a(this.tableName)){
+		return C.readStream(this.db, table)
 	}
 
 
@@ -287,7 +294,6 @@ export default class VocaSqlite{
 	 * @param db 
 	 * @param table 
 	 * @param word 
-	 * @deprecated
 	 */
 	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[]>
 	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[]>
@@ -304,10 +310,19 @@ export default class VocaSqlite{
 			const [sql,] = VocaSqlite.getInsertSql(table, words[0])
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
-			for(const w of words){
+			runResult.length = words.length
+			let lastRunResut
+			for(let i = 0; i < words.length; i++){
+				const w = words[i]
 				const [sql, value] = VocaSqlite.getInsertSql(table, w)
 				const r = await Sqlite.stmtRun(stmt, value)
-				runResult.push(r)
+				//console.log(r === lastRunResut)
+				const copyR:RunResult = lodash.cloneDeep(r)//每次循環 r所指ᵗ地址ˋ皆不變、唯其所指ᵗ數據ˋ變˪
+				//console.log(r)
+				// runResult.push(r)
+				runResult[i] = copyR
+				//console.log(runResult)//t
+				lastRunResut = r
 			}
 			return runResult
 		}
@@ -454,6 +469,7 @@ export default class VocaSqlite{
 				
 				await VocaSqlite.setWordsByIds(db, table, (wordsToUpdate))
 			}
+			//console.log(runResult1)//t *
 			const initAddIds = runResult1.map(e=>e.lastID)
 			const modifiedIds = wordsToUpdate.map(e=>$(e.id))
 			return [initAddIds, modifiedIds]

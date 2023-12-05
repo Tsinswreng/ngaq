@@ -1,4 +1,4 @@
-import {$a, RegexReplacePair, copyIgnoringKeys, delay, lodashMerge} from '@shared/Ut';
+import {$a, RegexReplacePair, copyIgnoringKeys, delay, lodashMerge, pathAt} from '@shared/Ut';
 import sqlite3 from 'sqlite3';
 const sqltVb = sqlite3.verbose()
 //import { Database,RunResult, Statement } from 'sqlite3';
@@ -15,7 +15,7 @@ import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 import _ from 'lodash';
 import * as fs from 'fs'
 import Stream from 'stream'
-
+import path from 'path';
 const Ut = {
 	objArrToStrArr:objArrToStrArr,
 	serialReplace:serialReplace,
@@ -168,9 +168,11 @@ export default class Sqlite{
 	 * @param mode 
 	 * @returns 
 	 */
-	public static newDatabase(filePath:string, mode?:number){
+	public static newDatabase(filePath:string, mode:number=C.openMode.DEFAULT){
 		return new Promise<sqlite3.Database>((res, rej)=>{
-			const db = new sqltVb.Database(filePath, mode, (err)=>{
+			
+			const db = new sqltVb.Database((filePath), mode, (err)=>{
+				
 				if(err){
 					//throw sqlErr(err)
 					rej(err)
@@ -313,13 +315,17 @@ export default class Sqlite{
 	}
 
 	
+	/**
+	 * 每次執行旹回調中之this之指嚮皆同?
+	 * @param stmt 
+	 * @param params 
+	 * @returns 
+	 */
 	public static stmtRun(stmt:Statement, params?:any){
 		return new Promise<RunResult>((res, rej)=>{
-			stmt.run(params, function(err){
+			stmt.run(params, function(this, err){
 				if(err){
 					//rej(err);return
-					//console.log(new Error())//t
-					//console.error(err)
 					//console.log(`調用堆棧ᵗ訊ˋ泯`)
 					//似當錯潙 SQLITE_BUSY 旹 則 必無調用堆棧之訊
 					//throw err
@@ -646,6 +652,10 @@ export default class Sqlite{
 	public static async getCreateTableSqlTemplateFromSqlite_master(db:Database, table:string){
 		const sql = `SELECT sql from 'sqlite_master' WHERE type='table' AND name=?`
 		const r = await Sqlite.all<any>(db, sql, table)
+		if(r.length === 0){
+			throw new Error(`table not exist:\n${table}`)
+		}
+		//console.log(r)//t
 		const originSql:string = $a(r[0].sql as string)
 		if(typeof(originSql)!=='string'){throw new Error(`typeof(originSql)!=='string'`)}
 		const oldTable = table
@@ -1078,7 +1088,7 @@ export default class Sqlite{
 	public static async isTableExist(db:Database, table:string){
 		let sql = `SELECT name FROM sqlite_master WHERE  type='table' AND name=?;`
 		const result = await Sqlite.all(db, sql, table)
-		return result.length===0
+		return result.length!==0
 	}
 
 	public static async deprecated_isTableExist(db:Database, tableName:string){
@@ -1240,6 +1250,7 @@ FROM '${tableName}';`
 	 * @returns 
 	 */
 	public static async copyTableStructureCrossDb(srcDb:Database, srcTable:string, targetDb:Database, neoName=srcTable){
+
 		const fn_creatSql = await Sqlite.getCreateTableSqlTemplateFromSqlite_master(srcDb, srcTable)
 		const creatSql = fn_creatSql(neoName)
 		return Sqlite.all(targetDb, creatSql)
@@ -1311,7 +1322,9 @@ FROM '${tableName}';`
 			let stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
 			//const firstRow = (await Sqlite.getManyRows_transaction(srcDb, srcTable, 1))[0]
 			const firstRow = await Sqlite.stmt.get<Object>(stmt_selectAllSafe)
-			
+			if(firstRow == void 0){
+				return
+			}
 			const stmt_insert = await Sqlite.getStmt_insertObj(targetDb, neoName, $(firstRow))
 			const sql = await Sqlite.sql.genSql_SelectAllIntSafe(srcDb, srcTable)
 			//console.log(sql)//t 如sql謬則有調用堆棧
@@ -1322,11 +1335,12 @@ FROM '${tableName}';`
 			stmt_selectAllSafe = await Sqlite.stmt.getStmt_selectAllSafe(srcDb, srcTable)
 			const fn_stmtGet = await Sqlite.fn.stmtGetRows(stmt_selectAllSafe, batchAmount)
 			
+			
 			for(let i = 0;;i++){
 				
 				process.stdout.write(`\r${i}`)
 				//const rows = await Sqlite.stmtGetRows_transaction(srcDb, stmt_get, batchAmount) //不能用getManyRows、因每次循環旹其內ᵗstmt皆異
-				//const rows = await Sqlite.stmt.get(stmt_selectAllSafe, batchAmount) //此處抛錯則泯調用堆棧訊
+				//const rows = await Sqlite.stmt.get(stmt_selectAllSafe, batchAmount)[1] //此處抛錯則泯調用堆棧訊
 				const rows = await Sqlite.transaction(srcDb, fn_stmtGet)
 				//await Sqlite.stmtInsertObjs_transaction(targetDb, stmt_insert, neoName, rows) // *
 				const fn_insert = await Sqlite.fn.stmtInsertObjs(targetDb, stmt_insert, neoName, rows)

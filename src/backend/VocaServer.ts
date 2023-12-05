@@ -16,7 +16,7 @@ import cookieParser from 'cookie-parser'
 import Tempus from "@shared/Tempus";
 import SingleWord2 from "@shared/SingleWord2";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
+import { $, absPath, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
@@ -119,13 +119,16 @@ export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
 	public static sqlt = VocaSqlite.new({})
-	public static sqltDbObj = VocaServer.sqlt.db
 	public static session
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
-		C.sqlt = await VocaSqlite.neW({})
+		C.sqlt = await VocaSqlite.neW({
+			_dbPath:config.config.dbPath
+			, _backupDbPath:config.config.backupDbPath
+			,mode: Sqlite.openMode.DEFAULT_CREATE
+		})
 		// console.log(114514)//t
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
 		// console.log(514114)
@@ -192,38 +195,38 @@ export default class VocaServer{
 		// })
 
 		/**
-		 * @deprecated
+		 * deprecated
 		 */
-		this.app.get('/english', async (req,res)=>{
+		// this.app.get('/english', async (req,res)=>{
 			
-			try {
-				let path = req.path
-				console.log('path:'+path)//t
-				let eng = VocaSqlite.new({_tableName:'english'})
-				//console.log(eng.tableName)//t *
-				let words = await eng.getAllWords()
-				//console.log(words)
-				//console.log(JSON.stringify(words))
-				res.setHeader('content-type','text/html;charset=utf-8')
-				res.end(JSON.stringify(words))
-			} catch (error) {
-				const err = error as Error
-				console.error(err)
-			}
+		// 	try {
+		// 		let path = req.path
+		// 		console.log('path:'+path)//t
+		// 		let eng = VocaSqlite.new({_tableName:'english'})
+		// 		//console.log(eng.tableName)//t *
+		// 		let words = await eng.getAllWords()
+		// 		//console.log(words)
+		// 		//console.log(JSON.stringify(words))
+		// 		res.setHeader('content-type','text/html;charset=utf-8')
+		// 		res.end(JSON.stringify(words))
+		// 	} catch (error) {
+		// 		const err = error as Error
+		// 		console.error(err)
+		// 	}
 			
-		})
+		// })
 		
 		/**
-		 * @deprecated
+		 * deprecated
 		 */
-		this.app.get('/japanese', async (req,res)=>{
-			let path = req.path
-			console.log('path:'+path)//t
-			let sqlt = VocaSqlite.new({_tableName:'japanese'})
-			let words = await sqlt.getAllWords()
-			res.setHeader('content-type','text/html;charset=utf-8')
-			res.end(JSON.stringify(words))
-		})
+		// this.app.get('/japanese', async (req,res)=>{
+		// 	let path = req.path
+		// 	console.log('path:'+path)//t
+		// 	let sqlt = VocaSqlite.new({_tableName:'japanese'})
+		// 	let words = await sqlt.getAllWords()
+		// 	res.setHeader('content-type','text/html;charset=utf-8')
+		// 	res.end(JSON.stringify(words))
+		// })
 
 /* 		VocaServer.app.get('/', (req:any, res:any)=>{
 			console.log(req.ip)
@@ -247,11 +250,11 @@ export default class VocaServer{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
 			//console.log(sws)//t
-			const prms = await VocaSqlite.saveWords(this.sqltDbObj, sws)
+			const prms = await VocaSqlite.saveWords(this.sqlt.db, sws)
 			const fn = ()=>{
 				return Promise.all(prms)
 			}
-			await Sqlite.transaction(C.sqltDbObj, fn)
+			await Sqlite.transaction(C.sqlt.db, fn)
 			// for(const p of prms){
 			// 	await p
 			// }//並行則有transaction嵌套之謬?
@@ -273,17 +276,16 @@ export default class VocaServer{
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
 				//console.log(1)//t
 				const backupDb = await VocaSqlite.neW({
-						_dbPath:config.config.backupDbPath
+						_dbPath:(config.config.backupDbPath)
 						, mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				//console.log(2)//t
-				await VocaSqlite.backupTable(VocaServer.sqltDbObj, sws[0].table, backupDb.db) //* 無調用堆棧
+				await VocaSqlite.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
 				//console.log(114)//t
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
 				//console.log(3)//t *
-				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqltDbObj, sws)
+				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqlt.db, sws)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
@@ -372,10 +374,19 @@ export default class VocaServer{
 		// })
 
 		C.app.get('/tables', get(async(req, res)=>{
+			const tables_ = config.config.tables
+			const tables = $(tables_)
+			
+			const nonNullTables:string[] = []
+			for(const u of tables){
+				const b = await Sqlite.isTableExist(C.sqlt.db,u)
+				if(b){nonNullTables.push(u)}
+			}
+			
 			config.reload()
 			res.send(
 				JSON.stringify(
-					config.config.tables
+					nonNullTables
 				)
 			)
 		}))
@@ -387,8 +398,9 @@ export default class VocaServer{
 				throw new Error(`typeof table0 !== 'string'`)
 			}
 			const table:string = table0
-			const vsqlt = await VocaSqlite.neW({_tableName:table})
-			const stream = await vsqlt.readStream()
+			//const vsqlt = await VocaSqlite.neW({_tableName:table})
+			const stream = await C.sqlt.readStream(table)
+			//const stream = await vsqlt.readStream()
 			res.setHeader('Content-Type', 'application/octet-stream');
 			stream.pipe(res)
 

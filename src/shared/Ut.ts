@@ -99,7 +99,7 @@ export function extendTrace(object:Object, property:string, pos?:number) {
 		// 如果回調是函數，則進行替換處理
         if (typeof arguments[pos] === 'function') {
             arguments[pos] = function replacement() {
-                const err = arguments[0];
+                const err = arguments[0]; // sqlite error
 				// 如果錯誤存在並且尚未處理過，則進行錯誤堆棧的擴充和替換
                 if (err && err.stack && !err.__augmented) {
                     err.stack = filter(err).join('\n');
@@ -745,6 +745,22 @@ export function areFilesExist(paths:string[]){
 		if(result === false){break}
 	}
 	return result
+}
+
+/**
+ * 解析潙絕對路徑並檢ˌ存否
+ * @param dir 
+ * @returns 
+ */
+export function absPath(dir:string|null|undefined){
+	if(dir == null){
+		throw new Error(`dir == null`)
+	}
+	if(!fs.existsSync(dir as string)){
+		const abs = path.resolve(dir)
+		throw new Error("path not exist\n"+abs)
+	}
+	return path.resolve(dir)
 }
 
 /**
