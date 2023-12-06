@@ -242,6 +242,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 級	kəp
 急	krəp
 然	nan
+然	nans	# ts
+燃	nan	1%
+繎	nan
+肰	nan
+
 服	bək
 伏	bək
 伏	bəks
@@ -353,6 +358,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 舅	ɡʷəʔ
 臼	ɡʷəʔ
 桕	ɡʷəʔ
+䊆	ɡʷəʔ
+
 
 尚	daŋs	# 舍他音
 上	daŋʔ	# 舍他音
@@ -1051,6 +1058,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 尼	nri
 泥	nˁəj	# bs
 泥	nˁi
+呢	nri
 
 妮	nri	# ptl
 響	haŋʔ
@@ -1102,6 +1110,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 利	rits	# bs
 莉	rˁi
 備	brəks
+憊	brˁəks
 少	stewʔ	# bs
 少	stews	# bs
 器	kʰrəts
@@ -1908,6 +1917,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 拒	ɡraʔ
 鉅	ɡraʔ
 炬	ɡraʔ
+距	ɡraʔ
 率	ruts	# 舍他音
 律	rut
 摔	srut
@@ -3000,7 +3010,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 函	kˁom	# ts
 境	tʰraŋʔ	# ts
 祘	sˁolʔ	# ts
-距	ɡras	# ts
+#距	ɡras	# ts
+
 #爸	bˁajʔ	# ts
 
 養	laŋʔ	# ts

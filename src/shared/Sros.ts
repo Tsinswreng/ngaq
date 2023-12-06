@@ -454,7 +454,7 @@ export class Sros_big implements ISros<N4,BN>{
 	public absolute(x:N4){
 		const num_substract = this.compare.bind(this)
 		const multiply = this.multiply.bind(this)
-		const bn = this.createNumber
+		const bn = this.createNumber.bind(this)
 		let comp = num_substract(x, 0)
 		if(comp < 0){
 			return multiply(x, -1)

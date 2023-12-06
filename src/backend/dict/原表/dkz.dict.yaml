@@ -1,5 +1,5 @@
 
-#20231204185126258
+#20231206201333910
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -188,6 +188,10 @@ use_preset_vocabulary: true
 級	kəp	
 急	krəp	
 然	nan	
+然	nans	
+燃	nan	1%
+繎	nan	
+肰	nan	
 服	bək	
 伏	bək	
 伏	bəks	
@@ -282,6 +286,7 @@ use_preset_vocabulary: true
 舅	ɡʷəʔ	
 臼	ɡʷəʔ	
 桕	ɡʷəʔ	
+䊆	ɡʷəʔ	
 尚	daŋs	
 上	daŋʔ	
 云	wul	
@@ -827,6 +832,7 @@ use_preset_vocabulary: true
 尼	nri	
 泥	nˁəj	
 泥	nˁi	
+呢	nri	
 妮	nri	
 響	haŋʔ	
 贏	jeŋ	
@@ -872,6 +878,7 @@ use_preset_vocabulary: true
 利	rits	
 莉	rˁi	
 備	brəks	
+憊	brˁəks	
 少	stewʔ	
 少	stews	
 器	kʰrəts	
@@ -1545,6 +1552,7 @@ use_preset_vocabulary: true
 拒	ɡraʔ	
 鉅	ɡraʔ	
 炬	ɡraʔ	
+距	ɡraʔ	
 率	ruts	
 律	rut	
 摔	srut	
@@ -2293,7 +2301,6 @@ use_preset_vocabulary: true
 函	kˁom	
 境	tʰraŋʔ	
 祘	sˁolʔ	
-距	ɡras	
 養	laŋʔ	
 癢	laŋʔ	
 薪	stin	
@@ -3213,7 +3220,6 @@ use_preset_vocabulary: true
 鋇	pˁats	
 䰽	pˁats	
 𤸶	brˁəs	
-憊	brˁəs	
 糒	brəjs	
 鞴	brəjs	
 鞴	buk	
@@ -11053,7 +11059,6 @@ use_preset_vocabulary: true
 救	kus	
 㲃	kʰu	
 㲃	kus	
-䊆	ɡuʔ	
 廐	kus	
 廄	kus	
 𤷑	ɡuʔ	
@@ -17420,7 +17425,6 @@ use_preset_vocabulary: true
 㱿	kʰrˁok	
 冄	nam	
 呥	nam	
-肰	nen	
 柟	nam	
 柟	namʔ	
 柟	nˁəm	
@@ -17435,11 +17439,8 @@ use_preset_vocabulary: true
 㜣	nˁens	
 㜣	nen	
 㜣	ɕenʔ	
-燃	nen	
 𩓾	nam	
 𥳚	nen	
-繎	nen	
-繎	non	
 䕼	nen	
 䶲	nam	
 䶲	nˁəm	
