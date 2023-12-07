@@ -182,13 +182,6 @@ export default class VocaRaw2{
 		let dateBlock:[string, string]=this.config.dateBlock, dateRegex=this.config.dateRegex
 		const regex = new RegExp(`(${dateRegex}\\s*?${dateBlock[0]}.*?${dateBlock[1]})`, 'gs')
 		const matches = text.match(regex)
-
-		// console.log(`console.log(matches)`)
-		// console.log(matches)//t
-		// console.log(`console.log(regex)`)
-		// console.log(regex)//t
-		// console.log(`console.log(matches?.length)`)
-		// console.log(matches?.length)
 		if(!matches){return [] as string[]}
 		//全局模式旹matches[0]代表第一個捕獲組
 		return matches as string[]

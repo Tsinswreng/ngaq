@@ -1,5 +1,5 @@
 
-#20231206201333910
+#20231207200249762
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -724,6 +724,9 @@ use_preset_vocabulary: true
 眉	mrəl	
 媚	mrəls	
 弓	kʷəŋ	
+穹	kʰʷəŋ	
+芎	kʰʷəŋ	
+匑	kʰʷəŋ	
 洗	sˁəlʔ	
 踏	lʰˁəp	
 沓	lʰəp	
@@ -1207,6 +1210,9 @@ use_preset_vocabulary: true
 哀	ʔˁəj	
 泣	kʰrəp	
 幺	ʔˁiw	
+吆	ʔˁiw	
+邀	ʔˁew	
+邀	ʔew	%0
 繼	kˁes	
 寶	pˁuʔ	
 堡	pˁuʔ	
@@ -7939,8 +7945,6 @@ use_preset_vocabulary: true
 躬	kuŋ	
 宮	kuŋ	
 𤱨	koŋ	
-匑	kʰuŋ	
-匑	kuŋ	
 躳	kuŋ	
 觥	kʷrˁaŋ	
 㷓	tsʰˁoŋ	
@@ -17025,7 +17029,6 @@ use_preset_vocabulary: true
 𢗋	ɡʷeŋ	
 𢗋	dun	
 𦭭	ɡoŋ	
-穹	kʰuŋ	
 桏	ɡoŋ	
 赹	ɡʷeŋ	
 𤤶	ɡoŋ	
@@ -22080,7 +22083,6 @@ use_preset_vocabulary: true
 興	həŋs	
 臖	həŋs	
 凶	hoŋ	
-芎	kʰuŋ	
 兇	hoŋ	
 兇	hoŋʔ	
 匈	hoŋ	
@@ -23042,7 +23044,6 @@ use_preset_vocabulary: true
 𧫛	laŋs	
 䵮	laŋs	
 䵮	ɕaŋ	
-吆	ʔˁew	
 𠣑	ʔrˁaw	
 妖	ʔraw	
 𢆷	ʔˁew	
@@ -23062,8 +23063,6 @@ use_preset_vocabulary: true
 腰	ʔew	
 䙅	ʔew	
 𧍔	ʔew	
-邀	kˁew	
-邀	ʔew	
 䳩	ʔew	
 爻	ɡrˁaw	
 肴	ɡrˁaw	

@@ -773,29 +773,28 @@ export class Priority{
 			}else{
 				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = $n(
-					 s.d(
-						prio0
-						,s.d(innerWeight,2)
-					)
-				)
+				prio0 = $n( s.d(prio0, s.d(innerWeight,2)) )
 				weight = innerWeight
 			}
 			
-
-			let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-			let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
-			if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
-			//prio0 /= debuff
-			//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
-			prio0 = $n( s.d(prio0, debuff) )
-			// console.log(debuff)//t
-			// console.log('final')
-			// console.log(this.config.debuffNumerator)//t
+			const unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:1})
 			if(i<finalAddEventOrder){
-				debuff = 1 //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
+
+				//return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
+			}else{
+
+				let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
+				let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
+				if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
+				//prio0 /= debuff
+				//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
+				prio0 = $n( s.d(prio0, debuff) )
+				unusProcedure.debuff = debuff
+				// console.log(debuff)//t
+				// console.log('final')
+				// console.log(this.config.debuffNumerator)//t
 			}
-			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight, _debuff:debuff})
+			
 			procedures.push(unusProcedure)
 		}
 

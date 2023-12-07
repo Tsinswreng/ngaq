@@ -130,7 +130,6 @@ export default class Recite{
 			const id = $(u.fw.id)
 			const gotV:WordB|undefined = id__reviewedWord.get( C.tableId(u) )
 			if(gotV === void 0){continue}
-			
 			//console.log(u.priority.prio0num)//t
 			// console.log(u.fw.wordShape, u.fw.id) //simeru
 			// console.log(gotV.fw.wordShape, gotV.fw.id) //mane

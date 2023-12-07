@@ -143,8 +143,11 @@ export default class MultiMode{
 			// for(const st of selectedTables){
 			// 	await recite.fetchAndStoreWords(st)
 			// }
-			
-			const sws = await vocaClient.getAllTablesWords()
+			const mea = await measurePromiseTime(
+				vocaClient.getAllTablesWords()
+			)
+			const sws = await mea[1]
+			console.log(`getAllTablesWords: `+mea[0])
 			if(sws.length === 0){
 				throw new Error(`無可背單詞`)
 			}

@@ -1,10 +1,16 @@
+## 2023-12-07T15:36:02.000+08:00
+- [ ] 同一語言洏異表、多表混背: 設英語有兩表: 平時由觀書ⁿ積詞者潙A表、六級詞表潙B表。開啓A,B表並背旹, 由A,B表合併得C表。以C表程前端、背ᶦ旹、每得新事件、保存旹A,B,C表皆各自保存新事件。
+- [ ] 自定義篩選規則
+- [ ] 改voca語法。增日期塊頭、能納訊芝標籤 來源等。
+- [ ] @shared/ 自動同步
+
 ## 2023-12-06T23:55:07.000+08:00
 
 - [ ] 前端 設 彈窗組件
-- [ ] Recite.ts # const neoSw = SingleWord2.intersect(u.fw, gotV.fw) 偶爾報錯 w1.wordShape !== w2.wordShape
+- [x] Recite.ts # const neoSw = SingleWord2.intersect(u.fw, gotV.fw) 偶爾報錯 w1.wordShape !== w2.wordShape
 
 ## 2023-12-05T00:40:26.000+08:00
-- [ ] /db下胡無vocaBackup.db
+- [x] /db下胡無vocaBackup.db
 - [ ] 予config.js 增 ts-check
 - [ ] 事件循環
 - [ ] 日誌
@@ -70,7 +76,7 @@
 
 * ConfigError
 * 把設置頁做成彈窗 不另由路由跳轉
-- [o] 自定義權重算法 eval 或 Function
+- [x] 自定義權重算法 eval 或 Function
 
 
 ## 2023-11-20T00:24:49.000+08:00
