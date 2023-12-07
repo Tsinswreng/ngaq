@@ -13,7 +13,7 @@
 		,`latin`
 		
 	]
-	,dbPath: `./db/cavo.db`
-	,backupDbPath: `./db/cavoBackup.db`
+	,dbPath: `./db/voca.db`
+	,backupDbPath: `./db/vocaBackup.db`
 
 })

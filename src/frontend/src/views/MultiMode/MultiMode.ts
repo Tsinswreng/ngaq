@@ -218,8 +218,11 @@ export default class MultiMode{
 
 
 	public async save(){
+		console.log('save')//t
 		await this.recite.saveWords()
 		this.isSaved.value = true
+		//alert('保存成功')
+		console.log(this.isSaved)//t
 	}
 
 	private async _showNextRandomBg(){

@@ -17,17 +17,23 @@ class ReviewedWords{
 	/**
 	 * id對既憶ᵗ單詞 之映射
 	 */
-	private _rmb_idToWordsMap:Map<number, WordB> = new Map()
-	get rmb_idToWordsMap(){return this._rmb_idToWordsMap;};
+	// private _rmb_idToWordsMap:Map<number, WordB> = new Map()
+	// get rmb_idToWordsMap(){return this._rmb_idToWordsMap;};
+
+	private _rmb_table_id__word:Map<string, WordB> = new Map()
+	get rmb_table_id__word(){return this._rmb_table_id__word}
 
 	/**
 	 * id對既忘ᵗ單詞 之映射
 	 */
-	private _fgt_idToWordsMap:Map<number, WordB> = new Map()
-	get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
+	// private _fgt_idToWordsMap:Map<number, WordB> = new Map()
+	// get fgt_idToWordsMap(){return this._fgt_idToWordsMap;};
+	private _fgt_table_id__word:Map<string, WordB> = new Map()
+	get fgt_table_id__word(){return this._fgt_table_id__word}
+
 
 	public merge(){
-		return new Map([...this.rmb_idToWordsMap, ...this.fgt_idToWordsMap])
+		return new Map([...this.rmb_table_id__word, ...this.fgt_table_id__word])
 	}
 }
 
@@ -57,8 +63,13 @@ export default class Recite{
 	private _allWordsToLearn:WordB[] = []
 	;public get allWordsToLearn(){return this._allWordsToLearn;};
 
-	private _id__allWordsToLearn:Map<number, WordB> = new Map()
-	get id__allWordsToLearn(){return this._id__allWordsToLearn}
+	/**
+	 * 鍵:`${表名}${id}` 如 'english551'
+	 */
+	private _table_id__word:Map<string, WordB> = new Map()
+	get table_id__word(){return this._table_id__word}
+
+	
 
 	// private _id__posInWordsArr:Map<number, number> = new Map()
 	// get id__posInWordsArr(){return this._id__posInWordsArr}
@@ -101,12 +112,29 @@ export default class Recite{
 
 	public flushAllWordsToLearn(){
 		const id__reviewedWord = this.rvwObj.merge()
+		// const id__index = C.genMap<number,WordB>(this.allWordsToLearn, 'id')
+		// //console.log(id__reviewedWord)//t
+		// const neoWordsToLearn:WordB[] = []
+		// for(const [id, word] of id__reviewedWord){
+		// 	word.mergeDates()
+		// 	const oldWord = $(id__index.get(id))
+		// 	const mergedSw = SingleWord2.intersect(oldWord.fw, word.fw)
+		// 	const mergedWb = new WordB(mergedSw)
+		// 	mergedWb.calcPrio()
+		// 	neoWordsToLearn.push(mergedWb)
+		// }
+
+		//英語表的id=551和日語表的id=551 不是同一個詞、故會合並失敗
 		for(let i = 0; i < this.allWordsToLearn.length; i++){
 			const u = this.allWordsToLearn[i]
 			const id = $(u.fw.id)
-			const gotV:WordB|undefined = id__reviewedWord.get(id)
+			const gotV:WordB|undefined = id__reviewedWord.get( C.tableId(u) )
 			if(gotV === void 0){continue}
-			console.log(u.priority.prio0num)//t
+			
+			//console.log(u.priority.prio0num)//t
+			// console.log(u.fw.wordShape, u.fw.id) //simeru
+			// console.log(gotV.fw.wordShape, gotV.fw.id) //mane
+			
 			const neoSw = SingleWord2.intersect(u.fw, gotV.fw)
 			gotV.fw = neoSw
 			//this.allWordsToLearn[i].fw = gotV.fw
@@ -117,7 +145,7 @@ export default class Recite{
 			u.mergeDates()
 			u.calcPrio()
 
-			console.log(u.priority.prio0num)//t
+			//console.log(u.priority.prio0num)//t
 		}
 	}
 
@@ -140,10 +168,13 @@ export default class Recite{
 		console.log(`後端ᙆ取詞之耗時: `+time)
 		//let sws = await VocaClient.fetchWords(path)
 		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
-		this.id__allWordsToLearn.clear()
+		this.table_id__word.clear()
 
 		this.allWordsToLearn.map(e=>{
-			this.id__allWordsToLearn.set($(e.fw.id), e)
+			this.table_id__word.set(
+				e.fw.table+$(e.fw.id)
+				, e
+			)
 		})
 	}
 
@@ -241,13 +272,13 @@ export default class Recite{
 
 		const rmb = ()=>{
 			wb.neoDates_rmb.push(nunc)
-			this.rvwObj.rmb_idToWordsMap.set($(wb.fw.id), wb)
+			this.rvwObj.rmb_table_id__word.set( C.tableId(wb), wb )
 			//console.log('rmb:')
 			//console.log(wb.fw.wordShape)//
 		}
 		const fgt = ()=>{
 			wb.neoDates_fgt.push(nunc)
-			this.rvwObj.fgt_idToWordsMap.set($(wb.fw.id), wb)
+			this.rvwObj.fgt_table_id__word.set( C.tableId(wb), wb )
 			//console.log('fgt:')
 			//console.log(wb.fw.wordShape)//
 		}
@@ -267,8 +298,8 @@ export default class Recite{
 	public undo(wb:WordB){
 		console.log(`undo:`)
 		console.log(wb.fw.wordShape)//t
-		let rmbWord = this.rvwObj.rmb_idToWordsMap.get($(wb.fw.id))
-		let fgtWord = this.rvwObj.fgt_idToWordsMap.get($(wb.fw.id))
+		let rmbWord = this.rvwObj.rmb_table_id__word.get( C.tableId(wb) )
+		let fgtWord = this.rvwObj.fgt_table_id__word.get( C.tableId(wb) )
 		if(rmbWord!==void 0 && fgtWord!==void 0){
 			//return
 			throw new Error()
@@ -276,10 +307,10 @@ export default class Recite{
 
 		if(rmbWord!==void 0){
 			$(  rmbWord.neoDates_rmb.pop()  )
-			this.rvwObj.rmb_idToWordsMap.delete($(rmbWord.fw.id))
+			this.rvwObj.rmb_table_id__word.delete( C.tableId(rmbWord) )
 		}else if(fgtWord!==undefined){
 			$(  fgtWord.neoDates_fgt.pop()  )
-			this.rvwObj.fgt_idToWordsMap.delete($(fgtWord.fw.id))
+			this.rvwObj.fgt_table_id__word.delete( C.tableId(fgtWord) )
 		}else{
 			//throw new Error()
 			l.warn('rmbWord 與 fgtWord 皆空');return
@@ -292,8 +323,8 @@ export default class Recite{
 	 * @returns 
 	 */
 	public getAllRvwWords(){
-		let rvwWords:WordB[] = Array.from(this.rvwObj.rmb_idToWordsMap.values())
-		rvwWords.push(  ...Array.from(this.rvwObj.fgt_idToWordsMap.values())  )
+		let rvwWords:WordB[] = Array.from(this.rvwObj.rmb_table_id__word.values())
+		rvwWords.push(  ...Array.from(this.rvwObj.fgt_table_id__word.values())  )
 		return rvwWords
 	}
 
@@ -331,6 +362,22 @@ export default class Recite{
 	public shuffleWords(everyN=8){
 		//console.log(this.allWordsToLearn.length)//t
 		this._allWordsToLearn = getShuffle($a(this.allWordsToLearn), everyN, this.allWordsToLearn.length/everyN)
+	}
+
+
+	public static genMap<K,V>(obj:V[], key:string){
+		const ans = new Map<K,V>()
+		for(const u of obj){
+			ans.set(
+				u[key]
+				,u
+			)
+		}
+		return ans
+	}
+	
+	public static tableId(wordB:WordB){
+		return wordB.fw.table+$(wordB.fw.id)
 	}
 
 }

@@ -1,3 +1,8 @@
+## 2023-12-06T23:55:07.000+08:00
+
+- [ ] 前端 設 彈窗組件
+- [ ] Recite.ts # const neoSw = SingleWord2.intersect(u.fw, gotV.fw) 偶爾報錯 w1.wordShape !== w2.wordShape
+
 ## 2023-12-05T00:40:26.000+08:00
 - [ ] /db下胡無vocaBackup.db
 - [ ] 予config.js 增 ts-check

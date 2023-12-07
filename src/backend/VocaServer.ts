@@ -255,6 +255,9 @@ export default class VocaServer{
 				return Promise.all(prms)
 			}
 			await Sqlite.transaction(C.sqlt.db, fn)
+			const nunc = Tempus.new()
+			console.log(nunc)//t
+			res.send(nunc.iso)
 			// for(const p of prms){
 			// 	await p
 			// }//並行則有transaction嵌套之謬?
