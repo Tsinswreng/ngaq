@@ -766,14 +766,18 @@ export class Priority{
 			cnt_rmb++
 			validRmbCnt++
 			let weight = 1.1
-			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 
+			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = $n( s.d(prio0,1.1) )
 				
 			}else{
 				let innerWeight = getWeight(lastProcedure.tempus_event, tempus_event)
 				//prio0 /= (weight/2)
-				prio0 = $n( s.d(prio0, s.d(innerWeight,2)) )
+				//prio0 = $n( s.d(prio0, s.d(innerWeight,2)) )
+				innerWeight = s.d(innerWeight, 2)
+				if(s.c(innerWeight,0)<=1){
+					innerWeight = s.n(1.01)
+				}
 				weight = innerWeight
 			}
 			
@@ -781,15 +785,20 @@ export class Priority{
 			if(i<finalAddEventOrder){
 
 				//return //加ˡ事件ᵗ前ᵗ憶ˡ事件ˋ皆不得有debuff
-			}else{
+			
+			}else if( lastOf(dateToEventObjs).event !== WordEvent.RMB ){
+
+			}
+			else{
 
 				let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
 				let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
-				if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1}
+				//if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1} 斯句已前置
 				//prio0 /= debuff
 				//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
 				prio0 = $n( s.d(prio0, debuff) )
 				unusProcedure.debuff = debuff
+				unusProcedure.after = prio0
 				// console.log(debuff)//t
 				// console.log('final')
 				// console.log(this.config.debuffNumerator)//t
@@ -818,17 +827,17 @@ export class Priority{
 				case WordEvent.FGT: fgt(dateToEvent, i);break
 				default: throw new Error('default');
 			}
-			//若末ᵗ事件潙添則再乘一次加ˡ權重
-			if(i===dateToEventObjs.length-1){
-				if(dateToEvent.event===WordEvent.ADD){
-					procedures[procedures.length-1].after *= this.config.addWeight
-					//console.log(procedures[procedures.length-1].after)//t
-				}
-			}
-			//若該詞有註則增權重、乘以加ˡ權重之半
-			if(sw.annotation.length>0){
-				procedures[procedures.length-1].after *= (this.config.addWeight/2)
-			}
+
+
+		}
+		//若末ᵗ事件潙添則再乘一次加ˡ權重
+		if(lastOf(dateToEventObjs).event===WordEvent.ADD){
+			procedures[procedures.length-1].after *= this.config.addWeight
+			//console.log(procedures[procedures.length-1].after)//t
+		}
+		//若該詞有註則增權重、乘以加ˡ權重之半
+		if(sw.annotation.length>0){
+			procedures[procedures.length-1].after *= (this.config.addWeight/2)
 		}
 
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){

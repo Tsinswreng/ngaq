@@ -107,6 +107,7 @@ export default class Recite{
 
 	public restart(){
 		this.flushAllWordsToLearn()
+		this._rvwObj = new ReviewedWords()
 	}
 
 
@@ -154,7 +155,9 @@ export default class Recite{
 	 * @returns 
 	 */
 	public filter(){
-		this._allWordsToLearn = this._allWordsToLearn.filter(wb=>wb.fw.times_add>=2||wb.fw.annotation.length>0)
+		this._allWordsToLearn = this._allWordsToLearn.filter(wb=>{
+			return wb.fw.times_add>=2||wb.fw.annotation.length>0||wb.fw.tag.length>0
+		})
 	}
 
 	/**
@@ -295,6 +298,7 @@ export default class Recite{
 	 * @returns 
 	 */
 	public undo(wb:WordB){
+		
 		console.log(`undo:`)
 		console.log(wb.fw.wordShape)//t
 		let rmbWord = this.rvwObj.rmb_table_id__word.get( C.tableId(wb) )

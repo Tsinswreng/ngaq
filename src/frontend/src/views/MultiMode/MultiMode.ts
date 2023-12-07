@@ -147,13 +147,17 @@ export default class MultiMode{
 				vocaClient.getAllTablesWords()
 			)
 			const sws = await mea[1]
+			
 			console.log(`getAllTablesWords: `+mea[0])
 			if(sws.length === 0){
 				throw new Error(`無可背單詞`)
 			}
 			recite.addWordsToLearn(sws)
-			recite.filter()
 			
+			recite.filter()
+			if(recite.allWordsToLearn.length === 0){
+				alertEtThrow(`無單詞可背`)
+			}
 			//throw new Error('114')
 			
 			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator}) // 此函數中報錯亦失調用堆棧ᵗ訊
@@ -161,6 +165,7 @@ export default class MultiMode{
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
 			let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
 			console.log(`calcAndDescSortPriority耗時: `+time)
+			
 			recite.shuffleWords()
 			this._isShowCardBox.value = true
 		} catch (e) {
@@ -183,7 +188,7 @@ export default class MultiMode{
 			// recite.mergeSelfWords()
 			// recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
 			// recite.shuffleWords()
-			recite.flushAllWordsToLearn()
+			recite.restart()
 			recite.descSortByPrio()
 			// let temp = recite.allWordsToLearn.slice()
 			// recite.allWordsToLearn.length=0

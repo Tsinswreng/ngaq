@@ -5,7 +5,11 @@ import SingleWord2 from '@shared/SingleWord2';
 import Tempus from '@shared/Tempus';
 import _ from 'lodash';
 
-
+class IConf_dataBlock{
+	constructor(
+		public tag?:string
+	){}
+}
 
 export interface VocaRawConfig{
 	dbName:string, //數據庫的名稱、暫未啓用
@@ -48,6 +52,11 @@ export default class VocaRaw2{
 		const mergedConfig:VocaRawConfig = (_ as any).merge({},VocaRaw2.defaultConfig,c,configPatch)
 		if(_.isEmpty(mergedConfig)){throw new Error(`_.isEmpty(mergedConfig)`)}
 		this._config = mergedConfig
+	}
+	
+
+	static new(_text:string, configPatch?:VocaRawConfig){
+		return new this(_text, configPatch)
 	}
 
 	private static readonly defaultConfig:VocaRawConfig=config
@@ -124,6 +133,7 @@ export default class VocaRaw2{
 		VocaRaw2.checkBracesMatch(text, config.dateBlock)
 		text = this.processRawText(text)
 		let dateBlocks = this.getDateBlocks(text)
+		//'在此取dateBloks之配置'()
 		// console.log(`console.log(dateBlocks)//t`)//t -
 		// console.log(dateBlocks)//t
 		const words:SingleWord2[] = []
@@ -182,13 +192,6 @@ export default class VocaRaw2{
 		let dateBlock:[string, string]=this.config.dateBlock, dateRegex=this.config.dateRegex
 		const regex = new RegExp(`(${dateRegex}\\s*?${dateBlock[0]}.*?${dateBlock[1]})`, 'gs')
 		const matches = text.match(regex)
-
-		// console.log(`console.log(matches)`)
-		// console.log(matches)//t
-		// console.log(`console.log(regex)`)
-		// console.log(regex)//t
-		// console.log(`console.log(matches?.length)`)
-		// console.log(matches?.length)
 		if(!matches){return [] as string[]}
 		//全局模式旹matches[0]代表第一個捕獲組
 		return matches as string[]
@@ -310,7 +313,7 @@ export default class VocaRaw2{
 	 * @param ling 
 	 * @returns 
 	 */
-	private getWordInWordUnit(wordUnit:string, date:Tempus, table:string){
+	private getWordInWordUnit(wordUnit:string, date:Tempus, table:string, conf_dataBlock?:IConf_dataBlock){
 		let annotation:[string, string]=this.config.annotation
 		//VocaRaw2.checkDate(date)
 		wordUnit = wordUnit.trim()
@@ -328,14 +331,14 @@ export default class VocaRaw2{
 			console.log(`/console.log(wordUnit)`)
 			throw new Error(`mean === '' || annotation.length === 0`)
 		}
-
+		const tag = conf_dataBlock?.tag
 		let word = new SingleWord2({
 			table:table,
 			wordShape: wordShape.trim(),
 			pronounce: [],
 			mean:[mean.trim()],
 			annotation: annotationStr,
-			tag: [],
+			tag: tag==null?[]:[tag],
 			dates_add: [date],
 			source: [],
 		})
@@ -362,6 +365,23 @@ export default class VocaRaw2{
 	}
 
 	/**
+	 * 在日期塊中取 本日期塊ᵗ配置。 ```(在此處寫配置)```。寫在大括號裏
+	 * @param dateBlock 
+	 * @returns 
+	 */
+	private parseDataBlockConf(dateBlock:string){
+		const reg = /```(.+?)```/gs
+		const matches = dateBlock.match(reg)
+		if(matches == null){return undefined}
+		let rawConfStr = matches[0]
+		rawConfStr = rawConfStr.replace(reg, '$1')
+		rawConfStr = rawConfStr.trim()
+		const f = new Function(`return {${rawConfStr}}`)
+		const conf:IConf_dataBlock = f()
+		return conf
+	}
+
+	/**
 	 * 從一DateBlock中解析所有單詞對象
 	 * @param dateBlock 
 	 * @param ling 
@@ -370,16 +390,18 @@ export default class VocaRaw2{
 	private getWordsInDateBlock(dateBlock:string, table:string){
 		let config = this.config
 		let rawDate = this.getRawDateInDateBlock(dateBlock)
+		const conf_dataBlock = this.parseDataBlockConf(dateBlock)
 		// console.log(`console.log(rawDate)`)
 		// console.log(rawDate)//t
 		let tempus:Tempus = this.parseRawDate(rawDate,config.dateFormat)
 		//console.log(tempus)
+		dateBlock = dateBlock.replace(/```(.+?)```/gs, '')
 		let wordUnits = this.getWordUnitsInDateBlock(dateBlock) // -
 		//console.log(`console.log(wordUnits)`)
 		//console.log(wordUnits)//t
 		const words:SingleWord2[] = []
 		for(const e of wordUnits){
-			const word = this.getWordInWordUnit(e, tempus,table)
+			const word = this.getWordInWordUnit(e, tempus,table, conf_dataBlock)
 			words.push(word)
 		}
 		return words
@@ -485,6 +507,7 @@ export default class VocaRaw2{
 		// }
 		// return Array.from(map.values())
 		return SingleWord2.merge(ws)
+
 	}
 }
 

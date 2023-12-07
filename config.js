@@ -8,10 +8,10 @@
 		,`D:\\_\\視聽\\圖`
 	]
 	,tables:[
-		`english`
+		,`english`
 		,`japanese`
 		,`latin`
-		
+		,`cet6`
 	]
 	,dbPath: `./db/voca.db`
 	,backupDbPath: `./db/vocaBackup.db`
