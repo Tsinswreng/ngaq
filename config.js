@@ -11,7 +11,7 @@
 		,`english`
 		,`japanese`
 		,`latin`
-		,`cet6`
+		// ,`cet6`
 	]
 	,dbPath: `./db/voca.db`
 	,backupDbPath: `./db/vocaBackup.db`

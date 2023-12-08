@@ -1,5 +1,5 @@
 import SingleWord2, { Priority } from "@shared/SingleWord2"
-import { $, $a } from "@shared/Ut"
+import { $, $a, delay } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2"
 import { alertEtThrow } from "@ts/frut"
 import VocaClient, { LsItemNames } from "@ts/voca/VocaClient"
@@ -122,6 +122,38 @@ export default class Manage{
 		vocaClient.testJson()
 	}
 
+	public async genWordBViaStream(inp:ReadableStream<Uint8Array>){
+		const reader = inp.getReader()
+		// 创建 TextDecoder 对象
+		const textDecoder = new TextDecoder('utf-8');
 
+		// 将 Uint8Array 转换为字符串
+		
+		for(let i = 0;;i++){
+			const chunk = await reader.read()
+			const data = $(chunk.value, `chunk.value is nil when i=${i}`)
+			if(chunk.done){
+				break
+			}
+			const decodedString = textDecoder.decode(data);
+			
+			try {
+				const o = JSON.parse(decodedString)
+				console.log(o)
+			} catch (error) {
+				console.log(decodedString)
+				console.error(error)
+			}
+			console.log(11111111111111)
+			await delay(1000)
+		}
+	}
+
+	public async testStream(){
+		const resp = await vocaClient.get_words('english')
+		await this.genWordBViaStream(
+			$(resp?.body, 'resp?.body is nil')
+		)
+	}
 
 }

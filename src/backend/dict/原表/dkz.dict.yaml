@@ -1,5 +1,5 @@
 
-#20231207200249762
+#20231208223802633
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -25,6 +25,8 @@ use_preset_vocabulary: true
 硅	kʷˁe	
 矽	kʷˁe	
 矽	zAk	
+忠	truŋ	%0
+忠	truŋʔ	
 不	pə	
 爲	waj	
 為	waj	
@@ -25972,7 +25974,6 @@ use_preset_vocabulary: true
 𦬕	truŋ	
 彸	toŋ	
 妐	toŋ	
-忠	truŋ	
 炂	toŋ	
 泈	tuŋ	
 柊	tuŋ	

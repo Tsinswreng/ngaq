@@ -308,18 +308,25 @@ export default class VocaClient{
 		}
 	}
 
-/*
-大佬们、请教一个问题、为什么这样写 await resp.json()处抛出的错误会丢失调用堆栈信息
- */
+	public async get_words(table:string){
+		const params = new URLSearchParams({table:table})
+		const url = new URL(`/words?${params.toString()}`, this.baseUrl)
+		const resp_ = await fero(url)
+		return resp_
+	}
+
+	
 
 	/**
 	 * 從後端取整ᵗ單詞表
 	 * @param table 
+	 * @deprecated
 	 * @returns 
 	 */
-	public async get_words(table:string){
+	public async get_words_SingleWordsArr(table:string){
 		const params = new URLSearchParams({table:table})
 		const url = new URL(`/words?${params.toString()}`, this.baseUrl)
+		
 		const resp_ = await fero(url)
 		const resp = $(resp_)
 		
@@ -345,7 +352,7 @@ export default class VocaClient{
 		const ans:SingleWord2[] = []
 		try {
 			for(const u of $(tables)){
-				const ua = await this.get_words(u)
+				const ua = await this.get_words_SingleWordsArr(u)
 				
 				ans.push(...ua)
 			}

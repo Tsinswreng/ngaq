@@ -10,7 +10,7 @@ import * as readline from 'readline'
 import { Sros } from './Sros';
 import util from 'util'
 import * as ts from 'typescript'
-
+import json5 from 'json5'
 /**
  * 網絡錯誤類
  */
@@ -28,6 +28,11 @@ export namespace type{
 }
 
 //type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;//假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
+
+export function readTsConfig(path=`./tsconfig.json`){
+	const str = fs.readFileSync(path, 'utf-8')
+	return json5.parse(str) as {compilerOptions:ts.CompilerOptions,[key: string]: any}
+}
 
 /**
  * 清空對象所有鍵
@@ -94,7 +99,7 @@ export function extendTrace(object:Object, property:string, pos?:number) {
 		// 如果回調是函數，則進行替換處理
         if (typeof arguments[pos] === 'function') {
             arguments[pos] = function replacement() {
-                const err = arguments[0];
+                const err = arguments[0]; // sqlite error
 				// 如果錯誤存在並且尚未處理過，則進行錯誤堆棧的擴充和替換
                 if (err && err.stack && !err.__augmented) {
                     err.stack = filter(err).join('\n');
@@ -276,6 +281,40 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
 	return (_ as any).merge(object, ...otherArgs) as T
 }
 
+// 就地打亂
+// export function shuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
+// 	// 對arr按每組groupMemberAmount個元素分組 完整ᵗ組ᵗ量(整數除法的商)
+// 	const fullGroupAmount = Math.floor(arr.length/groupMemberAmount)
+// 	const groupAmount = fullGroupAmount + 1
+// 	// 剩嘰多元素不足一完整ᵗ組 (arr元素總個數 對 每組元素個數 取模)
+// 	const remainder = Math.floor(arr.length % groupMemberAmount)
+// 	//每組最多能得幾個亂序元素
+// 	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groupMemberAmount)
+
+// 	//const randomIndexs = randomIntArr(0, arr.length, totalDisorderAmount, false)
+// 	const randomIndexs:number[] = []
+// 	const remainRandom = totalDisorderAmount - fullGroupAmount * disorderAmountForEachGroup
+// 	for(let i = 0; i < fullGroupAmount; i++){
+// 		const curGroupStart = i * groupMemberAmount
+// 		const curGroupEnd = curGroupStart + groupMemberAmount - 1
+// 		const randomIndex = randomIntArr(curGroupStart, curGroupEnd, disorderAmountForEachGroup, false)
+// 		randomIndexs.push(...randomIndex)
+// 	}
+
+// 	for(let i = 0; i < fullGroupAmount; i++){
+// 		for(let j = 0; j < disorderAmountForEachGroup; j++){
+// 			const oldPos = (i+1) * groupMemberAmount - j
+// 			const neoPos = randomIndexs[i]
+// 			swapArrEle(arr, oldPos, neoPos)
+// 		}
+// 	}
+// 	if(remainder === 0){return}
+// 	for(let i = 0; i < remainder; i++){
+// 		swapArrEle(arr, arr.length-1-i, randomIndexs[randomIndexs.length-1-i])
+// 	}
+// }
+
+
 /**
  * 取打亂後ᵗ數組
  * 整體ᵗ思想: 從整ᵗ數組中隨機取 @see totalDisorderAmount 個元素。把數組按 @see groupMemberAmount-1 個一組 分成若干組(末ʸ不足者自成一組)、再把前ʸ隨機取出ᵗ元素均ᵈ分予各組、插入到各組ᵗ末。若分配後猶有餘則皆予末組。
@@ -373,6 +412,7 @@ export function group<T>(arr:T[], memberAmount:number){
 	}
 	return result
 }
+
 
 
 export function randomIntArr(min:number, max:number, howMany:number, allowDuplicate=true){
@@ -604,22 +644,21 @@ export function $n(v:number, errMsg?:string){
  * nonNullable Array
  * 數組或字符串判空後返回。
  * @param v 
- * @param errMsg 
+ * @param err 
  * @returns 
  */
-export function $a<T>(v:T[]|undefined|null, errMsg?:string):T[]
-export function $a<T>(v:string|undefined|null, errMsg?:string):string
+export function $a<T>(v:T[]|undefined|null, err?:string|Error):T[]
+export function $a<T>(v:string|undefined|null, err?:string|Error):string
 
-export function $a<T>(v:T[]|string|undefined|null, errMsg?:string){
-	if(v === void 0){throw new Error(errMsg)}
-	if(v === null){throw new Error(errMsg)}
-	if(v.length === 0){throw new Error(errMsg)}
-	if(typeof v === 'string'){
-		return v as string
-	}else{
-		return v as T[]
+export function $a<T>(v:T[]|string|undefined|null, err:string|Error=''){
+	if(v == null || v.length === 0){
+		if(typeof err === 'string'){
+			throw new Error(err)
+		}else{
+			throw err
+		}
 	}
-	
+	return v
 }
 
 /**
@@ -650,18 +689,37 @@ export function nug<T, U=undefined>(v: T | undefined, errMsg?:string):Exclude<T,
 /**
  * 判空後返回
  * @param v 
- * @param errMsg 
+ * @param err 
  * @returns 
  */
-export function $<T>(v:T, errMsg?:string): NonNullable<T>{
-	if(v === void 0){
-		throw new Error(errMsg)
-	}
-	if(v === null){
-		throw new Error(errMsg)
+export function $<T>(v:T, err:string|Error=''): NonNullable<T>{
+	if(v == null){
+		if(typeof err === 'string'){
+			throw new Error(err)
+		}else{
+			throw err
+		}
 	}
 	return v as NonNullable<T>
 }
+
+// export function $<T>(v:T, err?:string|Error): NonNullable<T>{
+// 	if(v == null){
+// 		if(typeof err === 'string'){
+// 			throw new Error(err)
+// 		}else{
+// 			throw err
+// 		}
+// 	}
+// 	return v as NonNullable<T>
+// }
+
+// export function nng<T>(v:T, errMsg?:string, Err=Error): NonNullable<T>{
+// 	if(v == null){
+// 		throw Err(errMsg)
+// 	}
+// 	return v as NonNullable<T>
+// }
 
 export function deduplicate<T>(arr:T[],criteria:(...param:any[])=>any){
 
@@ -705,6 +763,22 @@ export function areFilesExist(paths:string[]){
 		if(result === false){break}
 	}
 	return result
+}
+
+/**
+ * 解析潙絕對路徑並檢ˌ存否
+ * @param dir 
+ * @returns 
+ */
+export function absPath(dir:string|null|undefined){
+	if(dir == null){
+		throw new Error(`dir == null`)
+	}
+	if(!fs.existsSync(dir as string)){
+		const abs = path.resolve(dir)
+		throw new Error("path not exist\n"+abs)
+	}
+	return path.resolve(dir)
 }
 
 /**

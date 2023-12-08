@@ -120,6 +120,8 @@ export default class MultiMode{
 		return fn()
 	}
 
+
+
 	public async start(){
 		try {
 			this.customPriorityAlgorithm()
@@ -148,7 +150,7 @@ export default class MultiMode{
 			)
 			const sws = await mea[1]
 			
-			console.log(`getAllTablesWords: `+mea[0])
+			console.log(`getAllTablesWords: `, mea[0])
 			if(sws.length === 0){
 				throw new Error(`無可背單詞`)
 			}
@@ -160,11 +162,16 @@ export default class MultiMode{
 			}
 			//throw new Error('114')
 			
-			recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator}) // 此函數中報錯亦失調用堆棧ᵗ訊
+			 // 此函數中報錯亦失調用堆棧ᵗ訊
+			const [time_prio] = measureFunctionTime(
+				recite.calcAndDescSortPriority.bind(recite)
+				,({debuffNumerator: this.debuffNumerator})
+			)
+			console.log(`calcAndDescSortPriority耗時: `, time_prio)
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
-			let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
-			console.log(`calcAndDescSortPriority耗時: `+time)
+			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
+			//console.log(`calcAndDescSortPriority耗時: `+time)
 			
 			recite.shuffleWords()
 			this._isShowCardBox.value = true

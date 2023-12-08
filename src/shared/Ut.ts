@@ -644,22 +644,21 @@ export function $n(v:number, errMsg?:string){
  * nonNullable Array
  * 數組或字符串判空後返回。
  * @param v 
- * @param errMsg 
+ * @param err 
  * @returns 
  */
-export function $a<T>(v:T[]|undefined|null, errMsg?:string):T[]
-export function $a<T>(v:string|undefined|null, errMsg?:string):string
+export function $a<T>(v:T[]|undefined|null, err?:string|Error):T[]
+export function $a<T>(v:string|undefined|null, err?:string|Error):string
 
-export function $a<T>(v:T[]|string|undefined|null, errMsg?:string){
-	if(v === void 0){throw new Error(errMsg)}
-	if(v === null){throw new Error(errMsg)}
-	if(v.length === 0){throw new Error(errMsg)}
-	if(typeof v === 'string'){
-		return v as string
-	}else{
-		return v as T[]
+export function $a<T>(v:T[]|string|undefined|null, err:string|Error=''){
+	if(v == null || v.length === 0){
+		if(typeof err === 'string'){
+			throw new Error(err)
+		}else{
+			throw err
+		}
 	}
-	
+	return v
 }
 
 /**
@@ -690,18 +689,37 @@ export function nug<T, U=undefined>(v: T | undefined, errMsg?:string):Exclude<T,
 /**
  * 判空後返回
  * @param v 
- * @param errMsg 
+ * @param err 
  * @returns 
  */
-export function $<T>(v:T, errMsg?:string): NonNullable<T>{
-	if(v === void 0){
-		throw new Error(errMsg)
-	}
-	if(v === null){
-		throw new Error(errMsg)
+export function $<T>(v:T, err:string|Error=''): NonNullable<T>{
+	if(v == null){
+		if(typeof err === 'string'){
+			throw new Error(err)
+		}else{
+			throw err
+		}
 	}
 	return v as NonNullable<T>
 }
+
+// export function $<T>(v:T, err?:string|Error): NonNullable<T>{
+// 	if(v == null){
+// 		if(typeof err === 'string'){
+// 			throw new Error(err)
+// 		}else{
+// 			throw err
+// 		}
+// 	}
+// 	return v as NonNullable<T>
+// }
+
+// export function nng<T>(v:T, errMsg?:string, Err=Error): NonNullable<T>{
+// 	if(v == null){
+// 		throw Err(errMsg)
+// 	}
+// 	return v as NonNullable<T>
+// }
 
 export function deduplicate<T>(arr:T[],criteria:(...param:any[])=>any){
 

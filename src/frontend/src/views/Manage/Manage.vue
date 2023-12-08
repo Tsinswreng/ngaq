@@ -48,7 +48,7 @@ function lsGet(key:string){
 			<textarea name="" id="" cols="30" rows="10"></textarea>
 		</div>
 		<div>
-			<button @click="manage.testJson()">test</button>
+			<button @click="manage.testStream()">test</button>
 
 		</div>
 		<div class="tip">

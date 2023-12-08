@@ -10,6 +10,11 @@ export namespace SqliteType {
 	export type Statement = sqlite3.Statement
 	export type RunResult = sqlite3.RunResult
 	export type NonArrObj = object&{length?:never}
+	export class SqlError extends Error{
+		constructor(message?: string){
+			super(message)
+		}
+	}
 }
 import {objArrToStrArr,serialReplace,$} from '@shared/Ut'
 import _ from 'lodash';
@@ -1619,6 +1624,7 @@ FROM '${tableName}';`
 	 */
 	public static async genSql_columnCastToText(db:Database, table:string,needToBeCastedToText=['INT', 'INTEGER']){
 		const tableInfos = await Sqlite.getTableInfo(db, table)
+		$a(tableInfos, `tableInfos is empty. table:\n${table}\n:table`)
 		const [columns, types] = map_columnToType(tableInfos)
 		let casted = cast(columns, types,needToBeCastedToText)
 		return casted
