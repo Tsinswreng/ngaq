@@ -1,8 +1,10 @@
-import SingleWord2, { Priority } from "@shared/SingleWord2"
-import { $, $a, delay } from "@shared/Ut"
+import SingleWord2, { Priority, VocaDbTable } from "@shared/SingleWord2"
+import { $, $a, delay, measurePromiseTime } from "@shared/Ut"
 import VocaRaw2 from "@shared/VocaRaw2"
 import { alertEtThrow } from "@ts/frut"
 import VocaClient, { LsItemNames } from "@ts/voca/VocaClient"
+import WordB from "@ts/voca/WordB"
+import now from "performance-now"
 const vocaClient = VocaClient.getInstance()
 
 
@@ -122,38 +124,136 @@ export default class Manage{
 		vocaClient.testJson()
 	}
 
-	public async genWordBViaStream(inp:ReadableStream<Uint8Array>){
-		const reader = inp.getReader()
-		// 创建 TextDecoder 对象
-		const textDecoder = new TextDecoder('utf-8');
+	// public async genWordBViaStream(inp:ReadableStream<Uint8Array>){
+	// 	const reader = inp.getReader()
+	// 	// 创建 TextDecoder 对象
+	// 	const textDecoder = new TextDecoder('utf-8');
 
-		// 将 Uint8Array 转换为字符串
-		
-		for(let i = 0;;i++){
-			const chunk = await reader.read()
-			const data = $(chunk.value, `chunk.value is nil when i=${i}`)
-			if(chunk.done){
-				break
-			}
-			const decodedString = textDecoder.decode(data);
-			
-			try {
-				const o = JSON.parse(decodedString)
-				console.log(o)
-			} catch (error) {
-				console.log(decodedString)
-				console.error(error)
-			}
-			console.log(11111111111111)
-			await delay(1000)
-		}
+	// 	// 将 Uint8Array 转换为字符串
+	// 	const ans:WordB[] = []
+
+	// 	for(let i = 0;;i++){
+	// 		const chunk = await reader.read() // 循環中第一次迭代旹chunk總是包含數據庫表之多行數據、而後之每次迭代則只包含一行數據
+	// 		//const chunk:ReadableStreamReadResult<Uint8Array> = await new Promise(resolve => reader.read().then(resolve));
+	// 		//console.log(chunk.value)
+	// 		//const data = $(chunk.value, `chunk.value is nil when i=${i}`)
+	// 		const data = chunk.value
+	// 		if(data == null){
+	// 			console.warn(`chunk.value is nil when i=${i}`)
+	// 			break
+	// 		}
+	// 		const decodedStr = textDecoder.decode(data);
+	// 		const jsonArr = decodedStr.split(`\n`)
+	// 		//console.log(jsonArr)
+	// 		//const uDbRows:VocaDbTable[] = new Array(jsonArr.length)
+	// 		for(let j = 0; j < jsonArr.length; j++){
+	// 			if(jsonArr[j].length === 0){continue}
+	// 			const o:VocaDbTable = JSON.parse(jsonArr[j])
+	// 			//uDbRows[j] = o
+	// 			const sw = SingleWord2.toJsObj(o)
+	// 			const wb = new WordB(sw)
+	// 			ans.push(wb)
+	// 			//console.log(sw)
+	// 		}
+	// 		//const uDbRows:VocaDbTable[] = jsonArr.map(e=>JSON.parse(e))
+	// 		//console.log(uDbRows)
+	// 		// try {
+	// 		// 	const o = JSON.parse(decodedString)
+	// 		// 	console.log(o)
+	// 		// } catch (error) {
+	// 		// 	console.log(decodedString)
+	// 		// 	console.error(error)
+	// 		// }
+	// 		if(chunk.done){
+	// 			break
+	// 		}
+	// 		console.log(i)//t
+	// 		//await delay(10)
+
+	// 	}
+	// 	console.log(ans)
+	// 	console.log(ans.length)
+	// }
+	private static handleChunk(inp:ReadableStreamReadResult<Uint8Array>){
+
 	}
 
-	public async testStream(){
-		const resp = await vocaClient.get_words('english')
-		await this.genWordBViaStream(
-			$(resp?.body, 'resp?.body is nil')
-		)
-	}
+	// /**
+	//  * 從流中取wordB對象數組並 并行ᵈ算權重。
+	//  * @param readble 應來自response.body
+	//  * @returns 
+	//  */
+	// public async getWordBViaStream(readble:ReadableStream<Uint8Array>){
+	// 	const reader = readble.getReader()
+	// 	// 创建 TextDecoder 对象
+	// 	const textDecoder = new TextDecoder('utf-8');
+	// 	// 将 Uint8Array 转换为字符串
+	// 	const ans:WordB[] = []
+	// 	let timeToEnd = false
+	// 	const prms:Promise<void>[] = []
+	// 	const loopStart = now()
+	// 	for(let i = 0;;i++){
+	// 		console.log(i)
+	// 		const curTime = now()
+	// 		// const uprms = reader.read().then(chunk=>{
+				
+	// 		// })
+	// 		const chunk = await reader.read()
+	// 		const data = chunk.value
+	// 		if(data == null){
+	// 			//console.warn(`chunk.value is nil when i=${i}`)
+	// 			//console.log(`console.log(chunk.done) `,chunk.done)
+	// 			//break
+	// 			//timeToEnd = true
+	// 			timeToEnd = chunk.done
+	// 		}
+	// 		const decodedStr = textDecoder.decode(data);
+	// 		const uprms = new Promise<void>((res,rej)=>{
+	// 			setTimeout(()=>{
+	// 				const jsonArr = decodedStr.split(`\n`)
+	// 				console.log(`jsonArr.lenght: `,jsonArr.length)//t
+	// 				for(let j = 0; j < jsonArr.length; j++){
+	// 					if(jsonArr[j].length === 0){continue}
+	// 					const o:VocaDbTable = JSON.parse(jsonArr[j])
+	// 					const sw = SingleWord2.toJsObj(o)
+	// 					const wb = new WordB(sw)
+	// 					wb.calcPrio() //這是一個同步函數、用于複雜計算
+	// 					ans.push(wb)
+	// 				}
+	// 				res()
+	// 			},0)
+	// 		})
+
+	// 		prms.push(uprms)
+	// 		if(timeToEnd){break}
+	// 		if(curTime - loopStart > 5000){
+	// 			throw new Error(`循環超時`)
+	// 		}
+	// 	}
+	// 	const loopEnd = now()
+	// 	//console.log(`循環耗時: `, loopEnd-loopStart)
+	// 	const [time] = await measurePromiseTime(
+	// 		Promise.all(prms)
+	// 	)
+	// 	//console.log(`流 權重: `, time)
+	// 	//console.log(ans)
+	// 	//console.log(ans.length)
+	// 	return ans
+	// }
+
+
+	// public async testStream(){
+	// 	const resp = await vocaClient.get_words('english')
+	// 	const [time] = await measurePromiseTime(
+	// 		this.getWordBViaStream(
+	// 			$(resp?.body, 'resp?.body is nil')
+	// 		)
+	// 	)
+	// 	console.log(`genWordBViaStream: `, time)
+	// }
+
+	// public async t2(){
+
+	// }
 
 }

@@ -1,5 +1,5 @@
 
-#20231208223802633
+#20231209225209211
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -27,6 +27,10 @@ use_preset_vocabulary: true
 矽	zAk	
 忠	truŋ	%0
 忠	truŋʔ	
+憑	brəŋ	
+凭	brəŋ	
+凭	brəŋs	
+馮	bəŋ	
 不	pə	
 爲	waj	
 為	waj	
@@ -575,6 +579,8 @@ use_preset_vocabulary: true
 防	baŋs	
 於	ʔa	
 污	ʔʷrˁa	
+稠	driw	
+綢	driw	
 周	tiw	
 週	tiw	
 州	tu	
@@ -1196,6 +1202,8 @@ use_preset_vocabulary: true
 劃	wrˁek	
 插	tsʰrˁop	
 斂	ramʔ	
+撿	ramʔ	
+瀲	rams	
 善	ɡenʔ	
 纏	dran	
 廛	dran	
@@ -1860,6 +1868,10 @@ use_preset_vocabulary: true
 柵	tsrˁak	
 栅	tsrˁak	
 捐	wen	
+娟	ʔʷen	
+姢	ʔʷen	
+蜎	ʔʷen	
+悁	ʔʷen	
 恰	kʰrˁəp	
 奧	ʔˁuk	
 澳	ʔˁuks	
@@ -4934,14 +4946,11 @@ use_preset_vocabulary: true
 𠷎	dru	
 𠹝	ʔˁos	
 酬	du	
-稠	dru	
 詶	du	
 詶	dus	
 裯	dru	
 裯	dro	
 裯	tˁaw	
-綢	dru	
-綢	tʰˁaw	
 𨞪	dru	
 𨞪	du	
 𨞪	duʔ	
@@ -7251,8 +7260,6 @@ use_preset_vocabulary: true
 捀	boŋs	
 堸	buŋ	
 舽	brˁoŋ	
-馮	bəŋ	10%
-馮	buŋ	
 渢	buŋ	
 漨	boŋ	
 𨝭	buŋ	
@@ -10304,7 +10311,6 @@ use_preset_vocabulary: true
 翦	tsenʔ	
 䵤	ɡˁenʔ	
 䵤	tˁenʔ	
-撿	remʔ	
 錽	mʷamʔ	
 𦂇	krenʔ	
 𥳟	tsenʔ	
@@ -11307,10 +11313,8 @@ use_preset_vocabulary: true
 鐻	kas	
 𦮌	kʷˁen	
 㳙	kʷˁen	
-姢	ʔon	
 𦮻	kʷˁen	
 涓	kʷˁen	
-娟	ʔon	
 梋	hʷˁen	
 瓹	kʷˁens	
 脧	tsˁuj	
@@ -11347,7 +11351,6 @@ use_preset_vocabulary: true
 狷	kons	
 狷	kʷˁens	
 桊	krons	
-悁	ʔon	
 鄄	kons	
 眷	krons	
 𥁠	ɡron	
@@ -12996,8 +12999,6 @@ use_preset_vocabulary: true
 𣞰	rˁens	
 𧸘	rems	
 鰊	rˁens	
-瀲	rems	
-瀲	remʔ	
 戀	rons	
 俍	rˁaŋʔ	
 莨	rˁaŋ	
@@ -16031,8 +16032,6 @@ use_preset_vocabulary: true
 坪	breŋ	
 坪	breŋs	
 𡊞	breŋs	
-凭	bəŋ	
-凭	bəŋs	
 郱	bˁeŋ	
 泙	breŋ	
 荓	bˁeŋ	
@@ -16056,7 +16055,6 @@ use_preset_vocabulary: true
 箳	peŋ	
 鮃	breŋ	
 㵗	bəŋ	
-憑	bəŋ	
 鵧	bi	
 䶄	bˁeŋ	
 蘋	bin	
@@ -24576,9 +24574,6 @@ use_preset_vocabulary: true
 惌	ʔʷan	
 惌	ʔʷanʔ	
 蒬	ʔʷan	
-蜎	ɡonʔ	
-蜎	ʔon	
-蜎	ʔʷˁen	
 𣹠	ʔʷan	
 鳶	lon	
 䡝	ʔʷan	

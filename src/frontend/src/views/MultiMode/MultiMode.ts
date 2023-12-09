@@ -7,6 +7,8 @@ import { $, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime 
 import VocaClient, { LsItemNames } from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
+import now from 'performance-now'
+import { VocaDbTable } from 'shared/SingleWord2'
 
 const vocaClient = VocaClient.getInstance()
 export default class MultiMode{
@@ -120,7 +122,68 @@ export default class MultiMode{
 		return fn()
 	}
 
-
+	/**
+	 * 從流中取wordB對象數組並 并行ᵈ算權重。
+	 * @param readble 應來自response.body
+	 * @returns 
+	 */
+	public async getWordBViaStream(readble:ReadableStream<Uint8Array>){
+		const reader = readble.getReader()
+		// 创建 TextDecoder 对象
+		const textDecoder = new TextDecoder('utf-8');
+		// 将 Uint8Array 转换为字符串
+		const ans:WordB[] = []
+		let timeToEnd = false
+		const prms:Promise<void>[] = []
+		const loopStart = now()
+		for(let i = 0;;i++){
+			console.log(i)
+			const curTime = now()
+			// const uprms = reader.read().then(chunk=>{
+				
+			// })
+			const chunk = await reader.read()
+			const data = chunk.value
+			if(data == null){
+				//console.warn(`chunk.value is nil when i=${i}`)
+				//console.log(`console.log(chunk.done) `,chunk.done)
+				//break
+				//timeToEnd = true
+				timeToEnd = chunk.done
+			}
+			const decodedStr = textDecoder.decode(data);
+			const uprms = new Promise<void>((res,rej)=>{
+				setTimeout(()=>{
+					const jsonArr = decodedStr.split(`\n`)
+					console.log(`jsonArr.lenght: `,jsonArr.length)//t
+					for(let j = 0; j < jsonArr.length; j++){
+						if(jsonArr[j].length === 0){continue}
+						const o:VocaDbTable = JSON.parse(jsonArr[j])
+						const sw = SingleWord2.toJsObj(o)
+						const wb = new WordB(sw)
+						wb.calcPrio() //這是一個同步函數、用于複雜計算
+						ans.push(wb)
+					}
+					res()
+				},0)
+			})
+			
+			prms.push(uprms)
+			if(timeToEnd){break}
+			if(curTime - loopStart > 5000){
+				throw new Error(`循環超時`)
+			}
+		}
+		const loopEnd = now()
+		//console.log(`循環耗時: `, loopEnd-loopStart)
+		const [time] = await measurePromiseTime(
+			Promise.all(prms)
+		)
+		//console.log(`流 權重: `, time)
+		//console.log(ans)
+		//console.log(ans.length)
+		return ans
+	}
 
 	public async start(){
 		try {
@@ -197,6 +260,7 @@ export default class MultiMode{
 			// recite.shuffleWords()
 			recite.restart()
 			recite.descSortByPrio()
+			recite.shuffleWords()
 			// let temp = recite.allWordsToLearn.slice()
 			// recite.allWordsToLearn.length=0
 			// recite.allWordsToLearn.push(...temp)//t

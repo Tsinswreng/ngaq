@@ -42,6 +42,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 忠	truŋ	%0
 忠	truŋʔ	# ts
 
+憑	brəŋ
+凭	brəŋ
+凭	brəŋs
+馮	bəŋ
 
 不	pə
 爲	waj
@@ -736,6 +740,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 防	baŋs
 於	ʔa
 污	ʔʷrˁa
+
+稠	driw
+綢	driw
+
+
 周	tiw
 週	tiw
 州	tu
@@ -1491,6 +1500,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 劃	wrˁek
 插	tsʰrˁop	# bs
 斂	ramʔ
+撿	ramʔ
+瀲	rams
+
+
 善	ɡenʔ
 纏	dran
 廛	dran
@@ -2267,6 +2280,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 栅	tsrˁak	# ts
 
 捐	wen
+娟	ʔʷen
+姢	ʔʷen
+蜎	ʔʷen
+悁	ʔʷen
+
 恰	kʰrˁəp
 
 奧	ʔˁuk

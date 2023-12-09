@@ -792,7 +792,7 @@ export class Priority{
 			else{
 
 				let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-				let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb)
+				let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb, weight)
 				//if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1} 斯句已前置
 				//prio0 /= debuff
 				//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
@@ -876,11 +876,12 @@ export class Priority{
 		// return $n(result)
 	}
 
-	public getDebuff(mills:number, numerator:number){
+	public getDebuff(mills:number, numerator:number, weight=s.n(1)){
 		//let debuff = (numerator/mills) + 1
 		let debuff = s.n(numerator)
 		debuff = s.d(debuff, mills)
 		debuff = s.a(debuff, 1)
+		debuff = s.m(debuff, weight)
 		return $n(debuff)
 	}
 
