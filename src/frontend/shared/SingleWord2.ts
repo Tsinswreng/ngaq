@@ -6,11 +6,15 @@ import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import Log from '@shared/Log'
 import _ from 'lodash';
-import { Sros} from '@shared/Sros';
+import { Sros, UN} from '@shared/Sros';
 //const sros = Sros.new<Sros_number>()
+// const sros = Sros.new({})
+// const $n = sros.createNumber.bind(sros)
 const sros = Sros.new()
-const s = sros.short
 const $n = Sros.toNumber
+type num = number
+const s = sros.short
+
 const l = new Log()
 const Ut = {
 	union : simpleUnion
@@ -592,7 +596,7 @@ class ChangeRecord{
 	//public constructor(_tempus_event:Tempus_Event, after:number)
 
 	public constructor(props:{
-		_tempus_event:Tempus_Event, _after:number, _weight:number, _debuff?:number
+		_tempus_event:Tempus_Event, _after:UN, _weight:UN, _debuff?:UN
 	}){
 		//this._tempus_event = _.cloneDeep(_tempus_event)
 		Object.assign(this, props)
@@ -604,13 +608,13 @@ class ChangeRecord{
 	/**
 	 * 歷ᵣ當前ᵗ_tempus_event後 權重變後ᵗ量
 	 */
-	private _after:number = 0 
+	private _after:UN = 0 
 	;public get after(){return this._after;};;public set after(v){this._after=v;};
 
-	private _weight:number = -1
+	private _weight:UN = -1
 	;public get weight(){return this._weight;};;public set weight(v){this._weight=v;};
 
-	private _debuff?:number
+	private _debuff?:UN
 	;public get debuff(){return this._debuff;};;public set debuff(v){this._debuff=v;};
 
 }
@@ -736,7 +740,7 @@ export class Priority{
 		let procedures:ChangeRecord[] = []
 		let lastProcedure = lastOf(procedures)
 		let add_cnt = 0
-		let prio0 = 1
+		let prio0 = s.n(1)
 		let cnt_rmb = 0;
 		let validRmbCnt = 0 //憶ᵗ次、若遇加ˡ事件則置零
 
@@ -765,7 +769,7 @@ export class Priority{
 			lastProcedure = lastOf(procedures)
 			cnt_rmb++
 			validRmbCnt++
-			let weight = 1.1
+			let weight = s.n(1.1)
 			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = $n( s.d(prio0,1.1) )
@@ -810,7 +814,7 @@ export class Priority{
 		const fgt = (tempus_event:Tempus_Event, i:number)=>{
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
-			if( s.c(weight, 1.5)<0 ){weight = 1.5}//修正
+			if( s.c(weight, 1.5)<0 ){weight = s.n(1.5)}//修正
 			//prio0 /= weight
 			prio0 = $n( s.m(prio0, weight) ) 
 			let unusProcedure = new ChangeRecord({_tempus_event: tempus_event, _after:prio0, _weight:weight})
@@ -832,12 +836,23 @@ export class Priority{
 		}
 		//若末ᵗ事件潙添則再乘一次加ˡ權重
 		if(lastOf(dateToEventObjs).event===WordEvent.ADD){
-			procedures[procedures.length-1].after *= this.config.addWeight
+			//procedures[procedures.length-1].after *= this.config.addWeight
+			procedures[procedures.length-1].after = s.m(
+				procedures[procedures.length-1].after
+				,this.config.addWeight
+			)
 			//console.log(procedures[procedures.length-1].after)//t
 		}
 		//若該詞有註則增權重、乘以加ˡ權重之半
 		if(sw.annotation.length>0){
-			procedures[procedures.length-1].after *= (this.config.addWeight/2)
+			//procedures[procedures.length-1].after *= (this.config.addWeight/2)
+			procedures[procedures.length-1].after = s.m(
+				procedures[procedures.length-1].after
+				,s.d(
+					this.config.addWeight
+					,2
+				)
+			)
 		}
 
 		function getWeight(lastTempus_event:Tempus_Event, curTempus_event:Tempus_Event){
@@ -861,7 +876,7 @@ export class Priority{
 	 * @param dateDif 
 	 * @returns 
 	 */
-	public getDateWeight(dateDif:number):number{
+	public getDateWeight(dateDif:UN){
 		let ans = s.n(dateDif)
 		ans = sros.pow(ans, 1/2)
 		ans = s.d(ans, 100)
