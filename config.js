@@ -1,5 +1,6 @@
 // @ts-check
 //@import {  } from "module";
+
 ({
 	port: 1919
 	//待添: 隨機圖之路徑, 數據庫ᵗ路徑

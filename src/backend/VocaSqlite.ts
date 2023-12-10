@@ -434,6 +434,7 @@ export default class VocaSqlite{
 
 	/**
 	 * 添詞、@param words 之各ᵗ表名ˋ當皆同、否則報錯
+	 * 内含transaction
 	 * @param db 
 	 * @param words 
 	 * @returns [initAddIds, modifiedIds]
@@ -463,11 +464,14 @@ export default class VocaSqlite{
 				
 				//let d3 = await VocaSqlite.initAddWord_deprecated(db, table, wordsToInitAdd)
 				//runResult1 = d3.flat(2)
-				runResult1 = await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
+				const fn = async()=>{
+					return await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
+				}
+				runResult1 = await Sqlite.transaction(db, fn)
 			}
 			if(wordsToUpdate.length !== 0){
-				
-				await VocaSqlite.setWordsByIds(db, table, (wordsToUpdate))
+				const fn =  VocaSqlite.setWordsByIds_fn(db, table, (wordsToUpdate))
+				await Sqlite.transaction(db, fn)
 			}
 			//console.log(runResult1)//t *
 			const initAddIds = runResult1.map(e=>e.lastID)
@@ -720,7 +724,7 @@ export default class VocaSqlite{
 	 * @param ids 
 	 * @returns 
 	 */
-	public static setWordsByIds(db:Database, table:string, words:SingleWord2[], ids?:number[]){
+	public static setWordsByIds_fn(db:Database, table:string, words:SingleWord2[], ids?:number[]){
 		//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
 		VocaSqlite.checkTable(table, words)
@@ -752,7 +756,7 @@ export default class VocaSqlite{
 			return runResult
 		}
 		//return Sqlite.transaction(db, fn)
-		return fn()
+		return fn
 	}
 
 	/**
@@ -802,7 +806,7 @@ export default class VocaSqlite{
 	
 	public setWordsByIds(words:SingleWord2[], ids:number[]){
 		let table:string=$(this.tableName)
-		return VocaSqlite.setWordsByIds(this.db, table, words, ids)
+		return VocaSqlite.setWordsByIds_fn(this.db, table, words, ids)
 	}
 
 
