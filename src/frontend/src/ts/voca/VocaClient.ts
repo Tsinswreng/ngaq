@@ -1,6 +1,6 @@
 import { IVocaRow, VocaDbTable } from "@shared/SingleWord2"
 import SingleWord2 from "@shared/SingleWord2"
-import { NetworkError, $ } from "@shared/Ut"
+import { NetworkError, $, $a } from "@shared/Ut"
 import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
 import WordB from "./WordB"
@@ -315,13 +315,38 @@ export default class VocaClient{
 		return resp_
 	}
 
+	/**
+	 * @deprecated
+	 * @returns 
+	 */
+	public async get_allTableWords(){
+		const url = new URL(`/allTableWords`, this.baseUrl)
+		const resp_ = await fero(url)
+		return resp_
+	}
+
 	
+	/**
+	 * 分別請求每個表
+	 * @returns 響應對象數組
+	 */
+	public async getRespOfAllTables(){
+		const tables_ = await this.get_tables()
+		const table = $a(tables_, '取不到單詞表')
+		const resps:Response[] = new Array(table.length)
+		for(let i = 0; i < table.length; i++){
+			const u = table[i]
+			const ua = await this.get_words(u)
+			resps[i] = $(ua, `獲取響應失敗 i=${i}`)
+		}
+		return resps
+	}
 
 	/**
 	 * 從後端取整ᵗ單詞表
 	 * @param table 
 	 * @deprecated
-	 * @returns 
+	 * @returns SingleWord2[]
 	 */
 	public async get_words_SingleWordsArr(table:string){
 		const params = new URLSearchParams({table:table})
@@ -346,6 +371,10 @@ export default class VocaClient{
 		return SingleWord2.toJsObj(words)
 	}
 
+	/**
+	 * @deprecated
+	 * @returns 
+	 */
 	public async getAllTablesWords(){
 		const tables = await this.get_tables()
 		//console.log(tables)//t

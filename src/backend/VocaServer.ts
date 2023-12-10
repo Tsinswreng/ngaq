@@ -23,6 +23,8 @@ import Config from "@shared/Config";
 import Sqlite from "@shared/db/Sqlite";
 import json5 from 'json5'
 import * as fs from 'fs'
+import merge from "merge-stream";
+import { Readable } from "stream";
 Error.stackTraceLimit = 99
 const config = Config.getInstance()
 //const bodyParser = require('body-parser')
@@ -394,6 +396,7 @@ export default class VocaServer{
 			)
 		}))
 
+
 		C.app.get('/words', get(async(req, res)=>{
 			const table0 = req.query.table
 			console.log(table0)
@@ -406,8 +409,32 @@ export default class VocaServer{
 			//const stream = await vsqlt.readStream()
 			res.setHeader('Content-Type', 'application/octet-stream');
 			stream.pipe(res)
+		}))
 
-
+		/**
+		 * @deprecated 以merge合併流後 前端每次迭代讀取則json蜮被截斷
+		 */
+		C.app.get('/allTableWords', get(async(req, res)=>{
+			//const table0 = req.query.table
+			//console.log(table0)
+			// if(typeof table0 !== 'string'){
+			// 	throw new Error(`typeof table0 !== 'string'`)
+			// }
+			// const table:string = table0
+			//const vsqlt = await VocaSqlite.neW({_tableName:table})
+			config.reload()
+			
+			const tables = await Sqlite.filterExistTables(C.sqlt.db, config.config.tables??[])
+			const streams:Readable[] = new Array(tables.length)
+			for(let i = 0; i < tables.length; i++){
+				const ua = await C.sqlt.readStream(tables[i])
+				streams[i] = ua
+			}
+			const stream = merge(...streams)
+			//const stream = await C.sqlt.readStream(table)
+			//const stream = await vsqlt.readStream()
+			res.setHeader('Content-Type', 'application/octet-stream');
+			stream.pipe(res)
 		}))
 
 		// VocaServer.app.get('/login',async (req:MyReq,res)=>{

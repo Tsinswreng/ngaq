@@ -165,7 +165,7 @@ export default class Recite{
 	 * @param path 
 	 * @deprecated
 	 */
-	public async fetchAndStoreWords(path:string){
+	public async fetchAndStoreWords_deprecated(path:string){
 		let [time, sws] = await measurePromiseTime(VocaClient.fetchWords(path))
 		console.log(`後端ᙆ取詞之耗時: `+time)
 		//let sws = await VocaClient.fetchWords(path)
@@ -181,16 +181,20 @@ export default class Recite{
 	}
 
 	/***
-	 * 添加待背之詞
+	 * 添@see SingleWord2[]  作待背之詞
 	 */
-	public addWordsToLearn(sws:SingleWord2[]){
+	public addWordsToLearn_SingleWord2(sws:SingleWord2[]){
 		this.allWordsToLearn.push(...WordB.toWordB($(sws)))
 	}
 
 	/**
-	 * 使諸詞各算權重並降序ᵈ排
+	 * 添@see wordB[]  作待背之詞
 	 * @param wbs 
 	 */
+	public addWordsToLearn_WordB(inp:WordB[]){
+		this.allWordsToLearn.push(...inp)
+	}
+
 	public static calcAndDescSortPriority(wbs:WordB[],config?:Partial<typeof Priority.defaultConfig>){
 		//wbs.map(e=>console.log(e.priority.prio0num))//t
 		for(const w of wbs){

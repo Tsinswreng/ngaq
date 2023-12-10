@@ -1672,6 +1672,15 @@ FROM '${tableName}';`
 		return sql
 	}
 
+	public static async filterExistTables(db:Database, tables:any[]){
+		const nonNullTables:string[] = []
+		for(const u of tables){
+			const b = await Sqlite.isTableExist(db,u)
+			if(b){nonNullTables.push(u)}
+		}
+		return nonNullTables
+	}
+
 
 
 	/**把索引學完再來寫

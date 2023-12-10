@@ -10,7 +10,7 @@
 	,tables:[
 		,`english`
 		,`japanese`
-		,`latin`
+		// ,`latin`
 		// ,`cet6`
 	]
 	,dbPath: `./db/voca.db`

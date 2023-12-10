@@ -3,7 +3,7 @@ import WordB from '@ts/voca/WordB'
 import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
 import Log from '@shared/Log'
-import { $, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
+import { $, $a, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
 import VocaClient, { LsItemNames } from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
@@ -61,6 +61,10 @@ export default class MultiMode{
 
 	public get debuffNumerator(){return $n(mathjs.evaluate(this.debuffNumerator_str.value))}
 
+	private _priorityConfig = {debuffNumerator: this.debuffNumerator}
+	get priorityConfig(){return this._priorityConfig}
+	set priorityConfig(v){this._priorityConfig = v}
+
 	private _curWord:WordB = new WordB(SingleWord2.example)
 	;public get curWord(){return this._curWord;};;public set curWord(v){this._curWord=v;};
 
@@ -72,6 +76,8 @@ export default class MultiMode{
 
 	private _checkedTables:Ref<(boolean|undefined)[]> = ref([])
 	;public get checkedTables(){return this._checkedTables;};;public set checkedTables(v){this._checkedTables=v;};
+
+
 
 	/**
 	 * ls short for localStorage
@@ -127,7 +133,10 @@ export default class MultiMode{
 	 * @param readble 應來自response.body
 	 * @returns 
 	 */
-	public async getWordBViaStream(readble:ReadableStream<Uint8Array>){
+	public async getWordBViaStream(
+		readble:ReadableStream<Uint8Array>
+		, priorityConfig:Partial<typeof Priority.defaultConfig>
+	){
 		const reader = readble.getReader()
 		// 创建 TextDecoder 对象
 		const textDecoder = new TextDecoder('utf-8');
@@ -156,14 +165,24 @@ export default class MultiMode{
 				setTimeout(()=>{
 					const jsonArr = decodedStr.split(`\n`)
 					console.log(`jsonArr.lenght: `,jsonArr.length)//t
-					for(let j = 0; j < jsonArr.length; j++){
-						if(jsonArr[j].length === 0){continue}
-						const o:VocaDbTable = JSON.parse(jsonArr[j])
-						const sw = SingleWord2.toJsObj(o)
-						const wb = new WordB(sw)
-						wb.calcPrio() //這是一個同步函數、用于複雜計算
-						ans.push(wb)
+					let cur = ''
+					try {
+						for(let j = 0; j < jsonArr.length; j++){
+							cur = jsonArr[j]
+							if(cur.length === 0){continue}
+							const o:VocaDbTable = JSON.parse(cur)
+							const sw = SingleWord2.toJsObj(o)
+							const wb = new WordB(sw)
+							wb.priority.setConfig(priorityConfig)
+							wb.calcPrio() //這是一個同步函數、用于複雜計算
+							ans.push(wb)
+						}
+					} catch (error) {
+						const err = error as Error
+						console.error(err)
+						console.error(cur)
 					}
+					
 					res()
 				},0)
 			})
@@ -185,8 +204,26 @@ export default class MultiMode{
 		return ans
 	}
 
+	/**
+	 * 取所有wordB對象、權重已算好、權重配置依此ᵗ類
+	 * @returns 
+	 */
+	public async getAllWordB(){
+		const resps = await vocaClient.getRespOfAllTables()
+		const ans:WordB[] = []
+		for(const u of resps){
+			const ua = await this.getWordBViaStream(
+				$(u.body, '請求體潙空')
+				, this.priorityConfig
+			)
+			ans.push(...ua)
+		}
+		return ans
+	}
+
 	public async start(){
 		try {
+			
 			this.customPriorityAlgorithm()
 			const recite = this.recite
 			if(this.isSaved.value!==true){
@@ -208,16 +245,15 @@ export default class MultiMode{
 			// for(const st of selectedTables){
 			// 	await recite.fetchAndStoreWords(st)
 			// }
-			const mea = await measurePromiseTime(
-				vocaClient.getAllTablesWords()
-			)
-			const sws = await mea[1]
-			
-			console.log(`getAllTablesWords: `, mea[0])
-			if(sws.length === 0){
-				throw new Error(`無可背單詞`)
-			}
-			recite.addWordsToLearn(sws)
+
+
+			const wbs = await this.getAllWordB()
+
+			// if(wbs.length === 0){
+			// 	throw new Error(`無可背單詞`)
+			// }
+			$a(wbs, '無 可背單詞')
+			recite.addWordsToLearn_WordB(wbs)
 			
 			recite.filter()
 			if(recite.allWordsToLearn.length === 0){
@@ -226,16 +262,16 @@ export default class MultiMode{
 			//throw new Error('114')
 			
 			 // 此函數中報錯亦失調用堆棧ᵗ訊
-			const [time_prio] = measureFunctionTime(
-				recite.calcAndDescSortPriority.bind(recite)
-				,({debuffNumerator: this.debuffNumerator})
-			)
-			console.log(`calcAndDescSortPriority耗時: `, time_prio)
+			// const [time_prio] = measureFunctionTime(
+			// 	recite.calcAndDescSortPriority.bind(recite)
+			// 	,({debuffNumerator: this.debuffNumerator})
+			// )
+			//console.log(`calcAndDescSortPriority耗時: `, time_prio)
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority, {debuffNumerator: this.debuffNumerator.value})//<坑>{this潙undefined}
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(this), {debuffNumerator: this.debuffNumerator.value})//<坑>{如是則this會指向類洏非實例}
 			//let [time] = measureFunctionTime(recite.calcAndDescSortPriority.bind(recite), {debuffNumerator: this.debuffNumerator_str.value})
 			//console.log(`calcAndDescSortPriority耗時: `+time)
-			
+			recite.descSortByPrio()
 			recite.shuffleWords()
 			this._isShowCardBox.value = true
 		} catch (e) {
