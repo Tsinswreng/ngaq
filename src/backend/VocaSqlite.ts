@@ -439,14 +439,17 @@ export default class VocaSqlite{
 	 * @param words 
 	 * @returns [initAddIds, modifiedIds]
 	 */
-	public static async addWordsOfSameTable(db:Database, words:SingleWord2[]){
+	public static async addWordsOfSameTable_fn(db:Database, words:SingleWord2[]){
 		$a(words)
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
 		const table0 = $(words[0].table)
 		VocaSqlite.checkTable(table0, words)
-
-		return addWordsOfSameTable(db, table0, words)
+		const fn = async()=>{
+			return await addWordsOfSameTable(db, table0, words)
+		}
+		return fn
+		
 
 		async function addWordsOfSameTable(db:Database, table:string, words:SingleWord2[]){
 			words = words.map(e=>SingleWord2.intersect(e,e))//<坑>{舊版數據庫中 詞義ˉ數組蜮有重複元素、而SingleWord.intersect()合併單詞旹不會產重複元素。故初添前亦先除重}
@@ -467,11 +470,12 @@ export default class VocaSqlite{
 				const fn = async()=>{
 					return await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
 				}
-				runResult1 = await Sqlite.transaction(db, fn)
+				//runResult1 = await Sqlite.transaction(db, fn)
+				runResult1 = await fn()
 			}
 			if(wordsToUpdate.length !== 0){
 				const fn =  VocaSqlite.setWordsByIds_fn(db, table, (wordsToUpdate))
-				await Sqlite.transaction(db, fn)
+				await fn()
 			}
 			//console.log(runResult1)//t *
 			const initAddIds = runResult1.map(e=>e.lastID)
@@ -528,7 +532,7 @@ export default class VocaSqlite{
 		
 	}public addWordsOfSameTable(words:SingleWord2[]){
 		VocaSqlite.checkTable($(this.tableName), words)
-		return VocaSqlite.addWordsOfSameTable(this.db, words)
+		return VocaSqlite.addWordsOfSameTable_fn(this.db, words)
 	}
 	
 	
@@ -860,14 +864,17 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	public static saveWords(db:Database, sws:SingleWord2[]){
+	public static async saveWords(db:Database, sws:SingleWord2[]){
 		const tableToWordsMap = SingleWord2.classify(sws)
-		const prms:Promise<number[][]>[] = []
+		//const prms:Promise<number[][]>[] = []
+		const ans:number[][][] = []
 		for(const [table, words] of tableToWordsMap){
-			const pr = this.addWordsOfSameTable(db, words)
-			prms.push(pr)
+			const fn = await this.addWordsOfSameTable_fn(db, words)
+			const pr = await Sqlite.transaction(db, fn)
+			//prms.push(pr)
+			ans.push(pr)
 		}
-		return prms
+		return ans
 	}
 
 	// public static async censusByDate(db:Database, table:string){

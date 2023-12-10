@@ -253,10 +253,10 @@ export default class VocaServer{
 			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
 			//console.log(sws)//t
 			const prms = await VocaSqlite.saveWords(this.sqlt.db, sws)
-			const fn = ()=>{
-				return Promise.all(prms)
-			}
-			await Sqlite.transaction(C.sqlt.db, fn)
+			// const fn = ()=>{
+			// 	return Promise.all(prms)
+			// }
+			// await Sqlite.transaction(C.sqlt.db, fn)
 			const nunc = Tempus.new()
 			console.log(nunc)//t
 			res.send(nunc.iso)
@@ -290,7 +290,10 @@ export default class VocaServer{
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
 				//console.log(3)//t *
-				const [init, modified] = await VocaSqlite.addWordsOfSameTable(VocaServer.sqlt.db, sws)
+				const [init, modified] = await Sqlite.transaction(
+					VocaServer.sqlt.db
+					, await VocaSqlite.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
+				)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t

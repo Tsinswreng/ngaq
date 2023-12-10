@@ -663,7 +663,7 @@ export class Priority{
 
 	public static defaultConfig = {
 		//默認ᵗ 添ᵗ權重
-		addWeight : 0x100, 
+		addWeight : 0xFFF, 
 		//
 		debuffNumerator : 1000*3600*24*90
 	}

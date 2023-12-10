@@ -295,8 +295,15 @@ export default class MultiMode{
 			// recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
 			// recite.shuffleWords()
 			recite.restart()
-			recite.descSortByPrio()
-			recite.shuffleWords()
+			const resort = measureFunctionTime(
+				recite.descSortByPrio.bind(recite)
+			)
+			const reshuffle = measureFunctionTime(
+				recite.shuffleWords.bind(recite)
+			)
+			console.log(`重新排序耗時: `, resort[0])
+			console.log(`打亂耗時: `, reshuffle[0])
+			
 			// let temp = recite.allWordsToLearn.slice()
 			// recite.allWordsToLearn.length=0
 			// recite.allWordsToLearn.push(...temp)//t

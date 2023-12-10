@@ -30,19 +30,6 @@ const isShowWordWindow = multiMode.isShowWordWindow
 const isShowCardBox = multiMode.isShowCardBox
 let returnedWord:WordB = multiMode.curWord
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
-function wordCardClick(data:WordB){
-	multiMode.wordCardClick(data)
-}
-
-
-async function test(){
-	let sws_r = await VocaClient.fetchWords('/english')
-	let sws = $(sws_r)
-	//l.log(sws[0])
-	let peer = new WordB(sws[0])
-	peer.calcPrio()
-	l.log(peer.priority)
-}
 
 // onMounted(() => {
 // 	start()
@@ -64,7 +51,7 @@ async function test(){
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">
 		{{ VocaClient.baseUrl }}
-		<div v-for="(e, i) in recite.allWordsToLearn">
+		<div v-for="(e, i) in recite.allWordsToLearn.slice(0, 100)">
 			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
 	</div>
