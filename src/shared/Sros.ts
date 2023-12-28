@@ -8,6 +8,7 @@ export type BN = mathjs.BigNumber
 export type UN = mathjs.BigNumber|number //無bigint
 export type UNS = UN|string
 export type N4 = UNS|bigint
+export type N3 = UN|bigint
 
 class SrosError extends Error{
 	private constructor(x?){

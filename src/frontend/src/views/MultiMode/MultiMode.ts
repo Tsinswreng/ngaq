@@ -56,6 +56,17 @@ export default class MultiMode{
 	private _multiMode_key = ref(0)
 	;public get multiMode_key(){return this._multiMode_key;};
 
+	private _paging = ref(`0,64`)
+	get paging(){return this._paging}
+	set paging(v){this._paging = v}
+	public get paging_num(){
+		const pagingStr = this.paging.value.trim()
+		const extentArr = pagingStr.split(',')
+		const start = parseInt(extentArr[0].trim())
+		const end = parseInt(extentArr[1].trim())
+		return [start, end]
+	}
+
 	private _debuffNumerator_str = ref(this.get_debuffNumerator_str()+'')
 	;public get debuffNumerator_str(){return this._debuffNumerator_str;};;public set debuffNumerator_str(v){this._debuffNumerator_str=v;};
 
@@ -131,9 +142,10 @@ export default class MultiMode{
 	/**
 	 * 從流中取wordB對象數組並 并行ᵈ算權重。
 	 * @param readble 應來自response.body
+	 * @deprecated :一個json會被切斷
 	 * @returns 
 	 */
-	public async getWordBViaStream(
+	public async getWordBViaStream_deprecated(
 		readble:ReadableStream<Uint8Array>
 		, priorityConfig:Partial<typeof Priority.defaultConfig>
 	){
@@ -209,17 +221,26 @@ export default class MultiMode{
 	 * @returns 
 	 */
 	public async getAllWordB(){
-		const resps = await vocaClient.getRespOfAllTables()
-		const ans:WordB[] = []
-		for(const u of resps){
-			const ua = await this.getWordBViaStream(
-				$(u.body, '請求體潙空')
-				, this.priorityConfig
-			)
-			ans.push(...ua)
+		// const resps = await vocaClient.getRespOfAllTables()
+		// const ans:WordB[] = []
+		// for(const u of resps){
+		// 	const ua = await this.getWordBViaStream(
+		// 		$(u.body, '請求體潙空')
+		// 		, this.priorityConfig
+		// 	)
+		// 	ans.push(...ua)
+		// }
+		// return ans
+		const sws = await vocaClient.getAllTablesWords()
+		const ans:WordB[] = sws.map(e=>new WordB(e))
+		for(let i = 0; i < ans.length; i++){
+			ans[i].priority.setConfig(this.priorityConfig)
+			ans[i].calcPrio()
 		}
 		return ans
 	}
+
+
 
 	public async start(){
 		try {
@@ -234,24 +255,7 @@ export default class MultiMode{
 				//throw new Error(`不得重複開始`)
 				alertEtThrow(`不得重複開始`)
 			}
-			// const selectedTables:string[] = []
-			// for(let i = 0; i < this.checkedTables.value.length; i++){
-			// 	let cur = this.checkedTables.value[i]
-			// 	if(cur === true){
-			// 		selectedTables.push(this.tables[i])
-			// 	}
-			// }
-
-			// for(const st of selectedTables){
-			// 	await recite.fetchAndStoreWords(st)
-			// }
-
-
 			const wbs = await this.getAllWordB()
-
-			// if(wbs.length === 0){
-			// 	throw new Error(`無可背單詞`)
-			// }
 			$a(wbs, '無 可背單詞')
 			recite.addWordsToLearn_WordB(wbs)
 			
@@ -294,7 +298,7 @@ export default class MultiMode{
 			// recite.mergeSelfWords()
 			// recite.calcAndDescSortPriority({debuffNumerator: this.debuffNumerator})
 			// recite.shuffleWords()
-			recite.restart()
+			recite.restart(this.priorityConfig)
 			const resort = measureFunctionTime(
 				recite.descSortByPrio.bind(recite)
 			)

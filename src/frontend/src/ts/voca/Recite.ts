@@ -5,6 +5,9 @@ import { $, $a, getShuffle, lastOf, measurePromiseTime } from '@shared/Ut';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
 import _ from 'lodash';
+import { Sros } from '@shared/Sros';
+const sros = Sros.new()
+const s = sros.short
 const l = console
 
 /**
@@ -105,13 +108,13 @@ export default class Recite{
 		const o = C.getInstance()
 	}
 
-	public restart(){
-		this.flushAllWordsToLearn()
+	public restart(prioConfig:Partial<typeof Priority.defaultConfig>){
+		this.flushAllWordsToLearn(prioConfig)
 		this._rvwObj = new ReviewedWords()
 	}
 
 
-	public flushAllWordsToLearn(){
+	public flushAllWordsToLearn(prioConfig:Partial<typeof Priority.defaultConfig>){
 		const id__reviewedWord = this.rvwObj.merge()
 		// const id__index = C.genMap<number,WordB>(this.allWordsToLearn, 'id')
 		// //console.log(id__reviewedWord)//t
@@ -143,7 +146,10 @@ export default class Recite{
 			Object.assign(u, new WordB(u.fw))
 			//this.allWordsToLearn[i] = gotV
 			u.mergeDates()
-			u.calcPrio()
+			//debugger
+			u.priority.setConfig(prioConfig)
+			//console.log(u.priority.config)//t
+			u.calcPrio()//傳參config?
 
 			//console.log(u.priority.prio0num)//t
 		}
@@ -204,13 +210,13 @@ export default class Recite{
 				w.calcPrio()
 			}
 		}
-		wbs.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
+		wbs.sort((b,a)=>{return s.s(a.priority.prio0num , b.priority.prio0num)})
 	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
 	}
 
 	public descSortByPrio(){
-		this.allWordsToLearn.sort((b,a)=>{return a.priority.prio0num - b.priority.prio0num})
+		this.allWordsToLearn.sort((b,a)=>{return s.s(a.priority.prio0num , b.priority.prio0num)})
 	}
 
 	/**

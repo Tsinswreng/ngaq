@@ -667,9 +667,11 @@ export class Priority{
 
 	public static defaultConfig = {
 		//默認ᵗ 添ᵗ權重
-		addWeight : 0xFFF, 
+		addWeight : 0xFFFF, 
 		//
 		debuffNumerator : 1000*3600*24*90
+		//
+		,base: 10
 	}
 
 	protected _config:typeof Priority.defaultConfig = Priority.defaultConfig
@@ -796,7 +798,18 @@ export class Priority{
 			else{
 
 				let nowDiffThen = Tempus.diff_mills(nunc, tempus_event.tempus)
-				let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb, weight)
+				//let debuff = self.getDebuff(nowDiffThen, this.config.debuffNumerator*cnt_rmb, weight)
+				let debuff = self.getDebuff(
+					s.m(
+						nowDiffThen
+						, sros.pow(
+							this.config.base
+							//1
+							, add_cnt
+						)// 加ᵗ次ˋ越多、憶ᵗ事件ᵗdebuff越弱
+					)
+					, this.config.debuffNumerator*cnt_rmb, weight
+				)
 				//if(lastOf(dateToEventObjs).event !== WordEvent.RMB){debuff=1} 斯句已前置
 				//prio0 /= debuff
 				//prio0 = $n( div(prio0, debuff*cnt_rmb) ) //[2023-10-30T23:38:58.000+08:00]{*cnt_rmb可使 詞芝憶ᵗ次ˋ多者更靠後、無論其忘ᵗ次。}
@@ -878,8 +891,8 @@ export class Priority{
 	 */
 	public getDateWeight(dateDif:UN){
 		let ans = s.n(dateDif)
-		ans = sros.pow(ans, 1/2)
-		ans = s.d(ans, 100)
+		ans = sros.pow(ans, 1/4) //1/2
+		ans = s.d(ans, 1) //100
 		if( s.c(ans,1) < 0 ){
 			ans = s.n(1.01)
 		}

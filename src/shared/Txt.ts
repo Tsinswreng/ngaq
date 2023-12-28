@@ -54,7 +54,7 @@ export default class Txt{
 	}
 
 	/**
-	 * 從字符串中獲取二維數組表格
+	 * 從字符串中獲取二維數組表格(行優先)
 	 * @param tableStr 
 	 * @param splitter 同一行中分割單元格的依據、默認製表符
 	 * @returns 

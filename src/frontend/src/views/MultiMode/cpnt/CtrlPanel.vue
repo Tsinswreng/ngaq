@@ -58,10 +58,10 @@ function switchRandomImg(){
 		<button @click="multiMode.save()">存</button>
 		<button>改</button>
 		<button @click="multiMode.restart()">重開</button>
-		<button @click="multiMode.sortByRmb()">憶ᶤ排序</button>
-		<button @click="multiMode.sortBylastRvwDate()">期ᶤ排序</button>
+		<button @click="multiMode.sortByRmb()">憶序</button>
+		<button @click="multiMode.sortBylastRvwDate()">期序</button>
 		<button @click="switchRandomImg()">開圖</button>
-		<button @click="multiMode.showNextRandomBg()">圖</button>
+		<button @click="multiMode.showNextRandomBg()">換圖</button>
 		
 		
 		<!-- 坑{v-model與value=""不兼容} -->
@@ -69,16 +69,23 @@ function switchRandomImg(){
 			<input type="text" v-model="debuffNumerator" id="debuffNumerator">
 			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
 		</span>
+		<span>
+			<input type="text" v-model="multiMode.paging.value" id="paging">
+		</span>
 		<!-- <button></button> -->
 		<span>{{ isSaved? '':'未保存' }}</span>
 	</div>
 </template>
 <!-- <坑>{若欲父組件ʸ子組件ᵗ樣式ˇ設、則子組件須有唯一根節點。} -->
 <style scoped>
-#debuffNumerator{
+input{
 	background: transparent;
 	width: 64px;
 	font-size: 12px; /* 最小只能調到12 */
 	overflow: visible; /* 允许文本超出边框 不效 */
+}
+button{
+	height: 16px;
+	font-size: 13px;
 }
 </style>

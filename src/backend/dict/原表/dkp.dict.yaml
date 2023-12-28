@@ -155,6 +155,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 君	kul
 羣	ɡul
 群	ɡul
+窘	ɡrulʔ
 降	krˁuŋs
 夜	jAks
 
@@ -178,7 +179,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 聞	mun	# bs
 問	muns	# bs
 移	laj
-由	liw	# ms
+#由	liw	# ms
 由	liwʔ	# ts
 釉	liws
 鼬	liws
@@ -198,7 +199,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 寐	mits
 魅	mrəts
 調	dˁiws
-先	sˁən
+
 
 
 紙	keʔ
@@ -287,6 +288,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 唯	kʰi	# ts
 維	wuj	# bs
 惟	wi
+淮	wrˁi
 嘆	nʰˁans
 歎	nʰˁans
 炭	lʰˁans
@@ -300,10 +302,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 兄	mʰraŋ
 願	ŋons
 替	nʰˁits
-西	sˁəl
 栖	sˁəj
 西	sˁəj
-洗	sˁəjʔ
+洒	sˁəjʔ
+洗	sˁəlʔ
+先	sˁəl
+茜	tsʰˁəns
+哂	nʰənʔ
+
+
 道	lˁuʔ
 
 明	mraŋ
@@ -463,6 +470,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 原	ŋol	# ms
 
 元	ŋon
+
+沅	ŋon
+芫	ŋon
+阮	ŋonʔ
+朊	ŋonʔ
 夏	ɡrˁas
 夏	wrˁas
 條	lˁiw
@@ -493,6 +505,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 區	kʰo
 驅	kʰjo	# ms
+軀	kʰo
 軀	kʰro
 
 
@@ -503,6 +516,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 禺	ŋos	# 平聲潙地名 去聲蔿動物
 遇	ŋros
+偶	ŋˁos #舍他音
 愚	ŋro
 隅	ŋo
 虞	ŋʷra
@@ -581,6 +595,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 効	ɡrˁews	# ptl
 餃	krˁewʔ	# ptl
 佼	krˁewʔ	# ptl
+鉸	krˁew
+鉸	krˁewʔ
+鮫	krˁew
+絞	krˁewʔ
+姣	krˁewʔ
+姣	ɡrˁew
+狡	krˁewʔ
 膠	krˁiw
 攪	krˁuʔ
 
@@ -625,6 +646,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 徭	jaw
 
 第	lˁis
+娣	lˁiʔ	# 舍去聲
+悌	lˁiʔ	# 舍去聲
+
 睇	lʰˁis
 逮	lˁəps
 帝	tˁeks
@@ -643,7 +667,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 將	tsaŋ
 搶	tsʰaŋʔ
 槍	tsʰaŋ
-乾	ɡˁal
+乾	ɡrˁal
+韓	ɡˁal
+乾	kˁal	
 干	kˁal	# bs
 
 肝	kˁal
@@ -1214,6 +1240,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 𣽅	ɡʷˁat
 䄆	ɡʷˁat
 
+憩	kʰrats
+
 灰	mʰˁə	# bs
 恢	kʰʷˁə
 詼	kʰʷˁə
@@ -1417,6 +1445,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 除	lra
 湍	tʰˁol
 端	tˁol
+踹	dolʔ
+踹	tˁols
+喘	tʰolʔ
+
 瑞	dols
 畀	pits
 既	kəts
@@ -1550,6 +1582,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 啐	tsʰˁuts
 焠	tsʰˁuts
 粹	suts
+
+悴	dzuts
+萃	dzuts
+瘁	dzuts
+顇	dzuts
+㱖	dzuts
+
 碎	sˁuts
 騷	sˁu
 搔	sˁu
@@ -1765,6 +1804,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 譬	pʰeks
 湯	lʰˁaŋ
 盪	lʰˁaŋ
+燙	lʰˁaŋs
 
 #年	nˁiŋ
 #秊	nˁiŋ
@@ -1974,9 +2014,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 淹	ʔom
 # 掩	手omʔ
 # 閹
+
+俱	kro
+
 殷	ʔəl	# bs
 柚	liwks	# ptl
 舳	lriwk
+畜	lʰruk
+畜	hruk
 蓄	hruk
 蓄	lʰruk
 搐	lʰruk
@@ -2114,6 +2159,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 簞	tˁal
 殫	tˁal
 憚	dˁals
+
+闡	tʰalʔ
+
+
 
 虐	ŋawk
 瘧	ŋawk
@@ -2274,10 +2323,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 刪	srˁan	# 非形聲
 删	srˁan
 
-册	tsrˁak	# ts
-冊	tsrˁak	# ts
-柵	tsrˁak	# ts
-栅	tsrˁak	# ts
+册	tsʰrˁak	# ts
+冊	tsʰrˁak	# ts
+柵	tsʰrˁak	# ts
+栅	tsʰrˁak	# ts
+
 
 捐	wen
 娟	ʔʷen
@@ -2286,6 +2336,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 悁	ʔʷen
 
 恰	kʰrˁəp
+洽	ɡrˤəp
+祫	ɡrˤəp
+烚	ɡrˤəp
+珨	ɡrˤəp
+
+組	sˁaʔ	# ts
+組	tsˁaʔ	%0
+
+鉗	ɡram
 
 奧	ʔˁuk
 澳	ʔˁuks
@@ -2329,6 +2388,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蛞	kʰʷˁat
 筈	kʰʷˁat
 爵	tsewk
+嚼
+爝
+皭
 盼	pʰrˁəns
 勃	bˁət
 脖	bˁət
@@ -2386,6 +2448,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 墜	lruts
 鑿	dzˁawk
 危	ŋoj
+跪	ɡojʔ
+跪	kʰojʔ
+詭	kojʔ
+桅	kojʔ
+佹	kojʔ
+
+跬	kʰʷeʔ
+䞨	kʰʷeʔ
+䠑	kʰʷeʔ
+
 尋	sləm
 尋	slum	# bs
 花	hʷrˁa
@@ -2425,7 +2497,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 愈	loʔ
 愈	soʔ	# ts
 俞	lo
-逾	tʰo	# ts
+逾	tʰos	# ts
 逾	lo
 陝	lʰemʔ	# ts
 硬	ŋrˁeŋs
@@ -2840,6 +2912,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 咬	ŋrˁewʔ	# ts
 怕	pʰrˁaks	# ts
+帕	pʰrˁaks	
+帊	pʰrˁas	
 哦	ʔo	# ts
 哦	ŋˁaj	# ts
 
@@ -3131,6 +3205,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #杠	mrˁoŋ	# ts
 
 陪	brˁə	# ts
+陪	bˁə	
 碘	dˁəlʔ	# ts
 嗜	ɡris	# ts
 逝	tats	# ts
@@ -3303,7 +3378,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 # #票	@票
 # 漂	水票
+票	pʰAws	# ts
+漂	pʰews
+
 # 嫖	女票
+嫖	pʰews
+嫖	nʰews	# ts
 # 瞟	目票
 # 鏢	金票
 # 飄	他票
@@ -3433,7 +3513,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 墓	tʰˁawks	# ts
 
 幕	mˁak
-幕	kˁakws	# ts
+幕	kˁawks	# ts
 
 #膜	肉莫
 膜	mˁak
@@ -3859,10 +3939,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 # #它	@它
 # 佗	人它
+佗	lˁaj
 # 陀	阜它
 # 砣	石它
 # 坨	土它
 # 舵	舟它
+舵	lˁajʔ
 # 柁	木它
 
 # 俞	@俞
@@ -4563,7 +4645,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 粦	rən
 # 鄰	邑粦
 鄰	rən
-鄰	ʔrən	# ts
+鄰	rənʔ	# ts
 # 磷	石粦
 磷	rən
 磷	trən	# ts
@@ -4625,7 +4707,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 綾	rəŋ
 凌	prəŋ	# ts
 凌	rəŋ
-陵	brəŋ	# ts
+陵	brəŋʔ	# ts
 陵	rəŋ
 淩	strəŋ	# ts
 淩	rəŋ

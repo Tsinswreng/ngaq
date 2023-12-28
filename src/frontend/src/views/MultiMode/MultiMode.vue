@@ -29,6 +29,8 @@ const isSaved = ref(true)
 const isShowWordWindow = multiMode.isShowWordWindow
 const isShowCardBox = multiMode.isShowCardBox
 let returnedWord:WordB = multiMode.curWord
+const page = multiMode.paging_num
+
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
 
 // onMounted(() => {
@@ -49,9 +51,9 @@ let returnedWord:WordB = multiMode.curWord
 		<component :is="WordInfo" :wordB="multiMode.curWord" class="WordInfo" :key="multiMode.curWord.fw.id" v-if="isShowWordInfo"></component>
 	</div>
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
-	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">
-		{{ VocaClient.baseUrl }}
-		<div v-for="(e, i) in recite.allWordsToLearn.slice(0, 100)">
+	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">.slice(page[0], page[1])
+		baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
+		<div v-for="(e, i) in recite.allWordsToLearn">
 			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
 	</div>
@@ -63,7 +65,10 @@ let returnedWord:WordB = multiMode.curWord
 </template>
 
 <style scoped>
-
+input{
+	background: transparent;
+	width: 64px;
+}
 .WordInfo-container{
 	width: 30%;
 	/* overflow-y: scroll; */
