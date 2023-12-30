@@ -202,8 +202,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
-紙	keʔ
-氏	ɡeʔ
 運	wəls
 羣	gul
 
@@ -1123,6 +1121,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 鹹	ɡrˁom	# bs
 咸	ɡrˁəm
 喊	ɡrˁəmʔ	# ptl
+鹼	tsʰam
+碱	krˁəmʔ
+緘	krˁəm
+
 威	ʔuj
 葳	ʔuj
 畏	ʔujs
@@ -1619,9 +1621,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 辰	dəl
 宸	dəl
 
-振	təls
-賑	təls
-娠	təls
+振	təl	# 舍他音
+賑	təlʔ	# 舍他音
+娠	stəl	# 舍他音
+震	təls
+#晨	dil	# ts
+晨	nəl	# ts
+
+
 
 疹	trənʔ
 軫	trənʔ
@@ -1734,6 +1741,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 匋	lˁu
 濤	dˁu
 淘	lˁu
+萄	lˁu
+啕	lˁu
+綯	lˁu
 燾	dˁus
 盜	dˁaws
 #包	prˁow	# ts
@@ -2454,6 +2464,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 桅	kojʔ
 佹	kojʔ
 
+扮	prˁəns
+
+只	teʔ	#ts
+只	kejʔ
+咫	keʔ
+枳	keʔ
+軹	keʔ
+抧	keʔ
+
+紙	kreʔ	# bs /k.te/
+氏	ɡeʔ
+
+
 跬	kʰʷeʔ
 䞨	kʰʷeʔ
 䠑	kʰʷeʔ
@@ -3054,6 +3077,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 版	pʰrˁanʔ	# ts
 
 培	bˁo	# ts
+培	bˁə	
+
 
 揮	hʷəl	# ts
 #碼	mrˁajʔ	# ts
@@ -3068,8 +3093,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 保	pˁuwʔ	# ts
 
 
-晨	dil	# ts
-震	tils	# ts
+
+
 援	wran	# ts
 雨	was	# ts
 羽	wraʔ	#ts

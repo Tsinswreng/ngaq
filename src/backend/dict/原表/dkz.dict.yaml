@@ -1,5 +1,5 @@
 
-#20231227173002647
+#20231229215455307
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -156,8 +156,6 @@ use_preset_vocabulary: true
 寐	mits	
 魅	mrəts	
 調	dˁiws	
-紙	keʔ	
-氏	ɡeʔ	
 運	wəls	
 羣	gul	
 連	ran	
@@ -881,6 +879,9 @@ use_preset_vocabulary: true
 鹹	ɡrˁom	
 咸	ɡrˁəm	
 喊	ɡrˁəmʔ	
+鹼	tsʰam	
+碱	krˁəmʔ	
+緘	krˁəm	
 威	ʔuj	
 葳	ʔuj	
 畏	ʔujs	
@@ -1297,9 +1298,11 @@ use_preset_vocabulary: true
 臣	ɡin	
 辰	dəl	
 宸	dəl	
-振	təls	
-賑	təls	
-娠	təls	
+振	təl	
+賑	təlʔ	
+娠	stəl	
+震	təls	
+晨	nəl	
 疹	trənʔ	
 軫	trənʔ	
 沾	trem	
@@ -1395,6 +1398,9 @@ use_preset_vocabulary: true
 匋	lˁu	
 濤	dˁu	
 淘	lˁu	
+萄	lˁu	
+啕	lˁu	
+綯	lˁu	
 燾	dˁus	
 盜	dˁaws	
 包	prˁuw	
@@ -2000,6 +2006,15 @@ use_preset_vocabulary: true
 詭	kojʔ	
 桅	kojʔ	
 佹	kojʔ	
+扮	prˁəns	
+只	teʔ	
+只	kejʔ	
+咫	keʔ	
+枳	keʔ	
+軹	keʔ	
+抧	keʔ	
+紙	kreʔ	
+氏	ɡeʔ	
 跬	kʰʷeʔ	
 䞨	kʰʷeʔ	
 䠑	kʰʷeʔ	
@@ -2328,6 +2343,7 @@ use_preset_vocabulary: true
 腺	sols	
 版	pʰrˁanʔ	
 培	bˁo	
+培	bˁə	
 揮	hʷəl	
 漿	tsaŋ	
 漿	stˁaŋ	
@@ -2336,8 +2352,6 @@ use_preset_vocabulary: true
 政	tʰeŋs	
 保	pˁowʔ	
 保	pˁuwʔ	
-晨	dil	
-震	tils	
 援	wran	
 雨	was	
 羽	wraʔ	
@@ -3147,11 +3161,6 @@ use_preset_vocabulary: true
 靽	pˁans	
 𩢔	pˁans	
 瓣	brˁens	
-扮	bənʔ	2%
-扮	hʷrˁeʔ	2%
-扮	prˁens	
-扮	pən	2%
-扮	pənʔ	2%
 邦	prˁoŋ	
 垹	prˁoŋ	
 𤰫	prˁoŋ	
@@ -10277,7 +10286,6 @@ use_preset_vocabulary: true
 𪊑	kˁen	
 𪊑	kʰˁen	
 𪊑	kʰˁeŋs	
-緘	krˁem	
 𣚙	tsˁin	
 㔋	ɡrˁamʔ	
 㔋	krˁams	
@@ -10344,7 +10352,6 @@ use_preset_vocabulary: true
 𥍹	kanʔ	
 絸	kˁenʔ	
 㨵	tsenʔ	
-碱	krˁemʔ	
 戩	tsenʔ	
 𢵈	krenʔ	
 𦺍	tsenʔ	
@@ -10384,8 +10391,6 @@ use_preset_vocabulary: true
 𩟗	tsemʔ	
 襺	kˁenʔ	
 𧟉	krˁenʔ	
-鹼	tsʰem	
-鹼	krˁemʔ	
 𩽜	krenʔ	
 建	kans	
 荐	dzˁins	
@@ -19616,14 +19621,11 @@ use_preset_vocabulary: true
 咷	tʰˁews	
 洮	lew	
 洮	tʰˁaw	
-萄	dˁaw	
-啕	dˁaw	
 䛌	dˁaw	
 裪	dˁaw	
 鞀	dˁaw	
 蜪	dˁaw	
 蜪	tʰˁaw	
-綯	dˁaw	
 鞉	dˁaw	
 䛬	dˁaw	
 駣	dˁaw	
@@ -25640,8 +25642,6 @@ use_preset_vocabulary: true
 𩏠	trˁaŋs	
 之	tə	
 㞢	tə	
-只	te	4%
-只	teʔ	
 卮	te	
 芝	tə	
 吱	kʰes	
@@ -25756,23 +25756,18 @@ use_preset_vocabulary: true
 沚	təʔ	
 汦	teʔ	
 汦	ti	
-抧	teʔ	
 茋	tiʔ	
 𣲵	teʔ	
 泜	drəj	
 祉	tʰrəʔ	
-枳	teʔ	
-枳	keʔ	
 洔	təʔ	
 洔	drəʔ	
-咫	teʔ	
 茝	tʰˁəʔ	
 茝	təʔ	
 疻	te	
 疻	ti	
 趾	təʔ	
 𢽃	ʔʷaŋʔ	
-軹	teʔ	
 黹	trəjʔ	
 䛗	tiʔ	
 䅩	teʔ	

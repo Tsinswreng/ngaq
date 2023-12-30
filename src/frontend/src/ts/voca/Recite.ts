@@ -210,13 +210,13 @@ export default class Recite{
 				w.calcPrio()
 			}
 		}
-		wbs.sort((b,a)=>{return s.s(a.priority.prio0num , b.priority.prio0num)})
+		wbs.sort((b,a)=>{return s.c(a.priority.prio0num , b.priority.prio0num)})
 	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
 	}
 
 	public descSortByPrio(){
-		this.allWordsToLearn.sort((b,a)=>{return s.s(a.priority.prio0num , b.priority.prio0num)})
+		this.allWordsToLearn.sort((b,a)=>{return s.c(a.priority.prio0num , b.priority.prio0num)})
 	}
 
 	/**
