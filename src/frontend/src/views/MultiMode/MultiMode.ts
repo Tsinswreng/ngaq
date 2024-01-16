@@ -2,8 +2,7 @@ import {Ref, ref} from 'vue'
 import WordB from '@ts/voca/WordB'
 import SingleWord2, { Priority } from '@shared/SingleWord2'
 import Recite from '@ts/voca/Recite'
-import Log from '@shared/Log'
-import { $, $a, $n, blobToBase64_fr, delay, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
+import { $, $a, $n, measureFunctionTime, measurePromiseTime } from '@shared/Ut'
 import VocaClient, { LsItemNames } from '@ts/voca/VocaClient'
 import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
@@ -68,7 +67,7 @@ export default class MultiMode{
 	}
 
 	private _debuffNumerator_str = ref(this.get_debuffNumerator_str()+'')
-	;public get debuffNumerator_str(){return this._debuffNumerator_str;};;public set debuffNumerator_str(v){this._debuffNumerator_str=v;};
+	get debuffNumerator_str(){return this._debuffNumerator_str;};set debuffNumerator_str(v){this._debuffNumerator_str=v;};
 
 	public get debuffNumerator(){return $n(mathjs.evaluate(this.debuffNumerator_str.value))}
 
@@ -81,14 +80,6 @@ export default class MultiMode{
 
 	private _recite = Recite.getInstance()
 	;public get recite(){return this._recite;};
-
-	private _tables = ['english', 'japanese', 'latin']
-	;public get tables(){return this._tables;};
-
-	private _checkedTables:Ref<(boolean|undefined)[]> = ref([])
-	;public get checkedTables(){return this._checkedTables;};;public set checkedTables(v){this._checkedTables=v;};
-
-
 
 	/**
 	 * ls short for localStorage
@@ -146,8 +137,8 @@ export default class MultiMode{
 	 * @returns 
 	 */
 	public async getWordBViaStream_deprecated(
-		readble:ReadableStream<Uint8Array>
-		, priorityConfig:Partial<typeof Priority.defaultConfig>
+		 readble:ReadableStream<Uint8Array>
+		,priorityConfig:Partial<typeof Priority.defaultConfig>
 	){
 		const reader = readble.getReader()
 		// 创建 TextDecoder 对象
@@ -344,11 +335,8 @@ export default class MultiMode{
 
 
 	public async save(){
-		console.log('save')//t
 		await this.recite.saveWords()
 		this.isSaved.value = true
-		//alert('保存成功')
-		console.log(this.isSaved)//t
 	}
 
 	private async _showNextRandomBg(){
@@ -366,7 +354,6 @@ export default class MultiMode{
 		let temp = this.class_bg_next.value
 		this.class_bg_next.value = this.class_bg.value
 		this.class_bg.value = temp;
-		//await delay(100)//t
 		// let temp = this.id_bg_next.value
 		// this.id_bg_next.value = this.id_bg.value
 		// this.id_bg.value = temp;
@@ -374,19 +361,11 @@ export default class MultiMode{
 
 		// const inst = this.getInstance()
 		// inst.setBgByBase64(inst.nextBg)
-		//console.log(114514)//t
 		let bg: string|null = await MultiMode.getRandomBase64Img()
-		//console.log(114515)//t
 		//MultiMode.setBgByBase64(bg.src, this.id_bg.value)
 		let nextBgId = getIdByClass(this.class_bg.value)
-		// console.log(`console.log(nextBgId)`)
-		// console.log(nextBgId)//t
-		//console.log(114514)//t
 		let [time] = measureFunctionTime(MultiMode.setBgByBase64.bind(MultiMode),bg, nextBgId)
 		console.log(`setBgByBase64耗時: `+time)
-		//console.log(114515)//t
-		//console.log(this.id_bg_next.value)//t
-		//console.log(bg.src.length)//t
 		// inst.nextBg=bg.src
 		bg=null
 		// let fn = ()=>{MultiMode._showNextRandomBg().then()}
@@ -398,7 +377,6 @@ export default class MultiMode{
 			console.log(`showNextRandomBg耗時: `+time)
 			return 
 		}
-		//console.log(114514)//t
 	}
 
 	public static async getRandomBase64Img(){
@@ -417,12 +395,10 @@ export default class MultiMode{
 	}
 
 	public static setBgByBase64(img:string, id:string){
-		//console.log(img.slice(0,999))
 		const prefix = `data:image/png;base64,`
 		let bg: HTMLImageElement|null  = document.getElementById(id) as HTMLImageElement
 		$(bg)
 		bg.src = prefix+''+img;
-		//console.log(bg.src);//t
 		(img as any)=null;
 		(bg as any)=null
 	}

@@ -334,7 +334,10 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
  * @returns 
  */
 export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
-	$a(arr, '不能打亂空數組')
+	//$a(arr, '不能打亂空數組')
+	if(arr.length === 0){
+		return arr
+	}
 	const copy:(T|null)[] = arr.slice()
 	const maxIndex = arr.length -1
 	//

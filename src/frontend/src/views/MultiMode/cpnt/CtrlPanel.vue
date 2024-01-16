@@ -23,11 +23,11 @@ const recite = Recite.getInstance()
 // 	await recite.saveWords()
 // }
 
-const checkedTables = multiMode.checkedTables
+
 const isSaved = multiMode.isSaved
 const debuffNumerator = multiMode.debuffNumerator_str
 
-let tempShape = ref('')
+
 function search(shape:string){
 	for(const w of recite.allWordsToLearn){
 		if(w.fw.wordShape === shape){

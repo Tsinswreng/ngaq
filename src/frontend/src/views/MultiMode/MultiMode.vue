@@ -12,7 +12,6 @@ import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import Log from '@shared/Log';
 import { $ } from '@shared/Ut';
-const l = new Log()
 import { ref,Ref, onMounted } from 'vue';
 import VocaClient from '@ts/voca/VocaClient';
 import SingleWord2 from '@shared/SingleWord2';
@@ -54,7 +53,7 @@ const page = multiMode.paging_num
 	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">.slice(page[0], page[1])
 		baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 		<div v-for="(e, i) in recite.allWordsToLearn">
-			<component :is="WordCard" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
+			<component :is="WordCard" :key="e.fw.table+''+e.fw.id" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
 		</div>
 	</div>
 	<img src="" alt="" :class="multiMode.class_bg.value" :id="multiMode.id_bg.value">

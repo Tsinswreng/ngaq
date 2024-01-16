@@ -2,6 +2,8 @@
 import { RegexReplacePair } from "@shared/Ut"
 export let replacePair:RegexReplacePair[] = [
 	//{regex:/waj/gm, replacement:'test'},
+
+
 	{regex:/g/gm, replacement:'ɡ'},
 	{regex:/ˤ/gm, replacement:'ˁ'},
 	//{regex:/jʷ/gm, replacement:'w'},
@@ -14,12 +16,21 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/ʑ/gm, replacement:'ʑr'},
 	{regex:/從/gm, replacement:'dz'},
 
+	//以下ˇ當 獨ᵈ先処。否則三等無r之a轉A後恐混。
+	{regex:/rˁ(æ|A)/gm, replacement:'腹一.腹二'},
+	{regex:/ˁ(æ|A)/gm, replacement:'腹一,腹二'},
+	{regex:/r(æ|A)/gm, replacement:'腹一H腹二'},
+	{regex:/ˡa/gm, replacement:'腹一N腹二'},
+	{regex:/(æ|A)/gm, replacement:'腹一N腹二'},
+
+
 	{regex:/rˁa/gm, replacement:'腹一Y腹二'},
 	{regex:/rˁe/gm, replacement:'腹一P腹二'},
 	{regex:/rˁi/gm, replacement:'腹一I腹二'},
 	{regex:/rˁo/gm, replacement:'腹一O腹二'},
 	{regex:/rˁu/gm, replacement:'腹一U腹二'},
 	{regex:/rˁə/gm, replacement:'腹一M腹二'},
+	
 
 	{regex:/ˁa/gm, replacement:'腹一Z腹二'},
 	{regex:/ˁe/gm, replacement:'腹一X腹二'},
@@ -27,6 +38,7 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/ˁo/gm, replacement:'腹一V腹二'},
 	{regex:/ˁu/gm, replacement:'腹一B腹二'},
 	{regex:/ˁə/gm, replacement:'腹一L腹二'},
+	
 
 	{regex:/ra/gm, replacement:'腹一Q腹二'},
 	{regex:/re/gm, replacement:'腹一W腹二'},
@@ -34,9 +46,8 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/ro/gm, replacement:'腹一R腹二'},
 	{regex:/ru/gm, replacement:'腹一T腹二'},
 	{regex:/rə/gm, replacement:'腹一K腹二'},
-
-	{regex:/r(æ|A)/gm, replacement:'腹一H腹二'},
-	{regex:/(æ|A)/gm, replacement:'腹一N腹二'},
+	
+	
 
 	//{regex:/(ɔ|O)/gm, replacement:'腹一,腹二'},
 	//{regex:/r(ɔ|O)/gm, replacement:'腹一.腹二'},
@@ -49,8 +60,7 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/o/gm, replacement:'腹一F腹二'},
 	{regex:/u/gm, replacement:'腹一G腹二'},
 	{regex:/ə/gm, replacement:'腹一J腹二'},
-
-
+	
 
 	{regex:/^(.*?)腹一/gm, replacement:'首一$1首二腹一'},
 

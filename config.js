@@ -12,7 +12,7 @@
 		,`english`
 		,`japanese`
 		//,`kvvts_ruts_ngrun`
-		// ,`latin`
+		,`latin`
 		// ,`cet6`
 	]
 	,dbPath: `./db/voca.db`

@@ -15,7 +15,7 @@ const $n = Sros.toNumber
 type num = number
 const s = sros.short
 
-const l = new Log()
+const l = Log.new()
 const Ut = {
 	union : simpleUnion
 };
@@ -33,6 +33,7 @@ const Ut = {
 export class VocaDbTable{
 	public static readonly id='id'
 	public static readonly wordShape='wordShape'
+	public static readonly variant = 'variant'
 	public static readonly pronounce='pronounce'
 	public static readonly mean='mean'
 	public static readonly annotation='annotation'
@@ -45,9 +46,14 @@ export class VocaDbTable{
 	public static readonly dates_fgt='dates_fgt'
 	public static readonly table='table' //此字段ˋ實ˋ不存。
 	public static readonly source='source'
-	public constructor(
+	/**
+	 * 私有構造器。若需創對象則:
+	 * const o : ClassName = {在此逐個字段賦值} 不推薦
+	 */
+	private constructor(
 		public table:string //數據庫中本無此字段、㕥存表名。
 		,public wordShape:string
+		//,public variant:string
 		,public pronounce:string
 		,public mean:string
 		,public annotation:string //
@@ -63,47 +69,9 @@ export class VocaDbTable{
 	){}
 }
 
-/**
- * 㕥約束數據庫中的行
- */
-/* export interface IVocaRow{
-	id?:number //從數據庫中取數據時id必不潙空
-	table:string //數據庫中本無此字段、㕥存表名。
-	wordShape:string
-	pronounce:string
-	mean:string
-	annotation:string //
-	tag:string
-	times_add:number
-	dates_add:string
-	times_rmb:number
-	dates_rmb:string
-	times_fgt:number
-	dates_fgt:string
-	source:string
-} */
 
 export type IVocaRow = VocaDbTable
 
-
-/* export class IVocaRow{
-	public constructor(
-		public ling:string //數據庫中本無此字段、㕥存表名。
-		,public wordShape:string
-		,public pronounce:string
-		,public mean:string
-		,public annotation:string //
-		,public tag:string
-		,public times_add:number
-		,public dates_add:string
-		,public times_rmb:number
-		,public dates_rmb:string
-		,public times_fgt:number
-		,public dates_fgt:string
-		,public source:string
-		,public id?:number //從數據庫中取數據時id必不潙空
-	){}
-} */
 
 
 /**
@@ -140,6 +108,7 @@ export default class SingleWord2{
 		id?:number,
 		table:string,
 		wordShape:string,
+		variant?:string[],
 		pronounce?:string[],
 		mean:string[],
 		tag?:string[],
@@ -152,6 +121,7 @@ export default class SingleWord2{
 		this._id=props.id
 		this._table=props.table
 		this._wordShape=props.wordShape
+		this._variant=props.variant?.slice()??[]
 		this._pronounce = props.pronounce?.slice()??[]
 		this._mean=props.mean.slice()
 		this._annotation=props.annotation?.slice()??[]
@@ -181,6 +151,13 @@ export default class SingleWord2{
 	 */
 	private _wordShape:string=''
 	;public get wordShape(){return this._wordShape;};
+
+	/**
+	 * 變形
+	 * 始于2024-01-13T10:48:35.000+08:00
+	 */
+	protected _variant:string[] = []
+	get variant(){return this._variant}
 
 	/**
 	 * 意
@@ -255,33 +232,29 @@ export default class SingleWord2{
 
 	public static toDbObj(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
-			// const r:IVocaRow[] = []
-			// for(const e of sw){
-			// 	const p = soloFieldStringfy(e)
-			// 	r.push(p)
-			// }
-			// return r
 			return sw.map(e=>soloFieldStringfy(e))
 		}else{
 			return soloFieldStringfy(sw)
 		}
 
 		function soloFieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow{
+			const sf = JSON.stringify
 			let result:IVocaRow = {
 				id:sw.id,
 				table:sw.table,
-				wordShape:sw.wordShape,
-				pronounce: JSON.stringify(sw.pronounce),
+				wordShape:sw.wordShape
+				//variant: sf(sw._variant)
+				,pronounce: sf(sw.pronounce),
 				mean:JSON.stringify(sw.mean),
-				annotation:JSON.stringify(sw.annotation),
-				tag: JSON.stringify(sw.tag),
+				annotation:sf(sw.annotation),
+				tag: sf(sw.tag),
 				dates_add:stringfyDateArr(sw.dates_add),
 				times_add:sw.times_add,
 				dates_rmb:stringfyDateArr(sw.dates_rmb),
 				times_rmb:sw.times_rmb,
 				dates_fgt:stringfyDateArr(sw.dates_fgt),
 				times_fgt:sw.times_fgt,
-				source: JSON.stringify(sw.source)
+				source: sf(sw.source)
 			}
 			if(ignoredKeys !== void 0){
 				for(const k of ignoredKeys){
@@ -317,12 +290,6 @@ export default class SingleWord2{
 
 	public static toJsObj(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
-			// const r:SingleWord2[] = []
-			// for(const e of obj){
-			// 	const p = soloParse(e)
-			// 	r.push(p)
-			// }
-			// return r
 			return obj.map(e=>soloParse(e))
 		}else{
 			return soloParse(obj)
@@ -337,10 +304,12 @@ export default class SingleWord2{
 			}
 			let sw:SingleWord2
 			try{
+				const ps = JSON.parse
 				sw = new SingleWord2({
 					id:num(obj.id)
-					,wordShape:obj.wordShape,
-					pronounce: JSON.parse(obj.pronounce),
+					,wordShape:obj.wordShape
+					//,variant: ps(obj.variant)
+					,pronounce: JSON.parse(obj.pronounce),
 					mean:JSON.parse(obj.mean),
 					annotation:JSON.parse(obj.annotation),
 					tag:JSON.parse(obj.tag) as string[],
@@ -358,11 +327,6 @@ export default class SingleWord2{
 					if(!Array.isArray(strArr)){
 						throw new TypeError(`!Array.isArray(strArr)`)
 					}
-					// const dates:Tempus[] = []
-					// for(const s of strArr){
-					// 	let d = Tempus.new(s)
-					// 	dates.push(d)
-					// }
 					return strArr.map(e=>Tempus.new(e))
 				}
 	
@@ -940,7 +904,8 @@ const f = ()=>{
 		override get prio0num(){return 100}
 
 		override calcPrio0(sw: SingleWord2): void {
-			super._changeRecord = []
+			//super._changeRecord = []//Class field '_changeRecord' defined by the parent class is not accessible in the child class via super.
+			this._changeRecord = []
 		}
 	
 	}

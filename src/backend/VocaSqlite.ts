@@ -142,11 +142,12 @@ export default class VocaSqlite{
 			if(ifNotExists){
 				isExist = 'IF NOT EXISTS'
 			}
-			let c = VocaTableColumnName
+			const c = VocaTableColumnName
 			return `
 			CREATE TABLE ${isExist} '${table}' (
 				${c.id} INTEGER PRIMARY KEY,
 				${c.wordShape} TEXT NOT NULL,
+				${c.variant} TEXT,
 				${c.pronounce} TEXT NOT NULL,
 				${c.mean} TEXT NOT NULL,
 				${c.annotation} TEXT NOT NULL,
@@ -192,7 +193,7 @@ export default class VocaSqlite{
 	public static backupTableInDb(db:Database, table:string, newName=table+Tempus.new().iso){
 		return Sqlite.copyTable(db, $(newName), table)
 	}public backupTableInDb(oldTable=this.tableName, newName=oldTable+Tempus.new().iso){
-		let table:string = $a(oldTable)
+		const table:string = $a(oldTable)
 		return VocaSqlite.backupTableInDb(this.db, table, newName)
 	}
 
@@ -311,7 +312,7 @@ export default class VocaSqlite{
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			runResult.length = words.length
-			let lastRunResut
+			//let lastRunResut
 			for(let i = 0; i < words.length; i++){
 				const w = words[i]
 				const [sql, value] = VocaSqlite.getInsertSql(table, w)
@@ -322,7 +323,7 @@ export default class VocaSqlite{
 				// runResult.push(r)
 				runResult[i] = copyR
 				//console.log(runResult)//t
-				lastRunResut = r
+				//lastRunResut = r
 			}
 			return runResult
 		}
@@ -602,7 +603,7 @@ export default class VocaSqlite{
 		}else{
 			const fn = await Sqlite.fn.qryValuesInColumn_fn<IVocaRow>(db, table, cl.wordShape, wordShape)
 			//let d2 = await Sqlite.qryValuesInColumn_unsafeInt_transaction<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
-			let d2 = await fn()
+			const d2 = await fn()
 			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
@@ -614,7 +615,7 @@ export default class VocaSqlite{
 
 		async function forOne(db:Database, table:string, wordShape:string){
 			const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
-			let r = await Sqlite.all<IVocaRow>(db, sql, wordShape)
+			const r = await Sqlite.all<IVocaRow>(db, sql, wordShape)
 			//if(r.length === 0 || r === void 0){return undefined}
 			VocaSqlite.attachTableName(r, table)
 			return r
@@ -658,7 +659,7 @@ export default class VocaSqlite{
 	 * @param table 
 	 */
 	public static attachTableName(words:IVocaRow[], table:string){
-		let lingField = VocaTableColumnName.table
+		const lingField = VocaTableColumnName.table
 		for(let i = 0; i < words.length; i++){
 			words[i][lingField] = table
 		}
@@ -743,7 +744,7 @@ export default class VocaSqlite{
 			throw new Error(`words.length !== ids.length`)
 		}
 
-		let sql = VocaSqlite.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
+		const sql = VocaSqlite.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
 		//console.log(`console.log(sql)`)
 		//console.log(sql)//t
 
@@ -809,7 +810,7 @@ export default class VocaSqlite{
 	// }
 	
 	public setWordsByIds(words:SingleWord2[], ids:number[]){
-		let table:string=$(this.tableName)
+		const table:string=$(this.tableName)
 		return VocaSqlite.setWordsByIds_fn(this.db, table, words, ids)
 	}
 
@@ -825,7 +826,7 @@ export default class VocaSqlite{
 	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
 		VocaSqlite.checkTable(table, [word])
 		const c = VocaTableColumnName
-		let obj = SingleWord2.toDbObj($(word))
+		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genSql_updateById(table, obj, id)
 	}
@@ -839,7 +840,7 @@ export default class VocaSqlite{
 	public static getInsertSql(table: string, word:SingleWord2){
 		VocaSqlite.checkTable(table, [word])
 		const c = VocaTableColumnName
-		let obj = SingleWord2.toDbObj($(word))
+		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genSql_insert(table, obj)
 	}
@@ -848,11 +849,11 @@ export default class VocaSqlite{
 
 	public static async getAllWords(db:Database, table:string){
 		const sql = `SELECT * FROM '${table}'`
-		let r = await Sqlite.all<IVocaRow>(db, sql)
+		const r = await Sqlite.all<IVocaRow>(db, sql)
 		VocaSqlite.attachTableName(r, table)
 		return r
 	}public getAllWords(table?:string){
-		let table_=table??this.tableName
+		const table_=table??this.tableName
 		return VocaSqlite.getAllWords(this.db, $(table_))
 	}
 
