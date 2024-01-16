@@ -4,7 +4,6 @@
 import Tempus from '@shared/Tempus';
 import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
-import Log from '@shared/Log'
 import _ from 'lodash';
 import { Sros, UN} from '@shared/Sros';
 //const sros = Sros.new<Sros_number>()
@@ -15,7 +14,6 @@ const $n = Sros.toNumber
 type num = number
 const s = sros.short
 
-const l = Log.new()
 const Ut = {
 	union : simpleUnion
 };
@@ -33,7 +31,7 @@ const Ut = {
 export class VocaDbTable{
 	public static readonly id='id'
 	public static readonly wordShape='wordShape'
-	//public static readonly variant = 'variant'
+	public static readonly variant = 'variant'
 	public static readonly pronounce='pronounce'
 	public static readonly mean='mean'
 	public static readonly annotation='annotation'
@@ -232,12 +230,6 @@ export default class SingleWord2{
 
 	public static toDbObj(sw:SingleWord2|SingleWord2[]){
 		if(Array.isArray(sw)){
-			// const r:IVocaRow[] = []
-			// for(const e of sw){
-			// 	const p = soloFieldStringfy(e)
-			// 	r.push(p)
-			// }
-			// return r
 			return sw.map(e=>soloFieldStringfy(e))
 		}else{
 			return soloFieldStringfy(sw)
@@ -250,17 +242,17 @@ export default class SingleWord2{
 				table:sw.table,
 				wordShape:sw.wordShape
 				//variant: sf(sw._variant)
-				,pronounce: JSON.stringify(sw.pronounce),
+				,pronounce: sf(sw.pronounce),
 				mean:JSON.stringify(sw.mean),
-				annotation:JSON.stringify(sw.annotation),
-				tag: JSON.stringify(sw.tag),
+				annotation:sf(sw.annotation),
+				tag: sf(sw.tag),
 				dates_add:stringfyDateArr(sw.dates_add),
 				times_add:sw.times_add,
 				dates_rmb:stringfyDateArr(sw.dates_rmb),
 				times_rmb:sw.times_rmb,
 				dates_fgt:stringfyDateArr(sw.dates_fgt),
 				times_fgt:sw.times_fgt,
-				source: JSON.stringify(sw.source)
+				source: sf(sw.source)
 			}
 			if(ignoredKeys !== void 0){
 				for(const k of ignoredKeys){
@@ -296,12 +288,6 @@ export default class SingleWord2{
 
 	public static toJsObj(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
-			// const r:SingleWord2[] = []
-			// for(const e of obj){
-			// 	const p = soloParse(e)
-			// 	r.push(p)
-			// }
-			// return r
 			return obj.map(e=>soloParse(e))
 		}else{
 			return soloParse(obj)
@@ -339,11 +325,6 @@ export default class SingleWord2{
 					if(!Array.isArray(strArr)){
 						throw new TypeError(`!Array.isArray(strArr)`)
 					}
-					// const dates:Tempus[] = []
-					// for(const s of strArr){
-					// 	let d = Tempus.new(s)
-					// 	dates.push(d)
-					// }
 					return strArr.map(e=>Tempus.new(e))
 				}
 	
@@ -753,7 +734,7 @@ export class Priority{
 			cnt_rmb++
 			validRmbCnt++
 			let weight = s.n(1.1)
-			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
+			if(lastProcedure===void 0){console.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = $n( s.d(prio0,1.1) )
 				

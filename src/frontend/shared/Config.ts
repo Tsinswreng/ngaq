@@ -1,5 +1,5 @@
 import path from "path";
-import { lodashMerge } from "@shared/Ut"
+import { clearObj, lodashMerge } from "@shared/Ut"
 import * as fs from 'fs'
 type IConfig = typeof Config.defaultConfig
 
@@ -26,6 +26,15 @@ export default class Config{
 		return o
 	}
 	
+	/**
+	 * 重新讀配置文件
+	 */
+	public reload(){
+		const outer = Config.readOuterConfig(Config.defaultConfig.outerConfig)
+		//clearObj(this._config)
+		//this.merge(outer)
+		Object.assign(this._config, outer)
+	}
 
 	static defaultConfig = 
 	{
@@ -34,6 +43,7 @@ export default class Config{
 		,outerConfig: path.resolve(process.cwd(), 'config.js')
 		,randomImgDir: [] as string[]
 		,backupDbPath: `./db/vocaBackup.db`
+		,tables:[] as string[]
 	}
 
 	private _config:Partial<IConfig> = lodashMerge(Config.defaultConfig)
@@ -42,7 +52,8 @@ export default class Config{
 	public static readOuterConfig(path:string){
 		//
 		const outerConfigStr = fs.readFileSync(path, 'utf-8')
-		const outerConfig = eval(`(${outerConfigStr})`)
+		const configFn = new Function(`return (${outerConfigStr})`)
+		const outerConfig = configFn()
 		return outerConfig
 	}
 

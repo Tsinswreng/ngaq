@@ -8,6 +8,7 @@ export type BN = mathjs.BigNumber
 export type UN = mathjs.BigNumber|number //無bigint
 export type UNS = UN|string
 export type N4 = UNS|bigint
+export type N3 = UN|bigint
 
 class SrosError extends Error{
 	private constructor(x?){
@@ -120,7 +121,18 @@ export class Sros{
 		}else{
 			ans = Number(num)
 		}
-		return Sros.toFiniteNumber(ans)
+		return Sros.checkFiniteNumber(ans)
+	}
+
+
+	static toNumber_unsafe(num:N4){
+		let ans = 0
+		if(typeof num === 'object'){
+			ans = (num as BN).toNumber()
+		}else{
+			ans = Number(num)
+		}
+		return ans
 	}
 
 	static isSafeIntNumber(num:number){
@@ -153,7 +165,7 @@ export class Sros{
 	 * @param errMsg 
 	 * @returns 
 	 */
-	static toFiniteNumber(num:number, errMsg?){
+	static checkFiniteNumber(num:number, errMsg?){
 		if(typeof num !== 'number'){throw SrosError.new(errMsg)}
 		if(!isFinite(num)){throw SrosError.new(errMsg)}
 		return num
@@ -190,26 +202,28 @@ export class Sros_number implements ISros<number, number>{
 		}
 	}
 
-	public add(...num: number[]){
+	public add(...num: N4[]){
 		if(num.length < 2) {
 			throw SrosError.new(`${num.length}\nnum.length < 2`)
 		}
-		let ans = num[0]
+		let ans = this.createNumber(num[0])
 		for(let i = 1; i < num.length; i++){
-			ans += num[i]
+			ans += this.createNumber(num[i])
 		}
-		return Sros.toFiniteNumber(ans)
+		//return Sros.toFiniteNumber(ans)
+		return ans
 	}
 
-	public subtract(...num: number[]){
+	public subtract(...num: N4[]){
 		if(num.length < 2) {
 			throw SrosError.new(`${num.length}\nnum.length < 2`)
 		}
-		let ans = num[0]
+		let ans = this.createNumber(num[0])
 		for(let i = 1; i < num.length; i++){
-			ans -= num[i]
+			ans -= this.createNumber(num[i])
 		}
-		return Sros.toFiniteNumber(ans)
+		//return Sros.toFiniteNumber(ans)
+		return ans
 	}
 	
 	/**
@@ -221,48 +235,54 @@ export class Sros_number implements ISros<number, number>{
 	 * @param y 
 	 * @returns 
 	 */
-	public compare(x: number, y: number){
+	public compare(x: N4, y: N4){
 		//x=Sros.toFiniteNumber(x)
 		//y=Sros.toFiniteNumber(y)
-		let ans = x - y
-		if(Number.isNaN(ans)){throw SrosError.new(`${x}-${y}\nNumber.isNaN(ans)`)}
-		return ans
+		if(typeof x === 'number' && typeof y === 'number'){
+			let ans = x - y
+			if(Number.isNaN(ans)){throw SrosError.new(`${x}-${y}\nNumber.isNaN(ans)`)}
+			return ans
+		}else{
+			let ans = Sros.toNumber_unsafe(x) - Sros.toNumber_unsafe(y)
+			return ans
+		}
+
 	}
 
-	public multiply(...num: number[]){
+	public multiply(...num: N4[]){
 		if(num.length < 2) {
 			throw SrosError.new(`${num.length}\nnum.length < 2`)
 		}
-		let ans = num[0]
+		let ans = this.createNumber(num[0])
 		for(let i = 1; i < num.length; i++){
-			ans *= num[i]
+			ans *= this.createNumber(num[i])
 		}
-		return Sros.toFiniteNumber(ans)
+		return Sros.checkFiniteNumber(ans)
 	}
 
-	public divide(x: number, y: number){
+	public divide(x: N4, y: N4){
 		if(y === 0) {
 			throw SrosError.new(`divide by zero`)
 		}
-		let ans = x / y
-		return Sros.toFiniteNumber(ans)
+		let ans = this.createNumber(x) / this.createNumber(y)
+		return Sros.checkFiniteNumber(ans)
 	}
 
-	public mod(x: number, y: number){
-		if(y === 0) {
+	public mod(x: N4, y: N4){
+		if(this.compare(y,0)===0) {
 			throw SrosError.new(`divide by zero`)
 		}
-		let ans = x % y
-		return Sros.toFiniteNumber(ans)
+		let ans = this.createNumber(x) % this.createNumber(y)
+		return Sros.checkFiniteNumber(ans)
 	}
 	
-	public pow(base: number, exponent: number){
-		return Sros.toFiniteNumber(
-			Math.pow(base, exponent)
+	public pow(base: N4, exponent: N4){
+		return Sros.checkFiniteNumber(
+			Math.pow(this.createNumber(base), this.createNumber(exponent))
 		)
 	}
 
-	public log(base: number, antilogarithm: number=Math.E){
+	public log(base: N4, antilogarithm: N4=Math.E){
 		const compare = this.compare.bind(this)
 		if( compare(antilogarithm,0) <= 0 ){
 			throw SrosError.new(`${antilogarithm}\nantilogarithm < 0`)
@@ -271,30 +291,34 @@ export class Sros_number implements ISros<number, number>{
 		if(compareBase <= 0 || compareBase === 1){
 			throw SrosError.new(`${base}\nbad base`)
 		}
-		let ans = Math.log(antilogarithm) / Math.log(base)
-		return Sros.toFiniteNumber(ans)
+		let ans = Math.log(this.createNumber(antilogarithm)) 
+		/ 
+		Math.log(this.createNumber(base))
+		return Sros.checkFiniteNumber(ans)
 
 	}
 
-	public sin(x: number){
-		return Sros.toFiniteNumber(
-			Math.sin(x)
+	public sin(x: N4){
+		return Sros.checkFiniteNumber(
+			Math.sin(this.createNumber(x))
 		)
 	}
 
-	public cos(x: number){
-		return Sros.toFiniteNumber(
-			Math.cos(x)
+	public cos(x: N4){
+		return Sros.checkFiniteNumber(
+			Math.cos(
+				this.createNumber(x)
+			)
 		)
 	}
 
-	public absolute(x: number){
-		return Sros.toFiniteNumber(
-			Math.abs(x)
+	public absolute(x: N4){
+		return Sros.checkFiniteNumber(
+			Math.abs(this.createNumber(x))
 		)
 	}
 
-	public diffRate(denominator: number, y: number){
+	public diffRate(denominator: N4, y: N4){
 		//const ans = Math.abs((denominator - y) / denominator)
 		//return isNaN(ans) ? 0 : ans
 		const subtract = this.subtract.bind(this)
@@ -454,7 +478,7 @@ export class Sros_big implements ISros<N4,BN>{
 	public absolute(x:N4){
 		const num_substract = this.compare.bind(this)
 		const multiply = this.multiply.bind(this)
-		const bn = this.createNumber
+		const bn = this.createNumber.bind(this)
 		let comp = num_substract(x, 0)
 		if(comp < 0){
 			return multiply(x, -1)

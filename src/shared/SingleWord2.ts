@@ -4,7 +4,6 @@
 import Tempus from '@shared/Tempus';
 import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
-import Log from '@shared/Log'
 import _ from 'lodash';
 import { Sros, UN} from '@shared/Sros';
 //const sros = Sros.new<Sros_number>()
@@ -15,7 +14,6 @@ const $n = Sros.toNumber
 type num = number
 const s = sros.short
 
-const l = Log.new()
 const Ut = {
 	union : simpleUnion
 };
@@ -736,7 +734,7 @@ export class Priority{
 			cnt_rmb++
 			validRmbCnt++
 			let weight = s.n(1.1)
-			if(lastProcedure===void 0){l.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
+			if(lastProcedure===void 0){console.warn(`lastProcedure===void 0`)} // 每單詞ᵗ首個 WordEvent 當必潙加
 			else if(	WordEvent.ADD === lastProcedure?.tempus_event.event	){
 				prio0 = $n( s.d(prio0,1.1) )
 				

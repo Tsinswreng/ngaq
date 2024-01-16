@@ -281,6 +281,8 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
 	return (_ as any).merge(object, ...otherArgs) as T
 }
 
+
+
 // 就地打亂
 // export function shuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
 // 	// 對arr按每組groupMemberAmount個元素分組 完整ᵗ組ᵗ量(整數除法的商)
@@ -332,7 +334,10 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
  * @returns 
  */
 export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
-	$a(arr, '')
+	//$a(arr, '不能打亂空數組')
+	if(arr.length === 0){
+		return arr
+	}
 	const copy:(T|null)[] = arr.slice()
 	const maxIndex = arr.length -1
 	//

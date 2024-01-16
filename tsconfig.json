@@ -48,7 +48,6 @@
 			"@shared/*": ["shared/*"], //不能不寫/*
 			"@frontend/*": ["src/frontend/*"],
 			"@backend/*": ["src/backend/*"],
-			"@@": ["src/shared/Util"], //test
 		}
 	},
 	"esModuleInterop": true,

@@ -16,8 +16,11 @@ export default class Tempus{
 	public static ISO8601FULLdATEfORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
 	public static REGEXPoFiSO8601FULLdATEfORMAT_ZERO = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z'
 
-	public static new(date?:string|number, format?:string){
+	public static new(date?:string|number|bigint, format?:string){
 		const o = new this()
+		if(typeof date === 'bigint'){
+			date = Number(date) // 
+		}
 		o._iso = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
 		if(o.iso === null){
 			console.error(Tempus.rely);console.error(date);console.error(format)
@@ -75,8 +78,15 @@ export default class Tempus{
 		return Tempus.format(tempus, 'YYYYMMDDHHmmssSSS')
 	}
 
-	public static toUnixTime(tempus:Tempus){
-		return this.rely(tempus.iso).valueOf()
+	public static toUnixTime(tempus:Tempus):number
+	public static toUnixTime(tempus:Tempus, type:'number'):number
+	public static toUnixTime(tempus:Tempus, type:'bigint'):bigint
+	public static toUnixTime(tempus:Tempus, type:'number'|'bigint'='number'){
+		if(type === 'bigint'){
+			return BigInt(this.rely(tempus.iso).valueOf())
+		}else{
+			return this.rely(tempus.iso).valueOf()
+		}
 	}
 
 }

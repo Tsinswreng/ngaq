@@ -1,5 +1,5 @@
 
-#20240116191411382
+#20240116215633912
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2240,9 +2240,17 @@ use_preset_vocabulary: true
 俹	ʔrˁas	
 傢	krˁa	
 鎵	krˁa	
+之	tə	
+㞢	tə	
+㞢	tel	
+芝	tə	
+芝	tsʰel	
+旹	də	
+旹	del	
+洏	nə	
+洏	nel	
 毀	mʰajʔ	
 進	tsiŋs	
-進	tsins	
 懼	ɡʷas	
 瞿	ɡʷa	
 瞿	kʷas	
@@ -6960,7 +6968,6 @@ use_preset_vocabulary: true
 䎠	ɡˁon	
 䎠	nə	
 䎠	nˁoj	
-洏	nə	
 栭	nə	
 胹	nə	
 𦓒	nə	
@@ -18532,7 +18539,6 @@ use_preset_vocabulary: true
 𪓿	ɕe	
 饣	ʑək	
 𡚼	tʰeʔ	
-旹	də	
 峕	də	
 食	ləs	
 食	zəs	
@@ -25653,10 +25659,7 @@ use_preset_vocabulary: true
 證	təŋs	
 㡧	trˁaŋs	
 𩏠	trˁaŋs	
-之	tə	
-㞢	tə	
 卮	te	
-芝	tə	
 吱	kʰes	
 巵	te	
 汥	te	

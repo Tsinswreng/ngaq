@@ -98,6 +98,8 @@
     "@services": "dist/services",
     "@root": ".",
     "@shared": "out/shared/"
+	,"@backend": "out/backend/"
+	,"@frontend": "out/frontend/"
   },
   "pkg": {
     "scripts": "bundle/bundle.js",

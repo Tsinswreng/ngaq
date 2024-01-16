@@ -1,8 +1,29 @@
+import winston from 'winston'
+import Tempus from './Tempus';
+import util from 'util'
+const inspect = util.inspect
+const logger = winston.createLogger({
+	level: 'debug',
+	format: winston.format.combine(
+		winston.format.simple(),
+		winston.format.printf((info) => {
+			return `${Tempus.new().iso}<${info.level}>\t${info.message}`;
+		})
+	),
+	transports: [
+		new winston.transports.Console(),
+		new winston.transports.File({ filename: 'log/combined.log' })
+	]
+})
 
 export default class Log{
-	public static readonly RELY=console ;
+	public static readonly RELY=logger;
 
-	public constructor(){}
+	protected constructor(){}
+
+	static new(){
+		return new this()
+	}
 
 	// public static readonly LOG = console.log
 	// public static readonly WARN = console.warn
@@ -10,18 +31,31 @@ export default class Log{
 	// public static readonly DBG = console.debug
 
 	public log(v?){
-		Log.RELY.log(v)
+		v=inspect(v)
+		C.RELY.log(v)
 	}
 
 	public warn(v?){
-		Log.RELY.warn(v)
+		v=inspect(v)
+		C.RELY.warn(v)
 	}
 
 	public err(v?){
-		Log.RELY.error(v)
+		v=inspect(v)
+		C.RELY.error(v)
 	}
 
-	public dbg(v?){
-		Log.RELY.debug(v)
+
+	public debug(v?){
+		v=inspect(v)
+		C.RELY.debug(v)
 	}
+
+	public dbg=this.debug.bind(this)
+
+	public info=C.RELY.info.bind(C.RELY)
+
 }
+
+const C = Log
+type C = Log

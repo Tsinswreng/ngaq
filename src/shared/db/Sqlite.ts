@@ -124,6 +124,8 @@ export default class Sqlite{
 		, genSql_insert:Sqlite.genSql_insert
 		, genSql_updateById:Sqlite.genSql_updateById
 		, getCreateTableSqlTemplateFromSqlite_master: Sqlite.getCreateTableSqlTemplateFromSqlite_master
+		, genSql_addColumn:Sqlite.genSql_addColumn
+		, genSql_renameTable:Sqlite.genSql_renameTable
 	}
 
 	public static readonly stmt = {
@@ -1680,6 +1682,41 @@ FROM '${tableName}';`
 		}
 		return nonNullTables
 	}
+
+	/**
+	 * 生成sql語句芝新增列
+	 * @param table 
+	 * @param neoColumn 新列
+	 * @param type 新列之類型
+	 * @param defaultV 默認值。可選。若需設字串以潙默認值旹則需手動增引號㕥裹㞢、㕥使合sql之語法
+	 * @returns 
+	 */
+	public static genSql_addColumn(table:string, neoColumn:string, type:string, defaultV?){
+		let defaultStr = ''
+		if(defaultV !== void 0){
+			defaultStr = `DEFAULT ${defaultV}`
+		}
+
+		let ans = 
+`ALTER TABLE '${table}'
+ADD COLUMN '${neoColumn}' ${type} ${defaultStr};`
+		return ans
+	}
+
+	/**
+	 * 生成sql芝重命名表
+	 * @param table 
+	 * @param neoName 
+	 * @returns 
+	 */
+	public static genSql_renameTable(table:string, neoName:string){
+		const ans = 
+`ALTER TABLE '${table}'
+RENAME TO ${neoName};`
+		return ans
+	}
+
+
 
 
 
