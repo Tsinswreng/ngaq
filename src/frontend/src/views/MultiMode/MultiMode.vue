@@ -12,7 +12,7 @@ import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import Log from '@shared/Log';
 import { $ } from '@shared/Ut';
-import { ref,Ref, onMounted } from 'vue';
+import { ref,Ref, onMounted, computed } from 'vue';
 import VocaClient from '@ts/voca/VocaClient';
 import SingleWord2 from '@shared/SingleWord2';
 //import Ut from '../../../shared/Ut'
@@ -36,6 +36,10 @@ const page = multiMode.paging_num
 // 	start()
 // }),
 
+// const isAddTimeGeq3 = computed((wb:WordB)=>{
+// 	return wb.fw.times_add >= 3
+// })
+
 </script>
 
 <template>
@@ -53,7 +57,14 @@ const page = multiMode.paging_num
 	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">.slice(page[0], page[1])
 		baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 		<div v-for="(e, i) in recite.allWordsToLearn">
-			<component :is="WordCard" :key="e.fw.table+''+e.fw.id" :wordB="e" :loopIndex="i" @WordCardClick="multiMode.wordCardClick(e)" class="WordCard" />
+			<component 
+				:is="WordCard" 
+				:key="e.fw.table+''+e.fw.id" 
+				:wordB="e" 
+				:loopIndex="i" 
+				@WordCardClick="multiMode.wordCardClick(e)" 
+				class="WordCard" 
+			/>
 		</div>
 	</div>
 	<img src="" alt="" :class="multiMode.class_bg.value" :id="multiMode.id_bg.value">
@@ -64,6 +75,8 @@ const page = multiMode.paging_num
 </template>
 
 <style scoped>
+
+
 input{
 	background: transparent;
 	width: 64px;
@@ -72,25 +85,25 @@ input{
 	width: 30%;
 	/* overflow-y: scroll; */
 	/* outline: 1px gray; */
-	border: solid 1px red; /* test */
+	/* border: solid 1px red; */
 }
 .MultiMode{
-
 	display: flex;
 }
 
 
 .cards-box{
-	border: solid 1px red; /* test */
+	/* border: solid 1px red; */
 	/* margin: 0 30% 0 auto; */
 	width: 550px;
 	/* position: fixed; */
 	/* left: 30%; */
 }
 
-.WordCard:hover{
+/* .WordCard:hover{
 	outline: white 1px;
-}
+	border: red;
+} */
 
 .WordInfo{
 	/* display: inline-block; */

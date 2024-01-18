@@ -75,11 +75,13 @@ function fmtNum(num:number, fix:number){
 
 
 let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
-
+const isAddTimeGeq3 = (wb:WordB)=>{
+	return wb.fw.times_add >= 3
+}
 </script>
 
 <template>
-	<div class="word-card">
+	<div class="word-card" :class="isAddTimeGeq3(props.wordB)?'addTimeGeq3':void 0">
 		<span class="w-shape" @click="handleWordEvent(WordEvent.RMB)" @contextmenu="rightClick" :class="reciteStatusRef">
 			{{ props.wordB.fw.wordShape }}
 		</span>
@@ -88,7 +90,7 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 			{{ props.wordB.fw.id }}
 		</span> -->
 
-		<span class="w-priority">{{ fmtNum(props.wordB.priority.prio0num,4) }}</span>
+		<span class="w-priority">{{ fmtNum(Number(props.wordB.priority.prio0num),4) }}</span>
 		<span class="w-lastRvwDate">{{ props.wordB.getLastRvwDate() }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>
@@ -106,16 +108,31 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 </template>
 
 <style scoped>
+.addTimeGeq3{
+	border-left: red 1px solid;
+	/* color: red; */
 
+}
+.addTimeGeq3 .w-shape{
+	color: rgb(0, 255, 255);
+	/* font-weight: bold; */
+	/* text-decoration: underline; */
+}
 
 .word-card{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box; */
 	display: flex;
 	/* align-items: stretch; 默认值，使左右两个子元素的高度相同 */
 	align-items: right;
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* 添加黑色边框 */
 }
-
+/* 
+元素過多旹設此會卡頓
+.word-card:hover{
+	outline: 1px solid gray;
+	box-sizing: border-box;
+} */
 
 .w-index{
 	width: 40px
@@ -126,29 +143,34 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 	display: inline-block;
 	/* font-size: 20px; */
 	/* height: 60px; */
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 150px
 }
 
 .w-id{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 30px;
 	display: inline-block; /* 设置为行内块级元素 */
 }
 
 .w-priority{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 80px;
 }
 
 .w-dates_add{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 260px;
 	font-size: 6px;
 }
 
 .w-eventsSymbols{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 55px;
 	font-size: 16px;
 	white-space: pre;
@@ -156,7 +178,8 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
 .w-lastRvwDate{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	width: 55px;
 }
 
@@ -164,13 +187,15 @@ let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 	opacity: 0.5;
 }
 .upper{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	display: inline-block; /* 设置为行内块级元素 */
 	vertical-align: top; /* 使元素在上部对齐，与左侧的元素对齐 */
 }
 
 .lower{
-	outline: solid 1px gray;  box-sizing: border-box; /* 让边框不占用宽度 */
+	/* 让边框不占用宽度 */
+	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	display: inline-block; /* 设置为行内块级元素 */
 	vertical-align: bottom; /* 使元素在上部对齐，与左侧的元素对齐 */
 }
