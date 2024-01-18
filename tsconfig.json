@@ -5,12 +5,12 @@
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
 		"declaration": false,
-		"types": ["node"],
+		"types": ["node", "jest"],
 		//"outDir": "./backend-out",
 		"outDir": "./out",
 		//"outFile": "bundle.js",
 		//"outDir": ".",
-		"rootDir": "./src",
+		"rootDir": "./src",//限定 TypeScript 编译器的搜索范围。若不設潙./src則${out}下還會有一個src目錄
 		
 		"allowJs": false,
 		"target": "ESNext",
@@ -24,7 +24,7 @@
 		/* Bundler mode */
 		//"moduleResolution": "bundler",Option 'bundler' can only be used when 'module' is set to 'es2015' or later.
 		//"allowImportingTsExtensions": true,
-		//"resolveJsonModule": true,
+		"resolveJsonModule": true,
 		//"isolatedModules": true, //选项“outFile”不能与选项“isolatedModules”同时指定。ts
 		"noEmit": false, //不生成編譯後ᵗ文件
 		"noEmitOnError": false, //有錯旹不生成編譯ᵗ文件
@@ -40,8 +40,8 @@
 		"esModuleInterop": true, //用import導入commonJs模塊
 		// "emitDecoratorMetadata": true,
 		// "experimentalDecorators": true,
-		"baseUrl": "./src",
 		//"allowImportingTsExtensions": true,
+		"baseUrl": "./src",//用于解析模块导入路径的基础路径
 		"paths": {
 			"@root/*": ["../*"],
 			//"*":["src/shared/*"],
@@ -53,8 +53,17 @@
 	"esModuleInterop": true,
 	"allowSyntheticDefaultImports": true,
 	//"include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue"],
-	"exclude": ["src/frontend/*"],
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "config.ts"],
+	"exclude": [
+		"src/frontend/*"
+	],
+	//include下之文件皆當在${rootDir}/*下
+	"include": [
+		"src/**/*.ts"
+		, "src/**/*.d.ts"
+		, "src/**/*.tsx"
+		, "src/**/*.vue"
+		, "config.ts"
+	],
 	//"include": ["/*.ts"],
 	
 	// "include": [

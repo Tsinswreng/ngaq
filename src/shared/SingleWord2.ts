@@ -11,7 +11,6 @@ import { Sros, UN} from '@shared/Sros';
 // const $n = sros.createNumber.bind(sros)
 const sros = Sros.new()
 const $n = Sros.toNumber
-type num = number
 const s = sros.short
 
 const Ut = {
@@ -717,6 +716,7 @@ export class Priority{
 		}
 
 		const add = (tempus_event:Tempus_Event, i:number)=>{
+			i=i
 			lastProcedure = lastOf(procedures)
 			add_cnt++
 			validRmbCnt = 0
@@ -766,7 +766,7 @@ export class Priority{
 						nowDiffThen
 						, sros.pow(
 							this.config.base
-							//1
+							//10
 							, add_cnt
 						)// 加ᵗ次ˋ越多、憶ᵗ事件ᵗdebuff越弱
 					)
@@ -787,6 +787,7 @@ export class Priority{
 		}
 
 		const fgt = (tempus_event:Tempus_Event, i:number)=>{
+			i=i
 			lastProcedure = lastOf(procedures)
 			let weight = getWeight(lastProcedure.tempus_event, tempus_event)
 			if( s.c(weight, 1.5)<0 ){weight = s.n(1.5)}//修正
@@ -904,6 +905,7 @@ const f = ()=>{
 		override calcPrio0(sw: SingleWord2): void {
 			//super._changeRecord = []//Class field '_changeRecord' defined by the parent class is not accessible in the child class via super.
 			this._changeRecord = []
+			sw=sw
 		}
 	
 	}

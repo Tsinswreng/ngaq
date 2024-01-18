@@ -1264,6 +1264,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 少	stews	# bs
 器	kʰrəts
 置	trəks
+程	dreŋ	# ts
+程	lreŋʔ	# ts
+埕	lreŋ
+酲	lreŋ
+珵	lreŋ
+䇸	lreŋ
 呈	lreŋ
 逞	lʰreŋʔ
 裎	lʰreŋʔ
@@ -3167,7 +3173,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 打	trˁaŋʔ	# ts
 
 胖	pʰˁaŋs	# ts
-
+#胖	pʰˁans	%0
 
 #糧	mʰrˁaŋs	# ts
 
@@ -3267,7 +3273,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 餡	ɡrˁomʔ	# ts
 喂	ʔujʔ	# ts
-程	dreŋ	# ts
+
 
 下	hrˁaʔ	# ts
 下	ɡrˁaʔ

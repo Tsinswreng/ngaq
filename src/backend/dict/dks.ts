@@ -236,7 +236,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 	}
 
 	get聲符strArr(){
-		const 聲符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/聲符.txt'), 'utf-8')
+		const 聲符str = fs.readFileSync((process.cwd()+'\\src\\backend\\dict\\regex/聲符.txt'), 'utf-8')
 		let strArr = Txt.getTableFromStr(聲符str)
 		for(let i = 0; i < strArr.length; i++){
 			if(strArr[i].length === 2){
@@ -247,7 +247,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 	}
 
 	get義符strArr(){
-		const 義符str = fs.readFileSync(('D:\\_\\mmf\\PROGRAM\\_Cak\\voca\\src\\backend\\dict\\regex/義符.txt'), 'utf-8')
+		const 義符str = fs.readFileSync((process.cwd()+'\\src\\backend\\dict\\regex/義符.txt'), 'utf-8')
 		let strArr = Txt.getTableFromStr(義符str)
 		for(let i = 0; i < strArr.length; i++){
 			if(strArr[i].length === 2){

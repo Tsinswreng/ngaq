@@ -10,8 +10,8 @@ export type UNS = UN|string
 export type N4 = UNS|bigint
 export type N3 = UN|bigint
 
-class SrosError extends Error{
-	private constructor(x?){
+export class SrosError extends Error{
+	protected constructor(x?){
 		super(x)
 	}
 
@@ -27,18 +27,16 @@ class SrosError extends Error{
  * @param ReturnType 諸方法 返回值類型
  */
 interface ISros<ParamType, ReturnType extends number | BN> {
-	/**
-	 * 提供四則運算與比較的簡短寫法
-	 */
+	/** 提供四則運算與比較的簡短寫法 */
 	short: {
 		//n:(x:N4|N4[])=>ReturnType|ReturnType[]
 		n(x:N4):ReturnType //構造
 		,n(x:N4[]):ReturnType[]
-		,a: (...num: ParamType[]) => ReturnType
-		, s: (...num: ParamType[]) => ReturnType
-		, m: (...num: ParamType[]) => ReturnType
-		, d: (x:ParamType, y:ParamType) => ReturnType
-		, c: (x: ParamType, y: ParamType) => number //以作差法比較
+		,a: (...num: ParamType[]) => ReturnType //加
+		,s: (...num: ParamType[]) => ReturnType //減
+		,m: (...num: ParamType[]) => ReturnType //乘
+		,d: (x:ParamType, y:ParamType) => ReturnType //除
+		,c: (x: ParamType, y: ParamType) => number //以作差法比較
 	}
 	createNumber(x:N4):ReturnType //構造
 	createNumber(x:N4[]):ReturnType[]

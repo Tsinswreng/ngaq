@@ -8,6 +8,7 @@
 		"files.associations": {
 			"iostream": "cpp",
 			"ostream": "cpp"
-		}
+		},
+		"pasteImage.basePath": "${currentFileDir}/img/"
 	}
 }

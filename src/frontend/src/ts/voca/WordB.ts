@@ -180,14 +180,20 @@ export default class WordB{
 	 */
 	public get formattedMean(){
 		let mean = this.fw.mean
-		let longest = WordB.longest(mean)
-		let r = longest??''
+		// let longest = WordB.longest(mean)
+		// let r = longest??''
+		let sortedMean = mean.slice()
+		sortedMean = sortedMean.sort((a,b)=>b.length-a.length)
+
+		let r = sortedMean.join('\x07')//bell
 		//r = r.replace(/\r\n/gm,'\n')
 		//r = r.replace(/\n{2,}/gm, '\\n\n')
 		r=r.replace(/([^\n])\n([^\n])/g, '$1\r$2')
 		r=r.replace(/(\n+)(\n)/g, '$1\r')
 		r=r.replace(/\n/g, '\\n')
 		r=r.replace(/\r/g, '\n')
+		//r=r.replace(/\a/g, '\n')//叵。如是寫則會換'a'洏非bell字符
+		r=r.replace(/\x07/g, '\n__________\n')
 		//console.log(r)//t
 		//console.log(114514)
 		return r

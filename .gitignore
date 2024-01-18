@@ -6,7 +6,6 @@ node_modules/
 *.log
 log/
 
-backend-out/
 src/backend/**/*.js
 src/shared/**/*.js
 src/**/*.js
@@ -18,7 +17,6 @@ build/*
 cmake-build-debug/
 cmake-build-debug/
 cmake-build-debug/*
-test/
 src/backend/debug/
 bundle/
 *.exe

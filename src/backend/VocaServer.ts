@@ -5,6 +5,7 @@
 }*/
 
 //require('tsconfig-paths/register');
+
 require('module-alias/register');
 import VocaSqlite from "./VocaSqlite";
 //const cors = require('cors')
@@ -131,9 +132,7 @@ export default class VocaServer{
 			, _backupDbPath:config.config.backupDbPath
 			,mode: Sqlite.openMode.DEFAULT_CREATE
 		})
-		// console.log(114514)//t
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
-		// console.log(514114)
 		let ri :RandomImg|undefined = undefined
 		try{
 			ri = await RandomImg.konstructor(dirs)
@@ -149,7 +148,6 @@ export default class VocaServer{
 		})
 		//VocaServer.app.use(express.static('browser'));
 		//VocaServer.app.use(express.static(Ut.pathAt(rootDir+'/src/frontend/dist')));
-		//console.log(path.resolve('./out/frontend/dist'))
 		VocaServer.app.use(express.static('./out/frontend/dist'));
 		//VocaServer.app.use(express.static('frontend\\src\\browser'))
 		
@@ -248,10 +246,8 @@ export default class VocaServer{
 		// })
 
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
-			//console.log(req.body)
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
-			//console.log(sws)//t
 			const prms = await VocaSqlite.saveWords(this.sqlt.db, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
@@ -279,17 +275,14 @@ export default class VocaServer{
 				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
-				//console.log(1)//t
 				const backupDb = await VocaSqlite.neW({
 						_dbPath:(config.config.backupDbPath)
 						, mode:Sqlite.openMode.DEFAULT_CREATE
 				})
 				await VocaSqlite.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
-				//console.log(114)//t
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
-				//console.log(3)//t *
 				const [init, modified] = await Sqlite.transaction(
 					VocaServer.sqlt.db
 					, await VocaSqlite.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
@@ -351,7 +344,6 @@ export default class VocaServer{
 		//請求頭潙'Content-Type': 'application/json'旹 res.body潙 解析json˪ᵗ js對象、無需再手動解析
 		VocaServer.app.post('/compileTs', post(async(req, res)=>{
 			//const [tsCode, tsconfigStr] = req.body
-			//console.log(req.body)//t
 			//const body = JSON.parse(req.body)
 			const body = req.body
 			const tsCode:string = $( body[0] )
@@ -419,7 +411,6 @@ export default class VocaServer{
 		 */
 		C.app.get('/allTableWords', get(async(req, res)=>{
 			//const table0 = req.query.table
-			//console.log(table0)
 			// if(typeof table0 !== 'string'){
 			// 	throw new Error(`typeof table0 !== 'string'`)
 			// }
@@ -512,13 +503,11 @@ export default class VocaServer{
 		VocaServer.app.get('*', (req:MyReq, res)=>{
 			VocaServer.session=req.session??''
 			if(VocaServer.session.userid && req.path==='/login'){
-				console.log(114514)//t
 				res.setHeader('content-type','text;charset=utf-8')
 				res.sendFile(rootDir+'/out/frontend/dist/index.html')
 			}else{
 				res.sendFile(rootDir+'/out/frontend/dist/index.html')
 				//res.redirect('/login')
-				//console.log(`res.redirect('/login')`)//t
 			}
 		})
 		VocaServer.app.listen(config.config.port, ()=>{
