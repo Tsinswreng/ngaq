@@ -93,16 +93,16 @@ export default class Recite{
 	 * 重置(測試)
 	 * @deprecated
 	 */
-	public static reset(){
-		//<待改>{lodash之merge會忽略undefined、洏余需ˌundefiend值ˋˋ亦可覆蓋ᵣ。}
-		_.merge(Recite._instance, new Recite())
-	}
+	// public static reset(){
+	// 	//<待改>{lodash之merge會忽略undefined、洏余需ˌundefiend值ˋˋ亦可覆蓋ᵣ。}
+	// 	_.merge(Recite._instance, new Recite())
+	// }
 	/**
 	 * @deprecated
 	 */
-	public reset(){
-		Recite.reset()
-	}
+	// public reset(){
+	// 	Recite.reset()
+	// }
 
 	public static restart(){
 		const o = C.getInstance()

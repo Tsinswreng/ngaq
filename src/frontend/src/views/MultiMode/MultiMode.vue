@@ -5,16 +5,15 @@ import WordCard from '@views/MultiMode/cpnt/WordCard.vue'
 import WordWindow from '@views/MultiMode/cpnt/WordWindow.vue'
 import WordInfo from './cpnt/WordInfo.vue';
 import CtrlPanel from './cpnt/CtrlPanel.vue'
-//
 
 import MultiMode from './MultiMode';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
-import Log from '@shared/Log';
 import { $ } from '@shared/Ut';
 import { ref,Ref, onMounted, computed } from 'vue';
 import VocaClient from '@ts/voca/VocaClient';
-import SingleWord2 from '@shared/SingleWord2';
+import LS from '@ts/LocalStorage';
+import { number } from 'mathjs';
 //import Ut from '../../../shared/Ut'
 
 //const { words } = defineProps(['words']);
@@ -28,7 +27,7 @@ const isSaved = ref(true)
 const isShowWordWindow = multiMode.isShowWordWindow
 const isShowCardBox = multiMode.isShowCardBox
 let returnedWord:WordB = multiMode.curWord
-const page = multiMode.paging_num
+let page:Ref<number[]> = multiMode.pageNums
 
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
 
@@ -39,6 +38,10 @@ const page = multiMode.paging_num
 // const isAddTimeGeq3 = computed((wb:WordB)=>{
 // 	return wb.fw.times_add >= 3
 // })
+
+function getPage(){
+	LS.items.multiModePaging.get()
+}
 
 </script>
 
@@ -56,7 +59,7 @@ const page = multiMode.paging_num
 	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
 	<div class="cards-box" v-if="isShowCardBox" :key="multiMode.multiMode_key.value">.slice(page[0], page[1])
 		baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
-		<div v-for="(e, i) in recite.allWordsToLearn">
+		<div v-for="(e, i) in recite.allWordsToLearn.slice(page[0], page[1])">
 			<component 
 				:is="WordCard" 
 				:key="e.fw.table+''+e.fw.id" 

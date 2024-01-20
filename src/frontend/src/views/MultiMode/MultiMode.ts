@@ -8,6 +8,7 @@ import * as mathjs from 'mathjs'
 import { alertEtThrow } from '@ts/frut'
 import now from 'performance-now'
 import { VocaDbTable } from 'shared/SingleWord2'
+import LS from '@ts/LocalStorage'
 
 const vocaClient = VocaClient.getInstance()
 export default class MultiMode{
@@ -55,16 +56,38 @@ export default class MultiMode{
 	private _multiMode_key = ref(0)
 	;public get multiMode_key(){return this._multiMode_key;};
 
-	private _paging = ref(`0,64`)
-	get paging(){return this._paging}
-	set paging(v){this._paging = v}
-	public get paging_num(){
-		const pagingStr = this.paging.value.trim()
-		const extentArr = pagingStr.split(',')
-		const start = parseInt(extentArr[0].trim())
-		const end = parseInt(extentArr[1].trim())
-		return [start, end]
+	// public get paging_num(){
+	// 	const pagingStr = this.pagingStr.value.trim()
+	// 	const extentArr = pagingStr.split(',')
+	// 	const start = parseInt(extentArr[0].trim())
+	// 	const end = parseInt(extentArr[1].trim())
+	// 	return [start, end]
+	// }
+
+	private _pagingStr:Ref<string> = ref(LS.items.multiModePaging.get()??'')
+	get pagingStr(){return this._pagingStr}
+	private set pagingStr(v){this._pagingStr = v}
+
+	private _pageNums:Ref<number[]> = ref(this.get_page())
+	get pageNums(){return this._pageNums}
+	private set pageNums(v){this._pageNums=v}
+
+	private get_page(){
+		const pageStr = LS.items.multiModePaging.get()??''
+		let start = 0, end = -1
+		if(pageStr!==''){
+			const extentArr = pageStr.split(',')
+			start = parseInt(extentArr[0].trim())
+			end = parseInt(extentArr[1].trim())
+		}
+		return [start,end]
 	}
+	public set_page(v:string){
+		LS.items.multiModePaging.set(v)
+		this.pagingStr = ref(v)
+		this.pageNums.value = this.get_page()
+	}
+
 
 	private _debuffNumerator_str = ref(this.get_debuffNumerator_str()+'')
 	get debuffNumerator_str(){return this._debuffNumerator_str;};set debuffNumerator_str(v){this._debuffNumerator_str=v;};
@@ -84,27 +107,35 @@ export default class MultiMode{
 	/**
 	 * ls short for localStorage
 	 */
-	public static ls_debuffNumerator = 'debuffNumerator'
+	//public static ls_debuffNumerator = 'debuffNumerator'
 
 	public get_debuffNumerator_str(){
-		let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)
-		if(expressionStr === null || expressionStr.length===0){
-			expressionStr = Priority.defaultConfig.debuffNumerator+''
+		//let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)
+		let expressionStr = (LS.items.debuffNumerator.get()??'')
+		try {
+			if(expressionStr.length===0){
+				expressionStr = Priority.defaultConfig.debuffNumerator+''
+			}
+			let resultNum = mathjs.evaluate(expressionStr) as number
+			$n(resultNum)
+		} catch (err) {
+			const e = err as Error
+			alert(e)
+			expressionStr='0'
 		}
-		let resultNum = mathjs.evaluate(expressionStr) as number
-		$n(resultNum)
 		return expressionStr
 	}
 
-	public get_debuffNumerator_num(){
-		let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)??Priority.defaultConfig.debuffNumerator+''
-		let resultNum = mathjs.evaluate(expressionStr) as number
-		$n(resultNum)
-		return resultNum
-	}
+	// public get_debuffNumerator_num(){
+	// 	let expressionStr = localStorage.getItem(MultiMode.ls_debuffNumerator)??Priority.defaultConfig.debuffNumerator+''
+	// 	let resultNum = mathjs.evaluate(expressionStr) as number
+	// 	$n(resultNum)
+	// 	return resultNum
+	// }
 
 	public set_debuffNumerator(n:string){
-		localStorage.setItem(MultiMode.ls_debuffNumerator, n+'')
+		//localStorage.setItem(MultiMode.ls_debuffNumerator, n+'')
+		LS.items.debuffNumerator.set(n)
 	}
 
 	public wordCardClick(data:WordB){
@@ -276,6 +307,7 @@ export default class MultiMode{
 		}
 	}
 
+	//當改潙 若權重參數有變旹䀬詞皆褈算權重
 	public restart(){
 		try {
 			this.set_debuffNumerator(this.debuffNumerator_str.value+'')

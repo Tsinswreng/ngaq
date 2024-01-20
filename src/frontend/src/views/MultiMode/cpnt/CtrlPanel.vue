@@ -6,6 +6,7 @@ import Recite from '@ts/voca/Recite';
 const multiMode = MultiMode.getInstance()
 import {ref} from 'vue'
 const recite = Recite.getInstance()
+import LS from '@ts/LocalStorage';
 //import { setInterval } from 'timers/promises';
 //const recite = Recite.getInstance()
 
@@ -27,16 +28,15 @@ const recite = Recite.getInstance()
 const isSaved = multiMode.isSaved
 const debuffNumerator = multiMode.debuffNumerator_str
 
-
-function search(shape:string){
-	for(const w of recite.allWordsToLearn){
-		if(w.fw.wordShape === shape){
-			console.log(w)
-		}
-	}
-}
 function switchRandomImg(){
 	multiMode.isShowRandomBg.value = !multiMode.isShowRandomBg.value
+}
+
+function set_page(){
+	const ele = document.getElementById('paging') as HTMLInputElement
+	const value = ele.value
+	multiMode.set_page(value)
+	multiMode.multiMode_key.value++
 }
 </script>
 
@@ -70,9 +70,10 @@ function switchRandomImg(){
 			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
 		</span>
 		<span>
-			<input type="text" v-model="multiMode.paging.value" id="paging">
+			<!-- <input type="text" v-model="multiMode.paging.value" id="paging"> -->
+			<input type="text" id="paging" :value="LS.items.multiModePaging.get()">
 		</span>
-		<!-- <button></button> -->
+		<button @click="set_page()">設頁</button>
 		<span>{{ isSaved? '':'未保存' }}</span>
 	</div>
 </template>
@@ -84,8 +85,12 @@ input{
 	font-size: 12px; /* 最小只能調到12 */
 	overflow: visible; /* 允许文本超出边框 不效 */
 }
+#paging{
+	width: 32px;
+}
 button{
 	height: 16px;
 	font-size: 13px;
+	padding: 0px;
 }
 </style>

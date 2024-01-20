@@ -2228,7 +2228,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #託
 乇	trˁak
 嫡	tˁek	# 舍他音
-#誦訟
+#誦		*sə-[l]oŋ-s
+訟	soŋs	#*s.[ɢ]oŋ-s
+
 #虧	kʷʰaj
 
 躋	tsˁi
@@ -2277,7 +2279,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 塩	jam
 閻	jam
 閆	jam
-檐	lam
+檐	lam	# 聲符ᵉ詹者多T系寡L系
+
+
 糕	kˁu
 皋	kˁu
 羔	kˁu
@@ -3556,7 +3560,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #形	kʰˁeŋ	# ts
 泄	水aps
 礎	石raʔ
-檔	mˡˁaŋ
+檔	mˁAŋ	# ts
+檔	tˁaŋ
 碼	石rˁaʔ
 喂	口ujs
 猴	犬ˁo	# ts

@@ -16,12 +16,15 @@ const wordB_nn = $(props.wordB)
 	<div class="container">
 		<div class="wordInfo">
 			<CtrlPanel class="CtrlPanel" @CtrlPanel:start="multiMode.isShowCardBox.value=true;"></CtrlPanel>
-			<div>{{ 'id='+wordB_nn.fw.id }}</div>
+			<div>{{ wordB_nn.fw.table+''+wordB_nn.fw.id }}</div>
 			<div class="w-eventSymbols">{{ wordB_nn.getEventSymbols() }}</div>
 			<div>{{ WordB.style_getAddDates(wordB_nn) }}</div>
 			<hr class="w-hr">
 			<div class="w-shape">{{ wordB_nn.fw.wordShape }}</div>
-			<div>{{ wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation }}</div>
+			<div>
+				<span>{{ wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation }}</span>
+				<span>{{ wordB_nn.fw.tag.length===0?'':wordB_nn.fw.tag }}</span>
+			</div>
 			<hr class="w-hr">
 			<div class="w-mean"> {{wordB_nn.formattedMean}}</div>
 		</div>
