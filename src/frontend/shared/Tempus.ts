@@ -13,8 +13,8 @@ import moment from "moment"
 export default class Tempus{
 	
 	private static readonly rely = moment
-	public static ISO8601FULLdATEfORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
-	public static REGEXPoFiSO8601FULLdATEfORMAT_ZERO = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z'
+	public static readonly ISO8601FULL_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
+	public static readonly REGEXP_ISO8601FULL_DATE_FORMAT_ZERO = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z'
 
 	public static new(date?:string|number|bigint, format?:string){
 		const o = new this()
@@ -32,7 +32,7 @@ export default class Tempus{
 		// }
 	}
 
-	private constructor(){}
+	protected constructor(){}
 
 	// public constructor(date?:string|number, format?:string){
 	// 	this._iso = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
@@ -59,7 +59,7 @@ export default class Tempus{
 		return Tempus.rely(tempus.iso)
 	}
 
-	public static format(tempus:Tempus, format=Tempus.ISO8601FULLdATEfORMAT){
+	public static format(tempus:Tempus, format=Tempus.ISO8601FULL_DATE_FORMAT){
 		return Tempus.rely(tempus.iso).format(format)
 	}
 

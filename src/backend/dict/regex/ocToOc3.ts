@@ -19,9 +19,9 @@ export let replacePair:RegexReplacePair[] = [
 	//以下ˇ當 獨ᵈ先処。否則三等無r之a轉A後恐混。
 	{regex:/rˁ(æ|A)/gm, replacement:'腹一.腹二'},
 	{regex:/ˁ(æ|A)/gm, replacement:'腹一,腹二'},
-	{regex:/r(æ|A)/gm, replacement:'腹一H腹二'},
-	{regex:/ˡa/gm, replacement:'腹一N腹二'},
-	{regex:/(æ|A)/gm, replacement:'腹一N腹二'},
+	{regex:/r(æ|A|ˡa)/gm, replacement:'腹一H腹二'},
+	//{regex:/ˡa/gm, replacement:'腹一N腹二'},
+	{regex:/(æ|A|ˡa)/gm, replacement:'腹一N腹二'},
 
 
 	{regex:/rˁa/gm, replacement:'腹一Y腹二'},
@@ -122,17 +122,23 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/首一ɡl首二/gm, replacement:'首一U首二'},
 	{regex:/首一ɡj首二/gm, replacement:'首一U首二'},
 	{regex:/首一ŋj首二/gm, replacement:'首一U首二'},
-	{regex:/首一hʷ首二/gm, replacement:'首一.首二'},
 	{regex:/首一lʰ首二/gm, replacement:'首一O首二'},
+
 	{regex:/首一nʰ首二/gm, replacement:'首一,首二'},
-	{regex:/首一mʰ首二/gm, replacement:'首一.首二'},
 	{regex:/首一sn首二/gm, replacement:'首一,首二'},
+	{regex:/首一sʷ首二/gm, replacement:'首一,首二'},	// > 中古/sʷ/
+	{regex:/首一sm首二/gm, replacement:'首一,首二'},	// > 中古/sʷ/
+	{regex:/首一ʍ首二/gm, replacement:'首一,首二'},	// > 中古/sʷ/
+
+	{regex:/首一mʰ首二/gm, replacement:'首一.首二'},	// > 中古/h/
+	{regex:/首一hʷ首二/gm, replacement:'首一.首二'},
+	
 	{regex:/首一sŋ首二/gm, replacement:'首一;首二'},
 	{regex:/首一stʰ首二/gm, replacement:'首一;首二'},
 	{regex:/首一st首二/gm, replacement:'首一;首二'},
+
 	{regex:/首一sk首二/gm, replacement:'首一K首二'},
-	{regex:/首一sʷ首二/gm, replacement:'首一,首二'},
-	{regex:/首一ʍ首二/gm, replacement:'首一,首二'},
+
 	{regex:/首一ɦ首二/gm, replacement:'首一U首二'},
 	{regex:/首一rʰ首二/gm, replacement:'首一E首二'},
 	{regex:/首一(kj)首二/gm, replacement:'首一I首二'},

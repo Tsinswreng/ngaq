@@ -11,6 +11,15 @@ import { Sros } from './Sros';
 import util from 'util'
 import * as ts from 'typescript'
 import json5 from 'json5'
+
+export function addFn(obj:Object, name:string, Fn:Function){
+	if(obj[name]===void 0){
+		obj[name]=Fn
+		return true
+	}
+	return false
+}
+
 /**
  * 網絡錯誤類
  */
@@ -164,26 +173,26 @@ export async function traverseDirs(directoryPath: string[]) {
 }
 
 
-export function safeIntStr(numStr:string, errMsg?){
-	let num = parseFloat(numStr)
-	if(num+'' !== numStr){
-		throw new Error(errMsg)
-	}
-	return safeInt(num)
-}
+// export function safeIntStr(numStr:string, errMsg?){
+// 	let num = parseFloat(numStr)
+// 	if(num+'' !== numStr){
+// 		throw new Error(errMsg)
+// 	}
+// 	return safeInt(num)
+// }
 
-export function safeInt(n:number, errMsg?){
-	if(!Number.isInteger(n)){
-		throw new Error(errMsg)
-	}
-	if(n>Number.MAX_SAFE_INTEGER ){
-		throw new Error(errMsg)
-	}
-	if(n<Number.MIN_SAFE_INTEGER){
-		throw new Error(errMsg)
-	}
-	return $n(n);
-}
+// export function safeInt(n:number, errMsg?){
+// 	if(!Number.isInteger(n)){
+// 		throw new Error(errMsg)
+// 	}
+// 	if(n>Number.MAX_SAFE_INTEGER ){
+// 		throw new Error(errMsg)
+// 	}
+// 	if(n<Number.MIN_SAFE_INTEGER){
+// 		throw new Error(errMsg)
+// 	}
+// 	return $n(n);
+// }
 
 /**
  * 延時。手動用promise封裝setTimeout
@@ -281,7 +290,7 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
 	return (_ as any).merge(object, ...otherArgs) as T
 }
 
-
+export const merge = _.merge
 
 // 就地打亂
 // export function shuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){

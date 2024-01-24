@@ -65,6 +65,7 @@
     "electron": "^26.2.2",
     "jest": "^29.7.0",
     "prettier": "^3.2.2",
+    "sass": "^1.70.0",
     "ts-jest": "^29.1.1",
     "tsconfig-paths": "^4.2.0",
     "vue": "^3.3.4",
@@ -89,6 +90,7 @@
     "exe": "pkg bundle/bundle.js --target node18-win-x64",
     "buildAll": "npm run build && npm run out && npm run bundle && npm run exe",
     "dks": "ts-node .\\src\\backend\\dict\\dks.ts"
+	,"updateFrontendShared":"ts-node ./src\\backend\\script\\update_shared.ts"
   },
   "bin": "bundle/bundle.js",
   "paths": {

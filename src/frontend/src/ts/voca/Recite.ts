@@ -147,7 +147,7 @@ export default class Recite{
 			//this.allWordsToLearn[i] = gotV
 			u.mergeDates()
 			//debugger
-			u.priority.setConfig(prioConfig)
+			u.priorityObj.setConfig(prioConfig)
 			//console.log(u.priority.config)//t
 			u.calcPrio()//傳參config?
 
@@ -204,19 +204,19 @@ export default class Recite{
 	public static calcAndDescSortPriority(wbs:WordB[],config?:Partial<typeof Priority.defaultConfig>){
 		//wbs.map(e=>console.log(e.priority.prio0num))//t
 		for(const w of wbs){
-			if(w.priority.changeRecord.length === 0){
+			if(w.priorityObj.changeRecord.length === 0){
 				//w.priority.config.debuffNumerator = 
-				if(config !== void 0){w.priority.setConfig(config) }
+				if(config !== void 0){w.priorityObj.setConfig(config) }
 				w.calcPrio()
 			}
 		}
-		wbs.sort((b,a)=>{return s.c(a.priority.prio0num , b.priority.prio0num)})
+		wbs.sort((b,a)=>{return s.c(a.priorityObj.prio0num , b.priorityObj.prio0num)})
 	}public calcAndDescSortPriority(config?:Partial<typeof Priority.defaultConfig>){
 		Recite.calcAndDescSortPriority(this.allWordsToLearn, config)
 	}
 
 	public descSortByPrio(){
-		this.allWordsToLearn.sort((b,a)=>{return s.c(a.priority.prio0num , b.priority.prio0num)})
+		this.allWordsToLearn.sort((b,a)=>{return s.c(a.priorityObj.prio0num , b.priorityObj.prio0num)})
 	}
 
 	/**

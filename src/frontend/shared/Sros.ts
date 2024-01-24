@@ -1,7 +1,6 @@
 /**
  * 皆嚴格也、除非用compare以較大小、否則不會出現NaN及Infinity等、而是直ᵈ抛錯
  */
-
 import * as mathjs from 'mathjs'
 import { lodashMerge } from '@shared/Ut'
 export type BN = mathjs.BigNumber
@@ -9,9 +8,43 @@ export type UN = mathjs.BigNumber|number //無bigint
 export type UNS = UN|string
 export type N4 = UNS|bigint
 export type N3 = UN|bigint
+declare global {
+	export interface Number {
+		add(...num:number[]): number;
+		sub(...num:number[]): number
+		mul(...num:number[]): number
+		div(num:number): number
+		pow(num:number): number
+	}
 
-class SrosError extends Error{
-	private constructor(x?){
+}
+
+function addFn(obj:Object, name:string, Fn:Function){
+	if(obj[name]===void 0){
+		obj[name]=Fn
+		return true
+	}
+	return false
+}
+
+function addFn_(...p:Parameters<typeof addFn>){
+	const ans = addFn(p[0],p[1],p[2])
+	if(!ans){
+		throw new Error(`${p[1]} is already defined at ${p[0]}`)
+	}
+}
+
+
+
+// interface bbb extends BN{
+	
+// }
+
+
+
+
+export class SrosError extends Error{
+	protected constructor(x?){
 		super(x)
 	}
 
@@ -27,18 +60,16 @@ class SrosError extends Error{
  * @param ReturnType 諸方法 返回值類型
  */
 interface ISros<ParamType, ReturnType extends number | BN> {
-	/**
-	 * 提供四則運算與比較的簡短寫法
-	 */
+	/** 提供四則運算與比較的簡短寫法 */
 	short: {
 		//n:(x:N4|N4[])=>ReturnType|ReturnType[]
 		n(x:N4):ReturnType //構造
 		,n(x:N4[]):ReturnType[]
-		,a: (...num: ParamType[]) => ReturnType
-		, s: (...num: ParamType[]) => ReturnType
-		, m: (...num: ParamType[]) => ReturnType
-		, d: (x:ParamType, y:ParamType) => ReturnType
-		, c: (x: ParamType, y: ParamType) => number //以作差法比較
+		,a: (...num: ParamType[]) => ReturnType //加
+		,s: (...num: ParamType[]) => ReturnType //減
+		,m: (...num: ParamType[]) => ReturnType //乘
+		,d: (x:ParamType, y:ParamType) => ReturnType //除
+		,c: (x: ParamType, y: ParamType) => number //以作差法比較
 	}
 	createNumber(x:N4):ReturnType //構造
 	createNumber(x:N4[]):ReturnType[]
@@ -169,6 +200,98 @@ export class Sros{
 		if(typeof num !== 'number'){throw SrosError.new(errMsg)}
 		if(!isFinite(num)){throw SrosError.new(errMsg)}
 		return num
+	}
+
+	protected static _isNumberMethodsExtended = false
+	static get isNumberMethodsExtended(){return Sros._isNumberMethodsExtended}
+
+
+	protected static _extendNumberMethods(){
+		const pro = Number.prototype
+		const sros = Sros.new()
+		const s = sros.short
+		addFn_(pro, 'add', 
+		function(...num:number[]){
+			//@ts-ignore
+			return s.a(this, ...num)
+		}
+		)
+		addFn_(pro, 'sub', 
+		function(...num:number[]){
+			//@ts-ignore
+			return s.s(this, ...num)
+		}
+		)
+		addFn_(pro, 'mul', 
+		function(...num:number[]){
+			//@ts-ignore
+			return s.m(this, ...num)
+		}
+		)
+		addFn_(pro, 'div', 
+		function(num:number){
+			//@ts-ignore
+			return s.d(this, num)
+		}
+		)
+		addFn_(pro, 'pow', 
+		function(num:number){
+			//@ts-ignore
+			return sros.pow(this, num)
+		}
+		)
+		// Number.prototype.add = function(...num:number[]){
+		// 	//@ts-ignore
+		// 	return s.a(this, ...num)
+		// }
+		// Number.prototype.sub = function(...num:number[]){
+		// 	//@ts-ignore
+		// 	return s.s(this, ...num)
+		// }
+		// Number.prototype.mul = function(...num:number[]){
+		// 	//@ts-ignore
+		// 	return s.m(this, ...num)
+		// }
+		// Number.prototype.div = function(num:number){
+		// 	//@ts-ignore
+		// 	return s.d(this, num)
+		// }
+		// Number.prototype.pow = function(num:number){
+		// 	//@ts-ignore
+		// 	return sros.pow(this, num)
+		// }
+	}
+
+	static extendNumberMethods(){
+		if(!Sros.isNumberMethodsExtended){
+			Sros._extendNumberMethods()
+			Sros._isNumberMethodsExtended=true
+		}
+	}
+
+	//@ts-ignore
+	protected static _unextendNumberMethods(){
+		// function delete(x){
+		// 	//x=undefined//此不效、鈣傳入後會複製指針?
+		// 	//Reflect.deleteProperty(Number.prototype, x)
+		// }
+		//@ts-ignore
+		delete(Number.prototype.add)
+		//@ts-ignore
+		delete(Number.prototype.sub)
+		//@ts-ignore
+		delete(Number.prototype.mul)
+		//@ts-ignore
+		delete(Number.prototype.div)
+		//@ts-ignore
+		delete(Number.prototype.pow)
+	}
+
+	static unextendNumberMethods(){
+		if(Sros.isNumberMethodsExtended){
+			Sros._unextendNumberMethods()
+			Sros._isNumberMethodsExtended=false
+		}
 	}
 
 }

@@ -146,7 +146,7 @@ export default class MultiMode{
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		console.log(data)
-		console.log(data.priority.changeRecord)
+		console.log(data.priorityObj.changeRecord)
 		//console.log(data.formattedMean)//t
 		
 	}
@@ -207,7 +207,7 @@ export default class MultiMode{
 							const o:VocaDbTable = JSON.parse(cur)
 							const sw = SingleWord2.toJsObj(o)
 							const wb = new WordB(sw)
-							wb.priority.setConfig(priorityConfig)
+							wb.priorityObj.setConfig(priorityConfig)
 							wb.calcPrio() //這是一個同步函數、用于複雜計算
 							ans.push(wb)
 						}
@@ -256,7 +256,7 @@ export default class MultiMode{
 		const sws = await vocaClient.getAllTablesWords()
 		const ans:WordB[] = sws.map(e=>new WordB(e))
 		for(let i = 0; i < ans.length; i++){
-			ans[i].priority.setConfig(this.priorityConfig)
+			ans[i].priorityObj.setConfig(this.priorityConfig)
 			ans[i].calcPrio()
 		}
 		return ans

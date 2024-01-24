@@ -21,8 +21,8 @@ export default class WordB{
 	/**
 	 * 出詞權重對象
 	 */
-	private _priority: Priority = Priority.newChild()
-	;public get priority(){return this._priority;};
+	private _priorityObj: Priority = Priority.newChild()
+	;public get priorityObj(){return this._priorityObj;};
 
 	/**
 	 * 升序ᵗ 日期對事件 ˉ對象
@@ -58,15 +58,13 @@ export default class WordB{
 		}
 		handle(this.fw.dates_rmb, this.neoDates_rmb)
 		handle(this.fw.dates_fgt, this.neoDates_fgt)
-
-
 	}
 
 	/**
 	 * 算ᵣ初權重
 	 */
 	public calcPrio(){
-		this.priority.calcPrio0(this.fw)
+		this.priorityObj.calcPrio0(this.fw)
 	}
 //✅🟢🥵😡🐸😍🥰😋😊
 

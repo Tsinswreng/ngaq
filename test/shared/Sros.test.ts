@@ -6,6 +6,39 @@ import * as Ut from "@shared/Ut"
 const sros_number = Sros.new()
 const sros_big = Sros.new({})
 
+describe('number proto', ()=>{
+	it('', ()=>{
+		Sros.extendNumberMethods()
+		let a = sros_number.createNumber(1)
+		const ans = a.add(2).add(3,4)
+		expect(ans).toBe(10)
+		expect(a.add==null).toBe(false)
+		//console.log('hello')
+		Sros.unextendNumberMethods()
+		a = sros_number.createNumber(1)
+		let add = a.add
+		//console.log(add)
+		expect(add).toBe(void 0)
+		// const ans = a.add(2).add(3,4)
+		// expect(ans).toBe(10)
+		//console.log('hello')
+	})
+
+	it('', ()=>{
+		Sros.unextendNumberMethods()
+		try {
+			Number.prototype.add = function(x){return 114514}
+			Sros.extendNumberMethods()
+		} catch (err) {
+			expect(err).toBeInstanceOf(Error)
+			//console.log(err)
+			//@ts-ignore
+			delete Number.prototype.add
+		}
+		
+	})
+})
+
 describe('Sros', ()=>{
 	it('should create an instance of Sros_number by default', () => {
 		const sros = Sros.new();

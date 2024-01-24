@@ -41,7 +41,7 @@ function closeWordWindow(){
 					<td>添ᵗ期</td><td>{{ fw.dates_add }}</td>
 				</tr>
 				<tr>
-					<td>權</td><td>{{ wb.priority }}</td>
+					<td>權</td><td>{{ wb.priorityObj }}</td>
 				</tr>
 				<tr>
 					<td>事</td><td></td>

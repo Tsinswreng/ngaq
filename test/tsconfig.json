@@ -47,8 +47,8 @@
 			"@root/*": ["../*"],
 			//"*":["src/shared/*"],
 			"@shared/*": ["shared/*"], //不能不寫/*
-			"@frontend/*": ["src/frontend/*"],
-			"@backend/*": ["src/backend/*"],
+			"@frontend/*": ["frontend/*"],
+			"@backend/*": ["backend/*"],
 		}
 	},
 	"esModuleInterop": true,

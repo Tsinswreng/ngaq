@@ -7,8 +7,14 @@ const jestConfig: JestConfigWithTsJest = {
 	//moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
 	moduleNameMapper: {
 		'^@shared/(.*)$': '<rootDir>/src/shared/$1',
-		
+		'^@backend/(.*)$': '<rootDir>/src/backend/$1',
+		'^@frontend/(.*)$': '<rootDir>/src/frontend/$1',
 	},
+	testMatch: [
+		'<rootDir>/test/**/*.test.ts',
+		'<rootDir>/test/**/*.test.js',
+		//'<rootDir>/src/**/*.test.jsx',
+	],
 }
 
 export default jestConfig;

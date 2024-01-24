@@ -1,11 +1,7 @@
 <script setup lang="ts">
 //import { ref, defineProps, withContext } from 'vue';
-
 import WordCard from '@views/MultiMode/cpnt/WordCard.vue'
-import WordWindow from '@views/MultiMode/cpnt/WordWindow.vue'
 import WordInfo from './cpnt/WordInfo.vue';
-import CtrlPanel from './cpnt/CtrlPanel.vue'
-
 import MultiMode from './MultiMode';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
@@ -13,20 +9,11 @@ import { $ } from '@shared/Ut';
 import { ref,Ref, onMounted, computed } from 'vue';
 import VocaClient from '@ts/voca/VocaClient';
 import LS from '@ts/LocalStorage';
-import { number } from 'mathjs';
-//import Ut from '../../../shared/Ut'
-
 //const { words } = defineProps(['words']);
-
 const recite = Recite.getInstance();
 const multiMode = MultiMode.getInstance()
-
 const isShowWordInfo = multiMode.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
-const isSaved = ref(true)
-
-const isShowWordWindow = multiMode.isShowWordWindow
 const isShowCardBox = multiMode.isShowCardBox
-let returnedWord:WordB = multiMode.curWord
 let page:Ref<number[]> = multiMode.pageNums
 
 //const returnedWord:Pick<WordB, keyof WordB> = returnedWordRef.value //<坑>{ref函數不能代理類中ᵗ私有屬性}
@@ -38,10 +25,6 @@ let page:Ref<number[]> = multiMode.pageNums
 // const isAddTimeGeq3 = computed((wb:WordB)=>{
 // 	return wb.fw.times_add >= 3
 // })
-
-function getPage(){
-	LS.items.multiModePaging.get()
-}
 
 </script>
 
@@ -77,7 +60,7 @@ function getPage(){
 </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 
 input{

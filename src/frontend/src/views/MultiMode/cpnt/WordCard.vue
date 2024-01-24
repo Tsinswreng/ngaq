@@ -90,7 +90,7 @@ const isAddTimeGeq3 = (wb:WordB)=>{
 			{{ props.wordB.fw.id }}
 		</span> -->
 
-		<span class="w-priority">{{ fmtNum(Number(props.wordB.priority.prio0num),4) }}</span>
+		<span class="w-priority">{{ fmtNum(Number(props.wordB.priorityObj.prio0num),4) }}</span>
 		<span class="w-lastRvwDate">{{ props.wordB.getLastRvwDate() }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{props.wordB.getEventSymbolCnt() }}</span>

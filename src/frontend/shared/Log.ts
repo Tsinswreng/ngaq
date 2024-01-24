@@ -1,23 +1,15 @@
-import winston from 'winston'
-import Tempus from './Tempus';
-import util from 'util'
-const inspect = util.inspect
-const logger = winston.createLogger({
-	level: 'debug',
-	format: winston.format.combine(
-		winston.format.simple(),
-		winston.format.printf((info) => {
-			return `${Tempus.new().iso}<${info.level}>\t${info.message}`;
-		})
-	),
-	transports: [
-		new winston.transports.Console(),
-		new winston.transports.File({ filename: 'log/combined.log' })
-	]
-})
 
+
+const inspect = (v)=>v
+
+interface ILog{
+	log:Function
+	
+}
+
+/** @deprecated */
 export default class Log{
-	public static readonly RELY=logger;
+	public static readonly RELY=console;
 
 	protected constructor(){}
 
