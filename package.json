@@ -79,11 +79,12 @@
   "scripts": {
     "start": "../../node_modules/.bin/webpack serve --open",
     "dev": "cd src/frontend && vite",
-    "build": "cd src/frontend && vite build",
+    "buildF": "cd src/frontend && vite build",
     "build2": "vue-tsc && vite build",
     "preview": "../../node_modules/.bin/vite preview",
     "out": "tsc -p . ",
-    "srvmon": "nodemon ./app.js",
+	"buildB":"tsc -p ."
+    ,"srvmon": "nodemon ./app.js",
     "srv": "node ./app.js",
     "addWords": "node ./out/backend/BackupTable.js",
     "bundle": "npx webpack",

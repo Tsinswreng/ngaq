@@ -8,9 +8,10 @@ export default defineConfig({
 	base: './',
 	resolve:{
 		alias:{
-			'@root': '.',
+			//'@root': '.',
 			//'@shared': '../shared',
-			'@shared': '/shared',
+			'@shared': '/../shared', //worked
+			//'@shared': 'D:/_code/voca/src/shared', //worked
 			'@ts': '/src/ts',
 			'@components': '/src/components',
 			'@views': '/src/views',

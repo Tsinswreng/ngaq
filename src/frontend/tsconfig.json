@@ -63,16 +63,16 @@
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
-		"baseUrl": "./",
+		"baseUrl": "../",
 		"paths": {
 			// "@root/*": ["./*"]
 			//"@root": ["."]
 			//"*":["../shared/*"],
-			"@root":["./"],
-			"@shared/*":["../shared/*"],
-			"@ts/*":["src/ts/*"],
-			"@components/*":["src/components/*"],
-			"@views/*":["src/views/*"],
+			//"@root":["./"],
+			"@shared/*":["/shared/*"],
+			"@ts/*":["frontend/src/ts/*"],
+			"@components/*":["frontend/src/components/*"],
+			"@views/*":["frontend/src/views/*"],
 			
 		}
 	},
