@@ -69,7 +69,8 @@
 			//"@root": ["."]
 			//"*":["../shared/*"],
 			//"@root":["./"],
-			"@shared/*":["/shared/*"],
+			//"@shared/*":["/shared/*"], //不效、不能以斜槓始
+			"@shared/*":["shared/*"],
 			"@ts/*":["frontend/src/ts/*"],
 			"@components/*":["frontend/src/components/*"],
 			"@views/*":["frontend/src/views/*"],
