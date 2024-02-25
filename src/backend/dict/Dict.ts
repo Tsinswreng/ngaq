@@ -12,11 +12,11 @@ import Txt from "@shared/Txt"
 import {RegexReplacePair} from '@shared/Ut';
 import * as Tp from '@shared/Type'
 import {Duplication,DictDbRow,DictRawConfig, cn} from '@shared/Type'
-import SqliteTableInfo from "@shared/db/Sqlite"
+import SqliteTableInfo from "@backend/db/Sqlite"
 import * as DictType from '@shared/Type'
 import _, { sum } from 'lodash';
 import moment from 'moment'
-import Sqlite from '@shared/db/Sqlite';
+import Sqlite from '@backend/db/Sqlite';
 // import { transpose, nng ,YYYYMMDDHHmmssSSS, YYYYMMDDHHmmss, printArr} from '@shared/Ut';
 // const Ut = {
 // 	transpose:transpose,

@@ -7,7 +7,7 @@ type Database = sqlite3.Database
 type Statement = sqlite3.Statement
 type RunResult = SqliteType.RunResult
 //import { RunResult } from 'sqlite3';
-import Sqlite, { SqliteTableInfo, SqliteType } from '@shared/db/Sqlite';
+import Sqlite, { SqliteTableInfo, SqliteType } from '@backend/db/Sqlite';
 import _ from 'lodash';
 import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2, { config } from '@shared/VocaRaw2';
@@ -136,7 +136,7 @@ export default class VocaSqlite{
 	 * @param table 
 	 * @returns 
 	 */
-	public static creatTable(db:Database, table:string, ifNotExists=false){
+	public static createTable(db:Database, table:string, ifNotExists=false){
 		function getSql(table:string){
 			let isExist = ''
 			if(ifNotExists){
@@ -164,7 +164,7 @@ export default class VocaSqlite{
 		}
 		return Sqlite.all(db, getSql(table))
 	}public creatTable(table=$a(this.tableName), ifNotExists=false){
-		return VocaSqlite.creatTable(this.db, table, ifNotExists)
+		return VocaSqlite.createTable(this.db, table, ifNotExists)
 	}
 
 	/**

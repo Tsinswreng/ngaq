@@ -44,9 +44,14 @@ export default class Config{
 		,randomImgDir: [] as string[]
 		,backupDbPath: `./db/vocaBackup.db`
 		,tables:[] as string[]
+		,server:{
+			dbPath: './db/server.db'
+			,userTableName: 'user'
+		}
 	}
 
-	private _config:Partial<IConfig> = lodashMerge(Config.defaultConfig)
+	//private _config:Partial<IConfig> = lodashMerge(Config.defaultConfig)
+	protected _config:IConfig = lodashMerge(Config.defaultConfig)
 	;public get config(){return this._config;};
 
 	public static readOuterConfig(path:string){

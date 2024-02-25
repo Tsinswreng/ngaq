@@ -1,7 +1,8 @@
 
 import Ut, { $, $a } from '@shared/Ut';
 import Txt from '@shared/Txt';
-import SingleWord2 from '@shared/SingleWord2';
+//import SingleWord2 from '@shared/SingleWord2';
+import { SingleWord2 } from "@shared/entities/Word/Word";
 import Tempus from '@shared/Tempus';
 import _ from 'lodash';
 

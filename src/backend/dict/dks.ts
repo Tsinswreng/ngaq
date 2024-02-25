@@ -17,7 +17,7 @@ import {replacePair as saffesToOcRegex} from './regex/saffesToOcRegex'
 import {replacePair as ocToOc3} from './regex/ocToOc3'
 import { replacePair as cangjieRegex } from './regex/cangjie';
 import moment = require('moment');
-import Sqlite from '@shared/db/Sqlite';
+import Sqlite from '@backend/db/Sqlite';
 import { transpose, $ ,YYYYMMDDHHmmssSSS} from '@shared/Ut';
 import fenbangToIPA from './regex/fenbangToIPA'
 const Ut = {

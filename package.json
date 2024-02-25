@@ -14,6 +14,7 @@
     "axios": "^1.4.0",
     "better-sqlite3": "^8.7.0",
     "cheerio": "^1.0.0-rc.12",
+    "commander": "^12.0.0",
     "comment-json": "^4.2.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -83,15 +84,15 @@
     "build2": "vue-tsc && vite build",
     "preview": "../../node_modules/.bin/vite preview",
     "out": "tsc -p . ",
-	"buildB":"tsc -p ."
-    ,"srvmon": "nodemon ./app.js",
+    "buildB": "tsc -p .",
+    "srvmon": "nodemon ./app.js",
     "srv": "node ./app.js",
     "addWords": "node ./out/backend/BackupTable.js",
     "bundle": "npx webpack",
     "exe": "pkg bundle/bundle.js --target node18-win-x64",
     "buildAll": "npm run build && npm run out && npm run bundle && npm run exe",
-    "dks": "ts-node .\\src\\backend\\dict\\dks.ts"
-	,"updateFrontendShared":"ts-node ./src\\backend\\script\\update_shared.ts"
+    "dks": "ts-node .\\src\\backend\\dict\\dks.ts",
+    "updateFrontendShared": "ts-node ./src\\backend\\script\\update_shared.ts"
   },
   "bin": "bundle/bundle.js",
   "paths": {

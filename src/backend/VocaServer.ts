@@ -15,17 +15,20 @@ import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser'
 //import path from "path";
 import Tempus from "@shared/Tempus";
-import SingleWord2 from "@shared/SingleWord2";
+//import SingleWord2 from "@shared/SingleWord2";
+import { SingleWord2 } from "@shared/entities/Word/Word";
 import { IVocaRow } from "@shared/SingleWord2";
 import { $, absPath, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
-import Sqlite from "@shared/db/Sqlite";
+import Sqlite from "@backend/db/Sqlite";
 import json5 from 'json5'
 import * as fs from 'fs'
 import merge from "merge-stream";
 import { Readable } from "stream";
+
+
 Error.stackTraceLimit = 99
 const config = Config.getInstance()
 //const bodyParser = require('body-parser')
@@ -122,6 +125,7 @@ export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
 	public static sqlt = VocaSqlite.new({})
+	static userDb
 	public static session
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
@@ -132,6 +136,7 @@ export default class VocaServer{
 			, _backupDbPath:config.config.backupDbPath
 			,mode: Sqlite.openMode.DEFAULT_CREATE
 		})
+		
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
 		let ri :RandomImg|undefined = undefined
 		try{
@@ -483,7 +488,7 @@ export default class VocaServer{
 			}
 			
 		})
-					//res.send(`<h1>404</h1>`)
+			//res.send(`<h1>404</h1>`)
 			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
 			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
 			//res.send('<h1>1919</h1>')

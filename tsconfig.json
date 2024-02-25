@@ -35,6 +35,7 @@
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true,
+		"strictPropertyInitialization": false,
 		"noImplicitAny": false, //不准 隱式ᵗ any
 		"moduleResolution": "Node",
 		"esModuleInterop": true, //用import導入commonJs模塊
