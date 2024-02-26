@@ -27,7 +27,8 @@ import json5 from 'json5'
 import * as fs from 'fs'
 import merge from "merge-stream";
 import { Readable } from "stream";
-
+import jwt from 'jsonwebtoken'
+const secretKey = '114514'
 
 Error.stackTraceLimit = 99
 const config = Config.getInstance()
@@ -452,6 +453,7 @@ export default class VocaServer{
 			if(req.body.username === tempUserName && req.body.password === tempPassword){
 				VocaServer.session = req.session
 				VocaServer.session.userid = req.body.username
+				const token = jwt.sign({ username: req.body.username }, secretKey);
 				res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
 			}else{
 				res.send('Invalid username or password');

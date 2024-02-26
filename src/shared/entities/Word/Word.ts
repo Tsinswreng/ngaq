@@ -5,7 +5,8 @@ import Tempus from '@shared/Tempus';
 import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import _ from 'lodash';
-
+import { WordPriority } from '@shared/entities/Word/WordPriority';
+import { VocaDbTable } from '@shared/interfaces/Word';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
@@ -375,6 +376,4 @@ export class Tempus_Event{
 	}
 }
 
-import { WordPriority } from '@shared/entities/Word/WordPriority';
-import { VocaDbTable } from '@shared/interfaces/Word';
 export{WordPriority as Priority}

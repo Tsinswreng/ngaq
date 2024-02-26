@@ -19,7 +19,6 @@ import Stream from 'stream';
 import lodash from 'lodash'
 //const rootDir:string = require('app-root-path').path
 
-
 //export type VocaTableColumnName = VocaDbTable
 const VocaTableColumnName = VocaDbTable
 
