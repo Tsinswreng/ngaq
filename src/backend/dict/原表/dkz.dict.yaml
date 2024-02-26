@@ -1,5 +1,5 @@
 
-#20240224212857956
+#20240226082158524
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1840,6 +1840,11 @@ use_preset_vocabulary: true
 咆	brˁu	
 狍	brˁu	
 炰	brˁu	
+鮑	brˁu	
+孢	brˁu	
+骲	brˁus	
+骲	brˁuʔ	
+骲	brˁuk	
 鞄	brˁu	
 鞄	brˁus	
 鞄	brˁuʔ	
@@ -3942,7 +3947,6 @@ use_preset_vocabulary: true
 勹	prˁaw	
 𨚔	pˁaw	
 𨚔	pʰrˁaw	
-孢	brˁawʔ	
 𠅬	pˁaw	
 襃	pˁaw	
 齙	brˁaw	
@@ -3975,12 +3979,7 @@ use_preset_vocabulary: true
 袌	bˁaw	
 袌	bˁaws	
 𤔣	bˁaws	
-骲	brˁaws	
-骲	brˁawʔ	
-骲	brˁok	
-骲	pʰˁok	
 虣	bˁaws	
-鮑	brˁawʔ	
 𡂟	brˁawʔ	
 𢖔	prˁaws	
 𧭤	prˁaws	

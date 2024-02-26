@@ -1,13 +1,13 @@
 import { User } from "@backend/entities/User"
 import { Db_User } from "@shared/interfaces/User"
-import { UserManager } from "@backend/db/sqlite/User/Manager"
+import { UserDbSrc } from "@backend/db/sqlite/User/DbSrc"
 import Sqlite, {SqliteType} from '@backend/db/Sqlite'
 import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 type Database = SqliteType.Database
 export class UserTable{
-	protected _manager:UserManager
+	protected _manager:UserDbSrc
 	get manager(){return this._manager}
 
 	protected _tableName:string
@@ -15,7 +15,7 @@ export class UserTable{
 
 	protected constructor(){}
 	static new(props:{
-		_manager: UserManager
+		_manager: UserDbSrc
 		_tableName:string
 	}){
 		const o = new this()

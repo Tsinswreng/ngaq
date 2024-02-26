@@ -5,7 +5,7 @@ import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 import { Db_User } from '@shared/interfaces/User'
 type Database = SqliteType.Database
-export class UserManager{
+export class UserDbSrc{
 
 	protected _db: SqliteType.Database
 	get db(){return this._db}
@@ -69,5 +69,5 @@ CREATE TABLE ${isExist} '${table}'(
 
 
 }
-const C = UserManager
-type C  = UserManager
+const C = UserDbSrc
+type C  = UserDbSrc

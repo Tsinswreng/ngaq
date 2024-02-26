@@ -40,7 +40,7 @@ const VocaTableColumnName = VocaDbTable
 	public static readonly source='source'
 } */
 
-export default class VocaSqlite{
+export default class WordDbSrc{
 
 
 	// 廢棄˪ᵗ構造函數
@@ -60,7 +60,7 @@ export default class VocaSqlite{
 	private constructor(){
 	}
 
-	static async neW(
+	static async New(
 		props:{
 			_dbName?:string,
 			_dbPath?:string,
@@ -127,7 +127,7 @@ export default class VocaSqlite{
 	public static creatDbFileSync(path:string, ifNotExists=false){
 		creatFileSync(path, ifNotExists)
 	}public creatDbFileSync(ifNotExists=false){
-		VocaSqlite.creatDbFileSync(this.dbPath, ifNotExists)
+		WordDbSrc.creatDbFileSync(this.dbPath, ifNotExists)
 	}
 
 	/**
@@ -164,7 +164,7 @@ export default class VocaSqlite{
 		}
 		return Sqlite.all(db, getSql(table))
 	}public creatTable(table=$a(this.tableName), ifNotExists=false){
-		return VocaSqlite.createTable(this.db, table, ifNotExists)
+		return WordDbSrc.createTable(this.db, table, ifNotExists)
 	}
 
 	/**
@@ -180,7 +180,7 @@ export default class VocaSqlite{
 		//return Sqlite.copyTableCrossDb(srcDb, srcTable, targetDb, neoName)
 	}
 	public backupTable(srcDb = this.db, srcTable = $a(this.tableName), targetDb=Sqlite.newDatabaseAsync(this.backupDbPath), neoName=this.tableName+Tempus.new().iso){
-		return VocaSqlite.backupTable( srcDb, srcTable , targetDb, neoName)
+		return WordDbSrc.backupTable( srcDb, srcTable , targetDb, neoName)
 	}
 
 	/**
@@ -194,7 +194,7 @@ export default class VocaSqlite{
 		return Sqlite.copyTable(db, $(newName), table)
 	}public backupTableInDb(oldTable=this.tableName, newName=oldTable+Tempus.new().iso){
 		const table:string = $a(oldTable)
-		return VocaSqlite.backupTableInDb(this.db, table, newName)
+		return WordDbSrc.backupTableInDb(this.db, table, newName)
 	}
 
 	/**
@@ -235,7 +235,7 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public backAllTables(){
-		return VocaSqlite.backAllTables(this.db)
+		return WordDbSrc.backAllTables(this.db)
 	}
 
 
@@ -253,13 +253,7 @@ export default class VocaSqlite{
 	}
 
 
-	/**
-	 * 數據庫ʸ原ᵈ無ᵗ詞ˇ添入庫
-	 * @param db 
-	 * @param table 
-	 * @param word 
-	 * @deprecated
-	 */
+
 	// private static initAddWord_deprecated(db:Database, table:string, word:SingleWord2):Promise<RunResult[][][]>
 	// private static initAddWord_deprecated(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[][][]>
 	// private static async initAddWord_deprecated(db:Database, table:string, word:SingleWord2|SingleWord2[]){
@@ -305,17 +299,17 @@ export default class VocaSqlite{
 		}else{
 			w = [word]
 		}
-		VocaSqlite.checkTable(table, w)
+		WordDbSrc.checkTable(table, w)
 		//let [r, runResult] = await forArr(db, table, w)
 		const forArr2=async(db:Database, table:string, words:SingleWord2[])=>{
-			const [sql,] = VocaSqlite.getInsertSql(table, words[0])
+			const [sql,] = WordDbSrc.getInsertSql(table, words[0])
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			runResult.length = words.length
 			//let lastRunResut
 			for(let i = 0; i < words.length; i++){
 				const w = words[i]
-				const [sql, value] = VocaSqlite.getInsertSql(table, w)
+				const [sql, value] = WordDbSrc.getInsertSql(table, w)
 				const r = await Sqlite.stmtRun(stmt, value)
 				//console.log(r === lastRunResut)
 				const copyR:RunResult = lodash.cloneDeep(r)//每次循環 r所指ᵗ地址ˋ皆不變、唯其所指ᵗ數據ˋ變˪
@@ -445,7 +439,7 @@ export default class VocaSqlite{
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
 		const table0 = $(words[0].table)
-		VocaSqlite.checkTable(table0, words)
+		WordDbSrc.checkTable(table0, words)
 		const fn = async()=>{
 			return await addWordsOfSameTable(db, table0, words)
 		}
@@ -469,13 +463,13 @@ export default class VocaSqlite{
 				//let d3 = await VocaSqlite.initAddWord_deprecated(db, table, wordsToInitAdd)
 				//runResult1 = d3.flat(2)
 				const fn = async()=>{
-					return await VocaSqlite.initAddWord(db, table, wordsToInitAdd)
+					return await WordDbSrc.initAddWord(db, table, wordsToInitAdd)
 				}
 				//runResult1 = await Sqlite.transaction(db, fn)
 				runResult1 = await fn()
 			}
 			if(wordsToUpdate.length !== 0){
-				const fn =  VocaSqlite.setWordsByIds_fn(db, table, (wordsToUpdate))
+				const fn =  WordDbSrc.setWordsByIds_fn(db, table, (wordsToUpdate))
 				await fn()
 			}
 			//console.log(runResult1)//t *
@@ -490,7 +484,7 @@ export default class VocaSqlite{
 			words = VocaRaw2.merge(words) 
 			const neoWord_existedWordMap = new Map<SingleWord2, SingleWord2|undefined>()
 			const neoWordShapes:string[] = words.map(e=>e.wordShape)
-			const existedRows:(IVocaRow)[][] = await VocaSqlite.qryWordByWordShape(db, table, neoWordShapes)
+			const existedRows:(IVocaRow)[][] = await WordDbSrc.qryWordByWordShape(db, table, neoWordShapes)
 			//console.log(`console.log(existedRows)`)
 			//console.log(existedRows)//t
 			if(words.length !== existedRows.length){throw new Error(`words.length !== existedRows.length`)}
@@ -532,8 +526,8 @@ export default class VocaSqlite{
 		}
 		
 	}public addWordsOfSameTable(words:SingleWord2[]){
-		VocaSqlite.checkTable($(this.tableName), words)
-		return VocaSqlite.addWordsOfSameTable_fn(this.db, words)
+		WordDbSrc.checkTable($(this.tableName), words)
+		return WordDbSrc.addWordsOfSameTable_fn(this.db, words)
 	}
 	
 	
@@ -607,7 +601,7 @@ export default class VocaSqlite{
 			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
-					VocaSqlite.attachTableName(r[i], table)
+					WordDbSrc.attachTableName(r[i], table)
 				}
 			}
 			return r
@@ -617,7 +611,7 @@ export default class VocaSqlite{
 			const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
 			const r = await Sqlite.all<IVocaRow>(db, sql, wordShape)
 			//if(r.length === 0 || r === void 0){return undefined}
-			VocaSqlite.attachTableName(r, table)
+			WordDbSrc.attachTableName(r, table)
 			return r
 		}
 	}
@@ -732,7 +726,7 @@ export default class VocaSqlite{
 	public static setWordsByIds_fn(db:Database, table:string, words:SingleWord2[], ids?:number[]){
 		//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
-		VocaSqlite.checkTable(table, words)
+		WordDbSrc.checkTable(table, words)
 		$a(words)
 		if(ids === void 0){
 			ids = []
@@ -744,7 +738,7 @@ export default class VocaSqlite{
 			throw new Error(`words.length !== ids.length`)
 		}
 
-		const sql = VocaSqlite.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
+		const sql = WordDbSrc.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
 		//console.log(`console.log(sql)`)
 		//console.log(sql)//t
 
@@ -754,7 +748,7 @@ export default class VocaSqlite{
 			const runResult:RunResult[] = []
 			for(let i = 0; i < words.length; i++){
 				let w = words[i]; let id = $(ids)[i]
-				let [,v] = VocaSqlite.getUpdateByIdSql(table, w, id)
+				let [,v] = WordDbSrc.getUpdateByIdSql(table, w, id)
 				const r = await Sqlite.stmtRun(stmt, v)
 				runResult.push(r)
 			}
@@ -811,7 +805,7 @@ export default class VocaSqlite{
 	
 	public setWordsByIds(words:SingleWord2[], ids:number[]){
 		const table:string=$(this.tableName)
-		return VocaSqlite.setWordsByIds_fn(this.db, table, words, ids)
+		return WordDbSrc.setWordsByIds_fn(this.db, table, words, ids)
 	}
 
 
@@ -824,7 +818,7 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
-		VocaSqlite.checkTable(table, [word])
+		WordDbSrc.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
@@ -838,7 +832,7 @@ export default class VocaSqlite{
 	 * @returns 
 	 */
 	public static getInsertSql(table: string, word:SingleWord2){
-		VocaSqlite.checkTable(table, [word])
+		WordDbSrc.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
@@ -850,11 +844,11 @@ export default class VocaSqlite{
 	public static async getAllWords(db:Database, table:string){
 		const sql = `SELECT * FROM '${table}'`
 		const r = await Sqlite.all<IVocaRow>(db, sql)
-		VocaSqlite.attachTableName(r, table)
+		WordDbSrc.attachTableName(r, table)
 		return r
 	}public getAllWords(table?:string){
 		const table_=table??this.tableName
-		return VocaSqlite.getAllWords(this.db, $(table_))
+		return WordDbSrc.getAllWords(this.db, $(table_))
 	}
 
 
@@ -928,8 +922,8 @@ export default class VocaSqlite{
 	// }
 
 }
-const C = VocaSqlite
-type C = VocaSqlite
+const C = WordDbSrc
+type C = WordDbSrc
 
 
 // namespace VocaSqliteUtil{
