@@ -26,6 +26,21 @@ let page:Ref<number[]> = multiMode.pageNums
 // 	return wb.fw.times_add >= 3
 // })
 
+// 定義一個函數來處理按下 alt+s 的事件
+function handleAltS(event: KeyboardEvent) {
+	// 檢查按下的按鍵是否是 alt+s
+	if (event.altKey && event.key === 's') {
+		// 在這裡執行你想要執行的功能
+		//console.log('Alt+S pressed!'); // 這裡示範將事件輸出到控制台
+		multiMode.save().then((d)=>{
+			multiMode.restart()
+		})
+	}
+}
+
+// 監聽頁面的鍵盤事件
+document.addEventListener('keydown', handleAltS);
+
 </script>
 
 <template>

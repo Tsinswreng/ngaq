@@ -454,7 +454,8 @@ export default class VocaServer{
 				VocaServer.session = req.session
 				VocaServer.session.userid = req.body.username
 				const token = jwt.sign({ username: req.body.username }, secretKey);
-				res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+				//res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+				res.send(token)
 			}else{
 				res.send('Invalid username or password');
 			}

@@ -246,6 +246,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 笮	tsrˁaks
 
 忽	mʰˁut	# bs
+忽	mʰˁət	0%
+惚	mʰˁət
+笏	mʰˁət
+囫	mʰˁət
+鍃	mʰˁət
+曶	mʰˁət
+
 聞	mun	# bs
 問	muns	# bs
 移	laj
@@ -361,6 +368,51 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 訴	sˁaks
 低	tˁi
+坻	dri
+坻	tˁiʔ
+彽	dri
+蚳	dri
+岻	dri
+岻	tˁi
+泜	dri
+阺	dri
+貾	dri
+胝	tri
+疷	tri
+秪	tri
+氐	tri
+
+柢	tˁis
+𦨢	tˁis
+骶	tˁis
+䟡	tˁis
+𤬵	tˁis
+趆	tˁis
+䩚	tˁis
+
+邸	tˁiʔ
+底	tˁiʔ
+詆	tˁiʔ
+坻	tˁiʔ
+抵	tˁiʔ
+牴	tˁiʔ
+觝	tˁiʔ
+柢	tˁiʔ
+弤	tˁiʔ
+㪆	tˁiʔ
+軧	tˁiʔ
+
+遟	lrəj
+遟	lrəjs
+墀	lrəj
+謘	lrəj
+謘	lrəjs
+𡎰	lrəj
+
+致	driks
+
+蔓	mˁans	# ts 與萬ᵗ反查碼ˋ別
+墀	lrəj
 信	nʰiŋs
 限	ɡrˁənʔ
 艱	krˁən
@@ -368,6 +420,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 地	lˁajs
 結	kˁit
 髻	kˁits
+趌	ɡrit
+趌	kʰit
+趌	kit
 
 合	ɡˁop	# bs
 
@@ -485,7 +540,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 汽	kʰəjs	# ts
 
 池	lraj
-
+馳	lraj	0%
 雇	kʷˁas
 僱	kʷˁas
 
@@ -649,7 +704,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 忕	lʰˁats
 #泰	tʰˁats
 
-朝	traw	# 舍他音
+朝	traw
+朝	draw
+𦩻	traw
+𦩻	draw
+潮	straw	# ts
+潮	draw	0%
+
+晁	lraw
+
+
 品	pʰrumʔ
 品	pʰrəmʔ
 臨	rum	# bs
@@ -737,6 +801,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 老	rˁuwʔ
 佬	rˁuʔ
 銠	rˁuʔ
+荖	rˁuʔ
+栳	rˁuʔ
+恅	rˁuʔ
 
 
 丞	dəŋs	# 舍他音、與「承」辨
@@ -820,6 +887,17 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 求	ɡuw
 球	ɡru
+逵	ɡʷru	# bs
+艽	ɡʷru
+馗	ɡʷru
+馗	ɡu
+頄	ɡʷru
+頄	ɡu
+
+矜	kriŋ
+
+戣	ɡʷri
+鍨	ɡʷri
 仇	ɡu
 
 歡	hʷˁal
@@ -952,6 +1030,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 芥	krˁets
 蚧	krˁets
 疥	krˁets
+玠	krˁets
+魪	krˁets
+砎	krˁets
+砎	krˁet
 
 誡	krˁəks
 悈	krˁəks
@@ -985,11 +1067,24 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 圖	dˁa
 
-
-
+除	lra
+滁	lra
+蒢	lra
+篨	lra
+㾻	lra
+㾻	lras
+涂	lˁa	# 水名
+塗	stˁa	# 動詞
+塗	lˁa	0%
 途	lˁa
 
-塗	stˁa
+櫥	dro
+
+潺	dzran
+孱	dzran
+𨬖	dzran
+
+
 
 茶	lrˁa
 坐	dzˁojʔ
@@ -1059,7 +1154,21 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 越	wˁat
 
 乖	kʷrˁəj
-冶	lA	# ts
+冶	lAʔ
+
+斜	slA	# 舍他音
+邪	slA	0% # 舍他音
+邪	ŋA
+爺	lA	0%
+爺	bA	# ts
+耶	lA
+
+
+舉	kaʔ	0%
+舉	kˡaʔ
+櫸	kaʔ	0%
+櫸	kˡaʔ
+
 
 孚	pʰu
 俘	pʰu
@@ -1084,7 +1193,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 捲	kronʔ
 權	ɡʷral
-科	kʰˁoj
+科	kʰˁoj	0%
 科	kʰjˁoj	# ts
 課	kʰˁojs
 在	dzˁəʔ
@@ -1353,6 +1462,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 穹	kʰʷəŋ
 芎	kʰʷəŋ
 匑	kʰʷəŋ
+焪	kʰʷəŋ
+焪	kʰʷəŋs
+䠻	kʰʷəŋs
+䛪	kʰʷəŋs
+
 
 
 #躬	kʷəŋ	躳 又從弓
@@ -1452,6 +1566,20 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 譚	lˁəm
 覃	lˁom	# bs
 階	krˁi
+喈	krˁi
+堦	krˁi
+鍇	krˁi
+鍇	kʰrˁiʔ
+湝	krˁi
+稭	krˁi
+蝔	ɡrˁi
+蝔	krˁi
+鶛	krˁi
+湝	ɡrˁi
+荄	kˁə
+荄	krˁə
+痎	krˁə
+
 楷	kʰrˁi
 
 造	dzˁuʔ
@@ -2002,7 +2130,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 舔	lʰˁimʔ
 忝	lʰˁimʔ
 抱	bˁuʔ
-除	lra
+
 湍	tʰˁol
 端	tˁol
 踹	dolʔ
@@ -2073,7 +2201,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 銀	ŋrən
 畫	wrˁeks
 覽	rˁamʔ
-攬	rˁamʔ
+攬	rˁamʔ	0%
 攬	nʰrˁamʔ	# ts
 薦	tsˁəls
 韉	tsˁəl
@@ -2159,6 +2287,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 啐	tsʰˁuts
 焠	tsʰˁuts
 粹	suts
+祟	suts
+邃	suts
+賥	suts
+譢	suts
+誶	suts
+誶	sˁuts
+誶	dzuts
+睟	suts
 
 悴	dzuts
 萃	dzuts
@@ -2248,6 +2384,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 貶	pramʔ
 貴	kujs
 抛	pʰrˁew
+拋	pʰrˁew
 泡	pʰrˁu
 胞	prˁu
 飽	prˁuʔ
@@ -2255,6 +2392,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 鼻	bits
 就	dzuks	# bs
 戰	tals
+
+申	lʰin	0%
+申	lʰiŋ
+
+伸	lʰin	0%
+伸	lʰiŋs
+
+份	prən	0%
+份	prəns	# ts
+
 
 桀	krat
 傑	ɡrat
@@ -2284,6 +2431,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 淑	diwk
 叔	stiwk
 寂	dzˁiwk
+俶	tʰiwk
+埱	tʰiwk
+琡	tʰiwk
+𣥹	tʰiwk
+
 慼	tsʰˁiwk
 戚	tsʰˁiwk
 鏚	tsʰˁiwk
@@ -2351,9 +2503,26 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 炰	brˁu
 鮑	brˁu
 孢	brˁu
+齙	brˁu
+颮	brˁu
+脬	pʰrˁu
+麭	pʰrˁus
+礮	pʰrˁus
+奅	pʰrˁus
+窌	pʰrˁus
+窌	rus
+#窌	rˁu
+颮	pʰrˁuk
+
 骲	brˁus
 骲	brˁuʔ
 骲	brˁuk
+
+軳	bˁu
+袌	bˁus
+勽	bˁus
+𡂟	bˁuʔ
+
 
 
 鞄	brˁu
@@ -2439,6 +2608,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 武	mraʔ
 哧	kʰˡak
 
+
+辟	bek
+辟	pek
+辟	pʰek
+辟	pʰejs	# ts
+
 避	beks
 避	lʰejs	# ts
 
@@ -2484,6 +2659,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 年	nˁiŋ
 秊	nˁiŋ
 佞	nˁiŋs
+千	tsʰˁiŋ
+千	tsʰˁin	0%
 
 #千	tsʰˁiŋ
 #千	tsʰˁin
@@ -2811,12 +2988,20 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 芍	dewk
 杓	dewk
 
+撈	rˁaw	0%
+撈	rˁawʔ	# ts
+勞	rˁaw	# 舍他音
+澇	rˁaws	# 舍他音
+
+
 #托
 #託
 乇	trˁak
 嫡	tˁek	# 舍他音
 #誦		*sə-[l]oŋ-s
-訟	soŋs	#*s.[ɢ]oŋ-s
+#訟	soŋs	#*s.[ɢ]oŋ-s
+誦	lʰoŋs	# ts
+
 
 #虧	kʷʰaj
 
@@ -2878,7 +3063,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 槔	kˁu
 餻	kˁu
 
+衅	mʰrəns	# 棄用
+衅	mʰrəns
+舋	mʰrəns
+釁	mʰrəns
 
+衅	mʰrəls
+衅	mʰrəls
+舋	mʰrəls
+釁	mʰrəls
 
 
 典	tˁəlʔ
@@ -2889,6 +3082,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 憲	hals	# bs
 瀗	hals
 𧾨	hals
+鬳	ŋals
+𤬝	ŋals
+獻	ŋʰals
 欣	həl
 炘	həls
 炸	trˁaks
@@ -3003,10 +3199,23 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 懲	drəŋ
 
 藤	tsʰˁəŋ	# ts
-藤	lˁəŋ
 騰	lˁəŋ
-誊	lˁəŋ
 滕	lˁəŋ
+縢	lˁəŋ
+幐	lˁəŋ
+螣	lˁəŋ
+藤	lˁəŋ
+謄	lˁəŋ
+𧈜	lˁəŋ
+儯	lˁəŋ
+𤻴	lˁəŋ
+鰧	lˁəŋ
+𥉋	lˁəŋ
+# 藤	lˁəŋ
+# 騰	lˁəŋ
+# 誊	lˁəŋ
+# 滕	lˁəŋ
+
 漏	rˁoks	# bs
 說	lʰot	# 舍他音
 兌	lˁots
@@ -3418,6 +3627,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 續	sloks	# ts
 
+拌	pʰˁan
+拌	bˁanʔ	0%
+
+
+
 祁	gri
 祁	kiʔ
 恉	kiʔ
@@ -3462,7 +3676,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 供	koŋ	0%
 恭	koŋ	100%
+龚	koŋ	0%
 供	koŋs
+共	ɡoŋs	# 舍他音
+
 
 沸	pəts
 疿	pəts
@@ -3611,6 +3828,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 載	sˁəʔ	# ts
 
 宰	tsˁəʔ
+
+褥	nˁok	# 舍 ˁuk
+褥	nok
+傉	nˁok
+耨	nˁok
+搙	nˁok
+搙	nrˁok
 
 災	tsˁə
 灾	tsˁə
@@ -3781,6 +4005,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #<改r>
 表	pawʔ
 錶	prawʔ
+裱	paws
+
+
 #</改r>
 
 #@
@@ -3995,6 +4222,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 型	kʰˁeŋ	# ts
 形	kʰʷˁeŋ	# ts
+形	ɡeŋ	# ts
+頸	keŋʔ	# 舍他音
 德	tʰˁək	# ts
 #伸	lʰinʔ	# ts
 
@@ -4515,6 +4744,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 誨	言每
 霉	mˁə	# ts
 誨	mʰˁəs
+晦	mʰˁəs	0%	# ts
 晦	mʰˁəks	# bs
 侮	moʔ
 
@@ -4560,11 +4790,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #摹	手莫
 摹	mˁas
 摹	nʰˁawk	# ts
-摹	nʰˁAk	# ts
+摹	nʰˁAks	# ts
 #慕	心莫
 慕	mˁas
 慕	sˁawk	# ts
-慕	sˁAk	# ts
+慕	sˁAks	# ts
+
 #墓	土莫
 墓	mˁas
 墓	tʰˁawks	# ts
@@ -4576,6 +4807,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 幕	mˁaks
 募	rˁAks	# ts
+
+暮	mˁas
+暮	nˁAks
+
 #膜	肉莫
 膜	mˁak
 膜	ŋʷˁawk	# ts
@@ -4734,6 +4969,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 # 楷	木皆
 楷	kʰrˁiʔ
+
 
 # #丁	@丁
 # 汀	水丁
@@ -5478,8 +5714,17 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 徨	wˁaŋ
 篁	wˁaŋ
 隍	wˁaŋ
-
-
+湟	wˁaŋ
+偟	wˁaŋ
+媓	wˁaŋ
+鰉	wˁaŋ
+崲	wˁaŋ
+艎	wˁaŋ
+韹	wˁaŋ
+堭	wˁaŋ
+騜	wˁaŋ
+葟	wˁaŋ
+擴	ɡʷˁaŋs
 # #岡	@岡
 # 剛	刀岡
 # 崗	山岡
