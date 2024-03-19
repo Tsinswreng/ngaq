@@ -10,7 +10,7 @@ src/backend/**/*.js
 src/shared/**/*.js
 src/**/*.js
 out/
-src/backend/study/*
+src/backend/_study/*
 src/**/*.d.ts
 lib/*
 build/*

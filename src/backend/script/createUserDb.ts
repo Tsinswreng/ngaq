@@ -13,7 +13,7 @@ async function main(){
 		,_mode: Sqlite.openMode.DEFAULT_CREATE
 	})
 
-	await manager.createTable(config.server.userTableName, true)
+	await manager.createTable(config.server.userTableName, {ifNotExists:true})
 	console.log('done')
 }
 main()

@@ -91,6 +91,9 @@ interface ISros<ParamType, ReturnType extends number | BN> {
  * 工廠類
  */
 export class Sros{
+
+	static lib = mathjs
+
 	private constructor(){}
 	static new():Sros_number
 	static new(config:mathjs.ConfigOptions):Sros_big

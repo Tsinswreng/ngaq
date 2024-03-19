@@ -12,6 +12,8 @@ import util from 'util'
 import * as ts from 'typescript'
 import json5 from 'json5'
 
+import * as algo from '@shared/algo' //待分离
+
 export function addFn(obj:Object, name:string, Fn:Function){
 	if(obj[name]===void 0){
 		obj[name]=Fn
@@ -173,27 +175,6 @@ export async function traverseDirs(directoryPath: string[]) {
 }
 
 
-// export function safeIntStr(numStr:string, errMsg?){
-// 	let num = parseFloat(numStr)
-// 	if(num+'' !== numStr){
-// 		throw new Error(errMsg)
-// 	}
-// 	return safeInt(num)
-// }
-
-// export function safeInt(n:number, errMsg?){
-// 	if(!Number.isInteger(n)){
-// 		throw new Error(errMsg)
-// 	}
-// 	if(n>Number.MAX_SAFE_INTEGER ){
-// 		throw new Error(errMsg)
-// 	}
-// 	if(n<Number.MIN_SAFE_INTEGER){
-// 		throw new Error(errMsg)
-// 	}
-// 	return $n(n);
-// }
-
 /**
  * 延時。手動用promise封裝setTimeout
  * @param mills 
@@ -292,99 +273,10 @@ export function lodashMerge<T>(object: any, ...otherArgs: any[]){
 
 export const merge = _.merge
 
-// 就地打亂
-// export function shuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
-// 	// 對arr按每組groupMemberAmount個元素分組 完整ᵗ組ᵗ量(整數除法的商)
-// 	const fullGroupAmount = Math.floor(arr.length/groupMemberAmount)
-// 	const groupAmount = fullGroupAmount + 1
-// 	// 剩嘰多元素不足一完整ᵗ組 (arr元素總個數 對 每組元素個數 取模)
-// 	const remainder = Math.floor(arr.length % groupMemberAmount)
-// 	//每組最多能得幾個亂序元素
-// 	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groupMemberAmount)
-
-// 	//const randomIndexs = randomIntArr(0, arr.length, totalDisorderAmount, false)
-// 	const randomIndexs:number[] = []
-// 	const remainRandom = totalDisorderAmount - fullGroupAmount * disorderAmountForEachGroup
-// 	for(let i = 0; i < fullGroupAmount; i++){
-// 		const curGroupStart = i * groupMemberAmount
-// 		const curGroupEnd = curGroupStart + groupMemberAmount - 1
-// 		const randomIndex = randomIntArr(curGroupStart, curGroupEnd, disorderAmountForEachGroup, false)
-// 		randomIndexs.push(...randomIndex)
-// 	}
-
-// 	for(let i = 0; i < fullGroupAmount; i++){
-// 		for(let j = 0; j < disorderAmountForEachGroup; j++){
-// 			const oldPos = (i+1) * groupMemberAmount - j
-// 			const neoPos = randomIndexs[i]
-// 			swapArrEle(arr, oldPos, neoPos)
-// 		}
-// 	}
-// 	if(remainder === 0){return}
-// 	for(let i = 0; i < remainder; i++){
-// 		swapArrEle(arr, arr.length-1-i, randomIndexs[randomIndexs.length-1-i])
-// 	}
-// }
 
 
-/**
- * 取打亂後ᵗ數組
- * 整體ᵗ思想: 從整ᵗ數組中隨機取 @see totalDisorderAmount 個元素。把數組按 @see groupMemberAmount-1 個一組 分成若干組(末ʸ不足者自成一組)、再把前ʸ隨機取出ᵗ元素均ᵈ分予各組、插入到各組ᵗ末。若分配後猶有餘則皆予末組。
- * @param arr 
- * @param groupMemberAmount 每組幾個元素
- * @param totalDisorderAmount 總ᵗ亂序ᵗ元素ᵗ數
- * @instance
- * let arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
- * let s = getShuffle(arr, 5, 4)
- * [
-  0,  2,  3,  4, 15,  5,  6,
-  8,  9, 17, 10, 11, 12, 13,
-  1, 14, 16, 18, 19,  7, 20
-]  //
- * @returns 
- */
-export function getShuffle<T>(arr:T[], groupMemberAmount:number, totalDisorderAmount:number){
-	//$a(arr, '不能打亂空數組')
-	if(arr.length === 0){
-		return arr
-	}
-	const copy:(T|null)[] = arr.slice()
-	const maxIndex = arr.length -1
-	//
-	const randomIndexs = randomIntArr(0, maxIndex, totalDisorderAmount, false)
-
-	//在copy中把曩ʸ取出ᵗ元素ᵗ處ʸ設null
-	for(let i = 0; i < randomIndexs.length; i++){
-		copy[randomIndexs[i]] = null
-	}
-	const copyWithoutNull:T[] = []
-	for(const c of copy){
-		if(c!==null){
-			copyWithoutNull.push(c)
-		}
-	}
-	//對copyWithoutNull分組、每組groupMemberAmount-1個元素。末ʸ不足者自成一組。
-	const groups = group(copyWithoutNull, groupMemberAmount-1)
-	//每組最多能得幾個亂序元素
-	const disorderAmountForEachGroup = Math.ceil(totalDisorderAmount/groups.length)
-	let k = 0
-	//遍歷groups、disorderAmountForEachGroup個ᵗ曩取出ᵗ亂序元素ˇ添ᵣ每組之末ʸ
-	for(let i = 0; i < groups.length; i++){
-		for(let j = 0; j < disorderAmountForEachGroup; j++){
-			if(randomIndexs[k]===void 0){break}
-			groups[i].push(arr[randomIndexs[k]])
-			k++
-		}
-	}
-	//曩取出ᵗ亂序元素芝未盡分配者ˇ全ᵈ予末ᵗ組
-	for(;randomIndexs[k]!==void 0;k++){
-		groups[groups.length-1].push(arr[randomIndexs[k]])
-	}
-	const result:T[] = []
-	for(const g of groups){
-		result.push(...g)
-	}
-	return result
-}
+const getShuffle = algo.getShuffle
+export {getShuffle}
 
 /**
  * 按索引交換數組兩元素
@@ -396,159 +288,14 @@ export function swapArrEle<T>(arr:T[], index1:number, index2:number){
 	[arr[index1], arr[index2]] = [arr[index2], arr[index1]]; //解构赋值
 }
 
-/**
- * 數組分組
- * @param arr 
- * @param memberAmount 足夠分旹每組元素ᵗ數。不足旹餘者作一組。
- * @returns 
- * @instance
- * 
- * 	let arr = [0,1,2,3,4,5,6,7,8,9,10]
- * 	let g = group(arr, 5)
- * [ [ 0, 1, 2, 3, 4 ], [ 5, 6, 7, 8, 9 ], [ 10 ] ]
- * 
- */
-export function group<T>(arr:T[], memberAmount:number){
-	const result:T[][] = []
-	let unusGroup:T[] = []
-	for(let i=0; ; i++){
-		unusGroup.push(arr[i])
-		if(unusGroup.length===memberAmount){
-			result.push(unusGroup)
-			unusGroup = []
-		}
-		if(i===arr.length-1){
-			if(unusGroup.length!==0){
-				result.push(unusGroup)
-			}
-			break
-		}
-	}
-	return result
-}
+const group = algo.group
+export{group}
+
+const randomIntArr = algo.randomIntArr
+export{randomIntArr}
 
 
 
-export function randomIntArr(min:number, max:number, howMany:number, allowDuplicate=true){
-	if(allowDuplicate===false){
-		return non_duplicateInt(min, max, howMany)
-	}else{
-		return duplicateInt(min, max, howMany)
-	}
-	function duplicateInt(min:number, max:number, howMany:number){
-		const result:number[] = []
-		for(let i = 0; i < howMany; i++){
-			let unusRandom = Number(max-min)* Math.random()+Number(min)
-			result.push(Math.floor(unusRandom))
-		}
-		return result
-	}
-	/**
-	 * GPT寫的
-	 */
-	function non_duplicateInt(min: number, max: number, howMany: number) {
-		if (max - min + 1 < howMany) {
-			throw new Error(`max - min + 1 < howMany`);
-		}
-		//创建一个包含从 min 到 max 的所有整数的数组。
-		const integerArray = Array.from({ length: max - min + 1 }, (_, index) => index + min);
-		for (let i = integerArray.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[integerArray[i], integerArray[j]] = [integerArray[j], integerArray[i]];
-		}
-		return integerArray.slice(0, howMany);
-	}
-}
-
-/**
- * 生成隨機數數組 不支持bigint
- * @param min 含
- * @param max 含
- * @param howMany 
- * @param type 'int'|'float'
- * @param allowDuplicate 
- * @returns 
- */
-export function deprecated_simpleRandomArr(min:number, max:number, howMany:number, type:'int'|'float', allowDuplicate=true){
-	
-	if(type === 'int'){
-		if(allowDuplicate===true){
-			return duplicateInt(min, max, howMany)
-		}else{
-			return non_duplicateInt(min, max, howMany)
-		}
-	}else if(type === 'float'){
-		if(allowDuplicate===true){
-			return duplicateFloat(min, max, howMany)
-		}else{
-			return non_duplicateFloat(min, max, howMany)
-		}
-	}else{
-		throw new Error()
-	}
-	function duplicateFloat(min:number, max:number, howMany:number){
-		const result:number[] = []
-		for(let i = 0; i < howMany; i++){
-			let unusRandom = Number(max-min)* Math.random()+Number(min)
-			result.push(unusRandom)
-		}
-		return result
-	}
-
-	function duplicateInt(min:number, max:number, howMany:number){
-		const result:number[] = []
-		for(let i = 0; i < howMany; i++){
-			let unusRandom = Number(max-min)* Math.random()+Number(min)
-			result.push(Math.floor(unusRandom))
-		}
-		return result
-	}
-
-	function non_duplicateFloat(min:number, max:number, howMany:number){
-		const result = new Set<number>()
-		for(let i = 0; ; i++){
-			let unusRandom = Number(max-min)* Math.random()+Number(min)
-			if(result.has(unusRandom)){
-
-			}else{
-				result.add(unusRandom)
-			}
-			if(result.size===howMany){break}
-			
-		}
-		return [...result]
-	}
-
-	function non_duplicateInt(min:number, max:number, howMany:number){
-		if(max - min + 1 < howMany){throw new Error(`max - min + 1 < howMany`)}
-		const result = new Set<number>()
-		for(let i = 0; ; i++){
-			let unusRandom = Number(max-min)* Math.random()+Number(min)
-			unusRandom = Math.floor(unusRandom)
-			if(result.has(unusRandom)){
-
-			}else{
-				result.add(unusRandom)
-			}
-			if(result.size===howMany){break}
-			
-		}
-		return [...result]
-	}
-}
-
-/**
- * 生成隨機數 數組
- * @param min 最小值(含)
- * @param max 最大值(含)
- * @param howMany 數量
- * @param type 填'int'或'float'或'bigint'
- * @param allowDuplicate 是否允許重複 默認true
- * @return number[]
- */
-// export function randomArr(min:number|bigint, max:number|bigint, howMany:number|bigint, type:'int'|'float'|'bigint', allowDuplicate=true){
-//TODO
-// }
 
 export function createReadLineInterface(){
 	const rl = readline.createInterface({
@@ -603,30 +350,6 @@ export function copyIgnoringKeys(obj:Object, ignoredKeys?:string[]){
 }
 
 
-
-// export function add(a:number, b:number){
-// 	return a+b
-// }
-
-// export function sub(a:number, b:number){
-// 	return a-b
-// }
-
-// export function mul(a:number, b:number){
-// 	return a*b
-// }
-
-// export function div(a:number, b:number){
-// 	return a / b
-// }
-
-// export function eq(a:number, b:number){
-// 	return a === b
-// }
-
-// export function bigger(a:number, b:number){
-
-// }
 export function lastOf<T>(arr:T[]):T
 export function lastOf<T>(arr:string):string
 
@@ -646,10 +369,6 @@ export function lastOf<T>(arr:T[]|string):T|string{
  * @returns 
  */
 export function $n(v:number, errMsg?:string){
-	//if(isNaN(v)){throw toThrow}
-	//if(!isFinite(v)){throw toThrow}
-	// if(typeof v !== 'number'){throw new Error(errMsg)}
-	// // if(isNaN(v)){throw new Error(errMsg)}
 	if(!isFinite(v)){throw new Error(errMsg)}
 	return v
 }
@@ -690,15 +409,6 @@ export function nug<T, U=undefined>(v: T | undefined, errMsg?:string):Exclude<T,
 }
 
 
-// export function nug<T>(v: T | undefined, fn:undefined|((v:T|undefined)=>void), errMsg?:string): Exclude<T, undefined> {
-// 	if(fn === undefined){
-// 		fn = (v)=>{throw new Error(errMsg)}
-// 	}
-// 	if (v === undefined) {
-// 		fn(v)
-// 	}
-// 	return v as Exclude<T, undefined>;
-// }
 
 /**
  * 判空後返回
@@ -717,31 +427,14 @@ export function $<T>(v:T, err:string|Error=''): NonNullable<T>{
 	return v as NonNullable<T>
 }
 
-// export function $<T>(v:T, err?:string|Error): NonNullable<T>{
-// 	if(v == null){
-// 		if(typeof err === 'string'){
-// 			throw new Error(err)
-// 		}else{
-// 			throw err
-// 		}
-// 	}
-// 	return v as NonNullable<T>
+
+// export function deduplicate<T>(arr:T[],criteria:(...param:any[])=>any){
+
 // }
 
-// export function nng<T>(v:T, errMsg?:string, Err=Error): NonNullable<T>{
-// 	if(v == null){
-// 		throw Err(errMsg)
-// 	}
-// 	return v as NonNullable<T>
+// export function union<T>(s1:T[], s2:T[], criteria:(...param:any[])=>any){
+// 	const b = criteria()
 // }
-
-export function deduplicate<T>(arr:T[],criteria:(...param:any[])=>any){
-
-}
-
-export function union<T>(s1:T[], s2:T[], criteria:(...param:any[])=>any){
-	const b = criteria()
-}
 
 /**
  * 集合取並集
@@ -842,13 +535,6 @@ export async function measurePromiseTime<T=any>(promise:Promise<T>):Promise<[num
 	return [executionTime, result]
 }
 
-export function deprecated_measureTime(fn:()=>void){
-	const startTime = now();
-	fn();
-	const endTime = now();
-	const executionTime = endTime - startTime;
-	return executionTime;
-}
 
 /**
  * map轉對象數組
@@ -982,16 +668,7 @@ export function mapFields<T, K extends keyof T, V extends keyof T>(objArr: T[], 
 	}
 
 
-export function deprecated_sortMapIntoObj<K>(map:Map<K,number>, desc=true){
-	let obj = mapToObjArr(map)
-	if(desc){
-		obj = obj.sort((a,b)=>{return b.v - (a.v)})
-	}
-	else{
-		obj = obj.sort((a,b)=>{return a.v - (b.v)})
-	}
-	return obj
-}
+
 
 export function spliceStr(str: string, start: number, deleteCount: number, replacement: string = ''): string {
 	return str.slice(0, start) + replacement + str.slice(start + deleteCount);
@@ -1137,10 +814,6 @@ export function objArrToStrArr<T>(objArr:T[]){
 
 
 
-
-
-
-
 /**
  * [2023-09-09T15:34:49.000+08:00,]<>{欲重構、把各函數各自導出。}
  */
@@ -1149,188 +822,6 @@ export default class Ut {
 	private constructor(){}
 
 	public static readonly L_ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
-
-/**
- * [23.07.09-2134,]
- * [23.07.31-0928]{建議用getNonDef來代替此函數}
- * 訪問數組元素、越界則拋錯誤。支持任意維數組。如需訪問arr[3][2]則arrAt(arr, 3, 2)
- * @param arr 
- * @param indexPath 
- * @returns 
- */
-	/* public static arrAt<T>(arr: T[], ...indexPath: number[]): T {
-		function traverseArray(currentArray: any[], currentIndexPath: number[]): any {
-			if (currentIndexPath.length === 0) {
-				return currentArray;
-			}
-	
-			const currentIndex = currentIndexPath[0];
-			if (currentIndex < 0 || currentIndex >= currentArray.length) {
-				let msg = `Index ${currentIndex} out of bounds`
-				throw new Error(msg);
-			}
-
-			const nextArray = currentArray[currentIndex];
-			//const nextIndexPath = currentIndexPath.slice(1);
-			currentIndexPath.shift();
-			const nextIndexPath = currentIndexPath
-			return traverseArray(nextArray, nextIndexPath);
-		}
-
-		return traverseArray(arr, indexPath);
-	} */
-
-	
-
-	/* public static arrAt<T extends any[]>(arr: T, ...indexPath: number[]): ArrayElementType<T> {
-		function traverseArray(currentArray: any[], currentIndexPath: number[]): any {
-			if (currentIndexPath.length === 0) {
-				return currentArray as ArrayElementType<T>;
-			}
-
-			const currentIndex = currentIndexPath[0];
-			if (currentIndex < 0 || currentIndex >= currentArray.length) {
-				let msg = `Index ${currentIndex} out of bounds`
-				throw new Error(msg);
-			}
-
-			const nextArray = currentArray[currentIndex];
-			//const nextIndexPath = currentIndexPath.slice(1);
-			currentIndexPath.shift();
-			const nextIndexPath = currentIndexPath
-			return traverseArray(nextArray, nextIndexPath);
-		}
-
-		return traverseArray(arr, indexPath);
-	} */
-
-
-
-	public static nonFalseGet<T>(v:T){
-
-		if(!v){throw new Error(v+'')}
-		return v
-	}
-
-
-/* 	public static nonNullableGetArr<T>(v:T): NonNullable<T>{
-		if(v === undefined){
-			throw new Error(v+' '+undefined)
-		}
-		if(v === null){
-			throw new Error(v+' '+null)
-		}
-		return v
-	} */
-
-	//[23.08.01-2101,]<>{nonUndefGet做不出}
-
-
-	public static 有重複排列<T>(seto:T[]|Set<T>, n:number){
-
-
-		//給用來表示位值的數組做加法、等于或超過carryBit時則向高位進位。如[1,8] 加上 9 、當carryBit爲10時則進位(即滿十進一)、結果得[2,7]
-		function plus(arr:number[], plusNum:number, carryBit:number){
-			let result = arr.slice()
-			let lastEle = result[result.length-1]
-			//let carryOver = 0
-			for(let i = result.length-1; i>=0; i--){
-				result[i] += plusNum
-				plusNum = 0
-				if(result[i]>=carryBit && i !== 0){
-					plusNum = parseInt((result[i] / carryBit)+'')
-					result[i] -= carryBit
-				}else{
-					break
-				}
-			}
-			return result
-		}
-
-		//若 傳入的 seto是包含所有26個小寫字母的集合、n是3、要列舉 由任意三個可重複的字母組成的字符串 的所有可能
-		let setus:Set<T>
-		if(seto instanceof Set){
-			setus = seto
-		}
-		else{
-			setus = new Set<T>([...seto])
-		}
-		let setArr:T[] = [...setus] //處理傳入的參數、統一化作無重複的數組
-		let outIndexes:number[][] = [] //用索引表示原集合中元素的位置
-		let innerIndexes:number[] = new Array(n).fill(0)
-		outIndexes.push(innerIndexes)
-		for(let i = 0;; i++){
-			innerIndexes = plus(innerIndexes, 1, setArr.length) //窮舉 [0,0,0],[0,0,1]...直到[25,25,25] (n爲26時最大索引是25)
-			if(innerIndexes[0]>=setArr.length){break} // arr.length是26、當上一個元素是[25,25,25]、再加一得[26,0,0]時已逾界、停止循環
-			outIndexes.push(innerIndexes)
-		}
-		//根據outIndexe取結果
-		let result:T[][] = []
-		for(let i = 0; i < outIndexes.length; i++){
-			result.push(Ut.getNewArrByIndexes(setArr, outIndexes[i], true))//t
-		}
-		return result
-	}
-
-	public static getNewArrByIndexes<T>(arr:T[], indexes:number[], checkBound:boolean=false){
-		let result:T[] = []
-		if(checkBound){
-			for(let i = 0; i < indexes.length; i++){
-				result.push($(arr[indexes[i]]))
-			}
-		}else{
-			for(let i = 0; i < indexes.length; i++){
-				result.push(arr[indexes[i]])
-			}
-		}
-
-		return result
-	}
-
-	
-
-	
-
-
-
-
-
-
-	// public static mapArrToIndexes<T,K,V>(objArr:T[], fieldAsK:keyof T, fieldAsV:keyof T){
-	// 	let result = new Map<any, any[]>()
-	// 	for(let i = 0; i < objArr.length; i++){
-	// 		let v = result.get(objArr[i][fieldAsK])
-	// 		//typeof(objArr[i][fieldAsK])
-	// 		//console.log(typeof v)
-	// 		//console.log(v)
-			
-	// 		if(v){
-	// 			v.push(objArr[i][fieldAsV])
-	// 			result.set(objArr[i][fieldAsK], v)
-	// 		}else{
-	// 			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]])
-	// 		}
-	// 	}
-	// 	return result as Map<K,V[]>
-	// }
-
-	// public static mapArrToIndexes<T extends Partial<Record<K, any>> & Record<V, any>, K extends keyof T, V extends keyof T>(objArr: T[], fieldAsK: K, fieldAsV: V): Map<T[K], T[V][]>{
-	// 	let result = new Map<T[K], T[V][]>();
-	  
-	// 	for (let i = 0; i < objArr.length; i++) {
-	// 		let v = result.get(objArr[i][fieldAsK]);
-		
-	// 		if (v) {
-	// 			v.push(objArr[i][fieldAsV]);
-	// 			result.set(objArr[i][fieldAsK], v);
-	// 		} else {
-	// 			result.set(objArr[i][fieldAsK], [objArr[i][fieldAsV]]);
-	// 		}
-	// 	}
-	  
-	// 	return result;
-	// }
-
 
 
 	public static isLikeMatrix(arr: any[][]): boolean {
@@ -1348,99 +839,6 @@ export default class Ut {
 	  
 		return true; // 是矩阵
 	  }
-
-	
-
-
-
-
-	/**
-	 * 用一連串正則表達式給字符串作替換
-	 * @param str 
-	 * @param regexArr -正則表達式數組。循環中每次替換時會把regexArr[i][0]匹配到的內容替換成regexArr[i][1]
-	 * @returns 
-	 */
-	//public static replace(str:string, regexArr: string[][]):string{
-
-		// let result:string = str + '' //複製字符串
-		// for(let i = 0; i < regexArr.length; i++){
-		// 	if(typeof(regexArr[i][0]) !== 'string'){
-		// 		throw new Error(`regexArr[i][0]) !== 'string'`)
-		// 	}
-		// 	if(typeof(regexArr[i][1]) !== 'string'){
-		// 		regexArr[i][1] = ''
-		// 	}
-
-		// 	let left = new RegExp(regexArr[i][0], 'gm')
-		// 	let right:string = SerialRegExp.getUnescapeStr(regexArr[i][1])
-		// 	result = result.replace(left, right)
-		// 	//result = result.replace(/./g, '$0$0')
-		// 	//result = XRegExp.replace(result, left, regexArr[i][1])
-		// 	//result = XRegExp.replace(result, /(.)/g, '\\U$1')
-		// 	//console.log(right)
-		// }
-		// return result
-	//}
-
-	/**
-	 * 
-	 * @param mainString 
-	 * @param replacement 
-	 * @param start 
-	 * @param end [start, end)
-	 * @returns 
-	 */
-	// public static replaceInRange(mainString: string, replacement: string, start: number, end=replacement.length): string {
-	// 	return mainString.substring(0, start) + replacement + mainString.substring(end);
-	// }
-
-	
-	// public static replaceFirstSubstring(full:string, str1:string, str2:string){
-	// 	let start = full.indexOf(str1)
-	// 	if(start === -1){Promise.reject(str1+' non est substring de '+full)}
-	// 	let end = start+str1.length
-	// 	return this.replaceInRange(full, str2, start, end)
-	// }
-	/* public static replace(srcStr:string, left:string[], right:string[]):string{
-		if(left.length !== right.length){
-			throw new Error('left.length !== right.length');
-		}
-		let newStr = srcStr + ''
-		for(let i = 0; i < left.length; i++){
-			let regex = new RegExp(left[i])
-			newStr = srcStr.replace(regex, right[i])
-		}
-		return newStr
-	} */
-	
-	/**
-	 * 
-	 * @param oldStr 
-	 * @param replacement 
-	 * @param start 在oldStr上的起始索引
-	 * @param replaceLength oldStr要被替換掉的長度
-	 */
-	// public static replace(oldStr:string, replacement:string, start:number, replaceLength=0):string{
-	// 	if (start < 0 || start >= oldStr.length) {
-	// 		// 如果起始索引超出原字符串范围，则直接返回原字符串
-	// 		return oldStr;
-	// 	  }
-		
-	// 	  // 截取原字符串中需要保留的部分
-	// 	  const preservedPart = oldStr.substring(0, start);
-	// 	  const end = start + replaceLength;
-	// 	  const endPart = oldStr.substring(end);
-		
-	// 	  // 拼接替换后的新字符串
-	// 	  const newStr = preservedPart + replacement + endPart;
-		
-	// 	  return newStr;
-	// }
-
-
-
-
-
 
 	/**
 	 * AI寫的創建多維數組並填充(試驗)
@@ -1477,65 +875,8 @@ export default class Ut {
 	
 
 
-	
-
-	public static permute<T>(elements: T[], m: number): T[][] {
-		const result: T[][] = [];
-	  
-		function backtrack(tempArr: any[]) {
-			if (tempArr.length === m) {
-				result.push([...tempArr]);
-				return;
-			}
-		
-			for (let i = 0; i < elements.length; i++) {
-				if (!tempArr.includes(elements[i])) {
-					tempArr.push(elements[i]);
-					backtrack(tempArr);
-					tempArr.pop();
-				}
-			}
-		}
-	  
-		backtrack([]);
-		return result;
-	}
-
-
-
-
-
-
 	/**
-	 * 取對象數組的某個字段的值組成一個新數組並返回
-	 * @param arr 
-	 * @param field 
-	 * @returns 
-	 */
-	public static extractFieldValues<T extends any, K extends keyof T>(arr: T[], field: K): T[K][] {
-		return arr.map((obj) => obj[field]);
-	}
-
-
-
-
-	/**
-	 * json字串轉數字數組 如 '["1","2.3"]' --> 
-	 * @param json 
-	 * @returns 
-	 */
-	public static parseJsonNumArr(json:string){
-		let strArr:string[] = JSON.parse(json)
-		if(!Array.isArray(strArr)){
-			console.error(json)
-			throw new Error(`json解析之後不是數組\n${json}`)
-		}
-		let numArr = strArr.map((e)=>{return parseFloat(e)})
-		return numArr
-	}
-
-	/**
-	 * 判斷text中的str1與str2是否配對。若str1與str2皆無亦算已配對。
+	 * 判斷text中的str1與str2是否配對。若str1與str2皆無亦算已配對。如(text, '{','}')
 	 * @param text 
 	 * @param str1 
 	 * @param str2 
@@ -1572,89 +913,8 @@ export default class Ut {
 	}
 
 
-	/**
-	 * 轉換日期格式
-	 * @param oldDate 
-	 * @param oldFormat 
-	 * @param neoFormat 
-	 * @returns 
-	 */
-	public static convertDateFormat(oldDate:string, oldFormat:string, neoFormat:string):string
-	public static convertDateFormat(oldDate:string[], oldFormat:string, neoFormat:string):string[]
-
-	public static convertDateFormat(oldDate:string|string[], oldFormat:string, neoFormat:string){
-		if(typeof(oldDate)==='string'){
-			let obj = dayjs(oldDate, oldFormat)
-			return obj.format(neoFormat)
-		}else{
-			let oldDates = oldDate
-			let r:string[] = []
-			for(const oldDate of oldDates){
-				let obj = dayjs(oldDate, oldFormat)
-				r.push(obj.format(neoFormat))
-			}
-			return r
-		}
-		
-	}
-
-
-	/**
-	 * 數組ᵘ判斷a是否b之真子集
-	 * <待叶:判斷對象>
-	 * @param a 
-	 * @param b 
-	 */
-	public static is_properSubsetOf_<T>(a:T[],b:T[]){
-		let s1 = new Set([...a])
-		let s2 = new Set([...b])
-		if(s1.size >= s2.size){
-			return false;
-		}
-		for(const item of s1){
-			if(!s2.has(item)){
-				return false;
-			}
-		}
-		return true
-	}
-
-
 
 
 }
 
 
-
-
-// function t20230712092052(){
-// 	//const path = require('path')
-// 	console.log(path.resolve(Util.pathAt(__dirname)))
-// }
-// t20230712092052()
-
-/*
-
-type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T;  解釋一下
-ChatGPT
-当我们定义 type ArrayElementType<T> = T extends (infer U)[] ? ArrayElementType<U> : T; 这个类型别名时，它的作用是将数组的多维嵌套结构转换为一维数组类型。让我们一步一步解释这个类型别名的含义：
-
-type ArrayElementType<T>：这是一个类型别名的声明，它表示我们正在定义一个泛型类型别名，并用 T 表示这个泛型参数。
-
-T extends (infer U)[]：这是一个条件类型。它判断泛型类型 T 是否是一个数组类型，即 T 是否可以赋值给 (infer U)[]。在这里，(infer U) 表示一个未知的元素类型。
-
-?：这是 TypeScript 中的条件类型语法。当条件类型 T extends (infer U)[] 成立时，执行条件为 true 的分支，否则执行条件为 false 的分支。
-
-ArrayElementType<U>：条件为 true 时的分支。当 T 是数组类型时，我们递归地调用 ArrayElementType 类型别名，并传入数组元素类型 U，以继续判断 U 是否是数组类型。
-
-:：条件为 false 时的分支。当 T 不是数组类型时，直接返回 T 本身。
-
-通过这个条件类型，我们能够一层一层地解开多维数组的嵌套结构，直到获取到最底层的元素类型。这样，我们就能够在 arrAt 方法中正确地处理多维数组，并返回正确的元素类型。
-
-举个例子来说明：
-
-假设我们有一个类型为 number[][] 的二维数组，使用 ArrayElementType<number[][]> 将得到 number 类型，因为 number[][] 表示一个二维数组，它的元素类型是 number[]，再继续解开 number[]，我们得到的是 number 类型。如果传入的是 string[][][]，则最终返回的是 string 类型。
-
-这样，我们在 arrAt 方法中使用 ArrayElementType 就能够正确地获取多维数组中的元素类型，而不会受到多维嵌套结构的影响。
-
-*/

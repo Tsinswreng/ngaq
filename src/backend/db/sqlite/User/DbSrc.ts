@@ -4,16 +4,21 @@ import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 import { Db_User } from '@shared/interfaces/User'
+import { SqliteDbSrc,CreateTableConfig } from '@shared/interfaces/SqliteDbSrc'
 type Database = SqliteType.Database
-export class UserDbSrc{
+export class UserDbSrc implements SqliteDbSrc{
 
 	protected _db: SqliteType.Database
 	get db(){return this._db}
 
 	protected _dbName:string
+	get dbName(){return this._dbName}
+	
 	protected _dbPath: string
+	get dbPath(){return this._dbPath}
 	
 	protected _backupDbPath:string
+	get backupDbPath(){return this._backupDbPath}
 	protected _mode:number = Sqlite.openMode.DEFAULT_CREATE
 
 	protected constructor(
@@ -56,7 +61,8 @@ CREATE TABLE ${isExist} '${table}'(
 		return Sqlite.all(db, getSql(table))
 	}
 
-	createTable(table:string, ifNotExists = false){
+	createTable(table:string, config = CreateTableConfig.new()){
+		const ifNotExists = config.ifNotExists
 		return C.createTable(this._db, table, ifNotExists)
 	}
 

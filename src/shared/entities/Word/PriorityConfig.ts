@@ -40,3 +40,11 @@ class PriorityConfig implements I_WordPriority{
 自ᵈ叶ᵣ算法代碼
 */
 
+/* 
+定義一個默認算法類
+每張詞表定義一個算法實現
+建 VocaTableManager、焉ʸ存各詞表ᵗ權重算法
+
+id	表名	權重算法代碼(js)
+
+*/

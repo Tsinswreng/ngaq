@@ -38,6 +38,17 @@ function handleAltS(event: KeyboardEvent) {
 	}
 }
 
+//const element = $( document.getElementById("body") , 'no body')
+
+document.addEventListener("mousedown", (event) => {
+	if (event.button === 1) { //鼠標中鍵
+		event.preventDefault();
+		multiMode.save().then((d)=>{
+				multiMode.restart()
+		})
+	}
+});
+
 // 監聽頁面的鍵盤事件
 document.addEventListener('keydown', handleAltS);
 

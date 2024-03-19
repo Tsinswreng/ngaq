@@ -7,8 +7,8 @@ import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 type Database = SqliteType.Database
 export class UserTable{
-	protected _manager:UserDbSrc
-	get manager(){return this._manager}
+	protected _dbSrc:UserDbSrc
+	get dbSrc(){return this._dbSrc}
 
 	protected _tableName:string
 	get tableName(){return this._tableName}
@@ -25,12 +25,12 @@ export class UserTable{
 
 	async addRecords(objs:Db_User[]):Promise<RunResult[]>{
 		$a(objs, 'empty array')
-		const [sql,] = this.manager.genSql_insert(this.tableName, objs[0])
-		const stmt = await Sqlite.prepare(this.manager.db, sql)
+		const [sql,] = this.dbSrc.genSql_insert(this.tableName, objs[0])
+		const stmt = await Sqlite.prepare(this.dbSrc.db, sql)
 		const ans = [] as RunResult[]
 		for(let i = 0; i < objs.length; i++){
 			const o = objs[i]
-			const [, value] = this.manager.genSql_insert(this.tableName, o)
+			const [, value] = this.dbSrc.genSql_insert(this.tableName, o)
 			const r = await Sqlite.stmtRun(stmt, value)
 			ans.push(r)
 		}

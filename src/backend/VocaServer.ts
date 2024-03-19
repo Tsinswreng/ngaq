@@ -7,7 +7,7 @@
 //require('tsconfig-paths/register');
 
 require('module-alias/register');
-import WordDbSrc from "./db/sqlite/Word/DbSrc";
+import WordDbSrc_, { WordDbSrc } from "./db/sqlite/Word/DbSrc";
 //const cors = require('cors')
 //const express = require('express')
 import express, { Request, Response } from 'express'
@@ -125,14 +125,14 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
-	public static sqlt = WordDbSrc.new({})
+	public static sqlt:WordDbSrc
 	static userDb
 	public static session
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
-		C.sqlt = await WordDbSrc.New({
+		C.sqlt = await WordDbSrc_.New({
 			_dbPath:config.config.dbPath
 			, _backupDbPath:config.config.backupDbPath
 			,mode: Sqlite.openMode.DEFAULT_CREATE
@@ -254,7 +254,7 @@ export default class VocaServer{
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
-			const prms = await WordDbSrc.saveWords(this.sqlt.db, sws)
+			const prms = await WordDbSrc_.saveWords(this.sqlt.db, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
 			// }
@@ -281,23 +281,23 @@ export default class VocaServer{
 				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
-				const backupDb = await WordDbSrc.New({
+				const backupDb = await WordDbSrc_.New({
 						_dbPath:(config.config.backupDbPath)
 						, mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				await WordDbSrc.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
+				await WordDbSrc_.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
 				const [init, modified] = await Sqlite.transaction(
 					VocaServer.sqlt.db
-					, await WordDbSrc.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
+					, await WordDbSrc_.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
 				)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, init)
-				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, modified)
+				const addedWords_init:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, init)
+				const addedWords_modified:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
 				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){
@@ -339,7 +339,7 @@ export default class VocaServer{
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
 				const tableName:string = $((req.body).tableName)
-				await this.sqlt.creatTable(tableName, false)
+				await this.sqlt.creatTable_deprecated(tableName, false)
 				res.send('creat table successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){
 				console.error(e)
@@ -480,7 +480,7 @@ export default class VocaServer{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try {
-				const vsqlt = await WordDbSrc.New({_tableName:'english'})
+				const vsqlt = await WordDbSrc_.New({_tableName:'english'})
 				const stream = await vsqlt.readStream()
 				res.setHeader('Content-Type', 'application/octet-stream');
 				stream.pipe(res)
@@ -491,6 +491,23 @@ export default class VocaServer{
 			}
 			
 		})
+
+		
+		C.app.get('/testWasm', async(req, res)=>{
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			try {
+				const ans = fs.readFileSync('D:\\_code\\voca\\src\\c/index.html', {encoding: 'utf-8'})
+				res.send(ans)
+			} catch (error) {
+				const err = error as Error
+				console.error(err)
+				res.send(Tempus.format(nunc)+'\n'+err.message)
+			}
+			
+		})
+
+
 			//res.send(`<h1>404</h1>`)
 			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
 			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')

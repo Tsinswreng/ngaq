@@ -5,10 +5,10 @@ import { lastOf, $a } from "@shared/Ut";
 
 //459 323 127 88 126
 /**/
-export default class WordB{
+export default class WordB extends SingleWord2{
 
 	constructor(private _fw:SingleWord2) {
-		
+		super(_fw)
 	}
 
 
@@ -182,7 +182,6 @@ export default class WordB{
 		// let r = longest??''
 		let sortedMean = mean.slice()
 		sortedMean = sortedMean.sort((a,b)=>b.length-a.length)
-
 		let r = sortedMean.join('\x07')//bell
 		//r = r.replace(/\r\n/gm,'\n')
 		//r = r.replace(/\n{2,}/gm, '\\n\n')

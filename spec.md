@@ -6,3 +6,5 @@
 約束plain object旹用class當接口用、不用interface
 少用默認導出
 可略旹不寫`public`
+
+數據庫表ᵗ實體類ᵘ、蔿兼容int64、故其_idᵗ類型應設潙`number|string`而非獨`number`
