@@ -1,9 +1,9 @@
 import { User } from "@backend/entities/User"
-
+import { I_DbRow_Static } from "@shared/interfaces/SqliteDbSrc"
 /**
  * used as Interface
  */
-export class Db_User{
+class _Db_User{
 	/** names of columns in database */
 	static id = 'id'
 	static name = 'name'
@@ -12,11 +12,12 @@ export class Db_User{
 	static email = 'email'
 
 	protected constructor(
-		 public id:number|string
-		,public name:string
+		
+		public name:string
 		,public password:string
 		,public date:string
 		,public email:string
+		,public id?:number|string
 	){}
 
 	static toEntity(o:Db_User):User{
@@ -41,3 +42,7 @@ export class Db_User{
 		return ans
 	}
 }
+
+export type Db_User = _Db_User
+export const Db_User:I_DbRow_Static<_Db_User, User> & typeof _Db_User = _Db_User // 不加typeof則是實例ᵗ類型
+//export const Db_User = _Db_User

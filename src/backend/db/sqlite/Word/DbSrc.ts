@@ -11,12 +11,12 @@ import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
-import { CreateTableConfig, SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc';
+import { CreateTableConfig, I_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc';
 
 const VocaTableColumnName = VocaDbTable
 
 
-export class WordDbSrc implements SqliteDbSrc{
+export class WordDbSrc implements I_SqliteDbSrc{
 	protected constructor(){
 	}
 

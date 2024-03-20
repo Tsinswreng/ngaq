@@ -4,39 +4,20 @@ import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 import { Db_User } from '@shared/interfaces/User'
-import { SqliteDbSrc,CreateTableConfig } from '@shared/interfaces/SqliteDbSrc'
+import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
 type Database = SqliteType.Database
-export class UserDbSrc implements SqliteDbSrc{
+export class UserDbSrc extends Abs_SqliteDbSrc{
 
-	protected _db: SqliteType.Database
-	get db(){return this._db}
+	protected constructor(){
+		super()
+	}
 
-	protected _dbName:string
-	get dbName(){return this._dbName}
-	
-	protected _dbPath: string
-	get dbPath(){return this._dbPath}
-	
-	protected _backupDbPath:string
-	get backupDbPath(){return this._backupDbPath}
-	protected _mode:number = Sqlite.openMode.DEFAULT_CREATE
-
-	protected constructor(
-	){}
-
-	static async New(props:{
-		_dbName?:string,
-		_dbPath:string,
-		_backupDbPath?:string
-		,_mode?:number
-	}){
-		//@ts-ignore
-		const o = new this()
-		Object.assign(o, props)
-		if(o._dbPath != void 0){
-			o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
-		}
-		return o
+	static async New(...params:Parameters<typeof Abs_SqliteDbSrc.New>):Promise<UserDbSrc>{
+		const f = await Abs_SqliteDbSrc.New(params)
+		const c = new this()
+		Object.setPrototypeOf(f, UserDbSrc.prototype); // 设置原型链
+		Object.assign(f,c)
+		return f as UserDbSrc
 	}
 
 	static createTable(db:Database, table:string, ifNotExists=false){

@@ -47,4 +47,8 @@ class PriorityConfig implements I_WordPriority{
 
 id	表名	權重算法代碼(js)
 
+
+設每64個詞一組、允 自訂 每組中 各表ᙆᵗ詞ᵗ比例。如日:英 = 40:24
+允 權重初分配 與 再分配
+權重變化ᵗ視圖
 */

@@ -16,7 +16,15 @@ export class VocaTableMetadata{
 		return o
 	}
 	protected _id?:number|string
+	get id(){return this._id}
+
 	protected _tableName:string
+	get tableName(){return this._tableName}
+
+	protected _createdDate:Tempus
+	get createDate(){return this._createdDate}
+
 	protected _weightAlgoJs:string
+	get weightAlgoJs(){return this._weightAlgoJs}
 }
 
