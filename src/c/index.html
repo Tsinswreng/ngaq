@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebAssembly Example</title>
+	<script src="a.out.js"></script>
+	<script>
+		fetch('a.out.wasm')
+		.then(response => response.arrayBuffer())
+		.then(bytes => WebAssembly.instantiate(bytes, {}))
+		.then(results => {
+			const instance = results.instance;
+			instance.exports._main();
+		});
+	</script>
+</head>
+<body>
+    <h1>114514</h1>
+</body>
+</html>
