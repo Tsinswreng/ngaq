@@ -4,7 +4,7 @@ import { DbRow_VocaTableMetadata } from "@backend/interfaces/VocaTableMetadata";
 import { extends_ } from "@shared/Ut";
 
 type Db = SqliteType.Database
-class _VocaTableDbSrc extends Abs_DbSrc{
+class _WordTableMetadataDbSrc extends Abs_DbSrc{
 
 	static metadataTableName = '_metadata'
 
@@ -15,7 +15,7 @@ class _VocaTableDbSrc extends Abs_DbSrc{
 	static async New(...params:Parameters<typeof Abs_DbSrc.New>){
 		const f = await Abs_DbSrc.New(params)
 		const c = new this()
-		return extends_(c,f, _VocaTableDbSrc)
+		return extends_(c,f, _WordTableMetadataDbSrc)
 	}
 
 	static createTable(db:Db, table:string, config:CreateTableConfig = {ifNotExists:false}){
@@ -43,12 +43,12 @@ CREATE TABLE ${isExist} '${table}'(
 	createTable(table: string, config: CreateTableConfig  = {ifNotExists:false}): Promise<unknown> {
 		const args = arguments
 		this.eventEmmiter.emit(this.eventNames.createTable_before, args)
-		return _VocaTableDbSrc.createTable(this.db, table, config).then((d)=>{
+		return _WordTableMetadataDbSrc.createTable(this.db, table, config).then((d)=>{
 			this.eventEmmiter.emit(this.eventNames.createTable_after, args, d)
 		})
 	}
 
 }
 
-export const VocaTableDbSrc = _VocaTableDbSrc
-export type VocaTableDbSrc = _VocaTableDbSrc
+export const WordTableMetadataDbSrc = _WordTableMetadataDbSrc
+export type WordTableMetadataDbSrc = _WordTableMetadataDbSrc

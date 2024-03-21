@@ -11,12 +11,14 @@ import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
-import { CreateTableConfig, I_SqliteDbSrc, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc';
+import { CreateTableConfig, Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
+import { VocaTableMetadata } from '@backend/entities/VocaTableMetadata';
+import { WordTableMetadataDbSrc } from '@backend/db/sqlite/VocaTableMetadata/DbSrc';
 
 const VocaTableColumnName = VocaDbTable
 
 
-export class WordDbSrc extends Abs_SqliteDbSrc{
+export class WordDbSrc extends Abs_DbSrc{
 	protected constructor(){
 		super()
 	}
@@ -60,6 +62,8 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	// 	}
 	// 	return o
 	// }
+
+	protected _tableMetadataDbSrc
 
 	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 
 
