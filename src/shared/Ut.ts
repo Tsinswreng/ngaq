@@ -1,3 +1,4 @@
+
 //[23.07.09-2232,]
 //const fs = require('fs')
 //import {RegexReplacePair} from '';
@@ -13,6 +14,22 @@ import * as ts from 'typescript'
 import json5 from 'json5'
 
 import * as algo from '@shared/algo' //待分离
+
+
+export function extends_<Ch, Fa>(child:Ch,father,ChildClass){
+	Object.setPrototypeOf(father, ChildClass.prototype); // 设置原型链
+	Object.assign(father,child)
+	return father as Ch
+}
+
+
+export function fn_childNewAsync<Child, Father, FatherNewParams>(fatherNew:(...fatherNewParams:FatherNewParams[])=>Promise<Father>){
+	let t:Parameters<typeof fatherNew>
+	const ans = async function childNewAsync(...params){
+
+	}
+}
+
 
 export function addFn(obj:Object, name:string, Fn:Function){
 	if(obj[name]===void 0){

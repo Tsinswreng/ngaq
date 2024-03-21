@@ -1,17 +1,10 @@
-import { 
-	CreateTableConfig
-	,I_SqliteDbSrc
-	,EventNames
-	,SqliteDbEventEmitter
-	,Abs_SqliteDbSrc
-	,Abs_SqliteDbSrc_Static
-}
-from "@shared/interfaces/SqliteDbSrc";
+import { CreateTableConfig, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { DbRow_VocaTableMetadata } from "@backend/interfaces/VocaTableMetadata";
+import { extends_ } from "@shared/Ut";
 
 type Db = SqliteType.Database
-class _VocaTableDbSrc extends Abs_SqliteDbSrc{
+class _VocaTableDbSrc extends Abs_DbSrc{
 
 	static metadataTableName = '_metadata'
 
@@ -19,12 +12,10 @@ class _VocaTableDbSrc extends Abs_SqliteDbSrc{
 		super()
 	}
 
-	static async New(...params:Parameters<typeof Abs_SqliteDbSrc.New>):Promise<VocaTableDbSrc>{
-		const f = await Abs_SqliteDbSrc.New(params)
+	static async New(...params:Parameters<typeof Abs_DbSrc.New>){
+		const f = await Abs_DbSrc.New(params)
 		const c = new this()
-		Object.setPrototypeOf(f, _VocaTableDbSrc.prototype); // 设置原型链
-		Object.assign(f,c)
-		return f as VocaTableDbSrc
+		return extends_(c,f, _VocaTableDbSrc)
 	}
 
 	static createTable(db:Db, table:string, config:CreateTableConfig = {ifNotExists:false}){
