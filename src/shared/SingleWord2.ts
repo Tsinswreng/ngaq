@@ -1,6 +1,6 @@
 import * as Word from "@shared/entities/Word/Word";
 import { VocaDbTable } from "@shared/interfaces/Word";
-export default Word.SingleWord2
+export default Word.Word
 const Priority = Word.Priority
 type  Priority = Word.Priority
 

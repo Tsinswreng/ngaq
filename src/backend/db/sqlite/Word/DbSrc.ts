@@ -4,7 +4,7 @@ type Statement = sqlite3.Statement
 type RunResult = SqliteType.RunResult
 import Sqlite, { SqliteTableInfo, SqliteType } from '@backend/db/Sqlite';
 import _ from 'lodash';
-import SingleWord2, { VocaDbTable } from '@shared/SingleWord2';
+import Word, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2, { config } from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
 import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
@@ -211,7 +211,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param table 
 	 * @param words 
 	 */
-	public static checkTable(table:string, words:SingleWord2[]){
+	public static checkTable(table:string, words:Word[]){
 		for(const w of words){
 			if(w.table !== table){
 				throw new Error(`w.table !== table\n${w.wordShape}\t${w.table}`)
@@ -226,10 +226,10 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param table 
 	 * @param word 
 	 */
-	private static initAddWord(db:Database, table:string, word:SingleWord2):Promise<RunResult[]>
-	private static initAddWord(db:Database, table:string, word:SingleWord2[]):Promise<RunResult[]>
-	private static async initAddWord(db:Database, table:string, word:SingleWord2|SingleWord2[]){
-		let w:SingleWord2[]
+	private static initAddWord(db:Database, table:string, word:Word):Promise<RunResult[]>
+	private static initAddWord(db:Database, table:string, word:Word[]):Promise<RunResult[]>
+	private static async initAddWord(db:Database, table:string, word:Word|Word[]){
+		let w:Word[]
 		if(Array.isArray(word)){
 			w = word
 		}else{
@@ -237,7 +237,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 		}
 		WordDbSrc_.checkTable(table, w)
 		//let [r, runResult] = await forArr(db, table, w)
-		const forArr2=async(db:Database, table:string, words:SingleWord2[])=>{
+		const forArr2=async(db:Database, table:string, words:Word[])=>{
 			const [sql,] = WordDbSrc_.genQry_insert(table, words[0])
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
@@ -273,7 +273,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param words 
 	 * @returns [initAddIds, modifiedIds]
 	 */
-	public static async addWordsOfSameTable_fn(db:Database, words:SingleWord2[]){
+	public static async addWordsOfSameTable_fn(db:Database, words:Word[]){
 		$a(words)
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
@@ -285,8 +285,8 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 		return fn
 		
 
-		async function addWordsOfSameTable(db:Database, table:string, words:SingleWord2[]){
-			words = words.map(e=>SingleWord2.intersect(e,e))//<坑>{舊版數據庫中 詞義ˉ數組蜮有重複元素、而SingleWord.intersect()合併單詞旹不會產重複元素。故初添前亦先除重}
+		async function addWordsOfSameTable(db:Database, table:string, words:Word[]){
+			words = words.map(e=>Word.intersect(e,e))//<坑>{舊版數據庫中 詞義ˉ數組蜮有重複元素、而SingleWord.intersect()合併單詞旹不會產重複元素。故初添前亦先除重}
 			
 			//const neoIds:number[] = []
 			const neoWord_existedWordMap = await getNeoWord_existedWordMap(db, table, words)
@@ -314,10 +314,10 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 
 		}
 
-		async function getNeoWord_existedWordMap(db:Database, table:string, words:SingleWord2[]){
+		async function getNeoWord_existedWordMap(db:Database, table:string, words:Word[]){
 			
 			words = VocaRaw2.merge(words) 
-			const neoWord_existedWordMap = new Map<SingleWord2, SingleWord2|undefined>()
+			const neoWord_existedWordMap = new Map<Word, Word|undefined>()
 			const neoWordShapes:string[] = words.map(e=>e.wordShape)
 			const existedRows:(IVocaRow)[][] = await WordDbSrc_.qryWordByWordShape(db, table, neoWordShapes)
 			if(words.length !== existedRows.length){throw new Error(`words.length !== existedRows.length`)}
@@ -327,7 +327,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 				if(existedRows[i].length === 0){
 					neoWord_existedWordMap.set(curNeoWord, undefined)
 				}else if (existedRows[i].length === 1){
-					const curExistedWord = SingleWord2.toJsObj(existedRows[i][0])
+					const curExistedWord = Word.toJsObj(existedRows[i][0])
 					neoWord_existedWordMap.set(curNeoWord, curExistedWord)
 				}else{
 					throw new Error(`${existedRows[i][0].wordShape}在數據庫中有重複項`)
@@ -336,15 +336,15 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 			return neoWord_existedWordMap
 		}
 
-		function getWordsToAdd(neoWord_existedWordMap:Map<SingleWord2, SingleWord2|undefined>){
-			const wordsToInitAdd:SingleWord2[] = []
-			const wordsToUpdate:SingleWord2[] = []
+		function getWordsToAdd(neoWord_existedWordMap:Map<Word, Word|undefined>){
+			const wordsToInitAdd:Word[] = []
+			const wordsToUpdate:Word[] = []
 			for(const [neoWord, existedWord] of neoWord_existedWordMap){
 				if(existedWord === void 0){
 					wordsToInitAdd.push(neoWord)
 				}else{
-					const united = SingleWord2.intersect(existedWord, neoWord)
-					if(SingleWord2.isWordsEqual(existedWord, united, [VocaTableColumnName.id])){}//實則不必刪id再比。united之id固同於前者
+					const united = Word.intersect(existedWord, neoWord)
+					if(Word.isWordsEqual(existedWord, united, [VocaTableColumnName.id])){}//實則不必刪id再比。united之id固同於前者
 					else{
 						wordsToUpdate.push(united)
 					}
@@ -353,7 +353,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 			return [wordsToInitAdd, wordsToUpdate]
 		}
 		
-	}public addWordsOfSameTable(words:SingleWord2[]){
+	}public addWordsOfSameTable(words:Word[]){
 		WordDbSrc_.checkTable($(this.tableName), words)
 		return WordDbSrc_.addWordsOfSameTable_fn(this.db, words)
 	}
@@ -417,7 +417,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param ids 
 	 * @returns 
 	 */
-	public static setWordsByIds_fn(db:Database, table:string, words:SingleWord2[], ids?:number[]){
+	public static setWordsByIds_fn(db:Database, table:string, words:Word[], ids?:number[]){
 		//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
 		WordDbSrc_.checkTable(table, words)
@@ -450,7 +450,7 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	}
 
 	
-	public setWordsByIds(words:SingleWord2[], ids:number[]){
+	public setWordsByIds(words:Word[], ids:number[]){
 		const table:string=$(this.tableName)
 		return WordDbSrc_.setWordsByIds_fn(this.db, table, words, ids)
 	}
@@ -464,10 +464,10 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param id 
 	 * @returns 
 	 */
-	public static genQry_updateById(table: string, word:SingleWord2,id: number){
+	public static genQry_updateById(table: string, word:Word,id: number){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
-		const obj = SingleWord2.toDbObj($(word))
+		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genQry_updateById(table, obj, id)
 	}
@@ -478,10 +478,10 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param word 
 	 * @returns 
 	 */
-	public static genQry_insert(table: string, word:SingleWord2){
+	public static genQry_insert(table: string, word:Word){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
-		const obj = SingleWord2.toDbObj($(word))
+		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genQry_insert(table, obj)
 	}
@@ -506,8 +506,8 @@ export class WordDbSrc extends Abs_SqliteDbSrc{
 	 * @param table 
 	 * @returns 
 	 */
-	public static async saveWords(db:Database, sws:SingleWord2[]){
-		const tableToWordsMap = SingleWord2.classify(sws)
+	public static async saveWords(db:Database, sws:Word[]){
+		const tableToWordsMap = Word.classify(sws)
 		//const prms:Promise<number[][]>[] = []
 		const ans:number[][][] = []
 		for(const [table, words] of tableToWordsMap){

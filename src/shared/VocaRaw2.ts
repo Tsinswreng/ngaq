@@ -2,7 +2,7 @@
 import Ut, { $, $a } from '@shared/Ut';
 import Txt from '@shared/Txt';
 //import SingleWord2 from '@shared/SingleWord2';
-import { SingleWord2 } from "@shared/entities/Word/Word";
+import { Word } from "@shared/entities/Word/Word";
 import Tempus from '@shared/Tempus';
 import _ from 'lodash';
 
@@ -137,7 +137,7 @@ export default class VocaRaw2{
 		//'在此取dateBloks之配置'()
 		// console.log(`console.log(dateBlocks)//t`)//t -
 		// console.log(dateBlocks)//t
-		const words:SingleWord2[] = []
+		const words:Word[] = []
 		for(const e of dateBlocks){
 			const partWords = this.getWordsInDateBlock(e,table)
 			words.push(...partWords)
@@ -333,7 +333,7 @@ export default class VocaRaw2{
 			throw new Error(`mean === '' || annotation.length === 0`)
 		}
 		const tag = conf_dataBlock?.tag
-		let word = new SingleWord2({
+		let word = new Word({
 			table:table,
 			wordShape: wordShape.trim(),
 			pronounce: [],
@@ -400,7 +400,7 @@ export default class VocaRaw2{
 		let wordUnits = this.getWordUnitsInDateBlock(dateBlock) // -
 		//console.log(`console.log(wordUnits)`)
 		//console.log(wordUnits)//t
-		const words:SingleWord2[] = []
+		const words:Word[] = []
 		for(const e of wordUnits){
 			const word = this.getWordInWordUnit(e, tempus,table, conf_dataBlock)
 			words.push(word)
@@ -495,7 +495,7 @@ export default class VocaRaw2{
 	 * @param ws 
 	 * @returns 
 	 */
-	public static merge(ws:SingleWord2[]){
+	public static merge(ws:Word[]){
 		// let map = new Map<string, SingleWord2>()
 		// for(const neoWord of ws){
 		// 	let old = map.get(neoWord.wordShape)
@@ -507,7 +507,7 @@ export default class VocaRaw2{
 		// 	}
 		// }
 		// return Array.from(map.values())
-		return SingleWord2.merge(ws)
+		return Word.merge(ws)
 
 	}
 }

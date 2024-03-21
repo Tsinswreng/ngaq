@@ -1,7 +1,7 @@
 
 import { Sros, UN} from '@shared/Sros';
 //import SingleWord2, { Tempus_Event, WordEvent } from './SingleWord2';
-import { SingleWord2, Tempus_Event, WordEvent } from "@shared/entities/Word/Word";
+import { Word, Tempus_Event, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from '@shared/Tempus'
 import { lastOf, lodashMerge } from '@shared/Ut';
 
@@ -144,22 +144,22 @@ export class WordPriority{
 	// }
 
 	/**
-	 * 蔿 @see SingleWord2 對象算初權重
-	 * @param {SingleWord2} sw 
+	 * 蔿 @see Word 對象算初權重
+	 * @param {Word} sw 
 	 */
-	public calcPrio0(sw:SingleWord2){
+	public calcPrio0(sw:Word){
 		this.changeRecord = this.getPrio0Procedures(sw)
 	}
 
 	/**
-	 * 蔿 @see SingleWord2 對象算並返@see Procedures 對象數組
-	 * @param {SingleWord2} sw 
+	 * 蔿 @see Word 對象算並返@see Procedures 對象數組
+	 * @param {Word} sw 
 	 * @returns 
 	 */
-	public getPrio0Procedures(sw: SingleWord2){
+	public getPrio0Procedures(sw: Word){
 		const self = this
 		const nunc = Tempus.new()
-		const dateToEventObjs = SingleWord2.getSortedDateToEventObjs(sw)
+		const dateToEventObjs = Word.getSortedDateToEventObjs(sw)
 		let changeRecord:ChangeRecord[] = []
 		let lastProcedure = lastOf(changeRecord)
 		let add_cnt = 0
@@ -397,7 +397,7 @@ const f = ()=>{
 		}
 		override get prio0num(){return 100}
 
-		override calcPrio0(sw: SingleWord2): void {
+		override calcPrio0(sw: Word): void {
 			//super._changeRecord = []//Class field '_changeRecord' defined by the parent class is not accessible in the child class via super.
 			this._changeRecord = []
 			sw=sw

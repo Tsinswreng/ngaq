@@ -1,7 +1,7 @@
 
 import Tempus from "@shared/Tempus";
 //import SingleWord2, {VocaDbTable} from "@shared/SingleWord2"
-import { SingleWord2 } from "@shared/entities/Word/Word";
+import { Word } from "@shared/entities/Word/Word";
 import { VocaDbTable } from "@shared/interfaces/Word";
 import { $ } from "../../Ut";
 
@@ -115,10 +115,10 @@ export default class VocaTempus{
 		
 	}
 
-	public static analyse(singleWord2s:SingleWord2[]){
+	public static analyse(singleWord2s:Word[]){
 		const result:VocaTempus[] = []
 
-		function add(sw:SingleWord2){
+		function add(sw:Word){
 			const partResult:VocaTempus[] = []
 			for(const tempus of sw.dates_add){
 				
@@ -134,7 +134,7 @@ export default class VocaTempus{
 			return partResult
 		}
 
-		function rmb(sw:SingleWord2){
+		function rmb(sw:Word){
 			const partResult:VocaTempus[] = []
 			for(const tempus of sw.dates_rmb){
 				
@@ -150,7 +150,7 @@ export default class VocaTempus{
 			return partResult
 		}
 
-		function fgt(sw:SingleWord2){
+		function fgt(sw:Word){
 			const partResult:VocaTempus[] = []
 			for(const tempus of sw.dates_fgt){
 				

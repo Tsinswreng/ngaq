@@ -1,4 +1,4 @@
-import {SingleWord2} from '@shared/entities/Word/Word'
+import {Word} from '@shared/entities/Word/Word'
 import Tempus from '@shared/Tempus'
 /**
  * 單詞表中每列的列名。蔿 保持統一 和 方便改名 、sql語句中通過此類中的列名常量間接訪問類名而非直接用寫死的字符串字面量
@@ -53,17 +53,17 @@ export class VocaDbTable{
 	 * @param sw 
 	 * @param ignoredKeys 忽略之字段
 	 */
-	public static toPlain(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow
-	public static toPlain(sw:SingleWord2[], ignoredKeys?:string[]):IVocaRow[]
+	public static toPlain(sw:Word, ignoredKeys?:string[]):IVocaRow
+	public static toPlain(sw:Word[], ignoredKeys?:string[]):IVocaRow[]
 
-	public static toPlain(sw:SingleWord2|SingleWord2[]){
+	public static toPlain(sw:Word|Word[]){
 		if(Array.isArray(sw)){
 			return sw.map(e=>soloFieldStringfy(e))
 		}else{
 			return soloFieldStringfy(sw)
 		}
 
-		function soloFieldStringfy(sw:SingleWord2, ignoredKeys?:string[]):IVocaRow{
+		function soloFieldStringfy(sw:Word, ignoredKeys?:string[]):IVocaRow{
 			const sf = JSON.stringify
 			let result:IVocaRow = {
 				id:sw.id,
@@ -107,8 +107,8 @@ export class VocaDbTable{
 	 * @param obj 
 	 * @returns 
 	 */
-	public static toEntity(obj:IVocaRow):SingleWord2
-	public static toEntity(obj:IVocaRow[]):SingleWord2[]
+	public static toEntity(obj:IVocaRow):Word
+	public static toEntity(obj:IVocaRow[]):Word[]
 
 	public static toEntity(obj:IVocaRow|IVocaRow[]){
 		if(Array.isArray(obj)){
@@ -124,10 +124,10 @@ export class VocaDbTable{
 				}
 				return n
 			}
-			let sw:SingleWord2
+			let sw:Word
 			try{
 				const ps = JSON.parse
-				sw = new SingleWord2({
+				sw = new Word({
 					id:num(obj.id)
 					,wordShape:obj.wordShape
 					//,variant: ps(obj.variant)

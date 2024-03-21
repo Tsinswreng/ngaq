@@ -1,4 +1,3 @@
-import { I_DbRow_Static } from "@shared/interfaces/SqliteDbSrc"
 import { VocaTableMetadata as Entity_VocaTableMetadata } from "@backend/entities/VocaTableMetadata"
 import Tempus from "@shared/Tempus"
 

@@ -16,7 +16,7 @@ import cookieParser from 'cookie-parser'
 //import path from "path";
 import Tempus from "@shared/Tempus";
 //import SingleWord2 from "@shared/SingleWord2";
-import { SingleWord2 } from "@shared/entities/Word/Word";
+import { Word } from "@shared/entities/Word/Word";
 import { IVocaRow } from "@shared/SingleWord2";
 import { $, absPath, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
@@ -253,7 +253,7 @@ export default class VocaServer{
 
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
-			let sws:SingleWord2[] = SingleWord2.toJsObj(req.body as IVocaRow[])
+			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
 			const prms = await WordDbSrc_.saveWords(this.sqlt.db, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
@@ -277,7 +277,7 @@ export default class VocaServer{
 			try{
 				const rows:IVocaRow[] = $(req.body[0])
 				//const config2:VocaRawConfig = $(req.body[1])
-				const sws = SingleWord2.toJsObj(rows)
+				const sws = Word.toJsObj(rows)
 				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})

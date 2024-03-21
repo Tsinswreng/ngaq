@@ -29,16 +29,16 @@ export enum WordEvent{
 	FGT=-1	// forget
 }
 
-export class SingleWord2{
+export class Word{
 	/**
 	 * 空例
 	 */
-	public static readonly example = new SingleWord2({
+	public static readonly example = new Word({
 		table:'', wordShape: '', mean:[],dates_add:[]
 	})
 
 	/**
-	 * 
+	 * @deprecated
 	 * @param props 
 	 */
 	public constructor(props:{
@@ -69,24 +69,51 @@ export class SingleWord2{
 		this._source = props.source?.slice()??[]
 	}
 
-	// public static new(props:Parameters<SingleWord2>){
-	// 	return new this()
-	// }
+	static new(props:{
+		id?:number,
+		table:string,
+		wordShape:string,
+		variant?:string[],
+		pronounce?:string[],
+		mean:string[],
+		tag?:string[],
+		annotation?:string[],
+		dates_add:Tempus[] 
+		dates_rmb?:Tempus[]
+		dates_fgt?:Tempus[]
+		source?:string[]
+	}){
+		//@ts-ignore
+		const o = new this()
+		o._id=props.id
+		o._table=props.table
+		o._wordShape=props.wordShape
+		o._variant=props.variant?.slice()??[]
+		o._pronounce = props.pronounce?.slice()??[]
+		o._mean=props.mean.slice()
+		o._annotation=props.annotation?.slice()??[]
+		o._tag=props.tag?.slice()??[]
+		o._dates_add=props.dates_add.slice()
+		o._dates_rmb = props.dates_rmb?.slice()??[]
+		o._dates_fgt = props.dates_fgt?.slice()??[]
+		o._source = props.source?.slice()??[]
+		return o
+	}
 
 
 	/**
 	 * 所屬ᵗ表
 	 */
-	private _table:string = ''
+	protected _table:string = ''
 	;public get table(){return this._table;};
 
-	private _id?:number
+	protected _id?:number
 	;public get id(){return this._id;};
 
 	/**
 	 * 詞形
 	 */
-	private _wordShape:string=''
+	protected _wordShape:string=''
 	;public get wordShape(){return this._wordShape;};
 
 	/**
@@ -99,31 +126,31 @@ export class SingleWord2{
 	/**
 	 * 意
 	 */
-	private _mean:string[] = []
+	protected _mean:string[] = []
 	;public get mean(){return this._mean;};
 
 	/**
 	 * 音
 	 */
-	private _pronounce:string[] = []
+	protected _pronounce:string[] = []
 	;public get pronounce(){return this._pronounce;};
 
 	/**
 	 * 用戶手動畀單詞加之註、在源txt詞表中用<<>>括着ᵗ部。
 	 */
-	private _annotation:string[] = []
+	protected _annotation:string[] = []
 	;public get annotation(){return this._annotation;};
 
 	/**
 	 * 標籤。用戶ˋ定ᶦ。可潙四六級詞之屬。
 	 */
-	private _tag:string[] = []
+	protected _tag:string[] = []
 	;public get tag(){return this._tag;};
 
 	/**
 	 * 添ᵗ日期
 	 */
-	private _dates_add:Tempus[] = []
+	protected _dates_add:Tempus[] = []
 	;public get dates_add(){return this._dates_add;};
 
 	/**
@@ -136,7 +163,7 @@ export class SingleWord2{
 	/**
 	 * remember
 	 */
-	private _dates_rmb:Tempus[]=[]
+	protected _dates_rmb:Tempus[]=[]
 	;public get dates_rmb(){return this._dates_rmb;};
 
 	public get times_rmb(){
@@ -146,7 +173,7 @@ export class SingleWord2{
 	/**
 	 * forget
 	 */
-	private _dates_fgt:Tempus[] = []
+	protected _dates_fgt:Tempus[] = []
 	;public get dates_fgt(){return this._dates_fgt;};
 
 	public get times_fgt(){
@@ -156,7 +183,7 @@ export class SingleWord2{
 	/**
 	 * ʃᙆ添。可潙書名等。
 	 */
-	private _source:string[] = []
+	protected _source:string[] = []
 	;public get source(){return this._source;};
 
 	
@@ -171,13 +198,13 @@ export class SingleWord2{
 	 * 複製對象
 	 * @param o 
 	 */
-	public static clone(o:SingleWord2):SingleWord2
+	public static clone(o:Word):Word
 	public static clone(o:IVocaRow):IVocaRow
-	public static clone(o:SingleWord2|IVocaRow){
-		if(o instanceof SingleWord2){
-			return SingleWord2.toJsObj(SingleWord2.toDbObj(o))
+	public static clone(o:Word|IVocaRow){
+		if(o instanceof Word){
+			return Word.toJsObj(Word.toDbObj(o))
 		}else{
-			return SingleWord2.toDbObj(SingleWord2.toJsObj(o))
+			return Word.toDbObj(Word.toJsObj(o))
 		}
 	}
 
@@ -188,7 +215,7 @@ export class SingleWord2{
 	 * @param w2 
 	 * @returns 
 	 */
-	public static intersect(w1:SingleWord2, w2:SingleWord2){
+	public static intersect(w1:Word, w2:Word){
 		if(w1.wordShape!==w2.wordShape){
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.wordShape !== w2.wordShape`)
@@ -197,7 +224,7 @@ export class SingleWord2{
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.ling!==w2.ling`)
 		}
-		let o = new SingleWord2({
+		let o = new Word({
 			id:w1.id,
 			table:w1.table,
 			wordShape:w1.wordShape,
@@ -223,12 +250,12 @@ export class SingleWord2{
 	 * @param ws 
 	 * @returns 
 	 */
-	public static merge(ws:SingleWord2[]){
-		let map = new Map<string, SingleWord2>()
+	public static merge(ws:Word[]){
+		let map = new Map<string, Word>()
 		for(const neoWord of ws){
 			let old = map.get(neoWord.wordShape)
 			if(old !== void 0){
-				let united = SingleWord2.intersect(old,neoWord)
+				let united = Word.intersect(old,neoWord)
 				map.set(united.wordShape, united)
 			}else{
 				map.set(neoWord.wordShape, neoWord)
@@ -244,14 +271,14 @@ export class SingleWord2{
 	 * @param ignoredKeys 忽略之字段
 	 */
 	public static isWordsEqual(row1: IVocaRow, row2:IVocaRow, ignoredKeys?:string[]):boolean
-	public static isWordsEqual(row1: SingleWord2, row2:SingleWord2,ignoredKeys?:string[]):boolean
+	public static isWordsEqual(row1: Word, row2:Word,ignoredKeys?:string[]):boolean
 
-	public static isWordsEqual(row1: IVocaRow|SingleWord2, row2:IVocaRow|SingleWord2, ignoredKeys?:string[]){
+	public static isWordsEqual(row1: IVocaRow|Word, row2:IVocaRow|Word, ignoredKeys?:string[]){
 		let c1:IVocaRow
 		let c2:IVocaRow
-		if(row1 instanceof SingleWord2){
-			c1 = SingleWord2.toDbObj(row1)
-			c2 = SingleWord2.toDbObj(row2 as SingleWord2)
+		if(row1 instanceof Word){
+			c1 = Word.toDbObj(row1)
+			c2 = Word.toDbObj(row2 as Word)
 		}else{
 			c1 = this.clone(row1)
 			c2 = this.clone(row2 as IVocaRow)
@@ -273,8 +300,8 @@ export class SingleWord2{
 	 * @param sws 依table對SingleWord2數組分類
 	 * @returns 
 	 */
-	public static classify(sws:SingleWord2[]){
-		const tableToWordsMap = new Map<string, SingleWord2[]>()
+	public static classify(sws:Word[]){
+		const tableToWordsMap = new Map<string, Word[]>()
 		for(const wordToAdd of sws){
 			const innerWords = tableToWordsMap.get(wordToAdd.table)
 			if(innerWords === void 0){
@@ -296,10 +323,10 @@ export class SingleWord2{
 	 * @param sw 
 	 * @returns 
 	 */
-	public static getSortedDateToEventObjs(sw:SingleWord2): Tempus_Event[]{
-		const addMap = SingleWord2.getDateToEventMap(sw.dates_add, WordEvent.ADD)
-		const rmbMap = SingleWord2.getDateToEventMap(sw.dates_rmb, WordEvent.RMB)
-		const fgtMap = SingleWord2.getDateToEventMap(sw.dates_fgt, WordEvent.FGT)
+	public static getSortedDateToEventObjs(sw:Word): Tempus_Event[]{
+		const addMap = Word.getDateToEventMap(sw.dates_add, WordEvent.ADD)
+		const rmbMap = Word.getDateToEventMap(sw.dates_rmb, WordEvent.RMB)
+		const fgtMap = Word.getDateToEventMap(sw.dates_fgt, WordEvent.FGT)
 		const merged = new Map([...addMap, ...rmbMap, ...fgtMap])
 		//let mapObj = mapToObjArr(merged)
 		let mapObj:Tempus_Event[] = []
