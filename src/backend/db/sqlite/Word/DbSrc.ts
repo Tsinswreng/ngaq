@@ -11,13 +11,14 @@ import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
-import { CreateTableConfig, I_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc';
+import { CreateTableConfig, I_SqliteDbSrc, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc';
 
 const VocaTableColumnName = VocaDbTable
 
 
-export class WordDbSrc implements I_SqliteDbSrc{
+export class WordDbSrc extends Abs_SqliteDbSrc{
 	protected constructor(){
+		super()
 	}
 
 	static async New(
@@ -63,20 +64,20 @@ export class WordDbSrc implements I_SqliteDbSrc{
 	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 
 
 	//private _dbName = 'voca';
-	protected _dbName:string
-	public get dbName(){return this._dbName}public set dbName(v){this._dbName=v}
+	// protected _dbName:string
+	// public get dbName(){return this._dbName}public set dbName(v){this._dbName=v}
 
 	//private _dbPath = process.cwd()+'/db/'+this._dbName+'.db' 
-	private _dbPath:string = ''
+	protected _dbPath:string = ''
 	;public get dbPath(){return this._dbPath;};
 
-	private _tableName?:string 
+	protected _tableName?:string 
 	;get tableName(){return this._tableName;};;set tableName(v){this._tableName=v;};
 
-	private _db = Sqlite.newDatabaseAsync(this.dbPath)
+	protected _db = Sqlite.newDatabaseAsync(this.dbPath)
 	;public get db(){return this._db;};
 
-	private _backupDbPath = this.dbPath
+	protected _backupDbPath = this.dbPath
 	;public get backupDbPath(){return this._backupDbPath;};;public set backupDbPath(v){this._backupDbPath=v;};
 
 	/**
@@ -237,14 +238,14 @@ export class WordDbSrc implements I_SqliteDbSrc{
 		WordDbSrc_.checkTable(table, w)
 		//let [r, runResult] = await forArr(db, table, w)
 		const forArr2=async(db:Database, table:string, words:SingleWord2[])=>{
-			const [sql,] = WordDbSrc_.getInsertSql(table, words[0])
+			const [sql,] = WordDbSrc_.genQry_insert(table, words[0])
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			runResult.length = words.length
 			//let lastRunResut
 			for(let i = 0; i < words.length; i++){
 				const w = words[i]
-				const [sql, value] = WordDbSrc_.getInsertSql(table, w)
+				const [sql, value] = WordDbSrc_.genQry_insert(table, w)
 				const r = await Sqlite.stmtRun(stmt, value)
 				const copyR:RunResult = lodash.cloneDeep(r)//每次循環 r所指ᵗ地址ˋ皆不變、唯其所指ᵗ數據ˋ變˪
 				// runResult.push(r)
@@ -431,14 +432,14 @@ export class WordDbSrc implements I_SqliteDbSrc{
 			throw new Error(`words.length !== ids.length`)
 		}
 
-		const sql = WordDbSrc_.getUpdateByIdSql(table, $(words[0],'words[0]'), ids[0])[0]
+		const sql = WordDbSrc_.genQry_updateById(table, $(words[0],'words[0]'), ids[0])[0]
 
 		const fn = async()=>{
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			for(let i = 0; i < words.length; i++){
 				let w = words[i]; let id = $(ids)[i]
-				let [,v] = WordDbSrc_.getUpdateByIdSql(table, w, id)
+				let [,v] = WordDbSrc_.genQry_updateById(table, w, id)
 				const r = await Sqlite.stmtRun(stmt, v)
 				runResult.push(r)
 			}
@@ -463,12 +464,12 @@ export class WordDbSrc implements I_SqliteDbSrc{
 	 * @param id 
 	 * @returns 
 	 */
-	public static getUpdateByIdSql(table: string, word:SingleWord2,id: number){
+	public static genQry_updateById(table: string, word:SingleWord2,id: number){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.genSql_updateById(table, obj, id)
+		return Sqlite.genQry_updateById(table, obj, id)
 	}
 
 	/**
@@ -477,12 +478,12 @@ export class WordDbSrc implements I_SqliteDbSrc{
 	 * @param word 
 	 * @returns 
 	 */
-	public static getInsertSql(table: string, word:SingleWord2){
+	public static genQry_insert(table: string, word:SingleWord2){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = SingleWord2.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.genSql_insert(table, obj)
+		return Sqlite.genQry_insert(table, obj)
 	}
 
 

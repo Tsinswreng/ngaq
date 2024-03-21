@@ -121,11 +121,16 @@ export default class Sqlite{
 	public static readonly sql = {
 		genSql_SelectAllIntSafe : Sqlite.genSql_SelectAllIntSafe
 		, genSql_columnCastToText:Sqlite.genSql_columnCastToText
-		, genSql_insert:Sqlite.genSql_insert
-		, genSql_updateById:Sqlite.genSql_updateById
+		, genSql_insert:Sqlite.genQry_insert
+		, genSql_updateById:Sqlite.genQry_updateById
 		, getCreateTableSqlTemplateFromSqlite_master: Sqlite.getCreateTableSqlTemplateFromSqlite_master
 		, genSql_addColumn:Sqlite.genSql_addColumn
 		, genSql_renameTable:Sqlite.genSql_renameTable
+	}
+
+	static readonly genSqy = {
+		genQry_insert:Sqlite.genQry_insert
+		, genQry_updateById:Sqlite.genQry_updateById
 	}
 
 	public static readonly stmt = {
@@ -529,14 +534,14 @@ export default class Sqlite{
 	 * @returns 
 	 */
 	public static async dbInsertObjs(db:Database, table:string, objs:SqliteType.NonArrObj[], ignoredKeys?:string[]){
-		const [insertSql, ] = Sqlite.genSql_insert(table, objs[0], ignoredKeys)
+		const [insertSql, ] = Sqlite.genQry_insert(table, objs[0], ignoredKeys)
 		// const stmt = db.prepare(insertSql, function(err){
 		// 	if(err){throw err}
 		// })
 		const stmt = await Sqlite.prepare(db, insertSql)
 		const runResults:RunResult[] =[]
 		for(const o of objs){
-			const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
+			const [,params] = Sqlite.genQry_insert(table, o, ignoredKeys)
 			const runResult = await Sqlite.stmtRun(stmt, params)
 			runResults.push(runResult)
 		}
@@ -561,7 +566,7 @@ export default class Sqlite{
 	// }
 
 	public static async getStmt_insertObj(db:Database, table:string, objs:SqliteType.NonArrObj, ignoredKeys?:string[]){
-		const [insertSql, ] = Sqlite.genSql_insert(table, objs, ignoredKeys)
+		const [insertSql, ] = Sqlite.genQry_insert(table, objs, ignoredKeys)
 		// const stmt = db.prepare(insertSql, function(err){
 		// 	if(err){throw err}
 		// })
@@ -575,7 +580,7 @@ export default class Sqlite{
 			
 		}
 		for(const o of objs){
-			const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
+			const [,params] = Sqlite.genQry_insert(table, o, ignoredKeys)
 			const runResult = await Sqlite.stmtRun(stmt, params)
 			runResults.push(runResult)
 		}
@@ -586,7 +591,7 @@ export default class Sqlite{
 		const runResults:RunResult[] =[]
 		const fn = async()=>{
 			for(const o of objs){
-				const [,params] = Sqlite.genSql_insert(table, o, ignoredKeys)
+				const [,params] = Sqlite.genQry_insert(table, o, ignoredKeys)
 				const runResult = await Sqlite.stmtRun(stmt, params)
 				runResults.push(runResult)
 			}
@@ -1210,17 +1215,12 @@ FROM '${tableName}';`
 	 * @param obj 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static genSql_insert(table:string, obj:SqliteType.NonArrObj, ignoredKeys?:string[]):[string, any[]]{
+	public static genQry_insert(table:string, obj:SqliteType.NonArrObj, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
 		
 		let keys = Object.keys(obj)
-		// for(const k of keys){
-		// 	if(	typeof (obj[k]) === 'string'	){
-		// 		obj[k] = obj[k]+''
-		// 	}
-		// }
 		const columns = keys.join(', ');
 		const placeholders = keys.map(()=>'?').join(',')
 		let insertSql = `INSERT INTO '${table}' (${columns}) VALUES (${placeholders})`
@@ -1237,7 +1237,7 @@ FROM '${tableName}';`
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static genSql_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
+	public static genQry_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}
@@ -1282,11 +1282,11 @@ FROM '${tableName}';`
 		//const srcRows = await Sqlite.all<object>(srcDb, fn_selectAll(srcTable))
 		const srcRows = await Sqlite.all<object>(srcDb, selectAll_safe)
 		//console.log(srcRows)//t
-		let insertSql = Sqlite.genSql_insert(neoName, srcRows[0])[0]
+		let insertSql = Sqlite.genQry_insert(neoName, srcRows[0])[0]
 		//console.log(insertSql)//t
 		const values:any[] = []
 		for(const row of srcRows){
-			const v:any[] = Sqlite.genSql_insert(neoName, row)[1]
+			const v:any[] = Sqlite.genQry_insert(neoName, row)[1]
 			//console.log(v)//t
 			values.push(v)
 		}

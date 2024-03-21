@@ -13,8 +13,7 @@ import { DbRow_VocaTableMetadata } from "@backend/interfaces/VocaTableMetadata";
 type Db = SqliteType.Database
 class _VocaTableDbSrc extends Abs_SqliteDbSrc{
 
-	// protected _dbName: string = 'child'
-	// get dbName(){return this._dbName}
+	static metadataTableName = '_metadata'
 
 	protected constructor(){
 		super()
@@ -51,8 +50,10 @@ CREATE TABLE ${isExist} '${table}'(
 	}
 
 	createTable(table: string, config: CreateTableConfig  = {ifNotExists:false}): Promise<unknown> {
+		const args = arguments
+		this.eventEmmiter.emit(this.eventNames.createTable_before, args)
 		return _VocaTableDbSrc.createTable(this.db, table, config).then((d)=>{
-			this.eventEmmiter.emit(this.eventNames.createTable)
+			this.eventEmmiter.emit(this.eventNames.createTable_after, args, d)
 		})
 	}
 

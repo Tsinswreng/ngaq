@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
+import { $a } from "@shared/Ut";
 export interface I_SqliteDbSrc{
 
 	get db():SqliteType.Database
@@ -9,6 +10,8 @@ export interface I_SqliteDbSrc{
 	get eventEmmiter(): EventEmitter
 	get eventNames(): EventNames
 	createTable(table:string, config:CreateTableConfig):Promise<unknown>
+	genQry_insert(table:string, obj:Object):[string, unknown[]]
+	genQry_updateById(table:string, obj:Object, id:number|string):[string, unknown[]]
 	//createTable: (table:string, config:CreateTableConfig)=>Promise<unknown>
 }
 
@@ -40,7 +43,8 @@ export class EventNames{
 	static new(){
 		return new this()
 	}
-	createTable = 'createTable'
+	createTable_before = 'createTable_before'
+	createTable_after = 'createTable_after'
 	error = 'error'
 }
 
@@ -99,6 +103,15 @@ abstract class _Abs_SqliteDbSrc implements I_SqliteDbSrc{
 	protected _mode:number = Sqlite.openMode.DEFAULT_CREATE
 
 	abstract createTable(table: string, config: CreateTableConfig): Promise<unknown>;
+
+	genQry_insert(table: string, obj: Object): [string, unknown[]] {
+		throw new Error()
+	}
+
+	genQry_updateById(table: string, obj: Object, id: string | number): [string, unknown[]] {
+		throw new Error()
+	}
+
 }
 
 
@@ -106,5 +119,3 @@ abstract class _Abs_SqliteDbSrc implements I_SqliteDbSrc{
 export const Abs_SqliteDbSrc:Abs_SqliteDbSrc_Static<_Abs_SqliteDbSrc> & typeof _Abs_SqliteDbSrc = _Abs_SqliteDbSrc //不寫& typeof xxx 則不可繼承
 export type Abs_SqliteDbSrc = _Abs_SqliteDbSrc
 
-abstract class c1 extends _Abs_SqliteDbSrc{}
-abstract class c2 extends Abs_SqliteDbSrc{}
