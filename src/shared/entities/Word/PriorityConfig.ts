@@ -2,7 +2,7 @@
 import { Priority } from "@shared/entities/Word/Word"
 type Conf0 = typeof Priority.defaultConfig
 type Fn<Return=any> = <Return=any>(...args:any[])=>Return
-interface I_WordPriority{
+interface I_WordWeight{
 	/** 此配置項之名 */
 	name:string
 	/** 在哪些單詞表起效。若潙undefined則皆起效 */
@@ -25,13 +25,12 @@ interface I_WordPriority{
 
 }
 
-class PriorityConfig implements I_WordPriority{
+class WeightConfig implements I_WordWeight{
 	name=''
 	includeTables= []
 	params:Partial<Conf0>={}
 	filterBefore?:(...args:any[])=>boolean
 	calcPrioFnArr?: Fn<any>[] | undefined;
-
 }
 
 /*
@@ -43,7 +42,7 @@ class PriorityConfig implements I_WordPriority{
 /* 
 定義一個默認算法類
 每張詞表定義一個算法實現
-建 VocaTableManager、焉ʸ存各詞表ᵗ權重算法
+建 WordTableMetadata、焉ʸ存各詞表ᵗ權重算法
 
 id	表名	權重算法代碼(js)
 

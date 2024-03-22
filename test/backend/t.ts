@@ -126,6 +126,12 @@ class Aa{
 
 }
 
+// Aa.map = new Map() //相當於static map
+
+// Aa.prototype.map = new Map() //相當於不加static
+
 const aa = new Aa()
 
 console.log(Aa === aa.constructor)
+
+

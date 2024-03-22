@@ -28,7 +28,7 @@ export function inherit<Ch, Fa>(child:Ch,father){
 		throw new Error('child does not have constructor')
 	}
 	Object.setPrototypeOf(father, child.constructor.prototype); // 设置原型链
-	Object.assign(father,child)
+	//Object.assign(father,child)
 	return father as Ch
 }
 

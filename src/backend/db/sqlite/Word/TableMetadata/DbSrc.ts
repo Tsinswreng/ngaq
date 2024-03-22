@@ -1,4 +1,4 @@
-import { CreateTableConfig, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
+import { CreateTableOpt as CreateTableOpt, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { DbRow_VocaTableMetadata } from "@backend/interfaces/VocaTableMetadata";
 import { inherit } from "@shared/Ut";
@@ -6,7 +6,7 @@ import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
 type Db = SqliteType.Database
 class _WordTableMetadataDbSrc extends Abs_DbSrc{
 
-	static metadataTableName = '_metadata'
+	static readonly metadataTableName = '_metadata'
 
 	static emmiter__handler = new Map<WordDbSrc, _WordTableMetadataDbSrc>()
 
@@ -17,18 +17,28 @@ class _WordTableMetadataDbSrc extends Abs_DbSrc{
 	static async New(...params:Parameters<typeof Abs_DbSrc.New>){
 		const f = await Abs_DbSrc.New(...params)
 		const c = new this()
-		return inherit(c,f)
+		const o = inherit(c,f)
+		//Object.setPrototypeOf(f,c)
+		return o as _WordTableMetadataDbSrc
 	}
 
 	initListener(){
 		const self = this
-		const emt = self.eventEmmiter_deprecated
-		const names = self.eventNames_deprecated
-		emt.on(names.createTable_after, self.createTable.bind(self))
-		console.log('created') //t
+		const emt = self.linkedEmitter
+		const events = self.events
+	/* 	emt.eventEmitter.on(enents.createTable_after.name, (...args)=>{
+			self.createTable(_WordTableMetadataDbSrc.metadataTableName)
+		}) */
+		emt.on(events.createTable_after, (table:string, opt:CreateTableOpt)=>{
+			//self.createTable(_WordTableMetadataDbSrc.metadataTableName)
+			console.log(`${table} was created successfully`)
+		})
+
+		
+		
 	}
 
-	static createTable(db:Db, table:string, config:CreateTableConfig = {ifNotExists:false}){
+	static createTable(db:Db, table:string, config:CreateTableOpt = {ifNotExists:false}){
 		const ifNotExists = config.ifNotExists
 		function getSql(table:string){
 			let isExist = ''
@@ -50,11 +60,12 @@ CREATE TABLE ${isExist} '${table}'(
 		return Sqlite.all(db, getSql(table))
 	}
 
-	createTable(table: string, config: CreateTableConfig  = {ifNotExists:false}): Promise<unknown> {
+	createTable(table: string = _WordTableMetadataDbSrc.metadataTableName, opt: CreateTableOpt  = {ifNotExists:false}): Promise<unknown> {
 		const args = arguments
-		this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_before, args)
-		return _WordTableMetadataDbSrc.createTable(this.db, table, config).then((d)=>{
-			this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_after, args, d)
+		const got = [table, opt]
+		this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_before, got)
+		return _WordTableMetadataDbSrc.createTable(this.db, table, opt).then((d)=>{
+			//this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_after, args, d)
 		})
 	}
 

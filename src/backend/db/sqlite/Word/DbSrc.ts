@@ -7,11 +7,11 @@ import _ from 'lodash';
 import Word, { VocaDbTable } from '@shared/SingleWord2';
 import VocaRaw2, { config } from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
-import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
+import { $, $a, creatFileSync, inherit, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
-import { CreateTableConfig, Abs_DbSrc, New_Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
+import { CreateTableOpt, Abs_DbSrc, New_Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
 import { WordTableMetadataDbSrc } from '@backend/db/sqlite/Word/TableMetadata/DbSrc';
 import {WordTable} from '@backend/db/sqlite/Word/Table'
 const VocaTableColumnName = VocaDbTable
@@ -25,8 +25,9 @@ export class WordDbSrc extends Abs_DbSrc{
 	static override async New(props:New_Abs_DbSrc & {
 		_tableMetadataDbSrc?:WordTableMetadataDbSrc
 	}){
+		const f = await Abs_DbSrc.New(props)
 		const o = new this()
-		Object.assign(o, props)
+		inherit(o,f)
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
@@ -34,7 +35,16 @@ export class WordDbSrc extends Abs_DbSrc{
 			_dbPath:props._dbPath
 		})
 		WordTableMetadataDbSrc.emmiter__handler.set(o, props._tableMetadataDbSrc)
+		Object.assign(o, props)
+		o.initMdListener()
 		return o
+	}
+
+	initMdListener(){
+		const self = this
+		self.linkedEmitter.on(self.events.createTable_after,(...args)=>{
+			self.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
+		})
 	}
 
 	// /**
@@ -98,7 +108,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param table 
 	 * @returns 
 	 */
-	public static createTable_deprecated(db:Database, table:string, ifNotExists=false){
+	public static createTable_helper(db:Database, table:string, ifNotExists=false){
 		function getSql(table:string){
 			let isExist = ''
 			if(ifNotExists){
@@ -126,7 +136,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		}
 		return Sqlite.all(db, getSql(table))
 	}public creatTable_deprecated(table=$a(this.tableName), ifNotExists=false){
-		return WordDbSrc_.createTable_deprecated(this.db, table, ifNotExists)
+		return WordDbSrc_.createTable_helper(this.db, table, ifNotExists)
 	}
 
 
@@ -134,7 +144,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		const ifNotExists = opt.ifNotExists
 		const args = arguments
 		this.linkedEmitter.emit(this.events.createTable_before, args)
-		return WordDbSrc_.createTable_deprecated(this.db, table, ifNotExists)
+		return WordDbSrc_.createTable_helper(this.db, table, ifNotExists)
 		.then((d)=>{
 			this.linkedEmitter.emit(this.events.createTable_after, args, d)
 		})

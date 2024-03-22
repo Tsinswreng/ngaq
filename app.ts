@@ -1,3 +1,5 @@
+require('module-alias/register');
+require('tsconfig-paths/register');
 Error.stackTraceLimit = 99
 // worked
 //const express = require('express')

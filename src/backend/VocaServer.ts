@@ -1,5 +1,3 @@
-//require('tsconfig-paths/register');
-require('module-alias/register');
 import WordDbSrc_, { WordDbSrc } from "./db/sqlite/Word/DbSrc";
 //const cors = require('cors')
 //const express = require('express')
@@ -22,6 +20,7 @@ import merge from "merge-stream";
 import { Readable } from "stream";
 import jwt from 'jsonwebtoken'
 import { WordTable } from "./db/sqlite/Word/Table";
+import EventEmitter from "eventemitter3";
 const secretKey = '114514'
 
 Error.stackTraceLimit = 99
@@ -124,13 +123,23 @@ export default class VocaServer{
 
 
 		C.wordDbSrc.linkedEmitter.eventEmitter.on(C.wordDbSrc.events.createTable_before.name, (...args)=>{
-			console.log(args)
-			console.log('before create table')
+			const table = args[0]['0']
+			//console.log(`before create table ${table}`)
 		})
 
 		C.wordDbSrc.linkedEmitter.eventEmitter.on(C.wordDbSrc.events.createTable_after.name, (...args)=>{
-			console.log(args)
-			console.log('create table done')
+			/* console.log(args)
+			console.log(args[0]) */
+			//console.log(`create table done ${args[0]}`)
+		})
+
+		C.wordDbSrc.linkedEmitter.on(C.wordDbSrc.events.createTable_after, (...args)=>{
+			const table = args[0]['0']
+			console.log(`after create table ${table}`)
+			const inEmt = C.wordDbSrc.tableMetadataDbSrc.linkedEmitter.eventEmitter as EventEmitter
+			console.log(
+				inEmt.eventNames()
+			)
 		})
 		
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')

@@ -4,7 +4,7 @@ import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 import { Db_User } from '@shared/interfaces/User'
-import { Abs_DbSrc, CreateTableConfig } from '../_base/DbSrc'
+import { Abs_DbSrc, CreateTableOpt } from '../_base/DbSrc'
 //import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
 
 type Database = SqliteType.Database
@@ -44,7 +44,7 @@ CREATE TABLE ${isExist} '${table}'(
 		return Sqlite.all(db, getSql(table))
 	}
 
-	createTable(table:string, config = CreateTableConfig.new()){
+	createTable(table:string, config = CreateTableOpt.new()){
 		const ifNotExists = config.ifNotExists
 		return C.createTable(this._db, table, ifNotExists)
 	}

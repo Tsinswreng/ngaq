@@ -45,6 +45,10 @@ class _Emitter{
 			}
 		}
 	}
+
+	on(event:_Event, callback:(...args:any[])=>void){
+		this.eventEmitter.on(event.name, callback)
+	}
 }
 
 export class Events{

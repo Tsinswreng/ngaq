@@ -22,7 +22,7 @@ export interface I_DbSrc{
 	get backupDbPath():string|undefined
 	get eventEmmiter_deprecated(): EventEmitter
 	get eventNames_deprecated(): EventNames_deprecated
-	createTable(table:string, config:CreateTableConfig):Promise<unknown>
+	createTable(table:string, config:CreateTableOpt):Promise<unknown>
 	get linkedEmitter():Le.Emitter
 	get events():Le.Events
 	// genQry_insert(table:string, obj:Object):[string, unknown[]]
@@ -66,7 +66,7 @@ export class LinkedEventEmitter extends Le.Emitter{
 
 
 
-export class CreateTableConfig{
+export class CreateTableOpt{
 	static new(){
 		return new this()
 	}
@@ -112,17 +112,20 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 
 	protected constructor(){}
 
-	static new(p):_Abs_DbSrc{
+	/**
+	 * @deprecated
+	 * @param p 
+	 */
+	static new(p:never):_Abs_DbSrc{
 		throw new Error('')
 	}
 
-	static async New(props:New_Abs_DbSrc){
+	static async New(props:New_Abs_DbSrc):Promise<_Abs_DbSrc>{
 		//@ts-ignore
 		const o = new this()
 		Object.assign(o, props)
-		if(o._dbPath != void 0){
-			o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
-		}
+		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
+		//console.log(o.dbPath, o.db)
 		return o
 	}
 	
@@ -152,7 +155,7 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 	get backupDbPath(){return this._backupDbPath}
 	protected _mode:number = Sqlite.openMode.DEFAULT_CREATE
 
-	abstract createTable(table: string, config: CreateTableConfig): Promise<unknown>;
+	abstract createTable(table: string, config: CreateTableOpt): Promise<unknown>;
 
 
 }
