@@ -18,8 +18,8 @@ class _Event{
 
 export interface I_EventEmitter{
 	emit(eventName: string | symbol, ...args: any[]):unknown
+	on(eventName: string | symbol, listener: (...args: any[]) => void): this;
 }
-
 
 
 class _Emitter{
@@ -36,8 +36,13 @@ class _Emitter{
 	}
 
 	emit(event:_Event, ...args:any[]){
-		for(let e = event;e.base != void 0 && e.base instanceof _Event;e = e.base){
+		for(let e = event;e instanceof _Event;){
 			this.eventEmitter.emit(e.name, ...args)
+			if( e.base != void 0 && e.base instanceof _Event ){
+				e = e.base
+			}else{
+				break
+			}
 		}
 	}
 }

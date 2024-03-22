@@ -2,20 +2,21 @@ import { I_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 //import { Db_User } from "@shared/interfaces/User"
 import Sqlite, {SqliteType} from "@backend/db/Sqlite"
 import { $a, inherit } from "@shared/Ut"
-import EventEmitter = require("events")
+//import EventEmitter = require("eventemitter3")
+import { EventEmitter } from "eventemitter3";
 type RunResult = SqliteType.RunResult
-type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
+//type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
 import * as Le from '@shared/linkedEvent'
 export class InnerTableEventEmitter extends EventEmitter{
-	protected constructor(p:Para_EventEmitter){
-		super(p)
+	protected constructor(props?:ConstructorParameters<typeof EventEmitter>){
+		super()
 	}
-	static new(props?:Para_EventEmitter){
+	static new(props?:ConstructorParameters<typeof EventEmitter>){
 		if(props != void 0){
-			const o = new InnerTableEventEmitter(props)
+			const o = new InnerTableEventEmitter(...props)
 			return o
 		}
-		const o = new InnerTableEventEmitter({captureRejections:true})
+		const o = new InnerTableEventEmitter()
 		return o
 	}
 }

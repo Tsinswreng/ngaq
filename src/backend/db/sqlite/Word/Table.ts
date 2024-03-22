@@ -5,7 +5,6 @@ import { WordDbRow } from "@shared/interfaces/Word";
 import { Word } from "@shared/entities/Word/Word";
 import Sqlite, {SqliteType} from "@backend/db/Sqlite";
 import lodash from 'lodash'
-import VocaRaw2 from "@shared/VocaRaw2";
 
 type Database = SqliteType.Database
 class _WordTable extends Abs_Table{
@@ -230,7 +229,7 @@ class _WordTable extends Abs_Table{
 
 		async function getNeoWord_existedWordMap(db:Database, table:string, words:Word[]){
 			
-			words = VocaRaw2.merge(words) 
+			words = Word.merge(words) 
 			const neoWord_existedWordMap = new Map<Word, Word|undefined>()
 			const neoWordShapes:string[] = words.map(e=>e.wordShape)
 			const existedRows:(WordDbRow)[][] = await _WordTable.qryWordByWordShape(db, table, neoWordShapes)

@@ -130,9 +130,14 @@ export class WordDbSrc extends Abs_DbSrc{
 	}
 
 
-	createTable(table=$a(this.tableName), config={ifNotExists:false}){
-		const ifNotExists = config.ifNotExists
+	createTable(table=$a(this.tableName), opt={ifNotExists:false}){
+		const ifNotExists = opt.ifNotExists
+		const args = arguments
+		this.linkedEmitter.emit(this.events.createTable_before, args)
 		return WordDbSrc_.createTable_deprecated(this.db, table, ifNotExists)
+		.then((d)=>{
+			this.linkedEmitter.emit(this.events.createTable_after, args, d)
+		})
 	}
 
 	/**

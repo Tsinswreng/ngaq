@@ -1,11 +1,4 @@
-//import express from 'express'
-/*TODO:{
-  日誌模塊
-  數據庫中null作0
-}*/
-
 //require('tsconfig-paths/register');
-
 require('module-alias/register');
 import WordDbSrc_, { WordDbSrc } from "./db/sqlite/Word/DbSrc";
 //const cors = require('cors')
@@ -28,13 +21,13 @@ import * as fs from 'fs'
 import merge from "merge-stream";
 import { Readable } from "stream";
 import jwt from 'jsonwebtoken'
+import { WordTable } from "./db/sqlite/Word/Table";
 const secretKey = '114514'
 
 Error.stackTraceLimit = 99
 const config = Config.getInstance()
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
-
 //const rootDir:string = require('app-root-path').path
 const rootDir = process.cwd()
 const tempUserName = '114'
@@ -42,15 +35,7 @@ const tempPassword = '514'
 const oneDaySec = 3600*24
 
 const dirs:string[] = []
-//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`)
-//dirs.push(`D:\\_\\視聽\\圖`)
 dirs.push(...(config.config.randomImgDir??[]))
-//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene\\银河系.png`)
-//dirs.push(`C:\\Users\\lenovo\\Pictures\\屏保\\scene`)
-// dirs.push(`D:\\_\\視聽\\圖\\bili`)
-// dirs.push(`D:\\_\\視聽\\圖\\qqero`)
-// dirs.push(`D:\\_\\視聽\\圖\\貼吧ᙆᵗ圖`)
-
 
 //<{}, any, any, QueryString.ParsedQs, Record<string, any>>
 // type a = Express.Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>
@@ -125,17 +110,27 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
-	public static sqlt:WordDbSrc
-	static userDb
+	public static wordDbSrc:WordDbSrc
 	public static session
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
-		C.sqlt = await WordDbSrc_.New({
+		C.wordDbSrc = await WordDbSrc_.New({
 			_dbPath:config.config.dbPath
 			, _backupDbPath:config.config.backupDbPath
 			,_mode: Sqlite.openMode.DEFAULT_CREATE
+		})
+
+
+		C.wordDbSrc.linkedEmitter.eventEmitter.on(C.wordDbSrc.events.createTable_before.name, (...args)=>{
+			console.log(args)
+			console.log('before create table')
+		})
+
+		C.wordDbSrc.linkedEmitter.eventEmitter.on(C.wordDbSrc.events.createTable_after.name, (...args)=>{
+			console.log(args)
+			console.log('create table done')
 		})
 		
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
@@ -254,7 +249,7 @@ export default class VocaServer{
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
-			const prms = await WordDbSrc_.saveWords(this.sqlt.db, sws)
+			const prms = await WordDbSrc_.saveWords(this.wordDbSrc.db, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
 			// }
@@ -284,18 +279,18 @@ export default class VocaServer{
 						_dbPath:(config.config.backupDbPath)
 						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				await WordDbSrc_.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
+				await WordDbSrc_.backupTable(VocaServer.wordDbSrc.db, sws[0].table, backupDb.db) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				const [init, modified] = await Sqlite.transaction(
-					VocaServer.sqlt.db
-					, await WordDbSrc_.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
+					VocaServer.wordDbSrc.db
+					, await WordDbSrc_.addWordsOfSameTable_fn(VocaServer.wordDbSrc.db, sws)
 				)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				const addedWords_init:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, init)
-				const addedWords_modified:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.sqlt.db, sws[0].table, modified)
+				const addedWords_init:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, init)
+				const addedWords_modified:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
 				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){
@@ -311,7 +306,7 @@ export default class VocaServer{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
-				await this.sqlt.backAllTables()
+				await this.wordDbSrc.backAllTables()
 				res.send('backup successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){
 				console.error(e)
@@ -337,7 +332,9 @@ export default class VocaServer{
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
 				const tableName:string = $((req.body).tableName)
-				await this.sqlt.creatTable_deprecated(tableName, false)
+				//await this.wordDbSrc.creatTable_deprecated(tableName, false)
+				await this.wordDbSrc.createTable(tableName, {ifNotExists:false}).then(()=>{
+				})
 				res.send('creat table successfully\n'+Tempus.format(nunc)) //t
 			}catch(e){
 				console.error(e)
@@ -383,7 +380,7 @@ export default class VocaServer{
 			
 			const nonNullTables:string[] = []
 			for(const u of tables){
-				const b = await Sqlite.isTableExist(C.sqlt.db,u)
+				const b = await Sqlite.isTableExist(C.wordDbSrc.db,u)
 				if(b){nonNullTables.push(u)}
 			}
 			
@@ -404,7 +401,7 @@ export default class VocaServer{
 			}
 			const table:string = table0
 			//const vsqlt = await VocaSqlite.neW({_tableName:table})
-			const stream = await C.sqlt.readStream(table)
+			const stream = await C.wordDbSrc.readStream(table)
 			//const stream = await vsqlt.readStream()
 			res.setHeader('Content-Type', 'application/octet-stream');
 			stream.pipe(res)
@@ -422,10 +419,10 @@ export default class VocaServer{
 			//const vsqlt = await VocaSqlite.neW({_tableName:table})
 			config.reload()
 			
-			const tables = await Sqlite.filterExistTables(C.sqlt.db, config.config.tables??[])
+			const tables = await Sqlite.filterExistTables(C.wordDbSrc.db, config.config.tables??[])
 			const streams:Readable[] = new Array(tables.length)
 			for(let i = 0; i < tables.length; i++){
-				const ua = await C.sqlt.readStream(tables[i])
+				const ua = await C.wordDbSrc.readStream(tables[i])
 				streams[i] = ua
 			}
 			const stream = merge(...streams)

@@ -1,8 +1,9 @@
-import { EventEmitter } from "events";
+//import { EventEmitter } from "events";
+import { EventEmitter } from "eventemitter3";
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { $a, inherit } from "@shared/Ut";
 import * as Le from '@shared/linkedEvent'
-type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
+//type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
 
 export interface Abs_DbSrc_Static<Self>{
 	new:(...params:any[])=>Self
@@ -52,7 +53,7 @@ export class Events extends Le.Events{
 }
 
 export class LinkedEventEmitter extends Le.Emitter{
-	protected _eventEmitter: Le.I_EventEmitter = InnerDbSrcEventEmitter.new()
+	protected _eventEmitter: EventEmitter = InnerDbSrcEventEmitter.new()
 	protected constructor(){
 		super()
 	}
@@ -73,15 +74,15 @@ export class CreateTableConfig{
 }
 
 export class InnerDbSrcEventEmitter extends EventEmitter{
-	protected constructor(p:Para_EventEmitter){
-		super(p)
+	protected constructor(){
+		super()
 	}
-	static new(props?:Para_EventEmitter){
+	static new(props?:ConstructorParameters<typeof EventEmitter>){
 		if(props != void 0){
-			const o = new InnerDbSrcEventEmitter(props)
+			const o = new InnerDbSrcEventEmitter(...props)
 			return o
 		}
-		const o = new InnerDbSrcEventEmitter({captureRejections:true})
+		const o = new InnerDbSrcEventEmitter()
 		return o
 	}
 }
