@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
-import { $a } from "@shared/Ut";
+import { $a, inherit } from "@shared/Ut";
+import * as Le from '@shared/linkedEvent'
 type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
 
 export interface Abs_DbSrc_Static<Self>{
@@ -18,16 +19,18 @@ export interface I_DbSrc{
 	get dbName():string
 	get dbPath():string
 	get backupDbPath():string|undefined
-	get eventEmmiter(): EventEmitter
-	get eventNames(): EventNames
+	get eventEmmiter_deprecated(): EventEmitter
+	get eventNames_deprecated(): EventNames_deprecated
 	createTable(table:string, config:CreateTableConfig):Promise<unknown>
-	genQry_insert(table:string, obj:Object):[string, unknown[]]
-	genQry_updateById(table:string, obj:Object, id:number|string):[string, unknown[]]
+	get linkedEmitter():Le.Emitter
+	get events():Le.Events
+	// genQry_insert(table:string, obj:Object):[string, unknown[]]
+	// genQry_updateById(table:string, obj:Object, id:number|string):[string, unknown[]]
 	//createTable: (table:string, config:CreateTableConfig)=>Promise<unknown>
 }
 
 
-export class EventNames{
+export class EventNames_deprecated{
 	protected constructor(){}
 	static new(){
 		return new this()
@@ -37,6 +40,31 @@ export class EventNames{
 	error = 'error'
 }
 
+export class Events extends Le.Events{
+	protected constructor(){
+		super()
+	}
+	static new(){
+		return new this()
+	}
+	createTable_before = Le.Event.new('createTable_before')
+	createTable_after = Le.Event.new('createTable_after')
+}
+
+export class LinkedEventEmitter extends Le.Emitter{
+	protected _eventEmitter: Le.I_EventEmitter = InnerDbSrcEventEmitter.new()
+	protected constructor(){
+		super()
+	}
+	static new(...params:Parameters<typeof Le.Emitter.new>){
+		const f = Le.Emitter.new(...params)
+		const c = new this()
+		return inherit(c,f)
+	}
+}
+
+
+
 export class CreateTableConfig{
 	static new(){
 		return new this()
@@ -44,18 +72,39 @@ export class CreateTableConfig{
 	ifNotExists = false
 }
 
-export class SqliteDbEventEmitter extends EventEmitter{
+export class InnerDbSrcEventEmitter extends EventEmitter{
 	protected constructor(p:Para_EventEmitter){
 		super(p)
 	}
 	static new(props?:Para_EventEmitter){
 		if(props != void 0){
-			const o = new SqliteDbEventEmitter(props)
+			const o = new InnerDbSrcEventEmitter(props)
 			return o
 		}
-		const o = new SqliteDbEventEmitter({captureRejections:true})
+		const o = new InnerDbSrcEventEmitter({captureRejections:true})
 		return o
 	}
+}
+
+
+export class DbSrcEventEmitter extends Le.Emitter{
+	protected _eventEmitter: Le.I_EventEmitter = InnerDbSrcEventEmitter.new()
+	protected constructor(){
+		super()
+	}
+	static new(...params:Parameters<typeof Le.Emitter.new>){
+		const f = Le.Emitter.new(...params)
+		const c = new this()
+		return inherit(c,f)
+	}
+}
+
+
+export interface New_Abs_DbSrc{
+	_dbName?:string,
+	_dbPath:string,
+	_backupDbPath?:string
+	,_mode?:number
 }
 
 abstract class _Abs_DbSrc implements I_DbSrc{
@@ -66,12 +115,7 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 		throw new Error('')
 	}
 
-	static async New(props:{
-		_dbName?:string,
-		_dbPath:string,
-		_backupDbPath?:string
-		,_mode?:number
-	}){
+	static async New(props:New_Abs_DbSrc){
 		//@ts-ignore
 		const o = new this()
 		Object.assign(o, props)
@@ -85,11 +129,17 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 	protected _db: SqliteType.Database
 	get db(){return this._db}
 
-	protected _eventEmmiter = SqliteDbEventEmitter.new()
-	get eventEmmiter(){return this._eventEmmiter}
+	protected _eventEmmiter_deprecated = InnerDbSrcEventEmitter.new()
+	get eventEmmiter_deprecated(){return this._eventEmmiter_deprecated}
 
-	protected _eventNames = EventNames.new()
-	get eventNames(){return this._eventNames}
+	protected _linkedEmitter = Le.Emitter.new(InnerDbSrcEventEmitter.new())
+	get linkedEmitter(){return this._linkedEmitter}
+
+	protected _eventNames_deprecated = EventNames_deprecated.new()
+	get eventNames_deprecated(){return this._eventNames_deprecated}
+
+	protected _events = Events.new()
+	get events(){return this._events}
 
 	protected _dbName:string
 	get dbName(){return this._dbName}
@@ -103,17 +153,10 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 
 	abstract createTable(table: string, config: CreateTableConfig): Promise<unknown>;
 
-	genQry_insert(table: string, obj: Object): [string, unknown[]] {
-		throw new Error()
-	}
-
-	genQry_updateById(table: string, obj: Object, id: string | number): [string, unknown[]] {
-		throw new Error()
-	}
 
 }
 
-//export const Abs_SqliteDbSrc = _Abs_SqliteDbSrc
-export const Abs_DbSrc:Abs_DbSrc_Static<_Abs_DbSrc> & typeof _Abs_DbSrc = _Abs_DbSrc //不寫& typeof xxx 則不可繼承
+export const Abs_DbSrc = _Abs_DbSrc
+//export const Abs_DbSrc:Abs_DbSrc_Static<_Abs_DbSrc> & typeof _Abs_DbSrc = _Abs_DbSrc //不寫& typeof xxx 則不可繼承
 export type Abs_DbSrc = _Abs_DbSrc
 

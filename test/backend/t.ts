@@ -1,6 +1,7 @@
 import 'tsconfig-paths/register'
 import * as algo from '@shared/algo'
 import { Sros } from '@shared/Sros'
+import { EventEmitter } from 'stream'
 
 interface Static<Self>{
 	new: (this)=>Self
@@ -58,23 +59,73 @@ function emitEv(){
 
 emitEv() */
 
-import {
-	VocaTableDbSrc
-} from '@backend/db/sqlite/VocaTableMetadata/DbSrc'
-import { Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
-
-async function main(){
-	const o = await VocaTableDbSrc.New({
-		_dbPath: 'testDb240320.db'
-	})
-
-	console.log(o.dbName)
-	console.log(o.eventNames)
-	console.log(
-		o instanceof VocaTableDbSrc
-	)
-	console.log(
-		o instanceof Abs_SqliteDbSrc
-	)
+abstract class A{
+	static new(props:{
+		_dbName?:string,
+		_dbPath?:string,
+		_tableName?:string,
+		_backupDbPath?:string
+		,mode?:number
+		//,_tableMetadataDbSrc:Object
+	}){}
 }
-main()
+
+const A_ = A
+type A_ = A
+
+class B extends A_{
+	static new(props:{
+		_dbName?:string,
+		_dbPath?:string,
+		_tableName?:string,
+		_backupDbPath?:string
+		,mode?:number
+		,_tableMetadataDbSrc:Object
+	}){}
+}
+
+
+class Event{
+	name: string
+	base: Event|undefined
+	static new():Event{
+		const o = new Event()
+		return o
+	}
+}
+
+class AddRecordEvent extends Event{
+	name: string = 'AddRecordEvent'
+	static new(){
+		const o = new AddRecordEvent()
+		o.base = Event.new()
+		return o
+	}
+}
+
+class AddWordEvent extends AddRecordEvent{
+	name = 'AddWordEvent'
+	static new(){
+		const o = new AddWordEvent()
+		o.base = AddRecordEvent.new()
+		return o
+	}
+}
+
+class Emt extends EventEmitter{
+	eventEmitter = new EventEmitter()
+	myEmit(evt:Event){
+		for(let e = evt;e.base != void 0 && e.base instanceof Event;e = e.base){
+			this.eventEmitter.emit(e.name)
+		}
+	}
+}
+
+
+class Aa{
+
+}
+
+const aa = new Aa()
+
+console.log(Aa === aa.constructor)

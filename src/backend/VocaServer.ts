@@ -135,7 +135,7 @@ export default class VocaServer{
 		C.sqlt = await WordDbSrc_.New({
 			_dbPath:config.config.dbPath
 			, _backupDbPath:config.config.backupDbPath
-			,mode: Sqlite.openMode.DEFAULT_CREATE
+			,_mode: Sqlite.openMode.DEFAULT_CREATE
 		})
 		
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
@@ -278,17 +278,15 @@ export default class VocaServer{
 				const rows:IVocaRow[] = $(req.body[0])
 				//const config2:VocaRawConfig = $(req.body[1])
 				const sws = Word.toJsObj(rows)
-				//console.log(sws[0])//t
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
 				const backupDb = await WordDbSrc_.New({
 						_dbPath:(config.config.backupDbPath)
-						, mode:Sqlite.openMode.DEFAULT_CREATE
+						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
 				await WordDbSrc_.backupTable(VocaServer.sqlt.db, sws[0].table, backupDb.db) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
-				//await Sqlite.stmtRun(stmt) //t 能輸出調用堆棧
 				const [init, modified] = await Sqlite.transaction(
 					VocaServer.sqlt.db
 					, await WordDbSrc_.addWordsOfSameTable_fn(VocaServer.sqlt.db, sws)
@@ -476,21 +474,21 @@ export default class VocaServer{
 
 
 
-		C.app.get('/testStream', async(req, res)=>{
-			const nunc = Tempus.new()
-			console.log(req.path+' '+Tempus.format(nunc))
-			try {
-				const vsqlt = await WordDbSrc_.New({_tableName:'english'})
-				const stream = await vsqlt.readStream()
-				res.setHeader('Content-Type', 'application/octet-stream');
-				stream.pipe(res)
-			} catch (error) {
-				const err = error as Error
-				console.error(err)
-				res.send(Tempus.format(nunc)+'\n'+err.message)
-			}
+		// C.app.get('/testStream', async(req, res)=>{
+		// 	const nunc = Tempus.new()
+		// 	console.log(req.path+' '+Tempus.format(nunc))
+		// 	try {
+		// 		const vsqlt = await WordDbSrc_.New({_tableName:'english'})
+		// 		const stream = await vsqlt.readStream()
+		// 		res.setHeader('Content-Type', 'application/octet-stream');
+		// 		stream.pipe(res)
+		// 	} catch (error) {
+		// 		const err = error as Error
+		// 		console.error(err)
+		// 		res.send(Tempus.format(nunc)+'\n'+err.message)
+		// 	}
 			
-		})
+		// })
 
 		
 		C.app.get('/testWasm', async(req, res)=>{

@@ -6,7 +6,7 @@ import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
-import { VocaDbTable } from '@shared/interfaces/Word';
+import { WordDbRow } from '@shared/interfaces/Word';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
@@ -16,7 +16,7 @@ const Ut = {
 	union : simpleUnion
 };
 
-export type IVocaRow = VocaDbTable
+export type IVocaRow = WordDbRow
 
 
 
@@ -191,8 +191,8 @@ export class Word{
 	// 	return SingleWord2.fieldStringfy(this)
 	// }
 
-	static toJsObj = VocaDbTable.toEntity.bind(VocaDbTable)
-	static toDbObj = VocaDbTable.toPlain.bind(VocaDbTable)
+	static toJsObj = WordDbRow.toEntity.bind(WordDbRow)
+	static toDbObj = WordDbRow.toPlain.bind(WordDbRow)
 
 	/**
 	 * 複製對象

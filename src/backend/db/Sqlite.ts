@@ -887,7 +887,7 @@ export default class Sqlite{
 
 	/**
 	 * 若不同db對象指向同一數據庫 則在fn中調用 由別的db產生的statement實例好像也可以
-	 * @param db 
+	 * @param db 異步
 	 * @param fn 
 	 * @returns 
 	 */
@@ -920,7 +920,7 @@ export default class Sqlite{
 	}
 
 	/**
-	 * 始事務
+	 * 提交事務
 	 * @param db 
 	 */
 	public static commit(db:Database){
@@ -933,7 +933,6 @@ export default class Sqlite{
 				res()
 			})
 		})
-
 	}
 
 	/**
@@ -941,14 +940,14 @@ export default class Sqlite{
 	 * @param db 
 	 * @deprecated
 	 */
-	public static beginTransactionAsync(db:Database){
+/* 	public static beginTransactionAsync(db:Database){
 		db.run(`BEGIN TRANSACTION`, function(err){
 			if(err){
 				//throw err
 				throw sqlErr(err)
 			}
 		})
-	}
+	} */
 
 	/**
 	 * 提交事務
@@ -1237,7 +1236,7 @@ FROM '${tableName}';`
 	 * @param id 
 	 * @returns 返回值是長度潙2之數組、[0]是 帶佔位符之sql語句字串、[1]是佔位符ˋ對應ᵗ值ˉ數組。
 	 */
-	public static genQry_updateById(table:string, obj:object&{length?:never}, id:number, ignoredKeys?:string[]):[string, any[]]{
+	public static genQry_updateById(table:string, obj:object&{length?:never}, id:number|string, ignoredKeys?:string[]):[string, any[]]{
 		if(ignoredKeys !== void 0){
 			obj = copyIgnoringKeys(obj, ignoredKeys)
 		}

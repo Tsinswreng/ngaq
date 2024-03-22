@@ -16,8 +16,18 @@ import json5 from 'json5'
 import * as algo from '@shared/algo' //待分离
 
 
-export function extends_<Ch, Fa>(child:Ch,father,ChildClass){
-	Object.setPrototypeOf(father, ChildClass.prototype); // 设置原型链
+/**
+ * 類ᵗ實例ˋ繼承
+ * @param child 
+ * @param father 
+ * @returns 
+ */
+export function inherit<Ch, Fa>(child:Ch,father){
+	//Object.setPrototypeOf(father, ChildClass.prototype); // 设置原型链
+	if (child?.constructor == void 0){
+		throw new Error('child does not have constructor')
+	}
+	Object.setPrototypeOf(father, child.constructor.prototype); // 设置原型链
 	Object.assign(father,child)
 	return father as Ch
 }

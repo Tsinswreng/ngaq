@@ -11,10 +11,9 @@ import { $, $a, creatFileSync, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
-import { CreateTableConfig, Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
-import { VocaTableMetadata } from '@backend/entities/VocaTableMetadata';
-import { WordTableMetadataDbSrc } from '@backend/db/sqlite/VocaTableMetadata/DbSrc';
-
+import { CreateTableConfig, Abs_DbSrc, New_Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
+import { WordTableMetadataDbSrc } from '@backend/db/sqlite/Word/TableMetadata/DbSrc';
+import {WordTable} from '@backend/db/sqlite/Word/Table'
 const VocaTableColumnName = VocaDbTable
 
 
@@ -23,21 +22,18 @@ export class WordDbSrc extends Abs_DbSrc{
 		super()
 	}
 
-	static async New(
-		props:{
-			_dbName?:string,
-			_dbPath?:string,
-			_tableName?:string,
-			_backupDbPath?:string
-			,mode?:number
-		}
-	){
+	static override async New(props:New_Abs_DbSrc & {
+		_tableMetadataDbSrc?:WordTableMetadataDbSrc
+	}){
 		const o = new this()
 		Object.assign(o, props)
 		if(props._dbPath !== void 0){
-			
-			o._db = await Sqlite.newDatabase(props._dbPath, props.mode)
+			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
+		props._tableMetadataDbSrc = props._tableMetadataDbSrc?? await WordTableMetadataDbSrc.New({
+			_dbPath:props._dbPath
+		})
+		WordTableMetadataDbSrc.emmiter__handler.set(o, props._tableMetadataDbSrc)
 		return o
 	}
 
@@ -63,7 +59,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	// 	return o
 	// }
 
-	protected _tableMetadataDbSrc
+	protected _tableMetadataDbSrc:WordTableMetadataDbSrc
+	get tableMetadataDbSrc(){return this._tableMetadataDbSrc}
 
 	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 
 
@@ -215,13 +212,14 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param table 
 	 * @param words 
 	 */
-	public static checkTable(table:string, words:Word[]){
+	static checkTable = WordTable.checkTable
+/* 	public static checkTable(table:string, words:Word[]){
 		for(const w of words){
 			if(w.table !== table){
 				throw new Error(`w.table !== table\n${w.wordShape}\t${w.table}`)
 			}
 		}
-	}
+	} */
 
 
 	/**
@@ -230,7 +228,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param table 
 	 * @param word 
 	 */
-	private static initAddWord(db:Database, table:string, word:Word):Promise<RunResult[]>
+/* 	private static initAddWord(db:Database, table:string, word:Word):Promise<RunResult[]>
 	private static initAddWord(db:Database, table:string, word:Word[]):Promise<RunResult[]>
 	private static async initAddWord(db:Database, table:string, word:Word|Word[]){
 		let w:Word[]
@@ -265,9 +263,10 @@ export class WordDbSrc extends Abs_DbSrc{
 
 		const runResult:RunResult[] = await fn() //await Sqlite.transaction(db, fn)
 		return runResult
-	}
+	} */
 
-
+	//@ts-ignore
+	private static initAddWord = WordTable.initAddWord
 	
 
 	/**
@@ -277,7 +276,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param words 
 	 * @returns [initAddIds, modifiedIds]
 	 */
-	public static async addWordsOfSameTable_fn(db:Database, words:Word[]){
+	static addWordsOfSameTable_fn = WordTable.addWordsOfSameTable_fn
+	/* public static async addWordsOfSameTable_fn(db:Database, words:Word[]){
 		$a(words)
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
@@ -357,7 +357,10 @@ export class WordDbSrc extends Abs_DbSrc{
 			return [wordsToInitAdd, wordsToUpdate]
 		}
 		
-	}public addWordsOfSameTable(words:Word[]){
+	} */
+	
+	
+	public addWordsOfSameTable(words:Word[]){
 		WordDbSrc_.checkTable($(this.tableName), words)
 		return WordDbSrc_.addWordsOfSameTable_fn(this.db, words)
 	}
@@ -369,7 +372,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param wordShape 
 	 * @returns 
 	 */
-	public static async qryWordByWordShape(db:Database, table:string, wordShape:string):Promise<IVocaRow[]>
+	static qryWordByWordShape = WordTable.qryWordByWordShape
+	/* public static async qryWordByWordShape(db:Database, table:string, wordShape:string):Promise<IVocaRow[]>
 	public static async qryWordByWordShape(db:Database, table:string, wordShape:string[]):Promise<(IVocaRow)[][]>
 
 	public static async qryWordByWordShape(db:Database, table:string, wordShape:string|string[]){
@@ -396,19 +400,20 @@ export class WordDbSrc extends Abs_DbSrc{
 			WordDbSrc_.attachTableName(r, table)
 			return r
 		}
-	}
+	} */
 
 	/**
 	 * 畀words增ling字段。直ᵈ改原數組、無返。
 	 * @param words 
 	 * @param table 
 	 */
-	public static attachTableName(words:IVocaRow[], table:string){
+	static attachTableName = WordTable.attachTableName
+/* 	public static attachTableName(words:IVocaRow[], table:string){
 		const lingField = VocaTableColumnName.table
 		for(let i = 0; i < words.length; i++){
 			words[i][lingField] = table
 		}
-	}
+	} */
 
 
 
@@ -421,7 +426,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param ids 
 	 * @returns 
 	 */
-	public static setWordsByIds_fn(db:Database, table:string, words:Word[], ids?:number[]){
+	static setWordsByIds_fn = WordTable.setWordsByIds_fn
+/* 	public static setWordsByIds_fn(db:Database, table:string, words:Word[], ids?:number[]){
 		//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
 		WordDbSrc_.checkTable(table, words)
@@ -451,7 +457,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		}
 		//return Sqlite.transaction(db, fn)
 		return fn
-	}
+	} */
 
 	
 	public setWordsByIds(words:Word[], ids:number[]){
@@ -468,13 +474,14 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param id 
 	 * @returns 
 	 */
-	public static genQry_updateById(table: string, word:Word,id: number){
+	static genQry_updateById = WordTable.genQry_updateById
+/* 	public static genQry_updateById(table: string, word:Word,id: number){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genQry_updateById(table, obj, id)
-	}
+	} */
 
 	/**
 	 * 由詞ˉ對象生成 增ᵗsql語句。
@@ -482,13 +489,14 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param word 
 	 * @returns 
 	 */
-	public static genQry_insert(table: string, word:Word){
+	static genQry_insert = WordTable.genQry_insert
+/* 	public static genQry_insert(table: string, word:Word){
 		WordDbSrc_.checkTable(table, [word])
 		const c = VocaTableColumnName
 		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
 		return Sqlite.genQry_insert(table, obj)
-	}
+	} */
 
 
 
@@ -510,7 +518,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param table 
 	 * @returns 
 	 */
-	public static async saveWords(db:Database, sws:Word[]){
+	static saveWords = WordTable.saveWords
+/* 	public static async saveWords(db:Database, sws:Word[]){
 		const tableToWordsMap = Word.classify(sws)
 		//const prms:Promise<number[][]>[] = []
 		const ans:number[][][] = []
@@ -521,7 +530,7 @@ export class WordDbSrc extends Abs_DbSrc{
 			ans.push(pr)
 		}
 		return ans
-	}
+	} */
 
 
 	/**

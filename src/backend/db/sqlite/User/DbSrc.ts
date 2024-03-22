@@ -4,16 +4,18 @@ import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
 import { Db_User } from '@shared/interfaces/User'
-import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
+import { Abs_DbSrc, CreateTableConfig } from '../_base/DbSrc'
+//import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
+
 type Database = SqliteType.Database
-export class UserDbSrc extends Abs_SqliteDbSrc{
+export class UserDbSrc extends Abs_DbSrc{
 
 	protected constructor(){
 		super()
 	}
 
-	static async New(...params:Parameters<typeof Abs_SqliteDbSrc.New>):Promise<UserDbSrc>{
-		const f = await Abs_SqliteDbSrc.New(params)
+	static async New(...params:Parameters<typeof Abs_DbSrc.New>):Promise<UserDbSrc>{
+		const f = await Abs_DbSrc.New(...params)
 		const c = new this()
 		Object.setPrototypeOf(f, UserDbSrc.prototype); // 设置原型链
 		Object.assign(f,c)

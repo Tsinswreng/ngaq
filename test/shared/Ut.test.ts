@@ -1,5 +1,8 @@
 import * as Ut from '@shared/Ut'
 import Tempus from '@shared/Tempus'
+const ast = (b:boolean)=>{
+	expect(b).toBe(true)
+}
 describe('',()=>{
 	it('', ()=>{
 		try {
@@ -26,5 +29,28 @@ describe('',()=>{
 		})
 		expect(b2).toBe(false)
 		//console.log(ans, b, b2, Number.prototype)
+	})
+})
+
+describe('inherit',()=>{
+
+	class Father{
+		name:string = 'father'
+	}
+
+	class Child{
+		age:number = 18
+	}
+
+	it('1', ()=>{
+		const f = new Father()
+		const c = new Child()
+		const ans = Ut.inherit(c, f)
+		const b1 = ans instanceof Child
+		const b2 = ans['name'] === 'father'
+		const b3 = ans.age === 18
+		ast(b1)
+		ast(b2)
+		ast(b3)
 	})
 })

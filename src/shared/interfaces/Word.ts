@@ -9,7 +9,7 @@ import Tempus from '@shared/Tempus'
  * 㕥約束數據庫ᵗ表中ᵗ行
  * 原ᵗ VocaTableColumnName 與 IVocaRow皆由此代。
  */
-export class VocaDbTable{
+export class WordDbRow{
 	public static readonly id='id'
 	public static readonly wordShape='wordShape'
 	public static readonly variant = 'variant'
@@ -163,4 +163,4 @@ export class VocaDbTable{
 	}
 
 }
-export type IVocaRow = VocaDbTable
+export type IVocaRow = WordDbRow

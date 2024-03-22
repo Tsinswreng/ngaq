@@ -2,7 +2,7 @@
 import Tempus from "@shared/Tempus";
 //import SingleWord2, {VocaDbTable} from "@shared/SingleWord2"
 import { Word } from "@shared/entities/Word/Word";
-import { VocaDbTable } from "@shared/interfaces/Word";
+import { WordDbRow } from "@shared/interfaces/Word";
 import { $ } from "../../Ut";
 
 //VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt
@@ -50,7 +50,7 @@ export default class VocaTempus{
 		public table:string,
 		public word_id:number, //單詞ᵗid
 		/**
-		 * 必潙 @see VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt 三者之一
+		 * 必潙 @see WordDbRow.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt 三者之一
 		 */
 		public event: string
 		,public id?:number
@@ -103,7 +103,7 @@ export default class VocaTempus{
 	public static checkEvent(event:string[]):string[]
 	public static checkEvent(event:string|string[]){
 		function forOne(event:string){
-			if(event === VocaDbTable.dates_add || event === VocaDbTable.dates_rmb || event===VocaDbTable.dates_fgt){}
+			if(event === WordDbRow.dates_add || event === WordDbRow.dates_rmb || event===WordDbRow.dates_fgt){}
 			else{throw new Error()}
 			return event as string
 		}
@@ -127,7 +127,7 @@ export default class VocaTempus{
 					tempus:tempus,
 					table:sw.table,
 					word_id:$(sw.id),
-					event:VocaDbTable.dates_add
+					event:WordDbRow.dates_add
 				}
 				partResult.push(unus)
 			}
@@ -143,7 +143,7 @@ export default class VocaTempus{
 					tempus:tempus,
 					table:sw.table,
 					word_id:$(sw.id),
-					event:VocaDbTable.dates_rmb
+					event:WordDbRow.dates_rmb
 				}
 				partResult.push(unus)
 			}
@@ -159,7 +159,7 @@ export default class VocaTempus{
 					tempus:tempus,
 					table:sw.table,
 					word_id:$(sw.id),
-					event:VocaDbTable.dates_fgt
+					event:WordDbRow.dates_fgt
 				}
 				partResult.push(unus)
 			}
