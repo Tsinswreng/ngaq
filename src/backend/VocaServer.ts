@@ -141,6 +141,10 @@ export default class VocaServer{
 				inEmt.eventNames()
 			)
 		})
+
+		C.wordDbSrc.tmdTable.addOldCreatedTable().then((d)=>{
+			console.log('created old tmdTable')
+		})
 		
 		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
 		let ri :RandomImg|undefined = undefined

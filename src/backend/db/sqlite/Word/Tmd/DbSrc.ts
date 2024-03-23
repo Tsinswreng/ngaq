@@ -1,6 +1,6 @@
 import { CreateTableOpt as CreateTableOpt, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
-import { DbRow_WordTmd } from "@backend/interfaces/WordTmd";
+import { WordTmdDbRow } from "@backend/interfaces/WordTmd";
 import { inherit } from "@shared/Ut";
 import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
 import { WordTmdTable } from "./Table";
@@ -21,8 +21,19 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 		const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
 		o._TableClass = WordTmdTable
+		//console.log(o.db,4)//t non null
+		//console.log(o.tmdTable.dbSrc.db,5)//t undefined
+		//console.log(o.tmdTable.dbSrc === o) //false
+		o._tmdTable = WordTmdTable.new({
+			_dbSrc:o
+			,_tableName: WordTmdDbSrc.metadataTableName
+		}) // 字段在構造函數之前初始化、此時this尚未初始化、把this賦畀_dbSrc恐謬
 		return o as WordTmdDbSrc
 	}
+
+	protected _tmdTable:WordTmdTable
+
+	get tmdTable(){return this._tmdTable}
 
 	initListener(){
 		const self = this
@@ -49,7 +60,7 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 			if(ifNotExists){
 				isExist = 'IF NOT EXISTS'
 			}
-			const c = DbRow_WordTmd
+			const c = WordTmdDbRow
 			let ans = 
 `
 CREATE TABLE ${isExist} '${table}'(

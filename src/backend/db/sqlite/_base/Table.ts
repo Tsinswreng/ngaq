@@ -90,8 +90,8 @@ export abstract class Abs_Table{
 	get linkedEmitter(){return this._linkedEmitter}
 
 	protected _dbSrc:I_DbSrc
+	
 	get dbSrc(){return this._dbSrc}
-
 	protected _tableName:string
 	get tableName(){return this._tableName}
 

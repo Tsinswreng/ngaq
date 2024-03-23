@@ -140,17 +140,29 @@ function stringLiteralType<T extends string>(str: T): T {
 /**
  * 類ᵗ實例ˋ繼承
  * @param child 
- * @param father 
+ * @param parent 
  * @returns 
  */
-export function inherit<Ch, Fa>(child:Ch,father){
+export function inherit<Ch, Fa>(child:Ch,parent){
 	//Object.setPrototypeOf(father, ChildClass.prototype); // 设置原型链
 	if (child?.constructor == void 0){
 		throw new Error('child does not have constructor')
 	}
-	Object.setPrototypeOf(father, child.constructor.prototype); // 设置原型链
-	//Object.assign(father,child)
-	return father as Ch
+	//Object.setPrototypeOf(parent, child.constructor.prototype); // 设置原型链
+	Object.setPrototypeOf(parent, child); // 设置原型链
+	//Object.assign(parent,child)
+	return parent as Ch
+	
+	// // //return father as Ch
+	// for (const prop in parent) {
+	// 	if (parent.hasOwnProperty(prop)) {
+	// 		child[prop] = parent[prop];
+	// 	}
+	// }
+	// //@ts-ignore
+	// child.__proto__ = parent.prototype;
+	// return child
+
 }
 
 

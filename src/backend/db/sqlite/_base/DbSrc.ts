@@ -127,6 +127,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 		const o = new this()
 		Object.assign(o, props)
 		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
+		
 		//console.log(o.dbPath, o.db)
 		return o
 	}

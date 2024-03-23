@@ -1,7 +1,7 @@
 import { WordTmd as Entity_WordTmd } from "@backend/entities/WordTmd"
 import Tempus from "@shared/Tempus"
 
-class _DbRow_WordTmd{
+export class WordTmdDbRow{
 	static id = 'id'
 	static tableName = 'tableName'
 	static createDate = 'createDate'
@@ -13,7 +13,7 @@ class _DbRow_WordTmd{
 		,public id?:number|string
 	){}
 
-	static toEntity(o:_DbRow_WordTmd){
+	static toEntity(o:WordTmdDbRow){
 		const ans = Entity_WordTmd.new({
 			_id: o.id
 			,_tableName: o.tableName
@@ -24,7 +24,7 @@ class _DbRow_WordTmd{
 	}
 
 	static toDbRow(o:Entity_WordTmd){
-		const ans:_DbRow_WordTmd = {
+		const ans:WordTmdDbRow = {
 			id: o.id
 			,tableName: o.tableName
 			,createDate: o.createDate.iso
@@ -36,5 +36,3 @@ class _DbRow_WordTmd{
 	
 }
 
-export type DbRow_WordTmd = _DbRow_WordTmd
-export const DbRow_WordTmd = _DbRow_WordTmd 

@@ -13,6 +13,7 @@ export class WordTmd{
 	}){
 		const o = new this()
 		Object.assign(o, prop)
+		o._createdDate = prop._createDate??o._createdDate
 		return o
 	}
 	protected _id?:number|string

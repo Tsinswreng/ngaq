@@ -16,7 +16,7 @@ import {WordTable} from '@backend/db/sqlite/Word/Table'
 import { Abs_Table } from '../_base/Table';
 import { WordTmdTable } from './Tmd/Table';
 import { WordTmd } from '@backend/entities/WordTmd';
-import { DbRow_WordTmd } from '@backend/interfaces/WordTmd';
+import { WordTmdDbRow } from '@backend/interfaces/WordTmd';
 const VocaTableColumnName = VocaDbTable
 
 
@@ -29,20 +29,27 @@ export class WordDbSrc extends Abs_DbSrc{
 		_tmdDbSrc?:WordTmdDbSrc
 	}){
 		const f = await Abs_DbSrc.New(props)
-		const o = new this()
-		inherit(o,f)
+		const c = new this()
+		const o = inherit(c,f)
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
 		props._tmdDbSrc = props._tmdDbSrc?? await WordTmdDbSrc.New({
 			_dbPath:props._dbPath
 		})
+		//console.log(props._tmdDbSrc.db,1)//t non null
 		props._TableClass = props._TableClass?? WordTable
 		WordTmdDbSrc.emmiter__handler.set(o, props._tmdDbSrc)
 		Object.assign(o, props)
+		o._tmdTable = o.tmdDbSrc.tmdTable
+		//console.log(o.tmdDbSrc.db,1)
+		//console.log(o.tmdTable.dbSrc.db,1)//t undefined
 		o.initMdListener()
 		return o
 	}
+
+	protected _tmdTable:WordTmdTable
+	get tmdTable(){return this._tmdTable}
 
 	initMdListener(){
 		const s = this
@@ -57,7 +64,7 @@ export class WordDbSrc extends Abs_DbSrc{
 				const entity = WordTmd.new({
 					_tableName: $a(table)
 				})
-				const row = DbRow_WordTmd.toDbRow(entity)
+				const row = WordTmdDbRow.toDbRow(entity)
 				metadataTable.addRecords([
 					row
 				]).then((d)=>{

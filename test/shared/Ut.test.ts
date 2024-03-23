@@ -33,25 +33,74 @@ describe('',()=>{
 })
 
 describe('inherit',()=>{
+	// const ans = Ut.inherit(c, f)
+	// const b0 = ans === c
+	// const b1 = ans instanceof Child
+	// const b2 = ans['name'] === 'father'
+	// const b3 = ans.age === 18
+	// const b4 = ans instanceof Father
 
-	class Father{
-		name:string = 'father'
-	}
-
-	class Child{
-		age:number = 18
-	}
+	// //請你實現Ut.inherit方法、使b0~b4都爲true
 
 	it('1', ()=>{
+		class Father{
+			name:string = 'father'
+		}
+	
+		class Child extends Father{
+			age:number = 18
+		}
+	
 		const f = new Father()
 		const c = new Child()
 		const ans = Ut.inherit(c, f)
+		const b0 = ans === f
 		const b1 = ans instanceof Child
 		const b2 = ans['name'] === 'father'
 		const b3 = ans.age === 18
+		const b4 = ans instanceof Father
+		ast(b0)
 		ast(b1)
 		ast(b2)
 		ast(b3)
+		ast(b4)
+	})
+
+	it('2', ()=>{
+		class Father{
+			protected constructor(){}
+			static new(){
+				const o = new this()
+				o.name = 'father'
+				return o
+			}
+			name:string
+		}
+	
+		class Child extends Father{
+			protected constructor(){
+				super()
+			}
+			static new(){
+				const f = Father.new()
+				const c = new Child()
+				const o = Ut.inherit(c,f)
+				o.age = 18
+				return o
+			}
+			age:number
+		}
+		const ans = Child.new()
+		//console.log(ans)
+		const b1 = ans instanceof Child
+		const b2 = ans['name'] === 'father'
+		const b3 = ans.age === 18
+		const b4 = ans instanceof Father
+		//console.log(b1,b2,b3,b4)
+		ast(b1)
+		ast(b2)
+		ast(b3)
+		ast(b4)
 	})
 })
 

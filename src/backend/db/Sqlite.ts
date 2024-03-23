@@ -89,7 +89,6 @@ export interface Sqlite_master{
 // 	){}
 // }
 
-
 export class SqlGenerator{
 	protected constructor(){
 
@@ -270,7 +269,6 @@ ADD COLUMN '${neoColumn}' ${type} ${defaultStr};`
 		}
 		*/
 	}
-
 }
 
 /**
@@ -280,6 +278,8 @@ ADD COLUMN '${neoColumn}' ${type} ${defaultStr};`
  */
 export default class Sqlite{
 	private constructor(){}
+
+	static SqlGenerator = SqlGenerator
 
 	static sqltVb = sqltVb
 
@@ -305,7 +305,7 @@ export default class Sqlite{
 	}
 
 	public static readonly meta ={
-		querySqlite_master_unsafeInt:Sqlite.querySqlite_master_unsafeInt
+		querySqlite_master_unsafeInt:Sqlite.querySqlite_master_unsafeInt.bind(Sqlite)
 		,qureySqlite_sequence_unsafeInt:Sqlite.qureySqlite_sequence_unsafeInt
 		,getTableInfo:Sqlite.getTableInfo
 	}
@@ -486,6 +486,11 @@ export default class Sqlite{
 		})
 	}
 
+	/**
+	 * select * 查不到結果旹 返 undefined
+	 * @param stmt 
+	 * @param params 
+	 */
 	public static stmtGet<T>(stmt:Statement, params:any):Promise<[RunResult,T|undefined]>
 	public static stmtGet<T>(stmt:Statement):Promise<(T|undefined)>
 
@@ -494,8 +499,8 @@ export default class Sqlite{
 			return new Promise<[RunResult,T|undefined]>((res, rej)=>{
 				stmt.get<T>(params, function(err, rows){
 					if(err){
-						
-						rej( sqlErr(err) );return //此處抛錯會失調用堆棧ᵗ訊
+						//rej( sqlErr(err) );return //此處抛錯會失調用堆棧ᵗ訊
+						rej(err)
 						//throw sqlErr(err)
 					}
 					const this_runResult = this

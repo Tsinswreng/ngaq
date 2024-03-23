@@ -148,11 +148,18 @@ console.log(
 )
 
 
+function ret(a){
+	console.log(a)
+	return a
+}
 class P{
-	protected constructor(){
 
+	constructor(){
+		this.a = ret(2)
 	}
+	a = ret(1)
 }
 
+new P()
 
-type My = InstanceType<typeof P>//类型“typeof P”不满足约束“abstract new (...args: any) => any”。不可将“protected”构造函数类型分配给“public”构造函数类型。ts(2344
+
