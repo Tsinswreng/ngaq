@@ -23,7 +23,7 @@ class _DbRow_WordTmd{
 		return ans
 	}
 
-	static toPlain(o:Entity_WordTmd){
+	static toDbRow(o:Entity_WordTmd){
 		const ans:_DbRow_WordTmd = {
 			id: o.id
 			,tableName: o.tableName

@@ -5,15 +5,16 @@ type RunResult = SqliteType.RunResult
 import Sqlite, { SqliteTableInfo, SqliteType } from '@backend/db/Sqlite';
 import _ from 'lodash';
 import Word, { VocaDbTable } from '@shared/SingleWord2';
-import VocaRaw2, { config } from '@shared/VocaRaw2';
 import { IVocaRow } from '@shared/SingleWord2';
 import { $, $a, creatFileSync, inherit, lodashMerge, pathAt } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
 import { CreateTableOpt, Abs_DbSrc, New_Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
-import { WordTableMetadataDbSrc } from '@backend/db/sqlite/Word/Tmd/DbSrc';
+import { WordTmdDbSrc as WordTmdDbSrc } from '@backend/db/sqlite/Word/Tmd/DbSrc';
 import {WordTable} from '@backend/db/sqlite/Word/Table'
+import { Abs_Table } from '../_base/Table';
+import { WordTmdTable } from './Tmd/Table';
 const VocaTableColumnName = VocaDbTable
 
 
@@ -23,7 +24,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	}
 
 	static override async New(props:New_Abs_DbSrc & {
-		_tableMetadataDbSrc?:WordTableMetadataDbSrc
+		_tableMetadataDbSrc?:WordTmdDbSrc
 	}){
 		const f = await Abs_DbSrc.New(props)
 		const o = new this()
@@ -31,25 +32,29 @@ export class WordDbSrc extends Abs_DbSrc{
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
-		props._tableMetadataDbSrc = props._tableMetadataDbSrc?? await WordTableMetadataDbSrc.New({
+		props._tableMetadataDbSrc = props._tableMetadataDbSrc?? await WordTmdDbSrc.New({
 			_dbPath:props._dbPath
 		})
-		WordTableMetadataDbSrc.emmiter__handler.set(o, props._tableMetadataDbSrc)
+		props._TableClass = props._TableClass?? WordTable
+		WordTmdDbSrc.emmiter__handler.set(o, props._tableMetadataDbSrc)
 		Object.assign(o, props)
 		o.initMdListener()
 		return o
 	}
 
 	initMdListener(){
-		const self = this
+		const s = this
 		//每創詞表旹即試創元訊表
-		self.linkedEmitter.on(self.events.createTable_after,async (...args)=>{
-			await self.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
+		s.linkedEmitter.on(s.events.createTable_after,async (...args)=>{
+			await s.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
+			const metadataTable = await s.openTable(WordTmdDbSrc.metadataTableName) as WordTmdTable
 
+			
+			
 		})
-
-
 	}
+
+	
 
 	// /**
 	//  * @deprecated
@@ -73,7 +78,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	// 	return o
 	// }
 
-	protected _tableMetadataDbSrc:WordTableMetadataDbSrc
+	protected _tableMetadataDbSrc:WordTmdDbSrc
 	get tableMetadataDbSrc(){return this._tableMetadataDbSrc}
 
 	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 

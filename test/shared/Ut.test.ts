@@ -54,3 +54,34 @@ describe('inherit',()=>{
 		ast(b3)
 	})
 })
+
+describe('As', ()=>{
+	class Father{
+		name:string = 'father'
+	}
+
+	class Child extends Father{
+		age:number = 18
+	}
+
+	const f = new Father()
+	const c = new Child()
+	it('1', ()=>{
+		const ans = Ut.As(c, Child)
+		ast(ans===c)
+	})
+
+	it('2', ()=>{
+		let ans
+		let err_:Error
+		try {
+			ans = Ut.As(f, Child, '114')
+		} catch (error) {
+			err_ = error as Error
+		}finally{
+			const err = Ut.$(err_!)
+			ast(err.message === '114')
+		}
+		
+	})
+})

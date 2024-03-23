@@ -16,6 +16,30 @@ import json5 from 'json5'
 import * as algo from '@shared/algo' //待分离
 
 
+// export function As<Src, Tar>(src, target){
+	
+// }
+
+export function As<Target extends  abstract new (...args: any) => any>(src, TargetClass:Target, errMsg:any=''){
+	if(TargetClass?.constructor == void 0){
+		if( typeof errMsg === 'string' ){
+			throw new Error(errMsg)
+		}else{
+			throw errMsg
+		}
+	}
+	//@ts-ignore
+	if(src instanceof TargetClass){
+		return src as InstanceType<Target>
+	}else{
+		if( typeof errMsg === 'string' ){
+			throw new Error(errMsg)
+		}else{
+			throw errMsg
+		}
+	}
+}
+
 /**
  * 類ᵗ實例ˋ繼承
  * @param child 

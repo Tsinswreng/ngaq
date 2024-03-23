@@ -3,6 +3,7 @@ import { EventEmitter } from "eventemitter3";
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { $a, inherit } from "@shared/Ut";
 import * as Le from '@shared/linkedEvent'
+import { Abs_Table } from "./Table";
 //type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
 
 export interface Abs_DbSrc_Static<Self>{
@@ -106,9 +107,10 @@ export interface New_Abs_DbSrc{
 	_dbPath:string,
 	_backupDbPath?:string
 	,_mode?:number
+	,_TableClass?: typeof Abs_Table
 }
 
-abstract class _Abs_DbSrc implements I_DbSrc{
+export abstract class Abs_DbSrc implements I_DbSrc{
 
 	protected constructor(){}
 
@@ -116,11 +118,11 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 	 * @deprecated
 	 * @param p 
 	 */
-	static new(p:never):_Abs_DbSrc{
+	static new(p:never):Abs_DbSrc{
 		throw new Error('')
 	}
 
-	static async New(props:New_Abs_DbSrc):Promise<_Abs_DbSrc>{
+	static async New(props:New_Abs_DbSrc):Promise<Abs_DbSrc>{
 		//@ts-ignore
 		const o = new this()
 		Object.assign(o, props)
@@ -128,6 +130,9 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 		//console.log(o.dbPath, o.db)
 		return o
 	}
+
+	protected _TableClass = Abs_Table
+	get TableClass(){return this._TableClass}
 	
 
 	protected _db: SqliteType.Database
@@ -157,10 +162,19 @@ abstract class _Abs_DbSrc implements I_DbSrc{
 
 	abstract createTable(table: string, config: CreateTableOpt): Promise<unknown>;
 
+	openTable(tableName:string){
+		const s = this
+		const table = s.TableClass.new({
+			_tableName:tableName
+			,_dbSrc: s
+		})
+		return table
+	}
+
 
 }
 
-export const Abs_DbSrc = _Abs_DbSrc
-//export const Abs_DbSrc:Abs_DbSrc_Static<_Abs_DbSrc> & typeof _Abs_DbSrc = _Abs_DbSrc //不寫& typeof xxx 則不可繼承
-export type Abs_DbSrc = _Abs_DbSrc
+// export const Abs_DbSrc = _Abs_DbSrc
+// //export const Abs_DbSrc:Abs_DbSrc_Static<_Abs_DbSrc> & typeof _Abs_DbSrc = _Abs_DbSrc //不寫& typeof xxx 則不可繼承
+// export type Abs_DbSrc = _Abs_DbSrc
 

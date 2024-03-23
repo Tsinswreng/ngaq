@@ -132,6 +132,17 @@ class Aa{
 
 const aa = new Aa()
 
-console.log(Aa === aa.constructor)
+//console.log(Aa === aa.constructor)
 
 
+class X{
+	y = Y
+}
+
+class Y{
+	x = X
+}
+
+console.log(
+	new X()
+)

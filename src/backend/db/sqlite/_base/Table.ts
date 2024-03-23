@@ -61,7 +61,7 @@ export class Events extends Le.Events{
 
 type Row = Object
 
-abstract class _Table{
+export abstract class Abs_Table{
 	protected constructor(){
 
 	}
@@ -69,7 +69,7 @@ abstract class _Table{
 	static new(props:{
 		_dbSrc: I_DbSrc
 		_tableName:string
-	}):_Table{
+	}):Abs_Table{
 		//@ts-ignore
 		const o = new this()
 		Object.assign(o, props)
@@ -142,5 +142,5 @@ abstract class _Table{
 	}
 }
 
-export type Abs_Table = _Table
-export const Abs_Table = _Table
+// export type Abs_Table = _Abs_Table
+// export const Abs_Table = _Abs_Table

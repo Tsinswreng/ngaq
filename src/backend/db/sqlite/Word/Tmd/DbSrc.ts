@@ -4,11 +4,11 @@ import { DbRow_WordTmd } from "@backend/interfaces/WordTmd";
 import { inherit } from "@shared/Ut";
 import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
 type Db = SqliteType.Database
-class _WordTableMetadataDbSrc extends Abs_DbSrc{
+export class WordTmdDbSrc extends Abs_DbSrc{
 
 	static readonly metadataTableName = '_metadata'
 
-	static emmiter__handler = new Map<WordDbSrc, _WordTableMetadataDbSrc>()
+	static emmiter__handler = new Map<WordDbSrc, WordTmdDbSrc>()
 
 	protected constructor(){
 		super()
@@ -19,7 +19,7 @@ class _WordTableMetadataDbSrc extends Abs_DbSrc{
 		const c = new this()
 		const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
-		return o as _WordTableMetadataDbSrc
+		return o as WordTmdDbSrc
 	}
 
 	initListener(){
@@ -47,7 +47,7 @@ class _WordTableMetadataDbSrc extends Abs_DbSrc{
 			if(ifNotExists){
 				isExist = 'IF NOT EXISTS'
 			}
-			const c = DbRow_VocaTableMetadata
+			const c = DbRow_WordTmd
 			let ans = 
 `
 CREATE TABLE ${isExist} '${table}'(
@@ -62,11 +62,11 @@ CREATE TABLE ${isExist} '${table}'(
 		return Sqlite.all(db, getSql(table))
 	}
 
-	createTable(table: string = _WordTableMetadataDbSrc.metadataTableName, opt: CreateTableOpt  = {ifNotExists:false}): Promise<unknown> {
+	createTable(table: string = WordTmdDbSrc.metadataTableName, opt: CreateTableOpt  = {ifNotExists:false}): Promise<unknown> {
 		const args = arguments
 		const got = [table, opt]
 		this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_before, got)
-		return _WordTableMetadataDbSrc.createTable(this.db, table, opt).then((d)=>{
+		return WordTmdDbSrc.createTable(this.db, table, opt).then((d)=>{
 			//this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_after, args, d)
 		})
 	}
@@ -76,5 +76,5 @@ CREATE TABLE ${isExist} '${table}'(
 
 }
 
-export const WordTableMetadataDbSrc = _WordTableMetadataDbSrc
-export type WordTableMetadataDbSrc = _WordTableMetadataDbSrc
+// export const WordTmdDbSrc = _WordTmdDbSrc
+// export type WordTmdDbSrc = _WordTmdDbSrc

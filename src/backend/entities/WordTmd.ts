@@ -8,7 +8,7 @@ export class WordTmd{
 	static new(prop:{
 		_id?:number|string
 		,_tableName:string
-		,_createDate:Tempus
+		,_createDate?:Tempus
 		,_weightAlgoJs?:string
 	}){
 		const o = new this()
@@ -21,10 +21,12 @@ export class WordTmd{
 	protected _tableName:string
 	get tableName(){return this._tableName}
 
-	protected _createdDate:Tempus
+	protected _createdDate:Tempus = Tempus.new()
 	get createDate(){return this._createdDate}
 
 	protected _weightAlgoJs:string = ''
 	get weightAlgoJs(){return this._weightAlgoJs}
+
+
 }
 
