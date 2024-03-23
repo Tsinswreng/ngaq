@@ -46,11 +46,10 @@ export class WordDbSrc extends Abs_DbSrc{
 
 	initMdListener(){
 		const s = this
-		//每創詞表旹即試創元訊表
 		const outerErr = new Error()
+		//每創詞表旹即試創元訊表
 		s.linkedEmitter.on(s.events.createTable_after,async (table:string)=>{
 			try {
-				
 				await s.tmdDbSrc.createTable(void 0, {ifNotExists:true})
 				let metadataTable_:any = await s.tmdDbSrc.openTable(WordTmdDbSrc.metadataTableName)
 				const metadataTable = instanceAs(metadataTable_, WordTmdTable)
@@ -64,7 +63,6 @@ export class WordDbSrc extends Abs_DbSrc{
 				]).then((d)=>{
 					console.log(d)//t
 				})
-				//metadataTable.addRecords()
 			} catch (error) {
 				const err = error as Error
 				// console.error(error)
@@ -73,8 +71,8 @@ export class WordDbSrc extends Abs_DbSrc{
 				err.stack += '\n\n' + outerErr.stack
 				throw err
 			}
-			
 		})
+		
 	}
 
 	

@@ -3,6 +3,7 @@ import { Abs_Table } from "../../_base/Table"
 import { RunResult } from "sqlite3"
 import { WordTmd as Entity_WordTmd } from "@backend/entities/WordTmd"
 import { DbRow_WordTmd } from "@backend/interfaces/WordTmd"
+import Sqlite from "@backend/db/Sqlite"
 
 
 export class WordTmdTable extends Abs_Table{
@@ -21,6 +22,21 @@ export class WordTmdTable extends Abs_Table{
 		const entity = Entity_WordTmd.new({_tableName:tableName})
 		const row = DbRow_WordTmd.toDbRow(entity)
 		return s.addRecords([row])
+	}
+
+	async addOldCreatedTable(){
+		const s = this
+		const masters = await Sqlite.meta.querySqlite_master_unsafeInt(s.dbSrc.db)
+		const tableNames:string[] = []
+		for(const row of masters){
+			if( row.type === 'table' ){
+				tableNames.push(row.tbl_name)
+			}
+		}
+		function minIdRow_sql(tableName:string){
+			return `SELECT * FROM ${tableName} WHERE id = (SELECT MIN(id) FROM ${tableName});`
+		}
+		//TODO
 	}
 
 }
