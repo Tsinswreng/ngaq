@@ -29,6 +29,8 @@ class _WordTableMetadataDbSrc extends Abs_DbSrc{
 	/* 	emt.eventEmitter.on(enents.createTable_after.name, (...args)=>{
 			self.createTable(_WordTableMetadataDbSrc.metadataTableName)
 		}) */
+
+		
 		emt.on(events.createTable_after, (table:string, opt:CreateTableOpt)=>{
 			//self.createTable(_WordTableMetadataDbSrc.metadataTableName)
 			console.log(`${table} was created successfully`)

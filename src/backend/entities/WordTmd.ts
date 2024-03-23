@@ -1,7 +1,7 @@
 import Tempus from "@shared/Tempus"
 
 
-export class VocaTableMetadata{
+export class WordTmd{
 	protected constructor(){
 	}
 
@@ -9,7 +9,7 @@ export class VocaTableMetadata{
 		_id?:number|string
 		,_tableName:string
 		,_createDate:Tempus
-		,_weightAlgoJs:string
+		,_weightAlgoJs?:string
 	}){
 		const o = new this()
 		Object.assign(o, prop)
@@ -24,7 +24,7 @@ export class VocaTableMetadata{
 	protected _createdDate:Tempus
 	get createDate(){return this._createdDate}
 
-	protected _weightAlgoJs:string
+	protected _weightAlgoJs:string = ''
 	get weightAlgoJs(){return this._weightAlgoJs}
 }
 

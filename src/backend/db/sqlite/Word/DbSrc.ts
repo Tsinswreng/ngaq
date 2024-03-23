@@ -12,7 +12,7 @@ import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
 import { CreateTableOpt, Abs_DbSrc, New_Abs_DbSrc } from '@backend/db/sqlite/_base/DbSrc';
-import { WordTableMetadataDbSrc } from '@backend/db/sqlite/Word/TableMetadata/DbSrc';
+import { WordTableMetadataDbSrc } from '@backend/db/sqlite/Word/Tmd/DbSrc';
 import {WordTable} from '@backend/db/sqlite/Word/Table'
 const VocaTableColumnName = VocaDbTable
 
@@ -42,10 +42,12 @@ export class WordDbSrc extends Abs_DbSrc{
 
 	initMdListener(){
 		const self = this
+		//每創詞表旹即試創元訊表
 		self.linkedEmitter.on(self.events.createTable_after,async (...args)=>{
 			await self.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
-			
+
 		})
+
 
 	}
 

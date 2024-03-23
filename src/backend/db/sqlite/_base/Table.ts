@@ -69,7 +69,7 @@ abstract class _Table{
 	static new(props:{
 		_dbSrc: I_DbSrc
 		_tableName:string
-	}){
+	}):_Table{
 		//@ts-ignore
 		const o = new this()
 		Object.assign(o, props)

@@ -1,4 +1,4 @@
-import { VocaTableMetadata as Entity_VocaTableMetadata } from "@backend/entities/VocaTableMetadata"
+import { WordTmd as Entity_VocaTableMetadata } from "@backend/entities/WordTmd"
 import Tempus from "@shared/Tempus"
 
 class _DbRow_VocaTableMetadata{
