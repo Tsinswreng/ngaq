@@ -146,3 +146,13 @@ class Y{
 console.log(
 	new X()
 )
+
+
+class P{
+	protected constructor(){
+
+	}
+}
+
+
+type My = InstanceType<typeof P>//类型“typeof P”不满足约束“abstract new (...args: any) => any”。不可将“protected”构造函数类型分配给“public”构造函数类型。ts(2344

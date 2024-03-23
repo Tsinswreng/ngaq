@@ -6,7 +6,7 @@ import Sqlite, { SqliteTableInfo, SqliteType } from '@backend/db/Sqlite';
 import _ from 'lodash';
 import Word, { VocaDbTable } from '@shared/SingleWord2';
 import { IVocaRow } from '@shared/SingleWord2';
-import { $, $a, creatFileSync, inherit, lodashMerge, pathAt } from '@shared/Ut';
+import { $, $a, instanceAs, creatFileSync, inherit, lodashMerge, pathAt, As } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
@@ -47,10 +47,10 @@ export class WordDbSrc extends Abs_DbSrc{
 		//每創詞表旹即試創元訊表
 		s.linkedEmitter.on(s.events.createTable_after,async (...args)=>{
 			await s.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
-			const metadataTable = await s.openTable(WordTmdDbSrc.metadataTableName) as WordTmdTable
-
-			
-			
+			let metadataTable_:any = await s.openTable(WordTmdDbSrc.metadataTableName)
+			const metadataTable = instanceAs(metadataTable_, WordTmdTable)
+			metadataTable_ = null
+			//metadataTable.addRecords()
 		})
 	}
 

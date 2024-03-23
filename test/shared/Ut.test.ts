@@ -67,7 +67,7 @@ describe('As', ()=>{
 	const f = new Father()
 	const c = new Child()
 	it('1', ()=>{
-		const ans = Ut.As(c, Child)
+		const ans = Ut.instanceAs(c, Child)
 		ast(ans===c)
 	})
 
@@ -75,7 +75,7 @@ describe('As', ()=>{
 		let ans
 		let err_:Error
 		try {
-			ans = Ut.As(f, Child, '114')
+			ans = Ut.instanceAs(f, Child, '114')
 		} catch (error) {
 			err_ = error as Error
 		}finally{

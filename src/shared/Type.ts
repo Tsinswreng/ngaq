@@ -1,4 +1,5 @@
-import { type } from "os"
+/** Type Util */
+
 
 /**
  * 最小對立對
@@ -61,58 +62,20 @@ export interface DictRawConfig{
 
 
 
-export type Lings = 'english'|'japanese'|'latin'|'italian'|'french'|'spanish'|'esperanto'
-
-export interface VocaRawConfig{
-	dbName:string,
-	dbPath:string,
-	url:string,
-	dateFormat:string,
-	dateRegex:string
-	dateBlock: [string, string]
-	wordBlock: [string, string]
-	annotation: [string, string]
-	txtTables:{
-		ling:Lings,
-		path:string
-	}[]
-}
+export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 
 
-/**
- * 舊版ᵗ詞表
- */
-export interface Old_IVocaRow{
-	id?:number //從數據庫中取數據時id必不潙空
-	ling:string //數據庫中本無此字段、㕥存表名。
-	wordShape:string
-	fullComments:string[]
-	//annotation:string //
-	addedTimes:number
-	addedDates:string[]
-	reviewedDates:string[] //皆 空數組也
-	reviewedTimes:number // 皆 0
-	rememberedTimes:number
-	rememberedDates:string[]
-	forgottenTimes:number
-	forgottenDates:string[]
-}
+/** 從字串字面量解析類型 */
+export type ParseType<T extends string> =
+	T extends 'string' ? string :
+	T extends 'number' ? number :
+	T extends 'boolean' ? boolean :
+	T extends 'bigint' ? bigint :
+	T extends 'symbol' ? symbol :
+	T extends 'undefined' ? undefined :
+	T extends 'object' ? object :
+	T extends 'function' ? Function :
+	never;
 
-
-export class UserColumnName{
-	public static readonly id='id'
-	public static readonly strId='strId'
-	public static readonly userName='userName'
-	public static readonly password='password'
-	public static readonly mail='mail'
-	public static readonly date='date'
-}
-
-export interface IUser{
-	id?:number,
-	strId:string,
-	userName:string,
-	password:string,
-	mail:string
-	date:string
-}
+/** 基本數據類型 */
+export type PrimitiveTypeStr = 'number' | 'string' | 'boolean' | 'null' | 'undefined' | 'bigint' | 'symbol';

@@ -12,6 +12,7 @@ import { Sros } from './Sros';
 import util from 'util'
 import * as ts from 'typescript'
 import json5 from 'json5'
+import * as Ty from '@shared/Type'
 
 import * as algo from '@shared/algo' //待分离
 
@@ -19,8 +20,28 @@ import * as algo from '@shared/algo' //待分离
 // export function As<Src, Tar>(src, target){
 	
 // }
+/**
+ * 若作Target extends abstract new (...args: any) => any則類芝厥構造器非公開者不可用
+ */
 
-export function As<Target extends  abstract new (...args: any) => any>(src, TargetClass:Target, errMsg:any=''){
+//type InstanceType<T extends new (...args: any[]) => any> = T extends new (...args: any[]) => infer R ? R : any;
+//type InstanceType<T> = T extends new (...args: any[]) => infer R ? R : any;
+
+
+//export type InstanceType_<T extends { prototype: any }> = T["prototype"];
+
+
+/**
+ * 實例ᵗ類型轉化 並檢查
+ * class Child extends Father{}
+ * let idk:any = new Child()
+ * let c = instanceAs(idk, Father) //c:Father ok
+ * @param src 源實例
+ * @param TargetClass 目標類
+ * @param errMsg 
+ * @returns 
+ */
+export function instanceAs<Target extends { prototype: any }>(src, TargetClass: Target, errMsg:any=''){
 	if(TargetClass?.constructor == void 0){
 		if( typeof errMsg === 'string' ){
 			throw new Error(errMsg)
@@ -30,7 +51,7 @@ export function As<Target extends  abstract new (...args: any) => any>(src, Targ
 	}
 	//@ts-ignore
 	if(src instanceof TargetClass){
-		return src as InstanceType<Target>
+		return src as Ty.InstanceType_<Target>
 	}else{
 		if( typeof errMsg === 'string' ){
 			throw new Error(errMsg)
@@ -39,6 +60,79 @@ export function As<Target extends  abstract new (...args: any) => any>(src, Targ
 		}
 	}
 }
+
+
+
+/**
+ * 基本數據類型 類型斷言 帶運行時檢查
+ * let a:any = 1
+ * let b = primitiveAs(a, 'number') //b:number
+ * 
+ * @param src 
+ * @param target 
+ * @param errMsg 
+ * @returns 
+ */
+
+export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeStr|Target, errMsg:any=''){
+	if(typeof src === target){
+		return src as Ty.ParseType<Target>
+	}else{
+		if( typeof errMsg === 'string'){
+			throw new Error(errMsg)
+		}else{
+			throw errMsg
+		}
+	}
+	// function check<T extends string>(v, type_:T){
+	// 	if(typeof v === type_){
+	// 		return v as ParseType<T>
+	// 	}else{
+	// 		if( typeof errMsg === 'string'){
+	// 			throw new Error(errMsg)
+	// 		}else{
+	// 			throw errMsg
+	// 		}
+	// 	}
+	// }
+	
+	// return check(src, target)
+}
+
+/** primitiveAs */
+export function As<Target extends string>(src, target:Target, errMsg?:any):Ty.ParseType<Target>
+
+/** instanceAs */
+export function As<Target extends { prototype: any }>(src, target:Target, errMsg?:any):Ty.InstanceType_<Target>
+
+export function As<Target extends string|{ prototype: any }>(src, target:Target, errMsg:any=''){
+	if(typeof target === 'string'){
+		return primitiveAs(src, target, errMsg)
+	}else{
+		return instanceAs(src, target, errMsg)
+	}
+}
+
+
+
+
+// //typescript幫我寫一個函數、返回值的類型爲傳入的字符串字面量的類型
+// let a = t('utf-8') //要求編輯器推斷出a的類型爲'utf-8'
+function stringLiteralType<T extends string>(str: T): T {
+    return str;
+}
+
+
+
+
+/* 
+幫我寫一個typescirpt函數As、
+
+	let a:any = 1
+	let b = As(a, 'number')
+
+要求: 1.不添加額外的泛型參數; 2.編輯器能推斷出b的類型爲number
+*/
 
 /**
  * 類ᵗ實例ˋ繼承
