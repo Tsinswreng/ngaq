@@ -1,7 +1,7 @@
-import { WordTmd as Entity_VocaTableMetadata } from "@backend/entities/WordTmd"
+import { WordTmd as Entity_WordTmd } from "@backend/entities/WordTmd"
 import Tempus from "@shared/Tempus"
 
-class _DbRow_VocaTableMetadata{
+class _DbRow_WordTmd{
 	static id = 'id'
 	static tableName = 'tableName'
 	static createDate = 'createDate'
@@ -13,8 +13,8 @@ class _DbRow_VocaTableMetadata{
 		,public id?:number|string
 	){}
 
-	static toEntity(o:_DbRow_VocaTableMetadata){
-		const ans = Entity_VocaTableMetadata.new({
+	static toEntity(o:_DbRow_WordTmd){
+		const ans = Entity_WordTmd.new({
 			_id: o.id
 			,_tableName: o.tableName
 			,_createDate: Tempus.new(o.createDate)
@@ -23,8 +23,8 @@ class _DbRow_VocaTableMetadata{
 		return ans
 	}
 
-	static toPlain(o:Entity_VocaTableMetadata){
-		const ans:_DbRow_VocaTableMetadata = {
+	static toPlain(o:Entity_WordTmd){
+		const ans:_DbRow_WordTmd = {
 			id: o.id
 			,tableName: o.tableName
 			,createDate: o.createDate.iso
@@ -36,5 +36,5 @@ class _DbRow_VocaTableMetadata{
 	
 }
 
-export type DbRow_VocaTableMetadata = _DbRow_VocaTableMetadata
-export const DbRow_VocaTableMetadata = _DbRow_VocaTableMetadata 
+export type DbRow_WordTmd = _DbRow_WordTmd
+export const DbRow_WordTmd = _DbRow_WordTmd 
