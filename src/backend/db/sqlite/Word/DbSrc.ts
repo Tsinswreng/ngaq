@@ -15,6 +15,8 @@ import { WordTmdDbSrc as WordTmdDbSrc } from '@backend/db/sqlite/Word/Tmd/DbSrc'
 import {WordTable} from '@backend/db/sqlite/Word/Table'
 import { Abs_Table } from '../_base/Table';
 import { WordTmdTable } from './Tmd/Table';
+import { WordTmd } from '@backend/entities/WordTmd';
+import { DbRow_WordTmd } from '@backend/interfaces/WordTmd';
 const VocaTableColumnName = VocaDbTable
 
 
@@ -24,7 +26,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	}
 
 	static override async New(props:New_Abs_DbSrc & {
-		_tableMetadataDbSrc?:WordTmdDbSrc
+		_tmdDbSrc?:WordTmdDbSrc
 	}){
 		const f = await Abs_DbSrc.New(props)
 		const o = new this()
@@ -32,11 +34,11 @@ export class WordDbSrc extends Abs_DbSrc{
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
-		props._tableMetadataDbSrc = props._tableMetadataDbSrc?? await WordTmdDbSrc.New({
+		props._tmdDbSrc = props._tmdDbSrc?? await WordTmdDbSrc.New({
 			_dbPath:props._dbPath
 		})
 		props._TableClass = props._TableClass?? WordTable
-		WordTmdDbSrc.emmiter__handler.set(o, props._tableMetadataDbSrc)
+		WordTmdDbSrc.emmiter__handler.set(o, props._tmdDbSrc)
 		Object.assign(o, props)
 		o.initMdListener()
 		return o
@@ -45,12 +47,33 @@ export class WordDbSrc extends Abs_DbSrc{
 	initMdListener(){
 		const s = this
 		//每創詞表旹即試創元訊表
-		s.linkedEmitter.on(s.events.createTable_after,async (...args)=>{
-			await s.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
-			let metadataTable_:any = await s.openTable(WordTmdDbSrc.metadataTableName)
-			const metadataTable = instanceAs(metadataTable_, WordTmdTable)
-			metadataTable_ = null
-			//metadataTable.addRecords()
+		const outerErr = new Error()
+		s.linkedEmitter.on(s.events.createTable_after,async (table:string)=>{
+			try {
+				
+				await s.tmdDbSrc.createTable(void 0, {ifNotExists:true})
+				let metadataTable_:any = await s.tmdDbSrc.openTable(WordTmdDbSrc.metadataTableName)
+				const metadataTable = instanceAs(metadataTable_, WordTmdTable)
+				metadataTable_ = null
+				const entity = WordTmd.new({
+					_tableName: $a(table)
+				})
+				const row = DbRow_WordTmd.toDbRow(entity)
+				metadataTable.addRecords([
+					row
+				]).then((d)=>{
+					console.log(d)//t
+				})
+				//metadataTable.addRecords()
+			} catch (error) {
+				const err = error as Error
+				// console.error(error)
+				// console.error('---')
+				// console.error(outerErr.stack)
+				err.stack += '\n\n' + outerErr.stack
+				throw err
+			}
+			
 		})
 	}
 
@@ -78,8 +101,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	// 	return o
 	// }
 
-	protected _tableMetadataDbSrc:WordTmdDbSrc
-	get tableMetadataDbSrc(){return this._tableMetadataDbSrc}
+	protected _tmdDbSrc:WordTmdDbSrc
+	get tmdDbSrc(){return this._tmdDbSrc}
 
 	public static defaultDbPath = process.cwd()+'/db/'+'voca'+'.db' 
 
@@ -152,10 +175,10 @@ export class WordDbSrc extends Abs_DbSrc{
 	createTable(table=$a(this.tableName), opt={ifNotExists:false}){
 		const ifNotExists = opt.ifNotExists
 		const args = arguments
-		this.linkedEmitter.emit(this.events.createTable_before, args)
+		this.linkedEmitter.emit(this.events.createTable_before, table, opt)
 		return WordDbSrc_.createTable_helper(this.db, table, ifNotExists)
 		.then((d)=>{
-			this.linkedEmitter.emit(this.events.createTable_after, args, d)
+			this.linkedEmitter.emit(this.events.createTable_after, table, opt, d)
 		})
 	}
 

@@ -114,13 +114,16 @@ export function As<Target extends string|{ prototype: any }>(src, target:Target,
 }
 
 
-
-
 // //typescript幫我寫一個函數、返回值的類型爲傳入的字符串字面量的類型
 // let a = t('utf-8') //要求編輯器推斷出a的類型爲'utf-8'
 function stringLiteralType<T extends string>(str: T): T {
     return str;
 }
+
+
+// export function stackRecorderError(msg?:string, konstructor=Error.constructor.bind(Error)){
+// 	return konstructor(msg)
+// }
 
 
 

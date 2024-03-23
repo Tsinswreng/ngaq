@@ -3,6 +3,7 @@ import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { DbRow_WordTmd } from "@backend/interfaces/WordTmd";
 import { inherit } from "@shared/Ut";
 import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
+import { WordTmdTable } from "./Table";
 type Db = SqliteType.Database
 export class WordTmdDbSrc extends Abs_DbSrc{
 
@@ -19,6 +20,7 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 		const c = new this()
 		const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
+		o._TableClass = WordTmdTable
 		return o as WordTmdDbSrc
 	}
 

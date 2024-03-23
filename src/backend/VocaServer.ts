@@ -136,7 +136,7 @@ export default class VocaServer{
 		C.wordDbSrc.linkedEmitter.on(C.wordDbSrc.events.createTable_after, (...args)=>{
 			const table = args[0]['0']
 			console.log(`after create table ${table}`)
-			const inEmt = C.wordDbSrc.tableMetadataDbSrc.linkedEmitter.eventEmitter as EventEmitter
+			const inEmt = C.wordDbSrc.tmdDbSrc.linkedEmitter.eventEmitter as EventEmitter
 			console.log(
 				inEmt.eventNames()
 			)
