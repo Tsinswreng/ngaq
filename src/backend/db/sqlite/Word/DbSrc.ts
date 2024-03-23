@@ -42,9 +42,11 @@ export class WordDbSrc extends Abs_DbSrc{
 
 	initMdListener(){
 		const self = this
-		self.linkedEmitter.on(self.events.createTable_after,(...args)=>{
-			self.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
+		self.linkedEmitter.on(self.events.createTable_after,async (...args)=>{
+			await self.tableMetadataDbSrc.createTable(void 0, {ifNotExists:true})
+			
 		})
+
 	}
 
 	// /**

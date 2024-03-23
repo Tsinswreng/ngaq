@@ -3,6 +3,7 @@ import sqlite3 from 'sqlite3';
 const sqltVb = sqlite3.verbose()
 //import { Database,RunResult, Statement } from 'sqlite3';
 import { RunResult } from 'sqlite3';
+import { SqlitePool } from '@backend/db/sqlite/pool/Pool';
 type Database = sqlite3.Database
 type Statement = sqlite3.Statement
 export namespace SqliteType {
@@ -155,6 +156,12 @@ export default class Sqlite{
 		, isTableExist : Sqlite.isTableExist
 		, copyTableStructureCrossDb : Sqlite.copyTableStructureCrossDb
 		, copyTableCrossDb : Sqlite.copyTableCrossDb
+	}
+
+	static readonly pool = SqlitePool.new()
+
+	static connectViaPool(filePath:string, mode?:number){
+		return C.pool.connect(filePath, mode)
 	}
 
 	/**
