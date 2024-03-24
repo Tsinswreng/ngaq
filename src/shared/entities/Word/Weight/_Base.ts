@@ -3,13 +3,13 @@ import { Priority } from "@shared/entities/Word/Word"
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 type Conf0 = typeof Priority.defaultConfig
 type Fn<Return=any> = (...args:any[])=>Return
-export class WordWeight implements I_WordWeight{
+export class Abs_WordWeight implements I_WordWeight{
 
 	protected constructor(){
 
 	}
 
-	static new(){
+	static new(prop?:{}){
 		const o = new this()
 		return o
 	}
@@ -23,7 +23,7 @@ export class WordWeight implements I_WordWeight{
 	protected _excludeTables = void 0
 	get excludeTables(){return this._excludeTables}
 
-	params:Partial<Conf0>={}
+	params
 	filterBefore?:(...args:any[])=>boolean
 	calcPrioFnArr?: Fn<any>[] | undefined;
 }
