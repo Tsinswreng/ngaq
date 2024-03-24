@@ -1,5 +1,5 @@
 import { User } from "@backend/entities/User"
-import { Db_User } from "@shared/interfaces/User"
+import { UserDbRow } from "@shared/interfaces/User"
 import { UserDbSrc } from "@backend/db/sqlite/User/DbSrc"
 import Sqlite, {SqliteType} from '@backend/db/Sqlite'
 import { VocaDbTable } from '@shared/SingleWord2'
@@ -23,7 +23,7 @@ export class UserTable{
 		return o
 	}
 
-	async addRecords(objs:Db_User[]):Promise<RunResult[]>{
+	async addRecords(objs:UserDbRow[]):Promise<RunResult[]>{
 		$a(objs, 'empty array')
 		const [sql,] = this.dbSrc.genSql_insert(this.tableName, objs[0])
 		const stmt = await Sqlite.prepare(this.dbSrc.db, sql)

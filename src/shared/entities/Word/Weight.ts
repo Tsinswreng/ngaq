@@ -2,13 +2,13 @@
 import { Priority } from "@shared/entities/Word/Word"
 type Conf0 = typeof Priority.defaultConfig
 type Fn<Return=any> = <Return=any>(...args:any[])=>Return
-interface I_WordWeight{
+export interface I_WordWeight{
 	/** 此配置項之名 */
-	name:string
+	get name():string
 	/** 在哪些單詞表起效。若潙undefined則皆起效 */
-	includeTables?:string[]
+	get includeTables():string[]|undefined
 	/** 在哪些單詞表不起效 */
-	excludeTables?:string[]
+	get excludeTables():string[]|undefined
 	/** 權重參數 */
 	//params:Partial<Conf0>
 	/** 過濾函數。true:保留、false:濾除。在算權重前過濾 */
@@ -25,9 +25,27 @@ interface I_WordWeight{
 
 }
 
-class WordWeight implements I_WordWeight{
-	name=''
-	includeTables= []
+export class WordWeight implements I_WordWeight{
+
+	protected constructor(){
+
+	}
+
+	static new(){
+		const o = new this()
+		return o
+	}
+
+
+	protected _name='_default'
+	get name(){return this._name}
+
+	protected _includeTables= void 0
+	get includeTables(){return this._includeTables}
+
+	protected _excludeTables = void 0
+	get excludeTables(){return this._excludeTables}
+
 	params:Partial<Conf0>={}
 	filterBefore?:(...args:any[])=>boolean
 	calcPrioFnArr?: Fn<any>[] | undefined;

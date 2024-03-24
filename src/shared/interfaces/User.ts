@@ -3,7 +3,7 @@ import { User } from "@backend/entities/User"
 /**
  * used as Interface
  */
-class _Db_User{
+export class UserDbRow{
 	/** names of columns in database */
 	static id = 'id'
 	static name = 'name'
@@ -20,7 +20,7 @@ class _Db_User{
 		,public id?:number|string
 	){}
 
-	static toEntity(o:Db_User):User{
+	static toEntity(o:UserDbRow):User{
 		const ans = User.new({
 			_id: Number(o.id)
 			,_name: o.name
@@ -31,8 +31,8 @@ class _Db_User{
 		return ans
 	}
 	
-	static toPlain(o:User):Db_User{
-		const ans:Db_User = {
+	static toPlain(o:User):UserDbRow{
+		const ans:UserDbRow = {
 			id: o.id
 			,name: o.name
 			,password: o.password
@@ -43,7 +43,7 @@ class _Db_User{
 	}
 }
 
-export type Db_User = _Db_User
-export const Db_User = _Db_User
+// export type Db_User = _Db_User
+// export const Db_User = _Db_User
 //export const Db_User:I_DbRow_Static<_Db_User, User> & typeof _Db_User = _Db_User // 不加typeof則是實例ᵗ類型
 //export const Db_User = _Db_User

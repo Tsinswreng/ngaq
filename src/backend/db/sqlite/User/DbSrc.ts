@@ -3,7 +3,7 @@ import Sqlite, {SqliteType} from '@backend/db/Sqlite'
 import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
-import { Db_User } from '@shared/interfaces/User'
+import { UserDbRow } from '@shared/interfaces/User'
 import { Abs_DbSrc, CreateTableOpt } from '../_base/DbSrc'
 //import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
 
@@ -28,7 +28,7 @@ export class UserDbSrc extends Abs_DbSrc{
 			if(ifNotExists){
 				isExist = 'IF NOT EXISTS'
 			}
-			const c = Db_User
+			const c = UserDbRow
 			let ans = 
 `
 CREATE TABLE ${isExist} '${table}'(
@@ -49,8 +49,8 @@ CREATE TABLE ${isExist} '${table}'(
 		return C.createTable(this._db, table, ifNotExists)
 	}
 
-	static genSql_insert(table:string, o:Db_User){
-		const c = Db_User
+	static genSql_insert(table:string, o:UserDbRow){
+		const c = UserDbRow
 		return Sqlite.sql.genSql_insert(table, o, [c.id])
 	}
 	genSql_insert = C.genSql_insert.bind(C)
