@@ -21,18 +21,14 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 		const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
 		o._TableClass = WordTmdTable
-		//console.log(o.db,4)//t non null
-		//console.log(o.tmdTable.dbSrc.db,5)//t undefined
-		//console.log(o.tmdTable.dbSrc === o) //false
 		o._tmdTable = WordTmdTable.new({
 			_dbSrc:o
 			,_tableName: WordTmdDbSrc.metadataTableName
-		}) // 字段在構造函數之前初始化、此時this尚未初始化、把this賦畀_dbSrc恐謬
+		}) // 字段在構造函數之前初始化、若在字段處賦值、此時this尚未初始化、把this賦畀_dbSrc恐謬
 		return o as WordTmdDbSrc
 	}
 
 	protected _tmdTable:WordTmdTable
-
 	get tmdTable(){return this._tmdTable}
 
 	initListener(){
@@ -66,7 +62,9 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 CREATE TABLE ${isExist} '${table}'(
 	${c.id} INTEGER PRIMARY KEY,
 	${c.tableName} TEXT,
+	${c.type} TEXT,
 	${c.createDate} TEXT,
+	${c.modifiedDate} TEXT,
 	${c.weightAlgoJs} TEXT
 )
 `

@@ -133,7 +133,7 @@ export class WordDbRow{
 					//,variant: ps(obj.variant)
 					,pronounce: JSON.parse(obj.pronounce),
 					mean:JSON.parse(obj.mean),
-					annotation:JSON.parse(obj.annotation),
+				annotation:JSON.parse(obj.annotation),
 					tag:JSON.parse(obj.tag) as string[],
 					table:obj.table,
 					dates_add:parseDateJson(obj.dates_add),

@@ -1,14 +1,13 @@
 import { $, inherit } from "@shared/Ut"
 import { Abs_Table } from "../../_base/Table"
-import { RunResult } from "sqlite3"
 import { WordTmd as Entity_WordTmd, WordTmd } from "@backend/entities/WordTmd"
 import { WordTmdDbRow as WordTmdDbRow } from "@backend/interfaces/WordTmd"
-import Sqlite, { SqlGenerator } from "@backend/db/Sqlite"
+import Sqlite from "@backend/db/Sqlite"
 import { WordDbRow } from "@shared/interfaces/Word"
 import { Word } from "@shared/entities/Word/Word"
 import Tempus from "@shared/Tempus"
 import { WordTmdDbSrc } from "./DbSrc"
-import * as algo from '@shared/algo'
+
 
 export class WordTmdTable extends Abs_Table{
 	protected constructor(){
@@ -61,7 +60,7 @@ export class WordTmdTable extends Abs_Table{
 				table__row.set(table, row)
 			}
 		}
-		
+		//表名__首詞
 		const table__word = new Map<string, Word>()
 		const table__createDate = new Map<string, Tempus>()
 		for(const [table, row] of table__row){
@@ -76,7 +75,6 @@ export class WordTmdTable extends Abs_Table{
 		const selectAll = `SELECT * from ${WordTmdDbSrc.metadataTableName}`
 		await s.dbSrc.createTable(WordTmdDbSrc.metadataTableName, {ifNotExists: true})
 		const tmdRows =  await Sqlite.all(db, selectAll) as WordTmdDbRow[]
-		//TODO 按建表日期先後排序
 
 		const addedTables = new Set<string>()
 		for(const row of tmdRows){
