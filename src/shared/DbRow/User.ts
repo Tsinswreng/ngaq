@@ -31,7 +31,7 @@ export class UserDbRow{
 		return ans
 	}
 	
-	static toPlain(o:User):UserDbRow{
+	static toDbRow(o:User):UserDbRow{
 		const ans:UserDbRow = {
 			id: o.id
 			,name: o.name

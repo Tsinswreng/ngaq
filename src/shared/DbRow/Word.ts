@@ -29,7 +29,7 @@ export class WordDbRow{
 	 * 私有構造器。若需創對象則:
 	 * const o : ClassName = {在此逐個字段賦值} 不推薦
 	 */
-	private constructor(
+	protected constructor(
 		public table:string //數據庫中本無此字段、㕥存表名。
 		,public wordShape:string
 		//,public variant:string
