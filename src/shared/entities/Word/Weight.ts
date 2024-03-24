@@ -25,7 +25,7 @@ interface I_WordWeight{
 
 }
 
-class WeightConfig implements I_WordWeight{
+class WordWeight implements I_WordWeight{
 	name=''
 	includeTables= []
 	params:Partial<Conf0>={}
