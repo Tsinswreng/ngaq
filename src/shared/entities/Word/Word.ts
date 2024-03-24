@@ -6,7 +6,7 @@ import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
-import { WordDbRow } from '@shared/interfaces/Word';
+import { WordDbRow } from '@shared/DbRow/Word';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)

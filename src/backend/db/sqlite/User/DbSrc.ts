@@ -3,7 +3,7 @@ import Sqlite, {SqliteType} from '@backend/db/Sqlite'
 import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'
 import { RunResult } from 'sqlite3'
-import { UserDbRow } from '@shared/interfaces/User'
+import { UserDbRow } from '@shared/DbRow/User'
 import { Abs_DbSrc, CreateTableOpt } from '../_base/DbSrc'
 //import { I_SqliteDbSrc,CreateTableConfig, Abs_SqliteDbSrc } from '@shared/interfaces/SqliteDbSrc'
 

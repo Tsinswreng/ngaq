@@ -1,5 +1,5 @@
 import * as Word from "@shared/entities/Word/Word";
-import { WordDbRow } from "@shared/interfaces/Word";
+import { WordDbRow } from "@shared/DbRow/Word";
 export default Word.Word
 const Priority = Word.Priority
 type  Priority = Word.Priority
