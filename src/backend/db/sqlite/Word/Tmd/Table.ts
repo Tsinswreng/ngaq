@@ -8,7 +8,6 @@ import { Word } from "@shared/entities/Word/Word"
 import Tempus from "@shared/Tempus"
 import { WordTmdDbSrc } from "./DbSrc"
 
-
 export class WordTmdTable extends Abs_Table{
 	protected constructor(){
 		super()

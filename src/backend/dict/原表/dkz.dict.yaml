@@ -1,5 +1,5 @@
 
-#20240319195832779
+#20240325104501963
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -3244,6 +3244,11 @@ use_preset_vocabulary: true
 朵	tˁojʔ	
 躲	zˁojs	
 朵	zˁojʔ	
+港	krˁoŋʔ	0%
+港	kʰrˁoŋʔ	
+港	ɡˁoŋs	
+蛾	ŋˁaj	
+蛾	ŋajʔ	0%
 址	təʔ	0%
 址	stəʔ	
 偏	pʰen	
@@ -7652,8 +7657,6 @@ use_preset_vocabulary: true
 娥	ŋˁaj	
 䄉	ŋˁaj	
 睋	ŋˁaj	
-蛾	ŋˁaj	
-蛾	ŋajʔ	
 誐	ŋˁaj	
 鋨	ŋˁaj	
 頟	ŋrˁak	
@@ -8656,8 +8659,6 @@ use_preset_vocabulary: true
 綱	kˁaŋ	
 㽘	kˁaŋʔ	
 𨟼	kˁaŋʔ	
-港	ɡˁoŋs	2%
-港	krˁoŋʔ	
 䴚	kˁaŋʔ	
 杠	krˁoŋ	
 掆	kˁaŋ	

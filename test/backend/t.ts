@@ -162,4 +162,3 @@ class P{
 
 new P()
 
-

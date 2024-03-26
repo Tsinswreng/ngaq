@@ -1,5 +1,8 @@
 import { inherit } from "@shared/Ut";
 import { Abs_WordWeight } from "./_Base";
+
+
+
 export class EngWeight extends Abs_WordWeight{
 	protected constructor(){
 		super()
@@ -11,5 +14,7 @@ export class EngWeight extends Abs_WordWeight{
 		const o = inherit(c,f)
 		return o
 	}
-	
+
 }
+
+

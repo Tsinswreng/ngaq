@@ -94,7 +94,7 @@ export class Sros{
 
 	static lib = mathjs
 
-	private constructor(){}
+	protected constructor(){}
 	static new():Sros_number
 	static new(config:mathjs.ConfigOptions):Sros_big
 	static new(config?:mathjs.ConfigOptions){ //precision只影響小數
