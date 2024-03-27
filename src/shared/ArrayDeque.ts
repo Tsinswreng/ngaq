@@ -11,12 +11,18 @@ export default class ArrayDeque<T>{
 	}
 
 	protected _data = [] as T[]
+	get data(){return this._data}
 	
+	/** 實際元素量 */
 	protected _size:number = 0
 	get size(){return this._size}
 
+	/** 內部數組ᵗ容量 */
 	protected _capacity:number = 0
 	get capacity(){return this._capacity}
+	set capacity(v){
+		this.expand(v)
+	}
 
 	protected _reversed = false
 	protected _frontI = 0 // 當_reversed潙true旹、_frontI實潙隊尾
@@ -25,6 +31,27 @@ export default class ArrayDeque<T>{
 
 	get front(){return this._data[this._frontI]}
 	get back(){return this._data[this._backI]}
+
+
+	static fromArrayRef<T>(arr:T[], capacity:number=arr.length){
+		if(capacity!= void 0 && capacity < arr.length){
+			throw new RangeError(`capacity < ${arr.length}`)
+		}
+		const o = new this<T>()
+		o._capacity = capacity
+		o._data = arr
+		o._size = arr.length
+		o._frontI = 0
+		o._backI = arr.length -1
+		return o
+	}
+
+	static fromArrayCopy<T>(arr:T[], capacity:number=arr.length){
+		const o = ArrayDeque.fromArrayRef(arr, capacity)
+		o._data = arr.slice()
+		return o
+	}
+	
 
 	isEmpty(){
 		return this.size === 0
@@ -41,24 +68,37 @@ export default class ArrayDeque<T>{
 		this._backI = 0
 	}
 
-	reverse(){
-		// const temp = this._frontI
-		// this._frontI = this._backI
-		// this._backI = temp
-		let t
-		t = this.frontIterFn.bind(this)
-		this.frontIterFn = this.backIterFn.bind(this)
-		this.backIterFn = t
 
-		t = this.addFront.bind(this)
-		this.addFront = this.addBack.bind(this)
-		this.addBack = t
+	//<,2024-03-27T18:40:02.000+08:00>取消O(1) reverse
+	// reverse(){
+	// 	// const temp = this._frontI
+	// 	// this._frontI = this._backI
+	// 	// this._backI = temp
+	// 	const s = this
+	// 	let t
 
-		t = this.removeFront.bind(this)
-		this.removeFront = this.removeBack.bind(this)
-		this.removeBack = t
-		this._reversed = !this._reversed
-	}
+		
+	// 	t = this.frontIterFn.bind(this)
+	// 	this.frontIterFn = this.backIterFn.bind(this)
+	// 	this.backIterFn = t
+
+	// 	t = this.addFront.bind(this)
+	// 	this.addFront = this.addBack.bind(this)
+	// 	this.addBack = t
+
+	// 	t = this.removeFront.bind(this)
+	// 	this.removeFront = this.removeBack.bind(this)
+	// 	this.removeBack = t
+	// 	this._reversed = !this._reversed
+
+	// 	t = s.frontGet.bind(s)
+	// 	s.frontGet = s.backGet.bind(s)
+	// 	s.backGet = t
+
+	// 	t = s.frontSet.bind(s)
+	// 	s.frontSet = s.backSet.bind(s)
+	// 	s.backSet = t
+	// }
 
 	addBack(ele:T){
 		if(this.isFull()){
@@ -67,7 +107,8 @@ export default class ArrayDeque<T>{
 		if(this.isEmpty()){
 			this._data[this._backI] = ele
 		}else{
-			this._backI = (this._backI+1)%this.capacity
+			//this._backI = (this._backI+1)%this.capacity
+			this._backI = ArrayDeque.posAdd(this._backI, this._capacity, 1)
 			this._data[this._backI] = ele
 		}
 		this._size += 1
@@ -81,8 +122,9 @@ export default class ArrayDeque<T>{
 		const t = this.back
 		delete this._data[this._backI]
 		this._size -= 1
-		this._backI = this._backI-1
-		if(this._backI < 0){this._backI+=this._capacity}
+		ArrayDeque.posSub(this._backI, this._capacity, 1)
+		// this._backI = this._backI-1
+		// if(this._backI < 0){this._backI+=this._capacity}
 		return t
 	}
 
@@ -93,12 +135,72 @@ export default class ArrayDeque<T>{
 		if(this.isEmpty()){
 			
 		}else{
-			this._frontI = this._frontI-1
-			if(this._frontI < 0){this._frontI+=this._capacity}
-			this._data[this._frontI] = ele
+			// this._frontI = this._frontI-1
+			// if(this._frontI < 0){this._frontI+=this._capacity}
+			this._frontI = ArrayDeque.posSub(this._frontI, this._capacity, 1)
 		}
+		this._data[this._frontI] = ele
 		this._size += 1
 		return true
+	}
+
+	/**
+	 * 
+	 * @param index [0, capacity-1]
+	 * @param capacity when capacity is 5, index is in [0,4]
+	 * @param num 正整數
+	 * @returns 
+	 */
+	static posAdd(index:number, capacity:number, num:number){
+		index = (index+num) % capacity
+		return index
+	}
+
+	/**
+	 * 
+	 * @param index [0, capacity-1]
+	 * @param capacity when capacity is 5, index is in [0,4]
+	 * @param num 正整數
+	 */
+	static posSub(index:number, capacity:number, num:number){
+		num = num % capacity
+		index -= num
+		if(index < 0){
+			index += capacity
+		}
+		return index
+	}
+
+	/**
+	 * 從頭到尾 取第num個元素
+	 * @param num 
+	 * @returns 
+	 */
+	frontGet(num:number){
+		let index = ArrayDeque.posAdd(this._frontI, this.capacity, num)
+		return this._data[index]
+	}
+
+	frontSet(num:number, item:T){
+		let index = ArrayDeque.posAdd(this._frontI, this.capacity, num)
+		this._data[index] = item
+		return index
+	}
+
+	/**
+	 * 從尾到頭 取第num個元素
+	 * @param num 
+	 * @returns 
+	 */
+	backGet(num:number){
+		let index = ArrayDeque.posSub(this._backI, this.capacity, num)
+		return this._data[index]
+	}
+
+	backSet(num:number, item:T){
+		let index = ArrayDeque.posSub(this._backI, this.capacity, num)
+		this._data[index] = item
+		return index
 	}
 
 	removeFront(){
@@ -107,21 +209,23 @@ export default class ArrayDeque<T>{
 		}
 		const t = this.front
 		delete this._data[this._frontI]
-		this._frontI = (this._frontI+1)%this.capacity
+		//this._frontI = (this._frontI+1)%this.capacity
+		this._frontI = ArrayDeque.posAdd(this._frontI, this._capacity, 1)
 		this._size -= 1
 		return t
 	}
 
 	expand(neoCapacity:number){
 		if (neoCapacity <= this.size){
-			return false
+			//return false
+			throw new RangeError(`new capacity <= ${this.size}`)
 		}
-		const neoData = new Array<T>(neoCapacity)
-		for(let i = 0; i < this.size; i++){
-			neoData[i] = this._data[i]
-		}
-		//delete this._data
-		this._data = neoData
+		// const neoData = new Array<T>(neoCapacity)
+		// for(let i = 0; i < this.size; i++){
+		// 	neoData[i] = this._data[i]
+		// }
+		// //delete this._data
+		// this._data = neoData
 		this._capacity = neoCapacity
 		return true
 	}
@@ -134,26 +238,48 @@ export default class ArrayDeque<T>{
 	 * }
 	 */
 	frontIterFn(){
-		let i = this._frontI
+		//let i = this._frontI
+		let i = 0
 		//let cnt = 0
-		return ()=>{
-			const t = this._data[i]
-			i = (i+1)%this.capacity
-			//cnt++
-			return t
+		return (cnt=1)=>{
+			// const t = this._data[i]
+			// i = (i+1)%this.capacity
+			// //cnt++
+			// return t
+			const ans = this.frontGet(i+cnt-1)
+			i = ArrayDeque.posAdd(i, this.capacity, cnt)
+			return ans
 		}
 	}
 
 	backIterFn(){
-		let i = this._backI
+		//let i = this._backI
+		let i = 0
 		//let cnt = 0
-		return ()=>{
-			const t = this._data[i]
-			i = (i-1)
-			if(i<0){i+=this.capacity}
-			//cnt++
-			return t
+		return (cnt=1)=>{
+			// const t = this._data[i]
+			// i = (i-1)
+			// if(i<0){i+=this.capacity}
+			// //cnt++
+			// return t
+			const ans = this.backGet(i+cnt-1)
+			i = ArrayDeque.posAdd(i, this.capacity, cnt)
+			return ans
 		}
+	}
+
+	/**
+	 * 從頭到尾、所有元素轉數組。返ᵗ數組ᵗlength同size洏非capacity
+	 * @returns 
+	 */
+	toArray(){
+		const s = this
+		const next = s.frontIterFn()
+		const ans = [] as T[]
+		for(let i = 0; i < s.size; i++){
+			ans[i] = next()
+		}
+		return ans
 	}
 
 }
