@@ -31,7 +31,7 @@ const C:Static<Cl> = Cl
 
 let obj1 = C.New()
 let obj2 = C.new() //属性“new”在类型“Static<Cl>”上不存在。
-console.log(obj2.age)
+//console.log(obj2.age)
 
 
 /* import EventEmitter = require('events')
@@ -143,13 +143,13 @@ class Y{
 	x = X
 }
 
-console.log(
-	new X()
-)
+// console.log(
+// 	new X()
+// )
 
 
 function ret(a){
-	console.log(a)
+	//console.log(a)
 	return a
 }
 class P{
@@ -162,3 +162,10 @@ class P{
 
 new P()
 
+
+const inEmt = new EventEmitter()
+inEmt.on('1', (...args)=>{
+	console.log(args)
+})
+
+inEmt.emit('1', 1, 2)
