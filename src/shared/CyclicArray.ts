@@ -1,5 +1,5 @@
 
-export default class ArrayDeque<T>{
+export default class CyclicArray<T>{
 	protected constructor(){
 		
 	}
@@ -47,7 +47,7 @@ export default class ArrayDeque<T>{
 	}
 
 	static fromArrayCopy<T>(arr:T[], capacity:number=arr.length){
-		const o = ArrayDeque.fromArrayRef(arr, capacity)
+		const o = CyclicArray.fromArrayRef(arr, capacity)
 		o._data = arr.slice()
 		return o
 	}
@@ -108,7 +108,7 @@ export default class ArrayDeque<T>{
 			this._data[this._backI] = ele
 		}else{
 			//this._backI = (this._backI+1)%this.capacity
-			this._backI = ArrayDeque.posAdd(this._backI, this._capacity, 1)
+			this._backI = CyclicArray.posAdd(this._backI, this._capacity, 1)
 			this._data[this._backI] = ele
 		}
 		this._size += 1
@@ -122,7 +122,7 @@ export default class ArrayDeque<T>{
 		const t = this.back
 		delete this._data[this._backI]
 		this._size -= 1
-		ArrayDeque.posSub(this._backI, this._capacity, 1)
+		CyclicArray.posSub(this._backI, this._capacity, 1)
 		// this._backI = this._backI-1
 		// if(this._backI < 0){this._backI+=this._capacity}
 		return t
@@ -137,7 +137,7 @@ export default class ArrayDeque<T>{
 		}else{
 			// this._frontI = this._frontI-1
 			// if(this._frontI < 0){this._frontI+=this._capacity}
-			this._frontI = ArrayDeque.posSub(this._frontI, this._capacity, 1)
+			this._frontI = CyclicArray.posSub(this._frontI, this._capacity, 1)
 		}
 		this._data[this._frontI] = ele
 		this._size += 1
@@ -177,12 +177,12 @@ export default class ArrayDeque<T>{
 	 * @returns 
 	 */
 	frontGet(num:number){
-		let index = ArrayDeque.posAdd(this._frontI, this.capacity, num)
+		let index = CyclicArray.posAdd(this._frontI, this.capacity, num)
 		return this._data[index]
 	}
 
 	frontSet(num:number, item:T){
-		let index = ArrayDeque.posAdd(this._frontI, this.capacity, num)
+		let index = CyclicArray.posAdd(this._frontI, this.capacity, num)
 		this._data[index] = item
 		return index
 	}
@@ -193,12 +193,12 @@ export default class ArrayDeque<T>{
 	 * @returns 
 	 */
 	backGet(num:number){
-		let index = ArrayDeque.posSub(this._backI, this.capacity, num)
+		let index = CyclicArray.posSub(this._backI, this.capacity, num)
 		return this._data[index]
 	}
 
 	backSet(num:number, item:T){
-		let index = ArrayDeque.posSub(this._backI, this.capacity, num)
+		let index = CyclicArray.posSub(this._backI, this.capacity, num)
 		this._data[index] = item
 		return index
 	}
@@ -210,7 +210,7 @@ export default class ArrayDeque<T>{
 		const t = this.front
 		delete this._data[this._frontI]
 		//this._frontI = (this._frontI+1)%this.capacity
-		this._frontI = ArrayDeque.posAdd(this._frontI, this._capacity, 1)
+		this._frontI = CyclicArray.posAdd(this._frontI, this._capacity, 1)
 		this._size -= 1
 		return t
 	}
@@ -247,7 +247,7 @@ export default class ArrayDeque<T>{
 			// //cnt++
 			// return t
 			const ans = this.frontGet(i+cnt-1)
-			i = ArrayDeque.posAdd(i, this.capacity, cnt)
+			i = CyclicArray.posAdd(i, this.capacity, cnt)
 			return ans
 		}
 	}
@@ -263,7 +263,7 @@ export default class ArrayDeque<T>{
 			// //cnt++
 			// return t
 			const ans = this.backGet(i+cnt-1)
-			i = ArrayDeque.posAdd(i, this.capacity, cnt)
+			i = CyclicArray.posAdd(i, this.capacity, cnt)
 			return ans
 		}
 	}

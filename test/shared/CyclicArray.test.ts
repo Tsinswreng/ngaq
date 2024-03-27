@@ -1,4 +1,4 @@
-import ArrayDeque from '@shared/ArrayDeque'
+import ArrayDeque from '@shared/CyclicArray'
 import lodash from 'lodash'
 const eq = lodash.isEqual
 const ast = (a, b:any=true)=>{
