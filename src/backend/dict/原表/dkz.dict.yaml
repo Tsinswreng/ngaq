@@ -1,5 +1,5 @@
 
-#20240325104501963
+#20240328203840710
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1265,6 +1265,7 @@ use_preset_vocabulary: true
 蝔	krˁi	
 鶛	krˁi	
 湝	ɡrˁi	
+瑎	ɡrˁi	
 荄	kˁə	
 荄	krˁə	
 痎	krˁə	
@@ -1302,6 +1303,8 @@ use_preset_vocabulary: true
 蟩	kot	
 蟨	kot	
 蹷	ɡot	
+擦	tsʰˁat	
+擦	tsʰrˁet	0%
 宣	sʷan	
 瑄	sʷan	
 揎	sʷan	
@@ -2486,6 +2489,7 @@ use_preset_vocabulary: true
 玹	ɡʷˁins	
 袨	ɡʷˁins	
 䝮	ɡʷˁins	
+鞋	ɡrˁe	
 罩	trˁawks	
 罩	trˁaws	
 麥	mrˁək	
@@ -3249,6 +3253,35 @@ use_preset_vocabulary: true
 港	ɡˁoŋs	
 蛾	ŋˁaj	
 蛾	ŋajʔ	0%
+騁	lʰreŋʔ	
+悜	lʰreŋʔ	
+蟶	lʰreŋ	
+檉	lʰreŋ	
+禊	ɡˁets	
+稧	ɡˁets	
+瘛	ɡˁets	
+薊	kˁets	
+檕	kˁeks	
+蟿	kʰˁeks	
+罊	kʰˁeks	
+罊	kʰrˁek	
+緙	kʰrˁək	
+諽	kʰrˁək	
+契	kˁets	
+契	kˁets	
+楔	krˁet	
+楔	sŋˁet	
+偰	sŋˁet	
+揳	sŋˁet	
+絃	ɡˁin	
+絃	hʰˁins	
+痃	ɡˁin	
+蚿	ɡˁin	
+伭	ɡˁin	
+胘	ɡˁin	
+臤	kʰrˁiŋ	
+臤	kʰiŋ	
+臤	ɡˁiŋ	
 址	təʔ	0%
 址	stəʔ	
 偏	pʰen	
@@ -3336,6 +3369,10 @@ use_preset_vocabulary: true
 償	staŋs	
 鏡	ɡraŋʔ	
 望	mˁaŋs	
+朢	mAŋs	
+望	mAŋs	
+妄	maŋs	0%
+妄	nAŋs	
 惑	wrˁək	
 辨	prenʔ	
 伺	tsʰəs	
@@ -5186,8 +5223,6 @@ use_preset_vocabulary: true
 簿	bˁaʔ	
 攃	tsʰˁat	
 攃	sˁat	
-擦	tsʰˁat	
-擦	tsʰrˁet	
 䌨	tsʰˁat	
 礤	tsʰˁat	
 遪	tsʰˁəp	
@@ -5793,8 +5828,6 @@ use_preset_vocabulary: true
 赬	tʰreŋ	
 橕	tʰrˁaŋ	
 瞠	tʰrˁaŋ	
-檉	tʰreŋ	
-蟶	tʰreŋ	
 鏳	dzrˁeŋ	
 朾	drˁeŋ	
 朾	trˁeŋ	
@@ -5828,10 +5861,8 @@ use_preset_vocabulary: true
 騬	ʑəŋ	
 徎	tʰˁeŋʔ	
 徎	treŋʔ	
-悜	tʰreŋʔ	
 庱	tʰrəŋ	
 庱	tʰrəŋʔ	
-騁	tʰreŋʔ	
 秤	tʰəŋs	
 牚	tʰrˁaŋs	
 竀	tʰrˁaŋ	
@@ -5949,9 +5980,6 @@ use_preset_vocabulary: true
 𠟴	tsʰrəʔ	
 慗	tʰrək	
 𤸪	tʰets	
-瘛	tʰets	
-瘛	tʰet	
-瘛	ɡˁes	
 𥛚	tʰˁek	
 翨	kes	
 翨	ɕes	
@@ -8790,8 +8818,6 @@ use_preset_vocabulary: true
 㽁	rˁek	
 䗘	kˁap	
 臈	rˁap	
-諽	kʰrˁek	
-諽	krˁek	
 𪌣	krˁak	
 䨣	krˁek	
 𥢸	kˁat	
@@ -10801,13 +10827,10 @@ use_preset_vocabulary: true
 諅	kə	
 稷	tsək	
 𣽍	ɡrəjs	
-薊	kˁes	
 冀	krəjs	
 穄	tsets	
 𦃟	ɡˁes	
 襀	tsek	
-檕	kˁes	
-檕	kʰˁe	
 鮆	tse	
 覬	krəjs	
 罽	krets	
@@ -12454,7 +12477,6 @@ use_preset_vocabulary: true
 𣩄	kʰˁəp	
 𧛾	kʰˁap	
 䙐	kʰrˁek	
-緙	kʰrˁek	
 錁	kˁojʔ	
 騍	kʰˁojs	
 騍	kˁojs	
@@ -16803,9 +16825,6 @@ use_preset_vocabulary: true
 𨑤	kʰes	
 弃	kʰis	
 盵	kʰəjs	
-契	kʰˁes	
-契	kʰˁet	
-契	kʰət	
 䀙	tsʰˁes	
 咠	tsʰəp	
 咠	tsəp	
@@ -16861,10 +16880,6 @@ use_preset_vocabulary: true
 䫔	kʰˁet	
 䟄	tsʰek	
 䟄	dzʷrˁek	
-蟿	kʰˁes	
-蟿	kʰis	
-罊	kʰˁes	
-罊	kʰrˁek	
 礘	ŋˁəp	
 𪔪	tsʰəp	
 𪔧	tʰˁep	
@@ -16912,10 +16927,6 @@ use_preset_vocabulary: true
 岍	kʰˁen	
 汧	kʰˁen	
 汧	kʰˁens	
-臤	ɡˁen	
-臤	kʰˁan	
-臤	kʰins	
-臤	kʰrˁen	
 欦	hˁem	
 欦	hrˁemʔ	
 欦	kʰamʔ	
@@ -20674,12 +20685,9 @@ use_preset_vocabulary: true
 誷	mʷaŋʔ	
 魍	mʷaŋʔ	
 瀇	ʔʷˁaŋʔ	
-妄	mʷaŋs	
 迋	kʷaŋʔ	
 迋	wʷaŋs	
 旺	wʷaŋs	
-朢	mʷaŋ	
-朢	mʷaŋs	
 䤑	ʔʷˁaŋs	
 𧫢	mʷaŋs	
 𢼸	mʷəj	
@@ -21422,11 +21430,9 @@ use_preset_vocabulary: true
 𦝜	ɡˁes	
 慀	ɡˁes	
 慀	ɡrˁe	
-禊	ɡˁes	
 綌	kʰrek	
 𥈜	hək	
 犔	həjs	
-稧	ɡˁes	
 𧨃	hˁek	
 熂	həjs	
 蕮	sek	
@@ -21589,19 +21595,13 @@ use_preset_vocabulary: true
 䉳	sen	
 䉳	senʔ	
 𠆺	ɡʷˁen	
-伭	ɡˁen	
 𠛑	ɡˁen	
 㳄	zen	
-胘	ɡˁen	
-胘	ɡʷˁen	
 𢮂	ɡˁen	
 𢮂	kˁen	
 𦱁	ɡˁen	
-蚿	ɡˁen	
 㡉	kˁen	
 婱	ɡˁen	
-絃	ɡˁen	
-絃	hʷˁens	
 閑	ɡrˁen	
 閒	krˁen	99%
 閒	krˁens	
@@ -21912,8 +21912,6 @@ use_preset_vocabulary: true
 䉰	krˁaw	
 䉰	krˁawʔ	
 㨝	sˁit	
-楔	krˁet	
-楔	sˁit	
 歇	hat	
 㗨	hrˁe	
 蝎	ɡˁat	
@@ -21935,14 +21933,12 @@ use_preset_vocabulary: true
 𣢩	hap	
 𣫴	ɡʷˁe	
 𡸔	ɡʷˁe	
-揳	sˁit	
 翓	ɡˁet	
 䙽	hˁet	
 猲	hˁat	
 猲	hat	
 猲	kʰʷap	
 㥟	ɡrˁe	
-瑎	ɡrˁə	
 携	ɡʷˁe	
 㨙	ɡˁes	
 㨙	ɡrˁe	
@@ -21958,8 +21954,6 @@ use_preset_vocabulary: true
 𣣲	hap	
 𢴲	ɡˁet	
 𢴲	hˁet	
-鞋	ɡrˁə	
-鞋	ɡrˁe	
 䙎	ɡrˁe	
 勰	ɡˁep	
 䩤	hˁet	
@@ -21997,7 +21991,6 @@ use_preset_vocabulary: true
 屓	hrəjs	
 焎	hret	
 禼	set	
-偰	sˁit	
 徢	sˁep	
 𡞘	sˁep	
 紲	set	
@@ -22445,7 +22438,6 @@ use_preset_vocabulary: true
 𧟨	ɡʷˁen	
 㘣	hʷˁen	
 㘣	zon	
-痃	ɡˁen	
 㳬	zon	
 㳬	zons	
 琁	zon	

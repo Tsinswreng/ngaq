@@ -5,7 +5,7 @@ type IConfig = typeof Config.defaultConfig
 
 export default class Config{
 
-	private static _instance:Config
+	protected static _instance:Config
 	public static getInstance(){
 		if(Config._instance === void 0){
 			Config._instance = Config.new()
@@ -13,11 +13,11 @@ export default class Config{
 		return Config._instance
 	}
 
-	private constructor(){
+	protected constructor(){
 		
 	}
 
-	private static new(){
+	protected static new(){
 		const o = new this()
 		const config = Config.readOuterConfig(Config.defaultConfig.outerConfig)
 		o.merge(config)

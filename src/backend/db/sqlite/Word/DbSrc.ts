@@ -51,6 +51,19 @@ export class WordDbSrc extends Abs_DbSrc{
 	protected _tmdTable:WordTmdTable
 	get tmdTable(){return this._tmdTable}
 
+	declare protected _TableClass: typeof WordTable;
+	get TableClass():typeof WordTable{return this._TableClass}
+
+	loadTable(tableName:string, opt?:{
+	}){
+		const z = this
+		const ans = z.TableClass.new({
+			_tableName: tableName
+			,_dbSrc: z
+		})
+		return ans
+	}
+
 	initMdListener(){
 		const s = this
 		const outerErr = new Error()

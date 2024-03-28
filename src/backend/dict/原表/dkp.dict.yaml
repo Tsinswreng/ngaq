@@ -639,6 +639,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 衆	tuŋs	# 舍他音
 
 忘	maŋs	# 舍他音
+
 放	paŋs	# 舍他音
 王	waŋ	# 舍他音
 或	wˁək
@@ -1656,6 +1657,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蝔	krˁi
 鶛	krˁi
 湝	ɡrˁi
+瑎	ɡrˁi
 荄	kˁə
 荄	krˁə
 痎	krˁə
@@ -1702,7 +1704,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蟨	kot
 蹷	ɡot
 
-
+擦	tsʰˁat
+擦	tsʰrˁet	0%
 
 
 宣	sʷan
@@ -3180,6 +3183,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 袨	ɡʷˁins
 䝮	ɡʷˁins
 
+鞋	ɡrˁe	# 舍他音
+
+
 
 罩	trˁawks
 罩	trˁaws
@@ -4149,6 +4155,45 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蛾	ŋˁaj
 蛾	ŋajʔ	0%
 
+騁	lʰreŋʔ
+悜	lʰreŋʔ
+
+蟶	lʰreŋ
+檉	lʰreŋ
+
+禊	ɡˁets
+稧	ɡˁets
+瘛	ɡˁets
+#瘛	kʰˁet
+#瘛	kʰˁets
+薊	kˁets
+
+檕	kˁeks
+蟿	kʰˁeks
+罊	kʰˁeks
+罊	kʰrˁek
+緙	kʰrˁək
+諽	kʰrˁək
+#諽	krˁək
+
+契	kˁets
+契	kˁets
+
+楔	krˁet
+楔	sŋˁet
+偰	sŋˁet
+揳	sŋˁet
+
+絃	ɡˁin
+絃	hʰˁins
+痃	ɡˁin
+蚿	ɡˁin
+伭	ɡˁin
+胘	ɡˁin
+臤	kʰrˁiŋ
+臤	kʰiŋ
+臤	ɡˁiŋ
+
 
 # 勃
 # 脖
@@ -4366,6 +4411,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 鏡	ɡraŋʔ	# ts
 #帖	lʰˁep	# ts
 望	mˁaŋs	# ts	或用mAŋs
+朢	mAŋs	# ts
+望	mAŋs	# ts
+妄	maŋs	0%
+妄	nAŋs	# ts
 #妄	pʰˁaŋs	# ts
 惑	wrˁək	# ts
 辨	prenʔ	# ts
