@@ -1,6 +1,27 @@
 import * as Le from '@shared/linkedEvent'
 
-class ReciteEvent extends Le.Event{
+
+const Ev = Le.Event.new.bind(Le)
+class ReciteEvents extends Le.Events{
+	protected constructor(){
+		super()
+	}
+	static new(){
+		const o = new this()
+		return o
+	}
+	
+	reciteEvent = Ev('reciteEvent')
+	// rmb = Ev('rmb')
+	// fgt = Ev('fgt')
+	load = Ev('load')
+	start = Ev('start')
+	save = Ev('save')
+	restart = Ev('restart')
+}
+
+
+/* class ReciteEvent extends Le.Event{
 	protected constructor(){
 		super()
 	}
@@ -22,4 +43,5 @@ class RememberEvent extends ReciteEvent{
 		o._base = ReciteEvent.new(name)
 		return o
 	}
-}
+} */
+

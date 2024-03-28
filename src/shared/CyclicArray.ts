@@ -216,18 +216,32 @@ export default class CyclicArray<T>{
 	}
 
 	expand(neoCapacity:number){
+		const s = this
 		if (neoCapacity <= this.size){
 			//return false
 			throw new RangeError(`new capacity <= ${this.size}`)
 		}
-		// const neoData = new Array<T>(neoCapacity)
-		// for(let i = 0; i < this.size; i++){
-		// 	neoData[i] = this._data[i]
-		// }
-		// //delete this._data
-		// this._data = neoData
-		this._capacity = neoCapacity
+		const neoData = s.toArray()
+		//delete s._data
+		s._data = neoData
+		s._capacity = neoCapacity
+		s._frontI = 0
+		if(s.size === 0){
+			s._backI = 0
+		}else{
+			s._backI = s.size-1
+		}
 		return true
+	}
+
+	static toExpand<T>(old:CyclicArray<T>, neoCapacity:number){
+		if (neoCapacity <= old.size){
+			//return false
+			throw new RangeError(`new capacity <= ${old.size}`)
+		}
+		const arr = old.toArray()
+		const neo = CyclicArray.fromArrayRef(arr, neoCapacity)
+		return neo
 	}
 
 	/**
