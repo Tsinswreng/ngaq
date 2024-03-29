@@ -6,7 +6,7 @@ import Config from '@shared/Config';
 import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
-import { ReciteEvents } from '@shared/logic/reciteWord/ReciteEvent';
+import { MemorizeEvents } from '@shared/logic/memorizeWord/Event';
 
 const configInst = Config.getInstance()
 const config = configInst.config

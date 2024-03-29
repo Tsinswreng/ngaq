@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { Abs_MemorizeLogic } from "@shared/logic/reciteWord/MemorizeWordLogic";
+import { Abs_MemorizeLogic } from "@shared/logic/memorizeWord/MemorizeWordLogic";
 import { inherit } from "@shared/Ut";
 import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';

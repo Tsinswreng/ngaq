@@ -1,4 +1,4 @@
-import { ReciteEvents } from "./ReciteEvent";
+import { MemorizeEvents } from "./Event";
 import { Word } from "@shared/entities/Word/Word";
 import * as Le from '@shared/linkedEvent'
 
@@ -34,7 +34,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 	protected _wordsToLearn:Word[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
-	protected static _events = ReciteEvents.instance
+	protected static _events = MemorizeEvents.instance
 	static get events(){return this._events}
 
 	abstract on_load()
