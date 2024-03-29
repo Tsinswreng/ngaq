@@ -10,12 +10,15 @@ import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/DbRow/Word';
+import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 
 const configInst = Config.getInstance()
 const config = configInst.config
 
 
-export class CliRecite extends Abs_MemorizeLogic{
+
+
+export class CliMemorize extends Abs_MemorizeLogic{
 	protected constructor(){
 		super()
 	}
@@ -38,16 +41,28 @@ export class CliRecite extends Abs_MemorizeLogic{
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
+
+
+
 	async on_load() {
 		const z = this
 		const tbl = z.dbSrc.loadTable('english')
 		const rows = await tbl.selectAll()
 		const words = rows.map(e=>WordDbRow.toEntity(e))
+		const mWords = words.map(e=>MemorizeWord.new(e))
 		z._wordsToLearn.length = 0
-		z._wordsToLearn.push(...words)
+		z._wordsToLearn.push(...mWords)
+		z._status.load = true
 	}
 	on_calcWeight() {
-		throw new Error("Method not implemented.");
+		const z = this
+		if(!z._status.load){
+			throw new Error()
+		}
+		for(let i = 0; i < z.wordsToLearn.length; i++){
+			z.wordsToLearn[i].weight = 0
+		}
+		z._status.calcWeight = true
 	}
 	on_sort() {
 		throw new Error("Method not implemented.");

@@ -1,6 +1,13 @@
 import { MemorizeEvents } from "./Event";
-import { Word } from "@shared/entities/Word/Word";
+import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
+import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
+
+class ErrReason{
+	didnt_load = Reason.new('')
+}
+
+
 
 export interface I_MemorizeLogic{
 
@@ -31,11 +38,19 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 	protected abstract _emitter: Le.LinkedEmitter
 	abstract get emitter()
 
-	protected _wordsToLearn:Word[] = []
+	protected _wordsToLearn:MemorizeWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
 	protected static _events = MemorizeEvents.instance
 	static get events(){return this._events}
+
+	protected _status = {
+		load: false
+		,calcWeight: false
+		,sort: false
+		,start: false
+		,save: false
+	}
 
 	abstract on_load()
 

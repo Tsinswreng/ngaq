@@ -169,3 +169,12 @@ inEmt.on('1', (...args)=>{
 })
 
 inEmt.emit('1', 1, 2)
+
+import {Exception} from '@shared/Exception'
+
+try {
+	
+} catch (error) {
+	const e = error as Exception
+}
+
