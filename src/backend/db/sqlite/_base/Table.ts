@@ -21,13 +21,13 @@ export class InnerTableEventEmitter extends EventEmitter{
 	}
 }
 
-export class LinkedEventEmitter extends Le.Emitter{
+export class LinkedEventEmitter extends Le.LinkedEmitter{
 	protected _eventEmitter: Le.I_EventEmitter = InnerTableEventEmitter.new()
 	protected constructor(){
 		super()
 	}
-	static new(...params:Parameters<typeof Le.Emitter.new>){
-		const f = Le.Emitter.new(...params)
+	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
+		const f = Le.LinkedEmitter.new(...params)
 		const c = new this()
 		return inherit(c,f)
 	}
@@ -86,7 +86,7 @@ export abstract class Abs_Table{
 /* 	protected _eventEmitter_deprecated = InnerTableEventEmitter.new()
 	get eventEmitter_deprecated(){return this._eventEmitter_deprecated} */
 
-	protected _linkedEmitter = Le.Emitter.new(InnerTableEventEmitter.new())
+	protected _linkedEmitter = Le.LinkedEmitter.new(InnerTableEventEmitter.new())
 	get linkedEmitter(){return this._linkedEmitter}
 
 	protected _dbSrc:I_DbSrc

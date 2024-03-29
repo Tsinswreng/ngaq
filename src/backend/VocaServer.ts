@@ -1,4 +1,4 @@
-import WordDbSrc_, { WordDbSrc } from "./db/sqlite/Word/DbSrc";
+import { WordDbSrc } from "./db/sqlite/Word/DbSrc";
 //const cors = require('cors')
 //const express = require('express')
 import express, { Request, Response } from 'express'
@@ -115,7 +115,7 @@ export default class VocaServer{
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
 	public static async main(){
-		C.wordDbSrc = await WordDbSrc_.New({
+		C.wordDbSrc = await WordDbSrc.New({
 			_dbPath:config.config.dbPath
 			, _backupDbPath:config.config.backupDbPath
 			,_mode: Sqlite.openMode.DEFAULT_CREATE
@@ -262,7 +262,7 @@ export default class VocaServer{
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
-			const prms = await WordDbSrc_.saveWords(this.wordDbSrc.db, sws)
+			const prms = await WordDbSrc.saveWords(this.wordDbSrc.db, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
 			// }
@@ -288,22 +288,22 @@ export default class VocaServer{
 				const sws = Word.toJsObj(rows)
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
-				const backupDb = await WordDbSrc_.New({
+				const backupDb = await WordDbSrc.New({
 						_dbPath:(config.config.backupDbPath)
 						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				await WordDbSrc_.backupTable(VocaServer.wordDbSrc.db, sws[0].table, backupDb.db) //* 無調用堆棧
+				await WordDbSrc.backupTable(VocaServer.wordDbSrc.db, sws[0].table, backupDb.db) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				const [init, modified] = await Sqlite.transaction(
 					VocaServer.wordDbSrc.db
-					, await WordDbSrc_.addWordsOfSameTable_fn(VocaServer.wordDbSrc.db, sws)
+					, await WordDbSrc.addWordsOfSameTable_fn(VocaServer.wordDbSrc.db, sws)
 				)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				const addedWords_init:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, init)
-				const addedWords_modified:string[] = await WordDbSrc_.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, modified)
+				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, init)
+				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
 				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){

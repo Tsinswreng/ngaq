@@ -24,7 +24,7 @@ export interface I_DbSrc{
 	get eventEmmiter_deprecated(): EventEmitter
 	get eventNames_deprecated(): EventNames_deprecated
 	createTable(table:string, config:CreateTableOpt):Promise<unknown>
-	get linkedEmitter():Le.Emitter
+	get linkedEmitter():Le.LinkedEmitter
 	get events():Le.Events
 	// genQry_insert(table:string, obj:Object):[string, unknown[]]
 	// genQry_updateById(table:string, obj:Object, id:number|string):[string, unknown[]]
@@ -53,13 +53,13 @@ export class Events extends Le.Events{
 	createTable_after = Le.Event.new('createTable_after')
 }
 
-export class LinkedEventEmitter extends Le.Emitter{
+export class LinkedEventEmitter extends Le.LinkedEmitter{
 	protected _eventEmitter: EventEmitter = InnerDbSrcEventEmitter.new()
 	protected constructor(){
 		super()
 	}
-	static new(...params:Parameters<typeof Le.Emitter.new>){
-		const f = Le.Emitter.new(...params)
+	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
+		const f = Le.LinkedEmitter.new(...params)
 		const c = new this()
 		return inherit(c,f)
 	}
@@ -89,13 +89,13 @@ export class InnerDbSrcEventEmitter extends EventEmitter{
 }
 
 
-export class DbSrcEventEmitter extends Le.Emitter{
+export class DbSrcEventEmitter extends Le.LinkedEmitter{
 	protected _eventEmitter: Le.I_EventEmitter = InnerDbSrcEventEmitter.new()
 	protected constructor(){
 		super()
 	}
-	static new(...params:Parameters<typeof Le.Emitter.new>){
-		const f = Le.Emitter.new(...params)
+	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
+		const f = Le.LinkedEmitter.new(...params)
 		const c = new this()
 		return inherit(c,f)
 	}
@@ -142,7 +142,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 	protected _eventEmmiter_deprecated = InnerDbSrcEventEmitter.new()
 	get eventEmmiter_deprecated(){return this._eventEmmiter_deprecated}
 
-	protected _linkedEmitter = Le.Emitter.new(InnerDbSrcEventEmitter.new())
+	protected _linkedEmitter = Le.LinkedEmitter.new(InnerDbSrcEventEmitter.new())
 	get linkedEmitter(){return this._linkedEmitter}
 
 	protected _eventNames_deprecated = EventNames_deprecated.new()

@@ -23,7 +23,7 @@ export interface I_EventEmitter{
 }
 
 
-export class Emitter{
+export class LinkedEmitter{
 	protected _eventEmitter: I_EventEmitter
 	get eventEmitter(){return this._eventEmitter}
 	protected constructor(){

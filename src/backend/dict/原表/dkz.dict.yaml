@@ -1,5 +1,5 @@
 
-#20240328230428065
+#20240329195912410
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2447,6 +2447,11 @@ use_preset_vocabulary: true
 㑃	ʔrˁiws	
 劾	ɡˁəks	
 劾	ɡˁək	
+若	nak	
+惹	nAʔ	
+蒻	newk	
+孃	naŋ	
+孃	nraŋ	0%
 新	siŋ	
 差	tsʰraj	
 嗟	tsAj	
@@ -17861,8 +17866,6 @@ use_preset_vocabulary: true
 𨟚	naŋ	
 獽	naŋ	
 瀼	naŋ	
-孃	naŋ	
-孃	nraŋ	
 禳	naŋ	
 穰	naŋ	
 穰	naŋʔ	
@@ -17895,8 +17898,6 @@ use_preset_vocabulary: true
 𢹎	newʔ	
 遶	newʔ	
 𠰒	næʔ	
-惹	nak	
-惹	næʔ	
 𧧏	næs	
 𩭿	nrˁat	
 仁	nin	
@@ -18160,9 +18161,6 @@ use_preset_vocabulary: true
 閠	nuns	
 潤	nuns	
 叒	nak	
-若	næ	
-若	nak	
-若	næʔ	
 鄀	nak	
 偌	næs	
 焫	not	
@@ -18171,7 +18169,6 @@ use_preset_vocabulary: true
 婼	ne	
 婼	tʰrak	
 楉	nak	
-蒻	nak	
 𨀝	nak	
 箬	nak	
 䐞	nak	

@@ -139,6 +139,7 @@ function stringLiteralType<T extends string>(str: T): T {
 
 /**
  * 類ᵗ實例ˋ繼承
+ * 只設原型鏈、不保證instanceof
  * @param child 
  * @param parent 
  * @returns 

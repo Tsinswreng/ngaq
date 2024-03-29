@@ -331,6 +331,15 @@ class _WordTable extends Abs_Table{
 		}
 	}
 
+	async selectAll(){
+		const z = this
+		const db = z.dbSrc.db
+		const sql = await Sqlite.SqlGenerator.selectAllIntSafe(z.dbSrc.db, z.tableName, [])
+		//console.log(sql)
+		const ans:WordDbRow[] = await Sqlite.all(db, sql)
+		return ans
+	}
+
 }
 
 export const WordTable = _WordTable

@@ -50,7 +50,7 @@ describe('le', ()=>{
 	const myEvents = MyEvents.instance
 
 	it('1 parent only', ()=>{
-		const emt = Le.Emitter.new(new EventEmitter3())
+		const emt = Le.LinkedEmitter.new(new EventEmitter3())
 		let res = false
 		const parentCallback = (str1:string, str2:string)=>{
 			//console.log(114514)
@@ -76,7 +76,7 @@ describe('le', ()=>{
 	})
 
 	it('2 child only', ()=>{
-		const emt = Le.Emitter.new(new EventEmitter3())
+		const emt = Le.LinkedEmitter.new(new EventEmitter3())
 		let childRes = false
 		let c_cnt = 0
 		const c_callback = (str1:string, str2:string)=>{
@@ -105,7 +105,7 @@ describe('le', ()=>{
 	})
 
 	it('3 both', ()=>{
-		const emt = Le.Emitter.new(new EventEmitter3())
+		const emt = Le.LinkedEmitter.new(new EventEmitter3())
 		let childRes = false
 		let c_cnt = 0
 		const c_callback = (str1:string, str2:string)=>{

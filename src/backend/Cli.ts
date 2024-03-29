@@ -1,12 +1,12 @@
 import 'tsconfig-paths/register'
-import readline = require('readline');
-import { Abortable } from 'events';
-import { createInterface as createInterface, question_fn } from './util/readLine';
+import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
 import {WordDbSrc} from './db/sqlite/Word/DbSrc';
 import { Word } from '@shared/entities/Word/Word';
 import Config from '@shared/Config';
 import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
+import * as Le from '@shared/linkedEvent'
+import { ReciteEvents } from '@shared/logic/reciteWord/ReciteEvent';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -49,11 +49,27 @@ export class Cli{
 		const question = question_fn(rl, '')
 		
 		for(let i = 0;;i++){
-			let str = await question('')
-			z.exput(str)
-			if(str === 'loadEng'){
-				const engTbl = z.wordDbSrc.loadTable('eng')
-				//Sqlite.sel
+			try {
+				let str = await question('')
+				z.exput(str)
+				if(str === 'loadEng'){
+					const engTbl = z.wordDbSrc.loadTable('english')
+					const ans = await engTbl.selectAll()
+					ans.map(e=>{z.exput(e)})
+					//z.exput(ans)
+				}
+				if(str == 'err'){
+					const engTbl = z.wordDbSrc.loadTable('english00')
+					// engTbl.selectAll().then((d)=>{
+					
+					// }).catch((e)=>{
+					// 	//throw e
+					// 	console.error(e)
+					// })
+					await engTbl.selectAll()
+				}
+			} catch (error) {
+				console.error(error)
 			}
 		}
 	}

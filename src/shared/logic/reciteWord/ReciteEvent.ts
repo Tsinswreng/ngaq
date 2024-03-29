@@ -2,7 +2,7 @@ import * as Le from '@shared/linkedEvent'
 
 
 const Ev = Le.Event.new.bind(Le)
-class ReciteEvents extends Le.Events{
+export class ReciteEvents extends Le.Events{
 	protected constructor(){
 		super()
 	}
@@ -10,11 +10,14 @@ class ReciteEvents extends Le.Events{
 		const o = new this()
 		return o
 	}
+	static instance = ReciteEvents.new()
 	
 	reciteEvent = Ev('reciteEvent')
 	// rmb = Ev('rmb')
 	// fgt = Ev('fgt')
 	load = Ev('load')
+	calcWeight = Ev('calcWeight')
+	sort = Ev('sort')
 	start = Ev('start')
 	save = Ev('save')
 	restart = Ev('restart')
