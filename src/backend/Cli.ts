@@ -7,6 +7,8 @@ import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 import { MemorizeEvents } from '@shared/logic/memorizeWord/Event';
+import { CliMemorize } from './logic/CliMemorize';
+import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -25,8 +27,26 @@ export class Cli{
 	
 	static async New(){
 		const o = new this()
-		o.init()
+		o._cliMemorize = await CliMemorize.New()
+		o.initEvents()
 		return o
+	}
+
+	protected _cliMemorize: CliMemorize
+	get cliMemorize(){return this._cliMemorize}
+
+	//str__fn = new Map<string, Function>()
+	str__event = new Map<string, Le.Event>()
+
+	initEvents(){
+		const z = this
+		//z.str__fn.set
+		const es = z.cliMemorize.This.events
+		z.str__event = new Map([
+			['load', es.load]
+			,['start', es.start]
+		])
+		
 	}
 
 	async init(){
@@ -41,6 +61,41 @@ export class Cli{
 	}
 
 	async main(){
+		const z = this
+		console.log(process.argv)
+		let rl = createInterface()
+		const question = question_fn(rl, '')
+		z.cliMemorize.emitter.eventEmitter.on('error',(error)=>{
+			z.exput(error)
+		})
+		for(let i = 0; ; i++){
+			//TODO 每次輸te、輸出之Error之量都加一
+			try {
+				let imput = await question('')
+				if(imput === 'pr'){
+					z.exput(
+`${z.cliMemorize.wordsToLearn.length}個單詞`
+					)
+					continue
+				}
+				if(imput === 'te'){
+					z.cliMemorize.addListener_testError()
+					z.cliMemorize.emitter.eventEmitter.emit('testError')
+					continue
+				}
+				const event = z.str__event.get(imput)
+				if(event == void 0){
+					z.exput('illegal input')
+					continue
+				}
+				z.cliMemorize.emitter.emit(event)
+			} catch (error) {
+				z.exput(error)
+			}
+		}
+	}
+
+	async main_old(){
 		const z = this
 		console.log(
 			process.argv

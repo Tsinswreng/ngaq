@@ -11,6 +11,7 @@ import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/DbRow/Word';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
+import { Exception } from '@shared/Exception';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -19,21 +20,21 @@ const config = configInst.config
 
 
 export class CliMemorize extends Abs_MemorizeLogic{
+	override readonly This = CliMemorize
 	protected constructor(){
 		super()
 	}
 
-	static async New(){
+	static override async New(){
 		const f = await Abs_MemorizeLogic.New()
 		const c = new this()
 		const o = inherit(c,f)
 		o._dbSrc = await WordDbSrc.New({
 			_dbPath: config.dbPath
 		})
+		o.addListeners()
 		return o
 	}
-
-	
 
 	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
 	get emitter(){return this._emitter}
@@ -41,8 +42,19 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
-
-
+	addListener_testError(){
+		const z = this
+		z.emitter.on(Le.Event.new('testError'), z.testError.bind(z))
+	}
+	
+	async testError(){
+		const z = this
+		try {
+			throw new Error('test')
+		} catch (error) {
+			z.emitter.eventEmitter.emit('error', error)
+		}
+	}
 
 	async on_load() {
 		const z = this
@@ -57,7 +69,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	on_calcWeight() {
 		const z = this
 		if(!z._status.load){
-			throw new Error()
+			throw Exception.for(errR.didnt_load)
 		}
 		for(let i = 0; i < z.wordsToLearn.length; i++){
 			z.wordsToLearn[i].weight = 0
@@ -65,16 +77,16 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		z._status.calcWeight = true
 	}
 	on_sort() {
-		throw new Error("Method not implemented.");
+		
 	}
 	on_start() {
-		throw new Error("Method not implemented.");
+		
 	}
 	on_save() {
-		throw new Error("Method not implemented.");
+		
 	}
 	on_restart() {
-		throw new Error("Method not implemented.");
+		
 	}
-
 }
+const errR = CliMemorize.errReasons

@@ -3,8 +3,13 @@ import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 
-class ErrReason{
-	didnt_load = Reason.new('')
+class _ErrReason{
+	static new(){
+		const o = new this()
+		return o
+	}
+	didnt_load = Reason.new('didnt_load')
+	didnt_calcWeight = Reason.new('didnt_calcWeight')
 }
 
 
@@ -20,6 +25,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 
 	protected constructor(){}
 
+	readonly This = Abs_MemorizeLogic
 	// static new():Abs_ReciteLogic {
 	// 	//@ts-ignore
 	// 	const o = new this()
@@ -32,16 +38,20 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		return Promise.resolve(o)
 	}
 	
+	static ErrReason = _ErrReason
+	static errReasons = this.ErrReason.new()
 
 	protected _reciteConfig
 
 	protected abstract _emitter: Le.LinkedEmitter
-	abstract get emitter()
+	abstract get emitter():Le.LinkedEmitter
 
 	protected _wordsToLearn:MemorizeWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
 	protected static _events = MemorizeEvents.instance
+
+
 	static get events(){return this._events}
 
 	protected _status = {
@@ -50,6 +60,24 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		,sort: false
 		,start: false
 		,save: false
+	}
+
+	addListeners(){
+		const z = this
+		const Z = z.This
+		const event__fn = [] as [Le.Event, (this:Abs_MemorizeLogic)=>unknown][]
+		const es = Z.events
+		event__fn.push(
+			[es.load, z.on_load.bind(z)]
+			,[es.calcWeight, z.on_calcWeight.bind(z)]
+			,[es.sort, z.on_sort.bind(z)]
+			,[es.start, z.on_start.bind(z)]
+			,[es.save, z.on_save.bind(z)]
+			,[es.restart, z.on_restart.bind(z)]
+		)
+		for(let [event, fn] of event__fn){
+			z.emitter.on(event,fn)
+		}
 	}
 
 	abstract on_load()

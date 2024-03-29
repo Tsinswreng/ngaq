@@ -23,3 +23,24 @@ TableMetadata縮寫作Tmd
 ##
 2024-03-28T21:04:40.000+08:00
 函數選項對象 每字段應皆以_開頭、以便輸_後即得提示
+
+##
+2024-03-29T23:20:37.000+08:00
+子類中當添成員元曰This㕥指嚮子類
+```ts
+class Parent{
+	This = Parent
+	static arr = ['a']
+	print(){
+		const This = this.This
+		console.log(This.arr)
+	}
+}
+
+class Child extends Parent{
+	This = Child
+	static override arr = ['a','b']
+}
+const c = new Child()
+c.print() // ['a','b']
+```

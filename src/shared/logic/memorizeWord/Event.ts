@@ -1,6 +1,6 @@
 import * as Le from '@shared/linkedEvent'
 
-const Ev = Le.Event.new.bind(Le)
+const Ev = Le.Event.new.bind(Le.Event)
 export class MemorizeEvents extends Le.Events{
 	protected constructor(){
 		super()
