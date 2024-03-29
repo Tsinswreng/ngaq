@@ -3122,6 +3122,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 袎	ʔrˁiws
 㑃	ʔrˁiws
 
+劾	ɡˁəks
+劾	ɡˁək
 
 
 
@@ -4897,7 +4899,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 狼	rˁaŋ	0%
 狼	kʷʰrˁaŋ	# ts
 廊	kʷrˁaŋ	# ts
-浪	rˁaŋs	0%
+浪	rˁaŋs
 浪	strˁaŋs	# ts
 輛	車raŋs	# ts
 輛	raŋs	0%
@@ -5647,8 +5649,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #蘭	rˁan
 欄	rˁan
 欄	mrˁAn
+
 攔	nʰrˁAn
+攔	rˁan
 瀾	strˁAn
+瀾	rˁan
 爛	rˁan
 爛	mʰrˁAn
 # 蘭	艸闌

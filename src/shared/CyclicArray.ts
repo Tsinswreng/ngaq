@@ -20,12 +20,14 @@ export default class CyclicArray<T>{
 	/** 內部數組ᵗ容量 */
 	protected _capacity:number = 0
 	get capacity(){return this._capacity}
-	set capacity(v){
-		this.expand(v)
-	}
+	// set capacity(v){
+	// 	this.expand(v)
+	// }
 
-	protected _reversed = false
-	protected _frontI = 0 // 當_reversed潙true旹、_frontI實潙隊尾
+	//protected _reversed = false
+	/** 非空旹 頭元素之位 */
+	protected _frontI = 0
+	/** 非空旹 尾元素之位 */
 	protected _backI = 0
 	
 
@@ -215,7 +217,7 @@ export default class CyclicArray<T>{
 		return t
 	}
 
-	expand(neoCapacity:number){
+	/* expand(neoCapacity:number){
 		const s = this
 		if (neoCapacity <= this.size){
 			//return false
@@ -232,6 +234,34 @@ export default class CyclicArray<T>{
 			s._backI = s.size-1
 		}
 		return true
+	} */
+
+	expand(neoCapacity:number){
+		const z = this
+		return z.capacityAdd(neoCapacity-z.capacity)
+	}
+
+	/**
+	 * 擴容。只移ʃ需移。
+	 */
+	capacityAdd(add:number){
+		const z = this
+		if(z._frontI > z._backI){
+			const frontIToDataEnd = [] as T[]
+			for(let i = z._frontI; i < z.data.length; i++){
+				frontIToDataEnd.push(z._data[i])
+				//@ts-ignore
+				delete z.data[i] //如是則得empty item 洏非undefined
+				//z.data[i] = void 0
+			}
+
+			z._frontI += add
+			const oriDataLen = z.data.length
+			for(let i = z._frontI, j = 0; i < oriDataLen+add; i++, j++){
+				z._data[i] = frontIToDataEnd[j]
+			}
+		}
+		z._capacity += add
 	}
 
 	static toExpand<T>(old:CyclicArray<T>, neoCapacity:number){

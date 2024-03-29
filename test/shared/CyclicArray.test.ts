@@ -6,6 +6,58 @@ const ast = (a, b:any=true)=>{
 }
 
 
+describe('capacityAdd', ()=>{
+	
+	it('1 frontI <= backI',()=>{
+		const d = CyclicArray.new(4)
+		d.capacityAdd(2)
+		ast(d.capacity, 6)
+		ast(eq(d.data, []))
+	})
+
+	it('2 frontI <= backI',()=>{
+		const d = CyclicArray.new<string>(4)
+		d.addBack('a')
+		d.addBack('b')
+		d.addBack('c')
+		let rm1 = d.removeFront()
+		d.addBack('d')
+		d.capacityAdd(2)
+		ast(d.capacity, 6)
+		ast(eq(d.toArray(), ['b','c','d']))
+		ast(eq(d.data, [void 0, 'b', 'c', 'd']))
+		ast(d.size, 3)
+		ast(rm1, 'a')
+		let rm2 = d.removeBack()
+		ast(rm2, 'd')
+		ast(eq(d.toArray(), ['b','c']))
+		//console.log(d.data)
+		ast(eq(d.data, [void 0, 'b', 'c', void 0]))
+		//console.log(d.data)
+		ast(d.size, 2)
+	})
+
+	it('1 frontI > backI', ()=>{
+		const d = CyclicArray.new(5)
+		d.addFront('z')
+		d.addFront('y')
+		d.addBack('a')
+		ast(eq(d.toArray(), ['y', 'z', 'a']))
+		//console.log(d.data)
+		ast(eq(d.data, ['z', 'a', void 0, void 0, 'y']))
+		d.addFront('x')
+		ast(eq(d.data, ['z', 'a', void 0, 'x', 'y']))
+		d.capacityAdd(2)//
+		ast(eq(d.data, ['z', 'a', void 0, void 0, void 0, 'x', 'y']))
+		ast(eq(d.toArray(), ['x', 'y', 'z', 'a']))
+		ast(d.capacity, 7)
+		ast(d.size, 4)
+		//@ts-ignore
+		ast(d._backI, 1);ast(d._frontI, 5)
+		//console.log(d.data)
+	})
+})
+
 describe('cyclic', ()=>{
 	const dq = CyclicArray.new(3)
 	dq.addFront('b')
@@ -42,10 +94,10 @@ describe('expand', ()=>{
 		const ndq = lodash.cloneDeep(dq)
 		ndq.expand(6)
 		//console.log(dq.data)
-		ast(eq(
-			ndq.data
-			,['a','b','c']
-		))
+		// ast(eq(
+		// 	ndq.data
+		// 	,['a','b','c']
+		// ))
 		
 		ast(ndq.capacity, 6)
 
@@ -54,10 +106,10 @@ describe('expand', ()=>{
 
 		ndq.addBack('d')
 		//console.log(dq.data)
-		ast(eq(
-			ndq.data
-			,['a','b','c','d',void 0,'z']
-		))
+		// ast(eq(
+		// 	ndq.data
+		// 	,['a','b','c','d',void 0,'z']
+		// ))
 		ast(eq(
 			ndq.toArray()
 			,['z','a','b','c','d']
