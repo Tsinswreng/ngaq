@@ -178,3 +178,8 @@ try {
 	const e = error as Exception
 }
 
+10*Math.log10(
+	(
+		(4*3.14*50)/(5e-4)
+	)**2
+)

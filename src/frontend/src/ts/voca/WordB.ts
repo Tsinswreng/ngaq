@@ -3,14 +3,12 @@ import Tempus from "@shared/Tempus";
 import { WordEvent, Priority } from "@shared/SingleWord2";
 import { lastOf, $a } from "@shared/Ut";
 
-//459 323 127 88 126
 /**/
-export default class WordB extends SingleWord2{
+export default class WordB{
 
 	constructor(private _fw:SingleWord2) {
-		super(_fw)
-	}
 
+	}
 
 	/**
 	 * father word 原 單詞對象。此處取組合洏舍繼承。
@@ -191,8 +189,6 @@ export default class WordB extends SingleWord2{
 		r=r.replace(/\r/g, '\n')
 		//r=r.replace(/\a/g, '\n')//叵。如是寫則會換'a'洏非bell字符
 		r=r.replace(/\x07/g, '\n__________\n')
-		//console.log(r)//t
-		//console.log(114514)
 		return r
 	}
 

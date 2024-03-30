@@ -3,7 +3,7 @@ import { Priority } from "@shared/entities/Word/Word"
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 type Conf0 = typeof Priority.defaultConfig
 type Fn<Return=any> = (...args:any[])=>Return
-export class Abs_WordWeight implements I_WordWeight{
+export class WordWeight implements I_WordWeight{
 
 	protected constructor(){
 

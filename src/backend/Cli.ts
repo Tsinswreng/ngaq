@@ -18,12 +18,6 @@ const config = configInst.config
 /** 表示層 */
 export class Cli{
 
-	protected _wordsToLearn: Word[]
-	get wordsToLearn(){return this._wordsToLearn}
-
-	protected _wordDbSrc:WordDbSrc
-	get wordDbSrc(){return this._wordDbSrc}
-
 	protected constructor(){
 
 	}
@@ -85,6 +79,9 @@ export class Cli{
 		z.str__event = new Map([
 			['load', es.load]
 			,['start', es.start]
+			,['calcWeigh', es.calcWeight]
+			,['sort', es.sort]
+			//,['start']
 		])
 	}
 
@@ -92,23 +89,18 @@ export class Cli{
 		const z = this
 	}
 
-	async init(){
-		const z = this
-		z._wordDbSrc = await WordDbSrc.New({
-			_dbPath: config.dbPath
-		})
-	}
 
 	exput(v?){
 		console.log(v)
 	}
 
-	handleErr(v){
-		if(v instanceof Exception){
-			console.error(v)
+	handleErr(err){
+		const e = err as Error
+		if(e instanceof Exception){
+			console.error(e)
 			console.error('Exception')
 		}else{
-			console.error(v)
+			console.error(e)
 		}
 	}
 
@@ -124,9 +116,9 @@ export class Cli{
 			try {
 				let imput = await question('')
 				let cmd = z.cmd[imput]
-				if(cmd != void 0){
+				if(cmd != void 0 && typeof cmd === 'function'){
 					cmd = cmd.bind(z.cmd)
-					cmd()
+					cmd(imput)
 					continue
 				}
 	
@@ -135,7 +127,7 @@ export class Cli{
 					z.exput('illegal input')
 					continue
 				}
-				z.cliMemorize.emitter.emit(event)
+				z.cliMemorize.emitter.emit(event, imput)
 			} catch (error) {
 				z.handleErr(error)
 			}
@@ -149,9 +141,6 @@ async function main(){
 	cli.main()
 }
 main()
-
-
-
 
 
 /* 

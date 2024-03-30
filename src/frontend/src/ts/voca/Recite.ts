@@ -393,6 +393,78 @@ export default class Recite{
 		return wordB.fw.table+$(wordB.fw.id)
 	}
 
+
+	/**
+	 * 臨時 英:日:拉 = 4:4:1
+	 * @param words 
+	 */
+	static finalFilter(
+		words:WordB[] // 權重高者在前
+	){
+		words = words.slice()
+		words = words.reverse() // 此後 權重高者在末
+		//按表名分類
+		const tbl__words = new Map<string, WordB[]>()
+		for(const w of words){
+			const tbl = $a(w.fw.table)
+			const habere = tbl__words.get(tbl)
+			if( habere == void 0 ){
+				tbl__words.set(tbl, [w])
+			}else{
+				habere.push(w)
+				tbl__words.set(tbl, habere)
+			}
+		}
+
+		const ans = [] as WordB[]
+		const eng = $(tbl__words.get('english'))
+		const jap = $(tbl__words.get('japanese'))
+		const latin = $(tbl__words.get('latin'))
+		let i = 0
+		function engFn(){
+			const e = eng.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		function japFn(){
+			const e = jap.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		function latinFn(){
+			const e = latin.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		for(; i < words.length;){
+			engFn();japFn();
+			engFn();japFn();
+			engFn();japFn();
+			engFn();japFn();
+			latinFn();
+		}
+		return ans
+	}
+
+	finalFilter(){
+		const z = this
+
+		try {
+			const ratio = Recite.finalFilter(z._allWordsToLearn)
+			z._allWordsToLearn.length = 0
+			z._allWordsToLearn.push(...ratio)
+		} catch (error) {
+			console.error(error)
+		}
+		
+	}
+
 }
 
 const C = Recite

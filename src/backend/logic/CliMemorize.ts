@@ -95,9 +95,14 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			if(!z._status.load){
 				throw Exception.for(errR.didnt_load)
 			}
+
 			for(let i = 0; i < z.wordsToLearn.length; i++){
-				z.wordsToLearn[i].weight = 0
+				const u = z.wordsToLearn[i]
+				u.weight = 0
+				u.word.table
+				
 			}
+
 			z._status.calcWeight = true
 		} catch (error) {
 			z.emitErr(error)
@@ -111,12 +116,16 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		} catch (error) {
 			
 		}
+		z._status.sort = true
 	}
 	on_start() {
-		
+		const z = this
+		z._status.start = true
 	}
 	on_save() {
-		
+		const z = this
+		z._status.save = true
+		z._status.start = false
 	}
 	on_restart() {
 		

@@ -334,6 +334,7 @@ export default class MultiMode{
 			// let temp = recite.allWordsToLearn.slice()
 			// recite.allWordsToLearn.length=0
 			// recite.allWordsToLearn.push(...temp)//t
+			recite.finalFilter()//2024-03-30T21:45:57.000+08:00
 			this.multiMode_key.value++ //刷新組件
 
 			//this._isShowCardBox.value = false

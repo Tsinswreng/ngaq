@@ -321,7 +321,6 @@ export class WordPriority{
 			)
 		}
 
-		//if(procedures.length >=2){console.log(procedures)}//t
 		return changeRecord
 		
 		

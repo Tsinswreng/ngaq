@@ -1,5 +1,5 @@
 
-#20240329195912410
+#20240330164345023
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -93,6 +93,9 @@ use_preset_vocabulary: true
 三	srum	
 仨	srum	
 弎	srum	
+叁	srum	
+參	tsʰrum	
+參	tsʰˁəm	
 卅	srup	
 夫	pa	
 丘	kʷʰə	
@@ -605,6 +608,7 @@ use_preset_vocabulary: true
 喉	ɡrˁo	
 區	kʰo	
 驅	kʰjo	
+樞	kʰlo	
 軀	kʰo	
 軀	kʰro	
 乙	ʔrət	
@@ -1743,6 +1747,8 @@ use_preset_vocabulary: true
 踹	dolʔ	
 踹	tˁols	
 喘	tʰolʔ	
+揣	strolʔ	
+㪜	strolʔ	
 瑞	dols	
 畀	pits	
 既	kəts	
@@ -1833,6 +1839,8 @@ use_preset_vocabulary: true
 妻	tsʰˁi	
 卿	kʰraŋ	
 胃	wəts	
+喟	kʰʷrəts	
+喟	kʰʷrˁəts	
 彙	wəts	
 渭	wəts	
 劃	wrˁek	
@@ -1955,6 +1963,9 @@ use_preset_vocabulary: true
 掃	sˁuʔ	
 掃	sˁus	
 嫂	sˁuʔ	
+埽	sˁuʔ	
+埽	sˁus	
+瘙	sˁus	
 叟	sruʔ	
 輦	ranʔ	
 攆	ranʔ	
@@ -2010,7 +2021,6 @@ use_preset_vocabulary: true
 前	dzˁen	
 蓋	kˁaps	
 膚	pra	
-貌	mrˁawks	
 叩	kʰrˁoʔ	
 叩	kʰrˁos	
 吹	tʰol	
@@ -3131,7 +3141,7 @@ use_preset_vocabulary: true
 翃	ɡʷrˁəŋ	
 弘	wˁəŋ	
 泓	ʔʷrˁəŋ	
-鼓	kʷʰˁaʔ	
+鼓	kʰʷˁaʔ	
 兒	ŋe	
 兒	ne	
 牽	kʰˁin	
@@ -3274,8 +3284,8 @@ use_preset_vocabulary: true
 罊	kʰrˁek	
 緙	kʰrˁək	
 諽	kʰrˁək	
-契	kˁets	
-契	kˁets	
+契	kʰˁets	
+契	kʰˁets	
 楔	krˁet	
 楔	sŋˁet	
 偰	sŋˁet	
@@ -3289,6 +3299,30 @@ use_preset_vocabulary: true
 臤	kʰrˁiŋ	
 臤	kʰiŋ	
 臤	ɡˁiŋ	
+揍	nʰˁos	
+揍	tsˁos	0%
+鹿	mrˁok	
+敕	lʰrək	
+飭	lʰrək	
+栻	lʰrək	
+勅	lʰrək	
+趩	lʰrək	
+遫	lʰrək	
+鷘	lʰrək	
+侙	lʰrək	
+淔	lʰrək	
+慗	lʰrək	
+罰	bat	0%
+罰	bot	
+貌	mrˁawks	
+貌	mrˁaws	
+邈	mrˁewk	
+藐	mewʔ	
+藐	mrˁewk	
+瞐	mrˁuk	
+毣	mrˁawk	
+眊	mrˁawk	
+眊	mˁaws	
 址	təʔ	0%
 址	stəʔ	
 偏	pʰen	
@@ -5256,11 +5290,6 @@ use_preset_vocabulary: true
 䰂	tsʰˁəʔ	
 𪇭	tsʰˁats	
 飡	tsʰˁan	
-參	tsʰˁəm	
-參	tsʰˁəms	10%
-參	tsʰrəm	10%
-參	sˁam	10%
-參	srəm	10%
 湌	tsʰˁan	
 傪	tsʰˁəm	
 傪	tsʰˁəmʔ	
@@ -5878,7 +5907,6 @@ use_preset_vocabulary: true
 竀	tʰreŋ	
 吃	kət	
 妛	tʰə	
-侙	tʰrək	
 𨒬	tʰi	
 蚩	tʰə	
 𦐉	tʰə	
@@ -5952,7 +5980,6 @@ use_preset_vocabulary: true
 𠧚	tʰek	
 杘	tʰrəjs	
 迣	tets	
-勅	tʰrək	
 㽚	tʰrək	
 㡿	tʰek	
 恜	tʰrək	
@@ -5962,13 +5989,11 @@ use_preset_vocabulary: true
 翄	ɡe	
 翄	ɕes	
 𦐊	ɕes	
-敕	tʰrək	
 痓	tʰis	
 烾	tʰek	
 䀸	tets	
 䀸	tʰrets	
 䀿	tet	
-飭	tʰrək	
 訵	tʰrəj	
 訵	tʰrəjs	
 湁	tʰrəp	
@@ -5982,12 +6007,10 @@ use_preset_vocabulary: true
 痸	tʰets	
 𠞩	tsʰrit	
 𠞩	srut	
-遫	tʰrək	
 銐	tʰets	
 銐	drets	
 䟷	tʰrets	
 𠟴	tsʰrəʔ	
-慗	tʰrək	
 𤸪	tʰets	
 𥛚	tʰˁek	
 翨	kes	
@@ -6001,13 +6024,11 @@ use_preset_vocabulary: true
 𪀦	tʰrək	
 𧩼	tʰrəjs	
 𧩼	trəʔ	
-趩	tʰrək	
 䠠	tˁes	
 懘	tʰets	
 懘	tʰeʔ	
 𣤩	tʰˁek	
 饎	tʰəs	
-鷘	tʰrək	
 𦔫	tʰək	
 充	tʰuŋ	
 忡	tʰruŋ	
@@ -6231,14 +6252,9 @@ use_preset_vocabulary: true
 䵵	tsʰrˁot	
 䵵	tsrot	
 䫄	tʰrˁot	
-揣	tsʰrojʔ	
-揣	tˁojʔ	
 搋	tʰrˁə	
 膗	dzrˁuj	
 𢶀	dzrˁuj	
-㪜	tʰonʔ	
-㪜	tsʰrojʔ	
-㪜	tˁojʔ	
 𠽶	tsʰrˁots	
 𣤌	tsʰrˁots	
 膪	trˁajs	
@@ -7881,7 +7897,6 @@ use_preset_vocabulary: true
 筏	pˁat	
 䣹	bʷat	
 閥	bʷat	
-罰	bʷat	
 瞂	bʷat	
 藅	bʷat	
 𦪑	pˁat	
@@ -12798,8 +12813,6 @@ use_preset_vocabulary: true
 䫥	ŋˁujʔ	
 㚍	kʰˁujʔ	
 㕟	kʰrˁujs	
-喟	kʰrˁujs	
-喟	kʰrujs	
 愧	krujs	
 媿	krujs	
 㱱	ɡˁujʔ	
@@ -14232,7 +14245,6 @@ use_preset_vocabulary: true
 陸	ruk	
 菉	rok	
 硉	rˁut	
-鹿	rˁok	
 淕	ruk	
 渌	rˁok	
 渌	rok	
@@ -14728,8 +14740,6 @@ use_preset_vocabulary: true
 皃	mrˁok	
 𤣽	mˁaws	
 㺺	mˁaws	
-眊	mˁaws	
-眊	mrˁok	
 耄	mˁaws	
 𢂹	mrˁaws	
 䋃	mˁaws	
@@ -15107,9 +15117,6 @@ use_preset_vocabulary: true
 篎	mewʔ	
 緲	mewʔ	
 𢷕	mrˁok	
-藐	mewʔ	
-藐	mrˁok	
-邈	mrˁok	
 㦝	mrˁok	
 妙	mews	
 玅	mews	
@@ -15300,7 +15307,6 @@ use_preset_vocabulary: true
 𣩎	mˁak	
 銆	mrˁak	
 瞙	mˁak	
-瞐	mrˁok	
 墨	mˁək	
 瘼	mˁak	
 嫼	ʔrˁet	
@@ -15358,8 +15364,6 @@ use_preset_vocabulary: true
 苜	mˁat	
 蚞	mˁok	
 㾇	muk	
-毣	mrˁok	
-毣	mˁok	
 𦱒	muk	
 㣎	muk	
 萺	muk	
@@ -18221,7 +18225,6 @@ use_preset_vocabulary: true
 簺	sˁəs	
 氵	ɕujʔ	
 𢁘	sˁam	
-叁	sˁam	
 𦙱	sˁan	
 𦚻	sˁan	
 䈀	sˁan	
@@ -18296,9 +18299,6 @@ use_preset_vocabulary: true
 䕅	sˁawʔ	
 𦺋	sˁawʔ	
 𦺋	sru	
-埽	sˁaws	
-埽	sˁawʔ	
-瘙	sˁaws	
 臊	sˁaw	
 㿋	sˁaws	
 𢤁	sˁaws	
@@ -18862,7 +18862,6 @@ use_preset_vocabulary: true
 𣳪	srəs	
 恃	dəʔ	
 冟	ɕek	
-栻	tʰrək	
 眎	dis	
 眎	diʔ	
 眎	ʑis	
@@ -18986,7 +18985,6 @@ use_preset_vocabulary: true
 𢞣	ɕuk	
 𦺗	ɕa	
 蔬	sra	
-樞	tʰo	
 輸	ɕo	
 輸	ɕos	
 鮛	ɕuk	
@@ -25610,7 +25608,6 @@ use_preset_vocabulary: true
 埴	tʰəs	
 埴	dək	
 𡸜	drək	
-淔	tʰrək	
 𦳮	tʷek	
 植	drəs	
 植	dək	
@@ -26580,7 +26577,6 @@ use_preset_vocabulary: true
 走	tsˁoʔ	
 𧌗	tsruʔ	
 奏	tsˁos	
-揍	tsˁos	
 㔌	dzˁo	
 㔌	dzˁos	
 䠫	dzˁos	

@@ -58,6 +58,7 @@ function set_page(){
 		<button @click="multiMode.save()">存</button>
 		<button>改</button>
 		<button @click="multiMode.restart()">重開</button>
+		<button @click="recite.finalFilter()">比例</button>
 		<button @click="multiMode.sortByRmb()">憶序</button>
 		<button @click="multiMode.sortBylastRvwDate()">期序</button>
 		<button @click="switchRandomImg()">開圖</button>

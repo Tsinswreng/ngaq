@@ -59,7 +59,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		,calcWeight: false
 		,sort: false
 		,start: false
-		,save: false
+		,save: true
 	}
 
 	addListeners(){

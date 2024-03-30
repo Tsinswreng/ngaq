@@ -1,15 +1,15 @@
 import { inherit } from "@shared/Ut";
-import { Abs_WordWeight } from "./_Base";
+import { WordWeight } from "./_Base";
 
 
 
-export class EngWeight extends Abs_WordWeight{
+export class EngWeight extends WordWeight{
 	protected constructor(){
 		super()
 	}
 
-	static new(...prop:Parameters<typeof Abs_WordWeight.new>){
-		const f = Abs_WordWeight.new(...prop)
+	static new(...prop:Parameters<typeof WordWeight.new>){
+		const f = WordWeight.new(...prop)
 		const c = new this()
 		const o = inherit(c,f)
 		return o
