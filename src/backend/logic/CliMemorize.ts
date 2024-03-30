@@ -18,7 +18,7 @@ const config = configInst.config
 
 
 
-
+/** 業務理則層 */
 export class CliMemorize extends Abs_MemorizeLogic{
 	override readonly This = CliMemorize
 	protected constructor(){
@@ -36,48 +36,81 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		return o
 	}
 
+	protected _configInst = configInst
+	get configInst(){return this._configInst}
+
 	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
 	get emitter(){return this._emitter}
 
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
-	addListener_testError(){
+	emitErr(err?){
+		const z = this
+		z.emitter.emit(z.This.events.error,err)
+	}
+
+/* 	addListener_testError(){
 		const z = this
 		z.emitter.on(Le.Event.new('testError'), z.testError.bind(z))
 	}
-	
+
 	async testError(){
 		const z = this
 		try {
 			throw new Error('test')
 		} catch (error) {
-			z.emitter.eventEmitter.emit('error', error)
+			z.emitter.emit(z.This.events.error, error)
 		}
-	}
+	} */
 
 	async on_load() {
 		const z = this
-		const tbl = z.dbSrc.loadTable('english')
-		const rows = await tbl.selectAll()
-		const words = rows.map(e=>WordDbRow.toEntity(e))
-		const mWords = words.map(e=>MemorizeWord.new(e))
-		z._wordsToLearn.length = 0
-		z._wordsToLearn.push(...mWords)
-		z._status.load = true
+		async function oneTbl(tblName:string){
+			const tbl = z.dbSrc.loadTable(tblName)
+			const rows = await tbl.selectAll()
+			const words = rows.map(e=>WordDbRow.toEntity(e))
+			const mWords = words.map(e=>MemorizeWord.new(e))
+			return mWords
+		}
+		try {
+			const tblNames = z.configInst.config.tables
+			const mWords = [] as MemorizeWord[]
+			for(const tblN of tblNames){
+				if(tblN == void 0 || tblN.length === 0){continue}
+				const um = await oneTbl(tblN)
+				mWords.push(...um)
+			}
+			//z._wordsToLearn.length = 0
+			z._wordsToLearn.push(...mWords)
+			z._status.load = true
+		} catch (error) {
+			z.emitErr(error)
+		}
+		
 	}
 	on_calcWeight() {
 		const z = this
-		if(!z._status.load){
-			throw Exception.for(errR.didnt_load)
+		try {
+			if(!z._status.load){
+				throw Exception.for(errR.didnt_load)
+			}
+			for(let i = 0; i < z.wordsToLearn.length; i++){
+				z.wordsToLearn[i].weight = 0
+			}
+			z._status.calcWeight = true
+		} catch (error) {
+			z.emitErr(error)
 		}
-		for(let i = 0; i < z.wordsToLearn.length; i++){
-			z.wordsToLearn[i].weight = 0
-		}
-		z._status.calcWeight = true
+		
 	}
 	on_sort() {
-		
+		const z = this
+		try {
+			
+		} catch (error) {
+			
+		}
 	}
 	on_start() {
 		

@@ -6,7 +6,7 @@ type IConfig = typeof Config.defaultConfig
 export default class Config{
 
 	protected static _instance:Config
-	public static getInstance(){
+	static getInstance(){
 		if(Config._instance === void 0){
 			Config._instance = Config.new()
 		}
@@ -29,7 +29,7 @@ export default class Config{
 	/**
 	 * 重新讀配置文件
 	 */
-	public reload(){
+	reload(){
 		const outer = Config.readOuterConfig(Config.defaultConfig.outerConfig)
 		//clearObj(this._config)
 		//this.merge(outer)
@@ -52,9 +52,9 @@ export default class Config{
 
 	//private _config:Partial<IConfig> = lodashMerge(Config.defaultConfig)
 	protected _config:IConfig = lodashMerge(Config.defaultConfig)
-	;public get config(){return this._config;};
+	get config(){return this._config;};
 
-	public static readOuterConfig(path:string){
+	static readOuterConfig(path:string){
 		//
 		const outerConfigStr = fs.readFileSync(path, 'utf-8')
 		const configFn = new Function(`return (${outerConfigStr})`)
@@ -62,7 +62,7 @@ export default class Config{
 		return outerConfig
 	}
 
-	public merge(config:Object){
+	merge(config:Object){
 		lodashMerge(this.config, config)
 	}
 

@@ -9,10 +9,13 @@ import * as Le from '@shared/linkedEvent'
 import { MemorizeEvents } from '@shared/logic/memorizeWord/Event';
 import { CliMemorize } from './logic/CliMemorize';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
+import { Exception } from '@shared/Exception';
+
 
 const configInst = Config.getInstance()
 const config = configInst.config
 
+/** 表示層 */
 export class Cli{
 
 	protected _wordsToLearn: Word[]
@@ -32,11 +35,48 @@ export class Cli{
 		return o
 	}
 
+	readonly This = Cli
+
+	static get Cmd(){
+		class Cmd{
+			protected constructor(){}
+			static new(cli:Cli){
+				const o = new this()
+				o.cli = cli
+				return o
+			}
+			cli:Cli
+			echoConfig(){
+				const z = this.cli
+				z.exput(z.configInst.config)
+			}
+			reloadConfig(){
+				const z = this.cli
+				z._configInst.reload()
+			}
+			wordCnt(){
+				const z = this.cli
+				z.exput(z.cliMemorize.wordsToLearn.length)
+			}
+		}
+		return Cmd
+	}
+
+	protected _cmd = this.This.Cmd.new(this)
+	get cmd(){return this._cmd}
+
+	protected _configInst = configInst
+	get configInst(){return this._configInst}
+
 	protected _cliMemorize: CliMemorize
 	get cliMemorize(){return this._cliMemorize}
 
 	//str__fn = new Map<string, Function>()
 	str__event = new Map<string, Le.Event>()
+
+	str__fn = new Map<string, Function>()
+
+	
 
 	initEvents(){
 		const z = this
@@ -46,7 +86,10 @@ export class Cli{
 			['load', es.load]
 			,['start', es.start]
 		])
-		
+	}
+
+	initCmd(){
+		const z = this
 	}
 
 	async init(){
@@ -60,29 +103,33 @@ export class Cli{
 		console.log(v)
 	}
 
+	handleErr(v){
+		if(v instanceof Exception){
+			console.error(v)
+			console.error('Exception')
+		}else{
+			console.error(v)
+		}
+	}
+
 	async main(){
 		const z = this
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.cliMemorize.emitter.eventEmitter.on('error',(error)=>{
-			z.exput(error)
+		z.cliMemorize.emitter.on(z.cliMemorize.This.events.error, (error)=>{
+			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){
-			//TODO 每次輸te、輸出之Error之量都加一
 			try {
 				let imput = await question('')
-				if(imput === 'pr'){
-					z.exput(
-`${z.cliMemorize.wordsToLearn.length}個單詞`
-					)
+				let cmd = z.cmd[imput]
+				if(cmd != void 0){
+					cmd = cmd.bind(z.cmd)
+					cmd()
 					continue
 				}
-				if(imput === 'te'){
-					z.cliMemorize.addListener_testError()
-					z.cliMemorize.emitter.eventEmitter.emit('testError')
-					continue
-				}
+	
 				const event = z.str__event.get(imput)
 				if(event == void 0){
 					z.exput('illegal input')
@@ -90,44 +137,11 @@ export class Cli{
 				}
 				z.cliMemorize.emitter.emit(event)
 			} catch (error) {
-				z.exput(error)
+				z.handleErr(error)
 			}
 		}
 	}
 
-	async main_old(){
-		const z = this
-		console.log(
-			process.argv
-		)
-		let rl = createInterface()
-		const question = question_fn(rl, '')
-		
-		for(let i = 0;;i++){
-			try {
-				let str = await question('')
-				z.exput(str)
-				if(str === 'loadEng'){
-					const engTbl = z.wordDbSrc.loadTable('english')
-					const ans = await engTbl.selectAll()
-					ans.map(e=>{z.exput(e)})
-					//z.exput(ans)
-				}
-				if(str == 'err'){
-					const engTbl = z.wordDbSrc.loadTable('english00')
-					// engTbl.selectAll().then((d)=>{
-					
-					// }).catch((e)=>{
-					// 	//throw e
-					// 	console.error(e)
-					// })
-					await engTbl.selectAll()
-				}
-			} catch (error) {
-				console.error(error)
-			}
-		}
-	}
 }
 
 async function main(){

@@ -11,7 +11,7 @@
 	,tables:[
 		,`english`
 		,`japanese`
-		//,`kvvts_ruts_ngrun`
+		// ,`kvvts_ruts_ngrun`
 		,`latin`
 		// ,`cet6`
 	]
