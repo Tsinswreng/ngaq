@@ -116,11 +116,13 @@ export class WordWeight implements I_WordWeight{
 			_statistics:Statistics
 			_tempus__event:Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
+
 			addRecord(record:Record){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
 			}
+			
 			handleAdd(){
 				const z = this
 				const st = z._statistics
