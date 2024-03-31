@@ -1,4 +1,4 @@
-import { Word } from "./Word";
+import { Tempus_Event, Word } from "./Word";
 
 export class MemorizeWord{
 
@@ -9,6 +9,7 @@ export class MemorizeWord{
 	static new(word:Word){
 		const o = new this()
 		o._word = word
+		o.init()
 		return o
 	}
 
@@ -19,5 +20,12 @@ export class MemorizeWord{
 	get weight(){return this._weight}
 	set weight(v){this._weight = v}
 
+	protected _date__event:Tempus_Event[]
+	get date__event(){return this._date__event}
+
+	init(){
+		const z = this
+		z._date__event = Word.getSortedDateToEventObjs(z.word)
+	}
 
 }

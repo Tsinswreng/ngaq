@@ -4,10 +4,10 @@
 import * as mathjs from 'mathjs'
 import { lodashMerge } from '@shared/Ut'
 export type BN = mathjs.BigNumber
-export type UN = mathjs.BigNumber|number //無bigint
-export type UNS = UN|string
-export type N4 = UNS|bigint
-export type N3 = UN|bigint
+export type N2 = mathjs.BigNumber|number //無bigint
+export type N2S = N2|string
+export type N4 = N2S|bigint
+export type N3 = N2|bigint
 declare global {
 	export interface Number {
 		add(...num:number[]): number;

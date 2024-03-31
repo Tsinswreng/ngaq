@@ -148,6 +148,17 @@ export function classify<Ele,Key>(arr:Ele[], keyOfMap:(ele:Ele)=>Key){
 }
 
 
+export function key__arrMapPush<K,VEle>(map:Map<K,VEle[]>, k:K ,ele:VEle){
+	const gotV = map.get(k)
+	if(gotV == void 0){
+		map.set(k, [ele])
+	}else{
+		gotV.push(ele)
+		map.set(k, gotV)
+	}
+}
+
+
 
 /* 
 幫我寫一個typescirpt函數As、

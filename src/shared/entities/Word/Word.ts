@@ -7,6 +7,7 @@ import { $, compileTs_deprecated, lastOf, lodashMerge, simpleUnion } from '@shar
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
 import { WordDbRow } from '@shared/dbRow/Word';
+import { InstanceType_ } from '@shared/Type';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
@@ -251,7 +252,7 @@ export class Word{
 	 * @param ws 
 	 * @returns 
 	 */
-	public static merge(ws:Word[]){
+	static merge(ws:Word[]){
 		let map = new Map<string, Word>()
 		for(const neoWord of ws){
 			let old = map.get(neoWord.wordShape)
@@ -271,10 +272,10 @@ export class Word{
 	 * @param row2 
 	 * @param ignoredKeys 忽略之字段
 	 */
-	public static isWordsEqual(row1: IVocaRow, row2:IVocaRow, ignoredKeys?:string[]):boolean
-	public static isWordsEqual(row1: Word, row2:Word,ignoredKeys?:string[]):boolean
+	static isWordsEqual(row1: IVocaRow, row2:IVocaRow, ignoredKeys?:string[]):boolean
+	static isWordsEqual(row1: Word, row2:Word,ignoredKeys?:string[]):boolean
 
-	public static isWordsEqual(row1: IVocaRow|Word, row2:IVocaRow|Word, ignoredKeys?:string[]){
+	static isWordsEqual(row1: IVocaRow|Word, row2:IVocaRow|Word, ignoredKeys?:string[]){
 		let c1:IVocaRow
 		let c2:IVocaRow
 		if(row1 instanceof Word){
@@ -301,7 +302,7 @@ export class Word{
 	 * @param sws 依table對SingleWord2數組分類
 	 * @returns 
 	 */
-	public static classify(sws:Word[]){
+	static classify(sws:Word[]){
 		const tableToWordsMap = new Map<string, Word[]>()
 		for(const wordToAdd of sws){
 			const innerWords = tableToWordsMap.get(wordToAdd.table)
@@ -333,7 +334,7 @@ export class Word{
 		let mapObj:Tempus_Event[] = []
 		for(const [k,v] of merged){
 			//let unus = Tempus.new_Event(k,v)
-			let unus = new Tempus_Event(k,v)
+			let unus = Tempus_Event.new(k,v)
 			mapObj.push(unus)
 		}
 		mapObj.sort((a,b)=>{return Tempus.diff_mills(a.tempus,b.tempus)})
@@ -394,14 +395,30 @@ export class Word{
 		}
 	}
 
+	static get Tempus_Event(){
+		return class Tempus_Event{
+			// public constructor(public tempus:Tempus, public event:WordEvent){
+		
+			// }
+			protected constructor(){
+		
+			}
+			static new(tempus:Tempus, event:WordEvent){
+				const o = new this()
+				o.tempus = tempus
+				o.event = event
+				return o
+			}
+			tempus:Tempus
+			event:WordEvent
+		}
+	}
+
 }
 /**
  * 日期對事件
  */
-export class Tempus_Event{
-	public constructor(public tempus:Tempus, public event:WordEvent){
-
-	}
-}
+export const Tempus_Event = Word.Tempus_Event
+export type Tempus_Event = InstanceType_<typeof Word.Tempus_Event>
 
 export{WordPriority as Priority}

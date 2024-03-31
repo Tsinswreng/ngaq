@@ -1,5 +1,5 @@
 
-import { Sros, UN} from '@shared/Sros';
+import { Sros, N2} from '@shared/Sros';
 //import SingleWord2, { Tempus_Event, WordEvent } from './SingleWord2';
 import { Word, Tempus_Event, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from '@shared/Tempus'
@@ -19,7 +19,7 @@ class ChangeRecord{
 	//public constructor(_tempus_event:Tempus_Event, after:number)
 
 	public constructor(props:{
-		_tempus_event:Tempus_Event, _after:UN, _weight:UN, _debuff?:UN
+		_tempus_event:Tempus_Event, _after:N2, _weight:N2, _debuff?:N2
 	}){
 		//this._tempus_event = _.cloneDeep(_tempus_event)
 		Object.assign(this, props)
@@ -31,13 +31,13 @@ class ChangeRecord{
 	/**
 	 * 歷ᵣ當前ᵗ_tempus_event後 權重變後ᵗ量
 	 */
-	private _after:UN = 0 
+	private _after:N2 = 0 
 	;public get after(){return this._after;};;public set after(v){this._after=v;};
 
-	private _weight:UN = -1
+	private _weight:N2 = -1
 	;public get weight(){return this._weight;};;public set weight(v){this._weight=v;};
 
-	private _debuff?:UN
+	private _debuff?:N2
 	;public get debuff(){return this._debuff;};;public set debuff(v){this._debuff=v;};
 
 }
@@ -333,7 +333,7 @@ export class WordPriority{
 	 * @param dateDif 
 	 * @returns 
 	 */
-	public getDateWeight(dateDif:UN){
+	public getDateWeight(dateDif:N2){
 		let ans = s.n(dateDif)
 		ans = sros.pow(ans, 1/4) //1/2
 		ans = s.d(ans, 1) //100

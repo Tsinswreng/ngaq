@@ -6,7 +6,7 @@ import { WordWeight } from "./_Base";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 
-export const weightLib = {
+export /* const weightLib = */ {
 	WordWeight
 	,Word
 	,MemorizeWord
@@ -14,6 +14,10 @@ export const weightLib = {
 	,Sros
 	,lodash
 	,Ut
+}
+
+export namespace weightLib{
+	export type Sros = typeof Sros
 }
 
 
