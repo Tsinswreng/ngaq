@@ -1,6 +1,6 @@
 import { CreateTableOpt as CreateTableOpt, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
-import { WordTmdDbRow } from "@backend/interfaces/WordTmd";
+import { WordTmdDbRow } from "@backend/dbRow/WordTmd";
 import { inherit } from "@shared/Ut";
 import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
 import { WordTmdTable } from "./Table";

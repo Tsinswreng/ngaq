@@ -1,7 +1,7 @@
 import { $, $a, inherit } from "@shared/Ut";
 import { Abs_Table } from "../_base/Table";
 import { RunResult } from "sqlite3";
-import { WordDbRow } from "@shared/DbRow/Word";
+import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import Sqlite, {SqliteType} from "@backend/db/Sqlite";
 import lodash from 'lodash'

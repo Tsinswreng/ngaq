@@ -9,7 +9,7 @@ import { I_EventEmitter } from '@shared/linkedEvent';
 import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
-import { WordDbRow } from '@shared/DbRow/Word';
+import { WordDbRow } from '@shared/dbRow/Word';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 

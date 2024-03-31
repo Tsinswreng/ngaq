@@ -16,7 +16,7 @@ import {WordTable} from '@backend/db/sqlite/Word/Table'
 import { Abs_Table } from '../_base/Table';
 import { WordTmdTable } from './Tmd/Table';
 import { WordTmd } from '@backend/entities/WordTmd';
-import { WordTmdDbRow } from '@backend/interfaces/WordTmd';
+import { WordTmdDbRow } from '@backend/dbRow/WordTmd';
 const VocaTableColumnName = VocaDbTable
 
 
