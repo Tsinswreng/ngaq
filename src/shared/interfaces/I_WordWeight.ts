@@ -1,5 +1,10 @@
 type Fn<Return=any> = (...args:any[])=>Return
+import { MemorizeWord } from "@shared/entities/Word/MemorizeWord"
 export interface I_WordWeight{
+	run(mWords:MemorizeWord[]):unknown
+}
+
+export interface I_WordWeight_old{
 	/** 此配置項之名 */
 	get name():string
 	/** 在哪些單詞表起效。若潙undefined則皆起效 */

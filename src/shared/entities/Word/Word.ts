@@ -33,7 +33,7 @@ export class Word{
 	/**
 	 * 空例
 	 */
-	public static readonly example = new Word({
+	public static readonly example = Word.new({
 		table:'', wordShape: '', mean:[],dates_add:[]
 	})
 
@@ -41,33 +41,34 @@ export class Word{
 	 * @deprecated
 	 * @param props 
 	 */
-	public constructor(props:{
-		id?:number,
-		table:string,
-		wordShape:string,
-		variant?:string[],
-		pronounce?:string[],
-		mean:string[],
-		tag?:string[],
-		annotation?:string[],
-		dates_add:Tempus[] 
-		dates_rmb?:Tempus[]
-		dates_fgt?:Tempus[]
-		source?:string[]
-	}){
-		this._id=props.id
-		this._table=props.table
-		this._wordShape=props.wordShape
-		this._variant=props.variant?.slice()??[]
-		this._pronounce = props.pronounce?.slice()??[]
-		this._mean=props.mean.slice()
-		this._annotation=props.annotation?.slice()??[]
-		this._tag=props.tag?.slice()??[]
-		this._dates_add=props.dates_add.slice()
-		this._dates_rmb = props.dates_rmb?.slice()??[]
-		this._dates_fgt = props.dates_fgt?.slice()??[]
-		this._source = props.source?.slice()??[]
-	}
+	// public constructor(props:{
+	// 	id?:number,
+	// 	table:string,
+	// 	wordShape:string,
+	// 	variant?:string[],
+	// 	pronounce?:string[],
+	// 	mean:string[],
+	// 	tag?:string[],
+	// 	annotation?:string[],
+	// 	dates_add:Tempus[] 
+	// 	dates_rmb?:Tempus[]
+	// 	dates_fgt?:Tempus[]
+	// 	source?:string[]
+	// }){
+	// 	this._id=props.id
+	// 	this._table=props.table
+	// 	this._wordShape=props.wordShape
+	// 	this._variant=props.variant?.slice()??[]
+	// 	this._pronounce = props.pronounce?.slice()??[]
+	// 	this._mean=props.mean.slice()
+	// 	this._annotation=props.annotation?.slice()??[]
+	// 	this._tag=props.tag?.slice()??[]
+	// 	this._dates_add=props.dates_add.slice()
+	// 	this._dates_rmb = props.dates_rmb?.slice()??[]
+	// 	this._dates_fgt = props.dates_fgt?.slice()??[]
+	// 	this._source = props.source?.slice()??[]
+	// }
+	protected constructor(){}
 
 	static new(props:{
 		id?:number,
@@ -224,7 +225,7 @@ export class Word{
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.ling!==w2.ling`)
 		}
-		let o = new Word({
+		let o = Word.new({
 			id:w1.id,
 			table:w1.table,
 			wordShape:w1.wordShape,

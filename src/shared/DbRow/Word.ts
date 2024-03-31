@@ -127,7 +127,7 @@ export class WordDbRow{
 			let sw:Word
 			try{
 				const ps = JSON.parse
-				sw = new Word({
+				sw = Word.new({
 					id:num(obj.id)
 					,wordShape:obj.wordShape
 					//,variant: ps(obj.variant)

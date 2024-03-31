@@ -333,7 +333,7 @@ export default class VocaRaw2{
 			throw new Error(`mean === '' || annotation.length === 0`)
 		}
 		const tag = conf_dataBlock?.tag
-		let word = new Word({
+		let word = Word.new({
 			table:table,
 			wordShape: wordShape.trim(),
 			pronounce: [],

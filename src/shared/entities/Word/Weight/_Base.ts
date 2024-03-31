@@ -1,6 +1,27 @@
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import { MemorizeWord } from "../MemorizeWord"
+import { weightLib as L } from "./_lib"
 
-type Fn<Return=any> = (...args:any[])=>Return
+const sros = L.Sros.Sros.new()
+const s = sros.short
+const Tempus_Event = L.Word.Tempus_Event
+type Tempus_Event = InstanceType<typeof Tempus_Event>
+const WordEvent = L.Word.WordEvent
+type WordEvent = typeof WordEvent
+
+class Record{
+	protected constructor(){
+
+	}
+	static new(){}
+}
+
+class _DefaultOpt{
+	addWeight = 0xF
+	debuffNumerator = 1000*3600*24*90
+	base = 20
+}
+
 export class WordWeight implements I_WordWeight{
 
 	protected constructor(){
@@ -12,18 +33,44 @@ export class WordWeight implements I_WordWeight{
 		return o
 	}
 
-	protected _name='_default'
-	get name(){return this._name}
+	readonly This = WordWeight
 
-	protected _includeTables= void 0
-	get includeTables(){return this._includeTables}
+	run(mWords:MemorizeWord[]) {
+		
+	}
 
-	protected _excludeTables = void 0
-	get excludeTables(){return this._excludeTables}
+	calc0(mWord:MemorizeWord){
+		const z = this
+		const nunc = L.Tempus.new()
+		let cnt_add = 0
+		let cnt_rmb = 0
+		let validRmbCnt = 0 //憶ᵗ次、若遇加ˡ事件則置零
+		//let finalAddEventOrder = z.This.finalAddEventPos()
 
-	params
-	filterBefore?:(...args:any[])=>boolean
-	calcPrioFnArr?: Fn<any>[] | undefined;
+		function handle_add(){
+			
+		}
+	}
+
+
+	/**
+	 * 尋ᵣ末個 加ˡ事件
+	 * @param tempus__event 
+	 * @returns 
+	 */
+	static finalAddEventPos(tempus__event:Tempus_Event[]){
+		let ans = 0
+		for(let i = tempus__event.length-1; i>=0; i--){
+			if(tempus__event[i].event === WordEvent.ADD){
+				ans = i;
+				break
+			}
+		}
+		return ans
+	}
+
+
+
 }
 
 /* 

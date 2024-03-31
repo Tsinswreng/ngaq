@@ -1,5 +1,6 @@
 import Tempus from "@shared/Tempus";
 import { MemorizeWord } from "../MemorizeWord";
+import * as Word from '@shared/entities/Word/Word'
 import * as Sros from "@shared/Sros";
 import { WordWeight } from "./_Base";
 import lodash from 'lodash'
@@ -7,6 +8,7 @@ import * as Ut from '@shared/Ut'
 
 export const weightLib = {
 	WordWeight
+	,Word
 	,MemorizeWord
 	,Tempus
 	,Sros
