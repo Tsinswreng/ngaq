@@ -207,7 +207,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 窬	lˁos
 
 黯	ʔrˁəm
-
+黯	ʔrˁəmʔ
 
 件	granʔ
 家	krˁa
@@ -1171,9 +1171,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 方	paŋ
 商	staŋ
-填	dˁin
-田	lˁin
-鈿	lˁins
+
 成	deŋ
 盛	deŋs
 傍	bˁaŋs
@@ -3154,15 +3152,20 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 羈	kraj
 虔	ɡran
 淹	ʔom	# bs
-奄	ʔomʔ	# bs
+奄	ʔomʔ	# bs 甲聲
 俺	ʔomʔ	# 廣韻
 俺	ʔoms	# 廣韻
-唵	ʔˁəmʔ
-晻	ʔrˁəmʔ
-
-
+唵	ʔˁomʔ
+晻	ʔˁomʔ
+黤	ʔˁomʔ
+㞄	ʔˁomʔ
 阉	ʔrom
 腌	ʔop
+
+庵	ʔˁom
+菴	ʔˁom
+㞄	ʔˁom
+馣	ʔˁom
 # 俺
 # 餣
 # 淹	ʔom
@@ -3318,8 +3321,39 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 舋	mʰrəls
 釁	mʰrəls
 
-
+碘	dˁəlʔ	# ts
+碘	tˁəlʔ	0%
 典	tˁəlʔ
+腆	tʰˁəlʔ
+琠	tʰˁəlʔ
+錪	tʰˁəlʔ
+錪	tˁəlʔ
+淟	tʰˁəlʔ
+痶	tʰˁəlʔ
+晪	tʰˁəlʔ
+賟	tʰˁəlʔ
+㥏	tʰˁəlʔ
+佃	lˁin
+佃	lˁins
+畋	lˁin
+畋	lˁins
+沺	lˁin
+田	lˁin
+鈿	lˁins
+嗔	dˁin
+嗔	tʰˁin
+填	dˁin
+填	trin	0%
+填	trins	0%
+塡	dˁin	0%
+塡	trin	0%
+塡	trins	0%
+窴	dˁin
+窴	dˁins
+奠	dˁens	# bs
+壂	dˁəns
+
+
 奶	nrˁəʔ
 協	ɡjˁep	# ms
 駛	srəs	# 舍他音
@@ -4425,7 +4459,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 固	wˁas	# ts
 估	nʰˁaʔ	# ts
 估	kˁaʔ
-沽	kˁaʔ
+沽	kˁas	0% #  同 酤 賣也
 沽	stˁas	# ts
 菇	kˁa
 菇	tsʰˁa	# ts
@@ -4635,7 +4669,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #磚	tonʔ	# ts
 例	rets	# ts
 勵	raks	# ts
-勵	rats
+勵	rats	0%
 
 姓	sˁeŋs	# ts
 街	krˁej	# ts
@@ -4867,7 +4901,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 陪	brˁə	# ts
 陪	bˁə	
-碘	dˁəlʔ	# ts
+
 嗜	ɡris	# ts
 #逝	tats	# ts
 
@@ -6068,8 +6102,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #謬	言翏
 謬	mriws
 聊	rˁiw
-寥	rˁiwks
-廖	rˁiwks
+寥	rˁiwk
+寥	rˁiw
+#廖	rˁiwks
+
 # 繆	絲翏
 # 戮	他翏
 # 僇	人翏

@@ -34,7 +34,9 @@ export class WordTmd{
 	get modifiedDate(){return this._modifiedDate}
 	set modifiedDate(v){this._modifiedDate = v}
 
+	/** @deprecated */
 	protected _weightAlgoJs:string = ''
+	/** @deprecated */
 	get weightAlgoJs(){return this._weightAlgoJs}
 
 }

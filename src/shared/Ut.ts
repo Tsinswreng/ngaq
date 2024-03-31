@@ -126,6 +126,27 @@ function stringLiteralType<T extends string>(str: T): T {
 // }
 
 
+/**
+ * 
+ * @param arr 
+ * @param keyOfMap 返ᵗ值ˋ作Map之鍵
+ * @returns 
+ */
+export function classify<Ele,Key>(arr:Ele[], keyOfMap:(ele:Ele)=>Key){
+	const ans = new Map<Key, Ele[]>()
+	for(const e of arr){
+		const key = keyOfMap(e)
+		let got = ans.get(key)
+		if(got == void 0){
+			ans.set(key, [e])
+		}else{
+			got.push(e)
+			ans.set(key, got)
+		}
+	}
+	return ans
+}
+
 
 
 /* 
@@ -167,7 +188,7 @@ export function inherit<Ch, Fa>(child:Ch,parent){
 }
 
 
-export function fn_childNewAsync<Child, Father, FatherNewParams>(fatherNew:(...fatherNewParams:FatherNewParams[])=>Promise<Father>){
+function fn_childNewAsync<Child, Father, FatherNewParams>(fatherNew:(...fatherNewParams:FatherNewParams[])=>Promise<Father>){
 	let t:Parameters<typeof fatherNew>
 	const ans = async function childNewAsync(...params){
 
@@ -231,18 +252,29 @@ export function delKeys(obj:type.NonArrObj, keys:string[]){
 	}
 }
 
+/**
+ * 
+ * @param tsCode 
+ * @param compilerOptions 
+ * @returns result.diagnostics 總潙空、縱有謬
+ */
 export function compileTs(tsCode:string, compilerOptions:ts.CompilerOptions){
+	const result = ts.transpileModule(tsCode, {compilerOptions:compilerOptions})
+	return result
+}
+
+
+export function compileTs_deprecated(tsCode:string, compilerOptions:ts.CompilerOptions){
 	const result = ts.transpileModule(tsCode, {compilerOptions:compilerOptions})
 	//const result = ts.transpile(tsCode, tsconfig)
 	if (result.diagnostics && result.diagnostics.length > 0) {
 		throw new Error(ts.formatDiagnostics(result.diagnostics, {
-		  getCanonicalFileName: (fileName) => fileName,
-		  getCurrentDirectory: ts.sys.getCurrentDirectory,
-		  getNewLine: () => ts.sys.newLine,
+			getCanonicalFileName: (fileName) => fileName,
+			getCurrentDirectory: ts.sys.getCurrentDirectory,
+			getNewLine: () => ts.sys.newLine,
 		}));
-	  }
-	
-	  return result.outputText;
+	}
+	return result.outputText;
 }
 
 /**
@@ -455,44 +487,6 @@ export{group}
 const randomIntArr = algo.randomIntArr
 export{randomIntArr}
 
-
-
-
-export function createReadLineInterface(){
-	const rl = readline.createInterface({
-		input: process.stdin,
-		output: process.stdout
-	});
-	return rl
-}
-
-export function readLine(rl:readline.Interface, query=''){
-	return new Promise<string>((res,rej)=>{
-		rl.question(query, (answer)=>{
-			//rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
-			res(answer)
-		})
-	})
-}
-
-/**
- * 多次調用則病
- * @param query 
- * @returns 
- * @deprecated
- */
-export function readLine_deprecated(query:string=''){
-	const rl = readline.createInterface({
-		input: process.stdin,
-		output: process.stdout
-	});
-	return new Promise<string>((res,rej)=>{
-		rl.question(query, (answer)=>{
-			rl.close(); // 這一行將關閉readline接口，清空輸入緩衝
-			res(answer)
-		})
-	})
-}
 
 /**
  * 複製對象、忽略指定ᵗ鍵

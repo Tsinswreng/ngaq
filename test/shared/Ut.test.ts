@@ -134,3 +134,27 @@ describe('As', ()=>{
 		
 	})
 })
+
+describe('classify', ()=>{
+	const fn = Ut.classify.bind(Ut)
+	it('1', ()=>{
+		let arr = [
+			{
+				name:'a'
+				,seg:'0'
+			}
+			,
+			{
+				name:'b'
+				,seg:'0'
+			}
+			,
+			{
+				name:'c'
+				,seg:'1'
+			}
+		]
+		const ans = fn(arr, (e)=>e.seg)
+		console.log(ans)
+	})
+})

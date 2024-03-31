@@ -7,11 +7,13 @@ export class WordTmdDbRow{
 	static type = 'type'
 	static createDate = 'createDate'
 	static modifiedDate = 'modifiedDate'
+	/** @deprecated */
 	static weightAlgoJs = 'weightAlgoJs'
 	protected constructor(
 		public tableName:string
 		,public type:string
 		,public createDate: string
+		/** @deprecated */
 		,public weightAlgoJs: string
 		,public modifiedDate: string
 		,public id?:number|string

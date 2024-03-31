@@ -2,7 +2,7 @@
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
 import Tempus from '@shared/Tempus';
-import { $, compileTs, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
+import { $, compileTs_deprecated, lastOf, lodashMerge, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';

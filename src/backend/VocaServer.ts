@@ -9,7 +9,7 @@ import Tempus from "@shared/Tempus";
 //import SingleWord2 from "@shared/SingleWord2";
 import { Word } from "@shared/entities/Word/Word";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, absPath, compileTs, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
+import { $, absPath, compileTs_deprecated, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@shared/Config";
@@ -366,7 +366,7 @@ export default class VocaServer{
 			const tsconfig0 = json5.parse(tsconfig0_str)
 			const tsconfig1 = json5.parse(tsconfig1_str)
 			const tsconfig:any = lodashMerge({}, tsconfig1, tsconfig0)
-			const jsCode = compileTs(tsCode, tsconfig.compilerOptions)
+			const jsCode = compileTs_deprecated(tsCode, tsconfig.compilerOptions)
 			res.send(jsCode)
 	}))
 

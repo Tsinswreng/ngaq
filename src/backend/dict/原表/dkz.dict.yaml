@@ -1,5 +1,5 @@
 
-#20240330164345023
+#20240331151506176
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -146,6 +146,7 @@ use_preset_vocabulary: true
 竇	lˁoks	
 窬	lˁos	
 黯	ʔrˁəm	
+黯	ʔrˁəmʔ	
 件	granʔ	
 家	krˁa	
 軍	kʷəl	
@@ -896,9 +897,6 @@ use_preset_vocabulary: true
 要	ʔews	
 方	paŋ	
 商	staŋ	
-填	dˁin	
-田	lˁin	
-鈿	lˁins	
 成	deŋ	
 盛	deŋs	
 傍	bˁaŋs	
@@ -2472,10 +2470,16 @@ use_preset_vocabulary: true
 奄	ʔomʔ	
 俺	ʔomʔ	
 俺	ʔoms	
-唵	ʔˁəmʔ	
-晻	ʔrˁəmʔ	
+唵	ʔˁomʔ	
+晻	ʔˁomʔ	
+黤	ʔˁomʔ	
+㞄	ʔˁomʔ	
 阉	ʔrom	
 腌	ʔop	
+庵	ʔˁom	
+菴	ʔˁom	
+㞄	ʔˁom	
+馣	ʔˁom	
 俱	kro	
 殷	ʔəl	
 柚	liwks	
@@ -2587,7 +2591,37 @@ use_preset_vocabulary: true
 衅	mʰrəls	
 舋	mʰrəls	
 釁	mʰrəls	
+碘	dˁəlʔ	
+碘	tˁəlʔ	0%
 典	tˁəlʔ	
+腆	tʰˁəlʔ	
+琠	tʰˁəlʔ	
+錪	tʰˁəlʔ	
+錪	tˁəlʔ	
+淟	tʰˁəlʔ	
+痶	tʰˁəlʔ	
+晪	tʰˁəlʔ	
+賟	tʰˁəlʔ	
+㥏	tʰˁəlʔ	
+佃	lˁin	
+佃	lˁins	
+畋	lˁin	
+畋	lˁins	
+沺	lˁin	
+田	lˁin	
+鈿	lˁins	
+嗔	dˁin	
+嗔	tʰˁin	
+填	dˁin	
+填	trin	0%
+填	trins	0%
+塡	dˁin	0%
+塡	trin	0%
+塡	trins	0%
+窴	dˁin	
+窴	dˁins	
+奠	dˁens	
+壂	dˁəns	
 奶	nrˁəʔ	
 協	ɡjˁep	
 駛	srəs	
@@ -3385,7 +3419,7 @@ use_preset_vocabulary: true
 固	wˁas	
 估	nʰˁaʔ	
 估	kˁaʔ	
-沽	kˁaʔ	
+沽	kˁas	0% 
 沽	stˁas	
 菇	kˁa	
 菇	tsʰˁa	
@@ -3516,7 +3550,7 @@ use_preset_vocabulary: true
 刻	kʰˁək	
 例	rets	
 勵	raks	
-勵	rats	
+勵	rats	0%
 姓	sˁeŋs	
 街	krˁej	
 廿	nip	
@@ -3668,7 +3702,6 @@ use_preset_vocabulary: true
 害	ɡrˁats	
 陪	brˁə	
 陪	bˁə	
-碘	dˁəlʔ	
 嗜	ɡris	
 飾	zək	
 棍	kˁuns	
@@ -3893,8 +3926,8 @@ use_preset_vocabulary: true
 韱	sem	
 謬	mriws	
 聊	rˁiw	
-寥	rˁiwks	
-廖	rˁiwks	
+寥	rˁiwk	
+寥	rˁiw	
 皇	wˁaŋ	
 煌	wˁaŋ	
 凰	wˁaŋ	
@@ -4034,7 +4067,6 @@ use_preset_vocabulary: true
 茲	dzə	1%
 兹	dzə	1%
 靄	ʔˁat	0%
-庵	ʔˁəp	0%
 胺	ʔˁat	0%
 巳	ləs	0%
 巳	ləʔ	0%
@@ -4131,9 +4163,6 @@ use_preset_vocabulary: true
 䢿	ʔˁans	
 桉	ʔˁan	
 氨	ʔˁan	
-㞄	ʔˁəm	
-㞄	ʔˁəmʔ	
-庵	ʔˁəm	
 䀂	ʔˁan	
 媕	ʔremʔ	
 媕	ʔˁəm	
@@ -4145,7 +4174,6 @@ use_preset_vocabulary: true
 盦	ʔˁəm	
 諳	ʔˁəm	
 闇	ʔˁəms	
-馣	ʔˁəm	
 鵪	ʔˁəm	
 韽	ʔˁəm	
 韽	ʔrˁems	
@@ -5794,8 +5822,6 @@ use_preset_vocabulary: true
 棽	srəm	
 棽	tʰrəm	
 䀼	nins	
-嗔	tʰin	
-嗔	dˁen	
 䐜	tʰin	
 綝	tʰrəm	
 瞋	tʰin	
@@ -7173,8 +7199,6 @@ use_preset_vocabulary: true
 㸃	tˁemʔ	
 點	tˁemʔ	
 㓠	tˁemʔ	
-佃	dˁen	
-佃	dˁens	
 阽	lam	
 坫	tˁems	
 坫	trəm	
@@ -7185,15 +7209,12 @@ use_preset_vocabulary: true
 淀	dˁens	
 惦	tˁems	
 㼭	dˁems	
-奠	dˁens	
-奠	tˁeŋs	5%
 㝪	tˁems	
 㝪	tˁep	
 㞟	dˁens	
 㞟	tˁeŋʔ	
 靛	dˁens	
 𠿍	tˁens	
-壂	dˁens	
 磹	dˁems	
 簟	dˁemʔ	
 癜	tˁens	
@@ -20026,45 +20047,26 @@ use_preset_vocabulary: true
 黇	tʰˁem	
 𦧴	dˁen	
 𦧴	tʰˁan	
-沺	dˁen	
 盷	ɡʷˁen	
-畋	dˁen	
-畋	dˁens	
 菾	dˁem	
 𦳇	dˁem	
 䟧	dˁen	
 湉	dˁem	
 搷	dˁen	
-塡	dˁen	
-塡	dˁens	2%
-塡	trin	2%
-塡	trins	2%
 𨌈	dˁen	
 䡘	dˁen	
 㽐	hˁem	
 磌	tin	
 磌	dˁen	
-窴	dˁen	
-窴	dˁens	
 𥧑	dˁen	
 闐	dˁen	
 闐	dˁens	
 鷏	dˁen	
 鷆	dˁen	
 䄼	tʰˁemʔ	
-淟	tʰˁenʔ	
-㥏	tʰˁenʔ	
-琠	tˁenʔ	
-琠	tʰˁenʔ	
-晪	tʰˁenʔ	
-腆	tʰˁenʔ	
 𤲖	tʰˁenʔ	
-痶	tʰˁenʔ	
-賟	tʰˁenʔ	
 䠄	tʰˁenʔ	
 靦	tʰˁenʔ	
-錪	tˁenʔ	
-錪	tʰˁenʔ	
 𨆁	tʰˁenʔ	
 㐁	tʰˁems	
 㐁	tʰˁəms	
@@ -22841,8 +22843,6 @@ use_preset_vocabulary: true
 𣃰	ʔremʔ	
 剡	lamʔ	
 剡	damʔ	
-菴	ʔrem	
-菴	ʔˁəm	
 萒	ɡronʔ	
 萒	lonʔ	
 郾	ʔans	
@@ -22910,8 +22910,6 @@ use_preset_vocabulary: true
 甗	ŋan	
 甗	ŋrens	
 甗	ŋrenʔ	
-黤	ʔˁəmʔ	
-黤	ʔrˁamʔ	
 鰋	ʔanʔ	
 黬	krˁem	
 黬	ŋrˁem	
