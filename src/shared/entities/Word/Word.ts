@@ -24,10 +24,16 @@ export type IVocaRow = WordDbRow
 /**
  * 單詞事件枚舉
  */
-export enum WordEvent{
-	ADD=0, // add
-	RMB=1, // remember
-	FGT=-1	// forget
+// export enum WordEvent{
+// 	ADD=0, // add
+// 	RMB=1, // remember
+// 	FGT=-1	// forget
+// }
+
+export class WordEvent{
+	static readonly ADD = 0
+	static readonly RMB = 1
+	static readonly FGT = -1
 }
 
 export class Word{
@@ -37,6 +43,8 @@ export class Word{
 	public static readonly example = Word.new({
 		table:'', wordShape: '', mean:[],dates_add:[]
 	})
+
+	static Event = WordEvent
 
 	/**
 	 * @deprecated

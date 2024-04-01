@@ -6,9 +6,6 @@
 	import MultiMode from '../MultiMode';
 import { lastOf } from '@shared/Ut';
 
-	//let word = defineProps<SingleWord2>()
-	//console.log(words)
-	//let w = words[0]
 // 定义 props，此处需要和父组件传递的 prop 名字一致
 const props = defineProps<{
 	wordB: WordB; // 假设 YourDataType 是 e 的数据类型
@@ -21,8 +18,7 @@ const recite = Recite.getInstance()
 const multiMode = MultiMode.getInstance()
 function returnWordToParent(){
 	const wordToSend = props.wordB
-	emits('WordCardClick', wordToSend); // 第一個參數是事件ᵗ名、第二個是將傳ᵗ訊。
-	//console.log(wordToSend)
+	emits('WordCardClick', wordToSend);
 	//reciteStatus.value = 'rmb'
 };
 
@@ -53,9 +49,6 @@ function rightClick(event: MouseEvent){
 			handleWordEvent(WordEvent.FGT)
 		}
 	}else{undo()}
-	//console.log(reciteStatus.value)//t
-	//console.log(props.wordB.neoDates_rmb)//t
-	//console.log(props.wordB.neoDates_fgt)//t
 }
 
 function undo(){

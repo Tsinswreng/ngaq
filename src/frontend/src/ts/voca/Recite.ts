@@ -117,7 +117,6 @@ export default class Recite{
 	public flushAllWordsToLearn(prioConfig:Partial<typeof Priority.defaultConfig>){
 		const id__reviewedWord = this.rvwObj.merge()
 		// const id__index = C.genMap<number,WordB>(this.allWordsToLearn, 'id')
-		// //console.log(id__reviewedWord)//t
 		// const neoWordsToLearn:WordB[] = []
 		// for(const [id, word] of id__reviewedWord){
 		// 	word.mergeDates()
@@ -134,10 +133,6 @@ export default class Recite{
 			const id = $(u.fw.id)
 			const gotV:WordB|undefined = id__reviewedWord.get( C.tableId(u) )
 			if(gotV === void 0){continue}
-			//console.log(u.priority.prio0num)//t
-			// console.log(u.fw.wordShape, u.fw.id) //simeru
-			// console.log(gotV.fw.wordShape, gotV.fw.id) //mane
-			
 			const neoSw = SingleWord2.intersect(u.fw, gotV.fw)
 			gotV.fw = neoSw
 			//this.allWordsToLearn[i].fw = gotV.fw
@@ -146,12 +141,8 @@ export default class Recite{
 			Object.assign(u, new WordB(u.fw))
 			//this.allWordsToLearn[i] = gotV
 			u.mergeDates()
-			//debugger
 			u.priorityObj.setConfig(prioConfig)
-			//console.log(u.priority.config)//t
 			u.calcPrio()//傳參config?
-
-			//console.log(u.priority.prio0num)//t
 		}
 	}
 
@@ -262,13 +253,11 @@ export default class Recite{
 	// 	let wbs = $(sws).map((e)=>{return new WordB(e)})
 		
 	// 	this.calcAllPrio(wbs)
-	// 	//l.warn(wbs)//t
 	// 	wbs.sort((a,b)=>{return b.priority.prio0num - a.priority.prio0num})
 	// 	this.allWordsToLearn.length = 0
 	// 	this.allWordsToLearn.push(...wbs)
 	// 	//this.isSaved = false
 	// 	//console.log(`console.log(this.isSaved)`)
-	// 	//console.log(this.isSaved)//t
 	// }
 
 	/**
@@ -277,29 +266,20 @@ export default class Recite{
 	 * @param event 
 	 */
 	public trigger(wb:WordB, event:WordEvent){
-		//console.log(`console.log(event)`)
-		//console.log(event)//t
 		this.isSaved = false
 		const nunc = Tempus.new()
 
 		const rmb = ()=>{
 			wb.neoDates_rmb.push(nunc)
 			this.rvwObj.rmb_table_id__word.set( C.tableId(wb), wb )
-			//console.log('rmb:')
-			//console.log(wb.fw.wordShape)//
 		}
 		const fgt = ()=>{
 			wb.neoDates_fgt.push(nunc)
 			this.rvwObj.fgt_table_id__word.set( C.tableId(wb), wb )
-			//console.log('fgt:')
-			//console.log(wb.fw.wordShape)//
 		}
 		
 		const funs:Function[] = [()=>{}, rmb, fgt]
-
 		SingleWord2.switchEvent(event, funs)
-		//console.log(`console.log(this.rvwObj.rmb_idToWordsMap)`)
-		//console.log(this.rvwObj.rmb_idToWordsMap)//t
 	}
 
 	/**

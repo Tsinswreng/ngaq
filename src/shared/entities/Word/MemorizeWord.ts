@@ -1,4 +1,16 @@
-import { Tempus_Event, Word } from "./Word";
+import { InstanceType_ } from "@shared/Type";
+import { Tempus_Event, Word, WordEvent } from "./Word";
+
+//type WordEvent = typeof WordEvent
+class Status{
+	static new(){
+		const o = new this()
+		return o
+	}
+	memorize:typeof WordEvent.RMB| typeof WordEvent.FGT|undefined
+}
+
+
 
 export class MemorizeWord{
 
@@ -22,6 +34,9 @@ export class MemorizeWord{
 
 	protected _date__event:Tempus_Event[]
 	get date__event(){return this._date__event}
+
+	protected _status = Status.new()
+	get status(){return this._status}
 
 	init(){
 		const z = this

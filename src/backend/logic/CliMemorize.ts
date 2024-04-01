@@ -112,11 +112,11 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	on_sort() {
 		const z = this
 		try {
-			
+			z._status.sort = true
 		} catch (error) {
 			
 		}
-		z._status.sort = true
+		
 	}
 	on_start() {
 		const z = this

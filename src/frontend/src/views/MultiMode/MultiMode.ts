@@ -147,7 +147,6 @@ export default class MultiMode{
 		this._isShowWordInfo.value = !this._isShowWordInfo.value
 		console.log(data)
 		console.log(data.priorityObj.changeRecord)
-		//console.log(data.formattedMean)//t
 		
 	}
 
@@ -188,8 +187,6 @@ export default class MultiMode{
 			const chunk = await reader.read()
 			const data = chunk.value
 			if(data == null){
-				//console.warn(`chunk.value is nil when i=${i}`)
-				//console.log(`console.log(chunk.done) `,chunk.done)
 				//break
 				//timeToEnd = true
 				timeToEnd = chunk.done
@@ -228,13 +225,9 @@ export default class MultiMode{
 			}
 		}
 		const loopEnd = now()
-		//console.log(`循環耗時: `, loopEnd-loopStart)
 		const [time] = await measurePromiseTime(
 			Promise.all(prms)
 		)
-		//console.log(`流 權重: `, time)
-		//console.log(ans)
-		//console.log(ans.length)
 		return ans
 	}
 
