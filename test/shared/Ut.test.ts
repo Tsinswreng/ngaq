@@ -3,8 +3,8 @@ import Tempus from '@shared/Tempus'
 const ast = (b:boolean)=>{
 	expect(b).toBe(true)
 }
-describe('',()=>{
-	it('', ()=>{
+describe('$',()=>{
+	it('1', ()=>{
 		try {
 			let a
 			Ut.$(a)

@@ -1,5 +1,5 @@
 
-#20240331161824691
+#20240402110306887
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -147,8 +147,20 @@ use_preset_vocabulary: true
 窬	lˁos	
 黯	ʔrˁəm	
 黯	ʔrˁəmʔ	
+眨	tsrˁap	
+凡	bam	0%
+凡	bom	
+範	bramʔ	
 件	granʔ	
 家	krˁa	
+葭	krˁa	
+瘕	krˁa	
+瘕	krˁaʔ	
+瘕	krˁas	
+稼	krˁas	
+幏	krˁa	
+幏	krˁas	
+叚	krˁaʔ	
 軍	kʷəl	
 皸	kʷəl	
 君	kul	
@@ -3772,7 +3784,6 @@ use_preset_vocabulary: true
 狠	kʰʷˁənʔ	
 軾	kʰlək	
 軾	lʰək	0%
-範	bramʔ	
 默	kʰʷˁək	
 泄	staps	
 泄	slap	
@@ -7940,7 +7951,6 @@ use_preset_vocabulary: true
 颿	bʷams	
 𤃳	pʰʷan	
 𤄫	pʰʷan	
-凡	bʷam	
 匥	brens	
 柉	bʷam	
 笲	brens	
@@ -10914,7 +10924,6 @@ use_preset_vocabulary: true
 笳	krˁaj	
 𧉪	krˁaj	
 袈	krˁaj	
-葭	krˁaj	
 𨔣	krˁaj	
 跏	krˁaj	
 猳	krˁaj	
@@ -10962,7 +10971,6 @@ use_preset_vocabulary: true
 岬	krˁap	
 玾	krˁap	
 胛	krˁap	
-叚	krˁajʔ	
 𥑐	krˁap	
 斝	krˁajʔ	
 婽	krˁajʔ	
@@ -10970,9 +10978,6 @@ use_preset_vocabulary: true
 鉀	kˁap	
 鉀	krˁap	
 榎	krˁajʔ	
-瘕	krˁaj	
-瘕	krˁajs	
-瘕	krˁajʔ	
 檟	krˁajʔ	
 𩌍	krˁap	
 𦙺	krˁajs	
@@ -10980,9 +10985,6 @@ use_preset_vocabulary: true
 𢉤	krˁajs	
 㽎	dˁəm	
 㽎	həm	
-幏	krˁaj	
-幏	krˁajs	
-稼	krˁajs	
 幵	kˁen	
 尖	tsem	
 戔	dzˁan	
@@ -25086,7 +25088,6 @@ use_preset_vocabulary: true
 𨰉	dzrˁat	
 厏	tsrˁajʔ	
 厏	dzrˁajʔ	
-眨	tsrˁep	
 砟	dzˁak	
 搩	ɡret	
 𥀈	tsrˁep	

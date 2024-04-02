@@ -1,6 +1,7 @@
 {
   "name": "voca",
   "version": "1.0.0",
+  "type": "module",
   "dependencies": {
     "@types/better-sqlite3": "^7.6.6",
     "@types/body-parser": "^1.19.2",
@@ -13,6 +14,7 @@
     "app-root-path": "^3.1.0",
     "axios": "^1.4.0",
     "better-sqlite3": "^8.7.0",
+    "chalk": "^5.3.0",
     "cheerio": "^1.0.0-rc.12",
     "commander": "^12.0.0",
     "comment-json": "^4.2.3",
@@ -21,6 +23,7 @@
     "d3": "^7.8.5",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
+    "esm-module-alias": "^2.1.0",
     "eventemitter3": "^5.0.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -88,12 +91,12 @@
     "out": "tsc -p . ",
     "buildB": "tsc -p .",
     "srvmon": "nodemon ./app.js",
-    "srv": "node ./app.js",
+    "srv": "esno ./app.js",
     "addWords": "node ./out/backend/BackupTable.js",
     "bundle": "npx webpack",
     "exe": "pkg bundle/bundle.js --target node18-win-x64",
     "buildAll": "npm run build && npm run out && npm run bundle && npm run exe",
-    "dks": "ts-node .\\src\\backend\\dict\\dks.ts",
+    "dks": "esno .\\src\\backend\\dict\\dks.ts",
     "updateFrontendShared": "ts-node ./src\\backend\\script\\update_shared.ts"
   },
   "bin": "bundle/bundle.js",
@@ -103,6 +106,14 @@
     ]
   },
   "_moduleAliases": {
+    "@components": "dist/api/components",
+    "@services": "dist/services",
+    "@root": ".",
+    "@shared": "out/shared/",
+    "@backend": "out/backend/",
+    "@frontend": "out/frontend/"
+  },
+  "aliases": {
     "@components": "dist/api/components",
     "@services": "dist/services",
     "@root": ".",

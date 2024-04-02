@@ -10,7 +10,7 @@ import { MemorizeEvents } from '@shared/logic/memorizeWord/Event';
 import { CliMemorize } from './logic/CliMemorize';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
-
+import chalk from 'chalk'
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -52,9 +52,12 @@ export class Cli{
 				const z = this.cli
 				z.exput(z.cliMemorize.wordsToLearn.length)
 			}
+
 		}
 		return Cmd
 	}
+
+	
 
 	protected _cmd = this.This.Cmd.new(this)
 	get cmd(){return this._cmd}
@@ -91,7 +94,8 @@ export class Cli{
 
 
 	exput(v?){
-		console.log(v)
+		//console.log(v)
+		chalk.blue(v)
 	}
 
 	handleErr(err){

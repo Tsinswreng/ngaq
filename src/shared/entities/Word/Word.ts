@@ -31,6 +31,7 @@ export type IVocaRow = WordDbRow
 // }
 
 export class WordEvent{
+	protected constructor(){}
 	static readonly ADD = 0
 	static readonly RMB = 1
 	static readonly FGT = -1

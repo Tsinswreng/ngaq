@@ -50,9 +50,10 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 	get wordsToLearn(){return this._wordsToLearn}
 
 	protected static _events = MemorizeEvents.instance
-
-
 	static get events(){return this._events}
+
+	protected _curWordIndex = 0
+	get curWordIndex(){return this._curWordIndex}
 
 	protected _status = {
 		load: false

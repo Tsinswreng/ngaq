@@ -14,9 +14,9 @@
 		
 		"allowJs": false,
 		"target": "ESNext",
-		//"useDefineForClassFields": true,
-		//"module": "ESNext",
-		"module": "CommonJS", //模塊化ᵗ標準
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		//"module": "CommonJS", //模塊化ᵗ標準
 		//"module": "System",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"skipLibCheck": true,
@@ -37,8 +37,8 @@
 		"noFallthroughCasesInSwitch": true,
 		"strictPropertyInitialization": false,
 		"noImplicitAny": false, //不准 隱式ᵗ any
-		"moduleResolution": "Node",
-		"esModuleInterop": true, //用import導入commonJs模塊
+		"moduleResolution": "Node" //"Node",
+		,"esModuleInterop": true, //用import導入commonJs模塊
 		// "emitDecoratorMetadata": true,
 		// "experimentalDecorators": true,
 		//"allowImportingTsExtensions": true,
@@ -65,6 +65,10 @@
 		, "src/**/*.vue"
 		, "config.ts"
 	],
+	"ts-node": {
+		// Tell ts-node CLI to install the --loader automatically, explained below
+		"esm": true
+	  }
 	//"include": ["/*.ts"],
 	
 	// "include": [

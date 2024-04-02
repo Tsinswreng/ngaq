@@ -1,11 +1,15 @@
 //const sqlite3 = require("sqlite3").verbose();
-require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
-import 'module-alias/register';
+//require('tsconfig-paths/register'); //[23.07.16-2105,]{不寫這句用ts-node就不能解析路徑別名}
+//import 'module-alias/register';
 import { Database } from 'sqlite3';
-import * as sqlite3Temp from 'sqlite3'
-const sqlite3 = sqlite3Temp.verbose()
+// import * as sqlite3Temp from 'sqlite3'
+// const sqlite3 = sqlite3Temp.verbose()
+//import * as sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3'
 import * as fs from 'fs'
-const rootDir:string = require('app-root-path').path
+import appRootPath from 'app-root-path'
+const rootDir = appRootPath.path
+//const rootDir:string = require('app-root-path').path
 //import 'module-alias/register';
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"

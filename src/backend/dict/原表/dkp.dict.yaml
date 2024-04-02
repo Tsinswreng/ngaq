@@ -209,8 +209,21 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 黯	ʔrˁəm
 黯	ʔrˁəmʔ
 
+眨	tsrˁap
+凡	bam	0%
+凡	bom	# bs
+範	bramʔ
+
 件	granʔ
 家	krˁa
+葭	krˁa
+瘕	krˁa
+瘕	krˁaʔ
+瘕	krˁas
+稼	krˁas
+幏	krˁa
+幏	krˁas
+叚	krˁaʔ
 軍	kʷəl
 皸	kʷəl
 
@@ -5005,7 +5018,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 軾	車ək	# ts
 軾	lʰək	0%
 #範	竹amʔ
-範	bramʔ
+
 默	犬ˁək
 #聆	耳rˁeŋs	# ts
 #型	土

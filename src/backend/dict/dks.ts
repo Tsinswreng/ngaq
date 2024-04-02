@@ -1,5 +1,5 @@
-require('tsconfig-paths/register');
-import 'module-alias/register';
+//require('tsconfig-paths/register');
+//import 'module-alias/register';
 //import Txt from "@shared/Txt"
 import Txt from "@shared/Txt"
 
@@ -12,11 +12,14 @@ import { partial } from 'lodash';
 import { RegexReplacePair, printArr, regexStrArrToObjs } from '@shared/Ut';
 import { DictDbRow, cn } from '@shared/Type';
 import * as fs from 'fs'
-const rootDir:string = require('app-root-path').path
+//const rootDir:string = require('app-root-path').path
+import appRootPath from 'app-root-path'
+const rootDir = appRootPath.path
 import {replacePair as saffesToOcRegex} from './regex/saffesToOcRegex'
 import {replacePair as ocToOc3} from './regex/ocToOc3'
 import { replacePair as cangjieRegex } from './regex/cangjie';
-import moment = require('moment');
+//import moment = require('moment');
+import moment from 'moment'
 import Sqlite from '@backend/db/Sqlite';
 import { transpose, $ ,YYYYMMDDHHmmssSSS} from '@shared/Ut';
 import fenbangToIPA from './regex/fenbangToIPA'

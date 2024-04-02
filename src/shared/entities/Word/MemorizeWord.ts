@@ -7,7 +7,7 @@ class Status{
 		const o = new this()
 		return o
 	}
-	memorize:typeof WordEvent.RMB| typeof WordEvent.FGT|undefined
+	memorize:typeof WordEvent.RMB| typeof WordEvent.FGT|undefined = void 0
 }
 
 
@@ -44,3 +44,4 @@ export class MemorizeWord{
 	}
 
 }
+

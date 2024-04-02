@@ -1,7 +1,8 @@
 import 'tsconfig-paths/register'
 import * as algo from '@shared/algo'
 import { Sros } from '@shared/Sros'
-import { EventEmitter } from 'stream'
+import EventEmitter = require('events')
+import chalk from 'chalk'
 
 interface Static<Self>{
 	new: (this)=>Self
