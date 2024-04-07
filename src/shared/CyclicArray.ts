@@ -6,6 +6,12 @@ export default class CyclicArray<T>{
 
 	static new<T>(capacity:number){
 		const o = new this<T>()
+		if(capacity <= 0){
+			throw new RangeError(`${capacity}\ncapacity <= 0`)
+		}
+		if(!Number.isInteger(capacity)){
+			throw new RangeError(`${capacity}\ncapacity is not an Integer`)
+		}
 		o._capacity = capacity
 		return o
 	}

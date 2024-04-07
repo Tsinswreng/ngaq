@@ -19,9 +19,9 @@ export let replacePair:RegexReplacePair[] = [
 	//以下ˇ當 獨ᵈ先処。否則三等無r之a轉A後恐混。
 	{regex:/rˁ(æ|A)/gm, replacement:'腹一.腹二'},
 	{regex:/ˁ(æ|A)/gm, replacement:'腹一,腹二'},
-	{regex:/r(æ|A|ˡa)/gm, replacement:'腹一H腹二'},
+	{regex:/r(æ|A|ˡa|ʲa)/gm, replacement:'腹一H腹二'},
 	//{regex:/ˡa/gm, replacement:'腹一N腹二'},
-	{regex:/(æ|A|ˡa)/gm, replacement:'腹一N腹二'},
+	{regex:/(æ|A|ˡa|ʲa)/gm, replacement:'腹一N腹二'},
 
 
 	{regex:/rˁa/gm, replacement:'腹一Y腹二'},

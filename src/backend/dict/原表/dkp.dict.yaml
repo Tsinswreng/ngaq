@@ -214,6 +214,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 凡	bom	# bs
 範	bramʔ
 
+窆	prams
+
 件	granʔ
 家	krˁa
 葭	krˁa
@@ -239,6 +241,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 秋	tsʰiw
+楸	tsʰiw
+鞦	tsʰiw
+鰍	tsʰiw
+萩	tsʰiw
+鶖	tsʰiw
+鬏	tsiw
 愀	dziwʔ
 #愀	tsʰewʔ
 鍬	tsʰˁiw
@@ -883,12 +891,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 硐	lˁoŋ
 峒	lˁoŋ
 
+亇	kˁajs
 
 童	dˁoŋ
 
 洞	lˁoŋs
 恫	lˁoŋs
 絧	lˁoŋs
+胴	lˁoŋs
+戙	lˁoŋs
+迵	lˁoŋs
+㓊	lˁoŋs
+駧	lˁoŋs
+
 
 詷	lˁoŋʔ
 眮	lˁoŋʔ
@@ -903,6 +918,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 眮	lˁoŋ
 挏	lˁoŋ
 䆚	lˁoŋ
+
+
 
 
 
@@ -1198,7 +1215,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 惆	tʰriw
 
 周	tiw
-週	tiw
+週	tiw	0%
+週	tʰiw	# ts
 州	tu
 洲	stu	# ts
 
@@ -1750,7 +1768,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 奔	pˁəl
 犇	pˁəl
 錛	pˁəl
-畚	pˁəlʔ
+畚	pˁunʔ	# bs
 逩	pˁəls
 墳	bəl
 鱝	bəlʔ
@@ -1758,6 +1776,31 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 卉	hʷəlʔ
 芔	hʷəls
 泋	hʷəls
+
+卞	brons	# bs
+拚	brons	# bs
+拚	puns
+抃	brons	# bs
+弁	brons	# bs
+汴	brons	# bs
+閞	brons	# bs
+閞	bons
+昪	brons	# bs
+匥	brons	# bs
+䒪	brons	# bs
+笲	brons	# bs
+笲	bon
+笲	bonʔ
+㺹	brons	# bs
+忭	brons	# bs
+䪻	brons	# bs
+䪻	bonʔ
+
+㺕	bal
+㺕	brals
+
+
+
 
 
 冒	mˁuks
@@ -1940,6 +1983,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 儉	ɡramʔ
 儉	ɡamʔ
 
+饞	dzram
+攙	dzram
+攙	tsʰrˁam
+毚	dzram
+毚	dzrˁam
+讒	dzrˁams
+讒	dzram
+
 #險	hramʔ
 險	hamʔ
 嶮	hramʔ
@@ -1947,6 +1998,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 獫	hramʔ
 柬	krˁanʔ	# bs
 揀	krˁanʔ	# bs
+
+柬	krˁenʔ	0%
+揀	krˁenʔ	0%
 
 影	ʔraŋʔ
 璟	ʔraŋʔ
@@ -2153,6 +2207,46 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 狗	kʰʷˁoʔ	# ts
 苟	kˁoʔ
 出	kʰlut
+黜	kʰlrut
+炪	kʰlrut
+欪	kʰlrut
+絀	klrut
+茁	klrut	# 舍他音
+窋	klrut
+泏	klrut
+㤕	kʰlrut
+㑁	klrut
+䂐	klrut	# 舍他音
+
+拙	klut	# klot, tot
+拙	klot
+炪	klut
+䂐	klut
+#𠭴	klot
+䪼	klut
+䖦	klut
+
+咄	klˁot
+柮	klˁot
+𩢎	klˁot
+𩨳	klˁot
+
+梲	lot
+梲	lʰˁot
+侻	lʰˁot
+挩	lˁot
+挩	lʰˁot
+莌	lʰˁot
+莌	lˁot
+
+
+
+欪	hit
+怵	lʰrut
+𧺶	lʰrut
+䟣	lʰrut
+
+
 處	kʰˡas
 處	kʰˡaʔ
 䖏	kʰˡaʔ
@@ -2269,11 +2363,50 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 畀	pits
 既	kəts
 報	pˁuks
+㧓	kʷrˁa
+𤓰	kʷrˁa
 跨	kʰʷrˁas
 夸	kʰʷrˁa
+誇	kʰʷrˁa
+𠇗	kʰʷrˁa
+䠸	kʰʷrˁa
+䯞	kʰʷrˁa
 胯	kʰʷrˁas
 姱	kʰʷrˁa
 垮	kʰʷrˁaʔ
+
+剮	kʷrˁaʔ
+冎	kʷrˁaʔ
+𨀩	kʷrˁaʔ
+𠊰	kʷrˁaʔ
+䈑	kʷrˁaʔ
+𧤐	kʷrˁaʔ
+踻	kʷrˁaʔ
+踻	kʷrˁa
+坬	kʷrˁas
+
+銙	kʰʷrˁaʔ
+骻	kʰʷrˁaʔ
+㡁	kʰʷrˁaʔ
+
+譁	hʷrˁa
+譁	wrˁa
+驊	wrˁa
+鏵	wrˁa
+鋘	ŋʷˁa
+鋘	wˁa
+崋	wrˁa
+崋	wrˁas
+# 鱯
+# 檴
+
+
+划	ɡrˁoj
+划	krˁojʔ
+划	krˁojs
+
+
+
 好	hˁuʔ
 好	hˁus
 吾	ŋˁa
@@ -2330,7 +2463,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 槽	dzˁu
 漕	dzˁu
 嘈	dzˁu
-遭	tsˁu
+遭	tsˁuw
+遭	tsˁu	0%
 醩	tsˁu
 蹧	tsˁu
 
@@ -2486,6 +2620,28 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 辰	dəl
 宸	dəl
 
+桭	dəl
+屒	dəl
+屒	trəlʔ
+敐	təlʔ
+敐	dəl
+蜃	dəlʔ
+蜃	dəls
+脤	dəlʔ
+祳	dəlʔ
+鋠	dəlʔ
+㰮	dəlʔ
+腎	ɡiŋʔ
+唇	təl
+帪	təl
+甄	kin
+薽	kin
+畛	tən
+袗	tənʔ
+袗	təns
+挋	kins
+
+
 振	təl	# 舍他音
 振	nʰəl	# ts
 賑	təlʔ	# 舍他音
@@ -2494,7 +2650,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #晨	dil	# ts
 晨	nəl	# ts
 
-
+腭	ŋˁak
 
 疹	trənʔ
 軫	trənʔ
@@ -2537,6 +2693,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 聮	ron
 
 
+
+是	dejʔ	# ts
+是	deʔ
+#了
 
 
 
@@ -2861,6 +3021,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 菜	srˁəs	# bs
 #菜	tsʰˁəs
 
+靴	hʷaj	# 鞾 不改
+
+
 
 般	pˁan	# 舍他音
 班	prˁan
@@ -2873,8 +3036,22 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 漸	dzamʔ
 勸	kʰʷals
 羽	wraʔ
+詡	hʷaʔ
+栩	hʷaʔ
+祤	hʷaʔ
+
+盱	hʷa
+訏	hʷa
+荂	hʷa
+旴	hʷa
+
+虖	ɡˁa
+虖	hˁa
+虖	hʷa
+
 右	wəs
 韻	ɡʷrins	# bs
+韵	ɡʷrins
 顛	tˁin
 滇	tˁin
 癲	tˁin
@@ -3230,7 +3407,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 罩	trˁaws
 麥	mrˁək
 蠻	mrˁon
-姜	kAŋ	# ms kjaŋ
+
 褻	sŋet
 薛	sŋat
 孽	ŋrat
@@ -3401,6 +3578,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 欠	kʰoms	# bs
 欠	kʰams
 疆	ɡaŋʔ	# sch
+姜	kʲaŋ	# ms kjaŋ
+羌	kʰʲaŋ
+猐	kʰʲaŋ
+蜣	kʰʲaŋ
+
 施	lʰaj
 #謹	kəlʔ
 #勤	ɡəl
@@ -3464,7 +3646,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 鐸	lˁak
 度	dˁaks
 著	traks
-箸	draks
+#箸	draks	bs
 燈	kˁəŋ	# bs ktˁəŋ
 橙	drˁəŋ
 憕	drˁəŋ
@@ -3615,8 +3797,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #頁	ɡˁit	# ptl
 頁	ɡˁet
 筆	prut
-蔗	tAks
+#蔗	tAks
 炙	tAks
+炙	tAk
 柘	tAks
 穴	wˁit
 舂	stoŋ
@@ -3785,11 +3968,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 貪	lʰˁəm
 閃	lʰamʔ
 
-墮	jˁojs	# ts
-惰	jˁojʔ
-憜	jˁojʔ
+墮	lˁojʔ	0%
+墮	lˁojs	# ts
+惰	lˁojʔ
+憜	lˁojʔ
 隨	joj	# ms
-隋	jˁoj	# ms
+#隋	jˁoj	# ms
+隋	sloj	# 國名
+隋	lʰˁojʔ	# 裂肉也又徒果切
+惰	lˁojʔ
 髓	slojʔ
 𣿂	slojʔ
 䭉	slojʔ
@@ -4648,8 +4835,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 咯	krˁoks	# ts
 
 
-洲	tʰu	# ts
-舟	tʰus	# gs
+#洲	tʰu	# ts
+舟	tʰu	# ts
+
 
 像	dzaŋʔ	# ts
 #余	lAj	# ts
@@ -6441,6 +6629,25 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 嶙	rən
 # 燐	火粦
 燐	rən
+
+吝	rəns
+藺	rəns
+遴	rəns
+疄	rən
+疄	rənʔ
+疄	rəns
+鏻	rəns
+鏻	rən
+僯	rənʔ
+撛	rənʔ
+撛	rəns
+橉	rəns
+橉	rənʔ
+瞵	rəns
+瞵	rən
+轔	rən
+轔	rəns
+潾	rən
 
 #尞	@尞
 # 瞭	目尞

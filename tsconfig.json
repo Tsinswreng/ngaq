@@ -6,12 +6,6 @@
 		//"composite": true,
 		"declaration": false,
 		"types": ["node", "jest"],
-		//"outDir": "./backend-out",
-		"outDir": "./out",
-		//"outFile": "bundle.js",
-		//"outDir": ".",
-		"rootDir": "./src",//限定 TypeScript 编译器的搜索范围。若不設潙./src則${out}下還會有一個src目錄
-		
 		"allowJs": false,
 		"target": "ESNext",
 		"useDefineForClassFields": true,
@@ -42,6 +36,11 @@
 		// "emitDecoratorMetadata": true,
 		// "experimentalDecorators": true,
 		//"allowImportingTsExtensions": true,
+		//"outDir": "./backend-out",
+		"outDir": "./out",
+		//"outFile": "bundle.js",
+		//"outDir": ".",
+		"rootDir": "./src",//限定 TypeScript 编译器的搜索范围。若不設潙./src則${out}下還會有一個src目錄
 		"baseUrl": "./src",//用于解析模块导入路径的基础路径
 		"paths": {
 			"@root/*": ["../*"],
@@ -68,7 +67,7 @@
 	"ts-node": {
 		// Tell ts-node CLI to install the --loader automatically, explained below
 		"esm": true
-	  }
+	}
 	//"include": ["/*.ts"],
 	
 	// "include": [

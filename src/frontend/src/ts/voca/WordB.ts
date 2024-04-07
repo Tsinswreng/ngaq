@@ -11,7 +11,7 @@ export default class WordB{
 	}
 
 	/**
-	 * father word 原 單詞對象。此處取組合洏舍繼承。
+	 * father word 原 單詞對象。
 	 */
 	;get fw(){return this._fw;};
 	set fw(v){this._fw = v}

@@ -535,6 +535,9 @@ export default class VocaServer{
 		 */
 		VocaServer.app.get('*', (req:MyReq, res)=>{
 			VocaServer.session=req.session??''
+			console.log(123)
+			console.log(req)
+			//console.log(req.hostname)
 			if(VocaServer.session.userid && req.path==='/login'){
 				res.setHeader('content-type','text;charset=utf-8')
 				res.sendFile(rootDir+'/out/frontend/dist/index.html')

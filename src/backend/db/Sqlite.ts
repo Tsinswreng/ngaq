@@ -1026,7 +1026,8 @@ export default class Sqlite{
 			db.run(`COMMIT`, function(err){
 				if(err){
 					//throw err
-					throw sqlErr(err)
+					//throw sqlErr(err)
+					rej(err)
 				}
 				res()
 			})

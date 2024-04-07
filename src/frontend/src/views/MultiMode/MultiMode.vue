@@ -44,7 +44,7 @@ document.addEventListener("mousedown", (event) => {
 	if (event.button === 1) { //鼠標中鍵
 		event.preventDefault();
 		multiMode.save().then((d)=>{
-				multiMode.restart()
+			multiMode.restart()
 		})
 	}
 });

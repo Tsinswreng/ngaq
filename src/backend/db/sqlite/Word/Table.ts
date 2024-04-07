@@ -218,7 +218,7 @@ class _WordTable extends Abs_Table{
 				runResult1 = await fn()
 			}
 			if(wordsToUpdate.length !== 0){
-				const fn =  _WordTable.setWordsByIds_fn(db, table, (wordsToUpdate))
+				const fn = _WordTable.setWordsByIds_fn(db, table, (wordsToUpdate))
 				await fn()
 			}
 			const initAddIds = runResult1.map(e=>e.lastID)

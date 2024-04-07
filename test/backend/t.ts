@@ -184,3 +184,22 @@ try {
 		(4*3.14*50)/(5e-4)
 	)**2
 )
+
+import * as ts from 'typescript';
+
+const sourceCode = `
+function greeter(person: string) {
+    return "Hello, " + person;
+}
+
+let user = "Jane User";
+
+console.log(greeter(user));
+`;
+
+const sourceFile = ts.createSourceFile('example.ts', sourceCode, ts.ScriptTarget.Latest);
+console.log(sourceFile);
+
+import json5 from 'json5'
+
+
