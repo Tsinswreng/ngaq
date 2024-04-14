@@ -6,7 +6,7 @@ import Sqlite, { SqliteTableInfo, SqliteType } from '@backend/db/Sqlite';
 import _ from 'lodash';
 import Word, { VocaDbTable } from '@shared/SingleWord2';
 import { IVocaRow } from '@shared/SingleWord2';
-import { $, $a, instanceAs, creatFileSync, inherit, lodashMerge, pathAt, As } from '@shared/Ut';
+import { $, $a, instanceAs, creatFileSync, lodashMerge, pathAt, As } from '@shared/Ut';
 import Tempus from '@shared/Tempus';
 import Stream from 'stream';
 import lodash from 'lodash'
@@ -28,9 +28,17 @@ export class WordDbSrc extends Abs_DbSrc{
 	static override async New(props:New_Abs_DbSrc & {
 		_tmdDbSrc?:WordTmdDbSrc
 	}){
-		const f = await Abs_DbSrc.New(props)
-		const c = new this()
-		const o = inherit(c,f)
+		// const f = await Abs_DbSrc.New(props)
+		// const c = new this()
+		// const o = inherit(c,f)
+		const o = new this
+		await o.__init__(props)
+		return o
+	}
+
+
+	protected async __init__(props:Parameters<typeof WordDbSrc.New>[0]){
+		const o = this
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
@@ -45,7 +53,6 @@ export class WordDbSrc extends Abs_DbSrc{
 		//console.log(o.tmdDbSrc.db,1)
 		//console.log(o.tmdTable.dbSrc.db,1)//t undefined
 		o.initMdListener()
-		return o
 	}
 
 	protected _tmdTable:WordTmdTable

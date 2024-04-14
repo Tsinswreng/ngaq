@@ -1,6 +1,5 @@
 import 'tsconfig-paths/register'
 import { Abs_MemorizeLogic } from "@shared/logic/memorizeWord/MemorizeWordLogic";
-import { inherit } from "@shared/Ut";
 import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
@@ -26,14 +25,20 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 
 	static override async New(){
-		const f = await Abs_MemorizeLogic.New()
-		const c = new this()
-		const o = inherit(c,f)
+		// const f = await Abs_MemorizeLogic.New()
+		// const c = new this()
+		// const o = inherit(c,f)
+		const o = new this()
+		return o
+	}
+
+	protected override async __init__(): Promise<void> {
+		const o = this
+		await super.__init__()
 		o._dbSrc = await WordDbSrc.New({
 			_dbPath: config.dbPath
 		})
 		o.addListeners()
-		return o
 	}
 
 	protected _configInst = configInst

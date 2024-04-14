@@ -1,4 +1,4 @@
-import { $, inherit } from "@shared/Ut"
+import { $ } from "@shared/Ut"
 import { Abs_Table } from "../../_base/Table"
 import { WordTmd as Entity_WordTmd, WordTmd } from "@backend/entities/WordTmd"
 import { WordTmdDbRow as WordTmdDbRow } from "@backend/dbRow/WordTmd"
@@ -7,6 +7,7 @@ import { WordDbRow } from "@shared/dbRow/Word"
 import { Word } from "@shared/entities/Word/Word"
 import Tempus from "@shared/Tempus"
 import { WordTmdDbSrc } from "./DbSrc"
+import { I_DbSrc } from "../../_base/DbSrc"
 
 export class WordTmdTable extends Abs_Table{
 	protected constructor(){
@@ -14,10 +15,16 @@ export class WordTmdTable extends Abs_Table{
 	}
 
 	static new(...props:Parameters<typeof Abs_Table.new>){
-		const f = Abs_Table.new(...props)
-		const c = new this()
-		const o = inherit(c,f)
+		// const f = Abs_Table.new(...props)
+		// const c = new this()
+		// const o = inherit(c,f)
+		const o = new this()
+		o.__init__(...props)
 		return o
+	}
+
+	protected __init__(props: { _dbSrc: I_DbSrc; _tableName: string; }): void {
+		super.__init__(props)
 	}
 
 	addNewCreatedTable(tableName:string){

@@ -11,9 +11,14 @@ export class Event{
 	}
 	static new(name:string, base?:Event){
 		const o = new this()
-		o._name = name
-		o._base = base
+		o.__init__(name, base)
 		return o
+	}
+
+	protected __init__(...args:Parameters<typeof Event.new>){
+		const o = this
+		o._name = args[0]
+		o._base = args[1]
 	}
 }
 
@@ -32,8 +37,14 @@ export class LinkedEmitter{
 
 	static new(_eventEmitter: I_EventEmitter){
 		const o = new this()
-		o._eventEmitter = _eventEmitter
+		//o._eventEmitter = _eventEmitter
+		o.__init__(_eventEmitter)
 		return o
+	}
+
+	protected __init__(...args:Parameters<typeof LinkedEmitter.new>){
+		const o = this
+		o._eventEmitter = args[0]
 	}
 
 	emit(event:Event, ...args:any[]){
@@ -59,8 +70,10 @@ export class Events{
 	protected constructor(){}
 	static new(){
 		const o = new this()
+		o.__init__()
 		return o
 	}
+	protected __init__(){}
 	error = Event.new('error')
 }
 

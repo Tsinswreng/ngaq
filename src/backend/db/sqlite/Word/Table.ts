@@ -1,10 +1,11 @@
-import { $, $a, inherit } from "@shared/Ut";
+import { $, $a} from "@shared/Ut";
 import { Abs_Table } from "../_base/Table";
 import { RunResult } from "sqlite3";
 import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import Sqlite, {SqliteType} from "@backend/db/Sqlite";
 import lodash from 'lodash'
+import { I_DbSrc } from "../_base/DbSrc";
 
 type Database = SqliteType.Database
 class _WordTable extends Abs_Table{
@@ -14,11 +15,17 @@ class _WordTable extends Abs_Table{
 	}
 
 	static new(...params:Parameters<typeof Abs_Table.new>){
-		const f = Abs_Table.new(...params)
-		const c = new this()
-		return inherit(c,f)
+		// const f = Abs_Table.new(...params)
+		// const c = new this()
+		// return inherit(c,f)
+		const o = new this()
+		o.__init__(...params)
+		return o
 	}
 
+	protected override __init__(props: { _dbSrc: I_DbSrc; _tableName: string; }): void {
+		super.__init__(props)
+	}
 	/* addRecords_fn(objs: WordDbRow[]|Word[]){
 		if(objs.length === 0){
 			return Promise.resolve([])

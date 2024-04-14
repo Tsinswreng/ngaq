@@ -38,6 +38,10 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		const o = new this()
 		return Promise.resolve(o)
 	}
+
+	protected async __init__(){
+		
+	}
 	
 	static ErrReason = _ErrReason
 	static errReasons = this.ErrReason.new()

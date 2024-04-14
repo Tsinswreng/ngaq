@@ -1,7 +1,7 @@
 import { I_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 //import { Db_User } from "@shared/interfaces/User"
 import Sqlite, {SqliteType} from "@backend/db/Sqlite"
-import { $a, inherit } from "@shared/Ut"
+import { $a } from "@shared/Ut"
 //import EventEmitter = require("eventemitter3")
 import { EventEmitter } from "eventemitter3";
 type RunResult = SqliteType.RunResult
@@ -27,9 +27,16 @@ export class LinkedEventEmitter extends Le.LinkedEmitter{
 		super()
 	}
 	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
-		const f = Le.LinkedEmitter.new(...params)
-		const c = new this()
-		return inherit(c,f)
+		// const f = Le.LinkedEmitter.new(...params)
+		// const c = new this()
+		// return inherit(c,f)
+		const o = new this()
+		o.__init__(...params)
+		return o
+	}
+
+	protected override __init__(_eventEmitter: Le.I_EventEmitter): void {
+		super.__init__(_eventEmitter)
 	}
 }
 
@@ -72,8 +79,14 @@ export abstract class Abs_Table{
 	}):Abs_Table{
 		//@ts-ignore
 		const o = new this()
-		Object.assign(o, props)
+
+		o.__init__(props)
 		return o
+	}
+
+	protected __init__(props:Parameters<typeof Abs_Table.new>[0]){
+		const o = this
+		Object.assign(o, props)
 	}
 
 	

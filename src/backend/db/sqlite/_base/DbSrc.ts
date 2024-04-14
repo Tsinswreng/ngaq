@@ -1,7 +1,7 @@
 //import { EventEmitter } from "events";
 import { EventEmitter } from "eventemitter3";
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
-import { $a, inherit } from "@shared/Ut";
+import { $a } from "@shared/Ut";
 import * as Le from '@shared/linkedEvent'
 import { Abs_Table } from "./Table";
 //type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
@@ -37,6 +37,7 @@ export class EventNames_deprecated{
 	static new(){
 		return new this()
 	}
+	
 	createTable_before = 'createTable_before'
 	createTable_after = 'createTable_after'
 	error = 'error'
@@ -59,9 +60,15 @@ export class LinkedEventEmitter extends Le.LinkedEmitter{
 		super()
 	}
 	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
-		const f = Le.LinkedEmitter.new(...params)
-		const c = new this()
-		return inherit(c,f)
+		// const f = Le.LinkedEmitter.new(...params)
+		// const c = new this()
+		// return inherit(c,f)
+		const o = new this()
+		o.__init__(...params)
+		return o
+	}
+	protected override __init__(_eventEmitter: Le.I_EventEmitter): void {
+		super.__init__(_eventEmitter)
 	}
 }
 
@@ -95,9 +102,16 @@ export class DbSrcEventEmitter extends Le.LinkedEmitter{
 		super()
 	}
 	static new(...params:Parameters<typeof Le.LinkedEmitter.new>){
-		const f = Le.LinkedEmitter.new(...params)
-		const c = new this()
-		return inherit(c,f)
+		// const f = Le.LinkedEmitter.new(...params)
+		// const c = new this()
+		// return inherit(c,f)
+		const o = new this()
+		o.__init__(...params)
+		return o
+	}
+
+	protected override __init__(_eventEmitter: Le.I_EventEmitter): void {
+		super.__init__(_eventEmitter)
 	}
 }
 
@@ -125,11 +139,14 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 	static async New(props:New_Abs_DbSrc):Promise<Abs_DbSrc>{
 		//@ts-ignore
 		const o = new this()
+		o.__init__(props)
+		return o
+	}
+
+	protected async __init__(props:Parameters<typeof Abs_DbSrc.New>[0]){
+		const o = this
 		Object.assign(o, props)
 		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
-		
-		//console.log(o.dbPath, o.db)
-		return o
 	}
 
 	protected _TableClass = Abs_Table

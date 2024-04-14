@@ -1,7 +1,6 @@
-import { CreateTableOpt as CreateTableOpt, Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
+import { CreateTableOpt as CreateTableOpt, Abs_DbSrc, New_Abs_DbSrc } from "@backend/db/sqlite/_base/DbSrc"
 import Sqlite, { SqliteType } from "@backend/db/Sqlite";
 import { WordTmdDbRow } from "@backend/dbRow/WordTmd";
-import { inherit } from "@shared/Ut";
 import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc";
 import { WordTmdTable } from "./Table";
 type Db = SqliteType.Database
@@ -16,16 +15,23 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 	}
 
 	static async New(...params:Parameters<typeof Abs_DbSrc.New>){
-		const f = await Abs_DbSrc.New(...params)
-		const c = new this()
-		const o = inherit(c,f)
+		// const f = await Abs_DbSrc.New(...params)
+		// const c = new this()
+		// const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
+		const o = new this()
+		await o.__init__(...params)
+		return o as WordTmdDbSrc
+	}
+
+	protected override async __init__(props: New_Abs_DbSrc): Promise<void> {
+		const o = this
+		super.__init__(props)
 		o._TableClass = WordTmdTable
 		o._tmdTable = WordTmdTable.new({
 			_dbSrc:o
 			,_tableName: WordTmdDbSrc.metadataTableName
 		}) // 字段在構造函數之前初始化、若在字段處賦值、此時this尚未初始化、把this賦畀_dbSrc恐謬
-		return o as WordTmdDbSrc
 	}
 
 	protected _tmdTable:WordTmdTable
