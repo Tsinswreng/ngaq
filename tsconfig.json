@@ -63,7 +63,7 @@
 		, "src/**/*.tsx"
 		, "src/**/*.vue"
 		, "config.ts"
-	],
+, "src/backend/_study/web_structure/src/frontend/index.js"	],
 	"ts-node": {
 		// Tell ts-node CLI to install the --loader automatically, explained below
 		"esm": true

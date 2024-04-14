@@ -3,7 +3,7 @@ import lodash from 'lodash'
 const eq = lodash.isEqual
 
 describe('arrCombination', ()=>{
-	const fn = algo.arrCombination
+	const fn = algo.cartesianProduct
 	it('1',()=>{
 		expect(
 			eq(
@@ -201,4 +201,16 @@ describe('geneRegexReplacePair',()=>{
 	  });
 	
 	  // Add more test cases here if needed
+})
+
+
+describe('abc_to_c_bc_abc',()=>{
+	it('1',()=>{
+		const arr = [1,2,3,4]
+		const ans = algo.abc_to_c_bc_abc(arr)
+		console.log(ans)
+		expect(
+			eq(ans, [[4],[3,4],[2,3,4],[1,2,3,4]])
+		).toBe(true)
+	})
 })

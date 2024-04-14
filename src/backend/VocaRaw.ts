@@ -1,3 +1,4 @@
+/** @deprecated */
 //23.05.03-1311
 import * as fs from "fs";
 import * as mysql from 'mysql';

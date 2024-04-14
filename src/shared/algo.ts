@@ -444,3 +444,24 @@ export function permutation<T>(arr:T[], cnt:number):T[][]{
 		if(ipp && i<cnt-1){i++}
 	}
 }
+
+/**
+ * [1,2,3,4] -> [[4],[3,4],[2,3,4],[1,2,3,4]]
+ * @param arr 
+ * @returns 
+ */
+export function abc_to_c_bc_abc<T>(arr:T[]){
+	const ans = [] as T[][]
+	for(let j=0,i = arr.length-1; i>=0; i--,j++){
+		const u = arr[i]
+		if(j === 0){
+			const ua = [u]
+			ans.push(ua)
+		}else{
+			let last = ans[j-1]
+			const ua = [u,...last]
+			ans.push(ua)
+		}
+	}
+	return ans
+}

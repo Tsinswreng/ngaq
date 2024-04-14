@@ -1,5 +1,5 @@
 
-#20240406223609998
+#20240412131209257
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -236,6 +236,17 @@ use_preset_vocabulary: true
 蚰	liw	
 袖	sliws	
 岫	sliws	
+胄	lriws	
+伷	lriws	
+䛆	lriws	
+駎	lriws	
+籀	lrus	
+幗	kʷˁəks	
+幗	kʷrˁək	
+慖	kʷˁəks	
+慖	kʷrˁək	
+蔮	kʷˁəks	
+簂	kʷˁəks	
 悠	jiw	
 攸	jiw	
 遊	ju	
@@ -1317,6 +1328,11 @@ use_preset_vocabulary: true
 歳	sʷats	
 歲	sʷats	
 劌	kʷats	
+喙	kʰlots	
+餯	kʰlots	
+𣨶	kʰlots	
+䂕	kʰlots	
+𤸁	kʰlots	
 蹶	kot	
 蹶	krot	
 蹶	krots	
@@ -1347,6 +1363,8 @@ use_preset_vocabulary: true
 瀵	puls	
 賁	bəl	
 憤	bəlʔ	
+濆	bəl	
+濆	pˁəl	
 噴	pʰˁəls	
 奔	pˁəl	
 犇	pˁəl	
@@ -1410,6 +1428,7 @@ use_preset_vocabulary: true
 嬴	jeŋ	
 籝	jeŋ	
 㜲	jeŋ	
+姉	tsiʔ	
 達	lˁat	
 噠	lˁat	
 墶	lˁat	
@@ -1522,6 +1541,7 @@ use_preset_vocabulary: true
 仙	san	
 僊	san	
 鮮	sal	
+鮮	salʔ	0%
 切	tsʰˁit	
 砌	tsʰˁits	
 弦	ɡˁin	
@@ -1875,6 +1895,13 @@ use_preset_vocabulary: true
 好	hˁus	
 吾	ŋˁa	
 梧	ŋˁa	
+衙	ŋa	
+衙	ŋaʔ	
+衙	ŋrˁa	
+枒	ŋrˁa	
+枒	ŋrˁas	
+齖	ŋrˁa	
+齖	ŋrˁas	
 牙	ŋrˁa	
 芽	ŋrˁa	
 伢	ŋrˁa	
@@ -2696,6 +2723,12 @@ use_preset_vocabulary: true
 詢	sʷin	
 荀	sʷin	
 峋	sʷin	
+珣	sʷin	
+郇	sʷin	
+恂	sʷin	
+筍	sʷinʔ	
+迿	sʷins	
+迿	wˁins	
 殉	zins	
 徇	zins	
 侚	zins	
@@ -3700,8 +3733,8 @@ use_preset_vocabulary: true
 裁	dzˁə	
 案	ʔˁanʔ	
 吵	tsʰrˁewʔ	
-牌	bˁe	
-牌	bˁej 	
+牌	bˁe	0%
+牌	bˁej	
 刻	kˁək	
 刻	kʰˁək	
 例	rets	
@@ -9492,7 +9525,6 @@ use_preset_vocabulary: true
 䳏	kʷˁes	
 瞶	lujs	
 瞶	kʷəjs	
-簂	kˁujs	
 禬	ɡˁots	
 禬	kˁots	
 櫃	ɡrujs	
@@ -9551,14 +9583,9 @@ use_preset_vocabulary: true
 䂸	kʷrˁek	
 摑	kʷrˁek	
 聝	kʷrˁek	
-蔮	kˁujs	
 𦸈	kˁot	
-幗	kʷrˁek	
-幗	kˁujs	
 𧖻	kʷrˁek	
 漍	kʷrˁek	
-慖	kʷrˁek	
-慖	kˁujs	
 虢	kʷrˁak	
 䬎	kʷrˁek	
 馘	kʷrˁek	
@@ -10550,8 +10577,6 @@ use_preset_vocabulary: true
 𠧩	hˁujs	
 恚	ʔojs	
 㑰	laŋs	
-喙	hʷats	
-𣨶	hʷats	
 會	ɡˁots	
 會	kˁots	2%
 彚	wʷəjs	
@@ -10561,9 +10586,7 @@ use_preset_vocabulary: true
 蔧	zujs	
 嘒	hʷˁes	
 𧶅	hˁujʔ	
-䂕	hʷats	
 瘣	ɡˁujʔ	
-𤸁	hʷats	
 㩇	tsʷrˁek	
 㩇	hʷrˁek	
 䕇	ɡˁujʔ	
@@ -10581,7 +10604,6 @@ use_preset_vocabulary: true
 嬒	ʔˁots	
 嬒	ʔˁot	
 璯	kʰrˁots	
-餯	hʷats	
 燴	ɡˁots	
 𨘇	ɡˁens	
 𨘇	ɡˁots	
@@ -16208,8 +16230,6 @@ use_preset_vocabulary: true
 霈	pʰˁats	
 嶏	pʰˁəs	
 嶏	pʰət	
-濆	bən	
-濆	pʰˁən	
 盆	bˁən	
 葐	bˁən	
 葐	bən	
@@ -19597,7 +19617,6 @@ use_preset_vocabulary: true
 笋	sunʔ	
 𠣤	sunʔ	
 𠣬	sunʔ	
-筍	sunʔ	
 𣕍	sunʔ	
 榫	sunʔ	
 䐣	sˁunʔ	
@@ -22615,13 +22634,9 @@ use_preset_vocabulary: true
 醺	hun	
 巡	zun	
 𠣙	zun	
-郇	ɡrˁon	
-郇	sun	
 咰	srut	
-恂	sun	
 紃	ʑun	
 紃	zun	
-珣	sun	
 栒	sunʔ	
 㰬	sun	
 揗	ʑuns	
@@ -22664,8 +22679,6 @@ use_preset_vocabulary: true
 汛	sins	
 汛	srˁes	
 𢓈	zuns	
-迿	ɡʷˁens	
-迿	suns	
 訓	huns	
 訙	sins	
 𢏤	suns	
@@ -22694,8 +22707,6 @@ use_preset_vocabulary: true
 䃁	ʔrˁaj	
 鵶	ʔrˁaj	
 岈	hrˁaj	
-枒	ŋrˁaj	
-枒	ŋrˁajs	
 厓	ŋrˁe	
 疨	hrˁaj	
 琊	læ	
@@ -22707,11 +22718,6 @@ use_preset_vocabulary: true
 涯	ŋrˁe	
 瑘	læ	
 睚	ŋrˁes	
-衙	ŋa	
-衙	ŋaʔ	
-衙	ŋrˁaj	
-齖	ŋrˁaj	
-齖	ŋrˁajs	
 𪘲	ŋrˁe	
 厊	ŋrˁajʔ	
 庌	ŋrˁaj	
@@ -25931,24 +25937,20 @@ use_preset_vocabulary: true
 箒	tuʔ	
 𧳜	tuʔ	
 鯞	tuʔ	
-伷	drus	
 呪	tus	
 咒	tus	
 冑	drus	
-胄	drus	
 紂	druʔ	
 酎	drus	
 葤	druʔ	
 㑳	tsro	
 㑳	nrˁep	
 㑳	dzrus	
-䛆	drus	
 甃	tsrus	
 㥮	tsʰrˁawʔ	
 𩊄	drus	
 㾭	tsrˁaws	
 㾭	tsrus	
-駎	drus	
 䈙	druʔ	
 僽	dzrus	
 噣	tok	
@@ -25956,7 +25958,6 @@ use_preset_vocabulary: true
 噣	trˁok	
 噣	tˁos	
 𥣙	dzruʔ	
-籀	drus	
 帚	tuʔ	
 朱	to	
 邾	tro	

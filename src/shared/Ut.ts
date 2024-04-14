@@ -172,6 +172,7 @@ export function key__arrMapPush<K,VEle>(map:Map<K,VEle[]>, k:K ,ele:VEle){
 /**
  * 類ᵗ實例ˋ繼承
  * 只設原型鏈、不保證instanceof
+ * @deprecated
  * @param child 
  * @param parent 
  * @returns 

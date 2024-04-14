@@ -1,4 +1,4 @@
-import readline = require('readline');
+import readline from 'readline';
 import { Abortable } from 'events';
 import lodash from 'lodash'
 export function question_fn(rl:readline.Interface, qryStr:string, opt?:Abortable){

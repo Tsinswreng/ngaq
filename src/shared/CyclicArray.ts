@@ -1,19 +1,31 @@
-
+/**
+ * 2024-04-14T22:45:14.000+08:00
+ */
 export default class CyclicArray<T>{
 	protected constructor(){
 		
 	}
 
+
+	
+	static new<T>(capacity:number):CyclicArray<T>
+	static new(...args:any[]):never
+	
 	static new<T>(capacity:number){
 		const o = new this<T>()
+		o.__init__(capacity)
+		return o
+	}
+
+	protected __init__(capacity:number){
+		const o = this
 		if(capacity <= 0){
 			throw new RangeError(`${capacity}\ncapacity <= 0`)
 		}
 		if(!Number.isInteger(capacity)){
-			throw new RangeError(`${capacity}\ncapacity is not an Integer`)
+			throw new RangeError(`${capacity}\ncapacity is not an integer`)
 		}
 		o._capacity = capacity
-		return o
 	}
 
 	protected _data = [] as T[]

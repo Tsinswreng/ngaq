@@ -201,5 +201,48 @@ const sourceFile = ts.createSourceFile('example.ts', sourceCode, ts.ScriptTarget
 console.log(sourceFile);
 
 import json5 from 'json5'
+import { InstanceType_ } from '@shared/Type'
+
+
+interface IF{
+	__init__(...args:any[])
+}
+
+
+type InstMethodType<Cls extends { prototype: any; }, key extends string> = Parameters<InstanceType_<Cls>[key]>
+type __init__ = '__init__'
+class Base implements IF{
+	
+//...args:Parameters<BaseInstance['make']>
+	protected constructor(){}
+	static make<Cls extends Base>(...args:InstMethodType<Cls, __init__>){
+		const o = new this()
+		o.__init__(...args)
+		return o
+	}
+
+	__init__(name:string)
+	__init__(...args:any[])
+	__init__(name:string){
+		this._name = name
+	}
+
+	protected _name:string
+	get name(){return this._name}
+
+}
+
+class Sub extends Base{
+	protected constructor(){
+		super()
+	}
+
+	override __init__(name:string, gender:string){
+
+	}
+
+	protected _gender:string
+	get gender(){return this._gender}
+}
 
 

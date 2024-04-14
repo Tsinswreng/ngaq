@@ -312,6 +312,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蚰	liw	# ms
 袖	sliws
 岫	sliws
+胄	lriws
+伷	lriws
+䛆	lriws
+駎	lriws
+籀	lrus
+
+幗	kʷˁəks
+幗	kʷrˁək
+慖	kʷˁəks
+慖	kʷrˁək
+蔮	kʷˁəks
+簂	kʷˁəks
+
 
 悠	jiw	# ms
 攸	jiw	# ms
@@ -1716,6 +1729,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 歳	sʷats
 歲	sʷats
 劌	kʷats
+喙	kʰlots
+餯	kʰlots
+𣨶	kʰlots
+䂕	kʰlots
+𤸁	kʰlots
+
+
 # 蹶	kʷat
 # 蹶	kʷrat
 # 蹶	kʷrats
@@ -1763,7 +1783,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 賁	bəl	# bs 主元音u	說文: 从貝卉聲
 憤	bəlʔ
-
+濆	bəl
+濆	pˁəl
 噴	pʰˁəls
 奔	pˁəl
 犇	pˁəl
@@ -1841,6 +1862,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 嬴	jeŋ
 籝	jeŋ
 㜲	jeŋ
+
+姉	tsiʔ
 
 達	lˁat
 噠	lˁat
@@ -1969,6 +1992,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 仙	san
 僊	san
 鮮	sal
+鮮	salʔ	0%
 
 切	tsʰˁit
 #切	tsʰˁits
@@ -2411,6 +2435,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 好	hˁus
 吾	ŋˁa
 梧	ŋˁa
+衙	ŋa
+衙	ŋaʔ
+衙	ŋrˁa
+枒	ŋrˁa
+枒	ŋrˁas
+齖	ŋrˁa
+齖	ŋrˁas
+
 牙	ŋrˁa
 芽	ŋrˁa
 伢	ŋrˁa
@@ -3452,6 +3484,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 詢	sʷin
 荀	sʷin
 峋	sʷin
+珣	sʷin
+郇	sʷin
+恂	sʷin
+筍	sʷinʔ
+迿	sʷins
+迿	wˁins
+
+
+#俊	tsuls
+
 殉	zins	# ts
 徇	zins	# ts
 侚	zins	# ts
@@ -4864,8 +4906,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 吵	tsʰrˁewʔ
-牌	bˁe
-牌	bˁej # ts
+牌	bˁe	0%
+牌	bˁej	# ts
 
 刻	kˁək
 刻	kʰˁək	# ts

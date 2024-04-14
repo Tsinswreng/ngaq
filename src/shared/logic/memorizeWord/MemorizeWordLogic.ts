@@ -12,7 +12,8 @@ class _ErrReason{
 	didnt_calcWeight = Reason.new('didnt_calcWeight')
 }
 
-
+// const isb = new Int32Array(new SharedArrayBuffer(4))
+// Atomics.wait(isb, 0, 0, 1000)
 
 export interface I_MemorizeLogic{
 
