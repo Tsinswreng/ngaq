@@ -1,8 +1,70 @@
 import * as Ut from '@shared/Ut'
 import Tempus from '@shared/Tempus'
+import lodash from 'lodash'
+const eq = lodash.isEqual
 const ast = (b:boolean)=>{
 	expect(b).toBe(true)
 }
+
+describe('object_keys', ()=>{
+	const fn = Ut.object_keys
+	it('1', ()=>{
+		const arr = [1,2,3]
+		const keys = fn(arr)
+		ast(eq(keys,[0,1,2]))
+	})
+	it('2',()=>{
+		const obj = {
+			foo: 'bar'
+			,f2: 2
+			,f3: true
+		}
+		const keys = fn(obj)
+		ast(eq(keys, ['foo','f2','f3']))
+	})
+})
+
+const Object_keys = Ut.object_keys
+
+
+describe('recursiveType', ()=>{
+	const fn = Ut.deepType
+	it('1',()=>{
+		let a = {
+			f1: 'bar'
+			,f2: 2
+			,f3: true
+			,f4: []
+			,f5: [
+				1, '2', {
+					f6: 'f7'
+				}
+			]
+		}
+		Object.freeze(a)
+		
+		let typ = {
+			f1: 'string'
+			,f2: 'number'
+			,f3: 'boolean'
+			,f4: []
+			,f5: [
+				'number'
+				,'string'
+				,{
+					f6: 'string'
+				}
+			]
+		}
+		let ans = fn(a)
+		
+		
+		//console.log(ans)
+		ast(eq(ans, typ))
+	})
+})
+
+
 describe('$',()=>{
 	it('1', ()=>{
 		try {

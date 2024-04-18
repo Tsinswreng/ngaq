@@ -1,5 +1,5 @@
 
-#20240412131209257
+#20240415231521128
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -938,6 +938,8 @@ use_preset_vocabulary: true
 傍	bˁaŋs	
 防	baŋs	
 於	ʔa	
+洿	ʔʷrˁa	
+洿	ɡʷa	
 污	ʔʷrˁa	
 稠	driw	
 綢	driw	
@@ -1184,7 +1186,7 @@ use_preset_vocabulary: true
 虶	ʔʷa	
 圩	kʰʷa	
 芋	wras	
-汙	ʔʷa	
+汙	ʔʷˁa	
 竽	wra	
 盂	wra	
 雩	wra	
@@ -3998,6 +4000,7 @@ use_preset_vocabulary: true
 漂	pʰews	
 嫖	pʰews	
 嫖	nʰews	
+嫖	news	
 縫	broŋ	
 縫	broŋs	
 縫	tsroŋ	
@@ -21109,8 +21112,6 @@ use_preset_vocabulary: true
 㢪	kʰˁa	
 㢪	ʔˁa	
 杇	ʔˁa	
-洿	ɡˁaʔ	
-洿	ʔˁa	
 屋	ʔˁok	
 烏	ʔˁa	
 𦤼	ʔˁok	

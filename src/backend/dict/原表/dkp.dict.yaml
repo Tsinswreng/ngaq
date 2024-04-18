@@ -1220,7 +1220,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 傍	bˁaŋs
 防	baŋs
 於	ʔa
-污	ʔʷrˁa
+洿	ʔʷrˁa
+洿	ɡʷa
+污	ʔʷrˁa	# 洿
+
 
 稠	driw
 綢	driw
@@ -1555,7 +1558,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 圩	kʰʷa	# ts
 芋	wras
-汙	ʔʷa
+汙	ʔʷˁa	# ts
 竽	wra
 盂	wra
 雩	wra
@@ -5343,6 +5346,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 嫖	女票
 嫖	pʰews
 嫖	nʰews	# ts
+嫖	news	# ts
 # 瞟	目票
 # 鏢	金票
 # 飄	他票

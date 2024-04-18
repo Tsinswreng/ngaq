@@ -32,6 +32,79 @@ import * as algo from '@shared/algo' //待分离
 
 
 /**
+ * 返回所有鍵。若o爲數組則返number[]
+ * @param o 
+ */
+//export function object_keys(o:any):string[]|number[]
+export function object_keys(o:any[]):number[] //此重載聲明當寫于前
+export function object_keys(o:kvobj):string[]
+export function object_keys(o:object){
+	if( Array.isArray(o) ){
+		const ans = [] as number[]
+		for(let i = 0; i < o.length; i++){
+			ans[i] = i
+		}
+		return ans
+	}else{
+		return Object.keys(o)
+	}
+}
+/* 
+type ElementType<T> = T extends Array<infer U> ? U : never;
+
+// 使用 ElementType 來獲取陣列的元素類型
+type StringArrayElement = ElementType<string[]>;  // string
+type NumberArrayElement = ElementType<number[]>;  // number
+
+ */
+
+
+// type RecursiveType<T> = 
+//     T extends Array<infer U> ? RecursiveType<U>[] :
+//     T extends object ? { [K in keyof T]: RecursiveType<T[K]> } :
+//     T;
+
+export type DeepType<T> = T extends string ? 'string' :
+T extends number ? 'number' :
+T extends boolean ? "boolean" :
+T extends Array<infer U> ? Array<DeepType<U>> :
+T extends object ? { [K in keyof T]: DeepType<T[K]> } :
+never;
+
+export function deepType<T>(o:T):DeepType<T>{
+	function handleArr(o:any[]){
+		const keys = object_keys(o)
+		const ans = [] as any[]
+		for(const k of keys){
+			ans[k] = helper(o[k])
+		}
+		return ans
+	}
+
+	function handleKvObj(o:Record<string, unknown>){
+		const keys = object_keys(o)
+		const ans = {} as any
+		for(const k of keys){
+			ans[k] = helper(o[k])
+		}
+		return ans
+	}
+
+	function helper(o){
+		const typ = typeof o
+		if(typ !== 'object'){
+			return typ
+		}
+		if( Array.isArray(o) ){
+			return handleArr(o as any[])
+		}else{
+			return handleKvObj(o)
+		}
+	}
+	return helper(o)
+}
+
+/**
  * 實例ᵗ類型轉化 並檢查
  * class Child extends Father{}
  * let idk:any = new Child()
@@ -575,6 +648,27 @@ export function nug<T, U=undefined>(v: T | undefined, errMsg?:string):Exclude<T,
 	return v as Exclude<T, U>
 }
 
+
+// /**
+//  * non nullalbe assign
+//  * @param target 被賦值者
+//  * @param src 賦值者
+//  * @returns 
+//  */
+// function aaa<Tar, Src extends Tar>(target:Tar, src:Src|undefined|null){
+// 	if(src == void 0){return target}
+// 	return src
+// }
+// a
+//target = src
+
+
+export function nullCoalesce_fn<Tar>(target:Tar){
+	return <Src>(src:Src)=>{
+		if(src == void 0){return target}
+		return src
+	}
+}
 
 
 /**

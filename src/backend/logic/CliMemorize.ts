@@ -29,6 +29,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		// const c = new this()
 		// const o = inherit(c,f)
 		const o = new this()
+		await o.__init__()
 		return o
 	}
 

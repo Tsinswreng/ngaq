@@ -134,3 +134,106 @@ describe('custom constructor', ()=>{
 		test()
 	})
 })
+
+
+describe('static custom constructor `s name be the same as class name',()=>{
+	class Parent{
+		static Parent(name:string){
+			const o = new this()
+			//const o = new Parent()
+			o.__init__(name)
+			return o
+		}
+	
+		protected __init__(...args:Parameters<typeof Parent.Parent>){
+			const z = this
+			z.name = args[0]
+		}
+		defau='defau'
+		name:string
+	}
+	
+	class Child extends Parent{
+		static Child(name:string, age:number){
+			const o = new this()
+			o.__init__(name, age)
+			return o
+		}
+		//@ts-ignore
+		protected __init__(...args:Parameters<typeof Child.Child>){
+			const z = this
+			super.__init__(args[0])
+			z.age = args[1]
+		}
+		age:number
+	}
+
+	it('1',()=>{
+		const o = Child.Child('ch', 2)
+		expect(o instanceof Child).toBe(true)
+		expect(o instanceof Parent).toBe(true)
+		expect(o.defau).toBe('defau')
+		expect(o.age).toBe(2)
+		expect(o.name).toBe('ch')
+	})
+	it('2',()=>{
+		const o = Child.Parent('ch')
+		expect(o instanceof Child).toBe(true)
+		expect(o instanceof Parent).toBe(true)
+		expect(o.defau).toBe('defau')
+		expect(o['age']).toBe(void 0)
+		expect(o.name).toBe('ch')
+	})
+})
+
+
+describe('2: static custom constructor `s name be the same as class name',()=>{
+	class Parent{
+		static Parent(name:string){
+			//const o = new this()
+			const o = new Parent()
+			o.__init__(name)
+			return o
+		}
+	
+		protected __init__(...args:Parameters<typeof Parent.Parent>){
+			const z = this
+			z.name = args[0]
+		}
+		defau='defau'
+		name:string
+	}
+	
+	class Child extends Parent{
+		static Child(name:string, age:number){
+			//const o = new this()
+			const o = new Child()
+			o.__init__(name, age)
+			return o
+		}
+		//@ts-ignore
+		protected __init__(...args:Parameters<typeof Child.Child>){
+			const z = this
+			super.__init__(args[0])
+			z.age = args[1]
+		}
+		age:number
+	}
+
+	it('1',()=>{
+		const o = Child.Child('ch', 2)
+		expect(o instanceof Child).toBe(true)
+		expect(o instanceof Parent).toBe(true)
+		expect(o.defau).toBe('defau')
+		expect(o.age).toBe(2)
+		expect(o.name).toBe('ch')
+	})
+	it('2',()=>{
+		const o = Child.Parent('ch')
+		expect(o instanceof Child).toBe(false)
+		expect(o instanceof Parent).toBe(true)
+		expect(o.defau).toBe('defau')
+		expect(o['age']).toBe(void 0)
+		expect(o.name).toBe('ch')
+	})
+})

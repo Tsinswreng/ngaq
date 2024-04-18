@@ -5,7 +5,10 @@
 /* 将多个TypeScript源文件编译成一个单独的JavaScript文件。 */
 		//"composite": true,
 		"declaration": false,
-		"types": ["node", "jest"],
+		"types": [
+			"node", "jest"
+			,"./global.d.ts"
+		],
 		"allowJs": false,
 		"target": "ESNext",
 		"useDefineForClassFields": true,
