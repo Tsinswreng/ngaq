@@ -143,7 +143,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 		return o
 	}
 
-	protected async __init__(props:Parameters<typeof Abs_DbSrc.New>[0]){
+	protected async __Init__(props:Parameters<typeof Abs_DbSrc.New>[0]){
 		const o = this
 		Object.assign(o, props)
 		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)

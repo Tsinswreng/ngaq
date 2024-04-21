@@ -1,5 +1,5 @@
 
-#20240415231521128
+#20240421115100046
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1275,6 +1275,8 @@ use_preset_vocabulary: true
 槥	wets	
 轊	wets	
 𢅫	wets	
+叡	wets	
+睿	wets	
 遂	sluts	
 隧	sluts	
 燧	sluts	
@@ -1895,6 +1897,12 @@ use_preset_vocabulary: true
 划	krˁojs	
 好	hˁuʔ	
 好	hˁus	
+薅	hˁu	
+茠	hˁu	
+𣐾	hˁu	
+𡚽	nʰˁūs	
+𡚽	nʰˁūʔ	
+𡥆	nʰˁūs	
 吾	ŋˁa	
 梧	ŋˁa	
 衙	ŋa	
@@ -3824,7 +3832,7 @@ use_preset_vocabulary: true
 螄	lri	
 藍	hrˁam	
 哇	waw	
-哇	ʔrˁe	
+哇	ʔrˁe	0%
 消	sAw	
 拓	tʰrAk	
 捕	bˁaks	
@@ -9807,9 +9815,7 @@ use_preset_vocabulary: true
 䟘	ɡˁaŋʔ	
 䟘	kˁaŋʔ	
 𡕬	ɡˁaŋʔ	
-𣐾	hˁaw	
 蒿	hˁaw	
-薅	hˁaw	
 嚆	hrˁaw	
 𧯌	hˁaw	
 𨚙	ɡˁaw	
@@ -9828,10 +9834,7 @@ use_preset_vocabulary: true
 嚎	ɡˁaw	
 濠	ɡˁaw	
 蠔	ɡˁaw	
-𡥆	hˁaws	
 郝	hˁak	98%
-𡚽	hˁaws	
-𡚽	hˁawʔ	
 昦	ɡˁawʔ	
 秏	hˁaws	
 秏	hˁujs	
@@ -18256,8 +18259,6 @@ use_preset_vocabulary: true
 蜹	lots	
 蜹	nots	
 蜹	not	
-睿	lots	
-叡	lots	
 𩀋	nun	
 䏰	nuns	
 閏	nuns	
@@ -22258,7 +22259,6 @@ use_preset_vocabulary: true
 敻	hʷeŋs	
 𧽒	huŋs	
 休	hu	
-茠	hˁaw	
 咻	hu	
 咻	hoʔ	
 㹯	hu	

@@ -20,18 +20,22 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 		// const o = inherit(c,f)
 		//Object.setPrototypeOf(f,c)
 		const o = new this()
-		await o.__init__(...params)
+		await o.__Init__(...params)
 		return o as WordTmdDbSrc
 	}
 
-	protected override async __init__(props: New_Abs_DbSrc): Promise<void> {
+	protected override async __Init__(...props: Parameters<typeof WordTmdDbSrc.New>): Promise<void> {
 		const o = this
-		super.__init__(props)
+		await super.__Init__(...props)
 		o._TableClass = WordTmdTable
 		o._tmdTable = WordTmdTable.new({
 			_dbSrc:o
 			,_tableName: WordTmdDbSrc.metadataTableName
-		}) // 字段在構造函數之前初始化、若在字段處賦值、此時this尚未初始化、把this賦畀_dbSrc恐謬
+		})
+
+		//console.log(props[0].)
+		//console.log(o._tmdTable.dbSrc.db)//t
+
 	}
 
 	protected _tmdTable:WordTmdTable

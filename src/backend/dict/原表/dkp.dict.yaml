@@ -1670,6 +1670,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 轊	wets
 𢅫	wets
 
+叡	wets
+睿	wets
+
+
 遂	sluts
 隧	sluts
 燧	sluts
@@ -2434,8 +2438,15 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 
-好	hˁuʔ
+好	hˁuʔ	# 又作𡚽?
 好	hˁus
+薅	hˁu
+茠	hˁu
+𣐾	hˁu
+𡚽	nʰˁūs
+𡚽	nʰˁūʔ
+𡥆	nʰˁūs
+
 吾	ŋˁa
 梧	ŋˁa
 衙	ŋa
@@ -5045,7 +5056,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 螄	lri	# ts
 藍	hrˁam	# ts
 哇	waw	# ts
-哇	ʔrˁe
+哇	ʔrˁe	0%
 消	sAw	# ts
 拓	tʰrAk	# ts
 捕	bˁaks	# 中古去聲

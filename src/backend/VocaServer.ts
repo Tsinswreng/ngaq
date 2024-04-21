@@ -142,6 +142,7 @@ export default class VocaServer{
 			)
 		})
 
+		//console.log(C.wordDbSrc.tmdTable)//t
 		C.wordDbSrc.tmdTable.addOldCreatedTable().then((d)=>{
 			console.log('created old tmdTable')
 		})

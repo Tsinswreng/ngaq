@@ -39,9 +39,8 @@ export class WordTmdTable extends Abs_Table{
 	 * @returns 
 	 */
 	async addOldCreatedTable(){
-		const s = this
-		const db = s.dbSrc.db
-		
+		const z = this
+		const db = z.dbSrc.db
 		const masters = await Sqlite.meta.querySqlite_master_unsafeInt(db)
 		//sqlite_master中諸表之名
 		const tableNames:string[] = []
@@ -79,7 +78,7 @@ export class WordTmdTable extends Abs_Table{
 
 		//console.log(table__createDateStr)
 		const selectAll = `SELECT * from ${WordTmdDbSrc.metadataTableName}`
-		await s.dbSrc.createTable(WordTmdDbSrc.metadataTableName, {ifNotExists: true})
+		await z.dbSrc.createTable(WordTmdDbSrc.metadataTableName, {ifNotExists: true})
 		const tmdRows =  await Sqlite.all(db, selectAll) as WordTmdDbRow[]
 
 		const addedTables = new Set<string>()
@@ -119,7 +118,7 @@ export class WordTmdTable extends Abs_Table{
 		if (rowsToAdd.length === 0){
 			return
 		}
-		return s.addRecords(rowsToAdd)
+		return z.addRecords(rowsToAdd)
 	}
 
 }

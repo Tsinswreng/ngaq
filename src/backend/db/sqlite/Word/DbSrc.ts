@@ -32,12 +32,12 @@ export class WordDbSrc extends Abs_DbSrc{
 		// const c = new this()
 		// const o = inherit(c,f)
 		const o = new this
-		await o.__init__(props)
+		await o.__Init__(props)
 		return o
 	}
 
 
-	protected async __init__(props:Parameters<typeof WordDbSrc.New>[0]){
+	protected async __Init__(props:Parameters<typeof WordDbSrc.New>[0]){
 		const o = this
 		if(props._dbPath !== void 0){
 			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
