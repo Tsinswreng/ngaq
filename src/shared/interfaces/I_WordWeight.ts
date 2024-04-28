@@ -4,6 +4,9 @@ export interface I_WordWeight{
 	run(mWords:MemorizeWord[]):unknown
 }
 
+/**
+ * @deprecated
+ */
 export interface I_WordWeight_old{
 	/** 此配置項之名 */
 	get name():string

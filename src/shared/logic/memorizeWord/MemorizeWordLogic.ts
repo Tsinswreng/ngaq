@@ -39,7 +39,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		return Promise.resolve(o)
 	}
 
-	protected async __init__(){
+	protected async __Init__(){
 		
 	}
 	

@@ -2368,6 +2368,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 院	wrans
 院	wrons
 
+圕	danʔ	# ts
+
+#鋪*pʰʳa pʰˁɑ pʰˁɑs
+鋪	pʰra	# 舍他音
 管	kʷˁanʔ
 算	sˁols	# bs
 
@@ -2436,6 +2440,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 划	krˁojʔ
 划	krˁojs
 
+數	sroʔ
+數	sros
+數	srok
 
 
 好	hˁuʔ	# 又作𡚽?
@@ -2747,7 +2754,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 椒	tsˁiw
-螢	wˁeŋ
+螢	wˁeŋ	# dks_v
+熒	wˁeŋ
+滎	wˁeŋ
+褮	wˁeŋ
+䁝	wˁeŋ
 冤	ʔon
 矣	ʔəʔ
 規	kʷe
@@ -4613,6 +4624,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 咥	tʰrit
 𡇓	tˁit
 
+樹	dos	# 捨上聲
+
 沈	stəmʔ
 沈	drəms
 #沈	drəm	
@@ -4705,8 +4718,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 男	nˁom	# ts
 詞	səʔ	# ts
 詞	tsʰəʔ	# ts
-乎	ɡas	# ts
+#乎	ɡas	# ts
 乎	hrˁa	# ts
+乎	hˁas	# ts
 里	mʰrə	# ts
 理	mʰrəʔ	# ts
 #郎
@@ -5384,13 +5398,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 逢	辵夆
 # 峯	山夆
 # 峰	山夆
-峯	pʰoŋ
+峯	pʰoŋ	0%
 峯	sroŋ	# ts
-峰	pʰoŋ
+峰	pʰoŋ	0%
 峰	sroŋ	# ts
-烽	pʰoŋ
+烽	pʰoŋ	0%
 烽	mʰroŋ	# ts
-蜂	pʰoŋ
+蜂	pʰoŋ	0%
 蜂	lroŋ	# ts
 鋒	pʰoŋ
 鋒	kroŋ	# ts

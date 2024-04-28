@@ -29,13 +29,13 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		// const c = new this()
 		// const o = inherit(c,f)
 		const o = new this()
-		await o.__init__()
+		await o.__Init__()
 		return o
 	}
 
-	protected override async __init__(): Promise<void> {
+	protected override async __Init__(): Promise<void> {
 		const o = this
-		await super.__init__()
+		await super.__Init__()
 		o._dbSrc = await WordDbSrc.New({
 			_dbPath: config.dbPath
 		})

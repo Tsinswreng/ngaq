@@ -1,5 +1,5 @@
 /**
- * 2024-04-14T22:45:14.000+08:00
+ * 2024-04-28T12:40:56.372+08:00
  */
 export default class CyclicArray<T>{
 	protected constructor(){
@@ -140,7 +140,9 @@ export default class CyclicArray<T>{
 			return void 0
 		}
 		const t = this.back
-		delete this._data[this._backI]
+		//delete this._data[this._backI]
+		//@ts-ignore
+		this._data[this._backI] = void 0
 		this._size -= 1
 		CyclicArray.posSub(this._backI, this._capacity, 1)
 		// this._backI = this._backI-1
@@ -228,7 +230,10 @@ export default class CyclicArray<T>{
 			return void 0
 		}
 		const t = this.front
-		delete this._data[this._frontI]
+
+		//delete this._data[this._frontI]
+		//@ts-ignore
+		this._data[this._frontI] = void 0
 		//this._frontI = (this._frontI+1)%this.capacity
 		this._frontI = CyclicArray.posAdd(this._frontI, this._capacity, 1)
 		this._size -= 1
@@ -243,6 +248,7 @@ export default class CyclicArray<T>{
 		}
 		const neoData = s.toArray()
 		//delete s._data
+		//@ts-ignore
 		s._data = neoData
 		s._capacity = neoCapacity
 		s._frontI = 0
@@ -269,8 +275,9 @@ export default class CyclicArray<T>{
 			for(let i = z._frontI; i < z.data.length; i++){
 				frontIToDataEnd.push(z._data[i])
 				//@ts-ignore
-				delete z.data[i] //如是則得empty item 洏非undefined
-				//z.data[i] = void 0
+				//delete z.data[i] //如是則得empty item 洏非undefined
+				//@ts-ignore
+				z.data[i] = void 0
 			}
 
 			z._frontI += add

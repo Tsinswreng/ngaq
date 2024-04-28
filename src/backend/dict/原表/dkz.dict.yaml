@@ -1,5 +1,5 @@
 
-#20240421115100046
+#20240425184334553
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1839,6 +1839,8 @@ use_preset_vocabulary: true
 怫	buts	
 院	wrans	
 院	wrons	
+圕	danʔ	
+鋪	pʰra	
 管	kʷˁanʔ	
 算	sˁols	
 狄	lˁek	
@@ -1895,6 +1897,9 @@ use_preset_vocabulary: true
 划	ɡrˁoj	
 划	krˁojʔ	
 划	krˁojs	
+數	sroʔ	
+數	sros	
+數	srok	
 好	hˁuʔ	
 好	hˁus	
 薅	hˁu	
@@ -2153,6 +2158,10 @@ use_preset_vocabulary: true
 是	deʔ	
 椒	tsˁiw	
 螢	wˁeŋ	
+熒	wˁeŋ	
+滎	wˁeŋ	
+褮	wˁeŋ	
+䁝	wˁeŋ	
 冤	ʔon	
 矣	ʔəʔ	
 規	kʷe	
@@ -3585,6 +3594,7 @@ use_preset_vocabulary: true
 咥	dˁit	
 咥	tʰrit	
 𡇓	tˁit	
+樹	dos	
 沈	stəmʔ	
 沈	drəms	
 跟	kˁəlʔ	
@@ -3609,8 +3619,8 @@ use_preset_vocabulary: true
 男	nˁom	
 詞	səʔ	
 詞	tsʰəʔ	
-乎	ɡas	
 乎	hrˁa	
+乎	hˁas	
 里	mʰrə	
 理	mʰrəʔ	
 馳	draj	
@@ -4012,13 +4022,13 @@ use_preset_vocabulary: true
 縫	broŋ	
 縫	broŋs	
 縫	tsroŋ	
-峯	pʰoŋ	
+峯	pʰoŋ	0%
 峯	sroŋ	
-峰	pʰoŋ	
+峰	pʰoŋ	0%
 峰	sroŋ	
-烽	pʰoŋ	
+烽	pʰoŋ	0%
 烽	mʰroŋ	
-蜂	pʰoŋ	
+蜂	pʰoŋ	0%
 蜂	lroŋ	
 鋒	pʰoŋ	
 鋒	kroŋ	
@@ -16693,9 +16703,6 @@ use_preset_vocabulary: true
 𪐙	pʰˁok	
 撲	pʰˁok	
 噗	pʰˁok	
-鋪	pʰˁa	
-鋪	pʰˁas	
-鋪	pʰa	
 䮒	pʰˁa	
 𢷏	brˁok	
 𧱹	pʰˁa	
@@ -19147,14 +19154,9 @@ use_preset_vocabulary: true
 墅	daʔ	
 㵂	ɕas	
 豎	doʔ	
-數	srˁok	3%
-數	sros	
-數	sroʔ	3%
 澍	tos	
 澍	dos	
 𧼯	ɕos	
-樹	dos	
-樹	doʔ	20%
 䠼	ɕos	
 䩱	lo	
 䩱	ɕos	
@@ -23923,9 +23925,6 @@ use_preset_vocabulary: true
 霙	ʔaŋ	
 霙	ʔreŋ	
 罃	ʔrˁeŋ	
-褮	ɡʷˁeŋ	
-褮	ʔʷeŋ	
-褮	ʔrˁeŋ	
 嬰	ʔeŋ	
 韺	ʔreŋ	
 甖	ʔrˁeŋ	
@@ -23959,14 +23958,9 @@ use_preset_vocabulary: true
 楹	leŋ	
 𦝚	leŋ	
 塋	weŋ	
-滎	ɡʷˁeŋ	
-熒	ɡʷˁeŋ	
 𦻝	krek	
 瑩	ʔʷˁeŋs	
 瑩	wʷreŋ	
-䁝	ɡʷˁeŋ	
-䁝	weŋ	
-䁝	ʔʷrˁaŋʔ	
 營	weŋ	
 縈	ʔʷeŋ	
 覮	pʰˁeŋ	

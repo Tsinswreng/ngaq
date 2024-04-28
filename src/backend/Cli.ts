@@ -57,8 +57,6 @@ export class Cli{
 		return Cmd
 	}
 
-	
-
 	protected _cmd = this.This.Cmd.new(this)
 	get cmd(){return this._cmd}
 
@@ -94,8 +92,7 @@ export class Cli{
 
 
 	exput(v?){
-		//console.log(v)
-		chalk.blue(v)
+		console.log(v)
 	}
 
 	handleErr(err){

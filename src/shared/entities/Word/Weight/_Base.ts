@@ -18,10 +18,18 @@ type Word = L.Word.Word
 const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
 const last = L.Ut.lastOf
 //type Statistics = InstanceType_<typeof WordWeight.Statistics>
-class Record{
-	
+
+
+/** 㕥錄ᵣ 每次迭代中 權重ᵗ變 */
+class Rec{
 	static new(tempus__event:Tempus_Event, after:N2S, dateWeight?:N2S, debuff?:N2S){
 		const o = new this()
+		o.__init__(tempus__event, after, dateWeight, debuff)
+		return o
+	}
+
+	protected __init__(tempus__event:Tempus_Event, after:N2S, dateWeight?:N2S, debuff?:N2S){
+		const o = this
 		o.after = after
 		o.tempus = tempus__event.tempus
 		o.event = tempus__event.event
@@ -30,11 +38,14 @@ class Record{
 		return o
 	}
 
+	/** 變後ᵗ權重 */
 	after:N2S
+	/** 彼 單詞事件ˋ發旹ᵗ時刻 */
 	tempus:Tempus
 	event: WordEvent
 	dateWeight?:N2S
 	debuff?:N2S
+
 
 	static push<K,VEle>(map:Map<K,VEle[]>, k:K, ele:VEle){
 		L.Ut.key__arrMapPush(map, k, ele)
@@ -42,30 +53,47 @@ class Record{
 }
 
 
-
+/**
+ * 默認權參數等
+ */
 class DefaultOpt{
 	static new(){
 		const o = new this()
 		return o
 	}
+	/** 加ˡ事件ᵗ權重 */
 	addWeight = 0xF
+	/** ˣ削弱ᵗ分母 */
 	debuffNumerator = 1000*3600*24*90
 	base = 20
 }
 
+/** 權重ˇ算ᵗ程中ᵗ統計 */
 class Statistics{
-	static new(){
+/* 	static new_deprecated(){
 		const o = new this()
 		return o
+	} */
+	static new(finalAddEventPos:integer){
+		const o = new this()
+		o.__init__(finalAddEventPos)
+		return o
+	}
+	protected __init__(...param:Parameters<typeof Statistics.new>){
+		const o = this
+		o.finalAddEventPos = param[0]
 	}
 	weight = s.n(0)
 	curPos = 0 //當前ʃ処ˋ第幾個事件
+	/** 今ᵗ時刻 */
 	nunc = Tempus.new()
+	/** 加ˡ事件ᵗ數 */
 	cnt_add = 0
 	cnt_rmb = 0
-	cnt_validRmb = 0 //憶ᵗ次、若遇加ˡ事件則置零
+	/** 憶ᵗ次、若遇加ˡ事件則置零 */
+	cnt_validRmb = 0 
 	finalAddEventPos = 0
-	records:Record[] = []
+	records:Rec[] = []
 }
 
 
@@ -83,13 +111,20 @@ export class WordWeight implements I_WordWeight{
 
 	readonly This = WordWeight
 
-	protected _word__changeRecord:Map<Word, Record[]> = new Map()
+	protected _word__changeRecord:Map<Word, Rec[]> = new Map()
 	get word__changeRecord(){return this._word__changeRecord}
 
-	/** 關閉計算過程記錄旹 改此方法 */
-	addChangeRecord(word:Word, changeRecord:Record){
+
+	addChangeRecord(word:Word, changeRecord:Rec){
 		const z = this
-		Record.push(z.word__changeRecord, word, changeRecord)
+		Rec.push(z.word__changeRecord, word, changeRecord)
+		// let dʼʹ = 1
+		// let ˊ = 3
+		
+		// let ˮ = 4
+		// let ʼʽ·ˆˇˈˉˊˋːˤˌ
+		// let 
+
 	}
 
 	static get Statistics(){
@@ -99,6 +134,7 @@ export class WordWeight implements I_WordWeight{
 	static readonly defaultOpt = DefaultOpt.new()
 
 	static get Handle3Events(){
+		/** 處理單個單詞ᵗ單個Tempus_Event實例 */
 		class Handle3Events{
 			static new(prop:{
 				_ww:WordWeight
@@ -106,7 +142,13 @@ export class WordWeight implements I_WordWeight{
 				,_statistics:Statistics
 			}){
 				const o = new this()
-				Object.assign(o, prop)
+				o.__init__(prop)
+				return o
+			}
+
+			protected __init__(...prop:Parameters<typeof Handle3Events.new>){
+				const o = this
+				Object.assign(o, ...prop)
 				return o
 			}
 
@@ -117,7 +159,7 @@ export class WordWeight implements I_WordWeight{
 			_tempus__event:Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
 
-			addRecord(record:Record){
+			addRecord(record:Rec){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
@@ -126,14 +168,16 @@ export class WordWeight implements I_WordWeight{
 			handleAdd(){
 				const z = this
 				const st = z._statistics
-				st.cnt_add++
-				st.cnt_validRmb = 0 //reset
+				st.cnt_add++ //加ˡ事件ᵗ計數ˇ加一
+				st.cnt_validRmb = 0 //有效ᵗ憶ˡ事件ˋ逢加事件則置0
 				st.weight = s.m(
 					st.weight, z.This.defaultOpt.addWeight
-				)
-				const rec = Record.new(z._tempus__event, st.weight)
+				) // *= 默認加ˡ權重
+				//錄ᵣ此輪迭代ʸ權重ᵗ變
+				const rec = Rec.new(z._tempus__event, st.weight)
 				z.addRecord(rec)
 			}
+
 			handleRmb(){
 				const z = this
 				const st = z._statistics
@@ -154,7 +198,7 @@ export class WordWeight implements I_WordWeight{
 						weight_ = s.n(1.01)
 					}
 				}
-				const rec = Record.new(z._tempus__event, st.weight)
+				const rec = Rec.new(z._tempus__event, st.weight)
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
@@ -179,30 +223,51 @@ export class WordWeight implements I_WordWeight{
 				z.addRecord(rec)
 			}
 
+			handle_fgt(){
+				const z = this
+				const lastRec = last(z._statistics.records)
+				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._tempus__event.tempus)
+				const st = z._statistics
+				if(st.cnt_add >= 3){
+					weight = s.m(
+						weight
+						,st.cnt_add
+					)
+				}
+				if( s.c(weight, 1.5) < 0 ){
+					weight = s.n(1.5)
+				}
+				st.weight = s.m( st.weight, weight )
+				const rec = Rec.new(z._tempus__event, st.weight)
+				z.addRecord(rec)
+			}
 		}
 		return Handle3Events
 	}
 
 	run(mWords:MemorizeWord[]) {
-		
+		const z = this
+		for(let i = 0; i < mWords.length; i++){
+			const uWord = mWords[i]
+			
+		}
 	}
 
 	calc0(mWord:MemorizeWord){
 		const z = this
-		const st = z.This.Statistics.new()
-		st.finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
+		const finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
+		const st = z.This.Statistics.new(finalAddEventPos)
+		
+		const Handle3Events = z.This.Handle3Events
+		// const h3 = Handle3Events.new({
+		// 	_ww: z
+		// 	//,_tempus__event: tempus__event
+		// 	,_statistics: st
+		// })
+		for(const tempus__event of mWord.date__event){
 
+		}
 	}
-
-	handleAdd(st:Statistics, tempus__event:Tempus_Event){
-		const z = this
-		st.cnt_add++
-		st.cnt_validRmb = 0 //reset
-		st.weight = s.m(
-			st.weight, z.This.defaultOpt.addWeight
-		)
-	}
-
 
 	/**
 	 * 尋ᵣ末個 加ˡ事件
@@ -261,9 +326,6 @@ export class WordWeight implements I_WordWeight{
 		debuff = sros.absolute(debuff)
 		return $n(debuff)
 	}
-
-	
-
 }
 
 /* 

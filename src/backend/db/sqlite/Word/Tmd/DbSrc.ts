@@ -24,6 +24,11 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 		return o as WordTmdDbSrc
 	}
 
+	// static new(...props: Parameters<typeof WordTmdDbSrc.New>){
+	// 	const o = new this()
+	// 	return o.__Init__(...props).then((d)=>{return d})
+	// }
+
 	protected override async __Init__(...props: Parameters<typeof WordTmdDbSrc.New>): Promise<void> {
 		const o = this
 		await super.__Init__(...props)
@@ -32,7 +37,7 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 			_dbSrc:o
 			,_tableName: WordTmdDbSrc.metadataTableName
 		})
-
+		
 		//console.log(props[0].)
 		//console.log(o._tmdTable.dbSrc.db)//t
 
