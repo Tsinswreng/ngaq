@@ -31,6 +31,7 @@ export class Cli{
 
 	readonly This = Cli
 
+	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
@@ -72,7 +73,9 @@ export class Cli{
 	str__fn = new Map<string, Function>()
 
 	
-
+	/**
+	 * 亦可作潙命令
+	 */
 	initEvents(){
 		const z = this
 		//z.str__fn.set
@@ -80,7 +83,7 @@ export class Cli{
 		z.str__event = new Map([
 			['load', es.load]
 			,['start', es.start]
-			,['calcWeigh', es.calcWeight]
+			,['calcWeight', es.calcWeight]
 			,['sort', es.sort]
 			//,['start']
 		])
@@ -122,7 +125,6 @@ export class Cli{
 					cmd(imput)
 					continue
 				}
-	
 				const event = z.str__event.get(imput)
 				if(event == void 0){
 					z.exput('illegal input')

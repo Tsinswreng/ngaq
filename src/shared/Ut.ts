@@ -3,7 +3,7 @@
 //const fs = require('fs')
 //import {RegexReplacePair} from '';
 import * as fs from 'fs';
-import * as path from 'path'
+import * as Path from 'path'
 import now from 'performance-now';
 import _, { last } from 'lodash'
 import dayjs from 'dayjs';
@@ -434,7 +434,7 @@ export async function traverseDirs(directoryPath: string[]) {
 			const files = await fs.promises.readdir(dir);
 	
 			for (const file of files) {
-				const filePath = path.join(dir, file);
+				const filePath = Path.join(dir, file);
 				const stat = await fs.promises.stat(filePath);
 	
 				if (stat.isDirectory()) {
@@ -499,7 +499,7 @@ export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
  * @param ifNotExists 默認潙假、即目录既存旹報錯
  */
 export function mkdir(dir:string, ifNotExists=false){
-	const absolutePath = path.resolve(dir);
+	const absolutePath = Path.resolve(dir);
 	if(fs.existsSync(dir)){
 		if(ifNotExists){
 			return absolutePath
@@ -519,7 +519,7 @@ export function mkdir(dir:string, ifNotExists=false){
  * @returns 
  */
 export function creatFileSync(filePath:string, ifNotExists=false){
-	const absolutePath = path.resolve(filePath);
+	const absolutePath = Path.resolve(filePath);
 	if(fs.existsSync(filePath)){
 		if(ifNotExists){
 			return absolutePath
@@ -743,10 +743,10 @@ export function absPath(dir:string|null|undefined){
 		throw new Error(`dir == null`)
 	}
 	if(!fs.existsSync(dir as string)){
-		const abs = path.resolve(dir)
+		const abs = Path.resolve(dir)
 		throw new Error("path not exist\n"+abs)
 	}
-	return path.resolve(dir)
+	return Path.resolve(dir)
 }
 
 /**
@@ -757,7 +757,7 @@ export function absPath(dir:string|null|undefined){
 export function pathAt(dir:string, errMsg?:string):string{
 	if(!fs.existsSync(dir)){
 		console.error('<absoluteDir>')
-		console.error(path.resolve(dir))
+		console.error(Path.resolve(dir))
 		console.error('</absoluteDir>')
 		throw new Error(errMsg)
 	}

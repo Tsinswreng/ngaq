@@ -69,9 +69,13 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			z.emitter.emit(z.This.events.error, error)
 		}
 	} */
+	exput(v){
+		console.log(v)
+	}
 
 	async on_load() {
 		const z = this
+		z.exput('on_load')
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
 			const rows = await tbl.selectAll()
@@ -97,6 +101,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 	on_calcWeight() {
 		const z = this
+		z.exput(`on_calcWeight`)
 		try {
 			if(!z._status.load){
 				throw Exception.for(errR.didnt_load)
@@ -117,6 +122,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 	on_sort() {
 		const z = this
+		z.exput('sort')
 		try {
 			z._status.sort = true
 		} catch (error) {
@@ -126,10 +132,12 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 	on_start() {
 		const z = this
+		z.exput('start')
 		z._status.start = true
 	}
 	on_save() {
 		const z = this
+		z.exput(`save`)
 		z._status.save = true
 		z._status.start = false
 	}

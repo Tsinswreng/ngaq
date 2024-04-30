@@ -1,7 +1,7 @@
 
 import { areFilesExist, pathAt, randomIntArr } from '@shared/Ut';
 import * as fs from 'fs'
-import path from 'path';
+import Path from 'path';
 export default class RandomImg{
 	private constructor(){}
 
@@ -68,7 +68,7 @@ export default class RandomImg{
 			const entries = await fs.promises.readdir(dir);
 	
 			for (const entry of entries) {
-				const entryPath = path.join(dir, entry);
+				const entryPath = Path.join(dir, entry);
 				const stats = fs.statSync(entryPath);
 				if (stats.isFile()) {
 					files.push(entryPath);
@@ -157,7 +157,7 @@ async function getAllFilePaths(directoryPath: string[]) {
 			const files = await fs.promises.readdir(dir);
 	
 			for (const file of files) {
-				const filePath = path.join(dir, file);
+				const filePath = Path.join(dir, file);
 				const stat = await fs.promises.stat(filePath);
 	
 				if (stat.isDirectory()) {

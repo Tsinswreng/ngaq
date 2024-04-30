@@ -164,8 +164,30 @@ export class WordWeight implements I_WordWeight{
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
 			}
+
+			handleAll(){
+				
+			}
+
+			handle(){
+				const z = this
+				const WE = WordEvent
+				switch (z._tempus__event.event){
+					case WE.ADD:
+						z.handle_add()
+					break;
+					case WE.RMB:
+						z.handle_rmb()
+					break;
+					case WE.FGT:
+						z.handle_fgt()
+					break;
+					default:
+						throw new Error(`unexpected default in switch-case`)
+				}
+			}
 			
-			handleAdd(){
+			handle_add(){
 				const z = this
 				const st = z._statistics
 				st.cnt_add++ //加ˡ事件ᵗ計數ˇ加一
@@ -178,7 +200,7 @@ export class WordWeight implements I_WordWeight{
 				z.addRecord(rec)
 			}
 
-			handleRmb(){
+			handle_rmb(){
 				const z = this
 				const st = z._statistics
 				st.cnt_rmb++
@@ -249,7 +271,7 @@ export class WordWeight implements I_WordWeight{
 		const z = this
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
-			
+			z.calc0(uWord)
 		}
 	}
 
@@ -257,16 +279,17 @@ export class WordWeight implements I_WordWeight{
 		const z = this
 		const finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
 		const st = z.This.Statistics.new(finalAddEventPos)
-		
 		const Handle3Events = z.This.Handle3Events
-		// const h3 = Handle3Events.new({
-		// 	_ww: z
-		// 	//,_tempus__event: tempus__event
-		// 	,_statistics: st
-		// })
+		const h3 = Handle3Events.new({
+			_ww: z
+			,_tempus__event: mWord.date__event[0]
+			,_statistics: st
+		})
 		for(const tempus__event of mWord.date__event){
-
+			h3._tempus__event = tempus__event
+			h3.handle()
 		}
+		console.log(h3._statistics.records)//t
 	}
 
 	/**

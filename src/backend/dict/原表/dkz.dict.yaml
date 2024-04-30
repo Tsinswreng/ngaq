@@ -1,5 +1,5 @@
 
-#20240425184334553
+#20240429224434470
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -302,6 +302,9 @@ use_preset_vocabulary: true
 閾	hʷək	
 訴	sˁaks	
 低	tˁi	
+羝	tˁi	
+袛	tˁi	
+眡	tˁi	
 坻	dri	
 坻	tˁiʔ	
 彽	dri	
@@ -3714,6 +3717,8 @@ use_preset_vocabulary: true
 冷	rˁeŋʔ	
 稀	hrəj	
 渝	lro	
+渝	lo	0%
+渝	sto	
 哥	kʰˁaj	
 源	ŋolʔ	
 曆	rˁik	
@@ -7267,10 +7272,8 @@ use_preset_vocabulary: true
 𧄼	tˁəŋs	
 𪒘	drəŋs	
 奃	tˁe	
-袛	tˁe	
 䧑	tˁe	
 㓳	tˁe	
-羝	tˁe	
 隄	dˁe	
 隄	tˁe	
 𥿄	tˁe	
@@ -18963,8 +18966,6 @@ use_preset_vocabulary: true
 眎	dis	
 眎	diʔ	
 眎	ʑis	
-眡	tˁe	
-眡	diʔ	
 舐	ʑeʔ	
 𤖻	ɡew	
 𤖻	ɕes	

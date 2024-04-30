@@ -403,6 +403,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 訴	sˁaks
 低	tˁi
+羝	tˁi
+袛	tˁi
+眡	tˁi
+
 坻	dri
 坻	tˁiʔ
 彽	dri
@@ -4866,6 +4870,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 冷	rˁeŋʔ	# ts
 稀	hrəj	# ts
 渝	lro	# ts
+渝	lo	0%
+渝	sto
 哥	kʰˁaj	# ts
 
 源	ŋolʔ	# ts

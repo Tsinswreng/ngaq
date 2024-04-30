@@ -1,7 +1,28 @@
-import path from "path";
+import Path from "path";
 import { clearObj, lodashMerge } from "@shared/Ut"
 import * as fs from 'fs'
 type IConfig = typeof Config.defaultConfig
+
+class BaseConfig{
+
+}
+
+class ServerConfig extends BaseConfig{
+	dbPath= './db/server.db'
+	userTableName: 'user'
+}
+
+class DefaultConfig extends BaseConfig{
+	dbPath= './db/voca.db'
+	port= 1919
+	outerConfig= Path.resolve(process.cwd(), 'config.js')
+	randomImgDir= [] as string[]
+	backupDbPath= `./db/vocaBackup.db`
+	tables=[] as string[]
+	server= new ServerConfig()
+	wordWeight= []
+}
+
 
 export default class Config{
 
@@ -36,19 +57,20 @@ export default class Config{
 		Object.assign(this._config, outer)
 	}
 
-	static defaultConfig = 
-	{
-		dbPath: './db/voca.db'
-		,port: 1919
-		,outerConfig: path.resolve(process.cwd(), 'config.js')
-		,randomImgDir: [] as string[]
-		,backupDbPath: `./db/vocaBackup.db`
-		,tables:[] as string[]
-		,server:{
-			dbPath: './db/server.db'
-			,userTableName: 'user'
-		}
-	}
+	static defaultConfig = new DefaultConfig()
+	// {
+	// 	dbPath: './db/voca.db'
+	// 	,port: 1919
+	// 	,outerConfig: Path.resolve(process.cwd(), 'config.js')
+	// 	,randomImgDir: [] as string[]
+	// 	,backupDbPath: `./db/vocaBackup.db`
+	// 	,tables:[] as string[]
+	// 	,server:{
+	// 		dbPath: './db/server.db'
+	// 		,userTableName: 'user'
+	// 	}
+	// 	,wordWeight: []
+	// }
 
 	//private _config:Partial<IConfig> = lodashMerge(Config.defaultConfig)
 	protected _config:IConfig = lodashMerge(Config.defaultConfig)

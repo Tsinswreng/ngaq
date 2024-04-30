@@ -142,7 +142,6 @@ export default class VocaServer{
 			)
 		})
 
-		//console.log(C.wordDbSrc.tmdTable)//t
 		C.wordDbSrc.tmdTable.addOldCreatedTable().then((d)=>{
 			console.log('created old tmdTable')
 		})
@@ -182,84 +181,6 @@ export default class VocaServer{
 		
 		//eng.addSingleWordsToDb()
 	
-
-
-		// VocaServer.app.get('/eng', (req, res)=>{ //待改:此處ᵗ「/eng」ˋ還昰ᵣ寫死ₐ。
-		// 	const db = VocaServer.vocaObjs[0].getDbConnection()
-		// 	db.query(`SELECT * FROM ${VocaServer.vocaObjs[0].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
-		// 		//console.log('results:'+results)//RowDataPacket
-		// 		res.setHeader('content-type','text/html;charset=utf-8')
-		// 		res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
-		// 		//console.log(results['600']['wordShape'])
-		// 		//return results//蜮不效
-		// 	})
-		// })
-		
-		// VocaServer.app.get('/jap', (req:any, res:any)=>{
-		// 	let path = req.path
-		// 	console.log('path:'+path)//t
-		// 	const db = VocaServer.vocaObjs[1].getDbConnection()
-		// 	db.query(`SELECT * FROM ${VocaServer.vocaObjs[1].tableName}`, (error, results, fields)=>{//第二個被中括號包圍ᵗ參數即㕥代佔位符ˉ「?」
-				
-		// 		//console.log('results:'+results)//RowDataPacket
-		// 		res.setHeader('content-type','text/html;charset=utf-8')
-		// 		res.end(JSON.stringify(results))//TypeError [ERR_INVALID_ARG_TYPE]: The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Rceived an instance of Array
-		// 		//console.log(results['600']['wordShape'])
-		// 		//return results//蜮不效
-		// 	})
-		// })
-
-		/**
-		 * deprecated
-		 */
-		// this.app.get('/english', async (req,res)=>{
-			
-		// 	try {
-		// 		let path = req.path
-		// 		console.log('path:'+path)//t
-		// 		let eng = VocaSqlite.new({_tableName:'english'})
-		// 		//console.log(eng.tableName)//t *
-		// 		let words = await eng.getAllWords()
-		// 		//console.log(words)
-		// 		//console.log(JSON.stringify(words))
-		// 		res.setHeader('content-type','text/html;charset=utf-8')
-		// 		res.end(JSON.stringify(words))
-		// 	} catch (error) {
-		// 		const err = error as Error
-		// 		console.error(err)
-		// 	}
-			
-		// })
-		
-		/**
-		 * deprecated
-		 */
-		// this.app.get('/japanese', async (req,res)=>{
-		// 	let path = req.path
-		// 	console.log('path:'+path)//t
-		// 	let sqlt = VocaSqlite.new({_tableName:'japanese'})
-		// 	let words = await sqlt.getAllWords()
-		// 	res.setHeader('content-type','text/html;charset=utf-8')
-		// 	res.end(JSON.stringify(words))
-		// })
-
-/* 		VocaServer.app.get('/', (req:any, res:any)=>{
-			console.log(req.ip)
-			let path = req.path
-			console.log('path:'+path)
-			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile('/index.html')
-		}) */
-
-
-		// VocaServer.app.post('/post', (req, res)=>{
-		// 	console.log(req.body)
-		// 	VocaRaw.updateDb(req.body)
-		// 	//VocaRaw.updateDb(JSON.parse(req.body))
-		// 	const timeNow = Tempus.new().iso
-		// 	res.send('成功接收到数据'+timeNow)
-		// })
-
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
@@ -536,8 +457,6 @@ export default class VocaServer{
 		 */
 		VocaServer.app.get('*', (req:MyReq, res)=>{
 			VocaServer.session=req.session??''
-			console.log(123)
-			console.log(req)
 			//console.log(req.hostname)
 			if(VocaServer.session.userid && req.path==='/login'){
 				res.setHeader('content-type','text;charset=utf-8')
