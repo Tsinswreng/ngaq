@@ -1,7 +1,19 @@
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
-import { MemorizeWord } from "../MemorizeWord"
-//import { weightLib as L } from "./_lib"
+//<delete>
+
+//dependency import
 import * as L from "./_lib"
+
+
+//</delete>
+
+/* 
+載入旹、程序ˋ自動 添 依賴(即 L)、勿手動ᵈ褈添
+肰寫碼旹、若[不寫 import * as L from "./_lib"]則{報錯且不利代碼提示}
+遂定: <delete></delete> 中ʹ字串ˋ 載入旹 被刪
+ */
+
+//type import
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { InstanceType_ } from "@shared/Type"
 
 const sros = L.Sros.Sros.new()
@@ -17,6 +29,8 @@ type N2S = L.Sros.N2S
 type Word = L.Word.Word
 const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
 const last = L.Ut.lastOf
+const MemorizeWord = L.MemorizeWord
+type MemorizeWord = L.MemorizeWord
 //type Statistics = InstanceType_<typeof WordWeight.Statistics>
 
 
@@ -97,8 +111,8 @@ class Statistics{
 }
 
 
-
-export class WordWeight implements I_WordWeight{
+//<@return>
+class WordWeight implements I_WordWeight{
 
 	protected constructor(){
 

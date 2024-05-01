@@ -3,8 +3,34 @@ import { clearObj, lodashMerge } from "@shared/Ut"
 import * as fs from 'fs'
 type IConfig = typeof Config.defaultConfig
 
+/**
+ * 用來作 他ʹ配置類ʹ父
+ * 姑留空
+ */
 class BaseConfig{
 
+}
+
+
+/**
+ * 單項權重配置
+ */
+class WordWeightSchema{
+	/** 此配置項ʹ名 */
+	name:string = ''
+	/** 代碼ˉ叶 */
+	code:string = ''
+	/** ʃ用ʹ代碼 是何語 */
+	lang:string = ''
+	/** 權重參數 */
+	params:string[] = []
+}
+
+/**
+ * 䀬ʹ單詞權重配置方案
+ */
+class WordWeightConfig extends BaseConfig{
+	schemas:WordWeightSchema[] = []
 }
 
 class ServerConfig extends BaseConfig{
@@ -20,7 +46,7 @@ class DefaultConfig extends BaseConfig{
 	backupDbPath= `./db/vocaBackup.db`
 	tables=[] as string[]
 	server= new ServerConfig()
-	wordWeight= []
+	wordWeight = new WordWeightConfig()
 }
 
 
