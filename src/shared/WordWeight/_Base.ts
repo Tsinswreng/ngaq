@@ -112,7 +112,7 @@ class Statistics{
 
 
 //<@return>
-class WordWeight implements I_WordWeight{
+export class WordWeight implements I_WordWeight{
 
 	protected constructor(){
 

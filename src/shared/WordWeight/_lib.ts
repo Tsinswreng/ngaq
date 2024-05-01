@@ -1,8 +1,8 @@
 import Tempus from "@shared/Tempus";
-import { MemorizeWord } from "../MemorizeWord";
+import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
 import * as Word from '@shared/entities/Word/Word'
 import * as Sros from "@shared/Sros";
-import { WordWeight } from "./_Base";
+import { WordWeight } from "@shared/entities/Word/Weight/_Base";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 
