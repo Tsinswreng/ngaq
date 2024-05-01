@@ -1,70 +1,51 @@
-//<delete>
+//<@delete>
 
 //dependency import
-import * as L from "./_lib"
 
-
-//</delete>
-
-/* 
-載入旹、程序ˋ自動 添 依賴(即 L)、勿手動ᵈ褈添
-肰寫碼旹、若[不寫 import * as L from "./_lib"]則{報錯且不利代碼提示}
-遂定: <delete></delete> 中ʹ字串ˋ 載入旹 被刪
- */
+//</@delete>
+import Tempus from "@shared/Tempus";
+import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
+import * as Word from '@shared/entities/Word/Word'
+import * as Sros from "@shared/Sros";
+//import { WordWeight } from "@shared/WordWeight/_Base";
+import lodash from 'lodash'
+import * as Ut from '@shared/Ut'
+import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 
 //type import
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { InstanceType_ } from "@shared/Type"
 
-const sros = L.Sros.Sros.new()
+const sros = Sros.Sros.new()
 const s = sros.short
-const Tempus_Event = L.Word.Tempus_Event
-type Tempus_Event = InstanceType_<typeof Tempus_Event>
-const WordEvent = L.Word.WordEvent
-type WordEvent = L.Word.WordEvent
-//type WordEvent = InstanceType_<typeof WordEvent>
-const Tempus = L.Tempus
-type Tempus = InstanceType_<typeof L.Tempus>
-type N2S = L.Sros.N2S
-type Word = L.Word.Word
-const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
-const last = L.Ut.lastOf
-const MemorizeWord = L.MemorizeWord
-type MemorizeWord = L.MemorizeWord
+type Word = Word.Word
+type Tempus_Event = InstanceType_<typeof Word.Tempus_Event>
+const WordEvent = Word.WordEvent
+const last = Ut.lastOf
+const $n = Sros.Sros.toNumber
+type N2S = Sros.N2S
+
+// const sros = L.Sros.Sros.new()
+// const s = sros.short
+// const Tempus_Event = L.Word.Tempus_Event
+// type Tempus_Event = InstanceType_<typeof Tempus_Event>
+// const WordEvent = L.Word.WordEvent
+// type WordEvent = L.Word.WordEvent
+// //type WordEvent = InstanceType_<typeof WordEvent>
+// const Tempus = L.Tempus
+// type Tempus = InstanceType_<typeof L.Tempus>
+// type N2S = L.Sros.N2S
+// type Word = L.Word.Word
+// const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
+// const last = L.Ut.lastOf
+// const MemorizeWord = L.MemorizeWord
+// type MemorizeWord = L.MemorizeWord
+
+// const ChangeRecord = L.ChangeRecord
+// type ChangeRecord = L.ChangeRecord
 //type Statistics = InstanceType_<typeof WordWeight.Statistics>
 
 
-/** 㕥錄ᵣ 每次迭代中 權重ᵗ變 */
-class Rec{
-	static new(tempus__event:Tempus_Event, after:N2S, dateWeight?:N2S, debuff?:N2S){
-		const o = new this()
-		o.__init__(tempus__event, after, dateWeight, debuff)
-		return o
-	}
-
-	protected __init__(tempus__event:Tempus_Event, after:N2S, dateWeight?:N2S, debuff?:N2S){
-		const o = this
-		o.after = after
-		o.tempus = tempus__event.tempus
-		o.event = tempus__event.event
-		o.dateWeight = dateWeight
-		o.debuff = debuff
-		return o
-	}
-
-	/** 變後ᵗ權重 */
-	after:N2S
-	/** 彼 單詞事件ˋ發旹ᵗ時刻 */
-	tempus:Tempus
-	event: WordEvent
-	dateWeight?:N2S
-	debuff?:N2S
-
-
-	static push<K,VEle>(map:Map<K,VEle[]>, k:K, ele:VEle){
-		L.Ut.key__arrMapPush(map, k, ele)
-	}
-}
 
 
 /**
@@ -107,7 +88,7 @@ class Statistics{
 	/** 憶ᵗ次、若遇加ˡ事件則置零 */
 	cnt_validRmb = 0 
 	finalAddEventPos = 0
-	records:Rec[] = []
+	records:ChangeRecord[] = []
 }
 
 
@@ -125,13 +106,13 @@ export class WordWeight implements I_WordWeight{
 
 	readonly This = WordWeight
 
-	protected _word__changeRecord:Map<Word, Rec[]> = new Map()
+	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
 	get word__changeRecord(){return this._word__changeRecord}
 
 
-	addChangeRecord(word:Word, changeRecord:Rec){
+	addChangeRecord(word:Word, changeRecord:ChangeRecord){
 		const z = this
-		Rec.push(z.word__changeRecord, word, changeRecord)
+		ChangeRecord.push(z.word__changeRecord, word, changeRecord)
 		// let dʼʹ = 1
 		// let ˊ = 3
 		
@@ -173,7 +154,7 @@ export class WordWeight implements I_WordWeight{
 			_tempus__event:Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
 
-			addRecord(record:Rec){
+			addRecord(record:ChangeRecord){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
@@ -210,7 +191,10 @@ export class WordWeight implements I_WordWeight{
 					st.weight, z.This.defaultOpt.addWeight
 				) // *= 默認加ˡ權重
 				//錄ᵣ此輪迭代ʸ權重ᵗ變
-				const rec = Rec.new(z._tempus__event, st.weight)
+				const rec = ChangeRecord.new1(
+					z._tempus__event
+					, st.weight
+				)
 				z.addRecord(rec)
 			}
 
@@ -234,7 +218,7 @@ export class WordWeight implements I_WordWeight{
 						weight_ = s.n(1.01)
 					}
 				}
-				const rec = Rec.new(z._tempus__event, st.weight)
+				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
@@ -274,7 +258,7 @@ export class WordWeight implements I_WordWeight{
 					weight = s.n(1.5)
 				}
 				st.weight = s.m( st.weight, weight )
-				const rec = Rec.new(z._tempus__event, st.weight)
+				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
 				z.addRecord(rec)
 			}
 		}
