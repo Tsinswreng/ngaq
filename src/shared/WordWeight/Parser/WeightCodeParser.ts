@@ -1,3 +1,4 @@
+import { I_WordWeight } from '@shared/interfaces/I_WordWeight'
 import { compileTs, readTsConfig } from '@shared/Ut'
 import * as L from '@shared/WordWeight/_lib'
 
@@ -52,14 +53,23 @@ export class WeightCodeParser{
 		return ans
 	}
 	
-
-	parse(){
+	/**
+	 * //TODO 傳入 權重參數
+	 */
+	parse(): (()=>I_WordWeight)|undefined
+	{
 		const z = this
 		const jsCode = z.process(z.src)
-		const fn = new Function('L' ,jsCode)
-		return ()=>{
-			return fn(L)
+		try {
+			const fn = new Function('L' ,jsCode)
+			return ()=>{
+				return fn(L)
+			}
+		} catch (error) {
+			console.error(error)
+			console.error(jsCode)
 		}
+		
 		// return ()=>{
 		// 	eval(jsCode)
 		// }

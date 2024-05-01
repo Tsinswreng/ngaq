@@ -10,7 +10,8 @@ import dayjs from 'dayjs';
 import * as readline from 'readline'
 import { Sros } from './Sros';
 import util from 'util'
-import * as ts from 'typescript'
+//import * as ts from 'typescript'
+import ts from 'typescript'
 import json5 from 'json5'
 import * as Ty from '@shared/Type'
 

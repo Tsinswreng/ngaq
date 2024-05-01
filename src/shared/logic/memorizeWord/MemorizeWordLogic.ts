@@ -76,7 +76,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		event__fn.push(
 			[es.load, z.on_load.bind(z)]
 			,[es.calcWeight, z.on_calcWeight.bind(z)]
-			,[es.sort, z.on_sort.bind(z)]
+			//,[es.sort, z.on_sort.bind(z)]
 			,[es.start, z.on_start.bind(z)]
 			,[es.save, z.on_save.bind(z)]
 			,[es.restart, z.on_restart.bind(z)]
@@ -90,7 +90,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 
 	abstract on_calcWeight()
 
-	abstract on_sort()
+	// abstract on_sort()
 
 	abstract on_start()
 

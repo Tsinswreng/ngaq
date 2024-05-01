@@ -11,6 +11,10 @@ import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
+import * as fs from 'fs'
+import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
+import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
+import { $ } from '@shared/Ut';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -51,6 +55,10 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
+	//TODO 潙空旹 用 默認算法
+	protected _weightAlgo: I_WordWeight|undefined
+	get weightAlgo(){return this._weightAlgo}
+
 	emitErr(err?){
 		const z = this
 		z.emitter.emit(z.This.events.error,err)
@@ -71,6 +79,32 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	} */
 	exput(v){
 		console.log(v)
+	}
+
+	
+
+	/**
+	 * 試、只取配置中首個權重算法方案
+	 */
+	initWeightAlgo(){
+		const z = this
+		const first = z._configInst.config.wordWeight.schemas[0]
+		let code:string
+		if(first == void 0){
+			throw new Error(`config.wordWeight.schemas[0] == void 0`)
+		}
+		if(first.code == void 0){
+			if(first.path == void 0){
+				throw new Error(`code and path are all empty`)
+			}
+			const srcCode = fs.readFileSync(first.path, {encoding: 'utf-8'})
+			code = srcCode
+		}else{
+			code = first.code
+		}
+		const weiPar = WeightCodeParser.new(code)
+		z._weightAlgo = $(weiPar.parse())()
+		return z._weightAlgo
 	}
 
 	async on_load() {
@@ -107,29 +141,32 @@ export class CliMemorize extends Abs_MemorizeLogic{
 				throw Exception.for(errR.didnt_load)
 			}
 
-			for(let i = 0; i < z.wordsToLearn.length; i++){
-				const u = z.wordsToLearn[i]
-				u.weight = 0
-				u.word.table
+			// for(let i = 0; i < z.wordsToLearn.length; i++){
+			// 	const u = z.wordsToLearn[i]
+			// 	u.weight = 0
+			// 	u.word.table
 				
-			}
-
+			// }
+			z.initWeightAlgo()
+			$(z.weightAlgo).run(z.wordsToLearn)
 			z._status.calcWeight = true
 		} catch (error) {
 			z.emitErr(error)
 		}
 		
 	}
-	on_sort() {
-		const z = this
-		z.exput('sort')
-		try {
-			z._status.sort = true
-		} catch (error) {
+
+	/** @deprecated */
+	// on_sort() {
+	// 	const z = this
+	// 	z.exput('sort')
+	// 	try {
+	// 		z._status.sort = true
+	// 	} catch (error) {
 			
-		}
+	// 	}
 		
-	}
+	// }
 	on_start() {
 		const z = this
 		z.exput('start')

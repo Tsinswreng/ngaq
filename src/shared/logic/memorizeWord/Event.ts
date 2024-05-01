@@ -16,6 +16,7 @@ export class MemorizeEvents extends Le.Events{
 	// fgt = Ev('fgt')
 	load = Ev('load')
 	calcWeight = Ev('calcWeight')
+	/** @deprecated */
 	sort = Ev('sort')
 	start = Ev('start')
 	save = Ev('save')

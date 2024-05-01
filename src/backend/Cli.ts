@@ -11,9 +11,21 @@ import { CliMemorize } from './logic/CliMemorize';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import chalk from 'chalk'
-
+import util from 'util'
 const configInst = Config.getInstance()
 const config = configInst.config
+
+const helpPrompt = 
+`
+echoConfig
+reloadConfig
+wordCnt
+
+load
+start
+calcWeight
+help
+`
 
 /** 表示層 */
 export class Cli{
@@ -21,6 +33,8 @@ export class Cli{
 	protected constructor(){
 
 	}
+
+	static helpPrompt = helpPrompt
 	
 	static async New(){
 		const o = new this()
@@ -43,7 +57,9 @@ export class Cli{
 			cli:Cli
 			echoConfig(){
 				const z = this.cli
-				z.exput(z.configInst.config)
+				z.exput(
+					util.inspect(z.configInst.config, true, 32)
+				)
 			}
 			reloadConfig(){
 				const z = this.cli
@@ -53,7 +69,11 @@ export class Cli{
 				const z = this.cli
 				z.exput(z.cliMemorize.wordsToLearn.length)
 			}
-
+			help(){
+				const z = this.cli
+				z.exput(z.This.helpPrompt)
+			}
+			
 		}
 		return Cmd
 	}

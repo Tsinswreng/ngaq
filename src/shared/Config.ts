@@ -18,9 +18,12 @@ class BaseConfig{
 class WordWeightSchema{
 	/** 此配置項ʹ名 */
 	name:string = ''
-	/** 代碼ˉ叶 */
-	code:string = ''
-	/** ʃ用ʹ代碼 是何語 */
+	/** 代碼文件ʹ路徑、定utf8編碼 */
+	path?:string 
+	/** 代碼ˉ叶。path與code至少有一ˋ不潙空。若皆不潙空則以code潙準 */
+	code?:string
+	
+	/** ʃ用ʹ代碼 是何語. */
 	lang:string = ''
 	/** 權重參數 */
 	params:string[] = []

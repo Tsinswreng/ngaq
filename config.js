@@ -17,5 +17,18 @@
 	]
 	,dbPath: `./db/voca.db`
 	,backupDbPath: `./db/vocaBackup.db`
-
+	,wordWeight: {
+		schemas: [
+			{
+				name:'my'
+				,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
+				,lang: 'ts'
+				,params: [
+					1
+					,2
+					,3
+				]
+			}
+		]
+	}
 })
