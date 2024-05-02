@@ -73,7 +73,7 @@ export class Cli{
 				const z = this.cli
 				z.exput(z.This.helpPrompt)
 			}
-			
+
 		}
 		return Cmd
 	}
@@ -119,6 +119,7 @@ export class Cli{
 	}
 
 	handleErr(err){
+		console.error(`handleErr`)//t
 		const e = err as Error
 		if(e instanceof Exception){
 			console.error(e)
@@ -134,6 +135,7 @@ export class Cli{
 		let rl = createInterface()
 		const question = question_fn(rl, '')
 		z.cliMemorize.emitter.on(z.cliMemorize.This.events.error, (error)=>{
+			console.error(`on Error`)//t
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){

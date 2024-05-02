@@ -6,7 +6,7 @@ export interface I_WordWeight{
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
 	 * @param mWords 
 	 */
-	run(mWords:MemorizeWord[]):unknown
+	run(mWords:MemorizeWord[]):MemorizeWord[]
 }
 
 /**

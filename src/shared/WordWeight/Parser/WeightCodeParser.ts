@@ -45,8 +45,7 @@ export class WeightCodeParser{
 	}
 
 
-	process(str:string){
-		const z = this
+	static process(str:string){
 		let ans = str
 		ans = C.rmDeleteTag(ans)
 		ans = C.tsToJs(ans).outputText
@@ -59,7 +58,8 @@ export class WeightCodeParser{
 	parse(): (()=>I_WordWeight)|undefined
 	{
 		const z = this
-		const jsCode = z.process(z.src)
+		const jsCode = C.process(z.src)
+		z._jsCode = jsCode
 		try {
 			const fn = new Function('L' ,jsCode)
 			return ()=>{

@@ -55,6 +55,9 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
+	protected _weightCodeParser:WeightCodeParser|undefined
+	get weightCodeParser(){return this._weightCodeParser}
+
 	//TODO 潙空旹 用 默認算法
 	protected _weightAlgo: I_WordWeight|undefined
 	get weightAlgo(){return this._weightAlgo}
@@ -103,8 +106,15 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			code = first.code
 		}
 		const weiPar = WeightCodeParser.new(code)
-		z._weightAlgo = $(weiPar.parse())()
-		return z._weightAlgo
+		z._weightCodeParser = weiPar
+		try {
+			z._weightAlgo = $(weiPar.parse())()
+			return z._weightAlgo
+		} catch (error) {
+			console.error(weiPar.jsCode)
+			console.error(error)
+		}
+		
 	}
 
 	async on_load() {
@@ -140,18 +150,19 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			if(!z._status.load){
 				throw Exception.for(errR.didnt_load)
 			}
-
-			// for(let i = 0; i < z.wordsToLearn.length; i++){
-			// 	const u = z.wordsToLearn[i]
-			// 	u.weight = 0
-			// 	u.word.table
-				
-			// }
 			z.initWeightAlgo()
-			$(z.weightAlgo).run(z.wordsToLearn)
+			z._wordsToLearn = $(z.weightAlgo).run(z.wordsToLearn)
+			// for(const w of z._wordsToLearn){
+			// 	console.log(w)
+			// }
 			z._status.calcWeight = true
 		} catch (error) {
-			z.emitErr(error)
+			const err = error as Error
+			const jsCode = z.weightCodeParser?.jsCode??''
+			err.message = '\n' + jsCode + err.message
+			z.emitErr(err)
+			// console.error(`console.error(jsCode)`)
+			// console.error(jsCode)
 		}
 		
 	}

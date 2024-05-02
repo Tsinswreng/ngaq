@@ -125,6 +125,7 @@ class WordWeight implements I_WordWeight{
 				_ww:WordWeight
 				,_tempus__event:Tempus_Event
 				,_statistics:Statistics
+				,_mw:MemorizeWord
 			}){
 				const o = new this()
 				o.__init__(prop)
@@ -261,6 +262,7 @@ class WordWeight implements I_WordWeight{
 			const uWord = mWords[i]
 			z.calc0(uWord)
 		}
+		return mWords
 	}
 
 	calc0(mWord:MemorizeWord){
@@ -272,6 +274,7 @@ class WordWeight implements I_WordWeight{
 			_ww: z
 			,_tempus__event: mWord.date__event[0]
 			,_statistics: st
+			,_mw: mWord
 		})
 		for(const tempus__event of mWord.date__event){
 			h3._tempus__event = tempus__event
