@@ -71,7 +71,7 @@ class Statistics{
 		const o = this
 		o.finalAddEventPos = param[0]
 	}
-	weight = s.n(0)
+	weight = s.n(1.1)
 	curPos = 0 //當前ʃ処ˋ第幾個事件
 	/** 今ᵗ時刻 */
 	nunc = Tempus.new()
@@ -172,13 +172,13 @@ class WordWeight extends Base implements I_WordWeight{
 				const WE = WordEvent
 				switch (z._tempus__event.event){
 					case WE.ADD:
-						z.handle_add()
+						return z.handle_add()
 					break;
 					case WE.RMB:
-						z.handle_rmb()
+						return z.handle_rmb()
 					break;
 					case WE.FGT:
-						z.handle_fgt()
+						return z.handle_fgt()
 					break;
 					default:
 						throw new Error(`unexpected default in switch-case`)
@@ -199,6 +199,7 @@ class WordWeight extends Base implements I_WordWeight{
 					, st.weight
 				)
 				z.addRecord(rec)
+				return st
 			}
 
 			handle_rmb(){
@@ -244,6 +245,7 @@ class WordWeight extends Base implements I_WordWeight{
 					rec.after = st.weight
 				}
 				z.addRecord(rec)
+				return st
 			}
 
 			handle_fgt(){
@@ -263,6 +265,9 @@ class WordWeight extends Base implements I_WordWeight{
 				st.weight = s.m( st.weight, weight )
 				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
 				z.addRecord(rec)
+				//console.log(st.weight)//t
+				//process.stdout.write(st.weight+' ')//t
+				return st
 			}
 		}
 		return Handle3Events
@@ -273,7 +278,9 @@ class WordWeight extends Base implements I_WordWeight{
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
 			z.calc0(uWord)
+			//uWord.weight = 114514 //t
 		}
+		mWords.sort((b,a)=>s.c(a.weight, b.weight))
 		return mWords
 	}
 
@@ -292,6 +299,7 @@ class WordWeight extends Base implements I_WordWeight{
 			h3._tempus__event = tempus__event
 			h3.handle()
 		}
+		mWord.weight = h3._statistics.weight
 		//console.log(h3._statistics.records)//t
 	}
 

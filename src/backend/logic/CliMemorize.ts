@@ -15,6 +15,7 @@ import * as fs from 'fs'
 import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
+import { Sros } from '@shared/Sros';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -181,8 +182,21 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	// }
 	on_start(param:string[]) {
 		const z = this
+		if(!z._status.load){
+			throw Exception.for(errR.didnt_load)
+		}
+		let wordsCnt = z.This.paramToIntAt(param, 1)??10
+		let tab = '\t'
+		for(let i = 0; i < wordsCnt; i++){
+			const mw = z.wordsToLearn[i]
+			z.exput(
+				i
+				+tab+mw.word.wordShape
+				+tab+mw.weight
+			)
+		}
+		
 		z._status.start = true
-		z.exput('start')
 	}
 	on_save() {
 		const z = this
@@ -193,6 +207,14 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 	on_restart() {
 		
+	}
+	static paramToIntAt(param:string[], index:integer){
+		let ans:integer|undefined
+		if(param != void 0 && param[index] != void 0){
+			let p = parseInt(param[index])
+			ans = Number.isNaN(p)? void 0 : p
+		}
+		return ans
 	}
 }
 const errR = CliMemorize.errReasons
