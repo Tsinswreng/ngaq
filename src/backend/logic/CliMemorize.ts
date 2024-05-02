@@ -180,11 +180,9 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		
 	// }
 	on_start(param:string[]) {
-		console.log(`console.log(param)`)
-		console.log(param)
 		const z = this
-		z.exput('start')
 		z._status.start = true
+		z.exput('start')
 	}
 	on_save() {
 		const z = this

@@ -39,7 +39,7 @@ export class Cli{
 	static async New(){
 		const o = new this()
 		o._cliMemorize = await CliMemorize.New()
-		o.initEvents()
+		//o.initEvents()
 		return o
 	}
 
@@ -73,7 +73,26 @@ export class Cli{
 				const z = this.cli
 				z.exput(z.This.helpPrompt)
 			}
-
+			load(){
+				const z = this.cli
+				const es = z.cliMemorize.This.events
+				z.cliMemorize.emitter.emit(es.load)
+			}
+			calc(){
+				const z = this.cli
+				const es = z.cliMemorize.This.events
+				z.cliMemorize.emitter.emit(es.calcWeight)
+			}
+			start(){
+				const z = this.cli
+				const es = z.cliMemorize.This.events
+				z.cliMemorize.emitter.emit(es.start)
+			}
+			restart(){
+				const z = this.cli
+				const es = z.cliMemorize.This.events
+				z.cliMemorize.emitter.emit(es.restart)
+			}
 		}
 		return Cmd
 	}
@@ -88,28 +107,28 @@ export class Cli{
 	get cliMemorize(){return this._cliMemorize}
 
 	//str__fn = new Map<string, Function>()
-	str__event = new Map<string, Le.Event>()
+	//str__event = new Map<string, Le.Event>()
 
-	str__fn = new Map<string, Function>()
+	//str__fn = new Map<string, Function>()
 
 	protected _delimiter = ','
 	get delimiter(){return this._delimiter}
 	
-	/**
-	 * 亦可作潙命令
-	 */
-	initEvents(){
-		const z = this
-		//z.str__fn.set
-		const es = z.cliMemorize.This.events
-		z.str__event = new Map([
-			['load', es.load]
-			,['start', es.start]
-			,['calcWeight', es.calcWeight]
-			,['sort', es.sort]
-			//,['start']
-		])
-	}
+	// /**
+	//  * 亦可作潙命令
+	//  */
+	// initEvents(){
+	// 	const z = this
+	// 	//z.str__fn.set
+	// 	const es = z.cliMemorize.This.events
+	// 	z.str__event = new Map([
+	// 		['load', es.load]
+	// 		,['start', es.start]
+	// 		,['calcWeight', es.calcWeight]
+	// 		,['sort', es.sort]
+	// 		//,['start']
+	// 	])
+	// }
 
 	initCmd(){
 		const z = this
@@ -150,13 +169,15 @@ export class Cli{
 					cmd = cmd.bind(z.cmd)
 					cmd(segs)
 					continue
-				}
-				const event = z.str__event.get(cmdName)
-				if(event == void 0){
+				}else{
 					z.exput('illegal input')
-					continue
 				}
-				z.cliMemorize.emitter.emit(event, segs)
+				// const event = z.str__event.get(cmdName)
+				// if(event == void 0){
+				// 	z.exput('illegal input')
+				// 	continue
+				// }
+				// z.cliMemorize.emitter.emit(event, segs)
 			} catch (error) {
 				z.handleErr(error)
 			}
