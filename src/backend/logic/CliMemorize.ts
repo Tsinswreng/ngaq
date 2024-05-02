@@ -29,9 +29,6 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	}
 
 	static override async New(){
-		// const f = await Abs_MemorizeLogic.New()
-		// const c = new this()
-		// const o = inherit(c,f)
 		const o = new this()
 		await o.__Init__()
 		return o
@@ -111,15 +108,20 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			z._weightAlgo = $(weiPar.parse())()
 			return z._weightAlgo
 		} catch (error) {
-			console.error(weiPar.jsCode)
-			console.error(error)
+			//console.error(weiPar.jsCode)
+			//console.error(error)
+			const err = error as Error
+			err.message = weiPar.jsCode +'\n\n'+ err.message
+			throw err
 		}
 		
 	}
 
-	async on_load() {
+	async on_load(params:string[]) {
 		const z = this
-		z.exput('on_load')
+		// z.exput('on_load')
+		// z.exput(`z.exput(params)`)
+		// z.exput(params)
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
 			const rows = await tbl.selectAll()
@@ -138,31 +140,30 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			//z._wordsToLearn.length = 0
 			z._wordsToLearn.push(...mWords)
 			z._status.load = true
+			z.exput(`load done`)
 		} catch (error) {
 			z.emitErr(error)
 		}
 		
 	}
-	on_calcWeight() {
+	async on_calcWeight() {
 		const z = this
 		z.exput(`on_calcWeight`)
+		const outErr = new Error()
 		try {
 			if(!z._status.load){
 				throw Exception.for(errR.didnt_load)
 			}
 			z.initWeightAlgo()
-			z._wordsToLearn = $(z.weightAlgo).run(z.wordsToLearn)
-			// for(const w of z._wordsToLearn){
-			// 	console.log(w)
-			// }
+			z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
 			z._status.calcWeight = true
+			z.exput(`calcWeight done`)
 		} catch (error) {
 			const err = error as Error
 			const jsCode = z.weightCodeParser?.jsCode??''
 			err.message = '\n' + jsCode + err.message
+			err.stack += '\n\n' + outErr.stack +'\n\n'
 			z.emitErr(err)
-			// console.error(`console.error(jsCode)`)
-			// console.error(jsCode)
 		}
 		
 	}
@@ -178,7 +179,9 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	// 	}
 		
 	// }
-	on_start() {
+	on_start(param:string[]) {
+		console.log(`console.log(param)`)
+		console.log(param)
 		const z = this
 		z.exput('start')
 		z._status.start = true
@@ -188,6 +191,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		z.exput(`save`)
 		z._status.save = true
 		z._status.start = false
+		z.exput(`save done`)
 	}
 	on_restart() {
 		

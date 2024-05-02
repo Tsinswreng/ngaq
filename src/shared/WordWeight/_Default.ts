@@ -1,3 +1,7 @@
+/**
+ * @deprecated
+ */
+
 //<@delete>
 
 //dependency import
@@ -92,7 +96,10 @@ class Statistics{
 }
 
 
-//<@return>
+
+/**
+ * @deprecated
+ */
 export class WordWeight implements I_WordWeight{
 
 	protected constructor(){

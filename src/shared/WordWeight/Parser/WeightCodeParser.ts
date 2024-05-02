@@ -15,6 +15,8 @@ export class WeightCodeParser{
 		z._src = param[0]
 	}
 
+	get This(){return WeightCodeParser}
+
 	protected _src:string
 	get src(){return this._src}
 

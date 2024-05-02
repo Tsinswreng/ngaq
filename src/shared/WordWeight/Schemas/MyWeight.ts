@@ -33,6 +33,9 @@ type MemorizeWord = L.MemorizeWord
 
 const ChangeRecord = L.ChangeRecord
 type ChangeRecord = L.ChangeRecord
+
+const Base = L.BaseWeight
+type Base = L.BaseWeight
 //type Statistics = InstanceType_<typ
 
 //___________________________________________________
@@ -83,10 +86,10 @@ class Statistics{
 
 
 
-class WordWeight implements I_WordWeight{
+class WordWeight extends Base implements I_WordWeight{
 
 	protected constructor(){
-
+		super()
 	}
 
 	static new(prop?:{}){
@@ -99,6 +102,15 @@ class WordWeight implements I_WordWeight{
 	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
 	get word__changeRecord(){return this._word__changeRecord}
 
+	protected _changeRecord:L.ChangeRecord[] = []
+	get changeRecord(){return this._changeRecord}
+	set changeRecord(v){this._changeRecord = v}
+
+	protected _paramOpt = this.This.defaultOpt
+	get paramOpt(){return this._paramOpt}
+	set paramOpt(v){
+		//this._paramOpt = v
+	}
 
 	addChangeRecord(word:Word, changeRecord:ChangeRecord){
 		const z = this
@@ -256,7 +268,7 @@ class WordWeight implements I_WordWeight{
 		return Handle3Events
 	}
 
-	run(mWords:MemorizeWord[]) {
+	async run(mWords:MemorizeWord[]) {
 		const z = this
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
@@ -342,5 +354,6 @@ class WordWeight implements I_WordWeight{
 	}
 }
 
+//throw new Error()
 //@ts-ignore
 return WordWeight.new()

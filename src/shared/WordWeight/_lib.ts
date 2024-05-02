@@ -6,6 +6,7 @@ import * as Sros from "@shared/Sros";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
+import { BaseWeight } from "./_BaseWeight";
 
 export /* const weightLib = */ {
 //	WordWeight
@@ -16,6 +17,7 @@ export /* const weightLib = */ {
 	,lodash
 	,Ut
 	,ChangeRecord
+	,BaseWeight
 }
 
 export namespace weightLib{

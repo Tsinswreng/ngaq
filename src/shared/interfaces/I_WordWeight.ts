@@ -1,12 +1,23 @@
 type Fn<Return=any> = (...args:any[])=>Return
 import { MemorizeWord } from "@shared/entities/Word/MemorizeWord"
+import { ChangeRecord } from "@shared/WordWeight/ChangeRecord"
 
 export interface I_WordWeight{
 	/**
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
 	 * @param mWords 
 	 */
-	run(mWords:MemorizeWord[]):MemorizeWord[]
+	run(mWords:MemorizeWord[]):Promise<MemorizeWord[]>
+	changeRecord?:ChangeRecord[]
+	/**
+	 * 權重參數設置
+	 * 如
+	 * {
+	 * 	"默認ʹ加ˡ權重": "200"
+	 * }
+	 */
+	paramOpt?:kvobj
+	setParam(key:string, v):boolean
 }
 
 /**

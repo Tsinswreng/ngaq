@@ -92,6 +92,8 @@ export class Cli{
 
 	str__fn = new Map<string, Function>()
 
+	protected _delimiter = ','
+	get delimiter(){return this._delimiter}
 	
 	/**
 	 * 亦可作潙命令
@@ -141,24 +143,25 @@ export class Cli{
 		for(let i = 0; ; i++){
 			try {
 				let imput = await question('')
-				let cmd = z.cmd[imput]
+				const segs = imput.split(z.delimiter)
+				const cmdName = segs[0]
+				let cmd = z.cmd[cmdName]
 				if(cmd != void 0 && typeof cmd === 'function'){
 					cmd = cmd.bind(z.cmd)
-					cmd(imput)
+					cmd(segs)
 					continue
 				}
-				const event = z.str__event.get(imput)
+				const event = z.str__event.get(cmdName)
 				if(event == void 0){
 					z.exput('illegal input')
 					continue
 				}
-				z.cliMemorize.emitter.emit(event, imput)
+				z.cliMemorize.emitter.emit(event, segs)
 			} catch (error) {
 				z.handleErr(error)
 			}
 		}
 	}
-
 }
 
 async function main(){

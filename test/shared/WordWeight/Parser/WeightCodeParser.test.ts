@@ -8,7 +8,7 @@ describe('1', ()=>{
 		const tsCode = fse.readFileSync(tsPath, {encoding:"utf-8"})
 		//console.log(tsCode)
 		const weiPar = WeightCodeParser.new(tsCode)
-		const jsCode = weiPar.process(tsCode)
+		const jsCode = weiPar.This.process(tsCode)
 		console.log(jsCode)
 		const fn = weiPar.parse()
 		try {

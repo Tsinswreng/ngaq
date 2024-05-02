@@ -86,16 +86,16 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		}
 	}
 
-	abstract on_load()
+	abstract on_load(...params:any[])
 
-	abstract on_calcWeight()
+	abstract on_calcWeight(...params:any[])
 
 	// abstract on_sort()
 
-	abstract on_start()
+	abstract on_start(...params:any[])
 
-	abstract on_save()
+	abstract on_save(...params:any[])
 
-	abstract on_restart()
+	abstract on_restart(...params:any[])
 
 }
