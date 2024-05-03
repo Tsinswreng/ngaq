@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { Abs_MemorizeLogic } from "@shared/logic/memorizeWord/MemorizeWordLogic";
+import { MemorizeProcessLogic } from "@shared/logic/memorizeWord/MemorizeWordLogic";
 import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
@@ -17,41 +17,47 @@ import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { Sros } from '@shared/Sros';
 import { WordEvent } from '@shared/SingleWord2';
+import { RMB_FGT_nil } from '@shared/entities/Word/MemorizeWord';
 
 const configInst = Config.getInstance()
 const config = configInst.config
 
+
 const EV = Le.Event.new.bind(Le.Event)
 
-type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
-
-class MemorizeEvent{
-	addEvent = EV<RMB_FGT>('addEvent')
+class MemorizeEvent extends Le.Events{
+	/** 
+	 * MemorizeWord: ʃ蔿ˋ何詞。
+	 */
+	neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
+	/** RMB_FGT_nil: 撤銷前ʹ事件 */
+	undo = EV<[MemorizeWord, RMB_FGT_nil]>('undo')
 }
 
 // let emt3 = new EventEmitter3()
 // emt3.emit<>('')
 
 /** 業務理則層 */
-export class CliMemorize extends Abs_MemorizeLogic{
-	override readonly This = CliMemorize
+export class CliMemorize extends MemorizeProcessLogic{
+
+	readonly This = CliMemorize
 	protected constructor(){
 		super()
 	}
 
-	static override async New(){
+	static async New(){
 		const o = new this()
 		await o.__Init__()
 		return o
 	}
 
-	protected override async __Init__(): Promise<void> {
+	protected async __Init__(): Promise<void> {
 		const o = this
 		await super.__Init__()
 		o._dbSrc = await WordDbSrc.New({
 			_dbPath: config.dbPath
 		})
-		o.addListeners()
+		//o.addListeners()
 	}
 
 	/** 全局配置實例 */
@@ -61,7 +67,6 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	/** 背單詞ʹ程ʸʹ事件、如蔿一單詞添加憶抑忘ˡ事件,撤銷 等 */
 	protected _events = new MemorizeEvent()
 	get events(){return this._events}
-
 
 	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
 	get emitter(){return this._emitter}
@@ -76,29 +81,6 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	protected _weightAlgo: I_WordWeight|undefined
 	get weightAlgo(){return this._weightAlgo}
 
-	emitErr(err?){
-		const z = this
-		z.emitter.emit(z.This.events.error,err)
-	}
-
-/* 	addListener_testError(){
-		const z = this
-		z.emitter.on(Le.Event.new('testError'), z.testError.bind(z))
-	}
-
-	async testError(){
-		const z = this
-		try {
-			throw new Error('test')
-		} catch (error) {
-			z.emitter.emit(z.This.events.error, error)
-		}
-	} */
-	exput(v){
-		//console.log(v)
-	}
-
-	
 
 	/**
 	 * 試、只取配置中首個權重算法方案
@@ -126,8 +108,6 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			z._weightAlgo = $(weiPar.parse())()
 			return z._weightAlgo
 		} catch (error) {
-			//console.error(weiPar.jsCode)
-			//console.error(error)
 			const err = error as Error
 			err.message = weiPar.jsCode +'\n\n'+ err.message
 			throw err
@@ -135,11 +115,8 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		
 	}
 
-	async on_load(params:string[]) {
+	async load() {
 		const z = this
-		// z.exput('on_load')
-		// z.exput(`z.exput(params)`)
-		// z.exput(params)
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
 			const rows = await tbl.selectAll()
@@ -157,26 +134,24 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			}
 			//z._wordsToLearn.length = 0
 			z._wordsToLearn.push(...mWords)
-			z._status.load = true
-			z.exput(`load done`)
+			z._processStatus.load = true
 			return true
 		} catch (error) {
 			z.emitErr(error)
 		}
-		
+		return false
 	}
-	async on_calcWeight() {
+
+	async sort() {
 		const z = this
-		z.exput(`on_calcWeight`)
 		const outErr = new Error()
 		try {
-			if(!z._status.load){
-				throw Exception.for(errR.didnt_load)
+			if(!z._processStatus.load){
+				throw Exception.for(z.processErrReasons.didnt_load)
 			}
 			z.initWeightAlgo()
 			z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
-			z._status.calcWeight = true
-			z.exput(`calcWeight done`)
+			z._processStatus.sort = true
 			return true
 		} catch (error) {
 			const err = error as Error
@@ -185,73 +160,61 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			err.stack += '\n\n' + outErr.stack +'\n\n'
 			z.emitErr(err)
 		}
-		
-	}
-
-
-	on_start(param:string[]) {
-		const z = this
-		if(!z._status.load){
-			throw Exception.for(errR.didnt_load)
-		}
-		let wordsCnt = z.This.paramToIntAt(param, 1)??10
-		let tab = '\t'
-		for(let i = 0; i < wordsCnt; i++){
-			const mw = z.wordsToLearn[i]
-			z.exput(
-				i
-				+tab+mw.word.wordShape
-				+tab+mw.weight
-			)
-		}
-		
-		z._status.start = true
-	}
-	on_save() {
-		const z = this
-		z.exput(`save`)
-		z._status.save = true
-		z._status.start = false
-		z.exput(`save done`)
-	}
-	on_restart() {
-		
-	}
-
-	/**
-	 * index處ʹ參數ˇ轉整數
-	 * @param param 
-	 * @param index 
-	 * @returns 
-	 */
-	static paramToIntAt(param:string[], index:integer){
-		let ans:integer|undefined
-		if(param != void 0 && param[index] != void 0){
-			let p = parseInt(param[index])
-			ans = Number.isNaN(p)? void 0 : p
-		}
-		return ans
-	}
-
-	/**
-	 * 背單詞旹 憶抑忘
-	 * @param mw 
-	 * @param ev 
-	 * @returns 
-	 */
-	addEvent(mw:MemorizeWord, ev:typeof WordEvent.FGT|typeof WordEvent.RMB){
-		const z = this
-		if(mw.status.memorize == void 0){
-			mw.status.memorize = ev
-			z.emitter.emit(z.events.addEvent, ev)
-			return true
-		}
 		return false
 	}
 
+	// start(param:string[]) {
+	// 	const z = this
+	// 	if(!z._status.load){
+	// 		throw Exception.for(errR.didnt_load)
+	// 	}
+	// 	let wordsCnt = z.This.paramToIntAt(param, 1)??10
+	// 	let tab = '\t'
+	// 	for(let i = 0; i < wordsCnt; i++){
+	// 		const mw = z.wordsToLearn[i]
+	// 		z.exput(
+	// 			i
+	// 			+tab+mw.word.wordShape
+	// 			+tab+mw.weight
+	// 		)
+	// 	}
+		
+	// 	z._status.start = true
+	// }
+
+
+
+	save(){
+		const z = this
+		z._processStatus.save = true
+		z._processStatus.start = false
+		//TODO
+		throw new Error()
+		return Promise.resolve(false)
+	}
+
+	restart() {
+		return Promise.resolve(false)
+	}
+
+	/**
+	 * 只在成功旹觸發事件
+	 */
+	neo(mw:MemorizeWord, event:RMB_FGT_nil){
+		const z = this
+		const bol = mw.neoEvent(event)
+		if(bol){
+			z.emitter.emit(z.events.neoEvent, mw, event)
+			return bol
+		}else{
+			return bol
+		}
+	}
+
 	undo(mw:MemorizeWord){
-		mw.status.memorize = void 0
+		const z = this
+		const old = mw.undo()
+		z.emitter.emit(z.events.undo, mw, old)
 	}
 
 }
-const errR = CliMemorize.errReasons

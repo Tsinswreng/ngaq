@@ -6,7 +6,7 @@ import Config from '@shared/Config';
 import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
-import { MemorizeEvents } from '@shared/logic/memorizeWord/Event';
+import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { CliMemorize } from './logic/CliMemorize';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
@@ -73,25 +73,34 @@ export class Cli{
 				const z = this.cli
 				z.exput(z.This.helpPrompt)
 			}
-			load(){
+			async load(){
 				const z = this.cli
-				const es = z.cliMemorize.This.events
-				z.cliMemorize.emitter.emit(es.load)
+				const es = await z.cliMemorize.load()
 			}
-			calc(){
+			async sort(){
 				const z = this.cli
-				const es = z.cliMemorize.This.events
-				z.cliMemorize.emitter.emit(es.calcWeight)
+				const es = await z.cliMemorize.sort()
 			}
-			start(){
+			async start(args:string[]){
 				const z = this.cli
-				const es = z.cliMemorize.This.events
-				z.cliMemorize.emitter.emit(es.start)
+				const bol = await z.cliMemorize.start()
+				if(!bol){
+					z.exput('start failed')
+				}
+				const cnt = Cli.argToIntAt(args, 1)??10
+				let tab = '\t\t'
+				for(let i = 0; i < cnt; i++){
+					const mw = z.cliMemorize.wordsToLearn[i]
+					z.exput(
+						i
+						+tab+mw.word.wordShape
+						+tab+mw.weight
+					)
+				}
 			}
-			restart(){
+			async restart(){
 				const z = this.cli
-				const es = z.cliMemorize.This.events
-				z.cliMemorize.emitter.emit(es.restart)
+				const es = await z.cliMemorize.restart()
 			}
 		}
 		return Cmd
@@ -106,29 +115,10 @@ export class Cli{
 	protected _cliMemorize: CliMemorize
 	get cliMemorize(){return this._cliMemorize}
 
-	//str__fn = new Map<string, Function>()
-	//str__event = new Map<string, Le.Event>()
-
-	//str__fn = new Map<string, Function>()
 
 	protected _delimiter = ','
 	get delimiter(){return this._delimiter}
 	
-	// /**
-	//  * 亦可作潙命令
-	//  */
-	// initEvents(){
-	// 	const z = this
-	// 	//z.str__fn.set
-	// 	const es = z.cliMemorize.This.events
-	// 	z.str__event = new Map([
-	// 		['load', es.load]
-	// 		,['start', es.start]
-	// 		,['calcWeight', es.calcWeight]
-	// 		,['sort', es.sort]
-	// 		//,['start']
-	// 	])
-	// }
 
 	initCmd(){
 		const z = this
@@ -155,8 +145,7 @@ export class Cli{
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.cliMemorize.emitter.on(z.cliMemorize.This.events.error, (error)=>{
-			console.error(`on Error`)//t
+		z.cliMemorize.emitter.on(z.cliMemorize.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){
@@ -172,17 +161,28 @@ export class Cli{
 				}else{
 					z.exput('illegal input')
 				}
-				// const event = z.str__event.get(cmdName)
-				// if(event == void 0){
-				// 	z.exput('illegal input')
-				// 	continue
-				// }
-				// z.cliMemorize.emitter.emit(event, segs)
+				
 			} catch (error) {
 				z.handleErr(error)
 			}
 		}
 	}
+
+	/**
+	 * index處ʹ參數ˇ轉整數
+	 * @args args 
+	 * @param index 
+	 * @returns 
+	 */
+	static argToIntAt(args:string[], index:integer){
+		let ans:integer|undefined
+		if(args != void 0 && args[index] != void 0){
+			let p = parseInt(args[index])
+			ans = Number.isNaN(p)? void 0 : p
+		}
+		return ans
+	}
+
 }
 
 async function main(){
@@ -190,9 +190,3 @@ async function main(){
 	cli.main()
 }
 main()
-
-
-/* 
-"d:\_code\voca\src\backend\Cli.ts"
-"d:\_code\voca\out\backend\Cli.js"
-*/

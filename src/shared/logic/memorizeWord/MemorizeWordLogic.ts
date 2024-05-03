@@ -1,9 +1,13 @@
-import { MemorizeEvents } from "./Event";
+import { ProcessEvents } from "./Event";
 import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
+import { Exception } from "@shared/Exception";
 
-class _ErrReason{
+//type Asyncable<T> = T|Promise<T>
+type Task<T> = Promise<T>
+
+class ProcessErrReason{
 	static new(){
 		const o = new this()
 		return o
@@ -19,21 +23,106 @@ export interface I_MemorizeLogic{
 
 }
 
+class ProcessStatus{
+
+	load = false 
+	sort = false
+	start = false
+	save = true
+}
+
+/**
+ * 背單詞 流程 業務理則
+ */
+export abstract class MemorizeProcessLogic{
+	static async New():Promise<MemorizeProcessLogic>{
+		//@ts-ignore
+		const z = new this()
+		z.__Init__()
+		return z
+	}
+
+	protected async __Init__(){
+
+	}
+
+	protected abstract _emitter:Le.LinkedEmitter
+	get emitter(){return this._emitter}
+
+	protected _processEvents = ProcessEvents.new()
+	get processEvents(){return this._processEvents}
+
+	protected _processStatus = new ProcessStatus()
+	get processStatus(){return this._processStatus}
+
+	protected _processErrReasons = new ProcessErrReason()
+	get processErrReasons(){return this._processErrReasons}
+
+	protected _wordsToLearn:MemorizeWord[] = []
+	get wordsToLearn(){return this._wordsToLearn}
+
+	emitErr(err:Error|any){
+		const z = this
+		z.emitter.emit(z.processEvents.error, err)
+	}
+
+	/**
+	 * 加載 待背ʹ詞、賦予this._wordsToLearn
+	 * 或直ᵈ取自數據庫、或發網絡請求
+	 */
+	abstract load():Task<boolean>
+
+	/**
+	 * this._wordsToLearnˇ排序。算權重,篩選等皆由此。
+	 */
+	abstract sort():Task<boolean>
+
+	/**
+	 * 始背單詞。
+	 */
+	start():Task<boolean>{
+		const z = this
+		if(!z._processStatus.load){
+			throw Exception.for(z.processErrReasons.didnt_load)
+		}
+		z._processStatus.start = true
+		return Promise.resolve(true)
+	}
+
+
+	abstract save():Task<boolean>
+
+	abstract restart():Task<boolean>
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 負責觸發事件
  */
-export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
+export abstract class Abs_MemorizeLogic_deprecated implements I_MemorizeLogic{
 
 	protected constructor(){}
 
-	readonly This = Abs_MemorizeLogic
+	readonly This = Abs_MemorizeLogic_deprecated
 	// static new():Abs_ReciteLogic {
 	// 	//@ts-ignore
 	// 	const o = new this()
 	// 	return o
 	// }
 
-	static async New():Promise<Abs_MemorizeLogic>{
+	static async New():Promise<Abs_MemorizeLogic_deprecated>{
 		//@ts-ignore
 		const o = new this()
 		return Promise.resolve(o)
@@ -43,7 +132,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 		
 	}
 	
-	static ErrReason = _ErrReason
+	static ErrReason = ProcessErrReason
 	static errReasons = this.ErrReason.new()
 
 	protected _reciteConfig
@@ -54,7 +143,7 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 	protected _wordsToLearn:MemorizeWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
-	protected static _events = MemorizeEvents.instance
+	protected static _events = ProcessEvents.instance
 	static get events(){return this._events}
 
 	protected _curWordIndex = 0
@@ -71,11 +160,11 @@ export abstract class Abs_MemorizeLogic implements I_MemorizeLogic{
 	addListeners(){
 		const z = this
 		const Z = z.This
-		const event__fn = [] as [Le.Event, (this:Abs_MemorizeLogic)=>unknown][]
+		const event__fn = [] as [Le.Event, (this:Abs_MemorizeLogic_deprecated)=>unknown][]
 		const es = Z.events
 		event__fn.push(
 			[es.load, z.on_load.bind(z)]
-			,[es.calcWeight, z.on_calcWeight.bind(z)]
+			,[es.sort, z.on_calcWeight.bind(z)]
 			//,[es.sort, z.on_sort.bind(z)]
 			,[es.start, z.on_start.bind(z)]
 			,[es.save, z.on_save.bind(z)]

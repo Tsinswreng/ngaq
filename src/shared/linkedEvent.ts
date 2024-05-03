@@ -48,7 +48,9 @@ export class LinkedEmitter{
 		o._eventEmitter = args[0]
 	}
 
-
+	/**
+	 * 不是責任鏈模式
+	 */
 	emit<Arg>(
 		event:Event<Arg>
 		, ...args:Args<Arg>
@@ -72,7 +74,7 @@ export class LinkedEmitter{
 }
 
 export class Events{
-	protected constructor(){}
+	constructor(){}
 	static new(){
 		const o = new this()
 		o.__init__()
