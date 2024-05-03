@@ -132,7 +132,7 @@ export class FileVocaSrv extends VocaSrv{
 				const um = await oneTbl(tblN)
 				mWords.push(...um)
 			}
-			//z._wordsToLearn.length = 0
+			z._wordsToLearn.length = 0
 			z._wordsToLearn.push(...mWords)
 			z._processStatus.load = true
 			return true

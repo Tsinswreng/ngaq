@@ -59,7 +59,7 @@ help
 `
 
 /** 表示層 */
-export class RimeVoca{
+export class FileVoca{
 
 	protected constructor(){
 
@@ -82,18 +82,18 @@ export class RimeVoca{
 		return z
 	}
 
-	readonly This = RimeVoca
+	readonly This = FileVoca
 
 	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
-			static new(cli:RimeVoca){
+			static new(cli:FileVoca){
 				const o = new this()
 				o.cli = cli
 				return o
 			}
-			cli:RimeVoca
+			cli:FileVoca
 			echoConfig(){
 				const z = this.cli
 				z.exput(
@@ -115,10 +115,18 @@ export class RimeVoca{
 			async load(){
 				const z = this.cli
 				const es = await z.cliMemorize.load()
+				return es
 			}
 			async sort(){
 				const z = this.cli
 				const es = await z.cliMemorize.sort()
+				return es
+			}
+			async prepare(){
+				const c = this
+				await c.load()
+				await c.sort()
+				return true
 			}
 			async start(args:string[]){
 				const z = this.cli
@@ -126,16 +134,19 @@ export class RimeVoca{
 				if(!bol){
 					z.exput('start failed')
 				}
-				const cnt = RimeVoca.argToIntAt(args, 1)??10
+				const cnt = FileVoca.argToIntAt(args, 1)??64
 				let tab = '\t\t'
+				let ans = ''
 				for(let i = 0; i < cnt; i++){
 					const mw = z.cliMemorize.wordsToLearn[i]
-					z.exput(
-						i
-						+tab+mw.word.wordShape
-						+tab+mw.weight
-					)
+					// ans += 
+					// i
+					// +tab+mw.word.wordShape
+					// +tab+mw.weight
+					ans += mw.word.wordShape
+					ans += '\n'
 				}
+				z.exput(ans)
 			}
 			async restart(){
 				const z = this.cli
@@ -190,7 +201,7 @@ export class RimeVoca{
 		try {
 			if(cmd != void 0 && typeof cmd === 'function'){
 				cmd = cmd.bind(z.cmd)
-				cmd(segs)
+				await cmd(segs)
 			}else{
 				z.exput('-1')
 			}
@@ -248,7 +259,7 @@ export class RimeVoca{
 
 async function main(){
 	console.log(process.argv)//t
-	const cli = await RimeVoca.New()
+	const cli = await FileVoca.New()
 	// 監視文件變化
 	//const testFile = `D:/_code/voca/out/test.txt`
 	let watcher: fs.FSWatcher
@@ -257,12 +268,18 @@ async function main(){
 	// 		console.error(err)
 	// 		return
 	// 	}
-	watcher = fs.watch(fileSignal, (eventType, filename) => {
+	watcher = fs.watch(fileSignal, async(eventType, filename) => {
 		if (eventType === 'change') {
 			const imput = fs.readFileSync(fileIn, {encoding:'utf-8'})
 			//cli.exput(imput)
 			console.log(imput)//t
-			cli.exec(imput)
+			try {
+				await cli.exec(imput)
+			} catch (error) {
+				const err = error as Error
+				const text = err.name+'\n'+err.message+'\n'+err.stack
+				cli.exput(text)
+			}
 			//
 			// fs.readFile(fileIn, {encoding:'utf-8'}, (err, imput)=>{
 			// 	if(err != void 0){
@@ -287,5 +304,5 @@ async function main(){
 main()
 
 /* 
-esno "D:\_code\voca\src\backend\Cli.ts" "filesignal" "filein" "fileout"
+esno "D:\_code\voca\src\backend\FileVoca.ts" "filesignal" "filein" "fileout"
 */
