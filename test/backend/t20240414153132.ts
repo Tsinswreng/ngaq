@@ -112,25 +112,3 @@ import { readTsConfig } from '@shared/Ut'
 //main();
 
 
-import {WeightCodeParser} from '@shared/WordWeight/Parser/WeightCodeParser'
-import * as fse from 'fs-extra'
-const tsPath = 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
-const tsCode = fse.readFileSync(tsPath, {encoding:"utf-8"})
-//console.log(tsCode)
-const weiPar = WeightCodeParser.new(tsCode)
-const jsCode = weiPar.process(tsCode)
-//console.log(jsCode)
-console.log()
-console.log(weiPar.src)
-
-const fn = weiPar.parse()
-console.log(fn)
-try {
-	const obj = fn()
-	console.log(obj)
-} catch (error) {
-	console.error(error)
-}
-
-
-

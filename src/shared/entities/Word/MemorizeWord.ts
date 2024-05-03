@@ -1,5 +1,5 @@
 import { InstanceType_ } from "@shared/Type";
-import { Tempus_Event, Word, WordEvent } from "./Word";
+import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
 
 //type WordEvent = typeof WordEvent
 class Status{

@@ -16,11 +16,21 @@ import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { Sros } from '@shared/Sros';
+import { WordEvent } from '@shared/SingleWord2';
 
 const configInst = Config.getInstance()
 const config = configInst.config
 
+const EV = Le.Event.new.bind(Le.Event)
 
+type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
+
+class MemorizeEvent{
+	addEvent = EV<RMB_FGT>('addEvent')
+}
+
+// let emt3 = new EventEmitter3()
+// emt3.emit<>('')
 
 /** 業務理則層 */
 export class CliMemorize extends Abs_MemorizeLogic{
@@ -44,8 +54,14 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		o.addListeners()
 	}
 
+	/** 全局配置實例 */
 	protected _configInst = configInst
 	get configInst(){return this._configInst}
+
+	/** 背單詞ʹ程ʸʹ事件、如蔿一單詞添加憶抑忘ˡ事件,撤銷 等 */
+	protected _events = new MemorizeEvent()
+	get events(){return this._events}
+
 
 	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
 	get emitter(){return this._emitter}
@@ -79,13 +95,14 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		}
 	} */
 	exput(v){
-		console.log(v)
+		//console.log(v)
 	}
 
 	
 
 	/**
 	 * 試、只取配置中首個權重算法方案
+	 * //TODO
 	 */
 	initWeightAlgo(){
 		const z = this
@@ -142,6 +159,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			z._wordsToLearn.push(...mWords)
 			z._status.load = true
 			z.exput(`load done`)
+			return true
 		} catch (error) {
 			z.emitErr(error)
 		}
@@ -159,6 +177,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 			z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
 			z._status.calcWeight = true
 			z.exput(`calcWeight done`)
+			return true
 		} catch (error) {
 			const err = error as Error
 			const jsCode = z.weightCodeParser?.jsCode??''
@@ -169,17 +188,7 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		
 	}
 
-	/** @deprecated */
-	// on_sort() {
-	// 	const z = this
-	// 	z.exput('sort')
-	// 	try {
-	// 		z._status.sort = true
-	// 	} catch (error) {
-			
-	// 	}
-		
-	// }
+
 	on_start(param:string[]) {
 		const z = this
 		if(!z._status.load){
@@ -208,6 +217,13 @@ export class CliMemorize extends Abs_MemorizeLogic{
 	on_restart() {
 		
 	}
+
+	/**
+	 * index處ʹ參數ˇ轉整數
+	 * @param param 
+	 * @param index 
+	 * @returns 
+	 */
 	static paramToIntAt(param:string[], index:integer){
 		let ans:integer|undefined
 		if(param != void 0 && param[index] != void 0){
@@ -216,5 +232,26 @@ export class CliMemorize extends Abs_MemorizeLogic{
 		}
 		return ans
 	}
+
+	/**
+	 * 背單詞旹 憶抑忘
+	 * @param mw 
+	 * @param ev 
+	 * @returns 
+	 */
+	addEvent(mw:MemorizeWord, ev:typeof WordEvent.FGT|typeof WordEvent.RMB){
+		const z = this
+		if(mw.status.memorize == void 0){
+			mw.status.memorize = ev
+			z.emitter.emit(z.events.addEvent, ev)
+			return true
+		}
+		return false
+	}
+
+	undo(mw:MemorizeWord){
+		mw.status.memorize = void 0
+	}
+
 }
 const errR = CliMemorize.errReasons

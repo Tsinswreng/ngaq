@@ -1,16 +1,17 @@
 
-export class Event{
+type Args<T> = T extends any[] ? T : [T]
+export class Event<Arg=any>{
 	protected _name:string
 	get name(){return this._name}
 
-	protected _base:Event|undefined
+	protected _base:Event<Arg>|undefined
 	get base(){return this._base}
 
 	protected constructor(){
 
 	}
-	static new(name:string, base?:Event){
-		const o = new this()
+	static new<Arg=any>(name:string, base?:Event<Arg>){
+		const o = new this<Arg>()
 		o.__init__(name, base)
 		return o
 	}
@@ -47,7 +48,11 @@ export class LinkedEmitter{
 		o._eventEmitter = args[0]
 	}
 
-	emit(event:Event, ...args:any[]){
+
+	emit<Arg>(
+		event:Event<Arg>
+		, ...args:Args<Arg>
+	):integer{
 		let cnt = 0
 		for(let e = event;e instanceof Event;){
 			this.eventEmitter.emit(e.name, ...args)
@@ -61,7 +66,7 @@ export class LinkedEmitter{
 		return cnt
 	}
 
-	on(event:Event, callback:(...args:any[])=>void){
+	on<Arg>(event:Event<Arg>, callback:(...args:Args<Arg>)=>void){
 		this.eventEmitter.on(event.name, callback)
 	}
 }
@@ -94,12 +99,12 @@ class MyEvents extends Events{
 		return o
 	}
 	static instance = MyEvents.new()
-	parent = Event.new('parent')
+	parent = Event.new<[number, string]>('parent')
 	child = Event.new('child', this.parent)
 }
 const myEvents = MyEvents.instance
 const emt = Emitter.new(new EventEmitter())
-emt.on(myEvents.parent, ()=>{
+emt.on(myEvents.parent, (num:number, str:string)=>{
 
 })
 emt.emit(myEvents.child, 114, '514') */
