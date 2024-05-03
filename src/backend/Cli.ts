@@ -12,6 +12,37 @@ import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import chalk from 'chalk'
 import util from 'util'
+import * as fs from 'fs'
+
+const fileSignal = process.argv[2]??''
+const fileIn = process.argv[3]??''
+const fileOut = process.argv[4]??''
+if(fileSignal === '' || fileIn === '' || fileOut == ''){
+	console.error(`fileSignal === '' || fileIn === '' || fileOut == ''`)
+	console.log(`example:\nnode xxx.js "fileSignal.txt" "fileIn.txt" "fileOut.txt"`)
+	process.exit(-1)
+}
+
+
+
+
+// const pipeTest = 'C:/Users/lenovo/Desktop/mypipe'
+// fs.open(pipeTest, 'r', (err,fd)=>{
+// 	if (err) {
+// 		if (err.code === 'ENOENT') {
+// 			console.error('Pipe does not exist');
+// 			return;
+// 		}
+// 		throw err;
+// 	}
+
+// 	const buffer = Buffer.alloc(1024);
+// 	fs.read(fd, buffer, 0, buffer.length, null, (err, bytesRead, buffer) => {
+// 		if (err) throw err;
+// 		console.log('Received data:', buffer.slice(0, bytesRead).toString());
+// 	});
+// })
+
 const configInst = Config.getInstance()
 const config = configInst.config
 
@@ -37,10 +68,18 @@ export class Cli{
 	static helpPrompt = helpPrompt
 	
 	static async New(){
-		const o = new this()
-		o._cliMemorize = await CliMemorize.New()
-		//o.initEvents()
-		return o
+		const z = new this()
+		await z.__Init__()
+		return z
+	}
+
+	protected async __Init__(){
+		const z = this
+		z._cliMemorize = await CliMemorize.New()
+		z.cliMemorize.emitter.on(z.cliMemorize.events.error, (error)=>{
+			z.handleErr(error)
+		})
+		return z
 	}
 
 	readonly This = Cli
@@ -67,7 +106,7 @@ export class Cli{
 			}
 			wordCnt(){
 				const z = this.cli
-				z.exput(z.cliMemorize.wordsToLearn.length)
+				z.exput(z.cliMemorize.wordsToLearn.length+'')
 			}
 			help(){
 				const z = this.cli
@@ -125,8 +164,10 @@ export class Cli{
 	}
 
 
-	exput(v?){
+	async exput(v:string){
+		const z = this
 		console.log(v)
+		fs.promises.writeFile(fileOut, v).then()
 	}
 
 	handleErr(err){
@@ -140,7 +181,27 @@ export class Cli{
 		}
 	}
 
-	async main(){
+	async exec(imput:string){
+		const z = this
+		//console.log(process.argv) //t
+		const segs = imput.split(z.delimiter)
+		const cmdName = segs[0]
+		let cmd = z.cmd[cmdName]
+		try {
+			if(cmd != void 0 && typeof cmd === 'function'){
+				cmd = cmd.bind(z.cmd)
+				cmd(segs)
+			}else{
+				z.exput('-1')
+			}
+		} catch (error) {
+			z.handleErr(error)
+		}
+		
+	}
+
+	/** command line */
+	async main_deprecated(){
 		const z = this
 		console.log(process.argv)
 		let rl = createInterface()
@@ -186,7 +247,45 @@ export class Cli{
 }
 
 async function main(){
+	console.log(process.argv)//t
 	const cli = await Cli.New()
-	cli.main()
+	// 監視文件變化
+	//const testFile = `D:/_code/voca/out/test.txt`
+	let watcher: fs.FSWatcher
+	// fs.open(fileIn, 'r', (err,fd)=>{
+	// 	if(err){
+	// 		console.error(err)
+	// 		return
+	// 	}
+	watcher = fs.watch(fileSignal, (eventType, filename) => {
+		if (eventType === 'change') {
+			const imput = fs.readFileSync(fileIn, {encoding:'utf-8'})
+			//cli.exput(imput)
+			console.log(imput)//t
+			cli.exec(imput)
+			//
+			// fs.readFile(fileIn, {encoding:'utf-8'}, (err, imput)=>{
+			// 	if(err != void 0){
+			// 		console.error(err)
+			// 		return
+			// 	}
+			// 	console.log(imput)//t
+			// 	//cli.exput(imput)
+			// })
+		}
+	});
+	// })
+	// if(watcher! != void 0){
+	watcher.on('error', (error) => {
+		console.error('Error occurred while watching file:', error);
+	});
+	// }
+	// 監聽錯誤
+	
+	//cli.main_deprecated()
 }
 main()
+
+/* 
+esno "D:\_code\voca\src\backend\Cli.ts" "filesignal" "filein" "fileout"
+*/
