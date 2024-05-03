@@ -7,7 +7,7 @@ import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
-import { CliMemorize } from './logic/CliMemorize';
+import { FileVocaSrv } from './logic/FileVocaSrv';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import chalk from 'chalk'
@@ -59,7 +59,7 @@ help
 `
 
 /** 表示層 */
-export class Cli{
+export class RimeVoca{
 
 	protected constructor(){
 
@@ -75,25 +75,25 @@ export class Cli{
 
 	protected async __Init__(){
 		const z = this
-		z._cliMemorize = await CliMemorize.New()
+		z._cliMemorize = await FileVocaSrv.New()
 		z.cliMemorize.emitter.on(z.cliMemorize.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		return z
 	}
 
-	readonly This = Cli
+	readonly This = RimeVoca
 
 	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
-			static new(cli:Cli){
+			static new(cli:RimeVoca){
 				const o = new this()
 				o.cli = cli
 				return o
 			}
-			cli:Cli
+			cli:RimeVoca
 			echoConfig(){
 				const z = this.cli
 				z.exput(
@@ -126,7 +126,7 @@ export class Cli{
 				if(!bol){
 					z.exput('start failed')
 				}
-				const cnt = Cli.argToIntAt(args, 1)??10
+				const cnt = RimeVoca.argToIntAt(args, 1)??10
 				let tab = '\t\t'
 				for(let i = 0; i < cnt; i++){
 					const mw = z.cliMemorize.wordsToLearn[i]
@@ -151,7 +151,7 @@ export class Cli{
 	protected _configInst = configInst
 	get configInst(){return this._configInst}
 
-	protected _cliMemorize: CliMemorize
+	protected _cliMemorize: FileVocaSrv
 	get cliMemorize(){return this._cliMemorize}
 
 
@@ -248,7 +248,7 @@ export class Cli{
 
 async function main(){
 	console.log(process.argv)//t
-	const cli = await Cli.New()
+	const cli = await RimeVoca.New()
 	// 監視文件變化
 	//const testFile = `D:/_code/voca/out/test.txt`
 	let watcher: fs.FSWatcher
