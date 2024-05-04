@@ -3,13 +3,13 @@ import { VocaSvc as VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
 import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
-import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
+//import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
 import { I_EventEmitter } from '@shared/linkedEvent';
 import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
-import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
+import { MemorizeWord, RMB_FGT } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import * as fs from 'fs'
 import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
@@ -29,9 +29,16 @@ class MemorizeEvent extends Le.Events{
 	/** 
 	 * MemorizeWord: ʃ蔿ˋ何詞。
 	 */
-	neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
+	//neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
 	/** RMB_FGT_nil: 撤銷前ʹ事件 */
 	undo = EV<[MemorizeWord, RMB_FGT_nil]>('undo')
+	start = EV<[]>('start')
+	//test=EV('')
+	learnByMWord = EV<[MemorizeWord, RMB_FGT]>('learnByWord')
+
+	/** 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件 */
+	learnByIndex = EV<[integer, MemorizeWord, RMB_FGT]>('learnByIndex')
+	save = EV('save')
 }
 
 // let emt3 = new EventEmitter3()
@@ -163,53 +170,75 @@ export class FileVocaSvc extends VocaSvc{
 		return false
 	}
 
-	// start(param:string[]) {
-	// 	const z = this
-	// 	if(!z._status.load){
-	// 		throw Exception.for(errR.didnt_load)
-	// 	}
-	// 	let wordsCnt = z.This.paramToIntAt(param, 1)??10
-	// 	let tab = '\t'
-	// 	for(let i = 0; i < wordsCnt; i++){
-	// 		const mw = z.wordsToLearn[i]
-	// 		z.exput(
-	// 			i
-	// 			+tab+mw.word.wordShape
-	// 			+tab+mw.weight
-	// 		)
-	// 	}
-		
-	// 	z._status.start = true
-	// }
 
-
-
-	save(){
+	override start(){
 		const z = this
-		z._processStatus.save = true
-		z._processStatus.start = false
-		//TODO
-		throw new Error()
-		return Promise.resolve(false)
+		if(!z.processStatus.load){
+			throw Exception.for(z.processErrReasons.didnt_load)
+		}
+		if(!z.processStatus.save){
+			throw Exception.for(z.processErrReasons.cant_start_when_unsave)
+		}
+		z.processStatus.start = true
+		z.emitter.emit(z.events.start)
+		return Promise.resolve(true)
 	}
 
-	restart() {
-		return Promise.resolve(false)
+	learnByMWord(mword:MemorizeWord, event:RMB_FGT){
+		const z = this
+		const ans = mword.setInitEvent(event)
+		if(ans){
+			z.emitter.emit(z.events.learnByMWord, mword, event)
+		}
+		return Promise.resolve(ans)
+	}
+
+	learnByIndex(index:integer, event:RMB_FGT){
+		const z = this
+		if(index +1 > z.wordsToLearn.length){
+			return Promise.resolve(false)
+		}
+		const ans = z.wordsToLearn[index].setInitEvent(event)
+		if(ans){
+			z.emitter.emit(z.events.learnByIndex, index, z.wordsToLearn[index], event)
+		}
+		return Promise.resolve(ans)
+	}
+
+	async save(){
+		const z = this
+		z._processStatus.start = false
+		//merge all
+		for(let i = 0; i < z.wordsToLearn.length; i++){
+			z.wordsToLearn[i].merge()
+		}
+		const words = z.wordsToLearn.map(e=>e.word)
+		//const fn = await z.dbSrc.addWordsOfSameTable(words)
+		const ans = await z.dbSrc.saveWords(words)
+		z.emitter.emit(z.events.save, ans)
+		z._processStatus.save = true
+		return true
+	}
+
+	async restart() {
+		const z = this
+		const ans = await z.start()
+		return ans
 	}
 
 	/**
 	 * 只在成功旹觸發事件
 	 */
-	neo(mw:MemorizeWord, event:RMB_FGT_nil){
-		const z = this
-		const bol = mw.neoEvent(event)
-		if(bol){
-			z.emitter.emit(z.events.neoEvent, mw, event)
-			return bol
-		}else{
-			return bol
-		}
-	}
+	// neo(mw:MemorizeWord, event:RMB_FGT_nil){
+	// 	const z = this
+	// 	const bol = mw.setInitEvent(event)
+	// 	if(bol){
+	// 		z.emitter.emit(z.events.neoEvent, mw, event)
+	// 		return bol
+	// 	}else{
+	// 		return bol
+	// 	}
+	// }
 
 	undo(mw:MemorizeWord){
 		const z = this

@@ -2,7 +2,9 @@ import { InstanceType_ } from "@shared/Type";
 import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
+import { $ } from "@shared/Ut";
 
+export type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
 export type RMB_FGT_nil = typeof WordEvent.FGT|typeof WordEvent.RMB|undefined
 //type WordEvent = typeof WordEvent
 
@@ -68,11 +70,12 @@ export class MemorizeWord{
 
 
 	/**
-	 * 背單詞旹 憶抑忘
+	 * 未背ʹ單詞ˇ 設 憶抑忘
+	 * 若已有事件則返false
 	 * @param ev 
 	 * @returns 
 	 */
-	neoEvent(ev:RMB_FGT_nil){
+	setInitEvent(ev:RMB_FGT){
 		const z = this
 		const mw = this
 		if(mw.status.memorize == void 0){
@@ -96,5 +99,23 @@ export class MemorizeWord{
 		return oriMemorizeState
 		//z.emitter.emit(z.events.undo, mw, oriMemorizeState)
 	}
+
+	/**
+	 * MemorizeWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
+	 */
+	merge(){
+		const z = this
+		if(z.status.memorize === WordEvent.RMB){
+			z.word.dates_rmb.push($(z.status.date))
+		}else if(z.status.memorize === WordEvent.FGT){
+			z.word.dates_fgt.push($(z.status.date))
+		}else{
+
+		}
+	}
+
+	
+
+
 }
 

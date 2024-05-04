@@ -28,9 +28,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	static override async New(props:New_Abs_DbSrc & {
 		_tmdDbSrc?:WordTmdDbSrc
 	}){
-		// const f = await Abs_DbSrc.New(props)
-		// const c = new this()
-		// const o = inherit(c,f)
+
 		const o = new this
 		await o.__Init__(props)
 		return o
@@ -45,15 +43,14 @@ export class WordDbSrc extends Abs_DbSrc{
 		props._tmdDbSrc = props._tmdDbSrc?? await WordTmdDbSrc.New({
 			_dbPath:props._dbPath
 		})
-		//console.log(props._tmdDbSrc.db,1)//t non null
 		props._TableClass = props._TableClass?? WordTable
 		WordTmdDbSrc.emmiter__handler.set(o, props._tmdDbSrc)
 		Object.assign(o, props)
 		o._tmdTable = o.tmdDbSrc.tmdTable
-		//console.log(o.tmdDbSrc.db,1)
-		//console.log(o.tmdTable.dbSrc.db,1)//t undefined
 		o.initMdListener()
 	}
+
+	get This(){return WordDbSrc}
 
 	protected _tmdTable:WordTmdTable
 	get tmdTable(){return this._tmdTable}
@@ -92,39 +89,12 @@ export class WordDbSrc extends Abs_DbSrc{
 				})
 			} catch (error) {
 				const err = error as Error
-				// console.error(error)
-				// console.error('---')
-				// console.error(outerErr.stack)
 				err.stack += '\n\n' + outerErr.stack
 				throw err
 			}
 		})
 		
 	}
-
-	
-
-	// /**
-	//  * @deprecated
-	//  * @param props 
-	//  * @returns 
-	//  */
-	// static new(
-	// 	props:{
-	// 		_dbName?:string,
-	// 		_dbPath?:string,
-	// 		_tableName?:string,
-	// 		_backupDbPath?:string
-	// 		,mode?:number
-	// 	}
-	// ){
-	// 	const o = new this()
-	// 	Object.assign(o, props)
-	// 	if(props._dbPath !== void 0){
-	// 		o._db = Sqlite.newDatabaseAsync(props._dbPath, props.mode)
-	// 	}
-	// 	return o
-	// }
 
 	protected _tmdDbSrc:WordTmdDbSrc
 	get tmdDbSrc(){return this._tmdDbSrc}
@@ -139,8 +109,12 @@ export class WordDbSrc extends Abs_DbSrc{
 	protected _dbPath:string = ''
 	;public get dbPath(){return this._dbPath;};
 
+	/**@deprecated */
 	protected _tableName?:string 
-	;get tableName(){return this._tableName;};;set tableName(v){this._tableName=v;};
+	/**@deprecated */
+	get tableName(){return this._tableName;}
+	/**@deprecated */
+	set tableName(v){this._tableName=v;}
 
 	protected _db = Sqlite.newDatabaseAsync(this.dbPath)
 	;public get db(){return this._db;};
@@ -285,57 +259,9 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @param words 
 	 */
 	static checkTable = WordTable.checkTable
-/* 	public static checkTable(table:string, words:Word[]){
-		for(const w of words){
-			if(w.table !== table){
-				throw new Error(`w.table !== table\n${w.wordShape}\t${w.table}`)
-			}
-		}
-	} */
 
 
-	/**
-	 * 數據庫ʸ原ᵈ無ᵗ詞ˇ添入庫
-	 * @param db 
-	 * @param table 
-	 * @param word 
-	 */
-/* 	private static initAddWord(db:Database, table:string, word:Word):Promise<RunResult[]>
-	private static initAddWord(db:Database, table:string, word:Word[]):Promise<RunResult[]>
-	private static async initAddWord(db:Database, table:string, word:Word|Word[]){
-		let w:Word[]
-		if(Array.isArray(word)){
-			w = word
-		}else{
-			w = [word]
-		}
-		WordDbSrc_.checkTable(table, w)
-		//let [r, runResult] = await forArr(db, table, w)
-		const forArr2=async(db:Database, table:string, words:Word[])=>{
-			const [sql,] = WordDbSrc_.genQry_insert(table, words[0])
-			const stmt = await Sqlite.prepare(db, sql)
-			const runResult:RunResult[] = []
-			runResult.length = words.length
-			//let lastRunResut
-			for(let i = 0; i < words.length; i++){
-				const w = words[i]
-				const [sql, value] = WordDbSrc_.genQry_insert(table, w)
-				const r = await Sqlite.stmtRun(stmt, value)
-				const copyR:RunResult = lodash.cloneDeep(r)//每次循環 r所指ᵗ地址ˋ皆不變、唯其所指ᵗ數據ˋ變˪
-				// runResult.push(r)
-				runResult[i] = copyR
-				//lastRunResut = r
-			}
-			return runResult
-		}
 
-		const fn = async()=>{
-			return forArr2(db, table, w)
-		}
-
-		const runResult:RunResult[] = await fn() //await Sqlite.transaction(db, fn)
-		return runResult
-	} */
 
 	//@ts-ignore
 	private static initAddWord = WordTable.initAddWord
@@ -349,87 +275,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns [initAddIds, modifiedIds]
 	 */
 	static addWordsOfSameTable_fn = WordTable.addWordsOfSameTable_fn
-	/* public static async addWordsOfSameTable_fn(db:Database, words:Word[]){
-		$a(words)
-		
-		//const tableToWordsMap = SingleWord2.classify(words)
-		const table0 = $(words[0].table)
-		WordDbSrc_.checkTable(table0, words)
-		const fn = async()=>{
-			return await addWordsOfSameTable(db, table0, words)
-		}
-		return fn
-		
 
-		async function addWordsOfSameTable(db:Database, table:string, words:Word[]){
-			words = words.map(e=>Word.intersect(e,e))//<坑>{舊版數據庫中 詞義ˉ數組蜮有重複元素、而SingleWord.intersect()合併單詞旹不會產重複元素。故初添前亦先除重}
-			
-			//const neoIds:number[] = []
-			const neoWord_existedWordMap = await getNeoWord_existedWordMap(db, table, words)
-			const [wordsToInitAdd, wordsToUpdate] = getWordsToAdd(neoWord_existedWordMap)//<坑>{記得判空、蜮得空數組}
-			let runResult1: RunResult[] = []
-			
-			
-			if(wordsToInitAdd.length !== 0){
-				
-				//let d3 = await VocaSqlite.initAddWord_deprecated(db, table, wordsToInitAdd)
-				//runResult1 = d3.flat(2)
-				const fn = async()=>{
-					return await WordDbSrc_.initAddWord(db, table, wordsToInitAdd)
-				}
-				//runResult1 = await Sqlite.transaction(db, fn)
-				runResult1 = await fn()
-			}
-			if(wordsToUpdate.length !== 0){
-				const fn =  WordDbSrc_.setWordsByIds_fn(db, table, (wordsToUpdate))
-				await fn()
-			}
-			const initAddIds = runResult1.map(e=>e.lastID)
-			const modifiedIds = wordsToUpdate.map(e=>$(e.id))
-			return [initAddIds, modifiedIds]
-
-		}
-
-		async function getNeoWord_existedWordMap(db:Database, table:string, words:Word[]){
-			
-			words = VocaRaw2.merge(words) 
-			const neoWord_existedWordMap = new Map<Word, Word|undefined>()
-			const neoWordShapes:string[] = words.map(e=>e.wordShape)
-			const existedRows:(IVocaRow)[][] = await WordDbSrc_.qryWordByWordShape(db, table, neoWordShapes)
-			if(words.length !== existedRows.length){throw new Error(`words.length !== existedRows.length`)}
-			for(let i = 0; i < existedRows.length; i++){
-				const curNeoWord = words[i]
-				
-				if(existedRows[i].length === 0){
-					neoWord_existedWordMap.set(curNeoWord, undefined)
-				}else if (existedRows[i].length === 1){
-					const curExistedWord = Word.toJsObj(existedRows[i][0])
-					neoWord_existedWordMap.set(curNeoWord, curExistedWord)
-				}else{
-					throw new Error(`${existedRows[i][0].wordShape}在數據庫中有重複項`)
-				}
-			}
-			return neoWord_existedWordMap
-		}
-
-		function getWordsToAdd(neoWord_existedWordMap:Map<Word, Word|undefined>){
-			const wordsToInitAdd:Word[] = []
-			const wordsToUpdate:Word[] = []
-			for(const [neoWord, existedWord] of neoWord_existedWordMap){
-				if(existedWord === void 0){
-					wordsToInitAdd.push(neoWord)
-				}else{
-					const united = Word.intersect(existedWord, neoWord)
-					if(Word.isWordsEqual(existedWord, united, [VocaTableColumnName.id])){}//實則不必刪id再比。united之id固同於前者
-					else{
-						wordsToUpdate.push(united)
-					}
-				}
-			}
-			return [wordsToInitAdd, wordsToUpdate]
-		}
-		
-	} */
 	
 	
 	public addWordsOfSameTable(words:Word[]){
@@ -445,34 +291,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	static qryWordByWordShape = WordTable.qryWordByWordShape
-	/* public static async qryWordByWordShape(db:Database, table:string, wordShape:string):Promise<IVocaRow[]>
-	public static async qryWordByWordShape(db:Database, table:string, wordShape:string[]):Promise<(IVocaRow)[][]>
 
-	public static async qryWordByWordShape(db:Database, table:string, wordShape:string|string[]){
-		const cl = VocaDbTable
-		if(typeof wordShape === 'string'){
-			return forOne(db, table, wordShape)
-		}else{
-			const fn = await Sqlite.fn.qryValuesInColumn_fn<IVocaRow>(db, table, cl.wordShape, wordShape)
-			//let d2 = await Sqlite.qryValuesInColumn_unsafeInt_transaction<IVocaRow>(db, table, VocaTableColumnName.wordShape, wordShape)
-			const d2 = await fn()
-			const r = d2
-			for(let i = 0; i < r.length; i++){
-				if(r[i].length !== 0){
-					WordDbSrc_.attachTableName(r[i], table)
-				}
-			}
-			return r
-		}
-
-		async function forOne(db:Database, table:string, wordShape:string){
-			const sql = `SELECT * FROM '${table}' WHERE ${VocaTableColumnName.wordShape}=?`
-			const r = await Sqlite.all<IVocaRow>(db, sql, wordShape)
-			//if(r.length === 0 || r === void 0){return undefined}
-			WordDbSrc_.attachTableName(r, table)
-			return r
-		}
-	} */
 
 	/**
 	 * 畀words增ling字段。直ᵈ改原數組、無返。
@@ -499,37 +318,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	static setWordsByIds_fn = WordTable.setWordsByIds_fn
-/* 	public static setWordsByIds_fn(db:Database, table:string, words:Word[], ids?:number[]){
-		//if(words.length === 0){throw new Error(`words.length === 0`)}
-		
-		WordDbSrc_.checkTable(table, words)
-		$a(words)
-		if(ids === void 0){
-			ids = []
-			for(const w of words){
-				ids.push($(w.id))
-			}
-		}
-		if(words.length !== ids.length){
-			throw new Error(`words.length !== ids.length`)
-		}
 
-		const sql = WordDbSrc_.genQry_updateById(table, $(words[0],'words[0]'), ids[0])[0]
-
-		const fn = async()=>{
-			const stmt = await Sqlite.prepare(db, sql)
-			const runResult:RunResult[] = []
-			for(let i = 0; i < words.length; i++){
-				let w = words[i]; let id = $(ids)[i]
-				let [,v] = WordDbSrc_.genQry_updateById(table, w, id)
-				const r = await Sqlite.stmtRun(stmt, v)
-				runResult.push(r)
-			}
-			return runResult
-		}
-		//return Sqlite.transaction(db, fn)
-		return fn
-	} */
 
 	
 	public setWordsByIds(words:Word[], ids:number[]){
@@ -547,13 +336,6 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	static genQry_updateById = WordTable.genQry_updateById
-/* 	public static genQry_updateById(table: string, word:Word,id: number){
-		WordDbSrc_.checkTable(table, [word])
-		const c = VocaTableColumnName
-		const obj = Word.toDbObj($(word))
-		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.genQry_updateById(table, obj, id)
-	} */
 
 	/**
 	 * 由詞ˉ對象生成 增ᵗsql語句。
@@ -562,15 +344,6 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	static genQry_insert = WordTable.genQry_insert
-/* 	public static genQry_insert(table: string, word:Word){
-		WordDbSrc_.checkTable(table, [word])
-		const c = VocaTableColumnName
-		const obj = Word.toDbObj($(word))
-		delete obj[c.id]; delete (obj as any)[c.table]
-		return Sqlite.genQry_insert(table, obj)
-	} */
-
-
 
 	public static async getAllWords(db:Database, table:string){
 		const sql = `SELECT * FROM '${table}'`
@@ -591,19 +364,19 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	static saveWords = WordTable.saveWords
-/* 	public static async saveWords(db:Database, sws:Word[]){
-		const tableToWordsMap = Word.classify(sws)
-		//const prms:Promise<number[][]>[] = []
-		const ans:number[][][] = []
-		for(const [table, words] of tableToWordsMap){
-			const fn = await this.addWordsOfSameTable_fn(db, words)
-			const pr = await Sqlite.transaction(db, fn)
-			//prms.push(pr)
-			ans.push(pr)
-		}
-		return ans
-	} */
 
+	/**
+	 * 數據庫ʰ既複習ᵗ單詞ˇ批量ᵈ依表名ⁿ存。此函數不可用于初添。
+	 * 斯方法操作多個表、宜置于DbSrc類洏非Table類
+	 * @param db 
+	 * @param sws 
+	 * @param table 
+	 * @returns 
+	 */
+	saveWords(words:Word[]){
+		const z = this
+		return z.This.saveWords(z.db, words)
+	}
 
 	/**
 	 * 由id數組取詞形數組

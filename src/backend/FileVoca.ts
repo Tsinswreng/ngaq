@@ -9,10 +9,11 @@ import * as Le from '@shared/linkedEvent'
 import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileVocaSvc as FileVocaSvc } from './logic/FileVocaSvc';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
-import { Exception } from '@shared/Exception';
+import { Exception, Reason } from '@shared/Exception';
 import chalk from 'chalk'
 import util from 'util'
 import * as fs from 'fs'
+import { WordEvent } from '@shared/SingleWord2';
 
 const fileSignal = process.argv[2]??''
 const fileIn = process.argv[3]??''
@@ -46,26 +47,21 @@ if(fileSignal === '' || fileIn === '' || fileOut == ''){
 const configInst = Config.getInstance()
 const config = configInst.config
 
-const helpPrompt = 
-`
-echoConfig
-reloadConfig
-wordCnt
+const RN = Reason.new.bind(Reason)
+class UiErrReasons{
+	no_such_word = RN('no_such_word')
+	bad_input = RN<string[][]>('bad_input')
+}
 
-load
-start
-calcWeight
-help
-`
 
 /** 表示層 */
-export class FileVoca{
+export class FileVocaUi{
 
 	protected constructor(){
 
 	}
 
-	static helpPrompt = helpPrompt
+	//static helpPrompt = helpPrompt
 	
 	static async New(){
 		const z = new this()
@@ -76,24 +72,38 @@ export class FileVoca{
 	protected async __Init__(){
 		const z = this
 		z._cliMemorize = await FileVocaSvc.New()
-		z.srv.emitter.on(z.srv.events.error, (error)=>{
+		z.svc.emitter.on(z.svc.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		return z
 	}
 
-	readonly This = FileVoca
+	readonly This = FileVocaUi
+
+	protected _errReasons = new UiErrReasons()
+	get errReasons(){return this._errReasons}
+
+	strToMemorizeEvent(str:string){
+		const z = this
+		if(str === 'r'){
+			return WordEvent.RMB
+		}else if(str === 'f'){
+			return WordEvent.FGT
+		}else{
+			
+		}
+	}
 
 	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
-			static new(cli:FileVoca){
+			static new(cli:FileVocaUi){
 				const o = new this()
 				o.cli = cli
 				return o
 			}
-			cli:FileVoca
+			cli:FileVocaUi
 			echoConfig(){
 				const z = this.cli
 				z.exput(
@@ -106,20 +116,22 @@ export class FileVoca{
 			}
 			wordCnt(){
 				const z = this.cli
-				z.exput(z.srv.wordsToLearn.length+'')
+				z.exput(z.svc.wordsToLearn.length+'')
 			}
 			help(){
 				const z = this.cli
-				z.exput(z.This.helpPrompt)
+				const fns = Object.keys(this)
+				z.exput(JSON.stringify(fns))//TOFIX
+				
 			}
 			async load(){
 				const z = this.cli
-				const es = await z.srv.load()
+				const es = await z.svc.load()
 				return es
 			}
 			async sort(){
 				const z = this.cli
-				const es = await z.srv.sort()
+				const es = await z.svc.sort()
 				return es
 			}
 			async prepare(){
@@ -130,15 +142,15 @@ export class FileVoca{
 			}
 			async start(args:string[]){
 				const z = this.cli
-				const bol = await z.srv.start()
+				const bol = await z.svc.start()
 				if(!bol){
 					z.exput('start failed')
 				}
-				const cnt = FileVoca.argToIntAt(args, 1)??64
+				const cnt = FileVocaUi.argToIntAt(args, 1)??64
 				let tab = '\t\t'
 				let ans = ''
 				for(let i = 0; i < cnt; i++){
-					const mw = z.srv.wordsToLearn[i]
+					const mw = z.svc.wordsToLearn[i]
 					// ans += 
 					// i
 					// +tab+mw.word.wordShape
@@ -148,12 +160,28 @@ export class FileVoca{
 				}
 				z.exput(ans)
 			}
+
+			async learnByIndex(args:string[]){
+				const z = this.cli
+				const index = z.This.argToIntAt(args, 1)
+				
+				if(index == void 0){
+					throw Exception.for(z.errReasons.bad_input)
+				}
+				const event = z.strToMemorizeEvent(args[2]??'')
+				if(event == void 0){
+					throw Exception.for(z.errReasons.bad_input, args)
+				}
+				z.svc.learnByIndex(index, event)
+				return true
+			}
+
 			async save(){
 
 			}
 			async restart(){
 				const z = this.cli
-				const es = await z.srv.restart()
+				const es = await z.svc.restart()
 			}
 
 		}
@@ -167,7 +195,7 @@ export class FileVoca{
 	get configInst(){return this._configInst}
 
 	protected _cliMemorize: FileVocaSvc
-	get srv(){return this._cliMemorize}
+	get svc(){return this._cliMemorize}
 
 
 	protected _delimiter = ','
@@ -221,7 +249,7 @@ export class FileVoca{
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.srv.emitter.on(z.srv.events.error, (error)=>{
+		z.svc.emitter.on(z.svc.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){
@@ -263,7 +291,7 @@ export class FileVoca{
 
 async function main(){
 	console.log(process.argv)//t
-	const cli = await FileVoca.New()
+	const cli = await FileVocaUi.New()
 	// 監視文件變化
 	//const testFile = `D:/_code/voca/out/test.txt`
 	let watcher: fs.FSWatcher

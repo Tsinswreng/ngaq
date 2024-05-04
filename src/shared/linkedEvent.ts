@@ -1,6 +1,6 @@
 
 type Args<T> = T extends any[] ? T : [T]
-export class Event<Arg=any>{
+export class Event<Arg extends any[] =any[]>{
 	protected _name:string
 	get name(){return this._name}
 
@@ -10,7 +10,7 @@ export class Event<Arg=any>{
 	protected constructor(){
 
 	}
-	static new<Arg=any>(name:string, base?:Event<Arg>){
+	static new<Arg extends any[] =any[]>(name:string, base?:Event<Arg>){
 		const o = new this<Arg>()
 		o.__init__(name, base)
 		return o
@@ -51,9 +51,9 @@ export class LinkedEmitter{
 	/**
 	 * 不是責任鏈模式
 	 */
-	emit<Arg>(
+	emit<Arg extends any[] =any[]>(
 		event:Event<Arg>
-		, ...args:Args<Arg>
+		, ...args:Arg
 	):integer{
 		let cnt = 0
 		for(let e = event;e instanceof Event;){

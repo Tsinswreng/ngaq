@@ -15,9 +15,7 @@ class _WordTable extends Abs_Table{
 	}
 
 	static new(...params:Parameters<typeof Abs_Table.new>){
-		// const f = Abs_Table.new(...params)
-		// const c = new this()
-		// return inherit(c,f)
+
 		const o = new this()
 		o.__init__(...params)
 		return o
@@ -129,7 +127,7 @@ class _WordTable extends Abs_Table{
 	 * @param db 
 	 * @param sws 
 	 * @param table 
-	 * @returns 
+	 * @returns //TODO
 	 */
 	static async saveWords(db:Database, sws:Word[]){
 		const tableToWordsMap = Word.classify(sws)

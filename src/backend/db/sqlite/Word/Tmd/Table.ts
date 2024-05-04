@@ -15,9 +15,6 @@ export class WordTmdTable extends Abs_Table{
 	}
 
 	static new(...props:Parameters<typeof Abs_Table.new>){
-		// const f = Abs_Table.new(...props)
-		// const c = new this()
-		// const o = inherit(c,f)
 		const o = new this()
 		o.__init__(...props)
 		return o

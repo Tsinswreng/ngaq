@@ -1,5 +1,5 @@
 import { ProcessEvents } from "./Event";
-import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
+import { MemorizeWord, RMB_FGT } from "@shared/entities/Word/MemorizeWord";
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 import { Exception } from "@shared/Exception";
@@ -7,13 +7,14 @@ import { Exception } from "@shared/Exception";
 //type Asyncable<T> = T|Promise<T>
 type Task<T> = Promise<T>
 
-class ProcessErrReason{
+class SvcErrReason{
 	static new(){
 		const o = new this()
 		return o
 	}
 	didnt_load = Reason.new('didnt_load')
-	didnt_calcWeight = Reason.new('didnt_calcWeight')
+	didnt_sort = Reason.new('didnt_sort')
+	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
 }
 
 // const isb = new Int32Array(new SharedArrayBuffer(4))
@@ -55,7 +56,7 @@ export abstract class VocaSvc{
 	protected _processStatus = new ProcessStatus()
 	get processStatus(){return this._processStatus}
 
-	protected _processErrReasons = new ProcessErrReason()
+	protected _processErrReasons = new SvcErrReason()
 	get processErrReasons(){return this._processErrReasons}
 
 	protected _wordsToLearn:MemorizeWord[] = []
@@ -80,19 +81,23 @@ export abstract class VocaSvc{
 	/**
 	 * 始背單詞。
 	 */
-	start():Task<boolean>{
-		const z = this
-		if(!z._processStatus.load){
-			throw Exception.for(z.processErrReasons.didnt_load)
-		}
-		z._processStatus.start = true
-		return Promise.resolve(true)
-	}
+	abstract start():Task<boolean>
+	// start():Task<boolean>{
+	// 	const z = this
+	// 	if(!z._processStatus.load){
+	// 		throw Exception.for(z.processErrReasons.didnt_load)
+	// 	}
+	// 	z._processStatus.start = true
+	// 	return Promise.resolve(true)
+	// }
 
+	abstract learnByIndex(index:integer, event:RMB_FGT):Task<boolean>
 
 	abstract save():Task<boolean>
 
 	abstract restart():Task<boolean>
+
+	
 
 
 }
@@ -132,7 +137,7 @@ export abstract class Abs_MemorizeLogic_deprecated implements I_MemorizeLogic{
 		
 	}
 	
-	static ErrReason = ProcessErrReason
+	static ErrReason = SvcErrReason
 	static errReasons = this.ErrReason.new()
 
 	protected _reciteConfig

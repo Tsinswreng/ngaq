@@ -1,18 +1,31 @@
-export class Reason{
+type Args<T> = T extends any[]? T : never
+
+export class Reason<Arg extends any[] = any[]>{
 	protected constructor(){
 
 	}
-	static new(msg:string='' ,prop?:{
-		_msg:string
+	static new<Arg extends any[]>(msg:string='' ,prop?:{
+		//_msg:string
 	}){
-		const o = new this()
-		o._msg = msg
-		Object.assign(o,prop)
-		return o
+		const z = new this<Arg>()
+		z.__init__(msg, prop)
+		return z
+	}
+
+	protected __init__(msg:string, prop?){
+		const z = this
+		z._msg = msg
+		Object.assign(z,prop)
+		return z
 	}
 
 	protected _msg:string
 	get msg(){return this._msg}
+	set msg(v){this._msg = v}
+
+	protected _args:Arg
+	get args(){return this.args}
+	set args(v){this._args = v}
 }
 
 
@@ -21,14 +34,24 @@ export class Exception extends Error{
 		super(...args)
 	}
 	static new(msg:string='', opt?){
-		const c = new this()
-		c.message = msg
-		return c
+		const z = new this()
+		z.__init__(msg, opt)
+		return z
 	}
 
-	static for(reason:Reason){
+	protected __init__(msg:string='', opt?){
+		const z = this
+		z.message = msg
+		return z
+	}
+
+	static for<Arg extends any[]>(
+		reason:Reason<Arg>
+		, ...args:Arg
+	){
 		const o = this.new(reason.msg)
 		o._reason = reason
+		
 		return o
 	}
 
