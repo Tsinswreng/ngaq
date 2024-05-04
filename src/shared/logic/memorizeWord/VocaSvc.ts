@@ -34,8 +34,8 @@ class ProcessStatus{
 /**
  * 背單詞 流程 業務理則
  */
-export abstract class MemorizeProcessLogic{
-	static async New():Promise<MemorizeProcessLogic>{
+export abstract class VocaSvc{
+	static async New():Promise<VocaSvc>{
 		//@ts-ignore
 		const z = new this()
 		z.__Init__()

@@ -7,7 +7,7 @@ import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
-import { FileVocaSrv } from './logic/FileVocaSrv';
+import { FileVocaSvc as FileVocaSvc } from './logic/FileVocaSvc';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import chalk from 'chalk'
@@ -75,8 +75,8 @@ export class FileVoca{
 
 	protected async __Init__(){
 		const z = this
-		z._cliMemorize = await FileVocaSrv.New()
-		z.cliMemorize.emitter.on(z.cliMemorize.events.error, (error)=>{
+		z._cliMemorize = await FileVocaSvc.New()
+		z.srv.emitter.on(z.srv.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		return z
@@ -106,7 +106,7 @@ export class FileVoca{
 			}
 			wordCnt(){
 				const z = this.cli
-				z.exput(z.cliMemorize.wordsToLearn.length+'')
+				z.exput(z.srv.wordsToLearn.length+'')
 			}
 			help(){
 				const z = this.cli
@@ -114,12 +114,12 @@ export class FileVoca{
 			}
 			async load(){
 				const z = this.cli
-				const es = await z.cliMemorize.load()
+				const es = await z.srv.load()
 				return es
 			}
 			async sort(){
 				const z = this.cli
-				const es = await z.cliMemorize.sort()
+				const es = await z.srv.sort()
 				return es
 			}
 			async prepare(){
@@ -130,7 +130,7 @@ export class FileVoca{
 			}
 			async start(args:string[]){
 				const z = this.cli
-				const bol = await z.cliMemorize.start()
+				const bol = await z.srv.start()
 				if(!bol){
 					z.exput('start failed')
 				}
@@ -138,7 +138,7 @@ export class FileVoca{
 				let tab = '\t\t'
 				let ans = ''
 				for(let i = 0; i < cnt; i++){
-					const mw = z.cliMemorize.wordsToLearn[i]
+					const mw = z.srv.wordsToLearn[i]
 					// ans += 
 					// i
 					// +tab+mw.word.wordShape
@@ -148,10 +148,14 @@ export class FileVoca{
 				}
 				z.exput(ans)
 			}
+			async save(){
+
+			}
 			async restart(){
 				const z = this.cli
-				const es = await z.cliMemorize.restart()
+				const es = await z.srv.restart()
 			}
+
 		}
 		return Cmd
 	}
@@ -162,8 +166,8 @@ export class FileVoca{
 	protected _configInst = configInst
 	get configInst(){return this._configInst}
 
-	protected _cliMemorize: FileVocaSrv
-	get cliMemorize(){return this._cliMemorize}
+	protected _cliMemorize: FileVocaSvc
+	get srv(){return this._cliMemorize}
 
 
 	protected _delimiter = ','
@@ -217,7 +221,7 @@ export class FileVoca{
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.cliMemorize.emitter.on(z.cliMemorize.events.error, (error)=>{
+		z.srv.emitter.on(z.srv.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){

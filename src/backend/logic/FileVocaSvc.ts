@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { MemorizeProcessLogic as VocaSrv } from "@shared/logic/memorizeWord/VocaSrv";
+import { VocaSvc as VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
 import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
@@ -38,9 +38,9 @@ class MemorizeEvent extends Le.Events{
 // emt3.emit<>('')
 
 /** 業務理則層 */
-export class FileVocaSrv extends VocaSrv{
+export class FileVocaSvc extends VocaSvc{
 
-	readonly This = FileVocaSrv
+	readonly This = FileVocaSvc
 	protected constructor(){
 		super()
 	}
