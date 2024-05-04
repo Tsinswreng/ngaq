@@ -20,23 +20,7 @@ const configInst = Config.getInstance()
 const config = configInst.config
 
 
-const EV = Le.Event.new.bind(Le.Event)
 
-class MemorizeEvent extends Le.Events{
-	/** 
-	 * MemorizeWord: ʃ蔿ˋ何詞。
-	 */
-	//neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
-	/** RMB_FGT_nil: 撤銷前ʹ事件 */
-	undo = EV<[MemorizeWord, RMB_FGT_nil]>('undo')
-	start = EV<[]>('start')
-	//test=EV('')
-	learnByMWord = EV<[MemorizeWord, RMB_FGT]>('learnByWord')
-
-	/** 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件 */
-	learnByIndex = EV<[integer, MemorizeWord, RMB_FGT]>('learnByIndex')
-	save = EV('save')
-}
 
 // let emt3 = new EventEmitter3()
 // emt3.emit<>('')
@@ -70,8 +54,8 @@ export class FileVocaSvc extends VocaSvc{
 	get configInst(){return this._configInst}
 
 	/** 背單詞ʹ程ʸʹ事件、如蔿一單詞添加憶抑忘ˡ事件,撤銷 等 */
-	protected _events = new MemorizeEvent()
-	get events(){return this._events}
+	//protected _svcEvents = new SvcEvent()
+	//get svcEvents(){return this._svcEvents}
 
 	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
 	get emitter(){return this._emitter}
@@ -139,7 +123,7 @@ export class FileVocaSvc extends VocaSvc{
 			}
 			z._wordsToLearn.length = 0
 			z._wordsToLearn.push(...mWords)
-			z._processStatus.load = true
+			z._svcStatus.load = true
 			return true
 		} catch (error) {
 			z.emitErr(error)
@@ -151,12 +135,12 @@ export class FileVocaSvc extends VocaSvc{
 		const z = this
 		const outErr = new Error()
 		try {
-			if(!z._processStatus.load){
-				throw Exception.for(z.processErrReasons.didnt_load)
+			if(!z._svcStatus.load){
+				throw Exception.for(z.svcErrReasons.didnt_load)
 			}
 			z.initWeightAlgo()
 			z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
-			z._processStatus.sort = true
+			z._svcStatus.sort = true
 			return true
 		} catch (error) {
 			const err = error as Error
@@ -171,14 +155,14 @@ export class FileVocaSvc extends VocaSvc{
 
 	override start(){
 		const z = this
-		if(!z.processStatus.load){
-			throw Exception.for(z.processErrReasons.didnt_load)
+		if(!z.svcStatus.load){
+			throw Exception.for(z.svcErrReasons.didnt_load)
 		}
-		if(!z.processStatus.save){
-			throw Exception.for(z.processErrReasons.cant_start_when_unsave)
+		if(!z.svcStatus.save){
+			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
 		}
-		z.processStatus.start = true
-		z.emitter.emit(z.events.start)
+		z.svcStatus.start = true
+		z.emitter.emit(z.svcEvents.start)
 		return Promise.resolve(true)
 	}
 
@@ -186,7 +170,7 @@ export class FileVocaSvc extends VocaSvc{
 		const z = this
 		const ans = mword.setInitEvent(event)
 		if(ans){
-			z.emitter.emit(z.events.learnByMWord, mword, event)
+			z.emitter.emit(z.svcEvents.learnByMWord, mword, event)
 		}
 		return Promise.resolve(ans)
 	}
@@ -198,14 +182,14 @@ export class FileVocaSvc extends VocaSvc{
 		}
 		const ans = z.wordsToLearn[index].setInitEvent(event)
 		if(ans){
-			z.emitter.emit(z.events.learnByIndex, index, z.wordsToLearn[index], event)
+			z.emitter.emit(z.svcEvents.learnByIndex, index, z.wordsToLearn[index], event)
 		}
 		return Promise.resolve(ans)
 	}
 
 	async save(){
 		const z = this
-		z._processStatus.start = false
+		z._svcStatus.start = false
 		//merge all
 		for(let i = 0; i < z.wordsToLearn.length; i++){
 			z.wordsToLearn[i].merge()
@@ -213,8 +197,8 @@ export class FileVocaSvc extends VocaSvc{
 		const words = z.wordsToLearn.map(e=>e.word)
 		//const fn = await z.dbSrc.addWordsOfSameTable(words)
 		const ans = await z.dbSrc.saveWords(words)
-		z.emitter.emit(z.events.save, ans)
-		z._processStatus.save = true
+		z.emitter.emit(z.svcEvents.save, ans)
+		z._svcStatus.save = true
 		return true
 	}
 
@@ -241,7 +225,7 @@ export class FileVocaSvc extends VocaSvc{
 	undo(mw:MemorizeWord){
 		const z = this
 		const old = mw.undo()
-		z.emitter.emit(z.events.undo, mw, old)
+		z.emitter.emit(z.svcEvents.undo, mw, old)
 	}
 
 }

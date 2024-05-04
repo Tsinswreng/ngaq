@@ -1,43 +1,26 @@
+<!-- 控制板、含諸按鈕等 -->
 <script setup lang="ts">
 //import {ref} from 'vue'
 import Log from '@shared/Log';
-//import * as aaa from '@shared/entities/Word/MemorizeWord'
-import MultiMode from '../MultiMode';
+import {WebVocaUi} from '../WebVocaUi';
 import Recite from '@ts/voca/Recite';
-const multiMode = MultiMode.getInstance()
+const ui = WebVocaUi.getInstance()
 import {ref} from 'vue'
 const recite = Recite.getInstance()
 import LS from '@ts/LocalStorage';
-//import { setInterval } from 'timers/promises';
-//const recite = Recite.getInstance()
 
-
-//const props = defineProps()
-//const emits = defineEmits(['CtrlPanel:start']);
-
-// async function start(){
-// 	l.log(`recite.start('/english')`) //t
-// 	await recite.start('/english')
-// 	emits('CtrlPanel:start', true)
-// }
-
-// async function save(){
-// 	await recite.saveWords()
-// }
-
-
-const isSaved = multiMode.isSaved
-const debuffNumerator = multiMode.debuffNumerator_str
+const isSaved = ui.uiStatus.isSaved
+const debuffNumerator = ui.uiStatus.debuffNumerator_str
 
 function switchRandomImg(){
-	multiMode.isShowRandomBg.value = !multiMode.isShowRandomBg.value
+	ui.uiStatus.isShowRandomBg.value = !ui.uiStatus.isShowRandomBg.value
 }
 
 function set_page(){
 	const ele = document.getElementById('paging') as HTMLInputElement
 	const value = ele.value
-	multiMode.set_page(value)
-	multiMode.multiMode_key.value++
+	ui.set_page(value)
+	ui.uiStatus.multiMode_key.value++
 }
 </script>
 
@@ -55,15 +38,15 @@ function set_page(){
 		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label> -->
 		
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
-		<button @click="multiMode.start()">始</button>
-		<button @click="multiMode.save()">存</button>
+		<button @click="ui.start()">始</button>
+		<button @click="ui.save()">存</button>
 		<button>改</button>
-		<button @click="multiMode.restart()">重開</button>
-		<button @click="recite.finalFilter()">比例</button>
-		<button @click="multiMode.sortByRmb()">憶序</button>
-		<button @click="multiMode.sortBylastRvwDate()">期序</button>
-		<button @click="switchRandomImg()">開圖</button>
-		<button @click="multiMode.showNextRandomBg()">換圖</button>
+		<button @click="ui.restart()">重開</button>
+		<!-- <button @click="recite.finalFilter()">比例</button> -->
+		<!-- <button @click="ui.sortByRmb()">憶序</button>
+		<button @click="ui.sortBylastRvwDate()">期序</button> -->
+		<!-- <button @click="switchRandomImg()">開圖</button>
+		<button @click="ui.showNextRandomBg()">換圖</button> -->
 		
 		
 		<!-- 坑{v-model與value=""不兼容} -->
@@ -80,19 +63,32 @@ function set_page(){
 	</div>
 </template>
 <!-- <坑>{若欲父組件ʸ子組件ᵗ樣式ˇ設、則子組件須有唯一根節點。} -->
-<style scoped>
+<style scoped lang="scss">
 input{
 	background: transparent;
 	width: 64px;
 	font-size: 12px; /* 最小只能調到12 */
 	overflow: visible; /* 允许文本超出边框 不效 */
 }
+
 #paging{
 	width: 32px;
 }
+
 button{
 	height: 16px;
-	font-size: 13px;
+	font-size: 16px;
 	padding: 0px;
+	background-color: black;
+	border: 0px;
+}
+
+button:hover{
+	background-color:darkcyan;
+}
+
+button:active{
+	background-color: white;
+	color: black;
 }
 </style>

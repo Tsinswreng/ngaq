@@ -1,11 +1,28 @@
-import { ProcessEvents } from "./Event";
-import { MemorizeWord, RMB_FGT } from "@shared/entities/Word/MemorizeWord";
+import { MemorizeWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/MemorizeWord";
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 import { Exception } from "@shared/Exception";
 
 //type Asyncable<T> = T|Promise<T>
 type Task<T> = Promise<T>
+
+const EV = Le.Event.new.bind(Le.Event)
+
+class SvcEvents extends Le.Events{
+	/** 
+	 * MemorizeWord: ʃ蔿ˋ何詞。
+	 */
+	//neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
+	/** RMB_FGT_nil: 撤銷前ʹ事件 */
+	undo = EV<[MemorizeWord, RMB_FGT_nil]>('undo')
+	start = EV<[]>('start')
+	//test=EV('')
+	learnByMWord = EV<[MemorizeWord, RMB_FGT]>('learnByWord')
+
+	/** 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件 */
+	learnByIndex = EV<[integer, MemorizeWord, RMB_FGT]>('learnByIndex')
+	save = EV('save')
+}
 
 class SvcErrReason{
 	static new(){
@@ -24,7 +41,7 @@ export interface I_MemorizeLogic{
 
 }
 
-class ProcessStatus{
+class SvcStatus{
 
 	load = false 
 	sort = false
@@ -51,21 +68,21 @@ export abstract class VocaSvc{
 	protected abstract _emitter:Le.LinkedEmitter
 	get emitter(){return this._emitter}
 
-	protected _processEvents = ProcessEvents.new()
-	get processEvents(){return this._processEvents}
+	protected _svcEvents = new SvcEvents()
+	get svcEvents(){return this._svcEvents}
 
-	protected _processStatus = new ProcessStatus()
-	get processStatus(){return this._processStatus}
+	protected _svcStatus = new SvcStatus()
+	get svcStatus(){return this._svcStatus}
 
-	protected _processErrReasons = new SvcErrReason()
-	get processErrReasons(){return this._processErrReasons}
+	protected _svcErrReasons = new SvcErrReason()
+	get svcErrReasons(){return this._svcErrReasons}
 
 	protected _wordsToLearn:MemorizeWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
 	emitErr(err:Error|any){
 		const z = this
-		z.emitter.emit(z.processEvents.error, err)
+		z.emitter.emit(z.svcEvents.error, err)
 	}
 
 	/**
@@ -114,83 +131,83 @@ export abstract class VocaSvc{
 
 
 
-/**
- * 負責觸發事件
- */
-export abstract class Abs_MemorizeLogic_deprecated implements I_MemorizeLogic{
+// /**
+//  * 負責觸發事件
+//  */
+// export abstract class Abs_MemorizeLogic_deprecated implements I_MemorizeLogic{
 
-	protected constructor(){}
+// 	protected constructor(){}
 
-	readonly This = Abs_MemorizeLogic_deprecated
-	// static new():Abs_ReciteLogic {
-	// 	//@ts-ignore
-	// 	const o = new this()
-	// 	return o
-	// }
+// 	readonly This = Abs_MemorizeLogic_deprecated
+// 	// static new():Abs_ReciteLogic {
+// 	// 	//@ts-ignore
+// 	// 	const o = new this()
+// 	// 	return o
+// 	// }
 
-	static async New():Promise<Abs_MemorizeLogic_deprecated>{
-		//@ts-ignore
-		const o = new this()
-		return Promise.resolve(o)
-	}
+// 	static async New():Promise<Abs_MemorizeLogic_deprecated>{
+// 		//@ts-ignore
+// 		const o = new this()
+// 		return Promise.resolve(o)
+// 	}
 
-	protected async __Init__(){
+// 	protected async __Init__(){
 		
-	}
+// 	}
 	
-	static ErrReason = SvcErrReason
-	static errReasons = this.ErrReason.new()
+// 	static ErrReason = SvcErrReason
+// 	static errReasons = this.ErrReason.new()
 
-	protected _reciteConfig
+// 	protected _reciteConfig
 
-	protected abstract _emitter: Le.LinkedEmitter
-	abstract get emitter():Le.LinkedEmitter
+// 	protected abstract _emitter: Le.LinkedEmitter
+// 	abstract get emitter():Le.LinkedEmitter
 
-	protected _wordsToLearn:MemorizeWord[] = []
-	get wordsToLearn(){return this._wordsToLearn}
+// 	protected _wordsToLearn:MemorizeWord[] = []
+// 	get wordsToLearn(){return this._wordsToLearn}
 
-	protected static _events = ProcessEvents.instance
-	static get events(){return this._events}
+// 	protected static _events = ProcessEvents.instance
+// 	static get events(){return this._events}
 
-	protected _curWordIndex = 0
-	get curWordIndex(){return this._curWordIndex}
+// 	protected _curWordIndex = 0
+// 	get curWordIndex(){return this._curWordIndex}
 
-	protected _status = {
-		load: false
-		,calcWeight: false
-		,sort: false
-		,start: false
-		,save: true
-	}
+// 	protected _status = {
+// 		load: false
+// 		,calcWeight: false
+// 		,sort: false
+// 		,start: false
+// 		,save: true
+// 	}
 
-	addListeners(){
-		const z = this
-		const Z = z.This
-		const event__fn = [] as [Le.Event, (this:Abs_MemorizeLogic_deprecated)=>unknown][]
-		const es = Z.events
-		event__fn.push(
-			[es.load, z.on_load.bind(z)]
-			,[es.sort, z.on_calcWeight.bind(z)]
-			//,[es.sort, z.on_sort.bind(z)]
-			,[es.start, z.on_start.bind(z)]
-			,[es.save, z.on_save.bind(z)]
-			,[es.restart, z.on_restart.bind(z)]
-		)
-		for(let [event, fn] of event__fn){
-			z.emitter.on(event,fn)
-		}
-	}
+// 	addListeners(){
+// 		const z = this
+// 		const Z = z.This
+// 		const event__fn = [] as [Le.Event, (this:Abs_MemorizeLogic_deprecated)=>unknown][]
+// 		const es = Z.events
+// 		event__fn.push(
+// 			[es.load, z.on_load.bind(z)]
+// 			,[es.sort, z.on_calcWeight.bind(z)]
+// 			//,[es.sort, z.on_sort.bind(z)]
+// 			,[es.start, z.on_start.bind(z)]
+// 			,[es.save, z.on_save.bind(z)]
+// 			,[es.restart, z.on_restart.bind(z)]
+// 		)
+// 		for(let [event, fn] of event__fn){
+// 			z.emitter.on(event,fn)
+// 		}
+// 	}
 
-	abstract on_load(...params:any[])
+// 	abstract on_load(...params:any[])
 
-	abstract on_calcWeight(...params:any[])
+// 	abstract on_calcWeight(...params:any[])
 
-	// abstract on_sort()
+// 	// abstract on_sort()
 
-	abstract on_start(...params:any[])
+// 	abstract on_start(...params:any[])
 
-	abstract on_save(...params:any[])
+// 	abstract on_save(...params:any[])
 
-	abstract on_restart(...params:any[])
+// 	abstract on_restart(...params:any[])
 
-}
+// }

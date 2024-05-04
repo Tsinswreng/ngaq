@@ -6,7 +6,7 @@ import Config from '@shared/Config';
 import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
-import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
+// import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileVocaSvc as FileVocaSvc } from './logic/FileVocaSvc';
 import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
 import { Exception, Reason } from '@shared/Exception';
@@ -72,7 +72,7 @@ export class FileVocaUi{
 	protected async __Init__(){
 		const z = this
 		z._svc = await FileVocaSvc.New()
-		z.svc.emitter.on(z.svc.events.error, (error)=>{
+		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
 			z.handleErr(error)
 		})
 		return z
@@ -273,7 +273,7 @@ export class FileVocaUi{
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.svc.emitter.on(z.svc.events.error, (error)=>{
+		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){
