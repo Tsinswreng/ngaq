@@ -101,15 +101,8 @@ export default class VocaClient{
 				throw new Error(`!res.ok`)
 			}
 			const words:IVocaRow[] = await res.json()
-			
-			
-			//console.log(SingleWord2.fieldStringfy(words as any))
-			//console.log(`console.log(words)`)
-			//console.log(words)//t
-			//console.log(SingleWord2.parse(words))
 			return SingleWord2.toJsObj(words)
 		}catch(e){
-			//console.error(e)
 			alertEtThrow(e)
 		}
 	}

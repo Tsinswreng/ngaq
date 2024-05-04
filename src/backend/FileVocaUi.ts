@@ -71,7 +71,7 @@ export class FileVocaUi{
 
 	protected async __Init__(){
 		const z = this
-		z._cliMemorize = await FileVocaSvc.New()
+		z._svc = await FileVocaSvc.New()
 		z.svc.emitter.on(z.svc.events.error, (error)=>{
 			z.handleErr(error)
 		})
@@ -94,43 +94,55 @@ export class FileVocaUi{
 		}
 	}
 
+	/**
+	 * 生成rime候選詞ʹcomment
+	 * @param mw 
+	 */
+	geneCandComment(mw:MemorizeWord):string{
+		let ans = mw.word.times_add + ':' + mw.word.times_rmb + ':' + mw.word.times_fgt
+		if(mw.word.times_add>=3){
+			ans = '*'+ans
+		}
+		return ans
+	}
+
 	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
 			static new(cli:FileVocaUi){
 				const o = new this()
-				o.cli = cli
+				o.ui = cli
 				return o
 			}
-			cli:FileVocaUi
+			ui:FileVocaUi
 			echoConfig(){
-				const z = this.cli
+				const z = this.ui
 				z.exput(
 					util.inspect(z.configInst.config, true, 32)
 				)
 			}
 			reloadConfig(){
-				const z = this.cli
+				const z = this.ui
 				z._configInst.reload()
 			}
 			wordCnt(){
-				const z = this.cli
+				const z = this.ui
 				z.exput(z.svc.wordsToLearn.length+'')
 			}
 			help(){
-				const z = this.cli
+				const z = this.ui
 				const fns = Object.keys(this)
 				z.exput(JSON.stringify(fns))//TOFIX
 				
 			}
 			async load(){
-				const z = this.cli
+				const z = this.ui
 				const es = await z.svc.load()
 				return es
 			}
 			async sort(){
-				const z = this.cli
+				const z = this.ui
 				const es = await z.svc.sort()
 				return es
 			}
@@ -141,28 +153,37 @@ export class FileVocaUi{
 				return true
 			}
 			async start(args:string[]){
-				const z = this.cli
+				const z = this.ui
 				const bol = await z.svc.start()
 				if(!bol){
 					z.exput('start failed')
 				}
 				const cnt = FileVocaUi.argToIntAt(args, 1)??64
+				// const ansWords = [] as MemorizeWord[]
+				// for(let i = 0; i < cnt; i++){
+				// 	const w = z.svc.wordsToLearn[i]
+				// 	ansWords.push(w)
+				// }
+				// z.exput(
+				// 	JSON.stringify(ansWords)
+				// )
+				
 				let tab = '\t\t'
+				const delimiter = '\t'
 				let ans = ''
 				for(let i = 0; i < cnt; i++){
 					const mw = z.svc.wordsToLearn[i]
-					// ans += 
-					// i
-					// +tab+mw.word.wordShape
-					// +tab+mw.weight
 					ans += mw.word.wordShape
+					ans += delimiter
+					ans += z.geneCandComment(mw)
+					if(i===cnt-1){break}
 					ans += '\n'
 				}
 				z.exput(ans)
 			}
 
 			async learnByIndex(args:string[]){
-				const z = this.cli
+				const z = this.ui
 				const index = z.This.argToIntAt(args, 1)
 				
 				if(index == void 0){
@@ -177,10 +198,13 @@ export class FileVocaUi{
 			}
 
 			async save(){
-
+				const z = this.ui
+				const ans = await z.svc.save()
+				z.exput(ans+'')
+				return ans
 			}
 			async restart(){
-				const z = this.cli
+				const z = this.ui
 				const es = await z.svc.restart()
 			}
 
@@ -194,8 +218,8 @@ export class FileVocaUi{
 	protected _configInst = configInst
 	get configInst(){return this._configInst}
 
-	protected _cliMemorize: FileVocaSvc
-	get svc(){return this._cliMemorize}
+	protected _svc: FileVocaSvc
+	get svc(){return this._svc}
 
 
 	protected _delimiter = ','
@@ -334,7 +358,4 @@ async function main(){
 	//cli.main_deprecated()
 }
 main()
-
-/* 
-esno "D:\_code\voca\src\backend\FileVoca.ts" "filesignal" "filein" "fileout"
-*/
+// esno "D:\_code\voca\src\backend\FileVocaUi.ts" "D:\Program Files\Rime\User_Data\voca\signal" "D:\Program Files\Rime\User_Data\voca\in" "D:\Program Files\Rime\User_Data\voca\out"

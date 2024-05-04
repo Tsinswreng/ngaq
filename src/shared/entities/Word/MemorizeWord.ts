@@ -113,9 +113,8 @@ export class MemorizeWord{
 
 		}
 	}
-
 	
-
+	
 
 }
 

@@ -24,7 +24,7 @@ import EventEmitter from "eventemitter3";
 const secretKey = '114514'
 
 Error.stackTraceLimit = 99
-const config = Config.getInstance()
+const configInst = Config.getInstance()
 //const bodyParser = require('body-parser')
 //import * as bodyParser from 'bodyParser'
 //const rootDir:string = require('app-root-path').path
@@ -34,7 +34,7 @@ const tempPassword = '514'
 const oneDaySec = 3600*24
 
 const dirs:string[] = []
-dirs.push(...(config.config.randomImgDir??[]))
+dirs.push(...(configInst.config.randomImgDir??[]))
 
 //<{}, any, any, QueryString.ParsedQs, Record<string, any>>
 // type a = Express.Request<{}, any, any, QueryString.ParsedQs, Record<string, any>>
@@ -106,6 +106,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 }
 
 
+
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
 	public static readonly app = express();
@@ -114,10 +115,28 @@ export default class VocaServer{
 	
 	//static pagePath:string = path.resolve(process.cwd())+'/frontend/src/browser'
 
+	/**
+	 * 忽略 空槽及數據庫ʸ不存ʹ表
+	 * @returns 
+	 */
+	static async getAllExistingTablesInConfig(){
+		const tables0 = configInst.config.tables
+		const ans = [] as string[]
+		for(const tbl of tables0){
+			if(tbl == void 0){
+				continue
+			}
+			const b = await Sqlite.isTableExist(C.wordDbSrc.db, tbl)
+			if(!b){continue}
+			ans.push(tbl)
+		}
+		return ans
+	}
+
 	public static async main(){
 		C.wordDbSrc = await WordDbSrc.New({
-			_dbPath:config.config.dbPath
-			, _backupDbPath:config.config.backupDbPath
+			_dbPath:configInst.config.dbPath
+			, _backupDbPath:configInst.config.backupDbPath
 			,_mode: Sqlite.openMode.DEFAULT_CREATE
 		})
 
@@ -181,6 +200,7 @@ export default class VocaServer{
 		
 		//eng.addSingleWordsToDb()
 	
+
 		VocaServer.app.post('/saveWords',post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
@@ -211,7 +231,7 @@ export default class VocaServer{
 				//await VocaSqlite.backupTableInDb(VocaServer.sqltDbObj, sws[0].table) //每加詞則備份表
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
 				const backupDb = await WordDbSrc.New({
-						_dbPath:(config.config.backupDbPath)
+						_dbPath:(configInst.config.backupDbPath)
 						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
 				await WordDbSrc.backupTable(VocaServer.wordDbSrc.db, sws[0].table, backupDb.db) //* 無調用堆棧
@@ -290,27 +310,31 @@ export default class VocaServer{
 			const tsconfig:any = lodashMerge({}, tsconfig1, tsconfig0)
 			const jsCode = compileTs_deprecated(tsCode, tsconfig.compilerOptions)
 			res.send(jsCode)
-	}))
+		}))
 
-		// C.app.get('/tables',async(req, res)=>{
-		// 	const nunc = Tempus.new()
-		// 	console.log(req.path+' '+Tempus.format(nunc))
-		// 	try {
-		// 		config.reload()
-		// 		res.send(
-		// 			JSON.stringify(
-		// 				config.config.tables
-		// 			)
-		// 		)
-		// 	} catch (error) {
-		// 		const err = error as Error
-		// 		console.error(err)
-		// 		res.send(Tempus.format(nunc)+'\n'+err.message)
-		// 	}
-		// })
 
+		/**
+		 * 表ˋ既存于數據庫且于配置中
+		 */
+		C.app.get('/wordsFromAllTables', async(req,res)=>{
+			const recErr = new Error()
+			const existingTbls = await C.getAllExistingTablesInConfig()
+			const rows = [] as IVocaRow[]
+			for(const tbl of existingTbls){
+				const tblObj = C.wordDbSrc.loadTable(tbl)
+				const urows = await tblObj.selectAllWithTblName()
+				rows.push(...urows)
+			}
+			res.send(
+				JSON.stringify(rows)
+			)
+		})
+
+		/**
+		 * 返 用戶config.js中䀬ʹ表
+		 */
 		C.app.get('/tables', get(async(req, res)=>{
-			const tables_ = config.config.tables
+			const tables_ = configInst.config.tables
 			const tables = $(tables_)
 			
 			const nonNullTables:string[] = []
@@ -318,8 +342,7 @@ export default class VocaServer{
 				const b = await Sqlite.isTableExist(C.wordDbSrc.db,u)
 				if(b){nonNullTables.push(u)}
 			}
-			
-			config.reload()
+			configInst.reload()
 			res.send(
 				JSON.stringify(
 					nonNullTables
@@ -328,6 +351,9 @@ export default class VocaServer{
 		}))
 
 
+		/**
+		 * ?table=english
+		 */
 		C.app.get('/words', get(async(req, res)=>{
 			const table0 = req.query.table
 			console.log(table0)
@@ -352,9 +378,9 @@ export default class VocaServer{
 			// }
 			// const table:string = table0
 			//const vsqlt = await VocaSqlite.neW({_tableName:table})
-			config.reload()
+			configInst.reload()
 			
-			const tables = await Sqlite.filterExistTables(C.wordDbSrc.db, config.config.tables??[])
+			const tables = await Sqlite.filterExistTables(C.wordDbSrc.db, configInst.config.tables??[])
 			const streams:Readable[] = new Array(tables.length)
 			for(let i = 0; i < tables.length; i++){
 				const ua = await C.wordDbSrc.readStream(tables[i])
@@ -366,13 +392,6 @@ export default class VocaServer{
 			res.setHeader('Content-Type', 'application/octet-stream');
 			stream.pipe(res)
 		}))
-
-		// VocaServer.app.get('/login',async (req:MyReq,res)=>{
-		// 	const nunc = Tempus.new()
-		// 	console.log(req.path+' '+Tempus.format(nunc))
-		// 	res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
-		// })
-
 
 		VocaServer.app.post('/user/login',async (req:MyReq,res)=>{
 			const nunc = Tempus.new()
@@ -404,25 +423,6 @@ export default class VocaServer{
 			res.json(pair)
 		})
 
-
-
-		// C.app.get('/testStream', async(req, res)=>{
-		// 	const nunc = Tempus.new()
-		// 	console.log(req.path+' '+Tempus.format(nunc))
-		// 	try {
-		// 		const vsqlt = await WordDbSrc_.New({_tableName:'english'})
-		// 		const stream = await vsqlt.readStream()
-		// 		res.setHeader('Content-Type', 'application/octet-stream');
-		// 		stream.pipe(res)
-		// 	} catch (error) {
-		// 		const err = error as Error
-		// 		console.error(err)
-		// 		res.send(Tempus.format(nunc)+'\n'+err.message)
-		// 	}
-			
-		// })
-
-		
 		C.app.get('/testWasm', async(req, res)=>{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
@@ -436,21 +436,6 @@ export default class VocaServer{
 			}
 			
 		})
-
-
-			//res.send(`<h1>404</h1>`)
-			//res.sendFile('./out/frontend/dist') 叵、只能用絕對路徑
-			//res.sendFile('D:/_/mmf/PROGRAM/_Cak/voca/src/frontend/dist/index.html')
-			//res.send('<h1>1919</h1>')
-		
-		/* VocaServer.app.get('/login', (req:any, res:any)=>{
-			console.log(req.body)
-			if(req.body.tempPwd === '一'){
-				console.log('密碼正確')
-			}else{
-				console.log('密碼錯誤')
-			}
-		}) */
 
 		/**
 		 * 此須寫于䀬之末
@@ -466,8 +451,8 @@ export default class VocaServer{
 				//res.redirect('/login')
 			}
 		})
-		VocaServer.app.listen(config.config.port, ()=>{
-			console.log(`at\nhttp://127.0.0.1:${config.config.port}`)
+		VocaServer.app.listen(configInst.config.port, ()=>{
+			console.log(`at\nhttp://127.0.0.1:${configInst.config.port}`)
 		})
 	}
 	

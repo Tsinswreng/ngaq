@@ -1,21 +1,18 @@
 import 'tsconfig-paths/register'
 import { VocaSvc as VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
-import Sqlite from "@backend/db/Sqlite";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
 //import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
-import { I_EventEmitter } from '@shared/linkedEvent';
 import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
 import { MemorizeWord, RMB_FGT } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
-import * as fs from 'fs'
+import * as fs from 'fs' //TODO remove
 import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
-import { Sros } from '@shared/Sros';
 import { WordEvent } from '@shared/SingleWord2';
 import { RMB_FGT_nil } from '@shared/entities/Word/MemorizeWord';
 
@@ -58,12 +55,13 @@ export class FileVocaSvc extends VocaSvc{
 		return o
 	}
 
-	protected async __Init__(): Promise<void> {
-		const o = this
+	protected async __Init__(){
+		const z = this
 		await super.__Init__()
-		o._dbSrc = await WordDbSrc.New({
+		z._dbSrc = await WordDbSrc.New({
 			_dbPath: config.dbPath
 		})
+		return z
 		//o.addListeners()
 	}
 
@@ -91,7 +89,7 @@ export class FileVocaSvc extends VocaSvc{
 
 	/**
 	 * 試、只取配置中首個權重算法方案
-	 * //TODO
+	 * //TODO 移到ui類
 	 */
 	initWeightAlgo(){
 		const z = this
@@ -126,7 +124,7 @@ export class FileVocaSvc extends VocaSvc{
 		const z = this
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
-			const rows = await tbl.selectAll()
+			const rows = await tbl.selectAllWithTblName()
 			const words = rows.map(e=>WordDbRow.toEntity(e))
 			const mWords = words.map(e=>MemorizeWord.new(e))
 			return mWords

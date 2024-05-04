@@ -2,10 +2,16 @@ import { Priority } from "@shared/SingleWord2"
 class Item{
 	protected constructor(){}
 	static new(prop:{_key:string, _default_?:string}){
-		const o = new Item()
-		Object.assign(o, prop)
+		const z	 = new Item()
+		z.__init__(prop)
 		//Object.defineProperty(o, 'key', {writable:false})
-		return o
+		return z
+	}
+	protected __init__(...args:Parameters<typeof Item.new>){
+		const z = this
+		const prop = args[0]
+		Object.assign(z, prop)
+		return z
 	}
 	protected _key:string = ''
 	get key(){return this._key}

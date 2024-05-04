@@ -43,6 +43,15 @@ export default{
 		},
 		{
 			id: i++,
+			title: 'Voca3',
+			// <font-awesome-icon icon="fa-solid fa-info" />
+			icon: 'fa-info',
+			onClick() {
+				window.location.href = '/voca3'
+			}
+		},
+		{
+			id: i++,
 			title: 'Manage',
 			// <font-awesome-icon icon="fa-solid fa-info" />
 			icon: 'fa-info',

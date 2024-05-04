@@ -7,8 +7,12 @@ import Sqlite, {SqliteType} from "@backend/db/Sqlite";
 import lodash from 'lodash'
 import { I_DbSrc } from "../_base/DbSrc";
 
+/* 
+learnByIndex,0,r
+*/
+
 type Database = SqliteType.Database
-class _WordTable extends Abs_Table{
+export class WordTable extends Abs_Table{
 
 	protected constructor(){
 		super()
@@ -34,7 +38,7 @@ class _WordTable extends Abs_Table{
 		
 	} */
 
-
+	get This(){return WordTable}
 
 	/**
 	 * 數據庫ʸ原ᵈ無ᵗ詞ˇ添入庫
@@ -51,17 +55,17 @@ class _WordTable extends Abs_Table{
 		}else{
 			w = [word]
 		}
-		_WordTable.checkTable(table, w)
+		WordTable.checkTable(table, w)
 		//let [r, runResult] = await forArr(db, table, w)
 		const forArr2=async(db:Database, table:string, words:Word[])=>{
-			const [sql,] = _WordTable.genQry_insert(table, words[0])
+			const [sql,] = WordTable.genQry_insert(table, words[0])
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			runResult.length = words.length
 			//let lastRunResut
 			for(let i = 0; i < words.length; i++){
 				const w = words[i]
-				const [sql, value] = _WordTable.genQry_insert(table, w)
+				const [sql, value] = WordTable.genQry_insert(table, w)
 				const r = await Sqlite.stmtRun(stmt, value)
 				const copyR:RunResult = lodash.cloneDeep(r)//每次循環 r所指ᵗ地址ˋ皆不變、唯其所指ᵗ數據ˋ變˪
 				// runResult.push(r)
@@ -99,7 +103,7 @@ class _WordTable extends Abs_Table{
 	 * @returns 
 	 */
 	static genQry_insert(table: string, word:Word){
-		_WordTable.checkTable(table, [word])
+		WordTable.checkTable(table, [word])
 		const c = WordDbRow
 		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
@@ -115,7 +119,7 @@ class _WordTable extends Abs_Table{
 	 * @returns 
 	 */
 	static genQry_updateById(table: string, word:Word,id: number){
-		_WordTable.checkTable(table, [word])
+		WordTable.checkTable(table, [word])
 		const c = WordDbRow
 		const obj = Word.toDbObj($(word))
 		delete obj[c.id]; delete (obj as any)[c.table]
@@ -154,7 +158,7 @@ class _WordTable extends Abs_Table{
 	static setWordsByIds_fn(db:Database, table:string, words:Word[], ids?:number[]){
 		//if(words.length === 0){throw new Error(`words.length === 0`)}
 		
-		_WordTable.checkTable(table, words)
+		WordTable.checkTable(table, words)
 		$a(words)
 		if(ids === void 0){
 			ids = []
@@ -166,14 +170,14 @@ class _WordTable extends Abs_Table{
 			throw new Error(`words.length !== ids.length`)
 		}
 
-		const sql = _WordTable.genQry_updateById(table, $(words[0],'words[0]'), ids[0])[0]
+		const sql = WordTable.genQry_updateById(table, $(words[0],'words[0]'), ids[0])[0]
 
 		const fn = async()=>{
 			const stmt = await Sqlite.prepare(db, sql)
 			const runResult:RunResult[] = []
 			for(let i = 0; i < words.length; i++){
 				let w = words[i]; let id = $(ids)[i]
-				let [,v] = _WordTable.genQry_updateById(table, w, id)
+				let [,v] = WordTable.genQry_updateById(table, w, id)
 				const r = await Sqlite.stmtRun(stmt, v)
 				runResult.push(r)
 			}
@@ -196,7 +200,7 @@ class _WordTable extends Abs_Table{
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
 		const table0 = $(words[0].table)
-		_WordTable.checkTable(table0, words)
+		WordTable.checkTable(table0, words)
 		const fn = async()=>{
 			return await addWordsOfSameTable(db, table0, words)
 		}
@@ -217,13 +221,13 @@ class _WordTable extends Abs_Table{
 				//let d3 = await VocaSqlite.initAddWord_deprecated(db, table, wordsToInitAdd)
 				//runResult1 = d3.flat(2)
 				const fn = async()=>{
-					return await _WordTable.initAddWord(db, table, wordsToInitAdd)
+					return await WordTable.initAddWord(db, table, wordsToInitAdd)
 				}
 				//runResult1 = await Sqlite.transaction(db, fn)
 				runResult1 = await fn()
 			}
 			if(wordsToUpdate.length !== 0){
-				const fn = _WordTable.setWordsByIds_fn(db, table, (wordsToUpdate))
+				const fn = WordTable.setWordsByIds_fn(db, table, (wordsToUpdate))
 				await fn()
 			}
 			const initAddIds = runResult1.map(e=>e.lastID)
@@ -237,7 +241,7 @@ class _WordTable extends Abs_Table{
 			words = Word.merge(words) 
 			const neoWord_existedWordMap = new Map<Word, Word|undefined>()
 			const neoWordShapes:string[] = words.map(e=>e.wordShape)
-			const existedRows:(WordDbRow)[][] = await _WordTable.qryWordByWordShape(db, table, neoWordShapes)
+			const existedRows:(WordDbRow)[][] = await WordTable.qryWordByWordShape(db, table, neoWordShapes)
 			if(words.length !== existedRows.length){throw new Error(`words.length !== existedRows.length`)}
 			for(let i = 0; i < existedRows.length; i++){
 				const curNeoWord = words[i]
@@ -274,7 +278,7 @@ class _WordTable extends Abs_Table{
 	}
 
 	addWordsOfSameTable_fn(words:Word[]){
-		return _WordTable.addWordsOfSameTable_fn(this._dbSrc.db, words)
+		return WordTable.addWordsOfSameTable_fn(this._dbSrc.db, words)
 	}
 
 	async addWordsOfSameTable(words:Word[]){
@@ -309,7 +313,7 @@ class _WordTable extends Abs_Table{
 			const r = d2
 			for(let i = 0; i < r.length; i++){
 				if(r[i].length !== 0){
-					_WordTable.attachTableName(r[i], table)
+					WordTable.attachTableName(r[i], table)
 				}
 			}
 			return r
@@ -319,24 +323,50 @@ class _WordTable extends Abs_Table{
 			const sql = `SELECT * FROM '${table}' WHERE ${WordDbRow.wordShape}=?`
 			const r = await Sqlite.all<WordDbRow>(db, sql, wordShape)
 			//if(r.length === 0 || r === void 0){return undefined}
-			_WordTable.attachTableName(r, table)
+			WordTable.attachTableName(r, table)
 			return r
 		}
 	}
 
 	/**
-	 * 畀words增ling字段。直ᵈ改原數組、無返。
+	 * 畀words增table字段。直ᵈ改原數組、無返。
 	 * @param words 
 	 * @param table 
 	 */
 	static attachTableName(words:WordDbRow[], table:string){
-		const lingField = WordDbRow.table
+		const tableField = WordDbRow.table
 		for(let i = 0; i < words.length; i++){
-			words[i][lingField] = table
+			words[i][tableField] = table
 		}
 	}
 
-	async selectAll(){
+	/**
+	 * @see {attachTableName} static
+	 * @param rows 
+	 */
+	attachTableName(rows:WordDbRow[]){
+		const z = this
+		z.This.attachTableName(rows, z.tableName)
+	}
+
+	/**
+	 * select *、但有table屬性、潙ʃ來自ʹ表名
+	 * @returns 
+	 */
+	async selectAllWithTblName(){
+		const z = this
+		const rows = await z.selectAllNoTblName()
+		z.attachTableName(rows)
+		return rows
+		//z.This.attachTableName(rows, z.tableName)
+	}
+
+	/**
+	 * 普遍select *
+	 * 整數作字串
+	 * @returns 
+	 */
+	async selectAllNoTblName(){
 		const z = this
 		const db = z.dbSrc.db
 		const sql = await Sqlite.SqlGenerator.selectAllIntSafe(z.dbSrc.db, z.tableName, [])
@@ -347,5 +377,5 @@ class _WordTable extends Abs_Table{
 
 }
 
-export const WordTable = _WordTable
-export type WordTable = _WordTable
+// export const WordTable = WordTable
+// export type WordTable = WordTable

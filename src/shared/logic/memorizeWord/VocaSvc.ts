@@ -44,7 +44,8 @@ export abstract class VocaSvc{
 	}
 
 	protected async __Init__(){
-
+		const z = this
+		return z
 	}
 
 	protected abstract _emitter:Le.LinkedEmitter
