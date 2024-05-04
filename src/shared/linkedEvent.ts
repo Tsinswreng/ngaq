@@ -1,5 +1,8 @@
 
 type Args<T> = T extends any[] ? T : [T]
+
+
+
 export class Event<Arg extends any[] =any[]>{
 	protected _name:string
 	get name(){return this._name}
@@ -68,7 +71,7 @@ export class LinkedEmitter{
 		return cnt
 	}
 
-	on<Arg>(event:Event<Arg>, callback:(...args:Args<Arg>)=>void){
+	on<Arg extends any[]>(event:Event<Arg>, callback:(...args:Args<Arg>)=>void){
 		this.eventEmitter.on(event.name, callback)
 	}
 }
