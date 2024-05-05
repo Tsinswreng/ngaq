@@ -2,6 +2,7 @@ import { MemorizeWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/Memori
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 import { Exception } from "@shared/Exception";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 
 //type Asyncable<T> = T|Promise<T>
 type Task<T> = Promise<T>
@@ -79,6 +80,18 @@ export abstract class VocaSvc{
 
 	protected _wordsToLearn:MemorizeWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
+
+	/** 權重算法 */
+	protected _weightAlgo: I_WordWeight|undefined
+	get weightAlgo(){return this._weightAlgo}
+
+	/** 
+	 * 此輪已複習ʹ詞
+	 * 留予子類實現
+	 * 可按憶忘事件分類
+	 */
+	// protected _learnedWords:MemorizeWord[] = []
+	// get learnedWords(){return this._learnedWords}
 
 	emitErr(err:Error|any){
 		const z = this

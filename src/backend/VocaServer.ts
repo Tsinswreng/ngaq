@@ -21,6 +21,7 @@ import { Readable } from "stream";
 import jwt from 'jsonwebtoken'
 import { WordTable } from "./db/sqlite/Word/Table";
 import EventEmitter from "eventemitter3";
+import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 const secretKey = '114514'
 
 Error.stackTraceLimit = 99
@@ -434,7 +435,30 @@ export default class VocaServer{
 				console.error(err)
 				res.send(Tempus.format(nunc)+'\n'+err.message)
 			}
-			
+		})
+
+		/** 返 首個權重算法方案ʹjs代碼。臨時 */
+		C.app.get('/weightAlgoJs0', async(req,res)=>{
+			const first = configInst.config.wordWeight.schemas[0]
+			let code:string
+			if(first == void 0){
+				//throw new Error(`config.wordWeight.schemas[0] == void 0`)
+				res.status(400)
+				return
+			}
+			if(first.code == void 0){
+				if(first.path == void 0){
+					//throw new Error(`code and path are all empty`)
+					res.status(400)
+					return
+				}
+				const srcCode = fs.readFileSync(first.path, {encoding: 'utf-8'})
+				code = srcCode
+			}else{
+				code = first.code
+			}
+			const jsCode = WeightCodeParser.tsToJs(code)
+			res.send(jsCode)
 		})
 
 		/**

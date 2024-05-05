@@ -22,6 +22,15 @@ export class Client{
 	set baseUrl(v){this._baseUrl = v}
 
 	
+	async getWeightAlgoJs0(){
+		const z = this
+		const url = new URL('/weightAlgoJs0', z.baseUrl)
+		const got = await fetch(url)
+		const text = await got.text()
+		return text
+	}
+
+	
 	async getWordsFromAllTables(){
 		const z = this
 		const url = new URL('/wordsFromAllTables', z.baseUrl)

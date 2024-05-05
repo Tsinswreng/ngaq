@@ -120,6 +120,11 @@ export class WebVocaUi{
 		return ans
 	}
 
+	getLearnedWords(){
+		const z = this
+		return [z.svc.rmbWords, z.svc.fgtWords]
+	}
+
 	undoByWord(mw:WebMemorizeWord){
 		const z = this
 		const ans = mw.undo()
@@ -158,11 +163,12 @@ export class WebVocaUi{
 	}
 
 	async save(){
-
+		const z = this
+		return await z.svc.save()
 	}
 
 	async restart(){
-
+		
 	}
 
 	set_page(str:string){}

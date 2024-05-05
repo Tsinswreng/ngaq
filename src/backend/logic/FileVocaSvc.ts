@@ -66,9 +66,6 @@ export class FileVocaSvc extends VocaSvc{
 	protected _weightCodeParser:WeightCodeParser|undefined
 	get weightCodeParser(){return this._weightCodeParser}
 
-	//TODO 潙空旹 用 默認算法
-	protected _weightAlgo: I_WordWeight|undefined
-	get weightAlgo(){return this._weightAlgo}
 
 
 	/**

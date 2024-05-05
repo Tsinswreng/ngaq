@@ -8,6 +8,8 @@ import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/Exception";
 import { WebMemorizeWord } from "./entities/WebMemorizeWord";
+import { WordEvent } from "@shared/SingleWord2";
+import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 
 export class WebVocaSvc extends VocaSvc{
 
@@ -33,8 +35,25 @@ export class WebVocaSvc extends VocaSvc{
 	declare protected _wordsToLearn: WebMemorizeWord[];
 	get wordsToLearn(){return this._wordsToLearn}
 
+	/** 已背ʹ單詞中 憶者 */
+	protected _rmbWords:WebMemorizeWord[] = []
+	get rmbWords(){return this._rmbWords}
+
+	/** 已背ʹ單詞中 忘者 */
+	protected _fgtWords:WebMemorizeWord[] = []
+	get fgtWords(){return this._fgtWords}
+
+	// protected _learnedWords: WebMemorizeWord[] = []
+	// get learnedWords(){return this._learnedWords}
+
 	protected _client = Client.new()
 	get client(){return this._client}
+
+
+	protected _weightAlgoParser:WeightCodeParser|undefined
+	get weightAlgoParser(){return this._weightAlgoParser}
+	set weightAlgoParser(v){this._weightAlgoParser = v}
+
 
 	async load(): Promise<boolean> {
 		const z = this
@@ -46,9 +65,28 @@ export class WebVocaSvc extends VocaSvc{
 		z.svcStatus.load = true
 		return Promise.resolve(true)
 	}
+
+	protected async _initWeightAlgo(){
+		const z = this
+		const algoCode = await z.client.getWeightAlgoJs0()
+		
+	}
+
 	//TODO
 	async sort(): Promise<boolean> {
-		return true
+		const z = this
+		if(z.weightAlgo == void 0){
+			throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
+		}
+		try {
+			const gotWords = await z.weightAlgo.run(z.wordsToLearn)
+			z._wordsToLearn = gotWords as WebMemorizeWord[]
+			return true
+		} catch (error) {
+			const err = error as Error
+			throw err //TODO 用exception
+		}
+		return false
 	}
 	start(): Promise<boolean> {
 		const z = this
@@ -62,7 +100,10 @@ export class WebVocaSvc extends VocaSvc{
 		z.emitter.emit(z.svcEvents.start)
 		return Promise.resolve(true)
 	}
+
+
 	learnByIndex(index: integer, event: RMB_FGT): Promise<boolean> {
+		throw new Error('not supported')
 		const z = this
 		if(index +1 > z.wordsToLearn.length){
 			return Promise.resolve(false)
@@ -73,14 +114,39 @@ export class WebVocaSvc extends VocaSvc{
 		}
 		return Promise.resolve(ans)
 	}
+
+
 	async learnByWord(mw:WebMemorizeWord, event:RMB_FGT):Promise<boolean>{
 		const z = this
-		const ans = mw.setInitEvent(event)
+		if(event === WordEvent.RMB){
+			return z.rmb(mw)
+		}else if(event === WordEvent.FGT){
+			return z.fgt(mw)
+		}else{
+			throw new Error('WordEvent error')
+		}
+	}
+
+	rmb(mw:WebMemorizeWord){
+		const z = this
+		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
-			//z.emitter.emit()
+			z.rmbWords.push(mw)
+			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
 		}
 		return ans
 	}
+
+	fgt(mw:WebMemorizeWord){
+		const z = this
+		const ans = mw.setInitEvent(WordEvent.FGT)
+		if(ans){
+			z.fgtWords.push(mw)
+			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
+		}
+		return ans
+	}
+
 	async save(): Promise<boolean> {
 		const z = this
 		z._svcStatus.start = false
