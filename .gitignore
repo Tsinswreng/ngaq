@@ -6,9 +6,9 @@ node_modules/
 *.log
 log/
 
-src/backend/**/*.js
-src/shared/**/*.js
-src/**/*.js
+# src/backend/**/*.js
+# src/shared/**/*.js
+# src/**/*.js
 out/
 src/backend/_study/*
 src/**/*.d.ts
