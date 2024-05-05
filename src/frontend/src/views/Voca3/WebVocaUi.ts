@@ -17,13 +17,14 @@ class HtmlId{
 
 class UiStuff{
 	isSaved = false
-	isShowWordInfo = false
+	//isShowWordInfo = false
+	isShowWordInfo = ref(false)
 	isShowCardBox = ref(false)
 	pageNums = 1
 	debuffNumerator_str:string = ''
 	isShowRandomBg:Ref<Boolean> = ref(false)
 	multiMode_key:Ref<number> = ref(0)
-	reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
+	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
 export class WebVocaUi{
@@ -88,6 +89,8 @@ export class WebVocaUi{
 			//console.log(k, typeof z[k])
 			if(typeof z[k] === 'function'){
 				ui[k] = z[k].bind(z)
+			}else{
+				ui[k] = z[k]
 			}
 		}
 	}
@@ -95,8 +98,7 @@ export class WebVocaUi{
 	async start(){
 		const z = this
 		await z.svc.start()
-		z.hideWordBox()
-		z.showWordBox()
+		z.fresh_wordBox()
 		console.log('start')//t
 	}
 
@@ -107,6 +109,8 @@ export class WebVocaUi{
 
 	learnByWord(mw:WebSvcWord, event:RMB_FGT){
 		const z = this
+		z._curWord = mw
+		z.fresh_wordInfo()
 		const ans = z.svc.learnByWord(mw, event)
 		if(mw instanceof WebSvcWord){
 			switch (event){
@@ -119,6 +123,10 @@ export class WebVocaUi{
 			}
 		}
 		return ans
+	}
+
+	updateWordInfo(){
+
 	}
 
 	getLearnedWords(){
@@ -135,6 +143,10 @@ export class WebVocaUi{
 		return ans
 	}
 
+	getCurrentWord(){
+		return this._curWord
+	}
+
 	showWordBox(){
 		const z = this
 		z.uiStuff.isShowCardBox.value = false
@@ -145,6 +157,18 @@ export class WebVocaUi{
 		const z = this
 		z.uiStuff.isShowCardBox.value = true
 		z.uiStuff.isShowCardBox.value = false
+	}
+
+	fresh_wordBox(){
+		const z = this
+		z.hideWordBox()
+		z.showWordBox()
+	}
+
+	fresh_wordInfo(){
+		const z = this
+		z.uiStuff.isShowWordInfo.value = false
+		z.uiStuff.isShowWordInfo.value = true
 	}
 
 
@@ -163,8 +187,7 @@ export class WebVocaUi{
 
 	async restart(){
 		const z = this
-		z.hideWordBox()
-		z.showWordBox()
+		z.fresh_wordBox()
 		return z.svc.restart()
 	}
 

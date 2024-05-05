@@ -2,32 +2,37 @@
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
 //import WordB from '@ts/voca/WordB';
-import {MemorizeWord} from '@shared/entities/Word/MemorizeWord'
+import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {WebVocaUi} from '../WebVocaUi';
 import CtrlPanel from './CtrlPanel.vue';
-const ui = await WebVocaUi.getInstanceAsync()
+import { ref } from 'vue';
+//const ui = await WebVocaUi.getInstanceAsync()
+const loaded = ref(false)
+let ui:WebVocaUi
+;(async()=>{
+	ui = await WebVocaUi.getInstanceAsync()
+	loaded.value = true
+})()
 const props = defineProps<{
-	memorizeWord: MemorizeWord|undefined
+	memorizeWord: SvcWord|undefined
 }>()
-//const wordB_nn = $(props.memorizeWord)
-//console.log(`console.log(wordB_nn)`)
-//console.log(wordB_nn)//t
+
 </script>
 <template>
-	<div class="container">
-		<div class="wordInfo">
+	<div class="container" v-if="loaded"> <!-- 不用寫.vaule -->
+		<div class="wordInfo" v-if="ui.uiStuff.isShowWordInfo.value"> <!-- 要寫.value -->
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
-			<div>table + id</div>
+			<div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div>
 			<div class="w-eventSymbols"> wordB_nn.getEventSymbols() </div>
 			<div>MemorizeWord.style_getAddDates(wordB_nn)</div>
 			<hr class="w-hr">
-			<div class="w-shape">wordB_nn.fw.wordShape</div>
+			<div class="w-shape">{{ ui.curWord?.word.wordShape??'' }}</div>
 			<div>
 				<span>wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation</span>
 				<span>wordB_nn.fw.tag.length===0?'':wordB_nn.fw.tag</span>
 			</div>
 			<hr class="w-hr">
-			<div class="w-mean">wordB_nn.formattedMean</div>
+			<div class="w-mean">{{ ui.curWord?.word.mean.join('\n')}}</div>
 		</div>
 	</div>
 </template>

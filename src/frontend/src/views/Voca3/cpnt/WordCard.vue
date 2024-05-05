@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import {RMB_FGT } from '@shared/entities/Word/MemorizeWord';
-import {WebMemorizeWord} from '@ts/voca3/entities/WebMemorizeWord'
+import {WebSvcWord} from '@ts/voca3/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
 import { WebVocaUi } from '../WebVocaUi';
 import { WordEvent } from '@shared/entities/Word/Word';
-import { $ } from '@shared/Ut';
+import { $ } from '@shared/Ut'
 
 const loaded = ref(false)
 let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
@@ -16,7 +15,7 @@ onBeforeMount( async() => {
 
 // 定义 props，此处需要和父组件传递的 prop 名字一致
 const props = defineProps<{
-	memorizeWord: WebMemorizeWord;
+	memorizeWord: WebSvcWord;
 	loopIndex: integer
 }>();
 const mw = props.memorizeWord
@@ -84,7 +83,7 @@ function returnWordToParent(){
 // }
 
 const reciteStatusRef = mw.uiStuff.reciteStatusRef
-const isAddTimeGeq3 = (wb:WebMemorizeWord)=>{
+const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	if(wb == void 0){
 		return false
 	}
