@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import { MemorizeWord, RMB_FGT } from '@shared/entities/Word/MemorizeWord';
-import {ref, Ref} from 'vue'
+import {RMB_FGT } from '@shared/entities/Word/MemorizeWord';
+import {WebMemorizeWord} from '@ts/voca3/entities/WebMemorizeWord'
+import {ref, Ref, onBeforeMount} from 'vue'
+import { WebVocaUi } from '../WebVocaUi';
+import { WordEvent } from '@shared/entities/Word/Word';
+import { $ } from '@shared/Ut';
+
+const loaded = ref(false)
+let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
+onBeforeMount( async() => {
+	ui = await WebVocaUi.getInstanceAsync()
+	loaded.value = true
+	ui.test()
+})
 
 // 定义 props，此处需要和父组件传递的 prop 名字一致
 const props = defineProps<{
-	memorizeWord: MemorizeWord;
-	loopIndex: number
+	memorizeWord: WebMemorizeWord;
+	loopIndex: integer
 }>();
+const mw = props.memorizeWord
 // const emits = defineEmits([/* 自定义事件名称列表 */]);
 const emits = defineEmits(['WordCardClick']);
 
@@ -58,19 +71,35 @@ function returnWordToParent(){
 // 	return baseStr + 'e' + exponentialStr
 // }
 
+// function rmb(){
+// 	ui.learnByWord($(mw), WordEvent.RMB)
+// }
 
-let reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
-const isAddTimeGeq3 = (wb:MemorizeWord)=>{
+// function fgt(){
+// 	ui.learnByWord($(mw), WordEvent.FGT)
+// }
+
+// function undo(){
+// 	return ui.undoByWord($(mw))
+// }
+
+const reciteStatusRef = mw.uiStuff.reciteStatusRef
+const isAddTimeGeq3 = (wb:WebMemorizeWord)=>{
+	if(wb == void 0){
+		return false
+	}
 	return wb.word.times_add >= 3
 }
 </script>
 
 <template>
-	<div class="word-card" :class="isAddTimeGeq3(props.memorizeWord)?'addTimeGeq3':void 0">
-		<span class="w-shape" @click="" @contextmenu="" :class="reciteStatusRef">
-			{{ props.memorizeWord.word.wordShape }}
+	<div v-if="loaded" class="word-card" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
+
+		<span class="w-index" :class="reciteStatusRef" @click="ui.learnByWord(mw, WordEvent.FGT)">{{ props.loopIndex }}</span>
+		<span class="w-shape" @click="ui.learnByWord(mw, WordEvent.RMB)" @contextmenu="">
+			{{ mw?.word.wordShape }}
 		</span>
-		<span class="w-index" @click="">{{ props.loopIndex }}</span>
+		
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
@@ -93,11 +122,9 @@ const isAddTimeGeq3 = (wb:MemorizeWord)=>{
 </template>
 
 <style scoped>
-.addTimeGeq3{
-	border-left: red 1px solid;
-	/* color: red; */
+/* .addTimeGeq3{
 
-}
+} */
 .addTimeGeq3 .w-shape{
 	color: rgb(0, 255, 255);
 	/* font-weight: bold; */

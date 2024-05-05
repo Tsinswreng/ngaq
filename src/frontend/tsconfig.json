@@ -39,7 +39,7 @@
 		"rootDir": "../",
 		"outDir": "../../out",
 		"allowJs": true,
-		"target": "ES2015",
+		"target": "ESNext",
 		//"useDefineForClassFields": true,
 		"module": "ESNext",
 		//"module": "commonjs", //模塊化ᵗ標準

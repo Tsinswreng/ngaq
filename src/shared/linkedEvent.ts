@@ -71,7 +71,8 @@ export class LinkedEmitter{
 		return cnt
 	}
 
-	on<Arg extends any[]>(event:Event<Arg>, callback:(...args:Args<Arg>)=>void){
+	on<Arg extends any[]>(event:Event<Arg>, callback:(...args:Arg)=>void){
+		//@ts-ignore
 		this.eventEmitter.on(event.name, callback)
 	}
 }

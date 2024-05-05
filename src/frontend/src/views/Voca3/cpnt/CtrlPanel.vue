@@ -4,23 +4,28 @@
 import Log from '@shared/Log';
 import {WebVocaUi} from '../WebVocaUi';
 import Recite from '@ts/voca/Recite';
-const ui = WebVocaUi.getInstance()
-import {ref} from 'vue'
-const recite = Recite.getInstance()
+import {ref, onBeforeMount} from 'vue'
 import LS from '@ts/LocalStorage';
 
-const isSaved = ui.uiStatus.isSaved
-const debuffNumerator = ui.uiStatus.debuffNumerator_str
+
+let ui:WebVocaUi
+onBeforeMount(async()=>{
+	ui = await WebVocaUi.getInstanceAsync()
+})
+//const ui = await WebVocaUi.getInstanceAsync()
+//console.log(ui)
+// const isSaved = ui.uiStatus.isSaved
+// const debuffNumerator = ui.uiStatus.debuffNumerator_str
 
 function switchRandomImg(){
-	ui.uiStatus.isShowRandomBg.value = !ui.uiStatus.isShowRandomBg.value
+	ui.uiStuff.isShowRandomBg.value = !ui.uiStuff.isShowRandomBg.value
 }
 
 function set_page(){
 	const ele = document.getElementById('paging') as HTMLInputElement
 	const value = ele.value
 	ui.set_page(value)
-	ui.uiStatus.multiMode_key.value++
+	ui.uiStuff.multiMode_key.value++
 }
 </script>
 
@@ -38,7 +43,9 @@ function set_page(){
 		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label> -->
 		
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
-		<button @click="ui.start()">始</button>
+		<button @click="ui.showWordBox()">showWordBox</button>
+		<button @click="ui.hideWordBox()">hide</button>
+		<button @click="ui.prepareEtStart()">始</button>
 		<button @click="ui.save()">存</button>
 		<button>改</button>
 		<button @click="ui.restart()">重開</button>
@@ -51,7 +58,7 @@ function set_page(){
 		
 		<!-- 坑{v-model與value=""不兼容} -->
 		<span>
-			<input type="text" v-model="debuffNumerator" id="debuffNumerator">
+			<!-- <input type="text" v-model="debuffNumerator" id="debuffNumerator"> -->
 			<!-- <input type="text" v-model="tempShape"><button @click="search(tempShape)">尋</button> -->
 		</span>
 		<span>
@@ -59,7 +66,7 @@ function set_page(){
 			<input type="text" id="paging" :value="LS.items.multiModePaging.get()">
 		</span>
 		<button @click="set_page()">設頁</button>
-		<span>{{ isSaved? '':'未保存' }}</span>
+		<!-- <span>{{ isSaved? '':'未保存' }}</span> -->
 	</div>
 </template>
 <!-- <坑>{若欲父組件ʸ子組件ᵗ樣式ˇ設、則子組件須有唯一根節點。} -->

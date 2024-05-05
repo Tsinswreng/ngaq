@@ -1,20 +1,32 @@
 <script setup lang="ts">
 //import { ref, defineProps, withContext } from 'vue';
-import WordCard from '@views/MultiMode/cpnt/WordCard.vue'
+import WordCard from '@views/Voca3/cpnt/WordCard.vue'
 import WordInfo from './cpnt/WordInfo.vue';
 import {WebVocaUi} from './WebVocaUi';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import { $ } from '@shared/Ut';
-import { ref,Ref, onMounted, computed } from 'vue';
+import { ref,Ref, onMounted, computed, onBeforeMount} from 'vue';
 import VocaClient from '@ts/voca/VocaClient';
 import LS from '@ts/LocalStorage';
 import CtrlPanel from './cpnt/CtrlPanel.vue';
+
 //const { words } = defineProps(['words']);
-const recite = Recite.getInstance();
-const ui = WebVocaUi.getInstance()
-const isShowWordInfo = ui.uiStatus.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
-const isShowCardBox = ui.uiStatus.isShowCardBox
+//const recite = Recite.getInstance();
+//const ui = await WebVocaUi.getInstanceAsync()
+const loaded = ref(false)
+const templateKey = ref(0)
+let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
+onBeforeMount( async() => {
+	ui = await WebVocaUi.getInstanceAsync()
+	//console.log(ui, 'on before')
+	loaded.value = true
+	templateKey.value++
+	ui.test()
+})
+//console.log(ui)
+// const isShowWordInfo = ui.uiStatus.isShowWordInfo // <坑>{直ᵈ用status.isShowWordInfo有時不效。組件中新聲明一變量甲、使甲受status.isShowWordInfo之值、此組件ʸ用甲㕥代用status.isShowWordInfo 則又可。}
+// const isShowCardBox = ui.uiStatus.isShowCardBox
 //let page:Ref<number[]> = ui.uiStatus.pageNums
 
 
@@ -43,45 +55,66 @@ document.addEventListener("mousedown", (event) => {
 
 // 監聽頁面的鍵盤事件
 document.addEventListener('keydown', handleAltS);
-
+const Pro = Promise
 </script>
 
-<template>
-<div class="MultiMode">
+<template v-if="loaded">
+<Suspense>
 
-		<!-- <button @click="start()">開始</button> -->
-	<!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
+<div class="MultiMode" v-if="loaded"> 
 
-	<!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
-	<component :is="CtrlPanel" class="CtrlPanel"></component>
-	<div class="WordInfo-container" v-if="ui.curWord!=void 0">
-		<!-- <component :is="WordInfo" :wordB="ui.curWord" class="WordInfo" :key="ui.curWord?.word.id" v-if="isShowWordInfo"></component> -->
+<!-- <button @click="start()">開始</button> -->
+<!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
+
+<!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
+<component :is="CtrlPanel" class="CtrlPanel"></component>
+<component :is="WordInfo" :memorizeWord="void 0" class="WordInfo"></component>
+
+<!-- :key="ui.uiStuff.isShowCardBox.value+''" -->
+<div v-if="ui.uiStuff.isShowCardBox.value" class="cards-box">
+	<div v-for="(w,i) in ui.wordsToLearn.slice(0,64)" :key="ui.uiStuff.isShowCardBox.value+''">
+		<component
+			:is="WordCard"
+			:memorizeWord="w"
+			:loopIndex="i"
+		>
+		</component>
 	</div>
-	<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
-	<!-- <div class="cards-box" v-if="isShowCardBox" :key="ui.multiMode_key.value">.slice(page[0], page[1])
-		baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
-		<div v-for="(e, i) in recite.allWordsToLearn.slice(page[0], page[1])">
-			<component 
-				:is="WordCard" 
-				:key="e.fw.table+''+e.fw.id" 
-				:wordB="e" 
-				:loopIndex="i" 
-				@WordCardClick="" 
-				class="WordCard" 
-			/>
-		</div>
-	</div> -->
-	<!-- <img src="" alt="" :class="ui.htmlClass.class_bg.value" :id="ui.htmlId.id_bg.value">
-	<img src="" alt="" :class="ui.htmlClass.class_bg_next.value" :id="ui.htmlId.id_bg_next.value"> -->
-	<!-- <img src="../../assets/uys.jpg" alt="" class="bg">
-	<img src="../../assets/dfq.jpg" alt="" class="bg"> -->
 </div>
+
+<!-- <div class="WordInfo-container" v-if="ui.curWord!=void 0">
+<component :is="WordInfo" :wordB="ui.curWord" class="WordInfo" :key="ui.curWord?.word.id" v-if="isShowWordInfo"></component>
+</div> -->
+<!-- <component :is="WordWindow" v-if="isShowWordWindow" :wordData="returnedWord" @wordWindow_click="wordWindow_click"></component> -->
+<!-- <div class="cards-box" v-if="isShowCardBox" :key="ui.multiMode_key.value">.slice(page[0], page[1])
+baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
+<div v-for="(e, i) in recite.allWordsToLearn.slice(page[0], page[1])">
+	<component 
+		:is="WordCard" 
+		:key="e.fw.table+''+e.fw.id" 
+		:wordB="e" 
+		:loopIndex="i" 
+		@WordCardClick="" 
+		class="WordCard" 
+	/>
+</div>
+</div> -->
+<!-- <img src="" alt="" :class="ui.htmlClass.class_bg.value" :id="ui.htmlId.id_bg.value">
+<img src="" alt="" :class="ui.htmlClass.class_bg_next.value" :id="ui.htmlId.id_bg_next.value"> -->
+<!-- <img src="../../assets/uys.jpg" alt="" class="bg">
+<img src="../../assets/dfq.jpg" alt="" class="bg"> -->
+</div>
+
+
+</Suspense>
+
 </template>
 
 <style scoped lang="scss">
 
 .CtrlPanel{
 	margin: auto auto auto 5%;
+	position: fixed;
 }
 
 input{
@@ -102,9 +135,10 @@ input{
 .cards-box{
 	/* border: solid 1px red; */
 	/* margin: 0 30% 0 auto; */
-	width: 550px;
+	width: 50%;
 	/* position: fixed; */
 	/* left: 30%; */
+	margin: 1% 5% 5% 35%;
 }
 
 /* .WordCard:hover{
@@ -119,6 +153,7 @@ input{
 	/* float: right;; */
 	position: fixed;
 	/* overflow: auto; 创建滚动条 */
+	margin: 2% 0% 0% 0%;
 	overflow: scroll;
 	left: 5%
 }

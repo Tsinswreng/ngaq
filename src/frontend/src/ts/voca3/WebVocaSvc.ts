@@ -7,6 +7,7 @@ import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/Exception";
+import { WebMemorizeWord } from "./entities/WebMemorizeWord";
 
 export class WebVocaSvc extends VocaSvc{
 
@@ -29,6 +30,9 @@ export class WebVocaSvc extends VocaSvc{
 
 	protected _emitter: LinkedEmitter = Le.LinkedEmitter.new(new EventEmitter3())
 
+	declare protected _wordsToLearn: WebMemorizeWord[];
+	get wordsToLearn(){return this._wordsToLearn}
+
 	protected _client = Client.new()
 	get client(){return this._client}
 
@@ -37,11 +41,12 @@ export class WebVocaSvc extends VocaSvc{
 		const jsonRows = await z.client.getWordsFromAllTables()
 		const rows:WordDbRow[] = JSON.parse(jsonRows)
 		const words = rows.map(e=>WordDbRow.toEntity(e))
-		const memorizeWords = words.map(e=>MemorizeWord.new(e))
+		const memorizeWords = words.map(e=>WebMemorizeWord.new(e))
 		z._wordsToLearn = memorizeWords
 		z.svcStatus.load = true
 		return Promise.resolve(true)
 	}
+	//TODO
 	async sort(): Promise<boolean> {
 		return true
 	}
@@ -59,15 +64,22 @@ export class WebVocaSvc extends VocaSvc{
 	}
 	learnByIndex(index: integer, event: RMB_FGT): Promise<boolean> {
 		const z = this
-		if(!z.svcStatus.load){
-			throw Exception.for(z.svcErrReasons.didnt_load)
+		if(index +1 > z.wordsToLearn.length){
+			return Promise.resolve(false)
 		}
-		if(!z.svcStatus.save){
-			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
+		const ans = z.wordsToLearn[index].setInitEvent(event)
+		if(ans){
+			z.emitter.emit(z.svcEvents.learnByIndex, index, z.wordsToLearn[index], event)
 		}
-		z.svcStatus.start = true
-		z.emitter.emit(z.svcEvents.start)
-		return Promise.resolve(true)
+		return Promise.resolve(ans)
+	}
+	async learnByWord(mw:WebMemorizeWord, event:RMB_FGT):Promise<boolean>{
+		const z = this
+		const ans = mw.setInitEvent(event)
+		if(ans){
+			//z.emitter.emit()
+		}
+		return ans
 	}
 	async save(): Promise<boolean> {
 		const z = this

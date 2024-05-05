@@ -1,5 +1,6 @@
 import { WordDbRow } from "@shared/dbRow/Word"
-
+import LocalStorage from "@ts/LocalStorage"
+const LS = LocalStorage
 /** Voca3 */
 export class Client{
 
@@ -15,7 +16,7 @@ export class Client{
 		return z
 	}
 
-	protected _baseUrl = window.location.origin
+	protected _baseUrl = LS.items.baseUrl.get()??window.location.origin
 	get baseUrl(){return this._baseUrl}
 	/**便于在dev模式調試 */
 	set baseUrl(v){this._baseUrl = v}

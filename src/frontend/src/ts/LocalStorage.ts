@@ -38,6 +38,10 @@ class Items{
 
 	static inst = Items.new()
 
+	readonly baseUrl = Item.new({
+		_key: 'baseUrl'
+		,_default_: window.location.origin
+	})
 	readonly multiModePaging:Item=Item.new({
 		_key:'multiModePaging'
 		,_default_: '0,64'
