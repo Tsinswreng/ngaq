@@ -8,7 +8,7 @@ import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 // import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileVocaSvc as FileVocaSvc } from './logic/FileVocaSvc';
-import { MemorizeWord } from '@shared/entities/Word/MemorizeWord';
+import { SvcWord } from '@shared/entities/Word/SvcWord';
 import { Exception, Reason } from '@shared/Exception';
 import chalk from 'chalk'
 import util from 'util'
@@ -98,7 +98,7 @@ export class FileVocaUi{
 	 * 生成rime候選詞ʹcomment
 	 * @param mw 
 	 */
-	geneCandComment(mw:MemorizeWord):string{
+	geneCandComment(mw:SvcWord):string{
 		let ans = mw.word.times_add + ':' + mw.word.times_rmb + ':' + mw.word.times_fgt
 		if(mw.word.times_add>=3){
 			ans = '*'+ans

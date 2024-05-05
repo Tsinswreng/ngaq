@@ -1,4 +1,4 @@
-import { MemorizeWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/MemorizeWord";
+import { SvcWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord";
 import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 import { Exception } from "@shared/Exception";
@@ -15,13 +15,13 @@ class SvcEvents extends Le.Events{
 	 */
 	//neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
 	/** RMB_FGT_nil: 撤銷前ʹ事件 */
-	undo = EV<[MemorizeWord, RMB_FGT_nil]>('undo')
+	undo = EV<[SvcWord, RMB_FGT_nil]>('undo')
 	start = EV<[]>('start')
 	//test=EV('')
-	learnByMWord = EV<[MemorizeWord, RMB_FGT]>('learnByWord')
+	learnByMWord = EV<[SvcWord, RMB_FGT]>('learnByWord')
 
 	/** 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件 */
-	learnByIndex = EV<[integer, MemorizeWord, RMB_FGT]>('learnByIndex')
+	learnByIndex = EV<[integer, SvcWord, RMB_FGT]>('learnByIndex')
 	save = EV('save')
 }
 
@@ -78,7 +78,7 @@ export abstract class VocaSvc{
 	protected _svcErrReasons = new SvcErrReason()
 	get svcErrReasons(){return this._svcErrReasons}
 
-	protected _wordsToLearn:MemorizeWord[] = []
+	protected _wordsToLearn:SvcWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 權重算法 */

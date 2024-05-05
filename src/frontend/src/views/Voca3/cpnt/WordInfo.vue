@@ -64,4 +64,4 @@ const props = defineProps<{
 	white-space: wrap;
 	font-size: 12px;
 }
-</style>
+</style>@shared/entities/Word/SvcWord

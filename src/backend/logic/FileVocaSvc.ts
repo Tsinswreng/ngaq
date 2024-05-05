@@ -7,14 +7,14 @@ import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
-import { MemorizeWord, RMB_FGT } from '@shared/entities/Word/MemorizeWord';
+import { SvcWord, RMB_FGT } from '@shared/entities/Word/SvcWord';
 import { Exception } from '@shared/Exception';
 import * as fs from 'fs' //TODO remove
 import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { WordEvent } from '@shared/SingleWord2';
-import { RMB_FGT_nil } from '@shared/entities/Word/MemorizeWord';
+import { RMB_FGT_nil } from '@shared/entities/Word/SvcWord';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -107,12 +107,12 @@ export class FileVocaSvc extends VocaSvc{
 			const tbl = z.dbSrc.loadTable(tblName)
 			const rows = await tbl.selectAllWithTblName()
 			const words = rows.map(e=>WordDbRow.toEntity(e))
-			const mWords = words.map(e=>MemorizeWord.new(e))
+			const mWords = words.map(e=>SvcWord.new(e))
 			return mWords
 		}
 		try {
 			const tblNames = z.configInst.config.tables
-			const mWords = [] as MemorizeWord[]
+			const mWords = [] as SvcWord[]
 			for(const tblN of tblNames){
 				if(tblN == void 0 || tblN.length === 0){continue}
 				const um = await oneTbl(tblN)
@@ -163,7 +163,7 @@ export class FileVocaSvc extends VocaSvc{
 		return Promise.resolve(true)
 	}
 
-	learnByMWord(mword:MemorizeWord, event:RMB_FGT){
+	learnByMWord(mword:SvcWord, event:RMB_FGT){
 		const z = this
 		const ans = mword.setInitEvent(event)
 		if(ans){
@@ -219,7 +219,7 @@ export class FileVocaSvc extends VocaSvc{
 	// 	}
 	// }
 
-	undo(mw:MemorizeWord){
+	undo(mw:SvcWord){
 		const z = this
 		const old = mw.undo()
 		z.emitter.emit(z.svcEvents.undo, mw, old)

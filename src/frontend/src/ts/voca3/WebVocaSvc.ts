@@ -1,4 +1,4 @@
-import { MemorizeWord, RMB_FGT } from "@shared/entities/Word/MemorizeWord";
+import { SvcWord, RMB_FGT } from "@shared/entities/Word/SvcWord";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
 import { VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
@@ -7,7 +7,7 @@ import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/Exception";
-import { WebMemorizeWord } from "./entities/WebMemorizeWord";
+import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
@@ -33,15 +33,15 @@ export class WebVocaSvc extends VocaSvc{
 
 	protected _emitter: LinkedEmitter = Le.LinkedEmitter.new(new EventEmitter3())
 
-	declare protected _wordsToLearn: WebMemorizeWord[];
+	declare protected _wordsToLearn: WebSvcWord[];
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 已背ʹ單詞中 憶者 */
-	protected _rmbWords:WebMemorizeWord[] = []
+	protected _rmbWords:WebSvcWord[] = []
 	get rmbWords(){return this._rmbWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWords:WebMemorizeWord[] = []
+	protected _fgtWords:WebSvcWord[] = []
 	get fgtWords(){return this._fgtWords}
 
 	// protected _learnedWords: WebMemorizeWord[] = []
@@ -61,7 +61,7 @@ export class WebVocaSvc extends VocaSvc{
 		const jsonRows = await z.client.getWordsFromAllTables()
 		const rows:WordDbRow[] = JSON.parse(jsonRows)
 		const words = rows.map(e=>WordDbRow.toEntity(e))
-		const memorizeWords = words.map(e=>WebMemorizeWord.new(e))
+		const memorizeWords = words.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords
 		z.svcStatus.load = true
 		return Promise.resolve(true)
@@ -88,7 +88,7 @@ export class WebVocaSvc extends VocaSvc{
 		}
 		try {
 			const gotWords = await z.weightAlgo.run(z.wordsToLearn)
-			z._wordsToLearn = gotWords as WebMemorizeWord[]
+			z._wordsToLearn = gotWords as WebSvcWord[]
 			return true
 		} catch (error) {
 			const err = error as Error
@@ -124,7 +124,7 @@ export class WebVocaSvc extends VocaSvc{
 	}
 
 
-	async learnByWord(mw:WebMemorizeWord, event:RMB_FGT):Promise<boolean>{
+	async learnByWord(mw:WebSvcWord, event:RMB_FGT):Promise<boolean>{
 		const z = this
 		if(event === WordEvent.RMB){
 			return z.rmb(mw)
@@ -135,7 +135,7 @@ export class WebVocaSvc extends VocaSvc{
 		}
 	}
 
-	rmb(mw:WebMemorizeWord){
+	rmb(mw:WebSvcWord){
 		const z = this
 		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
@@ -145,7 +145,7 @@ export class WebVocaSvc extends VocaSvc{
 		return ans
 	}
 
-	fgt(mw:WebMemorizeWord){
+	fgt(mw:WebSvcWord){
 		const z = this
 		const ans = mw.setInitEvent(WordEvent.FGT)
 		if(ans){

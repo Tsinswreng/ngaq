@@ -1,5 +1,5 @@
 type Fn<Return=any> = (...args:any[])=>Return
-import { MemorizeWord } from "@shared/entities/Word/MemorizeWord"
+import { SvcWord } from "@shared/entities/Word/SvcWord"
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord"
 import { Word } from "@shared/entities/Word/Word"
 export interface I_WordWeight{
@@ -7,7 +7,7 @@ export interface I_WordWeight{
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
 	 * @param mWords 
 	 */
-	run(mWords:MemorizeWord[]):Promise<MemorizeWord[]>
+	run(mWords:SvcWord[]):Promise<SvcWord[]>
 	// changeRecord?:ChangeRecord[]
 	word__changeRecord?:Map<Word, ChangeRecord[]>
 	/**

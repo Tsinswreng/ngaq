@@ -1,5 +1,5 @@
 import Tempus from "@shared/Tempus";
-import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
+import { SvcWord } from "@shared/entities/Word/SvcWord";
 import * as Word_ from '@shared/entities/Word/Word'
 import * as Sros_ from "@shared/Sros";
 import lodash from 'lodash'
@@ -7,7 +7,7 @@ import * as Ut from '@shared/Ut'
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 
-export {Tempus, MemorizeWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
+export {Tempus, SvcWord as MemorizeWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
 
 //import type Tempus_ from "@shared/Tempus";
 

@@ -23,7 +23,7 @@ class Status{
 }
 
 
-export class MemorizeWord{
+export class SvcWord{
 
 	protected constructor(){
 
@@ -42,7 +42,7 @@ export class MemorizeWord{
 		return z
 	}
 
-	get This(){return MemorizeWord}
+	get This(){return SvcWord}
 
 
 	/** Word實體 */

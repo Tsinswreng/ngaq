@@ -1,7 +1,7 @@
-import { RMB_FGT } from "@shared/entities/Word/MemorizeWord"
+import { RMB_FGT } from "@shared/entities/Word/SvcWord"
 import { VocaSvc } from "@shared/logic/memorizeWord/VocaSvc"
 import { WordEvent } from "@shared/SingleWord2"
-import { WebMemorizeWord } from "@ts/voca3/entities/WebMemorizeWord"
+import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
 import { WebVocaSvc } from "@ts/voca3/WebVocaSvc"
 import { ref, Ref } from "vue"
 
@@ -57,7 +57,7 @@ export class WebVocaUi{
 	protected _svc:WebVocaSvc
 	get svc(){return this._svc}
 
-	protected _curWord:WebMemorizeWord|undefined
+	protected _curWord:WebSvcWord|undefined
 	get curWord(){return this._curWord}
 	set curWord(v){this._curWord = v}
 
@@ -105,10 +105,10 @@ export class WebVocaUi{
 		return z.svc.learnByIndex(index, event)
 	}
 
-	learnByWord(mw:WebMemorizeWord, event:RMB_FGT){
+	learnByWord(mw:WebSvcWord, event:RMB_FGT){
 		const z = this
 		const ans = z.svc.learnByWord(mw, event)
-		if(mw instanceof WebMemorizeWord){
+		if(mw instanceof WebSvcWord){
 			switch (event){
 				case WordEvent.RMB:
 					mw.uiStuff.reciteStatusRef.value = 'rmb'
@@ -126,10 +126,10 @@ export class WebVocaUi{
 		return [z.svc.rmbWords, z.svc.fgtWords]
 	}
 
-	undoByWord(mw:WebMemorizeWord){
+	undoByWord(mw:WebSvcWord){
 		const z = this
 		const ans = mw.undo()
-		if(mw instanceof WebMemorizeWord){
+		if(mw instanceof WebSvcWord){
 			mw.uiStuff.reciteStatusRef.value = 'nil'
 		}
 		return ans

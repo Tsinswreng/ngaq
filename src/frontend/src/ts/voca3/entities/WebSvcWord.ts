@@ -1,4 +1,4 @@
-import {MemorizeWord} from '@shared/entities/Word/MemorizeWord'
+import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {Ref, ref} from 'vue'
 
 class UiStuff{
@@ -6,15 +6,15 @@ class UiStuff{
 }
 
 
-export class WebMemorizeWord extends MemorizeWord{
+export class WebSvcWord extends SvcWord{
 
-	static new(...args:Parameters<typeof MemorizeWord.new>){
+	static new(...args:Parameters<typeof SvcWord.new>){
 		const z = new this()
 		z.__init__(...args)
 		return z
 	}
 
-	protected __init__(...args:Parameters<typeof WebMemorizeWord.new>){
+	protected __init__(...args:Parameters<typeof WebSvcWord.new>){
 		const z = this
 		super.__init__(...args)
 		return z

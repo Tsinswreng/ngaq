@@ -1,5 +1,5 @@
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
-import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
+import { SvcWord } from "@shared/entities/Word/SvcWord";
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 
 export class BaseWeight implements I_WordWeight{
@@ -22,7 +22,7 @@ export class BaseWeight implements I_WordWeight{
 		//this._paramOpt = v
 	}
 
-	async run(mWords: MemorizeWord[]){
+	async run(mWords: SvcWord[]){
 		return mWords
 	}
 	

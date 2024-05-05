@@ -229,4 +229,4 @@ const isAddTimeGeq3 = (wb:WebMemorizeWord)=>{
 }
 </style>
 
-../Status
+../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord
