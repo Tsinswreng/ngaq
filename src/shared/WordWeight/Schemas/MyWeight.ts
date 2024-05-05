@@ -54,7 +54,7 @@ class DefaultOpt{
 	/** 加ˡ事件ᵗ權重 */
 	addWeight = 0xF
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 1000*3600*24*90
+	debuffNumerator = 99999*1000*3600*24*90
 	base = 20
 }
 
@@ -74,7 +74,11 @@ class Statistics{
 		o.finalAddEventPos = param[0]
 	}
 	weight = s.n(1.1)
-	curPos = 0 //當前ʃ処ˋ第幾個事件
+	/**
+	 * 當前ʃ処ˋ第幾個事件
+	 * 統一在handleOne中 先自增、緣初值潙負一
+	 */
+	curPos = -1
 	/** 今ᵗ時刻 */
 	nunc = Tempus.new()
 	/** 加ˡ事件ᵗ數 */
@@ -103,10 +107,10 @@ class WordWeight extends Base implements I_WordWeight{
 
 	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
 	get word__changeRecord(){return this._word__changeRecord}
-
-	protected _changeRecord:_ENV.ChangeRecord[] = []
-	get changeRecord(){return this._changeRecord}
-	set changeRecord(v){this._changeRecord = v}
+ 
+	// protected _changeRecord:_ENV.ChangeRecord[] = []
+	// get changeRecord(){return this._changeRecord}
+	// set changeRecord(v){this._changeRecord = v}
 
 	protected _paramOpt = this.This.defaultOpt
 	get paramOpt(){return this._paramOpt}
@@ -114,9 +118,11 @@ class WordWeight extends Base implements I_WordWeight{
 		//this._paramOpt = v
 	}
 
-	addChangeRecord(word:Word, changeRecord:ChangeRecord){
+	addChangeRecords(word:Word, changeRecords:ChangeRecord[]){
 		const z = this
-		ChangeRecord.push(z.word__changeRecord, word, changeRecord)
+		for(const r of changeRecords){
+			ChangeRecord.push(z.word__changeRecord, word, r)
+		}
 		// let dʼʹ = 1
 		// let ˊ = 3
 		
@@ -137,7 +143,7 @@ class WordWeight extends Base implements I_WordWeight{
 		class Handle3Events{
 			static new(prop:{
 				_ww:WordWeight
-				,_tempus__event:Tempus_Event
+				//,_tempus__event:Tempus_Event
 				,_statistics:Statistics
 				,_mw:MemorizeWord
 			}){
@@ -156,23 +162,30 @@ class WordWeight extends Base implements I_WordWeight{
 			_mw:MemorizeWord
 			_ww:WordWeight
 			_statistics:Statistics
-			_tempus__event:Tempus_Event
+			_cur_tempus__event:Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
 
 			addRecord(record:ChangeRecord){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
+				//console.log(record)//t
 				z._statistics.records.push(record)
 			}
 
-			handleAll(){
-				
+			handleAll(tempus_events:Tempus_Event[]){
+				const z = this
+				for(const t_e of tempus_events){
+					z._cur_tempus__event = t_e
+					z.handleOne()
+				}
+				return z._statistics
 			}
 
-			handle(){
+			protected handleOne(){
 				const z = this
+				z._statistics.curPos ++
 				const WE = WordEvent
-				switch (z._tempus__event.event){
+				switch (z._cur_tempus__event.event){
 					case WE.ADD:
 						return z.handle_add()
 					break;
@@ -187,7 +200,7 @@ class WordWeight extends Base implements I_WordWeight{
 				}
 			}
 			
-			handle_add(){
+			protected handle_add(){
 				const z = this
 				const st = z._statistics
 				st.cnt_add++ //加ˡ事件ᵗ計數ˇ加一
@@ -197,14 +210,18 @@ class WordWeight extends Base implements I_WordWeight{
 				) // *= 默認加ˡ權重
 				//錄ᵣ此輪迭代ʸ權重ᵗ變
 				const rec = ChangeRecord.new1(
-					z._tempus__event
+					z._cur_tempus__event
 					, st.weight
+					, z._ww.paramOpt.addWeight
 				)
+				// if(z._mw.word.wordShape === 'disguise'){
+				// 	console.log(rec)//t+
+				// }
 				z.addRecord(rec)
 				return st
 			}
 
-			handle_rmb(){
+			protected handle_rmb(){
 				const z = this
 				const st = z._statistics
 				st.cnt_rmb++
@@ -216,7 +233,7 @@ class WordWeight extends Base implements I_WordWeight{
 				}else if(WordEvent.ADD === lastRec.event){ //若上個事件潙 添
 					st.weight = $n( s.d(st.weight, 1.1) ) //自除以1.1
 				}else{
-					weight_ = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._tempus__event.tempus)
+					weight_ = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 					weight_ = s.d(
 						weight_, z._mw.word.times_add
 					)
@@ -224,9 +241,13 @@ class WordWeight extends Base implements I_WordWeight{
 						weight_ = s.n(1.01)
 					}
 				}
-				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
+				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
+				// if(z._mw.word.wordShape === 'disguise'){ //t
+				// 	console.log(st.curPos, st.finalAddEventPos, last(z._mw.date__event).event)
+				// }
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
-					let nowDiffThen = Tempus.diff_mills(st.nunc, z._tempus__event.tempus)
+					//console.log(1)//t
+					let nowDiffThen = Tempus.diff_mills(st.nunc, z._cur_tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
 						s.m(
 							nowDiffThen
@@ -242,18 +263,29 @@ class WordWeight extends Base implements I_WordWeight{
 						),
 						weight_
 					)
+					//console.log(st.weight)//t
 					st.weight = $n( s.d(st.weight, debuff) )
+					rec.dateWeight = weight_
 					rec.debuff = debuff
 					rec.after = st.weight
+					//console.log(debuff)//t
+					
+					// if(z._mw.word.wordShape === 'disguise'){
+					// 	console.log(rec)//t-
+					// }
 				}
+				//console.log(rec)//t
 				z.addRecord(rec)
+				// if(z._mw.word.wordShape === 'disguise'){
+				// 	console.log(rec)//t-
+				// }
 				return st
 			}
 
-			handle_fgt(){
+			protected handle_fgt(){
 				const z = this
 				const lastRec = last(z._statistics.records)
-				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._tempus__event.tempus)
+				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 				const st = z._statistics
 				if(st.cnt_add >= 3){
 					weight = s.m(
@@ -265,7 +297,7 @@ class WordWeight extends Base implements I_WordWeight{
 					weight = s.n(1.5)
 				}
 				st.weight = s.m( st.weight, weight )
-				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
+				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
 				z.addRecord(rec)
 				//console.log(st.weight)//t
 				//process.stdout.write(st.weight+' ')//t
@@ -277,13 +309,27 @@ class WordWeight extends Base implements I_WordWeight{
 
 	async run(mWords:MemorizeWord[]) {
 		const z = this
+		mWords = z.filter(mWords)
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
 			z.calc0(uWord)
 			//uWord.weight = 114514 //t
 		}
 		mWords.sort((b,a)=>s.c(a.weight, b.weight))
+		//console.log(z.word__changeRecord)//t *
 		return mWords
+	}
+
+	filter(words:MemorizeWord[]){
+		const z = this
+		const ans = [] as MemorizeWord[]
+		for(const w of words){
+			// if(w.word.times_add===1){
+			// 	ans.push(w)
+			// }
+			ans.push(w)
+		}
+		return ans
 	}
 
 	calc0(mWord:MemorizeWord){
@@ -293,16 +339,25 @@ class WordWeight extends Base implements I_WordWeight{
 		const Handle3Events = z.This.Handle3Events
 		const h3 = Handle3Events.new({
 			_ww: z
-			,_tempus__event: mWord.date__event[0]
+			//,_tempus__event: mWord.date__event[0]
 			,_statistics: st
 			,_mw: mWord
 		})
-		for(const tempus__event of mWord.date__event){
-			h3._tempus__event = tempus__event
-			h3.handle()
-		}
-		mWord.weight = h3._statistics.weight
-		//console.log(h3._statistics.records)//t
+		// for(const tempus__event of mWord.date__event){
+		// 	h3._cur_tempus__event = tempus__event
+		// 	const st = h3.handleOne()
+		// 	console.log(st.records.length)//t
+		// }
+		const ans = h3.handleAll(mWord.date__event)
+		mWord.weight = ans.weight
+		z.addChangeRecords(mWord.word, ans.records)
+		
+		// mWord.weight = h3._statistics.weight
+		// z.addChangeRecords(mWord.word, h3._statistics.records)
+		//t
+		// if(mWord.word.wordShape === 'disguise'){
+		// 	console.log(ans.records)//t *
+		// }
 	}
 
 	/**

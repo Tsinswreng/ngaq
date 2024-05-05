@@ -95,6 +95,7 @@ export class WebVocaUi{
 	async start(){
 		const z = this
 		await z.svc.start()
+		z.hideWordBox()
 		z.showWordBox()
 		console.log('start')//t
 	}
@@ -134,19 +135,12 @@ export class WebVocaUi{
 		return ans
 	}
 
-
-	/**
-	 * 無效
-	 */
 	showWordBox(){
 		const z = this
 		z.uiStuff.isShowCardBox.value = false
 		z.uiStuff.isShowCardBox.value = true
 	}
 
-	/**
-	 * 無效
-	 */
 	hideWordBox(){
 		const z = this
 		z.uiStuff.isShowCardBox.value = true
@@ -168,7 +162,10 @@ export class WebVocaUi{
 	}
 
 	async restart(){
-		
+		const z = this
+		z.hideWordBox()
+		z.showWordBox()
+		return z.svc.restart()
 	}
 
 	set_page(str:string){}
@@ -177,5 +174,24 @@ export class WebVocaUi{
 		const z = this
 		// console.log(z._svc instanceof VocaSvc)
 		// console.log(z.svc.wordsToLearn)
+	}
+
+	changeRec(){
+		const z = this
+		return z.svc.weightAlgo?.word__changeRecord
+	}
+
+
+	//TODO 把changeRecord作潙可選屬性 集于MemorizeWord
+	seekChangeRec(index:integer){
+		const z = this
+		const recs = z.svc.weightAlgo?.word__changeRecord
+		if(recs == void 0){
+			console.log(`recs == void 0`)
+			return
+		}
+		const curWord = z.wordsToLearn[index]
+		console.log(curWord)//t
+		return recs.get(curWord.word)
 	}
 }

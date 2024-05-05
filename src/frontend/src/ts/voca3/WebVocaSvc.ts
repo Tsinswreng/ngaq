@@ -170,10 +170,13 @@ export class WebVocaSvc extends VocaSvc{
 		z._svcStatus.save = true
 		return true
 	}
+
+	//TODO 判斷狀態
 	async restart(): Promise<boolean> {
 		const z = this
-		const ans = await z.start()
-		return ans
+		await z.sort()
+		await z.start()
+		return true
 	}
 	
 }

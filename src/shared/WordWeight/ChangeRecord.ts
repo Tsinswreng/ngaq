@@ -1,14 +1,17 @@
-import * as _ENV from "./_lib"
+// import * as _ENV from "./_lib"
+// import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+// import { InstanceType_ } from "@shared/Type"
 
+// type Tempus = InstanceType_<typeof _ENV.Tempus>
+// type WordEvent = InstanceType_<typeof _ENV.Word_.WordEvent>
+// type Tempus_Event = InstanceType_<typeof _ENV.Word_.Tempus_Event>
+// type N2S = _ENV.Sros_.N2S
 
-
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
-import { InstanceType_ } from "@shared/Type"
-
-type Tempus = InstanceType_<typeof _ENV.Tempus>
-type WordEvent = InstanceType_<typeof _ENV.Word_.WordEvent>
-type Tempus_Event = InstanceType_<typeof _ENV.Word_.Tempus_Event>
-type N2S = _ENV.Sros_.N2S
+import Tempus from "@shared/Tempus"
+import { WordEvent } from "@shared/SingleWord2"
+import { N2S } from "@shared/Sros"
+import { Tempus_Event } from "@shared/entities/Word/Word"
+import * as Ut from "@shared/Ut"
 
 /** 㕥錄ᵣ 每次迭代中 權重ᵗ變 */
 export class ChangeRecord{
@@ -58,6 +61,6 @@ export class ChangeRecord{
 	debuff?:N2S
 
 	static push<K,VEle>(map:Map<K,VEle[]>, k:K, ele:VEle){
-		_ENV.Ut.key__arrMapPush(map, k, ele)
+		Ut.key__arrMapPush(map, k, ele)
 	}
 }

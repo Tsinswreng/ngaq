@@ -97,15 +97,18 @@ const isAddTimeGeq3 = (wb:WebMemorizeWord)=>{
 
 		<span class="w-index" :class="reciteStatusRef" @click="ui.learnByWord(mw, WordEvent.FGT)">{{ props.loopIndex }}</span>
 		<span class="w-shape" @click="ui.learnByWord(mw, WordEvent.RMB)" @contextmenu="">
-			{{ mw?.word.wordShape }}
+			{{ mw.word.wordShape }}
 		</span>
 		
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
-
-		<span class="w-weight">{{}}</span>
-		<span class="w-lastRvwDate">{{}}</span>
+		<span>{{ mw.word.times_add }}</span>:
+		<span>{{ mw.word.times_rmb }}</span>:
+		<span>{{ mw.word.times_fgt }}</span>
+		<span>_____</span>
+		<span class="w-weight">{{ mw.weight }}</span>
+		<!-- <span class="w-lastRvwDate">{{ mw.date__event[mw.date__event.length-1].tempus }}</span> -->
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<span class="w-eventsSymbols">{{}}</span>
 		<span class="w-lastEvent">{{}}</span>

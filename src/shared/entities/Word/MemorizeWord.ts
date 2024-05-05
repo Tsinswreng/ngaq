@@ -23,7 +23,6 @@ class Status{
 }
 
 
-
 export class MemorizeWord{
 
 	protected constructor(){
