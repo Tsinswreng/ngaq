@@ -61,8 +61,11 @@ export interface DictRawConfig{
 }
 
 
-
+/**
+ * InstanceType_<typeof MyClass>
+ */
 export type InstanceType_<T extends { prototype: any }> = T["prototype"];
+//export type InstanceType_<T> = T["prototype"];
 
 
 /** 從字串字面量解析類型 */

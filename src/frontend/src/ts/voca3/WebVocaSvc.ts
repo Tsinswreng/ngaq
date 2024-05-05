@@ -10,6 +10,7 @@ import { Exception } from "@shared/Exception";
 import { WebMemorizeWord } from "./entities/WebMemorizeWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
+import { $ } from "@shared/Ut";
 
 export class WebVocaSvc extends VocaSvc{
 
@@ -50,9 +51,9 @@ export class WebVocaSvc extends VocaSvc{
 	get client(){return this._client}
 
 
-	protected _weightAlgoParser:WeightCodeParser|undefined
-	get weightAlgoParser(){return this._weightAlgoParser}
-	set weightAlgoParser(v){this._weightAlgoParser = v}
+	// protected _weightAlgoParser:WeightCodeParser = 
+	// get weightAlgoParser(){return this._weightAlgoParser}
+	// set weightAlgoParser(v){this._weightAlgoParser = v}
 
 
 	async load(): Promise<boolean> {
@@ -69,12 +70,19 @@ export class WebVocaSvc extends VocaSvc{
 	protected async _initWeightAlgo(){
 		const z = this
 		const algoCode = await z.client.getWeightAlgoJs0()
-		
+		try {
+			const ans = WeightCodeParser.parse(algoCode)
+			z._weightAlgo = $(ans)()
+		} catch (error) {
+			const err = error as Error
+			throw err
+		}
 	}
 
 	//TODO
 	async sort(): Promise<boolean> {
 		const z = this
+		await z._initWeightAlgo()
 		if(z.weightAlgo == void 0){
 			throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
 		}

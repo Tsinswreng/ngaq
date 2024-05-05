@@ -21,7 +21,7 @@ import { Readable } from "stream";
 import jwt from 'jsonwebtoken'
 import { WordTable } from "./db/sqlite/Word/Table";
 import EventEmitter from "eventemitter3";
-import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
+import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor";
 const secretKey = '114514'
 
 Error.stackTraceLimit = 99
@@ -457,7 +457,7 @@ export default class VocaServer{
 			}else{
 				code = first.code
 			}
-			const jsCode = WeightCodeParser.tsToJs(code)
+			const jsCode = WeightCodeProcessor.process(code)
 			res.send(jsCode)
 		})
 

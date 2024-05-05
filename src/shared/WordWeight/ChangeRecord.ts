@@ -1,25 +1,14 @@
-import * as L from "./_lib"
+import * as _ENV from "./_lib"
 
 
 
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { InstanceType_ } from "@shared/Type"
 
-const sros = L.Sros.Sros.new()
-const s = sros.short
-const Tempus_Event = L.Word.Tempus_Event
-type Tempus_Event = InstanceType_<typeof Tempus_Event>
-const WordEvent = L.Word.WordEvent
-type WordEvent = L.Word.WordEvent
-//type WordEvent = InstanceType_<typeof WordEvent>
-const Tempus = L.Tempus
-type Tempus = InstanceType_<typeof L.Tempus>
-type N2S = L.Sros.N2S
-type Word = L.Word.Word
-const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
-const last = L.Ut.lastOf
-const MemorizeWord = L.MemorizeWord
-type MemorizeWord = L.MemorizeWord
+type Tempus = InstanceType_<typeof _ENV.Tempus>
+type WordEvent = InstanceType_<typeof _ENV.Word_.WordEvent>
+type Tempus_Event = InstanceType_<typeof _ENV.Word_.Tempus_Event>
+type N2S = _ENV.Sros_.N2S
 
 /** 㕥錄ᵣ 每次迭代中 權重ᵗ變 */
 export class ChangeRecord{
@@ -69,6 +58,6 @@ export class ChangeRecord{
 	debuff?:N2S
 
 	static push<K,VEle>(map:Map<K,VEle[]>, k:K, ele:VEle){
-		L.Ut.key__arrMapPush(map, k, ele)
+		_ENV.Ut.key__arrMapPush(map, k, ele)
 	}
 }

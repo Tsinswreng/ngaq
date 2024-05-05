@@ -10,7 +10,7 @@ import { WordDbRow } from '@shared/dbRow/Word';
 import { MemorizeWord, RMB_FGT } from '@shared/entities/Word/MemorizeWord';
 import { Exception } from '@shared/Exception';
 import * as fs from 'fs' //TODO remove
-import { WeightCodeParser } from '@shared/WordWeight/Parser/WeightCodeParser';
+import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { WordEvent } from '@shared/SingleWord2';
@@ -63,7 +63,7 @@ export class FileVocaSvc extends VocaSvc{
 	protected _dbSrc:WordDbSrc
 	get dbSrc(){return this._dbSrc}
 
-	protected _weightCodeParser:WeightCodeParser|undefined
+	protected _weightCodeParser:WeightCodeProcessor|undefined
 	get weightCodeParser(){return this._weightCodeParser}
 
 
@@ -88,7 +88,7 @@ export class FileVocaSvc extends VocaSvc{
 		}else{
 			code = first.code
 		}
-		const weiPar = WeightCodeParser.new(code)
+		const weiPar = WeightCodeProcessor.new(code)
 		z._weightCodeParser = weiPar
 		try {
 			z._weightAlgo = $(weiPar.parse())()

@@ -1,5 +1,5 @@
 //<@delete>
-import * as L from '@shared/WordWeight/_lib'
+import * as _ENV from '@shared/WordWeight/_lib'
 //type import
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { InstanceType_ } from "@shared/Type"
@@ -15,30 +15,32 @@ import { InstanceType_ } from "@shared/Type"
 */
 
 
-const sros = L.Sros.Sros.new()
+const sros = _ENV.Sros_.Sros.new()
 const s = sros.short
-const Tempus_Event = L.Word.Tempus_Event
+const Tempus_Event = _ENV.Word_.Tempus_Event
 type Tempus_Event = InstanceType_<typeof Tempus_Event>
-const WordEvent = L.Word.WordEvent
-type WordEvent = L.Word.WordEvent
+const WordEvent = _ENV.Word_.WordEvent
+type WordEvent = _ENV.Word_.WordEvent
 //type WordEvent = InstanceType_<typeof WordEvent>
-const Tempus = L.Tempus
-type Tempus = InstanceType_<typeof L.Tempus>
-type N2S = L.Sros.N2S
-type Word = L.Word.Word
-const $n = L.Sros.Sros.toNumber.bind(L.Sros.Sros)
-const last = L.Ut.lastOf
-const MemorizeWord = L.MemorizeWord
-type MemorizeWord = L.MemorizeWord
+const Tempus = _ENV.Tempus
+type Tempus = InstanceType_<typeof _ENV.Tempus>
+type N2S = _ENV.Sros_.N2S
+const Word = _ENV.Word_.Word
+type Word = InstanceType_<typeof Word>
+const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
+const last = _ENV.Ut.lastOf
+const MemorizeWord = _ENV.MemorizeWord
+type MemorizeWord = InstanceType_<typeof _ENV.MemorizeWord>
 
-const ChangeRecord = L.ChangeRecord
-type ChangeRecord = L.ChangeRecord
+const ChangeRecord = _ENV.ChangeRecord
+type ChangeRecord =_ENV.ChangeRecord
 
-const Base = L.BaseWeight
-type Base = L.BaseWeight
+const Base = _ENV.BaseWeight
+type Base = _ENV.BaseWeight
 //type Statistics = InstanceType_<typ
 
 //___________________________________________________
+
 
 
 /**
@@ -102,7 +104,7 @@ class WordWeight extends Base implements I_WordWeight{
 	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
 	get word__changeRecord(){return this._word__changeRecord}
 
-	protected _changeRecord:L.ChangeRecord[] = []
+	protected _changeRecord:_ENV.ChangeRecord[] = []
 	get changeRecord(){return this._changeRecord}
 	set changeRecord(v){this._changeRecord = v}
 

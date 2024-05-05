@@ -1,29 +1,32 @@
 import Tempus from "@shared/Tempus";
 import { MemorizeWord } from "@shared/entities/Word/MemorizeWord";
-import * as Word from '@shared/entities/Word/Word'
-import * as Sros from "@shared/Sros";
-//import { WordWeight } from "@shared/WordWeight/_Base";
+import * as Word_ from '@shared/entities/Word/Word'
+import * as Sros_ from "@shared/Sros";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 
-export /* const weightLib = */ {
-//	WordWeight
-	Word
-	,MemorizeWord
-	,Tempus
-	,Sros
-	,lodash
-	,Ut
-	,ChangeRecord
-	,BaseWeight
-}
+export {Tempus, MemorizeWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
 
-export namespace weightLib{
-	export type Sros = typeof Sros
-}
+//import type Tempus_ from "@shared/Tempus";
 
+//typescript 中 如何把上面的import的變量及類型全部再導出、放到_ENV命令空間下? 
+//在另一個文件中可以通過import _ENV from 'xxx'來導入
+//必須將_ENV作爲整體導入和導出、不能分別
+
+// const _ENV={
+// 	Word_
+// 	,MemorizeWord
+// 	,Tempus
+// 	,Sros_
+// 	,lodash
+// 	,Ut
+// 	,ChangeRecord
+// 	,BaseWeight
+// }
+// type _ENV = typeof _ENV
+// export default _ENV
 
 // export const weightLib = {
 // 	WordWeight: class _WordWeight extends WordWeight{}
