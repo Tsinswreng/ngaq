@@ -7,7 +7,7 @@ import * as Ut from '@shared/Ut'
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 
-export {Tempus, SvcWord as MemorizeWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
+export {Tempus, SvcWord as SvcWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
 
 //import type Tempus_ from "@shared/Tempus";
 

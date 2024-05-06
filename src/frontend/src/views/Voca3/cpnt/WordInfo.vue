@@ -1,22 +1,18 @@
 <!-- 固定ʹ 單詞詳情框 -->
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
-//import WordB from '@ts/voca/WordB';
 import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {WebVocaUi} from '../WebVocaUi';
-import CtrlPanel from './CtrlPanel.vue';
 import { ref } from 'vue';
-//const ui = await WebVocaUi.getInstanceAsync()
 const loaded = ref(false)
 let ui:WebVocaUi
 ;(async()=>{
 	ui = await WebVocaUi.getInstanceAsync()
 	loaded.value = true
 })()
-const props = defineProps<{
-	memorizeWord: SvcWord|undefined
-}>()
-
+// const props = defineProps<{
+// 	memorizeWord: SvcWord|undefined
+// }>()
 </script>
 <template>
 	<div class="container" v-if="loaded"> <!-- 不用寫.vaule -->

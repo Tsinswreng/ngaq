@@ -29,8 +29,8 @@ const Word = _ENV.Word_.Word
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
 const last = _ENV.Ut.lastOf
-const MemorizeWord = _ENV.MemorizeWord
-type MemorizeWord = InstanceType_<typeof _ENV.MemorizeWord>
+const SvcWord = _ENV.SvcWord
+type SvcWord = InstanceType_<typeof _ENV.SvcWord>
 
 const ChangeRecord = _ENV.ChangeRecord
 type ChangeRecord =_ENV.ChangeRecord
@@ -145,7 +145,7 @@ class WordWeight extends Base implements I_WordWeight{
 				_ww:WordWeight
 				//,_tempus__event:Tempus_Event
 				,_statistics:Statistics
-				,_mw:MemorizeWord
+				,_mw:SvcWord
 			}){
 				const o = new this()
 				o.__init__(prop)
@@ -159,7 +159,7 @@ class WordWeight extends Base implements I_WordWeight{
 			}
 
 			readonly This = Handle3Events
-			_mw:MemorizeWord
+			_mw:SvcWord
 			_ww:WordWeight
 			_statistics:Statistics
 			_cur_tempus__event:Tempus_Event
@@ -307,9 +307,8 @@ class WordWeight extends Base implements I_WordWeight{
 		return Handle3Events
 	}
 
-	async run(mWords:MemorizeWord[]) {
+	async run0(mWords:SvcWord[]) {
 		const z = this
-		mWords = z.filter(mWords)
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
 			z.calc0(uWord)
@@ -320,9 +319,76 @@ class WordWeight extends Base implements I_WordWeight{
 		return mWords
 	}
 
-	filter(words:MemorizeWord[]){
+	async run(mWords:SvcWord[]) {
 		const z = this
-		const ans = [] as MemorizeWord[]
+		mWords = z.filter(mWords)
+		mWords = await z.run0(mWords)
+		mWords = await z.finalFilter(mWords)
+		return mWords
+	}
+
+	/**
+	 * 英日英日英日英日拉
+	 * @param words 
+	 */
+	finalFilter(
+		words:SvcWord[] // 權重高者在前
+	){
+		const $ = _ENV.Ut.$
+		words = words.slice()
+		words = words.reverse() // 此後 權重高者在末
+		//按表名分類
+		const tbl__words = new Map<string, SvcWord[]>()
+		for(const w of words){
+			const tbl = (w.word.table)
+			const habere = tbl__words.get(tbl)
+			if( habere == void 0 ){
+				tbl__words.set(tbl, [w])
+			}else{
+				habere.push(w)
+				tbl__words.set(tbl, habere)
+			}
+		}
+
+		const ans = [] as SvcWord[]
+		const eng = $(tbl__words.get('english'))
+		const jap = $(tbl__words.get('japanese'))
+		const latin = $(tbl__words.get('latin'))
+		let i = 0
+		function engFn(){
+			const e = eng.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		function japFn(){
+			const e = jap.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		function latinFn(){
+			const e = latin.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
+		for(; i < words.length;){
+			engFn();japFn();
+			engFn();japFn();
+			engFn();japFn();
+			engFn();japFn();
+			latinFn();
+		}
+		return ans
+	}
+
+	filter(words:SvcWord[]){
+		const z = this
+		const ans = [] as SvcWord[]
 		for(const w of words){
 			// if(w.word.times_add===1){
 			// 	ans.push(w)
@@ -332,7 +398,7 @@ class WordWeight extends Base implements I_WordWeight{
 		return ans
 	}
 
-	calc0(mWord:MemorizeWord){
+	calc0(mWord:SvcWord){
 		const z = this
 		const finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
 		const st = z.This.Statistics.new(finalAddEventPos)
