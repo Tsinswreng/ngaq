@@ -129,7 +129,7 @@ function fmtDate(tempus:Tempus){
 		<span class="w-weight">{{ fmtNum(mw.weight,2) }}</span>
 		<span class="w-lastRvwDate">{{ fmtDate(mw.date__event[mw.date__event.length-1].tempus) }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
-		<span class="w-eventsSymbols">{{  }}</span>
+		<!-- <span class="w-eventsSymbols">{{  }}</span> -->
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		
 		<!-- <span>{{ reciteStatusRef }}</span> -->
@@ -146,7 +146,7 @@ function fmtDate(tempus:Tempus){
 <style scoped>
 
 span{
-	outline: solid 1px gray;  box-sizing: border-box;
+	outline: solid 1px rgb(76, 76, 76);  box-sizing: border-box;
 }
 
 .timesCnt{
@@ -190,7 +190,7 @@ span{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
 	/* width: 150px */
-	width: 20%;
+	width: 30%;
 }
 
 .w-id{

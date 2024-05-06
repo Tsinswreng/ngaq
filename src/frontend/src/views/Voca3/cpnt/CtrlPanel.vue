@@ -43,8 +43,8 @@ function set_page(){
 		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label> -->
 		
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
-		<button @click="ui.showWordBox()">showWordBox</button>
-		<button @click="ui.hideWordBox()">hide</button>
+		<!-- <button @click="ui.mkWordBox()">showWordBox</button>
+		<button @click="ui.rmWordBox()">hide</button> -->
 		<button @click="ui.prepareEtStart()">始</button>
 		<button @click="ui.save()">存</button>
 		<button>改</button>
@@ -83,11 +83,11 @@ input{
 }
 
 button{
-	height: 16px;
+	height: 5%;
 	font-size: 16px;
-	padding: 0px;
+	padding: 1px;
 	background-color: black;
-	border: 0px;
+	border: 1px;
 }
 
 button:hover{

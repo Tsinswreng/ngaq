@@ -116,6 +116,7 @@ baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 .CtrlPanel{
 	margin: auto auto auto 5%;
 	position: fixed;
+	outline: solid 1px rgb(76, 76, 76);  box-sizing: border-box;
 }
 
 input{
@@ -154,7 +155,7 @@ input{
 	/* float: right;; */
 	position: fixed;
 	/* overflow: auto; 创建滚动条 */
-	margin: 2% 0% 0% 0%;
+	margin: 3% 0% 0% 0%;
 	overflow: scroll;
 	left: 5%
 }

@@ -76,6 +76,11 @@ export class WebVocaUi{
 
 	registerToWindow(){
 		const z = this
+		window['_voca'] = z
+	}
+
+	registerToWindow0(){
+		const z = this
 		//@ts-ignore
 		window._voca = {}
 		//@ts-ignore
@@ -94,6 +99,8 @@ export class WebVocaUi{
 			}
 		}
 	}
+
+
 	
 	async start(){
 		const z = this
@@ -147,13 +154,13 @@ export class WebVocaUi{
 		return this._curWord
 	}
 
-	showWordBox(){
+	mkWordBox(){
 		const z = this
 		z.uiStuff.isShowCardBox.value = false
 		z.uiStuff.isShowCardBox.value = true
 	}
 
-	hideWordBox(){
+	rmWordBox(){
 		const z = this
 		z.uiStuff.isShowCardBox.value = true
 		z.uiStuff.isShowCardBox.value = false
@@ -161,8 +168,8 @@ export class WebVocaUi{
 
 	fresh_wordBox(){
 		const z = this
-		z.hideWordBox()
-		z.showWordBox()
+		z.rmWordBox()
+		z.mkWordBox()
 	}
 
 	fresh_wordInfo(){
@@ -187,7 +194,7 @@ export class WebVocaUi{
 
 	async restart(){
 		const z = this
-		z.fresh_wordBox()
+		z.fresh_wordBox() // 不效
 		return z.svc.restart()
 	}
 
