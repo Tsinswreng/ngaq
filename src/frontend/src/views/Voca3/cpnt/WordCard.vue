@@ -4,6 +4,7 @@ import {ref, Ref, onBeforeMount} from 'vue'
 import { WebVocaUi } from '../WebVocaUi';
 import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
+import { SvcWord, Tempus } from '@shared/WordWeight/_lib';
 
 const loaded = ref(false)
 let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
@@ -62,13 +63,13 @@ function returnWordToParent(){
 // 	}
 // }
 
-// function fmtNum(num:number, fix:number){
-// 	let exp = num.toExponential()
-// 	let [baseStr, exponentialStr] = exp.split('e')
-// 	const base = parseFloat(baseStr)
-// 	baseStr = base.toFixed(fix)
-// 	return baseStr + 'e' + exponentialStr
-// }
+function fmtNum(num:number, fix:number){
+	let exp = num.toExponential()
+	let [baseStr, exponentialStr] = exp.split('e')
+	const base = parseFloat(baseStr)
+	baseStr = base.toFixed(fix)
+	return baseStr + 'e' + exponentialStr
+}
 
 // function rmb(){
 // 	ui.learnByWord($(mw), WordEvent.RMB)
@@ -82,6 +83,20 @@ function returnWordToParent(){
 // 	return ui.undoByWord($(mw))
 // }
 
+function lastEventSymbol(w:SvcWord){
+	switch(w.date__event[w.date__event.length-1].event){
+		case WordEvent.ADD:
+			return '🤔'
+		break;
+		case WordEvent.RMB:
+			return '✅'
+		break;
+		case WordEvent.FGT:
+			return '❌'
+		break;
+	}
+}
+
 const reciteStatusRef = mw.uiStuff.reciteStatusRef
 const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	if(wb == void 0){
@@ -89,10 +104,15 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	}
 	return wb.word.times_add >= 3
 }
+
+function fmtDate(tempus:Tempus){
+	return Tempus.format(tempus, 'YY.MM.DD')
+}
+
 </script>
 
 <template>
-	<div v-if="loaded" class="word-card" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
+	<div v-if="loaded" class="word-card-container" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
 
 		<span class="w-index" :class="reciteStatusRef" @click="ui.learnByWord(mw, WordEvent.FGT)">{{ props.loopIndex }}</span>
 		<span class="w-shape" @click="ui.learnByWord(mw, WordEvent.RMB)" @contextmenu="">
@@ -102,15 +122,15 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
-		<span>{{ mw.word.times_add }}</span>:
-		<span>{{ mw.word.times_rmb }}</span>:
-		<span>{{ mw.word.times_fgt }}</span>
-		<span>_____</span>
-		<span class="w-weight">{{ mw.weight }}</span>
-		<!-- <span class="w-lastRvwDate">{{ mw.date__event[mw.date__event.length-1].tempus }}</span> -->
+		<span class="timesCnt">{{ mw.word.times_add }}</span>
+		<span class="timesCnt">{{ mw.word.times_rmb }}</span>
+		<span class="timesCnt">{{ mw.word.times_fgt }}</span>
+		<!-- <span>_____</span> -->
+		<span class="w-weight">{{ fmtNum(mw.weight,2) }}</span>
+		<span class="w-lastRvwDate">{{ fmtDate(mw.date__event[mw.date__event.length-1].tempus) }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
-		<span class="w-eventsSymbols">{{}}</span>
-		<span class="w-lastEvent">{{}}</span>
+		<span class="w-eventsSymbols">{{  }}</span>
+		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		
 		<!-- <span>{{ reciteStatusRef }}</span> -->
 
@@ -124,6 +144,15 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 </template>
 
 <style scoped>
+
+span{
+	outline: solid 1px gray;  box-sizing: border-box;
+}
+
+.timesCnt{
+	width: 5%;
+}
+
 /* .addTimeGeq3{
 
 } */
@@ -133,13 +162,14 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	/* text-decoration: underline; */
 }
 
-.word-card{
+.word-card-container{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box; */
 	display: flex;
 	/* align-items: stretch; 默认值，使左右两个子元素的高度相同 */
 	align-items: right;
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* 添加黑色边框 */
+
 }
 /* 
 元素過多旹設此會卡頓
@@ -149,7 +179,7 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 } */
 
 .w-index{
-	width: 40px
+	width: 6%;
 }
 .w-shape{
 	/* font-weight: bold; */
@@ -159,33 +189,35 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	/* height: 60px; */
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 150px
+	/* width: 150px */
+	width: 20%;
 }
 
 .w-id{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 30px;
+	width: 5%;
 	display: inline-block; /* 设置为行内块级元素 */
 }
 
 .w-weight{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 80px;
+	/* width: 80px; */
+	width: 20%;
 }
 
 .w-dates_add{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 260px;
+	width: 20%;
 	font-size: 6px;
 }
 
 .w-eventsSymbols{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 55px;
+	width: 5%;
 	font-size: 16px;
 	white-space: pre;
 	
@@ -194,7 +226,7 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 .w-lastRvwDate{
 	/* 让边框不占用宽度 */
 	/* outline: solid 1px gray;  box-sizing: border-box;  */
-	width: 55px;
+	width: 20%;
 }
 
 .w-lastEvent{

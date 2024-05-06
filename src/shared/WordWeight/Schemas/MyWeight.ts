@@ -268,17 +268,9 @@ class WordWeight extends Base implements I_WordWeight{
 					rec.dateWeight = weight_
 					rec.debuff = debuff
 					rec.after = st.weight
-					//console.log(debuff)//t
-					
-					// if(z._mw.word.wordShape === 'disguise'){
-					// 	console.log(rec)//t-
-					// }
+
 				}
-				//console.log(rec)//t
 				z.addRecord(rec)
-				// if(z._mw.word.wordShape === 'disguise'){
-				// 	console.log(rec)//t-
-				// }
 				return st
 			}
 
@@ -299,8 +291,6 @@ class WordWeight extends Base implements I_WordWeight{
 				st.weight = s.m( st.weight, weight )
 				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
 				z.addRecord(rec)
-				//console.log(st.weight)//t
-				//process.stdout.write(st.weight+' ')//t
 				return st
 			}
 		}
