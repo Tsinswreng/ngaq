@@ -27,6 +27,7 @@ class UiStuff{
 	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
+
 export class WebVocaUi{
 	protected constructor(){
 
@@ -224,4 +225,19 @@ export class WebVocaUi{
 		console.log(curWord)//t
 		return recs.get(curWord.word)
 	}
+}
+
+
+class BgImg{
+	protected constructor(){}
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+	protected __init__(){
+		const z = this
+		return z
+	}
+	get This(){return BgImg}
 }

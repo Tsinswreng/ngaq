@@ -56,16 +56,27 @@ export class WebVocaSvc extends VocaSvc{
 	// set weightAlgoParser(v){this._weightAlgoParser = v}
 
 
-	async load(): Promise<boolean> {
+	// protected async _load(): Promise<boolean> {
+	// 	const z = this
+	// 	const jsonRows = await z.client.getWordsFromAllTables()
+	// 	const rows:WordDbRow[] = JSON.parse(jsonRows)
+	// 	const words = rows.map(e=>WordDbRow.toEntity(e))
+	// 	const memorizeWords = words.map(e=>WebSvcWord.new(e))
+	// 	z._wordsToLearn = memorizeWords
+	// 	z.svcStatus.load = true
+	// 	return Promise.resolve(true)
+	// }
+
+	protected async _load(){
 		const z = this
 		const jsonRows = await z.client.getWordsFromAllTables()
 		const rows:WordDbRow[] = JSON.parse(jsonRows)
 		const words = rows.map(e=>WordDbRow.toEntity(e))
 		const memorizeWords = words.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords
-		z.svcStatus.load = true
-		return Promise.resolve(true)
+		return true
 	}
+
 
 	protected async _initWeightAlgo(){
 		const z = this
@@ -96,87 +107,70 @@ export class WebVocaSvc extends VocaSvc{
 		}
 		return false
 	}
-	start(): Promise<boolean> {
+
+
+	protected async _save(words: Word[]): Promise<any> {
 		const z = this
-		if(!z.svcStatus.load){
-			throw Exception.for(z.svcErrReasons.didnt_load)
-		}
-		if(!z.svcStatus.save){
-			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
-		}
-		z.svcStatus.start = true
-		z.emitter.emit(z.svcEvents.start)
-		return Promise.resolve(true)
-	}
-
-
-	learnByIndex(index: integer, event: RMB_FGT): Promise<boolean> {
-		throw new Error('not supported')
-		const z = this
-		if(index +1 > z.wordsToLearn.length){
-			return Promise.resolve(false)
-		}
-		const ans = z.wordsToLearn[index].setInitEvent(event)
-		if(ans){
-			z.emitter.emit(z.svcEvents.learnByIndex, index, z.wordsToLearn[index], event)
-		}
-		return Promise.resolve(ans)
-	}
-
-
-	async learnByWord(mw:WebSvcWord, event:RMB_FGT):Promise<boolean>{
-		const z = this
-		if(event === WordEvent.RMB){
-			return z.rmb(mw)
-		}else if(event === WordEvent.FGT){
-			return z.fgt(mw)
-		}else{
-			throw new Error('WordEvent error')
-		}
-	}
-
-	rmb(mw:WebSvcWord){
-		const z = this
-		const ans = mw.setInitEvent(WordEvent.RMB)
-		if(ans){
-			z.rmbWords.push(mw)
-			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
-		}
-		return ans
-	}
-
-	fgt(mw:WebSvcWord){
-		const z = this
-		const ans = mw.setInitEvent(WordEvent.FGT)
-		if(ans){
-			z.fgtWords.push(mw)
-			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
-		}
-		return ans
-	}
-
-	async save(): Promise<boolean> {
-		const z = this
-		z._svcStatus.start = false
-		//merge all
-		for(let i = 0; i < z.wordsToLearn.length; i++){
-			z.wordsToLearn[i].merge()
-		}
-		const words = z.wordsToLearn.map(e=>e.word)
 		const rows = words.map(e=>WordDbRow.toPlain(e))
 		//const ans = await z.dbSrc.saveWords(words)
 		const ans = await z.client.saveWords(rows)
-		z.emitter.emit(z.svcEvents.save, ans)
-		z._svcStatus.save = true
+		return ans
+	}
+
+
+	protected async _restart(): Promise<boolean> {
 		return true
 	}
 
-	//TODO 判斷狀態
-	async restart(): Promise<boolean> {
-		const z = this
-		await z.sort()
-		await z.start()
+	protected async _sort(): Promise<boolean> {
 		return true
 	}
+	protected async _start(): Promise<boolean> {
+		return true
+	}
+
+	// rmb(mw:WebSvcWord){
+	// 	const z = this
+	// 	const ans = mw.setInitEvent(WordEvent.RMB)
+	// 	if(ans){
+	// 		z.rmbWords.push(mw)
+	// 		z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
+	// 	}
+	// 	return ans
+	// }
+
+	// fgt(mw:WebSvcWord){
+	// 	const z = this
+	// 	const ans = mw.setInitEvent(WordEvent.FGT)
+	// 	if(ans){
+	// 		z.fgtWords.push(mw)
+	// 		z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
+	// 	}
+	// 	return ans
+	// }
+
+	// async _save(): Promise<boolean> {
+	// 	const z = this
+	// 	z._svcStatus.start = false
+	// 	//merge all
+	// 	for(let i = 0; i < z.wordsToLearn.length; i++){
+	// 		z.wordsToLearn[i].merge()
+	// 	}
+	// 	const words = z.wordsToLearn.map(e=>e.word)
+	// 	const rows = words.map(e=>WordDbRow.toPlain(e))
+	// 	//const ans = await z.dbSrc.saveWords(words)
+	// 	const ans = await z.client.saveWords(rows)
+	// 	z.emitter.emit(z.svcEvents.save, ans)
+	// 	z._svcStatus.save = true
+	// 	return true
+	// }
+
+	//TODO 判斷狀態
+	// async _restart(): Promise<boolean> {
+	// 	const z = this
+	// 	await z._sort()
+	// 	await z._start()
+	// 	return true
+	// }
 	
 }

@@ -3,13 +3,14 @@ import { Reason } from "@shared/Exception";
 import * as Le from '@shared/linkedEvent'
 import { Exception } from "@shared/Exception";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { Word, WordEvent } from "@shared/entities/Word/Word";
 
 //type Asyncable<T> = T|Promise<T>
 type Task<T> = Promise<T>
 
 const EV = Le.Event.new.bind(Le.Event)
 
-class SvcEvents extends Le.Events{
+export class SvcEvents extends Le.Events{
 	/** 
 	 * MemorizeWord: ʃ蔿ˋ何詞。
 	 */
@@ -20,19 +21,27 @@ class SvcEvents extends Le.Events{
 	//test=EV('')
 	learnByMWord = EV<[SvcWord, RMB_FGT]>('learnByWord')
 
-	/** 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件 */
+	/**
+	 * 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件
+	 * @deprecated
+	 */
 	learnByIndex = EV<[integer, SvcWord, RMB_FGT]>('learnByIndex')
-	save = EV('save')
+	/**
+	 * SvcWord[] 保存ʹ諸詞
+	 */
+	save = EV<[SvcWord[]]>('save')
 }
 
-class SvcErrReason{
+export class SvcErrReason{
 	static new(){
 		const o = new this()
 		return o
 	}
-	didnt_load = Reason.new('didnt_load')
-	didnt_sort = Reason.new('didnt_sort')
-	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
+	load_err = Reason.new_deprecated<[Error]>(`load_err`)
+	didnt_load = Reason.new_deprecated('didnt_load')
+	didnt_sort = Reason.new_deprecated('didnt_sort')
+	cant_start_when_unsave = Reason.new_deprecated('cant_start_when_unsave')
+	cant_load_after_start = Reason.new_deprecated('cant_load_after_start')
 }
 
 // const isb = new Int32Array(new SharedArrayBuffer(4))
@@ -42,7 +51,7 @@ export interface I_MemorizeLogic{
 
 }
 
-class SvcStatus{
+export class SvcStatus{
 
 	load = false 
 	sort = false
@@ -81,6 +90,14 @@ export abstract class VocaSvc{
 	protected _wordsToLearn:SvcWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
+	/** 已背ʹ單詞中 憶者 */
+	protected _rmbWords:SvcWord[] = []
+	get rmbWords(){return this._rmbWords}
+
+	/** 已背ʹ單詞中 忘者 */
+	protected _fgtWords:SvcWord[] = []
+	get fgtWords(){return this._fgtWords}
+
 	/** 權重算法 */
 	protected _weightAlgo: I_WordWeight|undefined
 	get weightAlgo(){return this._weightAlgo}
@@ -102,17 +119,49 @@ export abstract class VocaSvc{
 	 * 加載 待背ʹ詞、賦予this._wordsToLearn
 	 * 或直ᵈ取自數據庫、或發網絡請求
 	 */
-	abstract load():Task<boolean>
+	protected abstract _load():Task<boolean>
+
+	async load(){
+		const z = this
+		if(z.svcStatus.start){
+			throw Exception.for(z.svcErrReasons.cant_load_after_start)
+		}
+		try {
+			await z._load()
+		} catch (error) {
+			const err = error as Error
+			throw Exception.for(z.svcErrReasons.load_err, err)
+		}
+
+		z.svcStatus.load = true
+		return true
+	}
 
 	/**
 	 * this._wordsToLearnˇ排序。算權重,篩選等皆由此。
 	 */
+	protected abstract _sort():Task<boolean>
 	abstract sort():Task<boolean>
 
 	/**
 	 * 始背單詞。
+	 * @deprecated
 	 */
-	abstract start():Task<boolean>
+	protected abstract _start():Task<boolean>
+
+	start(){
+		const z = this
+		if(!z.svcStatus.load){
+			throw Exception.for(z.svcErrReasons.didnt_load)
+		}
+		if(!z.svcStatus.save){
+			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
+		}
+		z.svcStatus.start = true
+		z.emitter.emit(z.svcEvents.start)
+		return Promise.resolve(true)
+	}
+
 	// start():Task<boolean>{
 	// 	const z = this
 	// 	if(!z._processStatus.load){
@@ -122,10 +171,112 @@ export abstract class VocaSvc{
 	// 	return Promise.resolve(true)
 	// }
 
-	abstract learnByIndex(index:integer, event:RMB_FGT):Task<boolean>
+	protected abstract _save(words:Word[]):Task<any>
 
-	abstract save():Task<boolean>
+	async save(){
+		const z = this
+		z._svcStatus.start = false
+		const svcWords = z.getSvcWordsToSave()
+		const words = svcWords.map(e=>e.word)
+		//const ans = await z.dbSrc.saveWords(words)
+		const ans = await z._save(words)
+		z.emitter.emit(z.svcEvents.save, svcWords)
+		z._svcStatus.save = true
+		return true
+	}
 
-	abstract restart():Task<boolean>
+	protected abstract _restart():Task<boolean>
+
+	async restart(){
+		const z = this
+		if(!z.svcStatus.save){
+			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
+		}
+		z.clearLearnedWords()
+		await z.sort()
+		z.svcStatus.start = true
+		return true
+	}
+
+
+
+	rmb(mw:SvcWord){
+		const z = this
+		const ans = mw.setInitEvent(WordEvent.RMB)
+		if(ans){
+			z.rmbWords.push(mw)
+			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
+		}
+		return ans
+	}
+
+	fgt(mw:SvcWord){
+		const z = this
+		const ans = mw.setInitEvent(WordEvent.FGT)
+		if(ans){
+			z.fgtWords.push(mw)
+			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
+		}
+		return ans
+	}
+
+	undo(mw:SvcWord){
+		const z = this
+		const old = mw.undo()
+		z.emitter.emit(z.svcEvents.undo, mw, old)
+	}
+
+	getSvcWordsToSave(){
+		const z = this
+		const svcWords = [] as SvcWord[]
+		for(const w of z.rmbWords){
+			svcWords.push(w)
+		}
+		for(const w of z.fgtWords){
+			svcWords.push(w)
+		}
+		// const words = svcWords.map(e=>e.word)
+		// return words
+		return svcWords
+	}
+
+
+	clearLearnedWords(){
+		const z = this
+		z._rmbWords.length = 0
+		z._fgtWords.length = 0
+	}
+
+	learnByIndex(index:integer, event:RMB_FGT){
+		const z = this
+		// if(index +1 > z.wordsToLearn.length){
+		// 	return Promise.resolve(false)
+		// }
+		const word = z.wordsToLearn[index]
+		if(word == void 0){
+			return false
+		}
+		let ans:boolean
+		if(event === WordEvent.RMB){
+			ans = z.rmb(word)
+		}else if(event === WordEvent.FGT){
+			ans = z.fgt(word)
+		}else{
+			throw new Error('else')
+		}
+		return ans
+	}
+
+
+	learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
+		const z = this
+		if(event === WordEvent.RMB){
+			return z.rmb(mw)
+		}else if(event === WordEvent.FGT){
+			return z.fgt(mw)
+		}else{
+			throw new Error('WordEvent error')
+		}
+	}
 
 }

@@ -15,6 +15,7 @@ import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { WordEvent } from '@shared/SingleWord2';
 import { RMB_FGT_nil } from '@shared/entities/Word/SvcWord';
+import { Word } from '@shared/entities/Word/Word';
 
 const configInst = Config.getInstance()
 const config = configInst.config
@@ -27,6 +28,7 @@ const config = configInst.config
 
 /** 業務理則層 */
 export class FileVocaSvc extends VocaSvc{
+
 
 	readonly This = FileVocaSvc
 	protected constructor(){
@@ -101,7 +103,36 @@ export class FileVocaSvc extends VocaSvc{
 		
 	}
 
-	async load() {
+
+
+	// async _load() {
+	// 	const z = this
+	// 	async function oneTbl(tblName:string){
+	// 		const tbl = z.dbSrc.loadTable(tblName)
+	// 		const rows = await tbl.selectAllWithTblName()
+	// 		const words = rows.map(e=>WordDbRow.toEntity(e))
+	// 		const mWords = words.map(e=>SvcWord.new(e))
+	// 		return mWords
+	// 	}
+	// 	try {
+	// 		const tblNames = z.configInst.config.tables
+	// 		const mWords = [] as SvcWord[]
+	// 		for(const tblN of tblNames){
+	// 			if(tblN == void 0 || tblN.length === 0){continue}
+	// 			const um = await oneTbl(tblN)
+	// 			mWords.push(...um)
+	// 		}
+	// 		z._wordsToLearn.length = 0
+	// 		z._wordsToLearn.push(...mWords)
+	// 		z._svcStatus.load = true
+	// 		return true
+	// 	} catch (error) {
+	// 		z.emitErr(error)
+	// 	}
+	// 	return false
+	// }
+
+	async _load(){
 		const z = this
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
@@ -110,25 +141,40 @@ export class FileVocaSvc extends VocaSvc{
 			const mWords = words.map(e=>SvcWord.new(e))
 			return mWords
 		}
-		try {
-			const tblNames = z.configInst.config.tables
-			const mWords = [] as SvcWord[]
-			for(const tblN of tblNames){
-				if(tblN == void 0 || tblN.length === 0){continue}
-				const um = await oneTbl(tblN)
-				mWords.push(...um)
-			}
-			z._wordsToLearn.length = 0
-			z._wordsToLearn.push(...mWords)
-			z._svcStatus.load = true
-			return true
-		} catch (error) {
-			z.emitErr(error)
+		const tblNames = z.configInst.config.tables
+		const mWords = [] as SvcWord[]
+		for(const tblN of tblNames){
+			if(tblN == void 0 || tblN.length === 0){continue}
+			const um = await oneTbl(tblN)
+			mWords.push(...um)
 		}
-		return false
+		z._wordsToLearn.length = 0
+		z._wordsToLearn.push(...mWords)
+		return true
+		// try {
+
+		// } catch (error) {
+		// 	z.emitErr(error)
+		// }
+		// return false
 	}
 
-	async sort() {
+	testHandleErr(){
+		const z = this
+		try {
+			
+		} catch (error) {
+			const err = error as Error
+			if(err instanceof Exception){
+				if(err.reason === z.svcErrReasons.load_err){
+					err.reason
+					const args =  Exception.getArgs(err.reason)
+				}
+			}
+		}
+	}
+
+	async _sort() {
 		const z = this
 		const outErr = new Error()
 		try {
@@ -149,20 +195,17 @@ export class FileVocaSvc extends VocaSvc{
 		return false
 	}
 
-
-	override start(){
-		const z = this
-		if(!z.svcStatus.load){
-			throw Exception.for(z.svcErrReasons.didnt_load)
-		}
-		if(!z.svcStatus.save){
-			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
-		}
-		z.svcStatus.start = true
-		z.emitter.emit(z.svcEvents.start)
-		return Promise.resolve(true)
+	async _start(){
+		return true
 	}
 
+	start(): Promise<boolean> {
+		return super.start()
+	}
+
+
+
+	/** @deprecated */
 	learnByMWord(mword:SvcWord, event:RMB_FGT){
 		const z = this
 		const ans = mword.setInitEvent(event)
@@ -172,38 +215,53 @@ export class FileVocaSvc extends VocaSvc{
 		return Promise.resolve(ans)
 	}
 
-	learnByIndex(index:integer, event:RMB_FGT){
+	// learnByIndex(index:integer, event:RMB_FGT){
+	// 	const z = this
+	// 	if(index +1 > z.wordsToLearn.length){
+	// 		return Promise.resolve(false)
+	// 	}
+	// 	const ans = z.wordsToLearn[index].setInitEvent(event)
+	// 	if(ans){
+	// 		z.emitter.emit(z.svcEvents.learnByIndex, index, z.wordsToLearn[index], event)
+	// 	}
+	// 	return Promise.resolve(ans)
+	// }
+
+
+	// async save(){
+	// 	const z = this
+	// 	z._svcStatus.start = false
+	// 	//merge all //TODO 没背ʹ詞ˇ不用merge
+	// 	for(let i = 0; i < z.wordsToLearn.length; i++){
+	// 		z.wordsToLearn[i].merge()
+	// 	}
+	// 	const words = z.wordsToLearn.map(e=>e.word)
+	// 	//const fn = await z.dbSrc.addWordsOfSameTable(words)
+	// 	const ans = await z.dbSrc.saveWords(words)
+	// 	z.emitter.emit(z.svcEvents.save, ans)
+	// 	z._svcStatus.save = true
+	// 	return true
+	// }
+
+	override async _save(words:Word[]){
 		const z = this
-		if(index +1 > z.wordsToLearn.length){
-			return Promise.resolve(false)
-		}
-		const ans = z.wordsToLearn[index].setInitEvent(event)
-		if(ans){
-			z.emitter.emit(z.svcEvents.learnByIndex, index, z.wordsToLearn[index], event)
-		}
-		return Promise.resolve(ans)
+		const ans = await z.dbSrc.saveWords(words)
+		return ans
 	}
 
 	async save(){
-		const z = this
-		z._svcStatus.start = false
-		//merge all
-		for(let i = 0; i < z.wordsToLearn.length; i++){
-			z.wordsToLearn[i].merge()
-		}
-		const words = z.wordsToLearn.map(e=>e.word)
-		//const fn = await z.dbSrc.addWordsOfSameTable(words)
-		const ans = await z.dbSrc.saveWords(words)
-		z.emitter.emit(z.svcEvents.save, ans)
-		z._svcStatus.save = true
-		return true
+		return super.save()
 	}
 
-	async restart() {
-		const z = this
-		const ans = await z.start()
-		return ans
+
+	sort(): Promise<boolean> {
+		throw new Error('Method not implemented.');
 	}
+	protected _restart(): Promise<boolean> {
+		throw new Error('Method not implemented.');
+	}
+
+
 
 	/**
 	 * 只在成功旹觸發事件
@@ -219,10 +277,6 @@ export class FileVocaSvc extends VocaSvc{
 	// 	}
 	// }
 
-	undo(mw:SvcWord){
-		const z = this
-		const old = mw.undo()
-		z.emitter.emit(z.svcEvents.undo, mw, old)
-	}
+
 
 }

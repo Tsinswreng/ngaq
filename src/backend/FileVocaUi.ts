@@ -47,7 +47,7 @@ if(fileSignal === '' || fileIn === '' || fileOut == ''){
 const configInst = Config.getInstance()
 const config = configInst.config
 
-const RN = Reason.new.bind(Reason)
+const RN = Reason.new_deprecated.bind(Reason)
 class UiErrReasons{
 	no_such_word = RN('no_such_word')
 	bad_input = RN<string[][]>('bad_input')
@@ -138,12 +138,12 @@ export class FileVocaUi{
 			}
 			async load(){
 				const z = this.ui
-				const es = await z.svc.load()
+				const es = await z.svc._load()
 				return es
 			}
 			async sort(){
 				const z = this.ui
-				const es = await z.svc.sort()
+				const es = await z.svc._sort()
 				return es
 			}
 			async prepare(){
@@ -154,7 +154,7 @@ export class FileVocaUi{
 			}
 			async start(args:string[]){
 				const z = this.ui
-				const bol = await z.svc.start()
+				const bol = await z.svc._start()
 				if(!bol){
 					z.exput('start failed')
 				}
@@ -199,13 +199,13 @@ export class FileVocaUi{
 
 			async save(){
 				const z = this.ui
-				const ans = await z.svc.save()
+				const ans = await z.svc._save()
 				z.exput(ans+'')
 				return ans
 			}
 			async restart(){
 				const z = this.ui
-				const es = await z.svc.restart()
+				const es = await z.svc._restart()
 			}
 
 		}
