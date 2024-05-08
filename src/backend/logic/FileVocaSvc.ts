@@ -8,7 +8,7 @@ import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
 import { SvcWord, RMB_FGT } from '@shared/entities/Word/SvcWord';
-import { Exception } from '@shared/Exception';
+import { Exception, Reason } from '@shared/Exception';
 import * as fs from 'fs' //TODO remove
 import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
@@ -132,7 +132,7 @@ export class FileVocaSvc extends VocaSvc{
 	// 	return false
 	// }
 
-	async _load(){
+	protected async _load(){
 		const z = this
 		async function oneTbl(tblName:string){
 			const tbl = z.dbSrc.loadTable(tblName)
@@ -159,22 +159,8 @@ export class FileVocaSvc extends VocaSvc{
 		// return false
 	}
 
-	testHandleErr(){
-		const z = this
-		try {
-			
-		} catch (error) {
-			const err = error as Error
-			if(err instanceof Exception){
-				if(err.reason === z.svcErrReasons.load_err){
-					err.reason
-					const args =  Exception.getArgs(err.reason)
-				}
-			}
-		}
-	}
 
-	async _sort() {
+	protected async _sort() {
 		const z = this
 		const outErr = new Error()
 		try {
@@ -195,7 +181,7 @@ export class FileVocaSvc extends VocaSvc{
 		return false
 	}
 
-	async _start(){
+	protected async _start(){
 		return true
 	}
 
@@ -243,7 +229,7 @@ export class FileVocaSvc extends VocaSvc{
 	// 	return true
 	// }
 
-	override async _save(words:Word[]){
+	protected override async _save(words:Word[]){
 		const z = this
 		const ans = await z.dbSrc.saveWords(words)
 		return ans
@@ -255,10 +241,11 @@ export class FileVocaSvc extends VocaSvc{
 
 
 	sort(): Promise<boolean> {
-		throw new Error('Method not implemented.');
+		const z = this
+		return z._sort()
 	}
-	protected _restart(): Promise<boolean> {
-		throw new Error('Method not implemented.');
+	protected async _restart(): Promise<boolean> {
+		return true
 	}
 
 

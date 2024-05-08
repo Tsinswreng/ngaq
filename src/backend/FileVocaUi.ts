@@ -138,12 +138,12 @@ export class FileVocaUi{
 			}
 			async load(){
 				const z = this.ui
-				const es = await z.svc._load()
+				const es = await z.svc.load()
 				return es
 			}
 			async sort(){
 				const z = this.ui
-				const es = await z.svc._sort()
+				const es = await z.svc.sort()
 				return es
 			}
 			async prepare(){
@@ -154,7 +154,7 @@ export class FileVocaUi{
 			}
 			async start(args:string[]){
 				const z = this.ui
-				const bol = await z.svc._start()
+				const bol = await z.svc.start()
 				if(!bol){
 					z.exput('start failed')
 				}
@@ -199,13 +199,13 @@ export class FileVocaUi{
 
 			async save(){
 				const z = this.ui
-				const ans = await z.svc._save()
+				const ans = await z.svc.save()
 				z.exput(ans+'')
 				return ans
 			}
 			async restart(){
 				const z = this.ui
-				const es = await z.svc._restart()
+				const es = await z.svc.restart()
 			}
 
 		}
@@ -238,13 +238,15 @@ export class FileVocaUi{
 	}
 
 	handleErr(err){
-		console.error(`handleErr`)//t
+		const z = this
 		const e = err as Error
 		if(e instanceof Exception){
 			console.error(e)
 			console.error('Exception')
+			z.exput(e.name)
 		}else{
 			console.error(e)
+			z.exec(e.message)
 		}
 	}
 

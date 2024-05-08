@@ -64,7 +64,7 @@ export class Exception extends Error{
 		return z
 	}
 
-	static new(reason:Reason){
+	protected static new(reason:Reason){
 		const z = new this()
 		z.__init__(reason)
 		return z
@@ -85,11 +85,28 @@ export class Exception extends Error{
 		return o
 	}
 
-	static getArgs<Arg extends any[]>(
-		reason: Reason<Arg>
-		, ...args:Arg
+
+/**
+ * 		const z = this
+		try {
+			
+		} catch (error) {
+			const err_ = error as Error
+			if(err_ instanceof Exception){
+				if(err_.reason === z.svcErrReasons.load_err){
+// typescript infers that its type is `Reason<any[]>`, 
+// but the type of `err.reason` shold be the same as `z.svcErrReasons.load_err`, which is Reason<[Error]>
+// in this way, we can get the correct type of args
+					const args =  Exception.getArgsAs(z.svcErrReasons.load_err, err_.reason)
+				}
+			}
+		}
+ */
+	static getArgsAs<Arg extends any[]>(
+		template_: Reason<Arg>
+		,target: Reason
 	){
-		return args
+		return target.args as Arg
 	}
 
 	protected _reason:Reason
@@ -97,3 +114,31 @@ export class Exception extends Error{
 }
 
 
+/* testArrMap(reason:Reason){
+	const z = this
+	if(reason === z.svcErrReasons.load_err){
+		const [args] = Exception.getArgsAs(z.svcErrReasons.load_err, reason)
+		return ()=>{
+			console.error('load err')
+			console.error(args.message)
+			console.error(args.stack)
+		}
+	}
+}
+
+testHandleErr(){
+	const z = this
+	try {
+		
+	} catch (error) {
+		const err_ = error as Error
+		if(err_ instanceof Exception){
+			if(err_.reason === z.svcErrReasons.load_err){
+// typescript infers that its type is `Reason<any[]>`, 
+// but the type of `err.reason` shold be the same as `z.svcErrReasons.load_err`, which is Reason<[Error]>
+// in this way, we can get the correct type of args
+				const args =  Exception.getArgsAs(z.svcErrReasons.load_err, err_.reason)
+			}
+		}
+	}
+} */
