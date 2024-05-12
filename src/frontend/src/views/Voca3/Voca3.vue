@@ -69,8 +69,8 @@ const Pro = Promise
 <!-- <component :is="CtrlPanel" class="CtrlPanel" v-if="true"></component> -->
 <component :is="CtrlPanel" class="CtrlPanel"></component>
 <component :is="WordInfo" :memorizeWord="void 0" class="WordInfo"></component>
-
 <!-- :key="ui.uiStuff.isShowCardBox.value+''" -->
+
 
 <div v-if="ui.uiStuff.isShowCardBox.value" class="cards-box">
 	<div v-for="(w,i) in ui.wordsToLearn.slice(0,64)" :key="ui.uiStuff.isShowCardBox.value+''">
@@ -104,6 +104,7 @@ baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 <img src="" alt="" :class="ui.htmlClass.class_bg_next.value" :id="ui.htmlId.id_bg_next.value"> -->
 <!-- <img src="../../assets/uys.jpg" alt="" class="bg">
 <img src="../../assets/dfq.jpg" alt="" class="bg"> -->
+<img src="" alt="null" :class="ui.htmlClass.class_bg.value" v-if="ui.uiStuff.isShowRandomBg.value">
 </div>
 
 
@@ -171,6 +172,7 @@ input{
 	background: transparent;
 	z-index: -1;
 	filter: brightness(0.65);
+	border: blue 1px;
 }
 
 .bg:hover{

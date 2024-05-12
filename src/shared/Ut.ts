@@ -32,6 +32,7 @@ import * as algo from '@shared/algo' //待分离
 //export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 
 
+
 /**
  * 返回所有鍵。若o爲數組則返number[]
  * @param o 

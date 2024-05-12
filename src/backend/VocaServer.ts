@@ -106,7 +106,8 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 	return neoFn
 }
 
-
+import { routes } from "@shared/Routes";
+const RT = routes
 
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
@@ -202,7 +203,7 @@ export default class VocaServer{
 		//eng.addSingleWordsToDb()
 	
 
-		VocaServer.app.post('/saveWords',post(async(req,res)=>{
+		VocaServer.app.post(RT.saveWords,post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
 			const prms = await WordDbSrc.saveWords(this.wordDbSrc.db, sws)
@@ -218,7 +219,7 @@ export default class VocaServer{
 			// }//並行則有transaction嵌套之謬?
 		}))
 
-		VocaServer.app.post('/addWords',async (req,res)=>{
+		VocaServer.app.post(RT.addWords,async (req,res)=>{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			//console.log(req.body)
@@ -258,7 +259,7 @@ export default class VocaServer{
 
 		
 
-		VocaServer.app.post('/backupAll',async (req,res)=>{
+		VocaServer.app.post(RT.backupAll,async (req,res)=>{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
@@ -270,7 +271,7 @@ export default class VocaServer{
 			}
 		})
 
-		VocaServer.app.post('/backup',async (req,res)=>{
+		VocaServer.app.post(RT.backup,async (req,res)=>{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
@@ -283,7 +284,7 @@ export default class VocaServer{
 			}
 		})
 
-		VocaServer.app.post('/creatTable',async (req,res)=>{
+		VocaServer.app.post(RT.createTable,async (req,res)=>{
 			const nunc = Tempus.new()
 			console.log(req.path+' '+Tempus.format(nunc))
 			try{
@@ -299,7 +300,7 @@ export default class VocaServer{
 		})
 
 		//請求頭潙'Content-Type': 'application/json'旹 res.body潙 解析json˪ᵗ js對象、無需再手動解析
-		VocaServer.app.post('/compileTs', post(async(req, res)=>{
+		VocaServer.app.post(RT.compileTs, post(async(req, res)=>{
 			//const [tsCode, tsconfigStr] = req.body
 			//const body = JSON.parse(req.body)
 			const body = req.body
@@ -317,7 +318,7 @@ export default class VocaServer{
 		/**
 		 * 表ˋ既存于數據庫且于配置中
 		 */
-		C.app.get('/wordsFromAllTables', async(req,res)=>{
+		C.app.get(RT.wordsFromAllTables, async(req,res)=>{
 			const recErr = new Error()
 			const existingTbls = await C.getAllExistingTablesInConfig()
 			const rows = [] as IVocaRow[]
@@ -334,7 +335,7 @@ export default class VocaServer{
 		/**
 		 * 返 用戶config.js中䀬ʹ表
 		 */
-		C.app.get('/tables', get(async(req, res)=>{
+		C.app.get(RT.tables, get(async(req, res)=>{
 			const tables_ = configInst.config.tables
 			const tables = $(tables_)
 			
@@ -355,7 +356,7 @@ export default class VocaServer{
 		/**
 		 * ?table=english
 		 */
-		C.app.get('/words', get(async(req, res)=>{
+		C.app.get(RT.words, get(async(req, res)=>{
 			const table0 = req.query.table
 			console.log(table0)
 			if(typeof table0 !== 'string'){
@@ -372,7 +373,7 @@ export default class VocaServer{
 		/**
 		 * @deprecated 以merge合併流後 前端每次迭代讀取則json蜮被截斷
 		 */
-		C.app.get('/allTableWords', get(async(req, res)=>{
+		C.app.get(RT.allTableWords, get(async(req, res)=>{
 			//const table0 = req.query.table
 			// if(typeof table0 !== 'string'){
 			// 	throw new Error(`typeof table0 !== 'string'`)
@@ -422,6 +423,46 @@ export default class VocaServer{
 			const pair:[string, string] = [path, base64]
 			//res.send(JSON.stringify(pair))
 			res.json(pair)
+		})
+
+		C.app.get('/randomImg2', async(req,res)=>{
+			if(!ri){return}
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			//res.sendFile(ri.oneRandomFile())
+			const path = ri.oneRandomFile()
+			const bin = fs.readFileSync(path)
+			res.send({
+				blob:bin
+				,text:path
+			})
+			console.log(bin)
+		})
+
+		/** test */
+		C.app.get('/r3', async(req, res)=>{
+			const path = ri!.oneRandomFile()
+			const bin = fs.readFileSync(path)
+			const base64Image = Buffer.from(bin).toString('base64');
+			// 构建HTML响应，将base64图像嵌入其中
+			const html = `
+				<!DOCTYPE html>
+				<html lang="en">
+				<head>
+					<meta charset="UTF-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1.0">
+					<title>Image Rendering</title>
+				</head>
+				<body>
+					<img src="data:image/jpeg;base64,${base64Image}" alt="Image">
+				</body>
+				</html>
+			`;
+	
+			// 发送HTML响应
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.write(html);
+			res.end();
 		})
 
 		C.app.get('/testWasm', async(req, res)=>{

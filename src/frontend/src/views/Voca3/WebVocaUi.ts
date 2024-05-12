@@ -4,15 +4,36 @@ import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
 import { WebVocaSvc } from "@ts/voca3/WebVocaSvc"
 import { ref, Ref } from "vue"
+import lodash from 'lodash'
+import { $ } from "@shared/Ut"
+
+
+// function testU8ArrToBase64(uint8Array:Uint8Array){
+// // 假设您有一个名为 uint8Array 的 UInt8Array 对象
+
+// // 将 UInt8Array 对象转换为普通数组
+// const array = Array.from(uint8Array);
+// //const array = uint8Array
+
+// // 将数组中的每个元素转换为字符
+// const chars = array.map(byte => String.fromCharCode(byte));
+
+// // 将字符数组连接为字符串
+// const binaryString = chars.join('');
+
+// // 使用 btoa() 将二进制字符串转换为 base64 编码
+// const base64String = btoa(binaryString);
+// return base64String
+// }
 
 class HtmlClass{
-	class_bg:Ref = ref('.bg')
-	class_bg_next:Ref = ref('.bg_next')
+	class_bg = ref('bg')
+	class_bg_next = ref('bg_next')
 }
 
 class HtmlId{
-	id_bg = ref('#bg')
-	id_bg_next = ref('@bg_next')
+	id_bg = ref('bg')
+	id_bg_next = ref('bg_next')
 }
 
 class UiStuff{
@@ -77,7 +98,8 @@ export class WebVocaUi{
 
 	registerToWindow(){
 		const z = this
-		window['_voca'] = z
+		//@ts-ignore
+		window['_'] = z
 	}
 
 	registerToWindow0(){
@@ -225,6 +247,82 @@ export class WebVocaUi{
 		console.log(curWord)//t
 		return recs.get(curWord.word)
 	}
+
+	// async d(){
+	// 	const z = this
+	// 	const blob = new Blob(['123'], {type: 'text'})
+	// 	const url = URL.createObjectURL(blob)
+	// 	console.log(url)
+	// 	for(let i = 0; i < url.length; i++){
+	// 		console.log(url[i])
+	// 	}
+	// }
+
+	// async test_get_imgU8Arr(){
+	// 	const z = this
+	// 	const got:Response = await z.svc.testImg()
+	// 	const json = await got.json()
+	// 	console.log(json['text'], 'text')//t
+	// 	const buffer = json['blob']
+	// 	const data:Uint8Array = buffer.data
+	// 	return data
+	// }
+
+	// test_getImg(){
+	// 	const z = this
+	// 	const imgs = document.getElementsByClassName(z.htmlClass.class_bg.value)
+	// 	const first = imgs[0] as HTMLImageElement
+	// 	if(first == void 0){
+	// 		console.error(`first == void 0`)
+	// 		return
+	// 	}
+	// 	return first
+	// }
+
+	// async tb(){
+	// 	const z = this
+	// 	const data = await z.test_get_imgU8Arr()
+	// 	const base8964 = testU8ArrToBase64(data)
+	// 	const prefix = `data:image/png;base64,`
+	// 	const first = $(z.test_getImg())
+	// 	first.src = prefix+base8964
+	// 	z.t1()
+	// }
+
+	// async tu(){
+	// 	const z = this
+	// 	z.t1()
+	// 	const data = await z.test_get_imgU8Arr()
+	// 	const imgs = document.getElementsByClassName(z.htmlClass.class_bg.value)
+	// 	const first = imgs[0] as HTMLImageElement
+	// 	if(first == void 0){
+	// 		console.error(`first == void 0`)
+	// 		return
+	// 	}
+	// 	const blob = new Blob(
+	// 		[data]
+	// 		//,{type: 'image/jpeg'}
+	// 	)
+		
+	// 	first.src = URL.createObjectURL(blob)
+	// 	// console.log(blob, 'blob')
+	// 	// console.log(buffer.data, 'buffer.data') //是 非空UInt8Array
+	// 	console.log(first.src)//t
+	// 	z.uiStuff.isShowRandomBg.value = false
+	// 	z.uiStuff.isShowRandomBg.value = true
+	// 	// // 釋放URL資源
+	// 	// URL.revokeObjectURL(imageUrl);
+	// }
+	// t0(){
+	// 	const z = this
+	// 	z.uiStuff.isShowRandomBg.value = true
+	// 	z.uiStuff.isShowRandomBg.value = false
+	// }
+	// t1(){
+	// 	const z = this
+	// 	z.uiStuff.isShowRandomBg.value = false
+	// 	z.uiStuff.isShowRandomBg.value = true
+	// }
 }
 
 
@@ -240,4 +338,6 @@ class BgImg{
 		return z
 	}
 	get This(){return BgImg}
+
+	
 }

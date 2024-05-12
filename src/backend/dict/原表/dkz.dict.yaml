@@ -1,5 +1,5 @@
 
-#20240506231207613
+#20240510232720280
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -686,7 +686,11 @@ use_preset_vocabulary: true
 格	krˁak	
 各	kˁak	
 流	riw	
-劉	mru	
+留	mru	
+廖	rˁiws	
+硫	riw	
+遛	rus	
+琉	riw	
 羊	jaŋ	
 洋	jaŋ	
 佯	jaŋ	
@@ -892,7 +896,8 @@ use_preset_vocabulary: true
 悈	krˁəks	
 屆	krˁits	
 届	krˁits	
-卷	kronʔ	
+捲	kronʔ	
+卷	krons	
 圈	kʰron	
 獲	ɡʷrˁak	
 獲	ɡʷrˁek	
@@ -1002,7 +1007,6 @@ use_preset_vocabulary: true
 黛	lˁəs	
 岱	lˁəs	
 玳	lˁəs	
-捲	kronʔ	
 權	ɡʷral	
 科	kʰˁoj	0%
 科	kʰjˁoj	
@@ -2454,11 +2458,6 @@ use_preset_vocabulary: true
 葴	krim	
 瑊	krim	
 鱵	krim	
-廖	rˁiws	
-留	ru	
-硫	riw	
-遛	rus	
-琉	riw	
 蘭	ɡrˁan	
 黑	mʰˁək	
 膩	nris	
@@ -3612,6 +3611,7 @@ use_preset_vocabulary: true
 跟	kˁəlʔ	
 表	pawʔ	
 錶	prawʔ	
+錶	paw	
 裱	paws	
 猶	lu	
 揄	lˁoʔ	
@@ -14104,6 +14104,7 @@ use_preset_vocabulary: true
 𥹷	ru	
 瑠	ru	
 榴	ru	
+劉	ru	
 瘤	ru	
 瘤	rus	
 瑬	ru	

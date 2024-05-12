@@ -168,6 +168,9 @@ export function geneRegexReplacePair(find:(string|string[])[], replacement:(stri
  * 
  */
 export function group<T>(arr:T[], memberAmount:number){
+	if(memberAmount <= 0){
+		throw new RangeError(`${memberAmount}\nmemberAmount <= 0`)
+	}
 	const result:T[][] = []
 	let unusGroup:T[] = []
 	for(let i=0; ; i++){
@@ -186,6 +189,32 @@ export function group<T>(arr:T[], memberAmount:number){
 	return result
 }
 
+/**
+ * 對長度一個分組
+ * @param length 總長度
+ * @param memberPerGrout 每組之元素個數。末尾不足者自成一組
+ * @returns 分組區間
+ * 如 fn(11, 5) 即 返回 [[0,4], [5,9], [10,10]]
+ */
+export function lengthGroup(length:integer, memberPerGrout:integer):[integer, integer][]{
+	if(memberPerGrout <= 0){
+		throw new RangeError(`${memberPerGrout}\nmemberAmount <= 0`)
+	}
+	const groupCnt = Math.ceil(length / memberPerGrout) //組數
+	//const mod = length % memberPerGrout
+	const ans = [] as [integer, integer][]
+	for(let i = 0; i < groupCnt; i++){
+		let start = i*memberPerGrout
+		if(i !== groupCnt-1){
+			const ua = [start, start+memberPerGrout-1] as [integer, integer]
+			ans.push(ua)
+		}else{
+			const ua = [start, length-1] as [integer, integer]
+			ans.push(ua)
+		}
+	}
+	return ans
+}
 
 export function randomIntArr(min:number, max:number, howMany:number, allowDuplicate=true){
 	if(allowDuplicate===false){

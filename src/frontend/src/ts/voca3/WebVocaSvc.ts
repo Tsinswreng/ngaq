@@ -129,6 +129,11 @@ export class WebVocaSvc extends VocaSvc{
 		return true
 	}
 
+	async testImg(){
+		const z = this
+		return z.client.get_randomImg2()
+	}
+
 	// rmb(mw:WebSvcWord){
 	// 	const z = this
 	// 	const ans = mw.setInitEvent(WordEvent.RMB)

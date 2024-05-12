@@ -2,6 +2,31 @@ import * as algo from '@shared/algo'
 import lodash from 'lodash'
 const eq = lodash.isEqual
 
+
+describe('lengthGroup', ()=>{
+	const fn = algo.lengthGroup
+	it('1', ()=>{
+		let ans = fn(11, 5)
+		expect(eq(ans, [[0,4], [5,9], [10,10]])).toBe(true)
+		// Test case with total length not divisible evenly by memberPerGrout
+		expect(fn(10, 3)).toEqual([[0, 2], [3, 5], [6, 8], [9, 9]]);
+		
+		// Test case with total length equal to memberPerGrout
+		expect(fn(5, 5)).toEqual([[0, 4]]);
+		
+		// Test case with total length less than memberPerGrout
+		expect(fn(3, 5)).toEqual([[0, 2]]);
+	})
+	
+    it('should throw an error if memberPerGrout is less than or equal to 0', () => {
+        // Test case with memberPerGrout equal to 0
+        expect(() => fn(10, 0)).toThrow(RangeError);
+        
+        // Test case with memberPerGrout less than 0
+        expect(() => fn(10, -1)).toThrow(RangeError);
+    });
+})
+
 describe('arrCombination', ()=>{
 	const fn = algo.cartesianProduct
 	it('1',()=>{

@@ -1,5 +1,5 @@
 
-import { areFilesExist, pathAt, randomIntArr } from '@shared/Ut';
+import {randomIntArr } from '@shared/Ut';
 import * as fs from 'fs'
 import Path from 'path';
 export default class RandomImg{

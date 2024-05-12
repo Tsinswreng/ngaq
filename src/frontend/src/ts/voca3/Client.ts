@@ -21,6 +21,14 @@ export class Client{
 	/**便于在dev模式調試 */
 	set baseUrl(v){this._baseUrl = v}
 
+
+	async get_randomImg2(){
+		const z = this
+		const url = new URL('/randomImg2', z.baseUrl)
+		const got = await fetch(url)
+		return got
+	}
+
 	
 	async getWeightAlgoJs0(){
 		const z = this

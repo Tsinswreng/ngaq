@@ -895,7 +895,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 各	kˁak
 
 流	riw	# sch
-劉	mru	# bs
+#劉	mru	# bs
+留	mru	#鄭張
+廖	rˁiws
+硫	riw
+遛	rus
+琉	riw
+
 
 羊	jaŋ
 洋	jaŋ
@@ -1157,7 +1163,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 屆	krˁits
 届	krˁits
 
-卷	kronʔ
+捲	kronʔ
+卷	krons
 圈	kʰron
 
 獲	ɡʷrˁak
@@ -1314,7 +1321,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 岱	lˁəs
 玳	lˁəs
 
-捲	kronʔ
+
 權	ɡʷral
 科	kʰˁoj	0%
 科	kʰjˁoj	# ts
@@ -3150,11 +3157,6 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 瑊	krim	# ts ms加r
 鱵	krim	# ts ms加r
 
-廖	rˁiws
-留	ru
-硫	riw
-遛	rus
-琉	riw
 
 蘭	ɡrˁan	# bs
 黑	mʰˁək
@@ -4707,6 +4709,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #<改r>
 表	pawʔ
 錶	prawʔ
+錶	paw	# 粵
 裱	paws
 
 

@@ -21,3 +21,10 @@ export function alertEtThrow(msg?:any|Error){
 export function alert(msg?:any){
 	window.alert(msg);
 }
+
+
+export function u8ArrToBase64(u8Arr:Uint8Array){
+	const decoder = new TextDecoder('utf8')
+	const ans = btoa(decoder.decode(u8Arr))
+	return ans
+}
