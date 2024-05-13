@@ -73,7 +73,7 @@ class Statistics{
 		const o = new this()
 		return o
 	} */
-	static new(finalAddEventPos:integer){
+	static new(finalAddEventPos:int){
 		const o = new this()
 		o.__init__(finalAddEventPos)
 		return o

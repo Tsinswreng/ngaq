@@ -100,11 +100,27 @@ export class FileVocaUi{
 	 * @param mw 
 	 */
 	geneCandComment(mw:SvcWord):string{
+		const z = this
 		let ans = mw.word.times_add + ':' + mw.word.times_rmb + ':' + mw.word.times_fgt
 		if(mw.word.times_add>=3){
 			ans = '*'+ans
 		}
+		ans = z.getFinalEventSymbol(mw)+ans
 		return ans
+	}
+
+	getFinalEventSymbol(mw:SvcWord){
+		switch(mw.date__event.at(-1)?.event){
+			case WordEvent.ADD:
+				return '🤔'
+			break;
+			case WordEvent.RMB:
+				return '✅'
+			break;
+			case WordEvent.FGT:
+				return '❌'
+		}
+		throw new Error(`unexpected default`)
 	}
 
 	protected _initListeners(){
@@ -161,7 +177,7 @@ export class FileVocaUi{
 				await c.sort()
 				return true
 			}
-			async putOld(args:string[]){
+			async putWordsToLearn(args:string[]){
 				const ui = this.ui
 				const cnt = FileVocaUi.argToIntAt(args, 1)??64
 				// const ansWords = [] as MemorizeWord[]
@@ -175,7 +191,7 @@ export class FileVocaUi{
 				
 				const delimiter = '\t'
 				const sb = [] as string[]
-				for(let i = 0; i < cnt; i++){
+				for(let i = 0; i < cnt && i < ui.svc.wordsToLearn.length; i++){
 					const mw = ui.svc.wordsToLearn[i]
 					sb.push(mw.word.wordShape)
 					sb.push(delimiter)
@@ -204,7 +220,7 @@ export class FileVocaUi{
 				if(!bol){
 					z.exput('start failed')
 				}
-				await this.putOld(args)
+				await this.putWordsToLearn(args)
 				return true
 			}
 
@@ -253,10 +269,11 @@ export class FileVocaUi{
 				z.exput(ans+'')
 				return ans
 			}
-			async restart(){
+			async restart(...args:string[]){
 				const z = this.ui
 				const es = await z.svc.restart()
 				z.exput(es+'')
+				return this.putWordsToLearn(args)
 			}
 
 		}
@@ -294,7 +311,7 @@ export class FileVocaUi{
 		if(e instanceof Exception){
 			console.error(e)
 			console.error('Exception')
-			z.exput(e.name)
+			z.exput(e.reason.name)
 		}else{
 			console.error(e)
 			z.exec(e.message)
@@ -312,7 +329,10 @@ export class FileVocaUi{
 				cmd = cmd.bind(z.cmd)
 				await cmd(segs)
 			}else{
-				z.exput('-1')
+				console.log(cmd)
+				z.exput(
+					`!(cmd != void 0 && typeof cmd === 'function')`
+				)
 			}
 		} catch (error) {
 			z.handleErr(error)
@@ -355,8 +375,8 @@ export class FileVocaUi{
 	 * @param index 
 	 * @returns 
 	 */
-	static argToIntAt(args:string[], index:integer){
-		let ans:integer|undefined
+	static argToIntAt(args:string[], index:int){
+		let ans:int|undefined
 		if(args != void 0 && args[index] != void 0){
 			let p = parseInt(args[index])
 			ans = Number.isNaN(p)? void 0 : p
@@ -368,7 +388,7 @@ export class FileVocaUi{
 
 async function main(){
 	console.log(process.argv)//t
-	const cli = await FileVocaUi.New()
+	const ui = await FileVocaUi.New()
 	// 監視文件變化
 	//const testFile = `D:/_code/voca/out/test.txt`
 	let watcher: fs.FSWatcher
@@ -383,11 +403,11 @@ async function main(){
 			//cli.exput(imput)
 			console.log(imput)//t
 			try {
-				await cli.exec(imput)
+				await ui.exec(imput)
 			} catch (error) {
 				const err = error as Error
 				const text = err.name+'\n'+err.message+'\n'+err.stack
-				cli.exput(text)
+				ui.exput(text)
 			}
 			//
 			// fs.readFile(fileIn, {encoding:'utf-8'}, (err, imput)=>{

@@ -57,7 +57,7 @@ export class LinkedEmitter{
 	emit<Arg extends any[] =any[]>(
 		event:Event<Arg>
 		, ...args:Arg
-	):integer{
+	):int{
 		let cnt = 0
 		for(let e = event;e instanceof Event;){
 			this.eventEmitter.emit(e.name, ...args)

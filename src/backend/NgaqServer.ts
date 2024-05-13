@@ -1,7 +1,7 @@
 import express from 'express'
 
 class Opt{
-	_port:integer = 6324
+	_port:int = 6324
 }
 
 class Server{

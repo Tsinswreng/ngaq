@@ -37,12 +37,12 @@ export class WebVocaSvc extends VocaSvc{
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 已背ʹ單詞中 憶者 */
-	protected _rmbWords:WebSvcWord[] = []
-	get rmbWords(){return this._rmbWords}
+	protected _rmbWord__index:WebSvcWord[] = []
+	get rmbWord__index(){return this._rmbWord__index}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWords:WebSvcWord[] = []
-	get fgtWords(){return this._fgtWords}
+	protected _fgtWord__index:WebSvcWord[] = []
+	get fgtWord__index(){return this._fgtWord__index}
 
 	// protected _learnedWords: WebMemorizeWord[] = []
 	// get learnedWords(){return this._learnedWords}

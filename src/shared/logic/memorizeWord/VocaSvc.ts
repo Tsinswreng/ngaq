@@ -10,6 +10,18 @@ type Task<T> = Promise<T>
 
 const EV = Le.Event.new.bind(Le.Event)
 
+// function requireStatusStart(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+//     const originalMethod = descriptor.value;
+//     descriptor.value = function(...args: any[]) {
+//         const z = this;
+//         if (!z.svcStatus.start) {
+//             throw Exception.for(z.svcErrReasons.not_started);
+//         }
+//         return originalMethod.apply(this, args);
+//     };
+//     return descriptor;
+// }
+
 export class SvcEvents extends Le.Events{
 	/** 
 	 * MemorizeWord: ʃ蔿ˋ何詞。
@@ -25,7 +37,7 @@ export class SvcEvents extends Le.Events{
 	 * 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件
 	 * @deprecated
 	 */
-	learnByIndex = EV<[integer, SvcWord, RMB_FGT]>('learnByIndex')
+	learnByIndex = EV<[int, SvcWord, RMB_FGT]>('learnByIndex')
 	/**
 	 * SvcWord[] 保存ʹ諸詞
 	 */
@@ -37,11 +49,12 @@ export class SvcErrReason{
 		const o = new this()
 		return o
 	}
-	load_err = Reason.new_deprecated<[Error]>(`load_err`)
-	didnt_load = Reason.new_deprecated('didnt_load')
-	didnt_sort = Reason.new_deprecated('didnt_sort')
-	cant_start_when_unsave = Reason.new_deprecated('cant_start_when_unsave')
-	cant_load_after_start = Reason.new_deprecated('cant_load_after_start')
+	load_err = Reason.new<[Error]>(`load_err`)
+	didnt_load = Reason.new('didnt_load')
+	didnt_sort = Reason.new('didnt_sort')
+	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
+	cant_load_after_start = Reason.new('cant_load_after_start')
+	cant_learn_when_unstart = Reason.new('cant_learn_when_unstart')
 }
 
 // const isb = new Int32Array(new SharedArrayBuffer(4))
@@ -95,16 +108,16 @@ export abstract class VocaSvc{
 	// get rmbWords(){return this._rmbWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _rmbWords:Set<SvcWord> = new Set
-	get rmbWords(){return this._rmbWords}
+	protected _rmbWord__index:Map<SvcWord, int> = new Map()
+	get rmbWord__index(){return this._rmbWord__index}
 
 	// /** 已背ʹ單詞中 忘者 */
 	// protected _fgtWords:SvcWord[] = []
 	// get fgtWords(){return this._fgtWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWords: Set<SvcWord> = new Set()
-	get fgtWords(){return this._fgtWords}
+	protected _fgtWord__index: Map<SvcWord, int> = new Map()
+	get fgtWord__index(){return this._fgtWord__index}
 
 	/** 權重算法 */
 	protected _weightAlgo: I_WordWeight|undefined
@@ -170,22 +183,13 @@ export abstract class VocaSvc{
 		return Promise.resolve(true)
 	}
 
-	// start():Task<boolean>{
-	// 	const z = this
-	// 	if(!z._processStatus.load){
-	// 		throw Exception.for(z.processErrReasons.didnt_load)
-	// 	}
-	// 	z._processStatus.start = true
-	// 	return Promise.resolve(true)
-	// }
-
 	protected abstract _save(words:Word[]):Task<any>
 
 	async save(){
 		const z = this
 		z._svcStatus.start = false
-		const svcWords = z.getSvcWordsToSave()
-		VocaSvc.mergeSvcWords(svcWords)
+		const svcWords = z.mergeLearnedWords()
+		//VocaSvc.mergeSvcWords(svcWords) 
 		const words = svcWords.map(e=>e.word)
 		//const ans = await z.dbSrc.saveWords(words)
 		const ans = await z._save(words)
@@ -196,34 +200,49 @@ export abstract class VocaSvc{
 
 	protected abstract _restart():Task<boolean>
 
+	/** 
+	 * 清 既學ʹ詞、褈排序
+	 * //TODO 設 褈排序算法、只褈算變˪ʹ詞ʹ權重、並打亂䀬ʹ詞ʹ權重
+	 */
 	async restart(){
 		const z = this
 		if(!z.svcStatus.save){
 			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
 		}
+
 		z.clearLearnedWords()
 		await z.sort()
 		z.svcStatus.start = true
 		return true
 	}
 
-
-
-	rmb(mw:SvcWord){
+	/** 
+	 * 開始後 之操作
+	 */
+	startedOp(){
 		const z = this
+		if(!z._svcStatus.start){
+			throw Exception.for(z.svcErrReasons.cant_learn_when_unstart)
+		}
+		z.svcStatus.save = false
+		return true
+	}
+
+	protected rmb(mw:SvcWord){
+		const z = this
+		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
-			z.rmbWords.add(mw)
 			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
 		}
 		return ans
 	}
 
-	fgt(mw:SvcWord){
+	protected fgt(mw:SvcWord){
 		const z = this
+		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.FGT)
 		if(ans){
-			z.fgtWords.add(mw)
 			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
 		}
 		return ans
@@ -231,23 +250,28 @@ export abstract class VocaSvc{
 
 	undo(mw:SvcWord){
 		const z = this
+		z.startedOp()
 		const old = mw.undo()
 		if(old === WordEvent.RMB){
-			z.rmbWords.delete(mw)
+			z.rmbWord__index.delete(mw)
 		}else if(old === WordEvent.FGT){
-			z.fgtWords.delete(mw)
+			z.fgtWord__index.delete(mw)
 		}
 		z.emitter.emit(z.svcEvents.undo, mw, old)
 	}
 
-	/** 不合入 新ʹ事件 */
+	/** 
+	 * @deprecated
+	 * 不合入 新ʹ事件
+	 * 建議用 @see mergeLearnedWords
+	 */
 	getSvcWordsToSave(){
 		const z = this
 		const svcWords = [] as SvcWord[]
-		for(const w of z.rmbWords){
+		for(const [w] of z.rmbWord__index){
 			svcWords.push(w)
 		}
-		for(const w of z.fgtWords){
+		for(const [w] of z.fgtWord__index){
 			svcWords.push(w)
 		}
 		// const words = svcWords.map(e=>e.word)
@@ -255,18 +279,36 @@ export abstract class VocaSvc{
 		return svcWords
 	}
 
-	static mergeSvcWords(toSave:SvcWord[]){
-		return toSave.map(e=>e.merge())
+
+	// static mergeSvcWords(toSave:SvcWord[]){
+	// 	return toSave.map(e=>e.innerWordMerge())
+	// }
+
+	/**
+	 * 新ʹ事件ˇ合入已背ʹ單詞中、且在wordsToLearn中更新
+	 */
+	mergeLearnedWords(){
+		const z = this
+		const learnedSvcWords = [] as SvcWord[]
+		for(const [word, index] of z.rmbWord__index){
+			z.wordsToLearn[index] = word.selfMerge()
+			learnedSvcWords.push(z.wordsToLearn[index])
+		}
+		for(const [word, index] of z.fgtWord__index){
+			z.wordsToLearn[index] = word.selfMerge()
+			learnedSvcWords.push(z.wordsToLearn[index])
+		}
+		return learnedSvcWords
 	}
 
 
 	clearLearnedWords(){
 		const z = this
-		z._rmbWords.clear()
-		z._fgtWords.clear()
+		z._rmbWord__index.clear()
+		z._fgtWord__index.clear()
 	}
 
-	learnByIndex(index:integer, event:RMB_FGT){
+	learnByIndex(index:int, event:RMB_FGT){
 		const z = this
 		// if(index +1 > z.wordsToLearn.length){
 		// 	return Promise.resolve(false)
@@ -278,17 +320,29 @@ export abstract class VocaSvc{
 		let ans:boolean
 		if(event === WordEvent.RMB){
 			ans = z.rmb(word)
+			if(ans){
+				z.rmbWord__index.set(word, index)
+			}
 		}else if(event === WordEvent.FGT){
 			ans = z.fgt(word)
+			if(ans){
+				z.fgtWord__index.set(word, index)
+			}
 		}else{
 			throw new Error('else')
 		}
 		return ans
 	}
 
-
+	/**
+	 * @deprecated
+	 * @param mw 
+	 * @param event 
+	 * @returns 
+	 */
 	learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
 		const z = this
+		z.startedOp()
 		if(event === WordEvent.RMB){
 			return z.rmb(mw)
 		}else if(event === WordEvent.FGT){

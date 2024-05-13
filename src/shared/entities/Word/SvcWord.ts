@@ -38,7 +38,7 @@ export class SvcWord{
 	protected __init__(word:Word){
 		const z = this
 		z._word = word
-		z.init()
+		z.sortDate__Event()
 		return z
 	}
 
@@ -62,7 +62,7 @@ export class SvcWord{
 	get status(){return this._status}
 
 
-	init(){
+	sortDate__Event(){
 		const z = this
 		z._date__event = Word.getSortedDateToEventObjs(z.word)
 	}
@@ -100,10 +100,11 @@ export class SvcWord{
 	}
 
 	/**
-	 * MemorizeWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
+	 * SvcWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
+	 * 只合入內ʹword實例 洏 不改自ʹ_date__event
 	 * 原地改
 	 */
-	merge(){
+	innerWordMerge(){
 		const z = this
 		if(z.status.memorize === WordEvent.RMB){
 			z.word.dates_rmb.push($(z.status.date))
@@ -115,6 +116,15 @@ export class SvcWord{
 		return z
 	}
 	
+	/**
+	 * 合入 新加ʹ背ˡ狀態及日期
+	 */
+	selfMerge(){
+		const z = this
+		z.innerWordMerge()
+		z.sortDate__Event()
+		return z
+	}
 	
 
 }

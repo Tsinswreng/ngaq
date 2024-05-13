@@ -196,20 +196,20 @@ export function group<T>(arr:T[], memberAmount:number){
  * @returns 分組區間
  * 如 fn(11, 5) 即 返回 [[0,4], [5,9], [10,10]]
  */
-export function lengthGroup(length:integer, memberPerGrout:integer):[integer, integer][]{
+export function lengthGroup(length:int, memberPerGrout:int):[int, int][]{
 	if(memberPerGrout <= 0){
 		throw new RangeError(`${memberPerGrout}\nmemberAmount <= 0`)
 	}
 	const groupCnt = Math.ceil(length / memberPerGrout) //組數
 	//const mod = length % memberPerGrout
-	const ans = [] as [integer, integer][]
+	const ans = [] as [int, int][]
 	for(let i = 0; i < groupCnt; i++){
 		let start = i*memberPerGrout
 		if(i !== groupCnt-1){
-			const ua = [start, start+memberPerGrout-1] as [integer, integer]
+			const ua = [start, start+memberPerGrout-1] as [int, int]
 			ans.push(ua)
 		}else{
-			const ua = [start, length-1] as [integer, integer]
+			const ua = [start, length-1] as [int, int]
 			ans.push(ua)
 		}
 	}

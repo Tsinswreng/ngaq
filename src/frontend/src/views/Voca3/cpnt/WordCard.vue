@@ -17,7 +17,7 @@ onBeforeMount( async() => {
 // 定义 props，此处需要和父组件传递的 prop 名字一致
 const props = defineProps<{
 	memorizeWord: WebSvcWord;
-	loopIndex: integer
+	loopIndex: int
 }>();
 const mw = props.memorizeWord
 // const emits = defineEmits([/* 自定义事件名称列表 */]);

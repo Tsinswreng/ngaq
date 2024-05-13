@@ -132,7 +132,7 @@ export class WebVocaUi{
 		console.log('start')//t
 	}
 
-	learnByIndex(index:integer, event:RMB_FGT){
+	learnByIndex(index:int, event:RMB_FGT){
 		const z = this
 		return z.svc.learnByIndex(index, event)
 	}
@@ -161,7 +161,7 @@ export class WebVocaUi{
 
 	getLearnedWords(){
 		const z = this
-		return [z.svc.rmbWords, z.svc.fgtWords]
+		return [z.svc.rmbWord__index, z.svc.fgtWord__index]
 	}
 
 	undoByWord(mw:WebSvcWord){
@@ -236,7 +236,7 @@ export class WebVocaUi{
 
 
 	//TODO 把changeRecord作潙可選屬性 集于MemorizeWord
-	seekChangeRec(index:integer){
+	seekChangeRec(index:int){
 		const z = this
 		const recs = z.svc.weightAlgo?.word__changeRecord
 		if(recs == void 0){
