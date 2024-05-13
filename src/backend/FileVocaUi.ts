@@ -75,6 +75,7 @@ export class FileVocaUi{
 		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
 			z.handleErr(error)
 		})
+		z._initListeners()
 		return z
 	}
 
@@ -104,6 +105,14 @@ export class FileVocaUi{
 			ans = '*'+ans
 		}
 		return ans
+	}
+
+	protected _initListeners(){
+		const z = this
+		const ev = z.svc.svcEvents
+		z.svc.emitter.on(ev.save, (sws:SvcWord[])=>{
+			console.log(sws.map(e=>e.word.wordShape)) //t
+		})
 	}
 
 	/** cli 之命令、直ᵈ輸入 成員方法ʹ名 */
@@ -152,12 +161,8 @@ export class FileVocaUi{
 				await c.sort()
 				return true
 			}
-			async start(args:string[]){
-				const z = this.ui
-				const bol = await z.svc.start()
-				if(!bol){
-					z.exput('start failed')
-				}
+			async putOld(args:string[]){
+				const ui = this.ui
 				const cnt = FileVocaUi.argToIntAt(args, 1)??64
 				// const ansWords = [] as MemorizeWord[]
 				// for(let i = 0; i < cnt; i++){
@@ -168,19 +173,40 @@ export class FileVocaUi{
 				// 	JSON.stringify(ansWords)
 				// )
 				
-				let tab = '\t\t'
 				const delimiter = '\t'
-				let ans = ''
+				const sb = [] as string[]
 				for(let i = 0; i < cnt; i++){
-					const mw = z.svc.wordsToLearn[i]
-					ans += mw.word.wordShape
-					ans += delimiter
-					ans += z.geneCandComment(mw)
+					const mw = ui.svc.wordsToLearn[i]
+					sb.push(mw.word.wordShape)
+					sb.push(delimiter)
+					sb.push(ui.geneCandComment(mw))
+					sb.push(delimiter)
+					sb.push(JSON.stringify(mw.word.annotation))
+					sb.push(',')
+					sb.push(JSON.stringify(mw.word.mean[0]))
 					if(i===cnt-1){break}
-					ans += '\n'
+					sb.push('\n')
 				}
-				z.exput(ans)
+				let ans = sb.join('')
+				// for(let i = 0; i < cnt; i++){
+				// 	const mw = ui.svc.wordsToLearn[i]
+				// 	ans += mw.word.wordShape
+				// 	ans += delimiter
+				// 	ans += ui.geneCandComment(mw)
+				// 	if(i===cnt-1){break}
+				// 	ans += '\n'
+				// }
+				return ui.exput(ans)
 			}
+			async start(args:string[]){
+				const z = this.ui
+				const bol = await z.svc.start()
+				if(!bol){
+					z.exput('start failed')
+				}
+				this.putOld(args)
+			}
+
 
 			async learnByIndex(args:string[]){
 				const z = this.ui

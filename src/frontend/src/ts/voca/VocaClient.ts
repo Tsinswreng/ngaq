@@ -3,8 +3,9 @@ import SingleWord2 from "@shared/SingleWord2"
 import { NetworkError, $, $a } from "@shared/Ut"
 import { VocaRawConfig } from "@shared/VocaRaw2"
 import { alert, alertEtThrow } from "@ts/frut"
+import {routes} from "@shared/Routes"
 import WordB from "./WordB"
-
+const RT = routes
 /**
  * local storage item names
  */
@@ -262,7 +263,7 @@ export default class VocaClient{
 	 * resp.json()出錯旹調用堆棧ᵗ訊ˋ失
 	 */
 	public testJson(){
-		const url = new URL('/tables', this.baseUrl)
+		const url = new URL(RT.tables, this.baseUrl)
 		fetch(url)
 		.then(resp=>{
 			return resp.json()

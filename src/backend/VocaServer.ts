@@ -108,6 +108,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 
 import { routes } from "@shared/Routes";
 const RT = routes
+//console.log(RT)
 
 export default class VocaServer{
 	//static vocaObjs:VocaRaw[] = VocaRaw.getObjsByConfig() //第0個昰英語 第1個是日語
