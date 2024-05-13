@@ -91,11 +91,19 @@ export abstract class VocaSvc{
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 已背ʹ單詞中 憶者 */
-	protected _rmbWords:SvcWord[] = []
-	get rmbWords(){return this._rmbWords}
+	// protected _rmbWords:SvcWord[] = []
+	// get rmbWords(){return this._rmbWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWords:SvcWord[] = []
+	protected _rmbWords:Set<SvcWord> = new Set
+	get rmbWords(){return this._rmbWords}
+
+	// /** 已背ʹ單詞中 忘者 */
+	// protected _fgtWords:SvcWord[] = []
+	// get fgtWords(){return this._fgtWords}
+
+	/** 已背ʹ單詞中 忘者 */
+	protected _fgtWords: Set<SvcWord> = new Set()
 	get fgtWords(){return this._fgtWords}
 
 	/** 權重算法 */
@@ -177,6 +185,7 @@ export abstract class VocaSvc{
 		const z = this
 		z._svcStatus.start = false
 		const svcWords = z.getSvcWordsToSave()
+		VocaSvc.mergeSvcWords(svcWords)
 		const words = svcWords.map(e=>e.word)
 		//const ans = await z.dbSrc.saveWords(words)
 		const ans = await z._save(words)
@@ -204,7 +213,7 @@ export abstract class VocaSvc{
 		const z = this
 		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
-			z.rmbWords.push(mw)
+			z.rmbWords.add(mw)
 			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
 		}
 		return ans
@@ -214,7 +223,7 @@ export abstract class VocaSvc{
 		const z = this
 		const ans = mw.setInitEvent(WordEvent.FGT)
 		if(ans){
-			z.fgtWords.push(mw)
+			z.fgtWords.add(mw)
 			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
 		}
 		return ans
@@ -223,9 +232,15 @@ export abstract class VocaSvc{
 	undo(mw:SvcWord){
 		const z = this
 		const old = mw.undo()
+		if(old === WordEvent.RMB){
+			z.rmbWords.delete(mw)
+		}else if(old === WordEvent.FGT){
+			z.fgtWords.delete(mw)
+		}
 		z.emitter.emit(z.svcEvents.undo, mw, old)
 	}
 
+	/** 不合入 新ʹ事件 */
 	getSvcWordsToSave(){
 		const z = this
 		const svcWords = [] as SvcWord[]
@@ -240,11 +255,15 @@ export abstract class VocaSvc{
 		return svcWords
 	}
 
+	static mergeSvcWords(toSave:SvcWord[]){
+		return toSave.map(e=>e.merge())
+	}
+
 
 	clearLearnedWords(){
 		const z = this
-		z._rmbWords.length = 0
-		z._fgtWords.length = 0
+		z._rmbWords.clear()
+		z._fgtWords.clear()
 	}
 
 	learnByIndex(index:integer, event:RMB_FGT){

@@ -101,6 +101,7 @@ export class SvcWord{
 
 	/**
 	 * MemorizeWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
+	 * 原地改
 	 */
 	merge(){
 		const z = this
@@ -111,6 +112,7 @@ export class SvcWord{
 		}else{
 
 		}
+		return z
 	}
 	
 	

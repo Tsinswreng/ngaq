@@ -235,13 +235,10 @@ export class FileVocaSvc extends VocaSvc{
 		// console.log(words) //+
 		const z = this
 		const ans = await z.dbSrc.saveWords(words)
-		console.log(`console.log(ans)//t`)
-		console.log(ans)//t 
 		return ans
 	}
 
 	async save(){
-
 		return super.save()
 	}
 

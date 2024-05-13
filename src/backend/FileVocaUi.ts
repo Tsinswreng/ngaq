@@ -204,11 +204,27 @@ export class FileVocaUi{
 				if(!bol){
 					z.exput('start failed')
 				}
-				this.putOld(args)
+				await this.putOld(args)
+				return true
 			}
 
 
-			async learnByIndex(args:string[]){
+			// async learnByIndex(args:string[]){
+			// 	const z = this.ui
+			// 	const index = z.This.argToIntAt(args, 1)
+				
+			// 	if(index == void 0){
+			// 		throw Exception.for(z.errReasons.bad_input)
+			// 	}
+			// 	const event = z.strToMemorizeEvent(args[2]??'')
+			// 	if(event == void 0){
+			// 		throw Exception.for(z.errReasons.bad_input, args)
+			// 	}
+			// 	z.svc.learnByIndex(index, event)
+			// 	return true
+			// }
+
+			async learnByIndexOrUndo(args:string[]){
 				const z = this.ui
 				const index = z.This.argToIntAt(args, 1)
 				
@@ -219,7 +235,15 @@ export class FileVocaUi{
 				if(event == void 0){
 					throw Exception.for(z.errReasons.bad_input, args)
 				}
-				z.svc.learnByIndex(index, event)
+				const sword = z.svc.wordsToLearn[index]
+				if(sword.status.memorize == void 0){
+					const ok = z.svc.learnByIndex(index, event)
+					if(!ok){
+						z.svc.undo(sword)
+					}
+				}else{
+					z.svc.undo(sword)
+				}
 				return true
 			}
 
@@ -232,6 +256,7 @@ export class FileVocaUi{
 			async restart(){
 				const z = this.ui
 				const es = await z.svc.restart()
+				z.exput(es+'')
 			}
 
 		}
