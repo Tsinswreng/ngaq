@@ -45,7 +45,7 @@ class UiStuff{
 	pageNums = 1
 	debuffNumerator_str:string = ''
 	isShowRandomBg:Ref<Boolean> = ref(false)
-	multiMode_key:Ref<number> = ref(0)
+	cardsBox_key:Ref<number> = ref(0)
 	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
@@ -252,7 +252,9 @@ export class WebNgaqUi{
 
 	fresh_wordBox(){
 		const z = this
-		z.rmWordBox()
+		// z.rmWordBox()
+		// z.mkWordBox()
+		z.uiStuff.cardsBox_key.value++
 		z.mkWordBox()
 	}
 
@@ -278,8 +280,9 @@ export class WebNgaqUi{
 
 	async restart(){
 		const z = this
-		z.fresh_wordBox() // 不效
-		return z.svc.restart()
+		await z.svc.restart()
+		z.fresh_wordBox()
+		
 	}
 
 	async saveEtRestart(){

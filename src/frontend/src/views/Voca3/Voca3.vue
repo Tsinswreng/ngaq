@@ -69,7 +69,7 @@ const Pro = Promise
 <!-- :key="ui.uiStuff.isShowCardBox.value+''" -->
 
 
-<div v-if="ui.uiStuff.isShowCardBox.value" class="cards-box">
+<div v-if="ui.uiStuff.isShowCardBox.value" class="cards-box" :key="ui.uiStuff.cardsBox_key.value">
 	<div v-for="(w,i) in ui.wordsToLearn.slice(0,64)" :key="ui.uiStuff.isShowCardBox.value+''">
 		<component
 			:is="WordCard"

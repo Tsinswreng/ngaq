@@ -25,7 +25,7 @@ function set_page(){
 	const ele = document.getElementById('paging') as HTMLInputElement
 	const value = ele.value
 	ui.set_page(value)
-	ui.uiStuff.multiMode_key.value++
+	ui.uiStuff.cardsBox_key.value++
 }
 </script>
 
