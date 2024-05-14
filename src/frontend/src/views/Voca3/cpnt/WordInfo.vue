@@ -2,12 +2,12 @@
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
 import {SvcWord} from '@shared/entities/Word/SvcWord'
-import {WebVocaUi} from '../WebNgaqUi';
+import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 const loaded = ref(false)
-let ui:WebVocaUi
+let ui:WebNgaqUi
 ;(async()=>{
-	ui = await WebVocaUi.getInstanceAsync()
+	ui = await WebNgaqUi.getInstanceAsync()
 	loaded.value = true
 })()
 // const props = defineProps<{

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import {WebSvcWord} from '@ts/voca3/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
-import { WebVocaUi } from '../WebNgaqUi';
+import { WebNgaqUi } from '../WebNgaqUi';
 import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
 import { SvcWord, Tempus } from '@shared/WordWeight/_lib';
 
 const loaded = ref(false)
-let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
+let ui:WebNgaqUi// = await WebVocaUi.getInstanceAsync()
 onBeforeMount( async() => {
-	ui = await WebVocaUi.getInstanceAsync()
+	ui = await WebNgaqUi.getInstanceAsync()
 	loaded.value = true
 	ui.test()
 })
@@ -56,6 +56,11 @@ function returnWordToParent(){
 // 		}
 // 	}else{undo()}
 // }
+
+function rightClick(event:MouseEvent){
+	event.preventDefault()
+	ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)
+}
 
 // function undo(){
 // 	if(reciteStatusRef.value !== 'nil'){
@@ -115,8 +120,8 @@ function fmtDate(tempus:Tempus){
 <template>
 	<div v-if="loaded" class="word-card-container" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
 
-		<span class="w-index" :class="reciteStatusRef" @click="ui.learnByWord(mw, WordEvent.FGT)">{{ props.loopIndex }}</span>
-		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="">
+		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)">{{ props.loopIndex }}</span>
+		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="rightClick">
 			{{ mw.word.wordShape }}
 		</span>
 		
@@ -248,13 +253,13 @@ span{
 }
 
 .rmb{
-	background-color: rgb(0, 80, 0, 0.5);
+	background-color: rgb(0, 80, 0, 0.8);
 	/* box-sizing: border-box;
 	border: rgb(0, 64, 0, 0.5) solid 10px; */
 }
 
 .fgt{
-	background-color: rgb(80, 0, 0, 0.5);
+	background-color: rgb(80, 0, 0, 0.8);
 }
 *{
 	opacity: 0.95;

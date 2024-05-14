@@ -2,15 +2,15 @@
 <script setup lang="ts">
 //import {ref} from 'vue'
 import Log from '@shared/Log';
-import {WebVocaUi} from '../WebNgaqUi';
+import {WebNgaqUi} from '../WebNgaqUi';
 import Recite from '@ts/voca/Recite';
 import {ref, onBeforeMount} from 'vue'
 import LS from '@ts/LocalStorage';
 
 
-let ui:WebVocaUi
+let ui:WebNgaqUi
 onBeforeMount(async()=>{
-	ui = await WebVocaUi.getInstanceAsync()
+	ui = await WebNgaqUi.getInstanceAsync()
 })
 //const ui = await WebVocaUi.getInstanceAsync()
 //console.log(ui)

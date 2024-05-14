@@ -6,6 +6,7 @@ import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $ } from "@shared/Ut"
+import { Exception } from "@shared/Exception"
 
 
 // function testU8ArrToBase64(uint8Array:Uint8Array){
@@ -48,13 +49,37 @@ class UiStuff{
 	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
+const withTryCatchProxy = (target: WebNgaqUi) => {
+	return new Proxy(target, {
+		get(target, prop) {
+			if (typeof target[prop] === 'function') {
+				return function (this:WebNgaqUi, ...args) {
+					try {
+						const ans = target[prop].apply(this, args)
+						if(ans instanceof Promise){
+							ans.catch(e=>{
+								target.handleErr(e)
+							})
+						}
+					} catch (error) {
+//						console.error(`Error in method ${String(prop)}:`, error);
+						target.handleErr(error)
+					}
+				};
+			} else {
+				return target[prop];
+			}
+		},
+	});
+};
 
-export class WebVocaUi{
+
+export class WebNgaqUi{
 	protected constructor(){
 
 	}
 
-	protected static _instance:WebVocaUi
+	protected static _instance:WebNgaqUi
 
 	static async getInstanceAsync(){
 		const z = this
@@ -67,7 +92,11 @@ export class WebVocaUi{
 	protected static async New(){
 		const z = new this()
 		await z.__Init__()
-		return z
+		const proxy = withTryCatchProxy(z)
+		//console.log(proxy instanceof Proxy) 報錯
+		//console.log(proxy instanceof WebNgaqUi) true
+		return proxy
+		//return z
 	}
 
 	protected async __Init__(){
@@ -102,6 +131,7 @@ export class WebVocaUi{
 		window['_'] = z
 	}
 
+	/** @deprecated */
 	registerToWindow0(){
 		const z = this
 		//@ts-ignore
@@ -123,13 +153,19 @@ export class WebVocaUi{
 		}
 	}
 
-
+	handleErr(err:any){
+		if(err instanceof Error){
+			if(err instanceof Exception){
+				console.error(err)
+				alert(err.reason.name)
+			}
+		}
+	}
 	
 	async start(){
 		const z = this
 		await z.svc.start()
 		z.fresh_wordBox()
-		console.log('start')//t
 	}
 
 	learnByIndex(index:int, event:RMB_FGT){
@@ -244,6 +280,12 @@ export class WebVocaUi{
 		const z = this
 		z.fresh_wordBox() // 不效
 		return z.svc.restart()
+	}
+
+	async saveEtRestart(){
+		const z = this
+		const saveOk = await z.save()
+		const restartOk = await z.restart()
 	}
 
 	set_page(str:string){}

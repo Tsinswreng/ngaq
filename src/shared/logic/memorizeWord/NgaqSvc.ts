@@ -189,7 +189,7 @@ export abstract class NgaqSvc{
 		const z = this
 		z._svcStatus.start = false
 		const svcWords = z.mergeLearnedWords()
-		//VocaSvc.mergeSvcWords(svcWords) 
+		//VocaSvc.mergeSvcWords(svcWords)
 		const words = svcWords.map(e=>e.word)
 		//const ans = await z.dbSrc.saveWords(words)
 		const ans = await z._save(words)

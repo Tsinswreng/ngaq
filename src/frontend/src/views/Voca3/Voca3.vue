@@ -2,7 +2,7 @@
 //import { ref, defineProps, withContext } from 'vue';
 import WordCard from '@views/Voca3/cpnt/WordCard.vue'
 import WordInfo from './cpnt/WordInfo.vue';
-import {WebVocaUi} from './WebNgaqUi';
+import {WebNgaqUi} from './WebNgaqUi';
 import { $ } from '@shared/Ut';
 import { ref,Ref, onMounted, computed, onBeforeMount} from 'vue';
 import LS from '@ts/LocalStorage';
@@ -13,9 +13,9 @@ import CtrlPanel from './cpnt/CtrlPanel.vue';
 //const ui = await WebVocaUi.getInstanceAsync()
 const loaded = ref(false)
 const templateKey = ref(0)
-let ui:WebVocaUi// = await WebVocaUi.getInstanceAsync()
+let ui:WebNgaqUi// = await WebVocaUi.getInstanceAsync()
 onBeforeMount( async() => {
-	ui = await WebVocaUi.getInstanceAsync()
+	ui = await WebNgaqUi.getInstanceAsync()
 	//console.log(ui, 'on before')
 	loaded.value = true
 	templateKey.value++
