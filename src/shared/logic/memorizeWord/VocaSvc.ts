@@ -352,4 +352,13 @@ export abstract class VocaSvc{
 		}
 	}
 
+	
+	discardChange(){
+		const z = this
+		z.clearLearnedWords()
+		z.svcStatus.save = true
+		z.svcStatus.start = false
+		return true
+	}
+
 }

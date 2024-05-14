@@ -18,8 +18,8 @@ import { WordEvent } from '@shared/SingleWord2';
 const fileSignal = process.argv[2]??''
 const fileIn = process.argv[3]??''
 const fileOut = process.argv[4]??''
-if(fileSignal === '' || fileIn === '' || fileOut == ''){
-	console.error(`fileSignal === '' || fileIn === '' || fileOut == ''`)
+if(fileSignal === '' || fileIn === '' || fileOut === ''){
+	console.error(`fileSignal === '' || fileIn === '' || fileOut === ''`)
 	console.log(`example:\nnode xxx.js "fileSignal.txt" "fileIn.txt" "fileOut.txt"`)
 	process.exit(-1)
 }
@@ -47,7 +47,7 @@ if(fileSignal === '' || fileIn === '' || fileOut == ''){
 const configInst = Config.getInstance()
 const config = configInst.config
 
-const RN = Reason.new_deprecated.bind(Reason)
+const RN = Reason.new.bind(Reason)
 class UiErrReasons{
 	no_such_word = RN('no_such_word')
 	bad_input = RN<string[][]>('bad_input')
@@ -224,6 +224,11 @@ export class FileVocaUi{
 				return true
 			}
 
+			discardChange(){
+				const z = this.ui
+				return z.svc.discardChange()
+			}
+
 
 			// async learnByIndex(args:string[]){
 			// 	const z = this.ui
@@ -314,7 +319,7 @@ export class FileVocaUi{
 			z.exput(e.reason.name)
 		}else{
 			console.error(e)
-			z.exec(e.message)
+			z.exput(e.message)
 		}
 	}
 
@@ -432,3 +437,4 @@ async function main(){
 }
 main()
 // esno "D:\_code\voca\src\backend\FileVocaUi.ts" "D:\Program Files\Rime\User_Data\voca\signal" "D:\Program Files\Rime\User_Data\voca\in" "D:\Program Files\Rime\User_Data\voca\out"
+//

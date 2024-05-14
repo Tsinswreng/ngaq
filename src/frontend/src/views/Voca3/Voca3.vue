@@ -2,7 +2,7 @@
 //import { ref, defineProps, withContext } from 'vue';
 import WordCard from '@views/Voca3/cpnt/WordCard.vue'
 import WordInfo from './cpnt/WordInfo.vue';
-import {WebVocaUi} from './WebVocaUi';
+import {WebVocaUi} from './WebNgaqUi';
 import Recite from '@ts/voca/Recite';
 import WordB from '@ts/voca/WordB';
 import { $ } from '@shared/Ut';
@@ -213,4 +213,4 @@ childClick：这是事件的名称，它是您在子组件中使用 $emit 方法
 = 符号：这个等号表示将事件监听器与某个方法或表达式关联起来。
 
 "handleChildClick"：这是在父组件中定义的一个方法的名称。这个方法会在事件触发时被调用。在前面的示例中，我们在父组件的 <script setup> 部分定义了 handleChildClick 方法。
-	  -->./Status
+	  -->./Status./WebNgaqUi./WebNgaqUi

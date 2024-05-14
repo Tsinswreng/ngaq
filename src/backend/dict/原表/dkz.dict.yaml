@@ -1,5 +1,5 @@
 
-#20240510232720280
+#20240514132019032
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -45,6 +45,7 @@ use_preset_vocabulary: true
 的	tˁewks	
 明	mraŋ	
 朙	mraŋ	
+甍	mrˁəŋ	
 皿	mraŋʔ	
 萎	ʔojs	
 悲	prəj	
@@ -3654,6 +3655,7 @@ use_preset_vocabulary: true
 響	hAŋʔ	
 享	hraŋʔ	
 洪	ɡoŋ	
+虹	ɡˁoŋ	
 莊	tsraŋʔ	
 妝	dzraŋʔ	
 什	dəms	
@@ -10089,9 +10091,6 @@ use_preset_vocabulary: true
 𨹁	ɡˁoŋ	
 𨹁	kˁoŋs	
 垬	ɡˁoŋ	
-虹	ɡˁoŋ	
-虹	krˁoŋs	
-虹	kˁoŋs	
 䉺	ɡˁoŋ	
 紅	ɡˁoŋ	
 耾	ɡʷrˁeŋ	
@@ -14999,7 +14998,6 @@ use_preset_vocabulary: true
 𢄐	mˁoŋs	
 𥭮	mrˁaŋ	
 䀄	mˁoŋ	
-甍	mrˁeŋ	
 蕄	mˁəŋ	
 蕄	mrˁeŋ	
 鄸	muŋs	

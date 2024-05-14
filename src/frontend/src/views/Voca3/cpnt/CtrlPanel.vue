@@ -2,7 +2,7 @@
 <script setup lang="ts">
 //import {ref} from 'vue'
 import Log from '@shared/Log';
-import {WebVocaUi} from '../WebVocaUi';
+import {WebVocaUi} from '../WebNgaqUi';
 import Recite from '@ts/voca/Recite';
 import {ref, onBeforeMount} from 'vue'
 import LS from '@ts/LocalStorage';
@@ -98,4 +98,4 @@ button:active{
 	background-color: white;
 	color: black;
 }
-</style>
+</style>../WebNgaqUi../WebNgaqUi

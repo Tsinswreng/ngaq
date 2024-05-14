@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {WebSvcWord} from '@ts/voca3/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
-import { WebVocaUi } from '../WebVocaUi';
+import { WebVocaUi } from '../WebNgaqUi';
 import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
 import { SvcWord, Tempus } from '@shared/WordWeight/_lib';
@@ -260,4 +260,4 @@ span{
 }
 </style>
 
-../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord
+../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi
