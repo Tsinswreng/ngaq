@@ -75,8 +75,8 @@ export class SvcStatus{
 /**
  * 背單詞 流程 業務理則
  */
-export abstract class VocaSvc{
-	static async New():Promise<VocaSvc>{
+export abstract class NgaqSvc{
+	static async New():Promise<NgaqSvc>{
 		//@ts-ignore
 		const z = new this()
 		z.__Init__()
@@ -332,6 +332,29 @@ export abstract class VocaSvc{
 			throw new Error('else')
 		}
 		return ans
+	}
+
+	/**
+	 * 若已背過則撤銷
+	 * @param index 
+	 * @param event 
+	 * @returns 
+	 */
+	learnOrUndoByIndex(index:int, event:RMB_FGT){
+		const z = this
+		const sword = z.wordsToLearn[index]
+		if(sword === void 0){
+			throw RangeError(`${index}\nout of ${z.wordsToLearn.length}`)
+		}
+		if(sword.status.memorize == void 0){
+			const ok = z.learnByIndex(index, event)
+			if(!ok){
+				z.undo(sword)
+			}
+		}else{
+			z.undo(sword)
+		}
+		return true
 	}
 
 	/**

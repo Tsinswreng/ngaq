@@ -1,8 +1,8 @@
 import { RMB_FGT } from "@shared/entities/Word/SvcWord"
-import { VocaSvc } from "@shared/logic/memorizeWord/VocaSvc"
+import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc"
 import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
-import { WebVocaSvc } from "@ts/voca3/WebVocaSvc"
+import { WebNgaqSvc } from "@ts/voca3/WebVocaSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $ } from "@shared/Ut"
@@ -72,12 +72,12 @@ export class WebVocaUi{
 
 	protected async __Init__(){
 		const z = this
-		z._svc = await WebVocaSvc.New()
+		z._svc = await WebNgaqSvc.New()
 		z.registerToWindow()
 		return z
 	}
 
-	protected _svc:WebVocaSvc
+	protected _svc:WebNgaqSvc
 	get svc(){return this._svc}
 
 	protected _curWord:WebSvcWord|undefined
@@ -153,6 +153,10 @@ export class WebVocaUi{
 			}
 		}
 		return ans
+	}
+
+	learnByIndexOrUndo(){
+		
 	}
 
 	updateWordInfo(){

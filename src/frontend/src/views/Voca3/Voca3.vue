@@ -3,11 +3,8 @@
 import WordCard from '@views/Voca3/cpnt/WordCard.vue'
 import WordInfo from './cpnt/WordInfo.vue';
 import {WebVocaUi} from './WebNgaqUi';
-import Recite from '@ts/voca/Recite';
-import WordB from '@ts/voca/WordB';
 import { $ } from '@shared/Ut';
 import { ref,Ref, onMounted, computed, onBeforeMount} from 'vue';
-import VocaClient from '@ts/voca/VocaClient';
 import LS from '@ts/LocalStorage';
 import CtrlPanel from './cpnt/CtrlPanel.vue';
 

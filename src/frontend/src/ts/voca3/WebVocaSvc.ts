@@ -1,7 +1,7 @@
 import { SvcWord, RMB_FGT } from "@shared/entities/Word/SvcWord";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
-import { VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
+import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
@@ -12,9 +12,9 @@ import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 
-export class WebVocaSvc extends VocaSvc{
+export class WebNgaqSvc extends NgaqSvc{
 
-	readonly This = WebVocaSvc
+	readonly This = WebNgaqSvc
 	protected constructor(){
 		super()
 	}
@@ -37,12 +37,12 @@ export class WebVocaSvc extends VocaSvc{
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 已背ʹ單詞中 憶者 */
-	protected _rmbWord__index:WebSvcWord[] = []
-	get rmbWord__index(){return this._rmbWord__index}
+	// protected _rmbWord__index:WebSvcWord[] = []
+	// get rmbWord__index(){return this._rmbWord__index}
 
-	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWord__index:WebSvcWord[] = []
-	get fgtWord__index(){return this._fgtWord__index}
+	// /** 已背ʹ單詞中 忘者 */
+	// protected _fgtWord__index:WebSvcWord[] = []
+	// get fgtWord__index(){return this._fgtWord__index}
 
 	// protected _learnedWords: WebMemorizeWord[] = []
 	// get learnedWords(){return this._learnedWords}

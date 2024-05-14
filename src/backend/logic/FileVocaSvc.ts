@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { VocaSvc as VocaSvc } from "@shared/logic/memorizeWord/VocaSvc";
+import { NgaqSvc as NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
 import Config from '@shared/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
 //import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
@@ -27,7 +27,7 @@ const config = configInst.config
 // emt3.emit<>('')
 
 /** 業務理則層 */
-export class FileVocaSvc extends VocaSvc{
+export class FileVocaSvc extends NgaqSvc{
 
 
 	readonly This = FileVocaSvc

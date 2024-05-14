@@ -256,16 +256,17 @@ export class FileVocaUi{
 				if(event == void 0){
 					throw Exception.for(z.errReasons.bad_input, args)
 				}
-				const sword = z.svc.wordsToLearn[index]
-				if(sword.status.memorize == void 0){
-					const ok = z.svc.learnByIndex(index, event)
-					if(!ok){
-						z.svc.undo(sword)
-					}
-				}else{
-					z.svc.undo(sword)
-				}
-				return true
+				// const sword = z.svc.wordsToLearn[index]
+				// if(sword.status.memorize == void 0){
+				// 	const ok = z.svc.learnByIndex(index, event)
+				// 	if(!ok){
+				// 		z.svc.undo(sword)
+				// 	}
+				// }else{
+				// 	z.svc.undo(sword)
+				// }
+				return z.svc.learnOrUndoByIndex(index, event)
+				//return true
 			}
 
 			async save(){
