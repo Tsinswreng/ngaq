@@ -5,7 +5,7 @@ import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
 import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
-import { $ } from "@shared/Ut"
+import { $, delay } from "@shared/Ut"
 import { Exception } from "@shared/Exception"
 
 
@@ -61,6 +61,7 @@ const withTryCatchProxy = (target: WebNgaqUi) => {
 								target.handleErr(e)
 							})
 						}
+						return ans
 					} catch (error) {
 //						console.error(`Error in method ${String(prop)}:`, error);
 						target.handleErr(error)
@@ -275,7 +276,7 @@ export class WebNgaqUi{
 
 	async save(){
 		const z = this
-		return await z.svc.save()
+		return z.svc.save()
 	}
 
 	async restart(){
@@ -287,7 +288,10 @@ export class WebNgaqUi{
 
 	async saveEtRestart(){
 		const z = this
+		//debugger
 		const saveOk = await z.save()
+		console.log(saveOk)//t
+		//await delay(1000)
 		const restartOk = await z.restart()
 	}
 

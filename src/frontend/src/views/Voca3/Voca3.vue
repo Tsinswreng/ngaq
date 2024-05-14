@@ -41,12 +41,10 @@ function handleAltS(event: KeyboardEvent) {
 
 //const element = $( document.getElementById("body") , 'no body')
 
-document.addEventListener("mousedown", (event) => {
+document.addEventListener("mousedown", (event:MouseEvent) => {
 	if (event.button === 1) { //鼠標中鍵
 		event.preventDefault();
-		ui.save().then((d)=>{
-			ui.restart()
-		})
+		ui.saveEtRestart()
 	}
 });
 
