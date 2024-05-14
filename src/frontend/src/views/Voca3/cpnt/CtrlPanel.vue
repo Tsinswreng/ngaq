@@ -9,17 +9,19 @@ import LS from '@ts/LocalStorage';
 
 
 let ui:WebNgaqUi
+let loaded = ref(false)
 onBeforeMount(async()=>{
 	ui = await WebNgaqUi.getInstanceAsync()
+	loaded.value = true
 })
 //const ui = await WebVocaUi.getInstanceAsync()
 //console.log(ui)
 // const isSaved = ui.uiStatus.isSaved
 // const debuffNumerator = ui.uiStatus.debuffNumerator_str
 
-function switchRandomImg(){
-	ui.uiStuff.isShowRandomBg.value = !ui.uiStuff.isShowRandomBg.value
-}
+// function switchRandomImg(){
+// 	ui.uiStuff.lockBg.value = !ui.uiStuff.lockBg.value
+// }
 
 function set_page(){
 	const ele = document.getElementById('paging') as HTMLInputElement
@@ -30,7 +32,7 @@ function set_page(){
 </script>
 
 <template>
-	<div>
+	<div v-if="loaded">
 		<!-- <span v-for="(item, index) in status.tables" :key="index">
 			<input type="checkbox" :id="'checkbox-' + index" v-model="selectedItems[index]" />
 			<label :for="'checkbox-' + index">{{ item }}</label>
@@ -49,6 +51,12 @@ function set_page(){
 		<button @click="ui.save()">存</button>
 		<button>改</button>
 		<button @click="ui.restart()">重開</button>
+		<button @click="ui.uiStuff.lockBg.value = !ui.uiStuff.lockBg.value">
+			{{ ui.uiStuff.lockBg.value==true?
+				'改景'
+				:'定景'
+			}}
+		</button>
 		<!-- <button @click="recite.finalFilter()">比例</button> -->
 		<!-- <button @click="ui.sortByRmb()">憶序</button>
 		<button @click="ui.sortBylastRvwDate()">期序</button> -->

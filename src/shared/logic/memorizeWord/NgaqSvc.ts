@@ -31,7 +31,7 @@ export class SvcEvents extends Le.Events{
 	undo = EV<[SvcWord, RMB_FGT_nil]>('undo')
 	start = EV<[]>('start')
 	//test=EV('')
-	learnByMWord = EV<[SvcWord, RMB_FGT]>('learnByWord')
+	learnBySvcWord = EV<[SvcWord, RMB_FGT]>('learnByWord')
 
 	/**
 	 * 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件
@@ -233,7 +233,7 @@ export abstract class NgaqSvc{
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
-			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
+			z.emitter.emit(z.svcEvents.learnBySvcWord, mw, WordEvent.RMB)
 		}
 		return ans
 	}
@@ -243,7 +243,7 @@ export abstract class NgaqSvc{
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.FGT)
 		if(ans){
-			z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
+			z.emitter.emit(z.svcEvents.learnBySvcWord, mw, WordEvent.FGT)
 		}
 		return ans
 	}

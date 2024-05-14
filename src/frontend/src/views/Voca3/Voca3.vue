@@ -99,7 +99,7 @@ baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 <img src="" alt="" :class="ui.htmlClass.class_bg_next.value" :id="ui.htmlId.id_bg_next.value"> -->
 <!-- <img src="../../assets/uys.jpg" alt="" class="bg">
 <img src="../../assets/dfq.jpg" alt="" class="bg"> -->
-<img src="" alt="null" :class="ui.htmlClass.class_bg.value" v-if="ui.uiStuff.isShowRandomBg.value">
+<img src="" alt="null" :class="ui.bgImg.uiStuff.class_bg.value" v-if="ui.bgImg.isShowRandomBg.value">
 </div>
 
 
@@ -156,6 +156,8 @@ input{
 	left: 5%
 }
 
+
+/* TODO 勿用硬ʹ字串、宜設樣式于js中 */
 .bg{
 	position: fixed;
 	margin: 0;

@@ -26,5 +26,18 @@ export function alert(msg?:any){
 export function u8ArrToBase64(u8Arr:Uint8Array){
 	const decoder = new TextDecoder('utf8')
 	const ans = btoa(decoder.decode(u8Arr))
+	// //@ts-ignore
+	// const ans = btoa(String.fromCharCode.apply(null, u8Arr));
 	return ans
+}
+
+export function numArrToBase64(array:int[]){
+	// 将数组中的每个元素转换为字符
+	const chars = array.map(byte => String.fromCharCode(byte));
+	// 将字符数组连接为字符串
+	const binaryString = chars.join('');
+
+	// 使用 btoa() 将二进制字符串转换为 base64 编码
+	const base64String = btoa(binaryString);
+	return base64String
 }

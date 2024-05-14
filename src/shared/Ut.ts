@@ -32,6 +32,11 @@ import * as algo from '@shared/algo' //待分离
 //export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 
 
+export function mergeErrStack(innerErr:Error, outErr:Error){
+	innerErr.stack = '\n\n'+innerErr.stack + outErr.stack
+	return innerErr
+}
+
 
 /**
  * 返回所有鍵。若o爲數組則返number[]

@@ -129,10 +129,27 @@ export class WebNgaqSvc extends NgaqSvc{
 		return true
 	}
 
-	async testImg(){
+	async getImg(){
 		const z = this
 		return z.client.get_randomImg2()
 	}
+
+	async getNumArrImg(){
+		const z = this
+		const resp = await z.getImg()
+		const json = await resp.json()
+		const buffer = json['blob']
+		//console.log(buffer)//t
+		const arr:int[] = buffer.data
+		return arr
+		// //@ts-ignore
+		// const u8Arr = new Uint8Array(arr)
+		// console.log(u8Arr)
+		// //const u8Arr:Uint8Array = buffer['data']
+		// return u8Arr
+	}
+
+	
 
 	// rmb(mw:WebSvcWord){
 	// 	const z = this

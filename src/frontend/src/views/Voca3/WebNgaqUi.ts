@@ -5,7 +5,7 @@ import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
 import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
-import { $, delay } from "@shared/Ut"
+import { $, delay, mergeErrStack } from "@shared/Ut"
 import { Exception } from "@shared/Exception"
 
 
@@ -28,6 +28,7 @@ import { Exception } from "@shared/Exception"
 // }
 
 class HtmlClass{
+	/** @deprecated */
 	class_bg = ref('bg')
 	class_bg_next = ref('bg_next')
 }
@@ -44,7 +45,8 @@ class UiStuff{
 	isShowCardBox = ref(false)
 	pageNums = 1
 	debuffNumerator_str:string = ''
-	isShowRandomBg:Ref<Boolean> = ref(false)
+	/** true 背景不再變 */
+	lockBg = ref(true)
 	cardsBox_key:Ref<number> = ref(0)
 	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
@@ -103,12 +105,16 @@ export class WebNgaqUi{
 	protected async __Init__(){
 		const z = this
 		z._svc = await WebNgaqSvc.New()
+		z._initSvcListeners()
 		z.registerToWindow()
 		return z
 	}
 
 	protected _svc:WebNgaqSvc
 	get svc(){return this._svc}
+
+	protected _bgImg = BgImg.new()
+	get bgImg(){return this._bgImg}
 
 	protected _curWord:WebSvcWord|undefined
 	get curWord(){return this._curWord}
@@ -322,6 +328,41 @@ export class WebNgaqUi{
 		return recs.get(curWord.word)
 	}
 
+	async nextBg(){
+		const z = this
+		if(z.uiStuff.lockBg.value == true){
+			return
+		}
+		const numArr = await z.svc.getNumArrImg()
+		//console.log(u8Arr instanceof Uint8Array) false
+		//console.log(u8Arr)//t +
+		return z.bgImg.setBg_numArr(numArr)
+	}
+
+	protected _initSvcListeners(){
+		const z = this
+		const recErr = new Error()
+		function hanErr(error){
+			const err = error as Error
+			mergeErrStack(err, recErr)
+			z.svc.emitErr(err)
+		}
+		try {
+			z.svc.emitter.on(z.svc.svcEvents.error, (e)=>{
+				console.error(e)
+			})
+			z.svc.emitter.on(z.svc.svcEvents.learnBySvcWord, async(svcWord)=>{
+				await z.nextBg().catch(e=>{
+					hanErr(e)
+				})
+			})
+
+			
+		} catch (e) {
+			hanErr(e)
+		}
+	}
+
 	// async d(){
 	// 	const z = this
 	// 	const blob = new Blob(['123'], {type: 'text'})
@@ -399,6 +440,9 @@ export class WebNgaqUi{
 	// }
 }
 
+class BgImgUiStuff{
+	class_bg = ref('bg')
+}
 
 class BgImg{
 	protected constructor(){}
@@ -413,5 +457,52 @@ class BgImg{
 	}
 	get This(){return BgImg}
 
-	
+	static base64ImgPrefix = `data:image/png;base64,`
+
+	protected _uiStuff = new BgImgUiStuff()
+	get uiStuff(){return this._uiStuff}
+
+	protected _isShowRandomBg = ref(true)
+	get isShowRandomBg(){return this._isShowRandomBg}
+	set isShowRandomBg(v){this._isShowRandomBg = v}
+
+	protected _curBg_bytes:Uint8Array|undefined
+	get curBg_bytes(){return this._curBg_bytes}
+	set curBg_bytes(v){this._curBg_bytes = v}
+
+	static numArrToBase64(bytes:int[]){
+		//console.log(bytes, 'bytes')//t +
+		return frut.numArrToBase64(bytes)
+	}
+
+	setBg_numArr(bytes:int[]){
+		const z = this
+		const base64 = z.This.numArrToBase64(bytes)
+		return z.setBg_base64(base64)
+	}
+
+	setBg_base64(base64:str){
+		const z = this
+		const klasses = document.getElementsByClassName(z.uiStuff.class_bg.value)
+		const first = klasses[0] as HTMLImageElement
+		if(first == void 0){
+			throw new Error(`first == void 0`)
+		}
+		first.src = z.This.base64ImgPrefix+base64
+	}
+
+	// async showBg(){
+	// 	const z = this
+	// 	if(z.curBg_bytes == void 0){
+	// 		return false
+	// 	}
+	// 	const base64 = frut.u8ArrToBase64(z.curBg_bytes)
+
+	// }
+
 }
+
+
+import * as frut from '@ts/frut'
+import { re } from "mathjs"
+
