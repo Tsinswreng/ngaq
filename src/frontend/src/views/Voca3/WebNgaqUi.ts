@@ -290,7 +290,7 @@ export class WebNgaqUi{
 		const z = this
 		//debugger
 		const saveOk = await z.save()
-		console.log(saveOk)//t
+		//console.log(saveOk)//t
 		//await delay(1000)
 		const restartOk = await z.restart()
 	}

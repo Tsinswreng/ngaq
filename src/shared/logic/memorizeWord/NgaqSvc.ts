@@ -291,11 +291,11 @@ export abstract class NgaqSvc{
 		const z = this
 		const learnedSvcWords = [] as SvcWord[]
 		for(const [word, index] of z.rmbWord__index){
-			z.wordsToLearn[index] = word.selfMerge()
+			z.wordsToLearn[index] = word.selfMergeEtFresh()
 			learnedSvcWords.push(z.wordsToLearn[index])
 		}
 		for(const [word, index] of z.fgtWord__index){
-			z.wordsToLearn[index] = word.selfMerge()
+			z.wordsToLearn[index] = word.selfMergeEtFresh()
 			learnedSvcWords.push(z.wordsToLearn[index])
 		}
 		return learnedSvcWords

@@ -17,6 +17,7 @@ export class WebSvcWord extends SvcWord{
 	protected __init__(...args:Parameters<typeof WebSvcWord.new>){
 		const z = this
 		super.__init__(...args)
+		z._uiStuff = new UiStuff()
 		return z
 	}
 

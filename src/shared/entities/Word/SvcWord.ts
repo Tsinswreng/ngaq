@@ -38,6 +38,7 @@ export class SvcWord{
 	protected __init__(word:Word){
 		const z = this
 		z._word = word
+		z._status = Status.new()
 		z.sortDate__Event()
 		return z
 	}
@@ -117,15 +118,22 @@ export class SvcWord{
 	}
 	
 	/**
-	 * 合入 新加ʹ背ˡ狀態及日期
+	 * 合入 新加ʹ背ˡ狀態及日期後 褈初始化
 	 */
+	selfMergeEtFresh(){
+		const z = this
+		z.innerWordMerge()
+		const word = z.word
+		z.__init__(word)
+		return z
+	}
+	
 	selfMerge(){
 		const z = this
 		z.innerWordMerge()
 		z.sortDate__Event()
 		return z
 	}
-	
 
 }
 
