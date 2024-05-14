@@ -116,7 +116,7 @@ function fmtDate(tempus:Tempus){
 	<div v-if="loaded" class="word-card-container" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
 
 		<span class="w-index" :class="reciteStatusRef" @click="ui.learnByWord(mw, WordEvent.FGT)">{{ props.loopIndex }}</span>
-		<span class="w-shape" @click="ui.learnByIndexOrUndo(wordIndex, WordEvent.RMB)" @contextmenu="">
+		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="">
 			{{ mw.word.wordShape }}
 		</span>
 		

@@ -2,7 +2,7 @@ import { RMB_FGT } from "@shared/entities/Word/SvcWord"
 import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc"
 import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
-import { WebNgaqSvc } from "@ts/voca3/WebVocaSvc"
+import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $ } from "@shared/Ut"
@@ -137,6 +137,7 @@ export class WebVocaUi{
 		return z.svc.learnByIndex(index, event)
 	}
 
+	/** @deprecated */
 	learnByWord(mw:WebSvcWord, event:RMB_FGT){
 		const z = this
 		z._curWord = mw
@@ -155,8 +156,28 @@ export class WebVocaUi{
 		return ans
 	}
 
-	learnByIndexOrUndo(){
-		
+	learnOrUndoByIndex(index:int, event:RMB_FGT){
+		const z = this
+		//return z.svc.learnOrUndoByIndex(index, event)
+		const mw = $(z.svc.wordsToLearn[index], 'z.svc.wordsToLearn[index]')
+		z._curWord = mw
+		z.fresh_wordInfo()
+		//const ans = z.svc.learnByWord(mw, event)
+		const ans = z.svc.learnOrUndoByIndex(index, event)
+		if(mw instanceof WebSvcWord){
+			switch (ans){
+				case WordEvent.RMB:
+					mw.uiStuff.reciteStatusRef.value = 'rmb'
+				break;
+				case WordEvent.FGT:
+					mw.uiStuff.reciteStatusRef.value = 'fgt'
+				break;
+				case void 0:
+					mw.uiStuff.reciteStatusRef.value = 'nil'
+				break
+			}
+		}
+		return ans
 	}
 
 	updateWordInfo(){

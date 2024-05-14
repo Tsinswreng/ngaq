@@ -338,23 +338,26 @@ export abstract class NgaqSvc{
 	 * 若已背過則撤銷
 	 * @param index 
 	 * @param event 
-	 * @returns 
+	 * @returns 單詞新加ʹ字件。若潙徹消則返undef
 	 */
 	learnOrUndoByIndex(index:int, event:RMB_FGT){
 		const z = this
 		const sword = z.wordsToLearn[index]
-		if(sword === void 0){
+		if(sword == void 0){
 			throw RangeError(`${index}\nout of ${z.wordsToLearn.length}`)
 		}
 		if(sword.status.memorize == void 0){
 			const ok = z.learnByIndex(index, event)
 			if(!ok){
 				z.undo(sword)
+				return void 0
 			}
+			return event
 		}else{
 			z.undo(sword)
+			return void 0
 		}
-		return true
+		
 	}
 
 	/**
