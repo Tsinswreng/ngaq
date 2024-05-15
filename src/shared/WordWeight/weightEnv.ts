@@ -6,8 +6,9 @@ import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
+import * as algo from '@shared/algo'
 
-export {Tempus, SvcWord as SvcWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight}
+export {Tempus, SvcWord as SvcWord, Word_, Sros_, lodash, Ut, ChangeRecord, BaseWeight, algo}
 
 //import type Tempus_ from "@shared/Tempus";
 

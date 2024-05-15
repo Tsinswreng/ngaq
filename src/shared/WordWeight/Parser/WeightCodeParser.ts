@@ -1,4 +1,4 @@
-import * as _ENV from '@shared/WordWeight/_lib'
+import * as _ENV from '@shared/WordWeight/weightEnv'
 import type { I_WordWeight } from '@shared/interfaces/I_WordWeight'
 
 export class WeightCodeParser{

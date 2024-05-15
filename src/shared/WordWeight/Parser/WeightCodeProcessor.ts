@@ -1,6 +1,6 @@
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight'
 import { compileTs, readTsConfig } from '@shared/Ut'
-import * as _ENV from '@shared/WordWeight/_lib'
+import * as _ENV from '@shared/WordWeight/weightEnv'
 
 
 export class WeightCodeProcessor{

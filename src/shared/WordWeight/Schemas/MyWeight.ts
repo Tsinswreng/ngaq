@@ -1,5 +1,5 @@
 //<@delete>
-import * as _ENV from '@shared/WordWeight/_lib'
+import * as _ENV from '@shared/WordWeight/weightEnv'
 //type import
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { InstanceType_ } from "@shared/Type"
@@ -315,6 +315,10 @@ class WordWeight extends Base implements I_WordWeight{
 		mWords = await z.run0(mWords)
 		mWords = await z.finalFilter(mWords)
 		return mWords
+	}
+
+	shuffer(words:SvcWord[]){
+		
 	}
 
 	/**

@@ -4,7 +4,8 @@ import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
 import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
-import { SvcWord, Tempus } from '@shared/WordWeight/_lib';
+import {SvcWord} from '@shared/entities/Word/SvcWord'
+import Tempus from '@shared/Tempus';
 
 const loaded = ref(false)
 let ui:WebNgaqUi// = await WebVocaUi.getInstanceAsync()
@@ -266,4 +267,4 @@ span{
 }
 </style>
 
-../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi
+../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi@shared/WordWeight/weightDependensy
