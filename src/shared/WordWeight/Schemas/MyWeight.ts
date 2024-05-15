@@ -297,10 +297,23 @@ class WordWeight extends Base implements I_WordWeight{
 		return Handle3Events
 	}
 
+	// checkIsResort(words:SvcWord[]){
+
+	// }
+
 	async run0(mWords:SvcWord[]) {
 		const z = this
+		
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
+			// 若已有匪權重 且未背過 則跳過 㕥應resort
+			if(
+				uWord.weight != void 0 
+				&& uWord.weight !== 0
+				&& uWord.status.memorize == void 0
+			){
+				continue
+			}
 			z.calc0(uWord)
 			//uWord.weight = 114514 //t
 		}
@@ -313,19 +326,23 @@ class WordWeight extends Base implements I_WordWeight{
 		const z = this
 		mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)
-		mWords = await z.finalFilter(mWords)
+		mWords = await z.filterByTbl(mWords)
+		mWords = z.shuffer(mWords)
 		return mWords
 	}
 
 	shuffer(words:SvcWord[]){
-		
+		return _ENV.algo.getShuffle(
+			words, 8, 
+			Math.floor(words.length / 8)
+		)
 	}
 
 	/**
 	 * 英日英日英日英日拉
 	 * @param words 
 	 */
-	finalFilter(
+	filterByTbl(
 		words:SvcWord[] // 權重高者在前
 	){
 		const $ = _ENV.Ut.$
