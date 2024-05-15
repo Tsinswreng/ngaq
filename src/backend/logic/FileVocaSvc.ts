@@ -159,26 +159,53 @@ export class FileVocaSvc extends NgaqSvc{
 		// return false
 	}
 
-
-	protected async _sort() {
+	protected async _sortWords(svcWords: SvcWord[]){
 		const z = this
 		const outErr = new Error()
 		try {
-			if(!z._svcStatus.load){
-				throw Exception.for(z.svcErrReasons.didnt_load)
-			}
+			// if(!z._svcStatus.load){
+			// 	throw Exception.for(z.svcErrReasons.didnt_load)
+			// }
 			z.initWeightAlgo()
-			z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
-			z._svcStatus.sort = true
-			return true
+			const ans = await $(z.weightAlgo).run(svcWords)
+			// z._svcStatus.sort = true
+			return ans
 		} catch (error) {
 			const err = error as Error
 			const jsCode = z.weightCodeParser?.jsCode??''
 			err.message = '\n' + jsCode + err.message
 			err.stack += '\n\n' + outErr.stack +'\n\n'
 			z.emitErr(err)
+			throw err
 		}
-		return false
+	}
+
+	// protected async _sort() {
+	// 	const z = this
+	// 	const outErr = new Error()
+	// 	try {
+	// 		if(!z._svcStatus.load){
+	// 			throw Exception.for(z.svcErrReasons.didnt_load)
+	// 		}
+	// 		// z.initWeightAlgo()
+	// 		// z._wordsToLearn = await $(z.weightAlgo).run(z.wordsToLearn)
+	// 		z._sortWords(z.wordsToLearn)
+	// 		z._svcStatus.sort = true
+	// 		return true
+	// 	} catch (error) {
+	// 		const err = error as Error
+	// 		// const jsCode = z.weightCodeParser?.jsCode??''
+	// 		// err.message = '\n' + jsCode + err.message
+	// 		err.stack += '\n\n' + outErr.stack +'\n\n'
+	// 		z.emitErr(err)
+	// 		throw err
+	// 	}
+	// 	return false
+	// }
+
+	protected override _resort(): Promise<boolean> {
+		const z = this
+		return z.sort()
 	}
 
 	protected async _start(){
@@ -242,11 +269,10 @@ export class FileVocaSvc extends NgaqSvc{
 		return super.save()
 	}
 
-
-	sort(): Promise<boolean> {
-		const z = this
-		return z._sort()
-	}
+	// sort(): Promise<boolean> {
+	// 	const z = this
+	// 	return z._sort()
+	// }
 	protected async _restart(): Promise<boolean> {
 		return true
 	}

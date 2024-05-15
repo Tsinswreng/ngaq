@@ -91,7 +91,24 @@ export class WebNgaqSvc extends NgaqSvc{
 	}
 
 	//TODO
-	async sort(): Promise<boolean> {
+	// async sort(): Promise<boolean> {
+	// 	const z = this
+	// 	await z._initWeightAlgo()
+	// 	if(z.weightAlgo == void 0){
+	// 		throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
+	// 	}
+	// 	try {
+	// 		const gotWords = await z.weightAlgo.run(z.wordsToLearn)
+	// 		z._wordsToLearn = gotWords as WebSvcWord[]
+	// 		return true
+	// 	} catch (error) {
+	// 		const err = error as Error
+	// 		throw err //TODO 用exception
+	// 	}
+	// 	return false
+	// }
+
+	protected async _sortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
 		await z._initWeightAlgo()
 		if(z.weightAlgo == void 0){
@@ -99,14 +116,16 @@ export class WebNgaqSvc extends NgaqSvc{
 		}
 		try {
 			const gotWords = await z.weightAlgo.run(z.wordsToLearn)
-			z._wordsToLearn = gotWords as WebSvcWord[]
-			return true
+			return gotWords
 		} catch (error) {
-			const err = error as Error
-			throw err //TODO 用exception
+			throw error //TODO 用exception
 		}
-		return false
+		
 	}
+	protected _resort(): Promise<boolean> {
+		throw new Error("Method not implemented.");
+	}
+
 
 
 	protected async _save(words: Word[]): Promise<any> {
@@ -122,9 +141,10 @@ export class WebNgaqSvc extends NgaqSvc{
 		return true
 	}
 
-	protected async _sort(): Promise<boolean> {
-		return true
-	}
+	// protected async _sort(): Promise<boolean> {
+	// 	return true
+	// }
+	
 	protected async _start(): Promise<boolean> {
 		return true
 	}

@@ -62,6 +62,11 @@ export class SvcWord{
 	protected _status = Status.new()
 	get status(){return this._status}
 
+	/** 在wordsToLearn中ʹ索引 */
+	protected _index:int|undef
+	get index(){return this._index}
+	set index(v){this._index = v}
+
 
 	sortDate__Event(){
 		const z = this
@@ -116,18 +121,32 @@ export class SvcWord{
 		}
 		return z
 	}
-	
-	/**
-	 * 合入 新加ʹ背ˡ狀態及日期後 褈初始化
-	 */
-	selfMergeEtFresh(){
+
+	/** 褈初始化。清ᵣ己ʹ狀態與權重等。 */
+	reInit(){
 		const z = this
-		z.innerWordMerge()
 		const word = z.word
 		z.__init__(word)
 		return z
 	}
+
+	clearStatus(){
+		const z = this
+		z._status = new Status()
+	}
 	
+	/**
+	 * 合入 新加ʹ背ˡ狀態及日期後 褈初始化
+	 */
+	// selfMergeEtFresh(){
+	// 	const z = this
+	// 	z.innerWordMerge()
+	// 	const word = z.word
+	// 	z.__init__(word)
+	// 	return z
+	// }
+	
+	/** 合入 新加ʹ背ˡ狀態及日期 */
 	selfMerge(){
 		const z = this
 		z.innerWordMerge()
@@ -137,3 +156,27 @@ export class SvcWord{
 
 }
 
+class ResortSvcWord{
+
+	protected constructor(){}
+
+	protected __init__(svcWord:SvcWord, index:int){
+		const z = this
+		z._svcWord = svcWord
+		z._index = index
+		return z
+	}
+
+	static new(svcWord:SvcWord, index:int){
+		const z = new this()
+		z.__init__(svcWord, index)
+		return z
+	}
+
+	protected _svcWord:SvcWord
+	get svcWord(){return this._svcWord}
+
+	protected _index:int
+	get index(){return this._index}
+
+}

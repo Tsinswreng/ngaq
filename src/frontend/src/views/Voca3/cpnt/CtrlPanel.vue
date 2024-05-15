@@ -53,7 +53,7 @@ function set_page(){
 		<button @click="ui.restart()">重開</button>
 		<button @click="ui.uiStuff.lockBg.value = !ui.uiStuff.lockBg.value">
 			{{ ui.uiStuff.lockBg.value==true?
-				'改景'
+				'變景'
 				:'定景'
 			}}
 		</button>

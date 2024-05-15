@@ -4,6 +4,7 @@ import { $ } from '@shared/Ut';
 import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
+import { WebSvcWord } from '@ts/voca3/entities/WebSvcWord';
 const loaded = ref(false)
 let ui:WebNgaqUi
 ;(async()=>{
@@ -13,19 +14,54 @@ let ui:WebNgaqUi
 // const props = defineProps<{
 // 	memorizeWord: SvcWord|undefined
 // }>()
+
+function eventsMark(ui:WebNgaqUi){
+	const sb = [] as str[]
+	function _(word:SvcWord){
+		for(let i = 0; i < word.date__event.length; i++){
+			const event = word.date__event[i].event
+			const ua = WebSvcWord.eventMark(event)
+			sb.push(ua)
+		}
+		return sb.join('')
+	}
+	if(ui.curWord!= void 0){
+		return _(ui.curWord)
+	}
+	return ''
+}
+
+function annotation(ui:WebNgaqUi){
+	const tar = ui.curWord?.word.annotation??''
+	if(tar.length > 0){
+		return JSON.stringify(tar)
+	}
+	return ''
+}
+
+function tags(ui:WebNgaqUi){
+	const tar = ui.curWord?.word.tag??''
+	if(tar.length > 0){
+		return JSON.stringify(tar)
+	}
+	return ''
+}
+
 </script>
 <template>
 	<div class="container" v-if="loaded"> <!-- 不用寫.vaule -->
 		<div class="wordInfo" v-if="ui.uiStuff.isShowWordInfo.value"> <!-- 要寫.value -->
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
-			<div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div>
-			<div class="w-eventSymbols"> wordB_nn.getEventSymbols() </div>
-			<div>MemorizeWord.style_getAddDates(wordB_nn)</div>
+			<!-- <div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div> -->
+			<div>{{ (ui.curWord?.word.table??'') + (ui.curWord?.word.id??'') }}</div>
+			<div class="w-eventSymbols"> {{ eventsMark(ui) }} </div>
+			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
 			<hr class="w-hr">
 			<div class="w-shape">{{ ui.curWord?.word.wordShape??'' }}</div>
 			<div>
-				<span>wordB_nn.fw.annotation.length===0?'':wordB_nn.fw.annotation</span>
-				<span>wordB_nn.fw.tag.length===0?'':wordB_nn.fw.tag</span>
+				<!-- <span>{{ ui.curWord?.word.annotation.length?'':ui.curWord?.word.annotation }}</span> -->
+				<span> {{ annotation(ui) }} </span>
+				<span>{{ tags(ui) }}</span>
 			</div>
 			<hr class="w-hr">
 			<div class="w-mean">{{ ui.curWord?.word.mean.join('\n')}}</div>

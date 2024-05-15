@@ -1,5 +1,5 @@
 
-#20240514132019032
+#20240515180958423
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2653,6 +2653,7 @@ use_preset_vocabulary: true
 氧	jaŋʔ	
 訊	siŋs	
 迅	sins	
+汛	sˁins	
 坳	ʔrˁiw	
 眑	ʔrˁiw	
 軪	ʔrˁiw	
@@ -22677,9 +22678,6 @@ use_preset_vocabulary: true
 灥	zun	
 卂	sins	
 卂	trots	
-汛	sˁins	
-汛	sins	
-汛	srˁes	
 𢓈	zuns	
 訓	huns	
 訙	sins	

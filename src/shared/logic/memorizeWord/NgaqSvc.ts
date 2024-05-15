@@ -159,10 +159,69 @@ export abstract class NgaqSvc{
 	}
 
 	/**
+	 * 合併 忘˪ʹ詞與憶˪ʹ詞
+	 * @returns 
+	 */
+	merge_LearnedWords__index(){
+		const z = this
+		return new Map<SvcWord, int>([
+			...z.rmbWord__index
+			,...z.fgtWord__index
+		])
+	}
+
+	/** 蔿SvcWord實例 賦index字段 */
+	indexWord(){
+		const z = this
+		for(let i = 0; i < z.wordsToLearn.length; i++){
+			z.wordsToLearn[i].index = i
+		}
+	}
+
+	/**
 	 * this._wordsToLearnˇ排序。算權重,篩選等皆由此。
 	 */
-	protected abstract _sort():Task<boolean>
-	abstract sort():Task<boolean>
+	protected async _sort(){
+		const z = this
+		z._wordsToLearn = await z._sortWords(z.wordsToLearn)
+	}
+
+	async sort(){
+		const z = this
+		await z._sort()
+		z.indexWord()
+		return true
+	}
+
+	/**
+	 * 用于初排序。返ᵣ排序後ʹ詞、不改ᵣ他ʹ數據。
+	 * @param svcWords 
+	 */
+	protected abstract _sortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+
+
+	protected abstract _resort():Task<bool>
+
+	/**
+	 * 背過一輪後 再排序
+	 * 只需重算 剛背過ʹ詞權重 及褈打亂
+	 * @param svcWords 
+	 */
+	//protected abstract _resortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+
+	/** 
+	 * 可據SvcWord對象之Status 判斷此詞是否在上一輪中背ʴ過
+	 */
+	async resort():Task<bool>{
+		const z = this
+		return z._resort()
+		// const learnedWord__index = z.merge_LearnedWords__index()
+		// const wordsToResort = [] as SvcWord[]
+		// for(const [sw, index] of learnedWord__index){
+		// 	wordsToResort.push(sw)
+		// }
+		// const resortedWords = await z._resortWords(wordsToResort)
+	}
 
 	/**
 	 * 始背單詞。
@@ -198,6 +257,7 @@ export abstract class NgaqSvc{
 		return true
 	}
 
+	/** @deprecated */
 	protected abstract _restart():Task<boolean>
 
 	/** 
@@ -209,9 +269,8 @@ export abstract class NgaqSvc{
 		if(!z.svcStatus.save){
 			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
 		}
-
-		z.clearLearnedWords()
 		await z.sort()
+		z.clearLearnedWordRecordEtItsStatus()
 		z.svcStatus.start = true
 		return true
 	}
@@ -291,22 +350,32 @@ export abstract class NgaqSvc{
 		const z = this
 		const learnedSvcWords = [] as SvcWord[]
 		for(const [word, index] of z.rmbWord__index){
-			z.wordsToLearn[index] = word.selfMergeEtFresh()
+			z.wordsToLearn[index] = word.selfMerge()
 			learnedSvcWords.push(z.wordsToLearn[index])
 		}
 		for(const [word, index] of z.fgtWord__index){
-			z.wordsToLearn[index] = word.selfMergeEtFresh()
+			z.wordsToLearn[index] = word.selfMerge()
 			learnedSvcWords.push(z.wordsToLearn[index])
 		}
 		return learnedSvcWords
 	}
 
-
-	clearLearnedWords(){
+	/**
+	 * 清ᵣ錄誧既學ʹ詞 及其中ʹ詞ʹ狀態
+	 */
+	clearLearnedWordRecordEtItsStatus(){
 		const z = this
+		const learnedWord__index = z.merge_LearnedWords__index()
+		for(const [word, index] of learnedWord__index){
+			word.clearStatus()
+		}
 		z._rmbWord__index.clear()
 		z._fgtWord__index.clear()
 	}
+
+	// freshLearnedWords(){
+
+	// }
 
 	learnByIndex(index:int, event:RMB_FGT){
 		const z = this
@@ -378,10 +447,11 @@ export abstract class NgaqSvc{
 		}
 	}
 
+	//
 	
 	discardChange(){
 		const z = this
-		z.clearLearnedWords()
+		z.clearLearnedWordRecordEtItsStatus()
 		z.svcStatus.save = true
 		z.svcStatus.start = false
 		return true
