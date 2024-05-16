@@ -3168,6 +3168,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 誓	dats
 #逝	dats
 逝	tats	# ts
+逝	lʰat	# ts
+誓	ŋat	# ts
+哲	kʰat	# ts
+誓	dats
 晢	tat
 浙	tat
 晣	tat
@@ -4461,7 +4465,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 搊	tsrˁoʔ
 
-舍	lʰas
+舍	lʰAs
 赦	lʰAks
 
 碑	pre

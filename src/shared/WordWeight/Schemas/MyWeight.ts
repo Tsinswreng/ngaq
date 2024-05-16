@@ -54,7 +54,7 @@ class DefaultOpt{
 	/** 加ˡ事件ᵗ權重 */
 	addWeight = 0xF
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 99999*1000*3600*24*90
+	debuffNumerator = 9999999999*1000*3600*24*90
 	base = 20
 }
 

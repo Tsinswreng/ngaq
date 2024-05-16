@@ -27,10 +27,10 @@ const config = configInst.config
 // emt3.emit<>('')
 
 /** 業務理則層 */
-export class FileVocaSvc extends NgaqSvc{
+export class FileNgaqSvc extends NgaqSvc{
 
 
-	readonly This = FileVocaSvc
+	readonly This = FileNgaqSvc
 	protected constructor(){
 		super()
 	}

@@ -7,7 +7,7 @@ import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 // import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
-import { FileVocaSvc as FileVocaSvc } from './logic/FileVocaSvc';
+import { FileNgaqSvc as FileNgaqSvc } from './logic/FileNgaqSvc';
 import { SvcWord } from '@shared/entities/Word/SvcWord';
 import { Exception, Reason } from '@shared/Exception';
 import chalk from 'chalk'
@@ -55,7 +55,7 @@ class UiErrReasons{
 
 
 /** 表示層 */
-export class FileVocaUi{
+export class FileNgaqUi{
 
 	protected constructor(){
 
@@ -71,7 +71,7 @@ export class FileVocaUi{
 
 	protected async __Init__(){
 		const z = this
-		z._svc = await FileVocaSvc.New()
+		z._svc = await FileNgaqSvc.New()
 		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
 			z.handleErr(error)
 		})
@@ -79,7 +79,7 @@ export class FileVocaUi{
 		return z
 	}
 
-	readonly This = FileVocaUi
+	readonly This = FileNgaqUi
 
 	protected _errReasons = new UiErrReasons()
 	get errReasons(){return this._errReasons}
@@ -135,12 +135,12 @@ export class FileVocaUi{
 	static get Cmd(){
 		class Cmd{
 			protected constructor(){}
-			static new(cli:FileVocaUi){
+			static new(cli:FileNgaqUi){
 				const o = new this()
 				o.ui = cli
 				return o
 			}
-			ui:FileVocaUi
+			ui:FileNgaqUi
 			echoConfig(){
 				const z = this.ui
 				z.exput(
@@ -179,12 +179,16 @@ export class FileVocaUi{
 			}
 			async putWordsToLearn(args:string[]){
 				const ui = this.ui
-				const cnt = FileVocaUi.argToIntAt(args, 1)??64
+				const svc = this.ui.svc
+				if(!svc.svcStatus.start){
+					throw Exception.for(svc.svcErrReasons.cant_learn_when_unstart)
+				}
+				const cnt = FileNgaqUi.argToIntAt(args, 1)??64
 				// const ansWords = [] as MemorizeWord[]
 				// for(let i = 0; i < cnt; i++){
 				// 	const w = z.svc.wordsToLearn[i]
 				// 	ansWords.push(w)
-				// }
+				// } 
 				// z.exput(
 				// 	JSON.stringify(ansWords)
 				// )
@@ -292,7 +296,7 @@ export class FileVocaUi{
 	protected _configInst = configInst
 	get configInst(){return this._configInst}
 
-	protected _svc: FileVocaSvc
+	protected _svc: FileNgaqSvc
 	get svc(){return this._svc}
 
 
@@ -394,7 +398,7 @@ export class FileVocaUi{
 
 async function main(){
 	console.log(process.argv)//t
-	const ui = await FileVocaUi.New()
+	const ui = await FileNgaqUi.New()
 	// 監視文件變化
 	//const testFile = `D:/_code/voca/out/test.txt`
 	let watcher: fs.FSWatcher
@@ -437,5 +441,5 @@ async function main(){
 	//cli.main_deprecated()
 }
 main()
-// esno "D:\_code\voca\src\backend\FileVocaUi.ts" "D:\Program Files\Rime\User_Data\voca\signal" "D:\Program Files\Rime\User_Data\voca\in" "D:\Program Files\Rime\User_Data\voca\out"
-//
+// esno "D:\_code\voca\src\backend\FileNgaqUi.ts" "D:\Program Files\Rime\User_Data\voca\signal" "D:\Program Files\Rime\User_Data\voca\in" "D:\Program Files\Rime\User_Data\voca\out"
+// 

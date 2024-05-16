@@ -1,5 +1,5 @@
 
-#20240515180958423
+#20240515224707960
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2467,6 +2467,10 @@ use_preset_vocabulary: true
 煽	lʰan	
 誓	dats	
 逝	tats	
+逝	lʰat	
+誓	ŋat	
+哲	kʰat	
+誓	dats	
 晢	tat	
 浙	tat	
 晣	tat	
@@ -3510,7 +3514,7 @@ use_preset_vocabulary: true
 騶	tsrˁo	
 陬	tsrˁo	
 搊	tsrˁoʔ	
-舍	lʰas	
+舍	lʰAs	
 赦	lʰAks	
 碑	pre	
 橢	lʰˁɔjʔ	
