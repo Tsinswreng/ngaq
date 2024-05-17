@@ -223,7 +223,7 @@ export class FileNgaqSvc extends NgaqSvc{
 		const z = this
 		const ans = mword.setInitEvent(event)
 		if(ans){
-			z.emitter.emit(z.svcEvents.learnBySvcWord, mword, event)
+			z.emitter.emit(z.events.learnBySvcWord, mword, event)
 		}
 		return Promise.resolve(ans)
 	}

@@ -71,7 +71,7 @@ const Pro = Promise
 	<div v-for="(w,i) in ui.wordsToLearn.slice(0,64)" :key="ui.uiStuff.isShowCardBox.value+''">
 		<component
 			:is="WordCard"
-			:memorizeWord="w"
+			:svcWord="w"
 			:loopIndex="i"
 		>
 		</component>

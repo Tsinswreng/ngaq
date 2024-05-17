@@ -65,7 +65,7 @@ const withTryCatchProxy = (target: WebNgaqUi) => {
 						}
 						return ans
 					} catch (error) {
-//						console.error(`Error in method ${String(prop)}:`, error);
+						//console.error(`Error in method ${String(prop)}:`, error);
 						target.handleErr(error)
 					}
 				};
@@ -348,10 +348,10 @@ export class WebNgaqUi{
 			z.svc.emitErr(err)
 		}
 		try {
-			z.svc.emitter.on(z.svc.svcEvents.error, (e)=>{
+			z.svc.emitter.on(z.svc.events.error, (e)=>{
 				console.error(e)
 			})
-			z.svc.emitter.on(z.svc.svcEvents.learnBySvcWord, async(svcWord)=>{
+			z.svc.emitter.on(z.svc.events.learnBySvcWord, async(svcWord)=>{
 				await z.nextBg().catch(e=>{
 					hanErr(e)
 				})
@@ -361,6 +361,11 @@ export class WebNgaqUi{
 		} catch (e) {
 			hanErr(e)
 		}
+	}
+
+	discardChange(){
+		const z = this
+		z.svc.discardChangeEtEnd()
 	}
 
 	// async d(){

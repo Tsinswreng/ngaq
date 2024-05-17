@@ -17,16 +17,16 @@ onBeforeMount( async() => {
 
 // 定义 props，此处需要和父组件传递的 prop 名字一致
 const props = defineProps<{
-	memorizeWord: WebSvcWord;
+	svcWord: WebSvcWord;
 	loopIndex: int
 }>();
-const mw = props.memorizeWord
+const mw = props.svcWord
 const wordIndex = props.loopIndex
 // const emits = defineEmits([/* 自定义事件名称列表 */]);
 const emits = defineEmits(['WordCardClick']);
 
 function returnWordToParent(){
-	const wordToSend = props.memorizeWord
+	const wordToSend = props.svcWord
 	emits('WordCardClick', wordToSend);
 	//reciteStatus.value = 'rmb'
 };
@@ -112,6 +112,34 @@ const isAddTimeGeq3 = (wb:WebSvcWord)=>{
 	return wb.word.times_add >= 3
 }
 
+class WordColor{
+	gray = ref('gray')
+	white = ref('white')
+	green = ref('green')
+	blue = ref('blue')
+	red = ref('red')
+	get(svcWord:SvcWord){
+		const z = this
+		const c = svcWord.word.times_add
+		//return ref('testDefault')
+		if(c<= 1){
+			return z.gray
+		}
+		else if(c===2){
+			return z.white
+		}else if(c===3){
+			return z.green
+		}else if(c===4){
+			return z.blue
+		}else if(c >= 5){
+			return z.red
+		}
+		return z.white
+	}
+
+}
+const wordColorRef = new WordColor()
+
 function fmtDate(tempus:Tempus){
 	return Tempus.format(tempus, 'YY.MM.DD')
 }
@@ -119,7 +147,10 @@ function fmtDate(tempus:Tempus){
 </script>
 
 <template>
-	<div v-if="loaded" class="word-card-container" :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0">
+	<div
+		v-if="loaded" class="word-card-container"
+		:class = wordColorRef.get(svcWord).value
+	> <!-- :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0" -->
 
 		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)">{{ props.loopIndex }}</span>
 		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="rightClick">
@@ -150,7 +181,50 @@ function fmtDate(tempus:Tempus){
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+
+:root{
+	--blue: rgb(0, 255, 255);
+	--gray: rgb(128, 128, 128);
+	--white: rgb(255, 255, 255);
+	--green: rgb(0, 255, 128);
+	--yellow: rgb(255, 255, 0);
+	--red: rgb(255, 0, 0);
+}
+
+.testDefault{
+	color: blue;
+}
+
+.gray .w-shape{
+	/* color: var(--gray); */
+	color: rgb(180, 180, 180)
+}
+
+.white .w-shape{
+	/* color: var(--white); */
+	color: rgb(255, 255, 255);
+}
+
+.green .w-shape{
+	/* color: var(--green); */
+	color: rgb(0, 255, 128);
+}
+
+.blue .w-shape{
+	/* color: var(--blue); */
+	color: rgb(0, 255, 255);
+}
+
+.yellow .w-shape{
+	/* color: var(--yellow); */
+	color:  rgb(255, 255, 0);
+}
+
+.red .w-shape{
+	/* color: var(--red); */
+	color: rgb(255, 0, 0);
+}
 
 span{
 	outline: solid 1px rgb(76, 76, 76);  box-sizing: border-box;

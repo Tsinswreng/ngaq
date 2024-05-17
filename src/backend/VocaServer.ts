@@ -437,7 +437,21 @@ export default class VocaServer{
 				blob:bin
 				,text:path
 			})
+		})
+
+		C.app.get('/randomImg3', async(req,res)=>{
+			if(!ri){return}
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			//res.sendFile(ri.oneRandomFile())
+			const path = ri.oneRandomFile()
+			const bin = fs.readFileSync(path)
+			res.send({
+				blob:bin
+				,text:path
+			})
 			console.log(bin)
+			
 		})
 
 		/** test */

@@ -72,7 +72,7 @@ export class FileNgaqUi{
 	protected async __Init__(){
 		const z = this
 		z._svc = await FileNgaqSvc.New()
-		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
+		z.svc.emitter.on(z.svc.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		z._initListeners()
@@ -125,7 +125,7 @@ export class FileNgaqUi{
 
 	protected _initListeners(){
 		const z = this
-		const ev = z.svc.svcEvents
+		const ev = z.svc.events
 		z.svc.emitter.on(ev.save, (sws:SvcWord[])=>{
 			console.log(sws.map(e=>e.word.wordShape)) //t
 		})
@@ -180,8 +180,8 @@ export class FileNgaqUi{
 			async putWordsToLearn(args:string[]){
 				const ui = this.ui
 				const svc = this.ui.svc
-				if(!svc.svcStatus.start){
-					throw Exception.for(svc.svcErrReasons.cant_learn_when_unstart)
+				if(!svc.status.start){
+					throw Exception.for(svc.errReasons.cant_learn_when_unstart)
 				}
 				const cnt = FileNgaqUi.argToIntAt(args, 1)??64
 				// const ansWords = [] as MemorizeWord[]
@@ -230,10 +230,9 @@ export class FileNgaqUi{
 
 			discardChange(){
 				const z = this.ui
-				return z.svc.discardChange()
+				const ans = z.svc.discardChangeEtEnd()
+				z.exput(ans+'')
 			}
-
-
 			// async learnByIndex(args:string[]){
 			// 	const z = this.ui
 			// 	const index = z.This.argToIntAt(args, 1)
@@ -356,7 +355,7 @@ export class FileNgaqUi{
 		console.log(process.argv)
 		let rl = createInterface()
 		const question = question_fn(rl, '')
-		z.svc.emitter.on(z.svc.svcEvents.error, (error)=>{
+		z.svc.emitter.on(z.svc.events.error, (error)=>{
 			z.handleErr(error)
 		})
 		for(let i = 0; ; i++){

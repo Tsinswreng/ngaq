@@ -144,7 +144,7 @@ export class WebNgaqSvc extends NgaqSvc{
 	// protected async _sort(): Promise<boolean> {
 	// 	return true
 	// }
-	
+
 	protected async _start(): Promise<boolean> {
 		return true
 	}
@@ -158,6 +158,7 @@ export class WebNgaqSvc extends NgaqSvc{
 		const z = this
 		const resp = await z.getImg()
 		const json = await resp.json()
+		console.log(json['text'])//t
 		const buffer = json['blob']
 		//console.log(buffer)//t
 		const arr:int[] = buffer.data

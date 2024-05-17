@@ -91,14 +91,14 @@ export abstract class NgaqSvc{
 	protected abstract _emitter:Le.LinkedEmitter
 	get emitter(){return this._emitter}
 
-	protected _svcEvents = new SvcEvents()
-	get svcEvents(){return this._svcEvents}
+	protected _events = new SvcEvents()
+	get events(){return this._events}
 
-	protected _svcStatus = new SvcStatus()
-	get svcStatus(){return this._svcStatus}
+	protected _status = new SvcStatus()
+	get status(){return this._status}
 
-	protected _svcErrReasons = new SvcErrReason()
-	get svcErrReasons(){return this._svcErrReasons}
+	protected _errReasons = new SvcErrReason()
+	get errReasons(){return this._errReasons}
 
 	protected _wordsToLearn:SvcWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
@@ -133,7 +133,7 @@ export abstract class NgaqSvc{
 
 	emitErr(err:Error|any){
 		const z = this
-		z.emitter.emit(z.svcEvents.error, err)
+		z.emitter.emit(z.events.error, err)
 	}
 
 	/**
@@ -144,17 +144,17 @@ export abstract class NgaqSvc{
 
 	async load(){
 		const z = this
-		if(z.svcStatus.start){
-			throw Exception.for(z.svcErrReasons.cant_load_after_start)
+		if(z.status.start){
+			throw Exception.for(z.errReasons.cant_load_after_start)
 		}
 		try {
 			await z._load()
 		} catch (error) {
 			const err = error as Error
-			throw Exception.for(z.svcErrReasons.load_err, err)
+			throw Exception.for(z.errReasons.load_err, err)
 		}
 
-		z.svcStatus.load = true
+		z.status.load = true
 		return true
 	}
 
@@ -231,14 +231,14 @@ export abstract class NgaqSvc{
 
 	start(){
 		const z = this
-		if(!z.svcStatus.load){
-			throw Exception.for(z.svcErrReasons.didnt_load)
+		if(!z.status.load){
+			throw Exception.for(z.errReasons.didnt_load)
 		}
-		if(!z.svcStatus.save){
-			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
+		if(!z.status.save){
+			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
-		z.svcStatus.start = true
-		z.emitter.emit(z.svcEvents.start)
+		z.status.start = true
+		z.emitter.emit(z.events.start)
 		return Promise.resolve(true)
 	}
 
@@ -246,14 +246,14 @@ export abstract class NgaqSvc{
 
 	async save(){
 		const z = this
-		z._svcStatus.start = false
+		z._status.start = false
 		const svcWords = z.mergeLearnedWords()
 		//VocaSvc.mergeSvcWords(svcWords)
 		const words = svcWords.map(e=>e.word)
 		//const ans = await z.dbSrc.saveWords(words)
 		const ans = await z._save(words)
-		z.emitter.emit(z.svcEvents.save, svcWords)
-		z._svcStatus.save = true
+		z.emitter.emit(z.events.save, svcWords)
+		z._status.save = true
 		return true
 	}
 
@@ -266,12 +266,12 @@ export abstract class NgaqSvc{
 	 */
 	async restart(){
 		const z = this
-		if(!z.svcStatus.save){
-			throw Exception.for(z.svcErrReasons.cant_start_when_unsave)
+		if(!z.status.save){
+			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
 		await z.sort()
 		z.clearLearnedWordRecordEtItsStatus()
-		z.svcStatus.start = true
+		z.status.start = true
 		return true
 	}
 
@@ -280,10 +280,10 @@ export abstract class NgaqSvc{
 	 */
 	startedOp(){
 		const z = this
-		if(!z._svcStatus.start){
-			throw Exception.for(z.svcErrReasons.cant_learn_when_unstart)
+		if(!z._status.start){
+			throw Exception.for(z.errReasons.cant_learn_when_unstart)
 		}
-		z.svcStatus.save = false
+		z.status.save = false
 		return true
 	}
 
@@ -292,7 +292,7 @@ export abstract class NgaqSvc{
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.RMB)
 		if(ans){
-			z.emitter.emit(z.svcEvents.learnBySvcWord, mw, WordEvent.RMB)
+			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.RMB)
 		}
 		return ans
 	}
@@ -302,8 +302,8 @@ export abstract class NgaqSvc{
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.FGT)
 		if(ans){
-			z.emitter.emit(z.svcEvents.learnBySvcWord, mw, WordEvent.FGT)
-		}
+			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.FGT)
+		} 
 		return ans
 	}
 
@@ -316,7 +316,7 @@ export abstract class NgaqSvc{
 		}else if(old === WordEvent.FGT){
 			z.fgtWord__index.delete(mw)
 		}
-		z.emitter.emit(z.svcEvents.undo, mw, old)
+		z.emitter.emit(z.events.undo, mw, old)
 	}
 
 	/** 
@@ -447,14 +447,23 @@ export abstract class NgaqSvc{
 		}
 	}
 
-	//
-	
-	discardChange(){
+	/**
+	 * 捨變、清既學ʹ詞、褈置狀態、不存ʃ變
+	 * @returns 
+	 */
+	discardChangeEtEnd(){
 		const z = this
 		z.clearLearnedWordRecordEtItsStatus()
-		z.svcStatus.save = true
-		z.svcStatus.start = false
+		z.resetStatus()
 		return true
+	}
+
+	/**
+	 * 褈置狀態
+	 */
+	resetStatus(){
+		const z = this
+		z._status = new SvcStatus()
 	}
 
 }
