@@ -5,6 +5,7 @@ import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/voca3/entities/WebSvcWord';
+import Tempus from '@shared/Tempus';
 const loaded = ref(false)
 let ui:WebNgaqUi
 ;(async()=>{
@@ -47,6 +48,16 @@ function tags(ui:WebNgaqUi){
 	return ''
 }
 
+function addDates(ui:WebNgaqUi){
+	function _(svcWord:SvcWord){
+		const dates = svcWord.word.dates_add
+		return dates.map(e=>Tempus.format(e, 'YY.MM.DD')).join('|')
+	}
+	if(ui.curWord == void 0){
+		return ''
+	}
+	return _(ui.curWord)
+}
 </script>
 <template>
 	<div class="container" v-if="loaded"> <!-- 不用寫.vaule -->
@@ -56,6 +67,7 @@ function tags(ui:WebNgaqUi){
 			<div>{{ (ui.curWord?.word.table??'') + (ui.curWord?.word.id??'') }}</div>
 			<div class="w-eventSymbols"> {{ eventsMark(ui) }} </div>
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
+			<div>{{ addDates(ui) }}</div>
 			<hr class="w-hr">
 			<div class="w-shape">{{ ui.curWord?.word.wordShape??'' }}</div>
 			<div>
