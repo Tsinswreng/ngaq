@@ -11,8 +11,10 @@ import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 
 export class WebNgaqSvc extends NgaqSvc{
+
 
 	readonly This = WebNgaqSvc
 	protected constructor(){
@@ -78,7 +80,10 @@ export class WebNgaqSvc extends NgaqSvc{
 	}
 
 
-	protected async _initWeightAlgo(){
+	/**
+	 * @deprecated
+	 */
+	protected async _initWeightAlgo_deprecated(){
 		const z = this
 		const algoCode = await z.client.getWeightAlgoJs0()
 		try {
@@ -89,6 +94,19 @@ export class WebNgaqSvc extends NgaqSvc{
 			throw err
 		}
 	}
+
+	protected async _loadWeightAlgo(): Promise<I_WordWeight> {
+		const z = this
+		const algoCode = await z.client.getWeightAlgoJs0()
+		try {
+			const ans = WeightCodeParser.parse(algoCode)
+			return $(ans)()
+		} catch (error) {
+			const err = error as Error
+			throw err
+		}
+	}
+
 
 	//TODO
 	// async sort(): Promise<boolean> {
@@ -108,9 +126,11 @@ export class WebNgaqSvc extends NgaqSvc{
 	// 	return false
 	// }
 
+
 	protected async _sortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
-		await z._initWeightAlgo()
+		//await z._initWeightAlgo_deprecated()
+		await z.initWeightAlgo()
 		if(z.weightAlgo == void 0){
 			throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
 		}

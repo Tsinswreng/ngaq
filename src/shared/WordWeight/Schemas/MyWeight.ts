@@ -52,9 +52,10 @@ class DefaultOpt{
 		return o
 	}
 	/** 加ˡ事件ᵗ權重 */
-	addWeight = 0xF
+	addWeightDefault = 0xfff
+	addWeight = [0xf, 0xf, 0xff, 0x7f0]
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 99999*1000*3600*24*90
+	debuffNumerator = 999999*1000*3600*24*90
 	base = 20
 }
 
@@ -205,14 +206,15 @@ class WordWeight extends Base implements I_WordWeight{
 				const st = z._statistics
 				st.cnt_add++ //加ˡ事件ᵗ計數ˇ加一
 				st.cnt_validRmb = 0 //有效ᵗ憶ˡ事件ˋ逢加事件則置0
+				const addWeight = z.This.defaultOpt.addWeight[st.curPos]??z.This.defaultOpt.addWeightDefault
 				st.weight = s.m(
-					st.weight, z.This.defaultOpt.addWeight
+					st.weight, addWeight
 				) // *= 默認加ˡ權重
 				//錄ᵣ此輪迭代ʸ權重ᵗ變
 				const rec = ChangeRecord.new1(
 					z._cur_tempus__event
 					, st.weight
-					, z._ww.paramOpt.addWeight
+					, addWeight
 				)
 				// if(z._mw.word.wordShape === 'disguise'){
 				// 	console.log(rec)//t+

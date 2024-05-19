@@ -514,6 +514,7 @@ export default class VocaServer{
 				code = first.code
 			}
 			const jsCode = WeightCodeProcessor.process(code)
+			console.log(jsCode.length)//t
 			res.send(jsCode)
 		})
 

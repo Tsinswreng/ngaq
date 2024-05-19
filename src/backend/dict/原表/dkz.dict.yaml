@@ -1,5 +1,5 @@
 
-#20240516194556416
+#20240519164025582
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -260,6 +260,10 @@ use_preset_vocabulary: true
 魅	mrəts	
 調	dˁiws	
 蜩	dˁiw	
+配	pʰˁəjs	
+妃	pʰˁəjs	
+妃	pʰəjs	
+嶏	pʰˁəjs	
 鷖	ʔˁi	
 翳	ʔˁi	
 𧫦	ʔˁi	
@@ -619,6 +623,20 @@ use_preset_vocabulary: true
 滌	lˁiwk	
 蓧	lˁiwk	
 跳	lˁew	
+佻	lˁew	
+佻	lʰˁew	
+朓	lʰˁew	
+銚	lʰˁew	
+趒	lˁew	
+趒	lʰˁew	
+趒	lʰˁews	
+眺	lʰˁews	
+頫	lʰˁews	
+覜	lʰˁews	
+朓	lʰˁewʔ	
+窱	lʰˁiws	
+窱	lʰˁiwʔ	
+䠷	lʰˁewʔ	
 窕	lˁewʔ	
 誂	lˁewʔ	
 調	dˁiw	
@@ -8254,8 +8272,6 @@ use_preset_vocabulary: true
 䲱	pʰʷaŋʔ	
 鶭	pʰʷaŋʔ	
 𨾔	pʷaŋs	
-妃	pʰˁəs	5%
-妃	pʰʷəj	
 非	pʷəj	
 婓	pʰʷəj	
 婔	wʷəj	
@@ -16243,15 +16259,12 @@ use_preset_vocabulary: true
 𥄔	pʰˁats	
 昢	pʰˁut	
 珮	bˁəs	
-配	pʰˁəs	
 旆	bˁats	
 浿	pʰˁats	
 浿	pʰrˁəs	
 淠	pʰrəjs	
 㾦	pʰˁə	
 霈	pʰˁats	
-嶏	pʰˁəs	
-嶏	pʰət	
 盆	bˁən	
 葐	bˁən	
 葐	bən	
@@ -20150,9 +20163,6 @@ use_preset_vocabulary: true
 睼	tʰˁens	
 舚	tʰˁem	
 舚	tʰˁems	
-佻	dˁew	
-佻	tˁewʔ	
-佻	tʰˁew	
 庣	tʰˁew	
 恌	lew	
 恌	tʰˁew	
@@ -20184,28 +20194,15 @@ use_preset_vocabulary: true
 䱔	lu	
 齠	dˁew	
 鰷	dˁew	
-䠷	tʰˁewʔ	
-窱	tʰˁews	
-窱	tʰˁewʔ	
 嬥	dˁew	
 嬥	dˁews	
 嬥	dˁewʔ	
 嬥	drˁok	
-朓	tʰˁew	
-朓	tʰˁewʔ	
-朓	tʰraws	
 脁	tʰˁew	
 脁	tʰraws	
-眺	tʰˁews	
 粜	tʰˁews	
 絩	tʰˁews	
-趒	dˁew	
-趒	tʰˁew	
-趒	tʰˁews	
-覜	tʰˁews	
 𥺋	tʰˁews	
-頫	paʔ	
-頫	tʰˁews	
 糶	tʰˁews	
 帖	tʰˁep	
 怗	tʰˁep	
@@ -23198,9 +23195,6 @@ use_preset_vocabulary: true
 媱	lew	
 瑶	lew	
 榣	lew	
-銚	dˁews	
-銚	lew	
-銚	tʰˁew	
 𣣳	lew	
 餆	lew	
 嶢	ŋˁew	

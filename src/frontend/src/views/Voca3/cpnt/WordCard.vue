@@ -156,7 +156,7 @@ function fmtDate(tempus:Tempus){
 		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="rightClick">
 			{{ mw.word.wordShape }}
 		</span>
-		
+		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
@@ -168,7 +168,6 @@ function fmtDate(tempus:Tempus){
 		<span class="w-lastRvwDate">{{ fmtDate(mw.date__event[mw.date__event.length-1].tempus) }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<!-- <span class="w-eventsSymbols">{{  }}</span> -->
-		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		
 		<!-- <span>{{ reciteStatusRef }}</span> -->
 

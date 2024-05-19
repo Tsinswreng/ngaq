@@ -29,7 +29,6 @@ const config = configInst.config
 /** 業務理則層 */
 export class FileNgaqSvc extends NgaqSvc{
 
-
 	readonly This = FileNgaqSvc
 	protected constructor(){
 		super()
@@ -69,12 +68,7 @@ export class FileNgaqSvc extends NgaqSvc{
 	get weightCodeParser(){return this._weightCodeParser}
 
 
-
-	/**
-	 * 試、只取配置中首個權重算法方案
-	 * //TODO 移到ui類
-	 */
-	initWeightAlgo(){
+	protected async _loadWeightAlgo(): Promise<I_WordWeight> {
 		const z = this
 		const first = z._configInst.config.wordWeight.schemas[0]
 		let code:string
@@ -102,6 +96,15 @@ export class FileNgaqSvc extends NgaqSvc{
 		}
 		
 	}
+
+
+
+	/**
+	 * 試、只取配置中首個權重算法方案
+	 */
+	// initWeightAlgo(){
+		
+	// }
 
 
 

@@ -108,7 +108,19 @@ async function main() {
     console.log(obj instanceof SubClass); // 输出 true
 }
 
-import { readTsConfig } from '@shared/Ut'
 //main();
 
 
+class Cl{
+	name = 'name'
+	age = 0
+	konstructor(name:string, age:number){
+		const z = this
+		z.name = name
+		z.age = age
+	}
+}
+
+const obj = new Cl.prototype.konstructor('namae', 20) //TypeError: Cl.prototype.konstructor is not a constructor
+console.log(obj)
+console.log(obj instanceof Cl)

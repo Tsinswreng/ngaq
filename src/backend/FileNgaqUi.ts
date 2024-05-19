@@ -163,6 +163,7 @@ export class FileNgaqUi{
 			}
 			async load(){
 				const z = this.ui
+				z.exput('load') // 覆蓋寫文件、防 上次異常退出後out文件中猶有舊詞
 				const es = await z.svc.load()
 				return es
 			}
@@ -220,6 +221,7 @@ export class FileNgaqUi{
 			}
 			async start(args:string[]){
 				const z = this.ui
+				z.exput('start')
 				const bol = await z.svc.start()
 				if(!bol){
 					z.exput('start failed')
@@ -280,10 +282,16 @@ export class FileNgaqUi{
 			}
 			async restart(...args:string[]){
 				const z = this.ui
+				z.exput('restart')
 				const es = await z.svc.restart()
 				z.exput(es+'')
 				return this.putWordsToLearn(args)
 			}
+			reloadWeightAlgo(){
+				const z = this.ui
+				return z.svc.reloadWeightAlgo()
+			}
+			
 
 		}
 		return Cmd

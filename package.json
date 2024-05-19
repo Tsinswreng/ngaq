@@ -93,12 +93,10 @@
     "buildB": "tsc -p .",
     "srvmon": "nodemon ./app.js",
     "srv": "esno ./app.js",
-    "addWords": "node ./out/backend/BackupTable.js",
     "bundle": "npx webpack",
     "exe": "pkg bundle/bundle.js --target node18-win-x64",
     "buildAll": "npm run build && npm run out && npm run bundle && npm run exe",
-    "dks": "esno .\\src\\backend\\dict\\dks.ts",
-    "updateFrontendShared": "ts-node ./src\\backend\\script\\update_shared.ts"
+    "dks": "esno .\\src\\backend\\dict\\dks.ts"
   },
   "bin": "bundle/bundle.js",
   "paths": {

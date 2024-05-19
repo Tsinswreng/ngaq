@@ -232,6 +232,11 @@ export class WebNgaqUi{
 		return [z.svc.rmbWord__index, z.svc.fgtWord__index]
 	}
 
+	reloadAlgoWeight(){
+		const z = this
+		return z.svc.reloadWeightAlgo()
+	}
+
 	undoByWord(mw:WebSvcWord){
 		const z = this
 		const ans = mw.undo()
@@ -355,6 +360,10 @@ export class WebNgaqUi{
 				await z.nextBg().catch(e=>{
 					hanErr(e)
 				})
+			})
+			z.svc.emitter.on(z.svc.events.load_weight_err, (err)=>{
+				alert('load_weight_err')
+				console.error(err)
 			})
 
 			

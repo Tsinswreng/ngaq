@@ -42,14 +42,21 @@ export class SvcEvents extends Le.Events{
 	 * SvcWord[] 保存ʹ諸詞
 	 */
 	save = EV<[SvcWord[]]>('save')
+
+	/**
+	 * _loadWeightAlgo拋錯旹則觸此事件、然後隱ᵈ用默認權重洏不強ᵈ退ᵣ流程
+	 */
+	load_weight_err = EV<[Error]>('load_weight_err')
 }
 
+const RN = Reason.new.bind(Reason)
 export class SvcErrReason{
 	static new(){
 		const o = new this()
 		return o
 	}
 	load_err = Reason.new<[Error]>(`load_err`)
+	load_weight_err = RN<[Error]>('load_weight_err')
 	didnt_load = Reason.new('didnt_load')
 	didnt_sort = Reason.new('didnt_sort')
 	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
@@ -66,7 +73,8 @@ export interface I_MemorizeLogic{
 
 export class SvcStatus{
 
-	load = false 
+	load = false
+	loadWeightAlgo = false
 	sort = false
 	start = false
 	save = true
@@ -176,6 +184,47 @@ export abstract class NgaqSvc{
 		for(let i = 0; i < z.wordsToLearn.length; i++){
 			z.wordsToLearn[i].index = i
 		}
+	}
+
+	protected abstract _loadWeightAlgo():Task<I_WordWeight>
+
+
+	/**
+	 * 初加載權重算法
+	 * 若既加載、再呼此則不理
+	 */
+	async initWeightAlgo(){
+		const z = this
+		// 確保只用于初加載
+		if(z.status.loadWeightAlgo === true){
+			return false
+		}
+		try {
+			z._weightAlgo = await z._loadWeightAlgo()
+
+			return true
+		} catch (error) {
+			//throw Exception.for(z.errReasons.load_weight_err, error)
+			//z.emitErr(z.errReasons.load_weight_err)
+			z.emitter.emit(z.events.load_weight_err, error)
+			return false
+		}finally{
+			//TODO 加載默認權重算法
+			z.status.loadWeightAlgo = true
+		}
+		return false
+	}
+
+	/**
+	 * reload後立即褈開、新權重算法未必生效
+	 * 緣權重算法中 可能有: 褈開再算旹詞芝權重不潙空且未背過者ʰ不復褈算權重
+	 * 可試discardChange 與load併用
+	 */
+	async reloadWeightAlgo(){
+		const z = this
+		z.status.loadWeightAlgo = false
+		const ans = await z.initWeightAlgo()
+		return ans
 	}
 
 	/**
