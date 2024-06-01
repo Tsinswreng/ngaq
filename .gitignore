@@ -21,3 +21,5 @@ src/backend/debug/
 bundle/
 *.exe
 crawler/
+*.wasm
+src/c/*

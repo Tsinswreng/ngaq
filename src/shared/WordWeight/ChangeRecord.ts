@@ -50,6 +50,8 @@ export class ChangeRecord{
 	// 	return o
 	// }
 
+
+	annotation:str = ''
 	/** 變後ᵗ權重 */
 	after:N2S
 	/** 彼 單詞事件ˋ發旹ᵗ時刻 */

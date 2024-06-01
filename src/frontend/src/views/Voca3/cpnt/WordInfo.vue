@@ -113,4 +113,4 @@ function addDates(ui:WebNgaqUi){
 	white-space: wrap;
 	font-size: 12px;
 }
-</style>@shared/entities/Word/SvcWord../WebNgaqUi../WebNgaqUi
+</style>

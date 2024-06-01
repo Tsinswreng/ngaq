@@ -42,6 +42,16 @@ type Base = _ENV.BaseWeight
 //___________________________________________________
 
 
+class InMills{
+	readonly SEC = 1000
+	readonly MIN = 1000*60
+	readonly HOUR = this.MIN * 60
+	readonly DAY = this.HOUR * 24
+	readonly WEEK = this.DAY * 7
+}
+const inMills = new InMills()
+
+
 
 /**
  * 默認權參數等
@@ -53,9 +63,9 @@ class DefaultOpt{
 	}
 	/** 加ˡ事件ᵗ權重 */
 	addWeightDefault = 0xfff
-	addWeight = [0xf, 0xf, 0xff, 0x7f0]
+	addWeight = [0x1, 0xff, 0x7f0, 0xff0]
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 999999*1000*3600*24*90
+	debuffNumerator = 599999*1000*3600*24*90
 	base = 20
 }
 
@@ -179,6 +189,7 @@ class WordWeight extends Base implements I_WordWeight{
 					z._cur_tempus__event = t_e
 					z.handleOne()
 				}
+				z.extraHandleFinalEvent()
 				return z._statistics
 			}
 
@@ -247,6 +258,8 @@ class WordWeight extends Base implements I_WordWeight{
 				// if(z._mw.word.wordShape === 'disguise'){ //t
 				// 	console.log(st.curPos, st.finalAddEventPos, last(z._mw.date__event).event)
 				// }
+
+				// 算 debuff
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
 					//console.log(1)//t
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._cur_tempus__event.tempus)
@@ -270,7 +283,6 @@ class WordWeight extends Base implements I_WordWeight{
 					rec.dateWeight = weight_
 					rec.debuff = debuff
 					rec.after = st.weight
-
 				}
 				z.addRecord(rec)
 				return st
@@ -294,6 +306,26 @@ class WordWeight extends Base implements I_WordWeight{
 				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
 				z.addRecord(rec)
 				return st
+			}
+
+			protected extraHandleFinalEvent(){
+				const z = this
+				const curEv = z._cur_tempus__event.event
+				const thatTime = z._cur_tempus__event.tempus
+				const nunc = _ENV.Tempus.new()
+				const diffMills = Tempus.diff_mills(nunc, thatTime)
+				if(curEv === WordEvent.ADD){
+					const bonus = z._ww.calcLastAddBonus(diffMills)
+					z._statistics.weight = s.m(
+						z._statistics.weight, bonus
+					)
+					const rec = ChangeRecord.new1(
+						z._cur_tempus__event
+						, z._statistics.weight
+					)
+					rec.annotation = 'extraHandleFinalEvent'
+					z.addRecord(rec)
+				}
 			}
 		}
 		return Handle3Events
@@ -400,6 +432,7 @@ class WordWeight extends Base implements I_WordWeight{
 	}
 
 	filter(words:SvcWord[]){
+		return words
 		const z = this
 		const ans = [] as SvcWord[]
 		for(const w of words){
@@ -455,6 +488,11 @@ class WordWeight extends Base implements I_WordWeight{
 		return ans
 	}
 
+	//TODO
+	extraHandleFinalEvent(){
+
+	}
+
 	/**
 	 * 算 事件ᵗ權重
 	 * @param lastEventTempus 上個事件
@@ -495,6 +533,21 @@ class WordWeight extends Base implements I_WordWeight{
 		).add(1)  .mul(weight)
 		debuff = sros.absolute(debuff)
 		return $n(debuff)
+	}
+
+	/**
+	 * 末ʹ事件潙加旹 算加成
+	 * 其日期距今ʹ期 越短 則加成越大、即他ʹ況ˋ同旹、ʃ被加ʹ期更近 之詞ˋ更優先
+	 */
+	calcLastAddBonus(mills:num){
+		let ans = s.d(
+			s.m( inMills.DAY,30 )
+			,mills
+		)
+		if( s.c(ans,1)<0 ){
+			ans = s.n(1)
+		}
+		return ans
 	}
 }
 
