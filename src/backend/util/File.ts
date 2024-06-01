@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as ReadLine from 'readline'
 
+type ReadStreamOpt = Parameters<typeof fs.createReadStream>[1]
 
 export class FileReadLine{
 
@@ -14,10 +15,11 @@ export class FileReadLine{
 			input: z.fileStream
 			//,crlfDelay: Infitiny // 无需转换换行符
 		})
+		z._iter = this.rlInterface[Symbol.asyncIterator]()
 		return z
 	}
 
-	static new(path:str, opt?:BufferEncoding | undefined){
+	static new(path:str, opt?:ReadStreamOpt){
 		const z = new this()
 		z.__init__(path, opt)
 		return z
@@ -32,17 +34,47 @@ export class FileReadLine{
 	protected _rlInterface:ReadLine.Interface
 	get rlInterface(){return this._rlInterface}
 
-	protected _pos:int = -1
-	get pos(){return this._pos}
+	protected _nextPos:int = 0
+	get pos(){return this._nextPos}
 
-	async next(){
+	protected _findEnd = false
+	get findEnd(){return this._findEnd}
+
+	protected _iter:AsyncIterableIterator<string>
+	get iter(){return this._iter}
+
+	// async next(){
+	// 	const z = this
+	// 	z._pos ++
+	// 	return new Promise<str>((res,rej)=>{
+	// 		z.rlInterface.on('line', (line)=>{
+	// 			res(line)
+	// 			return
+	// 		})
+	// 	})
+	// }
+
+
+	async read(num:int):Promise<str[]>{
 		const z = this
-		z._pos ++
-		return new Promise<str>((res,rej)=>{
-			z.rlInterface.once('line', (line)=>{
-				res(line)
-			})
-		})
+		const ans = [] as any[]
+		for(let i = 0; i < num; i++){
+			//const line = await (await z.rlInterface[Symbol.asyncIterator]().next()).value 每次執行都會褈複添加監聽器
+			const result = (await z.iter.next())
+			const line:str = result.value
+			if(line != void 0){
+				z._nextPos++
+				ans.push(line)
+			}else{
+				z._findEnd = true
+			}
+		}
+		return ans
+	}
+	async next():Promise<str|undef>{
+		const z = this
+		const [line] = await z.read(1)
+		return line
 	}
 }
 
