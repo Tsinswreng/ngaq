@@ -14,6 +14,7 @@ class Status{
 	in_body = false
 }
 
+
 class Line{
 	protected static lineCommentMark = '#'
 	protected constructor(){}
@@ -46,20 +47,9 @@ class Line{
 }
 
 /** 按行解析 */
-class TsvParser{
+export class TsvParser{
 
 	protected constructor(){}
-
-	// protected __init__(...args:Parameters<typeof TsvParser.new>){
-	// 	const z = this
-	// 	z._text = args[0]
-	// 	return z
-	// }
-	// static new(text:str){
-	// 	const z = new this()
-	// 	z.__init__(text)
-	// 	return z
-	// }
 
 	protected __init__(){
 
@@ -69,11 +59,14 @@ class TsvParser{
 
 	}
 
-	protected _iter:I_next<str>
+	protected _iter:I_next<Promise<str>>
 	get iter(){return this._iter}
 
+	protected _status = new Status()
+	get status(){return this._status}
+
 	/** 當前処理ʹ行號 */
-	protected _linePos = 0
+	protected _linePos = -1
 	get linePos(){return this._linePos}
 
 	protected _metaStartLinePos:int
@@ -83,16 +76,16 @@ class TsvParser{
 	get metaEndLinePos(){return this._metaEndLinePos}
 
 	/** 全文字串 */
-	protected _text:str
-	get text(){return this._text}
+	// protected _text:str
+	// get text(){return this._text}
 
 	/** 不含元數據 */
-	protected _data2d:str[][] = []
-	get data2d(){return this._data2d}
+	// protected _data2d:str[][] = []
+	// get data2d(){return this._data2d}
 
 	/** 原文按行分割 */
-	protected _oriLines:Line[] = []
-	get oriLines(){return this._oriLines}
+	// protected _oriLines:Line[] = []
+	// get oriLines(){return this._oriLines}
 
 	/** 元數據 全文字串 */
 	protected _metaText:str = ''
@@ -124,9 +117,25 @@ class TsvParser{
 	}
 
 
-
-
-
+	async nextLine(){
+		const z = this
+		z._linePos ++
+		const lineTxt = await z._iter.next()
+		const line = Line.new(lineTxt, z._linePos)
+		if(z.status.in_body === false){
+			if(lineTxt === '---'){
+				z.status.in_meta = true
+				z.status.in_body = false
+				z._metaStartLinePos = z.linePos
+			}
+			else if(lineTxt === '...'){
+				z.status.in_meta = false
+				z.status.in_body = true
+				z._metaEndLinePos = z.linePos
+			}
+		}
+		return line
+	}
 }
 
 
