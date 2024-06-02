@@ -724,7 +724,6 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 }
 
 
-
 /**
  * 批量ᵈ檢ᵣ文件ˋ存否
  * @param paths 

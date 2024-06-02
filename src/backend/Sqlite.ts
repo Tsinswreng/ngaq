@@ -93,6 +93,10 @@ export class SqliteDb extends Object{
 
 	get This(){return SqliteDb}
 
+	static readonly sqlite_master = 'sqlite_master'
+	static readonly sqlite_sequence = 'sqlite_sequence'
+	//static get sqlite_master(){return 'sqlite_master'}
+
 	protected _db:Database
 	get db(){return this._db}
 	
