@@ -134,7 +134,7 @@ export class SqliteDb extends Object{
 		})
 	}
 
-	run(sql:str, params:any){
+	run(sql:str, params?:any){
 		const z = this
 		return z.This.run(z.db, sql ,params)
 	}
