@@ -99,10 +99,10 @@ export class TsvParser{
 	protected _linePos = -1
 	get linePos(){return this._linePos}
 
-	protected _metaStartLinePos:int
+	protected _metaStartLinePos:int|undef
 	get metaStartLinePos(){return this._metaStartLinePos}
 
-	protected _metaEndLinePos:int
+	protected _metaEndLinePos:int|undef
 	get metaEndLinePos(){return this._metaEndLinePos}
 
 	/** 全文字串 */
@@ -121,10 +121,13 @@ export class TsvParser{
 	protected _metaText:str = ''
 	get metaText(){return this._metaText}
 
-
-
-
-
+	// reset(){
+	// 	const z = this
+	// 	z._linePos = -1
+	// 	z._metaStartLinePos = void 0
+	// 	z._metaEndLinePos = void 0
+	// 	//z._readNObj = //
+	// }
 
 	/**
 	 * ---中首個-在全文中ʹ位
@@ -158,7 +161,7 @@ export class TsvParser{
 		return ans
 	}
 
-	handleLine(lineTxt:str){
+	protected handleLine(lineTxt:str){
 		const z = this
 		z._linePos ++
 		// const lineTxt = await z._nextObj.next()

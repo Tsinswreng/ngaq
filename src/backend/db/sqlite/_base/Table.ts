@@ -79,7 +79,6 @@ export abstract class Abs_Table{
 	}):Abs_Table{
 		//@ts-ignore
 		const o = new this()
-
 		o.__init__(props)
 		return o
 	}
@@ -144,14 +143,22 @@ export abstract class Abs_Table{
 		return fn
 	}
 
-	genQry_insert(table: string, obj: Row, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
+	static genQry_insert(table: string, obj: Row, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
 		const ignoredKeys = opt?.ignoredKeys
 		return Sqlite.genQry_insert(table, obj, ignoredKeys)
 	}
 
-	genQry_updateById(table: string, obj: Row, id: string | number, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
+	genQry_insert(table: string, obj: Row, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
+		return Abs_Table.genQry_insert(table, obj, opt)
+	}
+
+	static genQry_updateById(table: string, obj: Row, id: string | number, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
 		const ignoredKeys = opt?.ignoredKeys
 		return Sqlite.genQry_updateById(table, obj, id, ignoredKeys)
+	}
+
+	genQry_updateById(table: string, obj: Row, id: string | number, opt?:{ignoredKeys?:string[]}): [string, unknown[]] {
+		return Abs_Table.genQry_updateById(table, obj, id, opt)
 	}
 }
 
