@@ -131,12 +131,26 @@ describe('insert', ()=>{
 		const stmt = await db.prepare(insertSql)
 		const start = now()
 		const fn = async()=>{
+			const fnAns = [] as any[]
 			for(let i = 0; i < 99; i++){
-				await stmt.run([i,i])
+				const u = await stmt.run([i,i])
+				fnAns.push(u)
 			}
+			return fnAns
 		}
-		await db.transaction(fn)
+		const ans = await db.transaction(fn)
 		const end = now()
+		console.log(ans)
+		/* 
+		[ 
+			Statement { lastID: 99, changes: 1 }, 
+			[
+				Statement { lastID: 99, changes: 1 },
+				Statement { lastID: 99, changes: 1 },
+				......
+			]
+		]
+		*/
 		console.log(end - start) // 11.659200012683868
 	})
 })

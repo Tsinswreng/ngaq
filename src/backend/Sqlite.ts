@@ -234,22 +234,32 @@ export class SqliteDb extends Object{
 		return z.run(db, 'ROLLBACK')
 	}
 
-	static transaction<T>(db:sqlite3.Database, fn:()=>T):Promise<Awaited<T>>{
+	
+	/**
+	 * 
+	 * @param db 
+	 * @param fn 
+	 * @returns Promise<[db.commit後之Runresult, fn被await之後之返ˡ值]>
+	 */
+	static transaction<T>(db:sqlite3.Database, fn:()=>T)
+	:Promise<[sqlite3.RunResult, Awaited<T>]>
+	{ //
 		const z = this
 		const recErr = new Error()
-		return new Promise<Awaited<T>>((res, rej)=>{
+		return new Promise((res, rej)=>{
 			db.serialize(async()=>{
 				try {
 					await z.beginTrans(db)
 					const ans = await fn()
-					await z.commit(db)
-					res(ans)
+					const commitRes = await z.commit(db)
+					res([commitRes, ans])
 				} catch (error) {
 					await z.rollback(db)
 					if(error instanceof Error){
 						error.stack += '\n\n' + recErr.stack
+						rej(DE(error));return
 					}
-					throw error
+					rej(error)
 				}
 			})
 		})
