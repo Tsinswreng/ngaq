@@ -3,6 +3,8 @@
 //'abcd'.indexOf('bc') -> 1
 //'abcd'.indexOf('1') -> -1
 
+import { $, $a } from "@shared/Ut"
+
 interface I_next<T>{
 	next():T
 }
@@ -27,7 +29,7 @@ class Line{
 	protected constructor(){}
 	protected __init__(...args:Parameters<typeof Line.new>){
 		const z = this
-		z.text = args[0]
+		z.rawText = args[0]
 		z.index = args[1]
 	}
 	static new(text:str, index:int){
@@ -35,9 +37,10 @@ class Line{
 		z.__init__(text, index)
 		return z
 	}
-	text:str
+	rawText:str
 	index:int
 	type = new LineType()
+
 
 	/**
 	 * 取字串芝除註釋後者
@@ -51,6 +54,14 @@ class Line{
 			return text
 		}
 		return text.slice(0, pos)
+	}
+
+	processedText():str{
+		const z = this
+		if(z.type.noComment){
+			return z.rawText
+		}
+		return Line.rmComment(z.rawText)
 	}
 }
 
@@ -71,8 +82,12 @@ export class TsvParser{
 		return z
 	}
 
+	get This(){return TsvParser}
+
 	// protected _nextObj:I_next<Promise<str>>
 	// get nextObj(){return this._nextObj}
+
+	static readonly noCommentPattern = '# no comment'
 
 	protected _readNObj:I_readN<Promise<str[]>>
 	get readNObj(){return this._readNObj}
@@ -136,6 +151,7 @@ export class TsvParser{
 		const lines = await z.readNObj.read(num)
 		const ans:Line[] = []
 		for(const lineTxt of lines){
+			if(lineTxt == void 0){continue}
 			const ua = z.handleLine(lineTxt)
 			ans.push(ua)
 		}
@@ -146,7 +162,7 @@ export class TsvParser{
 		const z = this
 		z._linePos ++
 		// const lineTxt = await z._nextObj.next()
-		const noCommentPattern = '# no comment'
+		const noCommentPattern = z.This.noCommentPattern
 		const line = Line.new(lineTxt, z._linePos)
 
 		if(z.status.nextLineNoComment === true){ //即上一行有 no comment 指令
