@@ -1,5 +1,52 @@
 import sqlite3, { Database } from "sqlite3";
 
+
+
+//PRAGMA table_info
+export interface SqliteTableInfo{
+	cid:number //列ᵗ序
+	name:string
+	type:string
+	notnull: 0|1
+	dflt_value:number|null//默認值
+	pk:0|1 //主鍵
+}
+
+export interface Sqlite_sequence{
+	name:string
+	seq:number
+}
+
+export interface Sqlite_master{
+	type:string 
+	name:string //存储了数据库对象的名称，包括表、视图、索引等。
+	tbl_name:string //也存储了数据库对象的名称，但通常用于描述表（table）对象的名称。
+	rootpage:number //rootpage 用于标识一个 B-Tree 的根节点在数据库文件中的页码
+	sql:string
+}
+
+
+
+export class DbErr extends Error{
+	protected constructor(message?:string){
+		super(message)
+	}
+	protected __init__(...args:Parameters<typeof DbErr.new>){
+		const z = this
+		z._err = args[0]
+	}
+	static new(err:Error){
+		const z = new this(err.message)
+		z.__init__(err)
+		return z
+	}
+	protected _err:Error
+	get err(){return this._err}
+}
+const DE = DbErr.new.bind(DbErr)
+
+
+type NewDatabase = ConstructorParameters<typeof sqlite3.Database>
 export class SqliteDb extends Object{
 
 	protected constructor(){
@@ -18,6 +65,32 @@ export class SqliteDb extends Object{
 		return z
 	}
 
+	/**
+	 * console.log(2)之後卡死不動
+	 * @deprecated
+	 * @param fileName 
+	 * @param mode 
+	 * @returns 
+	 */
+	static rawConnectByPathAsync(fileName:NewDatabase[0], mode?:NewDatabase[1]){
+		console.log(1)
+		return new Promise<sqlite3.Database>((res, rej)=>{
+			console.log(2)
+			const dbRaw = new sqlite3.Database(fileName, mode, function(err){
+				console.log(3)
+				if(err != void 0){
+					rej(DE(err));return
+				}
+				console.log(4)//t
+				res(dbRaw)
+			})
+		})
+	}
+
+	static rawConnectByPath(fileName:NewDatabase[0], mode?:NewDatabase[1]){
+		return new sqlite3.Database(fileName, mode)
+	}
+
 	get This(){return SqliteDb}
 
 	protected _db:Database
@@ -32,14 +105,14 @@ export class SqliteDb extends Object{
 		return new Promise<[sqlite3.Statement, T[]]>((res,rej)=>{
 			db.all<T>(sql, params ,function(this, err, rows){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res([this,rows])
 			})
 		})
 	}
 
-	all<T>(sql:str, params:any){
+	all<T>(sql:str, params?:any){
 		const z = this
 		return z.This.all<T>(z.db, sql ,params)
 	}
@@ -50,11 +123,11 @@ export class SqliteDb extends Object{
 	 * @param params 
 	 * @returns Promise<sqlite3.RunResult>
 	 */
-	static run(db:sqlite3.Database, sql:str, params:any){
+	static run(db:sqlite3.Database, sql:str, params?:any){
 		return new Promise<sqlite3.RunResult>((res,rej)=>{
 			db.run(sql, params ,function(this, err){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res(this)
 			})
@@ -76,7 +149,7 @@ export class SqliteDb extends Object{
 		return new Promise<[sqlite3.Statement, T]>((res,rej)=>{
 			db.get<T>(sql, params, function(this, err, row){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res([this, row])
 			})
@@ -88,11 +161,27 @@ export class SqliteDb extends Object{
 		return z.This.get<T>(z.db, sql, params)
 	}
 
+	static exec(db:sqlite3.Database, sql:str){
+		return new Promise<sqlite3.Statement>((res, rej)=>{
+			db.exec(sql, function(this, err){
+				if(err != void 0){
+					rej(DE(err));return
+				}
+				res(this)
+			})
+		})
+	}
+
+	exec(sql:str){
+		const z = this
+		return z.This.exec(z.db, sql)
+	}
+
 	static close(db:Database){
 		return new Promise<bool>((res, rej)=>{
 			db.close(function(err){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res(true)
 			})
@@ -108,7 +197,7 @@ export class SqliteDb extends Object{
 		return new Promise<sqlite3.Statement>((res,rej)=>{
 			db.prepare(sql, params, function(this, err){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res(this)
 			})
@@ -130,6 +219,45 @@ export class SqliteDb extends Object{
 	prepare(sql:str, params?:any){
 		const z = this
 		return z.This.prepare(z.db, sql, params)
+	}
+
+	static beginTrans(db:sqlite3.Database){
+		const z = this
+		return z.run(db, 'BEGIN TRANSACTION')
+	}
+	static commit(db:sqlite3.Database){
+		const z = this
+		return z.run(db, 'COMMIT')
+	}
+	static rollback(db:sqlite3.Database){
+		const z = this
+		return z.run(db, 'ROLLBACK')
+	}
+
+	static transaction<T>(db:sqlite3.Database, fn:()=>T):Promise<Awaited<T>>{
+		const z = this
+		const recErr = new Error()
+		return new Promise<Awaited<T>>((res, rej)=>{
+			db.serialize(async()=>{
+				try {
+					await z.beginTrans(db)
+					const ans = await fn()
+					await z.commit(db)
+					res(ans)
+				} catch (error) {
+					await z.rollback(db)
+					if(error instanceof Error){
+						error.stack += '\n\n' + recErr.stack
+					}
+					throw error
+				}
+			})
+		})
+	}
+
+	transaction<T>(fn:()=>T){
+		const z = this
+		return z.This.transaction(z.db, fn)
 	}
 }
 
@@ -165,7 +293,7 @@ export class Statement extends Object{
 		return new Promise<[sqlite3.Statement, T[]]>((res,rej)=>{
 			db.all<T>(params ,function(this, err, rows){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res([this,rows])
 			})
@@ -178,7 +306,8 @@ export class Statement extends Object{
 	}
 	
 	/**
-	 * 
+	 * 用於執行沒有返回值的 SQL 語句
+	 * 不會返回查詢結果，只會返回執行操作的狀態。
 	 * @param sql 
 	 * @param params 
 	 * @returns Promise<sqlite3.RunResult>
@@ -187,7 +316,7 @@ export class Statement extends Object{
 		return new Promise<sqlite3.RunResult>((res,rej)=>{
 			db.run(params ,function(this, err){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res(this)
 			})
@@ -200,7 +329,8 @@ export class Statement extends Object{
 	}
 
 	/**
-	 * 
+	 * 執行一條 SQL 查詢並返回一條結果。
+	 * 用於查詢返回單行數據的情況，例如查詢主鍵或唯一索引的數據。
 	 * @param sql 
 	 * @param params 
 	 * @returns Promise<[sqlite3.Statement, T]>
@@ -209,7 +339,7 @@ export class Statement extends Object{
 		return new Promise<[sqlite3.Statement, T?]>((res,rej)=>{
 			db.get<T>(params, function(this, err, row){
 				if(err != void 0){
-					rej(err);return
+					rej(DE(err));return
 				}
 				res([this, row])
 			})
@@ -220,6 +350,12 @@ export class Statement extends Object{
 		const z = this
 		return z.This.get<T>(z.db, params)
 	}
+
+	// static each<T>(db:sqlite3.Statement, param:any, complete?: (err: Error | null, count: number) => void){
+	// 	db.each<T>(param, function(this, err, row){
+
+	// 	}, complete)
+	// }
 
 
 }
