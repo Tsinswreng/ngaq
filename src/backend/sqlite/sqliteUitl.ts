@@ -12,7 +12,7 @@ const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
 class CreateSql{
 	
-	/** //TODO test
+	/** //TODO fix 語法不対?
 	 * 生成一个用于创建 SQLite 触发器的 SQL 语句，该触发器用于在插入操作时检查是否存在重复的行。
 	 * 并在存在重复时用新数据覆盖旧数据。
 	 * @param {string} tblName - 表名，触发器将在该表上创建。
@@ -42,7 +42,8 @@ class CreateSql{
 		FOR EACH ROW BEGIN
 			SELECT CASE WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause}) THEN
 				UPDATE "${tblName}" SET ${colNames.map(c => `"${c}"=NEW."${c}"`).join(',')} WHERE ${whereClause};
-				RAISE(IGNORE)
+				RAISE(IGNORE);
+				--RETURN;
 			END;
 		END;
 		`
@@ -74,7 +75,7 @@ function getObjKeys(obj:kvobj, ignoredKeys:str[]=[]){
 interface I_IgnoredKeys{
 	ignoredKeys:str[]
 }
-export class ObjSql{
+class ObjSql{
 	protected constructor(){}
 	protected __init__(...args:Parameters<typeof ObjSql.new>){
 		const z = this
@@ -91,6 +92,7 @@ export class ObjSql{
 
 	protected _obj:kvobj
 	get obj(){return this._obj}
+	set obj(v){this._obj = v}
 
 	protected _keys:str[] = []
 	get keys(){return this._keys}
@@ -117,10 +119,10 @@ export class ObjSql{
 		return placeholders
 	}
 
-	getValues(){
+	getParams(obj=this.obj){
 		const z = this
 		const keys = z.keys
-		const ans = keys.map(e=>z.obj[e])
+		const ans = keys.map(e=>obj[e])
 		return ans
 	}
 

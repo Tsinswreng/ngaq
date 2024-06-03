@@ -136,6 +136,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 		throw new Error('')
 	}
 
+
 	static async New(props:New_Abs_DbSrc):Promise<Abs_DbSrc>{
 		//@ts-ignore
 		const o = new this()
@@ -147,6 +148,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 		const o = this
 		Object.assign(o, props)
 		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
+		return o
 	}
 
 	protected _TableClass = Abs_Table

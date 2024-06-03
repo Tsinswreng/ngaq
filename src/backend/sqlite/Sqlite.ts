@@ -1,5 +1,5 @@
+import { mergeErrStack } from "@shared/Ut";
 import sqlite3, { Database } from "sqlite3";
-
 
 
 //PRAGMA table_info
@@ -34,14 +34,21 @@ export class DbErr extends Error{
 	protected __init__(...args:Parameters<typeof DbErr.new>){
 		const z = this
 		z._err = args[0]
+		const sql = args[1]
+		z.sql = sql??z.sql
+		const recErr = args[2]
+		z._err.stack += '\n\n' + (recErr?.stack??'')
+		//console.log(z.err.stack)//t
 	}
-	static new(err:Error){
+	static new(err:Error, sql?:str, recordErr?:Error){
 		const z = new this(err.message)
-		z.__init__(err)
+		z.__init__(err, sql, recordErr)
 		return z
 	}
 	protected _err:Error
 	get err(){return this._err}
+
+	sql:str=''
 }
 const DE = DbErr.new.bind(DbErr)
 
@@ -73,15 +80,12 @@ export class SqliteDb extends Object{
 	 * @returns 
 	 */
 	static rawConnectByPathAsync(fileName:NewDatabase[0], mode?:NewDatabase[1]){
-		console.log(1)
+		const recErr = new Error
 		return new Promise<sqlite3.Database>((res, rej)=>{
-			console.log(2)
 			const dbRaw = new sqlite3.Database(fileName, mode, function(err){
-				console.log(3)
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, void 0, recErr));return
 				}
-				console.log(4)//t
 				res(dbRaw)
 			})
 		})
@@ -106,10 +110,11 @@ export class SqliteDb extends Object{
 	 * @returns Promise<[sqlite3.Statement, T[]]>
 	 */
 	static all<T>(db:sqlite3.Database, sql:str, params:any){
+		const recErr = new Error
 		return new Promise<[sqlite3.Statement, T[]]>((res,rej)=>{
 			db.all<T>(sql, params ,function(this, err, rows){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, sql, recErr));return
 				}
 				res([this,rows])
 			})
@@ -128,10 +133,11 @@ export class SqliteDb extends Object{
 	 * @returns Promise<sqlite3.RunResult>
 	 */
 	static run(db:sqlite3.Database, sql:str, params?:any){
+		const recErr = new Error()
 		return new Promise<sqlite3.RunResult>((res,rej)=>{
 			db.run(sql, params ,function(this, err){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, sql, recErr));return
 				}
 				res(this)
 			})
@@ -150,10 +156,11 @@ export class SqliteDb extends Object{
 	 * @returns Promise<[sqlite3.Statement, T]>
 	 */
 	static get<T>(db:sqlite3.Database, sql:str, params:any){
+		const recErr = new Error
 		return new Promise<[sqlite3.Statement, T]>((res,rej)=>{
 			db.get<T>(sql, params, function(this, err, row){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, sql, recErr));return
 				}
 				res([this, row])
 			})
@@ -166,10 +173,11 @@ export class SqliteDb extends Object{
 	}
 
 	static exec(db:sqlite3.Database, sql:str){
+		const recErr = new Error
 		return new Promise<sqlite3.Statement>((res, rej)=>{
 			db.exec(sql, function(this, err){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, sql, recErr));return
 				}
 				res(this)
 			})
@@ -182,10 +190,11 @@ export class SqliteDb extends Object{
 	}
 
 	static close(db:Database){
+		const recErr = new Error
 		return new Promise<bool>((res, rej)=>{
 			db.close(function(err){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, void 0, recErr));return
 				}
 				res(true)
 			})
@@ -198,10 +207,11 @@ export class SqliteDb extends Object{
 	}
 
 	static prepareRaw(db:sqlite3.Database, sql:str, params?:any){
+		const recErr = new Error
 		return new Promise<sqlite3.Statement>((res,rej)=>{
 			db.prepare(sql, params, function(this, err){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, sql, recErr));return
 				}
 				res(this)
 			})
@@ -304,10 +314,11 @@ export class Statement extends Object{
 	 * @returns Promise<[sqlite3.Statement, T[]]>
 	 */
 	static all<T>(db:sqlite3.Statement, params?:any){
+		const recErr = new Error
 		return new Promise<[sqlite3.Statement, T[]]>((res,rej)=>{
 			db.all<T>(params ,function(this, err, rows){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, void 0, recErr));return
 				}
 				res([this,rows])
 			})
@@ -327,10 +338,11 @@ export class Statement extends Object{
 	 * @returns Promise<sqlite3.RunResult>
 	 */
 	static run(db:sqlite3.Statement, params?:any){
+		const recErr = new Error
 		return new Promise<sqlite3.RunResult>((res,rej)=>{
 			db.run(params ,function(this, err){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, void 0, recErr));return
 				}
 				res(this)
 			})
@@ -350,10 +362,11 @@ export class Statement extends Object{
 	 * @returns Promise<[sqlite3.Statement, T]>
 	 */
 	static get<T>(db:sqlite3.Statement, params?:any){
+		const recErr = new Error
 		return new Promise<[sqlite3.Statement, T?]>((res,rej)=>{
 			db.get<T>(params, function(this, err, row){
 				if(err != void 0){
-					rej(DE(err));return
+					rej(DE(err, void 0 ,recErr));return
 				}
 				res([this, row])
 			})

@@ -98,7 +98,7 @@ describe('1', ()=>{
 })
 
 describe('insert', ()=>{
-	const path = 'D:/_code/voca/test/backend/sqlite.db'
+	const path = process.cwd()+'/test/backend/sqlite.db'
 	const dbRaw = Sq.SqliteDb.rawConnectByPath(path)
 	const db = Sq.SqliteDb.new(dbRaw)
 	const tableName = 'test'

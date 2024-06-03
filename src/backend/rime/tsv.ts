@@ -18,13 +18,15 @@ class Status{
 	nextLineNoComment=false
 	in_meta = false
 	in_body = false
+	end=false
 }
 
 class LineType{
 	noComment=false
+	isBody=false
 }
 
-class Line{
+export class Line{
 	protected static lineCommentMark = '#'
 	protected constructor(){}
 	protected __init__(...args:Parameters<typeof Line.new>){
@@ -152,6 +154,10 @@ export class TsvParser{
 	async readLines(num:int){
 		const z = this
 		const lines = await z.readNObj.read(num)
+		if(lines == void 0 || lines.length === 0){
+			z.status.end = true
+			return []
+		}
 		const ans:Line[] = []
 		for(const lineTxt of lines){
 			if(lineTxt == void 0){continue}
@@ -167,7 +173,6 @@ export class TsvParser{
 		// const lineTxt = await z._nextObj.next()
 		const noCommentPattern = z.This.noCommentPattern
 		const line = Line.new(lineTxt, z._linePos)
-
 		if(z.status.nextLineNoComment === true){ //即上一行有 no comment 指令
 			line.type.noComment = true
 		}else{
@@ -186,11 +191,13 @@ export class TsvParser{
 				z._metaEndLinePos = z.linePos
 			}
 		}else{ //在body
+			line.type.isBody = true
 			z._status.nextLineNoComment = false //褈置
 			if(lineTxt === noCommentPattern){
 				z._status.nextLineNoComment = true
 			}
 		}
+		
 		return line
 	}
 }
