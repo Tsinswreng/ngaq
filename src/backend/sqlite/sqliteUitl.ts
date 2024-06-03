@@ -7,7 +7,6 @@ export class CreateTriggerOpt{
 
 export class CreateIndexOpt{
 	ifNotExists = false
-
 }
 const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
@@ -60,6 +59,88 @@ class CreateSql{
 	}
 }
 
+
+function getObjKeys(obj:kvobj, ignoredKeys:str[]=[]){
+	const igno = ignoredKeys
+	const ignoSet = new Set<str>()
+	if(igno != void 0){
+		igno.map(e=>ignoSet.add(e))
+	}
+	const allKeys = Object.keys(obj)
+	const keys = allKeys.filter(e=>!ignoSet.has(e))
+	return keys
+}
+
+interface I_IgnoredKeys{
+	ignoredKeys:str[]
+}
+export class ObjSql{
+	protected constructor(){}
+	protected __init__(...args:Parameters<typeof ObjSql.new>){
+		const z = this
+		z._obj = args[0]
+		const opt = args[1]
+		z._keys = getObjKeys(z._obj, opt?.ignoredKeys)
+		return z
+	}
+	static new(obj:kvobj, opt?:I_IgnoredKeys){
+		const z = new this()
+		z.__init__(obj, opt)
+		return z
+	}
+
+	protected _obj:kvobj
+	get obj(){return this._obj}
+
+	protected _keys:str[] = []
+	get keys(){return this._keys}
+	
+	/**
+	 * 
+	 * @returns "列1,列2,..."
+	 */
+	getColNamesStr(){
+		const z = this
+		const keys = z.keys
+		const columns = keys.join(', ');
+		return columns
+	}
+
+	/**
+	 * 
+	 * @returns ?,?,? ...
+	 */
+	getPlaceholdersStr(){
+		const z = this
+		const keys = z.keys
+		const placeholders = keys.map(()=>'?').join(',')
+		return placeholders
+	}
+
+	getValues(){
+		const z = this
+		const keys = z.keys
+		const ans = keys.map(e=>z.obj[e])
+		return ans
+	}
+
+	/**
+	 * 
+	 * @param tbl 
+	 * @returns `INSERT INTO '${tbl}' (${columns}) VALUES (${placeholders})`
+	 */
+	geneFullInsertSql(tbl:str){
+		const z = this
+		const columns = z.getColNamesStr()
+		const placeholders = z.getPlaceholdersStr()
+		return `INSERT INTO '${tbl}' (${columns}) VALUES (${placeholders})`
+	}
+
+
+
+}
+
+
 class SelectSql{
 
 }
@@ -68,4 +149,5 @@ export class Sql{
 	protected constructor(){}
 	static readonly create = CreateSql
 	static readonly select = SelectSql
+	static readonly obj = ObjSql
 }
