@@ -1,4 +1,5 @@
-import * as DictDb_ from '@backend/rime/dictDb' 
+import * as DictDbSrc_ from '@backend/rime/dictDbSrc' 
+import * as DictTbl_ from '@backend/rime/DictDbTbl'
 import { TsvParser } from '@backend/rime/tsv'
 import * as Tsv from '@backend/rime/tsv'
 import { DbErr } from '@backend/sqlite/Sqlite'
@@ -22,12 +23,12 @@ describe('1', ()=>{
 				}
 			}
 			const tsvParser = Tsv.TsvParser.new(readN)
-			const dbSrc = await DictDb_.DictDbSrc.New({_dbPath:dbPath})
+			const dbSrc = await DictDbSrc_.DictDbSrc.New({_dbPath:dbPath})
 			const tblName = 'cangjie5'
 			await dbSrc.createTable(tblName, {ifNotExists:true})
 			await dbSrc.createTrigger(tblName)
 			await dbSrc.createIndex(tblName)
-			const tbl = DictDb_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
+			const tbl = DictTbl_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
 			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
 			console.log(ans)
 			console.log('done')
