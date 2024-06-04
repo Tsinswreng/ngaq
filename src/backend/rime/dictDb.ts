@@ -185,13 +185,12 @@ export class DictTbl extends Abs_Table{
 	// 	return z
 	// }
 
-
-	static insert_fn(db:sqlite3.Database, tableName:str, rows:DbRow[]){
-		const z = this
-		const [sql ,values] = z.genQry_insert(tableName, rows, {ignoredKeys: [DbRow.col.id]})
-		
-	}
-
+	/**
+	 * tsvParserʸ all linesˇ dbʰ insert
+	 * @param tsvParser 
+	 * @param opt 
+	 * @returns 
+	 */
 	async insertByTsvParser(tsvParser:Tsv.TsvParser, opt:parseDbRowsOpt){
 		const z = this
 		const bufferLineNum = opt.bufferLineNum
