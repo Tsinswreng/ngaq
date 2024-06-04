@@ -1,9 +1,10 @@
 //import { EventEmitter } from "events";
 import { EventEmitter } from "eventemitter3";
-import Sqlite, { SqliteType } from "@backend/db/Sqlite";
+import SqliteOld, { SqliteType } from "@backend/db/Sqlite";
 import { $a } from "@shared/Ut";
 import * as Le from '@shared/linkedEvent'
 import { Abs_Table } from "./Table";
+import * as Sqlite from '@backend/sqlite/Sqlite'
 //type Para_EventEmitter = ConstructorParameters<typeof EventEmitter>[0]
 
 export interface Abs_DbSrc_Static<Self>{
@@ -17,7 +18,8 @@ export interface I_DbRow_Static<Self, Entity>{
 }
 
 export interface I_DbSrc{
-	get db():SqliteType.Database
+	//get dbRaw():SqliteType.Database
+	get db():Sqlite.SqliteDb
 	get dbName():string
 	get dbPath():string
 	get backupDbPath():string|undefined
@@ -147,15 +149,20 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 	protected async __Init__(props:Parameters<typeof Abs_DbSrc.New>[0]){
 		const o = this
 		Object.assign(o, props)
-		o._db = await Sqlite.newDatabase(o._dbPath, o._mode)
+		o._dbRaw = await SqliteOld.newDatabase(o._dbPath, o._mode)
+		o._db = Sqlite.SqliteDb.new(o._dbRaw)
 		return o
 	}
 
 	protected _TableClass = Abs_Table
 	get TableClass(){return this._TableClass}
 	
+	/** @deprecated */
+	protected _dbRaw: SqliteType.Database
+	/** @deprecated */
+	get dbRaw(){return this._dbRaw}
 
-	protected _db: SqliteType.Database
+	protected _db:Sqlite.SqliteDb
 	get db(){return this._db}
 
 	protected _eventEmmiter_deprecated = InnerDbSrcEventEmitter.new()
@@ -178,7 +185,7 @@ export abstract class Abs_DbSrc implements I_DbSrc{
 	
 	protected _backupDbPath:string
 	get backupDbPath(){return this._backupDbPath}
-	protected _mode:number = Sqlite.openMode.DEFAULT_CREATE
+	protected _mode:number = SqliteOld.openMode.DEFAULT_CREATE
 
 	abstract createTable(table: string, config: CreateTableOpt): Promise<unknown>;
 

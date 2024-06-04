@@ -1,4 +1,4 @@
-import * as Sq from '@backend/Sqlite'
+import * as Sq from '@backend/sqlite/Sqlite'
 import now from 'performance-now'
 import sqlite3 from 'sqlite3'
 

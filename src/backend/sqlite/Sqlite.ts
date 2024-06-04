@@ -239,13 +239,30 @@ export class SqliteDb extends Object{
 		const z = this
 		return z.run(db, 'BEGIN TRANSACTION')
 	}
+
+	beginTrans(){
+		const z = this
+		return z.This.beginTrans(z.db)
+	}
+
 	static commit(db:sqlite3.Database){
 		const z = this
 		return z.run(db, 'COMMIT')
 	}
+
+	commit(){
+		const z = this
+		return z.This.commit(z.db)
+	}
+
 	static rollback(db:sqlite3.Database){
 		const z = this
 		return z.run(db, 'ROLLBACK')
+	}
+
+	rollback(){
+		const z = this
+		return z.This.rollback(z.db)
 	}
 
 	

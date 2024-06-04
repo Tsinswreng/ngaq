@@ -12,7 +12,7 @@ const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
 class CreateSql{
 	
-	/** //TODO fix 語法不対?
+	/**
 	 * 生成一个用于创建 SQLite 触发器的 SQL 语句，该触发器用于在插入操作时检查是否存在重复的行。
 	 * 并在存在重复时用新数据覆盖旧数据。
 	 * @param {string} tblName - 表名，触发器将在该表上创建。
@@ -24,14 +24,15 @@ class CreateSql{
 	 */
 	static trigger_replaceDuplicate(tblName:str, triggerName:str , colNames:str[], opt:CreateTriggerOpt){
 
-		/** a = NEW.a AND b = NEW.b ... */
-		function geneWhere(colNames:str[]):str{
+		/** a = NEW.a ${join} b = NEW.b ... */
+		function geneSeg(colNames:str[], join:str):str{
 			const arr = colNames.map(e=>{
 				return ` ${e}=NEW.${e} `
 			})
-			return arr.join(' AND ')
+			return arr.join(join)
 		}
-		const whereClause = geneWhere(colNames)
+		const whereClause = geneSeg(colNames, ' AND ') /** a = NEW.a AND b = NEW.b ... */
+		const toSet = geneSeg(colNames, ',') /** a = NEW.a , b = NEW.b ... */
 		let ifNotExists = ''
 		if(opt.ifNotExists){
 			ifNotExists = 'IF NOT EXISTS'
@@ -39,15 +40,24 @@ class CreateSql{
 		const sql = 
 		`CREATE TRIGGER ${ifNotExists} "${triggerName}" 
 		BEFORE INSERT ON "${tblName}"
-		FOR EACH ROW BEGIN
-			SELECT CASE WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause}) THEN
+		FOR EACH ROW 
+		WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause})
+		BEGIN
+			UPDATE "${tblName}"
+			SET ${toSet}
+			WHERE ${whereClause};
+			SELECT RAISE(IGNORE);
+
+		END;
+		`
+		return sql
+		/* 
+SELECT CASE WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause}) THEN
 				UPDATE "${tblName}" SET ${colNames.map(c => `"${c}"=NEW."${c}"`).join(',')} WHERE ${whereClause};
 				RAISE(IGNORE);
 				--RETURN;
 			END;
-		END;
-		`
-		return sql
+		*/
 	}
 
 	static index(tbl:str, indexName:str, cols:str[], opt:CreateIndexOpt){

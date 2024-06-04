@@ -46,7 +46,7 @@ CREATE TABLE ${isExist} '${table}'(
 
 	createTable(table:string, config = CreateTableOpt.new()){
 		const ifNotExists = config.ifNotExists
-		return C.createTable(this._db, table, ifNotExists)
+		return C.createTable(this._dbRaw, table, ifNotExists)
 	}
 
 	static genSql_insert(table:string, o:UserDbRow){

@@ -129,7 +129,7 @@ export default class VocaServer{
 			if(tbl == void 0){
 				continue
 			}
-			const b = await Sqlite.isTableExist(C.wordDbSrc.db, tbl)
+			const b = await Sqlite.isTableExist(C.wordDbSrc.dbRaw, tbl)
 			if(!b){continue}
 			ans.push(tbl)
 		}
@@ -207,7 +207,7 @@ export default class VocaServer{
 		VocaServer.app.post(RT.saveWords,post(async(req,res)=>{
 			//let rows:IVocaRow[] = JSON.parse(req.body)
 			let sws:Word[] = Word.toJsObj(req.body as IVocaRow[])
-			const prms = await WordDbSrc.saveWords(this.wordDbSrc.db, sws)
+			const prms = await WordDbSrc.saveWords(this.wordDbSrc.dbRaw, sws)
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
 			// }
@@ -237,18 +237,18 @@ export default class VocaServer{
 						_dbPath:(configInst.config.backupDbPath)
 						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				await WordDbSrc.backupTable(VocaServer.wordDbSrc.db, sws[0].table, backupDb.db) //* 無調用堆棧
+				await WordDbSrc.backupTable(VocaServer.wordDbSrc.dbRaw, sws[0].table, backupDb.dbRaw) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				const [init, modified] = await Sqlite.transaction(
-					VocaServer.wordDbSrc.db
-					, await WordDbSrc.addWordsOfSameTable_fn(VocaServer.wordDbSrc.db, sws)
+					VocaServer.wordDbSrc.dbRaw
+					, await WordDbSrc.addWordsOfSameTable_fn(VocaServer.wordDbSrc.dbRaw, sws)
 				)
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, init)
-				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.db, sws[0].table, modified)
+				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].table, init)
+				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].table, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
 				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){
@@ -342,7 +342,7 @@ export default class VocaServer{
 			
 			const nonNullTables:string[] = []
 			for(const u of tables){
-				const b = await Sqlite.isTableExist(C.wordDbSrc.db,u)
+				const b = await Sqlite.isTableExist(C.wordDbSrc.dbRaw,u)
 				if(b){nonNullTables.push(u)}
 			}
 			configInst.reload()
@@ -383,7 +383,7 @@ export default class VocaServer{
 			//const vsqlt = await VocaSqlite.neW({_tableName:table})
 			configInst.reload()
 			
-			const tables = await Sqlite.filterExistTables(C.wordDbSrc.db, configInst.config.tables??[])
+			const tables = await Sqlite.filterExistTables(C.wordDbSrc.dbRaw, configInst.config.tables??[])
 			const streams:Readable[] = new Array(tables.length)
 			for(let i = 0; i < tables.length; i++){
 				const ua = await C.wordDbSrc.readStream(tables[i])

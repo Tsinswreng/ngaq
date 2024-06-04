@@ -45,10 +45,10 @@ export class DbRow{
 	 * @returns 
 	 */
 	static linesToDbRows(lines:Line[]){
-		const valid = lines.map(e=>e.processedText())
-
+		const valids = lines.map(e=>e.processedText())
 		const dbRows = [] as DbRow[]
-		for(const v of valid){
+		for(const v of valids){
+			if(v == void 0 || v === ''){continue}
 			const [text, code] = v.split('\t')
 			const row:DbRow = {
 				text:text
@@ -104,9 +104,10 @@ export class DictDbSrc extends Abs_DbSrc{
 			ifNotExists = 'IF NOT EXISTS'
 		}
 		return `CREATE TABLE ${ifNotExists} "${tblName}" (
-			id INT PRIMARY KEY
+			id INTEGER PRIMARY KEY
 			,text TEXT
 			,code TEXT
+			,UNIQUE(text, code)
 		)`
 	}
 
@@ -117,7 +118,7 @@ export class DictDbSrc extends Abs_DbSrc{
 
 	createTable(tbl: string, opt?: CreateTableOpt){
 		const z = this
-		return z.This.createTable(z.db, tbl, opt)
+		return z.This.createTable(z.dbRaw, tbl, opt)
 	}
 
 	static createTrigger(db:sqlite3.Database, tbl:str, triggerName='replace_duplicate'){
@@ -131,7 +132,7 @@ export class DictDbSrc extends Abs_DbSrc{
 
 	createTrigger(tbl:str, triggerName='replace_duplicate'){
 		const z = this
-		return z.This.createTrigger(z.db, tbl, triggerName)
+		return z.This.createTrigger(z.dbRaw, tbl, triggerName)
 	}
 
 	static createIndexSql(tbl:str, indexName = `idx_${tbl}`){
@@ -147,13 +148,10 @@ export class DictDbSrc extends Abs_DbSrc{
 
 	createIndex(tbl:str, indexName=`idx_${tbl}`){
 		const z = this
-		return z.This.createIndex(z.db, tbl, indexName)
+		return z.This.createIndex(z.dbRaw, tbl, indexName)
 	}
 
 }
-
-
-
 
 
 import * as Tsv from "./tsv"
@@ -197,7 +195,8 @@ export class DictTbl extends Abs_Table{
 	async insertByTsvParser(tsvParser:Tsv.TsvParser, opt:parseDbRowsOpt){
 		const z = this
 		const bufferLineNum = opt.bufferLineNum
-		const runResults = [] as RunResult[]
+		//const runResults = [] as RunResult[]
+		await z.dbSrc.db.beginTrans()
 		for(let i = 0;;i++){
 			if(tsvParser.status.end){
 				break
@@ -205,16 +204,15 @@ export class DictTbl extends Abs_Table{
 			const lines = await tsvParser.readLines(bufferLineNum)
 			const bodyLines = lines.filter(e=>e.type.isBody)
 			const dbRows = DbRow.linesToDbRows(bodyLines)
-			const ua = await z.insertDbRows(dbRows)
-			if(ua != void 0){
-				runResults.push(ua)
+			const fn = await z.insertDbRows_fn(dbRows)
+			if(fn != void 0){
+				const ua = await fn()
 			}
 		}
-		
-		return runResults
+		return await z.dbSrc.db.commit()
 	}
 
-	static async insertDbRows(db:sqlite3.Database, tbl:str, rows:DbRow[]){
+	static async insertDbRows_fn(db:sqlite3.Database, tbl:str, rows:DbRow[]){
 		const dbRows = rows
 		if(dbRows.length === 0){
 			return
@@ -223,19 +221,24 @@ export class DictTbl extends Abs_Table{
 		const sqlObj = sqliteUtil.Sql.obj.new(dbRows[0])
 		const insertSql = sqlObj.geneFullInsertSql(tbl)
 		const stmt = await SqliteDb.prepare(db, insertSql)
-		const fn = ()=>{
+		//console.log(stmt.sql)//t
+		const fn = async()=>{
+			//const prms = [] as Promise<sqlite3.RunResult>[]
 			for(const row of dbRows){
 				const params = sqlObj.getParams(row)
-				stmt.run(params)
+				const pr = await stmt.run(params)
+				//prms.push(pr)
 			}
+			//return Promise.all(prms)
 		}
-		const [runResult] = await SqliteDb.transaction(db, fn)
-		return runResult
+		// const [runResult] = await SqliteDb.transaction(db, fn)
+		// return runResult
+		return fn
 	}
 
-	insertDbRows(rows:DbRow[]){
+	insertDbRows_fn(rows:DbRow[]){
 		const z = this
-		return z.This.insertDbRows(z.dbSrc.db, z.tableName, rows)
+		return z.This.insertDbRows_fn(z.dbSrc.db.db, z.tableName, rows)
 	}
 
 }

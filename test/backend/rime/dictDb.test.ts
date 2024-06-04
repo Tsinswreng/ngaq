@@ -9,7 +9,9 @@ const dbPath = process.cwd()+'/test/backend/sqlite.db'
 const dictPath = process.cwd()+"/test/backend/rime/dict.dict.yaml"
 
 describe('1', ()=>{
-
+	// async function refresh(){
+	// 	const sql = `DROP TABLE IF EXISTS ""`
+	// }
 
 	it('1',async()=>{
 		try {
@@ -26,14 +28,15 @@ describe('1', ()=>{
 			await dbSrc.createTrigger(tblName)
 			await dbSrc.createIndex(tblName)
 			const tbl = DictDb_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
-			await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 100})
+			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
+			console.log(ans)
 			console.log('done')
 		} catch (error) {
 			if(error instanceof DbErr){
 				console.error(error)
 				console.error(error.sql)
 			}
-			//throw error
+			throw error
 		}
 
 	})

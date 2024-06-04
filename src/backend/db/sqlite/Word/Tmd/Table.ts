@@ -37,7 +37,7 @@ export class WordTmdTable extends Abs_Table{
 	 */
 	async addOldCreatedTable(){
 		const z = this
-		const db = z.dbSrc.db
+		const db = z.dbSrc.dbRaw
 		const masters = await Sqlite.meta.querySqlite_master_unsafeInt(db)
 		//sqlite_master中諸表之名
 		const tableNames:string[] = []

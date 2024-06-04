@@ -29,7 +29,7 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 	// 	return o.__Init__(...props).then((d)=>{return d})
 	// }
 
-	protected override async __Init__(...props: Parameters<typeof WordTmdDbSrc.New>): Promise<void> {
+	protected override async __Init__(...props: Parameters<typeof WordTmdDbSrc.New>){
 		const o = this
 		await super.__Init__(...props)
 		o._TableClass = WordTmdTable
@@ -37,10 +37,9 @@ export class WordTmdDbSrc extends Abs_DbSrc{
 			_dbSrc:o
 			,_tableName: WordTmdDbSrc.metadataTableName
 		})
-		
+		return o
 		//console.log(props[0].)
 		//console.log(o._tmdTable.dbSrc.db)//t
-
 	}
 
 	protected _tmdTable:WordTmdTable
@@ -92,7 +91,7 @@ CREATE TABLE ${isExist} '${table}'(
 		const args = arguments
 		const got = [table, opt]
 		this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_before, got)
-		return WordTmdDbSrc.createTable(this.db, table, opt).then((d)=>{
+		return WordTmdDbSrc.createTable(this.dbRaw, table, opt).then((d)=>{
 			//this.eventEmmiter_deprecated.emit(this.eventNames_deprecated.createTable_after, args, d)
 		})
 	}

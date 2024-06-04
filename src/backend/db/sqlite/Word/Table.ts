@@ -278,7 +278,7 @@ export class WordTable extends Abs_Table{
 	}
 
 	addWordsOfSameTable_fn(words:Word[]){
-		return WordTable.addWordsOfSameTable_fn(this._dbSrc.db, words)
+		return WordTable.addWordsOfSameTable_fn(this._dbSrc.dbRaw, words)
 	}
 
 	async addWordsOfSameTable(words:Word[]){
@@ -287,7 +287,7 @@ export class WordTable extends Abs_Table{
 		//this.eventEmitter_deprecated.emit(this.eventNames.addRecords_before, args)
 		//this.linkedEmitter.emit(this.events.)
 		this.linkedEmitter.emit(this.events.addRecords_before)
-		return Sqlite.transaction(this.dbSrc.db, fn).then((d)=>{
+		return Sqlite.transaction(this.dbSrc.dbRaw, fn).then((d)=>{
 			//this.eventEmitter_deprecated.emit(this.eventNames.addRecords_before, args, d)
 		})
 	}
@@ -368,8 +368,8 @@ export class WordTable extends Abs_Table{
 	 */
 	async selectAllNoTblName(){
 		const z = this
-		const db = z.dbSrc.db
-		const sql = await Sqlite.SqlGenerator.selectAllIntSafe(z.dbSrc.db, z.tableName, [])
+		const db = z.dbSrc.dbRaw
+		const sql = await Sqlite.SqlGenerator.selectAllIntSafe(z.dbSrc.dbRaw, z.tableName, [])
 		//console.log(sql)
 		const ans:WordDbRow[] = await Sqlite.all(db, sql)
 		return ans

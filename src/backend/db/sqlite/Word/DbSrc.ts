@@ -38,7 +38,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	protected async __Init__(props:Parameters<typeof WordDbSrc.New>[0]){
 		const o = this
 		if(props._dbPath !== void 0){
-			o._db = await Sqlite.newDatabase(props._dbPath, props._mode)
+			o._dbRaw = await Sqlite.newDatabase(props._dbPath, props._mode)
 		}
 		props._tmdDbSrc = props._tmdDbSrc?? await WordTmdDbSrc.New({
 			_dbPath:props._dbPath
@@ -48,6 +48,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		Object.assign(o, props)
 		o._tmdTable = o.tmdDbSrc.tmdTable
 		o.initMdListener()
+		return o
 	}
 
 	get This(){return WordDbSrc}
@@ -116,8 +117,8 @@ export class WordDbSrc extends Abs_DbSrc{
 	/**@deprecated */
 	set tableName(v){this._tableName=v;}
 
-	protected _db = Sqlite.newDatabaseAsync(this.dbPath)
-	;public get db(){return this._db;};
+	protected _dbRaw = Sqlite.newDatabaseAsync(this.dbPath)
+	;public get dbRaw(){return this._dbRaw;};
 
 	protected _backupDbPath = this.dbPath
 	;public get backupDbPath(){return this._backupDbPath;};;public set backupDbPath(v){this._backupDbPath=v;};
@@ -167,7 +168,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		}
 		return Sqlite.all(db, getSql(table))
 	}public creatTable_deprecated(table=$a(this.tableName), ifNotExists=false){
-		return WordDbSrc.createTable_helper(this.db, table, ifNotExists)
+		return WordDbSrc.createTable_helper(this.dbRaw, table, ifNotExists)
 	}
 
 
@@ -175,7 +176,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		const ifNotExists = opt.ifNotExists
 		const args = arguments
 		this.linkedEmitter.emit(this.events.createTable_before, table, opt)
-		return WordDbSrc.createTable_helper(this.db, table, ifNotExists)
+		return WordDbSrc.createTable_helper(this.dbRaw, table, ifNotExists)
 		.then((d)=>{
 			this.linkedEmitter.emit(this.events.createTable_after, table, opt, d)
 		})
@@ -193,7 +194,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		return Sqlite.table.copyTableCrossDb(srcDb, srcTable, targetDb, neoName)
 		//return Sqlite.copyTableCrossDb(srcDb, srcTable, targetDb, neoName)
 	}
-	public backupTable(srcDb = this.db, srcTable = $a(this.tableName), targetDb=Sqlite.newDatabaseAsync(this.backupDbPath), neoName=this.tableName+Tempus.new().iso){
+	public backupTable(srcDb = this.dbRaw, srcTable = $a(this.tableName), targetDb=Sqlite.newDatabaseAsync(this.backupDbPath), neoName=this.tableName+Tempus.new().iso){
 		return WordDbSrc.backupTable( srcDb, srcTable , targetDb, neoName)
 	}
 
@@ -208,7 +209,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		return Sqlite.copyTable(db, $(newName), table)
 	}public backupTableInDb(oldTable=this.tableName, newName=oldTable+Tempus.new().iso){
 		const table:string = $a(oldTable)
-		return WordDbSrc.backupTableInDb(this.db, table, newName)
+		return WordDbSrc.backupTableInDb(this.dbRaw, table, newName)
 	}
 
 	/**
@@ -221,7 +222,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		const stmt = await Sqlite.stmt.getStmt_selectAllSafe(db, table)
 		return Sqlite.readStream_json(stmt, opts, {assign:false,fn:(row:VocaDbTable)=>{C.attachTableName([row], table)}})
 	}public readStream(table:string=$a(this.tableName)){
-		return C.readStream(this.db, table)
+		return C.readStream(this.dbRaw, table)
 	}
 
 
@@ -249,7 +250,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 * @returns 
 	 */
 	public backAllTables(){
-		return WordDbSrc.backAllTables(this.db)
+		return WordDbSrc.backAllTables(this.dbRaw)
 	}
 
 
@@ -280,7 +281,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	
 	public addWordsOfSameTable(words:Word[]){
 		WordDbSrc.checkTable($(this.tableName), words)
-		return WordDbSrc.addWordsOfSameTable_fn(this.db, words)
+		return WordDbSrc.addWordsOfSameTable_fn(this.dbRaw, words)
 	}
 	
 	/**
@@ -323,7 +324,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	
 	public setWordsByIds(words:Word[], ids:number[]){
 		const table:string=$(this.tableName)
-		return WordDbSrc.setWordsByIds_fn(this.db, table, words, ids)
+		return WordDbSrc.setWordsByIds_fn(this.dbRaw, table, words, ids)
 	}
 
 
@@ -352,7 +353,7 @@ export class WordDbSrc extends Abs_DbSrc{
 		return r
 	}public getAllWords(table?:string){
 		const table_=table??this.tableName
-		return WordDbSrc.getAllWords(this.db, $(table_))
+		return WordDbSrc.getAllWords(this.dbRaw, $(table_))
 	}
 
 
@@ -375,7 +376,7 @@ export class WordDbSrc extends Abs_DbSrc{
 	 */
 	saveWords(words:Word[]){
 		const z = this
-		return z.This.saveWords(z.db, words)
+		return z.This.saveWords(z.dbRaw, words)
 	}
 
 	/**

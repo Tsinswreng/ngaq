@@ -26,7 +26,7 @@ export class UserTable{
 	async addRecords(objs:UserDbRow[]):Promise<RunResult[]>{
 		$a(objs, 'empty array')
 		const [sql,] = this.dbSrc.genSql_insert(this.tableName, objs[0])
-		const stmt = await Sqlite.prepare(this.dbSrc.db, sql)
+		const stmt = await Sqlite.prepare(this.dbSrc.dbRaw, sql)
 		const ans = [] as RunResult[]
 		for(let i = 0; i < objs.length; i++){
 			const o = objs[i]

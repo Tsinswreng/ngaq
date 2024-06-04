@@ -127,7 +127,7 @@ export abstract class Abs_Table{
 		
 
 		const [sql,] = this.genQry_insert(this.tableName, objs[0])
-		const stmt = await Sqlite.prepare(this.dbSrc.db, sql)
+		const stmt = await Sqlite.prepare(this.dbSrc.db.db, sql)
 		const fn = async()=>{
 			const ans = [] as RunResult[]
 			for(let i = 0; i < objs.length; i++){
