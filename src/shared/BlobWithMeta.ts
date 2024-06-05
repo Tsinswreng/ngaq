@@ -1,6 +1,32 @@
 type uint64 = number
 
-export class Package{
+export class BlobWithMeta{
+
+	static readonly HEADER_LEN = 8 //8字節
+
+	static pack(text:str, binary:ArrayBuffer){
+		const byteCount = new TextEncoder().encode(text).byteLength
+		const ans = BlobWithMeta.new()
+		ans.head = byteCount
+		ans.binary = binary
+		ans.text = text
+		return ans
+	}
+
+	static parse(data: ArrayBuffer){
+		const len = this.HEADER_LEN
+		const header = new Uint8Array(data.slice(0, len)); // 64 bits = 8 bytes
+		const view = new DataView(header.buffer);
+		const byteCount:uint64 = view.getUint8(0); // 從 header 的前 8 bytes 讀取 byteCount
+		const stringData = new TextDecoder().decode(data.slice(len, len + byteCount));
+		const binaryData = data.slice(len + byteCount);
+		const pack = BlobWithMeta.new()
+		pack.head = byteCount
+		pack.text = stringData
+		pack.binary = binaryData
+		return pack
+	}
+
 	static new(){
 		const z = new this()
 		return z
@@ -21,34 +47,6 @@ export class Package{
 			, ...new Uint8Array(z.binary)
 		]);
 		return concatenatedBuffer
-	}
-
-}
-
-export class BlobWithMeta{
-	static HEADER_LEN = 8 //8字節
-
-	static mkPackage(text:str, binary:ArrayBuffer){
-		const byteCount = new TextEncoder().encode(text).byteLength
-		const ans = Package.new()
-		ans.head = byteCount
-		ans.binary = binary
-		ans.text = text
-		return ans
-	}
-
-	static parse(data: ArrayBuffer){
-		const len = this.HEADER_LEN
-		const header = new Uint8Array(data.slice(0, len)); // 64 bits = 8 bytes
-		const view = new DataView(header.buffer);
-		const byteCount:uint64 = view.getUint8(0); // 從 header 的前 8 bytes 讀取 byteCount
-		const stringData = new TextDecoder().decode(data.slice(len, len + byteCount));
-		const binaryData = data.slice(len + byteCount);
-		const pack = Package.new()
-		pack.head = byteCount
-		pack.text = stringData
-		pack.binary = binaryData
-		return pack
 	}
 }
 
