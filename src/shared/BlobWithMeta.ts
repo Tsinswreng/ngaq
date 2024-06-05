@@ -8,7 +8,7 @@ export class BlobWithMeta{
 		const byteCount = new TextEncoder().encode(text).byteLength
 		const ans = BlobWithMeta.new()
 		ans.head = byteCount
-		ans.binary = binary
+		ans.arrBuf = binary
 		ans.text = text
 		return ans
 	}
@@ -23,7 +23,7 @@ export class BlobWithMeta{
 		const pack = BlobWithMeta.new()
 		pack.head = byteCount
 		pack.text = stringData
-		pack.binary = binaryData
+		pack.arrBuf = binaryData
 		return pack
 	}
 
@@ -34,7 +34,7 @@ export class BlobWithMeta{
 	/** byteCount */
 	head:uint64
 	text:str
-	binary:ArrayBuffer
+	arrBuf:ArrayBuffer
 
 	toUint8Arr(){
 		const z = this
@@ -44,7 +44,7 @@ export class BlobWithMeta{
 		const concatenatedBuffer = new Uint8Array([
 			...head
 			, ...new TextEncoder().encode(z.text)
-			, ...new Uint8Array(z.binary)
+			, ...new Uint8Array(z.arrBuf)
 		]);
 		return concatenatedBuffer
 	}

@@ -12,6 +12,7 @@ import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { BlobWithMeta } from "@shared/BlobWithMeta";
 
 export class WebNgaqSvc extends NgaqSvc{
 
@@ -171,24 +172,29 @@ export class WebNgaqSvc extends NgaqSvc{
 
 	async getImg(){
 		const z = this
-		return z.client.get_randomImg2()
+		//return z.client.get_randomImg2()
+		return z.client.get_randomImg4()
 	}
 
-	async getNumArrImg(){
+	async getImg_arrBuf(){
 		const z = this
 		const resp = await z.getImg()
-		const json = await resp.json()
-		console.log(json['text'])//t
-		const buffer = json['blob']
-		//console.log(buffer)//t
-		const arr:int[] = buffer.data
-		return arr
-		// //@ts-ignore
-		// const u8Arr = new Uint8Array(arr)
-		// console.log(u8Arr)
-		// //const u8Arr:Uint8Array = buffer['data']
-		// return u8Arr
+		const buf = await resp.arrayBuffer()
+		const pack = BlobWithMeta.parse(buf)
+		console.log(pack.text)//t 
+		return pack.arrBuf
 	}
+
+	// async getNumArrImg(){
+	// 	const z = this
+	// 	const resp = await z.getImg()
+	// 	const json = await resp.json()
+	// 	console.log(json['text'])//t
+	// 	const buffer = json['blob']
+	// 	//console.log(buffer)//t
+	// 	const arr:int[] = buffer.data
+	// 	return arr
+	// }
 
 	
 

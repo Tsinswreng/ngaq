@@ -107,6 +107,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 }
 
 import { routes } from "@shared/Routes";
+import { BlobWithMeta } from "@shared/BlobWithMeta";
 const RT = routes
 //console.log(RT)
 
@@ -450,8 +451,21 @@ export default class VocaServer{
 				blob:bin
 				,text:path
 			})
-			console.log(bin)
 			
+		})
+
+		C.app.get('/randomImg4', async(req,res)=>{
+			if(!ri){return}
+			const nunc = Tempus.new()
+			console.log(req.path+' '+Tempus.format(nunc))
+			//res.sendFile(ri.oneRandomFile())
+			const path = ri.oneRandomFile()
+			const bin = fs.readFileSync(path)
+			const pack = BlobWithMeta.pack(path, bin)
+			const u8arr = pack.toUint8Arr()
+			res.setHeader('Content-Type', 'application/octet-stream')
+			res.setHeader('Content-Length', u8arr.byteLength.toString())
+			res.send(Buffer.from(u8arr.buffer))
 		})
 
 		/** test */

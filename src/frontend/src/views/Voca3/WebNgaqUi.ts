@@ -338,10 +338,10 @@ export class WebNgaqUi{
 		if(z.uiStuff.lockBg.value == true){
 			return
 		}
-		const numArr = await z.svc.getNumArrImg()
+		const arrBuf = await z.svc.getImg_arrBuf()
 		//console.log(u8Arr instanceof Uint8Array) false
 		//console.log(u8Arr)//t +
-		return z.bgImg.setBg_numArr(numArr)
+		return z.bgImg.setBg_arrBuf(arrBuf)
 	}
 
 	protected _initSvcListeners(){
@@ -489,11 +489,31 @@ class BgImg{
 		return frut.numArrToBase64(bytes)
 	}
 
+	static arrBufToBase64(buffer:ArrayBuffer){
+		//let binary = '';
+		const sb = [] as str[]
+		const bytes = new Uint8Array(buffer);
+		const len = bytes.byteLength;
+		for (let i = 0; i < len; i++) {
+			const binary = String.fromCharCode(bytes[i]);
+			sb.push(binary)
+		}
+		const binary = sb.join('')
+		return window.btoa(binary);
+	}
+
 	setBg_numArr(bytes:int[]){
 		const z = this
 		const base64 = z.This.numArrToBase64(bytes)
 		return z.setBg_base64(base64)
 	}
+
+	setBg_arrBuf(arrBuf:ArrayBuffer){
+		const z = this
+		const base64 = z.This.arrBufToBase64(arrBuf)
+		return z.setBg_base64(base64)
+	}
+
 
 	setBg_base64(base64:str){
 		const z = this
