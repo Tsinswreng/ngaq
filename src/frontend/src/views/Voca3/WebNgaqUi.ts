@@ -377,46 +377,6 @@ export class WebNgaqUi{
 		z.svc.discardChangeEtEnd()
 	}
 
-	// async d(){
-	// 	const z = this
-	// 	const blob = new Blob(['123'], {type: 'text'})
-	// 	const url = URL.createObjectURL(blob)
-	// 	console.log(url)
-	// 	for(let i = 0; i < url.length; i++){
-	// 		console.log(url[i])
-	// 	}
-	// }
-
-	// async test_get_imgU8Arr(){
-	// 	const z = this
-	// 	const got:Response = await z.svc.testImg()
-	// 	const json = await got.json()
-	// 	console.log(json['text'], 'text')//t
-	// 	const buffer = json['blob']
-	// 	const data:Uint8Array = buffer.data
-	// 	return data
-	// }
-
-	// test_getImg(){
-	// 	const z = this
-	// 	const imgs = document.getElementsByClassName(z.htmlClass.class_bg.value)
-	// 	const first = imgs[0] as HTMLImageElement
-	// 	if(first == void 0){
-	// 		console.error(`first == void 0`)
-	// 		return
-	// 	}
-	// 	return first
-	// }
-
-	// async tb(){
-	// 	const z = this
-	// 	const data = await z.test_get_imgU8Arr()
-	// 	const base8964 = testU8ArrToBase64(data)
-	// 	const prefix = `data:image/png;base64,`
-	// 	const first = $(z.test_getImg())
-	// 	first.src = prefix+base8964
-	// 	z.t1()
-	// }
 
 	// async tu(){
 	// 	const z = this
@@ -442,16 +402,7 @@ export class WebNgaqUi{
 	// 	// // 釋放URL資源
 	// 	// URL.revokeObjectURL(imageUrl);
 	// }
-	// t0(){
-	// 	const z = this
-	// 	z.uiStuff.isShowRandomBg.value = true
-	// 	z.uiStuff.isShowRandomBg.value = false
-	// }
-	// t1(){
-	// 	const z = this
-	// 	z.uiStuff.isShowRandomBg.value = false
-	// 	z.uiStuff.isShowRandomBg.value = true
-	// }
+
 }
 
 class BgImgUiStuff{

@@ -1,3 +1,4 @@
+
 import * as Ut from '@shared/Ut'
 
 
@@ -27,46 +28,103 @@ function locate(text: string, index: number) {
 	return [line, column];
 }
 
+enum EleType{
+
+}
+
+class Ele{
+	start:int
+	end:int
+	type:EleType
+}
+
+
+
+export interface I_readNChars{
+	read(n:int):Promise<str[]>
+}
+
+enum Position{
+	dateBlock='dateBlock'
+	,wordBlock='wordBlock'
+}
+
+class Location{
+	stack:Position[]=[]
+}
+
+class Status{
+	index:int = -1
+	location = new Location()
+}
+
+class DateBlock{
+	date:str
+	text:str
+}
+
 export class NgaqSrcParser{
 	protected constructor(){}
 	protected __init__(...args:Parameters<typeof NgaqSrcParser.new>){
 		const z = this
-		z.str = args[0]
+		z._readNChar = args[0]
 		return z
 	}
-	static new(str:str){
+	static new(_readNChar:I_readNChars){
 		const z = new this()
-		z.__init__(str)
+		z.__init__(_readNChar)
 		return z
 	}
-	str:str
-	index:int = 0
+	
+	protected _readNChar:I_readNChars
+	get readNChar(){return this._readNChar}
+	protected set readNChar(v){this._readNChar = v}
+	
 
+	protected _status = new Status()
+	get status(){return this._status}
+	protected set status(v){this._status = v}
+	
+	protected _buffer:str[]
+	get buffer(){return this._buffer}
+	protected set buffer(v){this._buffer = v}
+	
+
+	/** 
+	 * //TODO 判斷越界 
+	 * 
+	 */
+	peek(){
+		const z = this
+		return z.buffer[0]
+	}
+	
 	error(v){
 		throw new Error(v)
 	}
 
 	eat(str:str, required?:bool){
 		const z = this
-		if(0){
-
-		}
+		const len = str.length
+		
 	}
+
+	async readN(n:int){
+		const z = this
+		const charArr = await z.readNChar.read(n)
+		z.buffer.push(...charArr)
+	}
+
+	readDateBlock(){
+
+	}
+
+	readWhite(){
+		const z = this
+		
+	}
+
 }
-
-
-
-
-
-
-
-
-function token(str:string){
-	
-}
-
-console.log(token)
-export {}
 
 
 /* 

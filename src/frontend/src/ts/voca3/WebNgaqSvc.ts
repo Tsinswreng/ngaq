@@ -12,7 +12,8 @@ import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
-import { BlobWithMeta } from "@shared/BlobWithMeta";
+import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
+import { TagImg } from "@shared/TagImg";
 
 export class WebNgaqSvc extends NgaqSvc{
 
@@ -170,7 +171,7 @@ export class WebNgaqSvc extends NgaqSvc{
 		return true
 	}
 
-	async getImg(){
+	protected async getImgResp(){
 		const z = this
 		//return z.client.get_randomImg2()
 		return z.client.get_randomImg4()
@@ -178,11 +179,21 @@ export class WebNgaqSvc extends NgaqSvc{
 
 	async getImg_arrBuf(){
 		const z = this
-		const resp = await z.getImg()
+		const resp = await z.getImgResp()
 		const buf = await resp.arrayBuffer()
-		const pack = BlobWithMeta.parse(buf)
-		console.log(pack.text)//t 
+		const pack = BlobWithText.parse(buf)
+		console.log(pack.text)//t
 		return pack.arrBuf
+	}
+
+	async getImg(){
+		const z = this
+		const resp = await z.getImgResp()
+		const buf = await resp.arrayBuffer()
+		const pack = BlobWithText.parse(buf)
+		const tagImg = TagImg.new(pack.arrBuf, pack.text)
+		tagImg.url = pack.text
+		return tagImg
 	}
 
 	// async getNumArrImg(){
