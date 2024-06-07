@@ -81,7 +81,7 @@ export class DictTbl{
 		}
 
 		const sqlObj = sqliteUtil.Sql.obj.new(dbRows[0])
-		const insertSql = sqlObj.geneFullInsertSql(tbl)
+		const insertSql = sqlObj.geneFullInsertSql(tbl, {orIgnore:true})
 		const stmt = await SqliteDb.prepare(db, insertSql)
 		//console.log(stmt.sql)//t
 		const fn = async()=>{

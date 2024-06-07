@@ -62,6 +62,14 @@ END;
 	}
 
 
+	/**
+	 * 性能不如 INSERT OR IGNORE INTO xxx
+	 * @param tblName 
+	 * @param triggerName 
+	 * @param colNames 
+	 * @param opt 
+	 * @returns 
+	 */
 	static trigger_ignore_duplicate_insert(tblName:str, triggerName:str , colNames:str[], opt:CreateTriggerOpt){
 
 		/** a = NEW.a ${join} b = NEW.b ... */
@@ -83,9 +91,6 @@ BEFORE INSERT ON "${tblName}"
 FOR EACH ROW 
 WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause})
 BEGIN
-	-- UPDATE "${tblName}"
-	-- SET ${toSet}
-	-- WHERE ${whereClause};
 	SELECT RAISE(IGNORE);
 END;
 `
@@ -117,6 +122,11 @@ function getObjKeys(obj:kvobj, ignoredKeys:str[]=[]){
 
 interface I_IgnoredKeys{
 	ignoredKeys:str[]
+}
+
+
+export interface Opt_insert{
+	orIgnore:bool
 }
 class ObjSql{
 	protected constructor(){}
@@ -174,11 +184,15 @@ class ObjSql{
 	 * @param tbl 
 	 * @returns `INSERT INTO '${tbl}' (${columns}) VALUES (${placeholders})`
 	 */
-	geneFullInsertSql(tbl:str){
+	geneFullInsertSql(tbl:str ,opt?:Opt_insert){
 		const z = this
+		let orIgnore = ''
+		if(opt?.orIgnore){
+			orIgnore = 'OR IGNORE'
+		}
 		const columns = z.getColNamesStr()
 		const placeholders = z.getPlaceholdersStr()
-		return `INSERT INTO '${tbl}' (${columns}) VALUES (${placeholders})`
+		return `INSERT ${orIgnore} INTO '${tbl}' (${columns}) VALUES (${placeholders})`
 	}
 
 

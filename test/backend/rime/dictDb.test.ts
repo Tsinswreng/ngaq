@@ -71,10 +71,9 @@ describe('test insert duplicate', ()=>{
 			await dbSrc.dropTable(tblName, {checkExist:false})
 			await dbSrc.createTable(tblName, {checkExist:false})
 			await dbSrc.createTrigger(tblName)
-			await dbSrc.createIndex(tblName)
-			//const tbl = DictTbl_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
 			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
+			await dbSrc.createIndex(tblName)
 		} catch (error) {
 			if(error instanceof DbErr){
 				console.error(error)

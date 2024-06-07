@@ -74,7 +74,7 @@ export class DictDbSrc{
 		return z.This.createTable(z.dbRaw, tbl, opt)
 	}
 
-	static createTrigger(db:sqlite3.Database, tbl:str, triggerName='replace_duplicate'){
+	static createTrigger(db:sqlite3.Database, tbl:str, triggerName='ignore_duplicate_insert'){
 		const c = DbRow.col
 		
 		const sql = sqliteUtil.Sql.create.trigger_ignore_duplicate_insert(
@@ -83,7 +83,7 @@ export class DictDbSrc{
 		return SqliteDb.run(db, sql)
 	}
 
-	createTrigger(tbl:str, triggerName='replace_duplicate'){
+	createTrigger(tbl:str, triggerName='ignore_duplicate_insert'){
 		const z = this
 		return z.This.createTrigger(z.dbRaw, tbl, triggerName)
 	}
