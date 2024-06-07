@@ -21,6 +21,7 @@ const IF_NOT_EXISTS = 'IF NOT EXISTS'
 class CreateSql{
 	
 	/**
+	 * @deprecated 理則不善。緣UPDATE中新ᐪ與舊ᐪˋ皆褈複也。
 	 * 生成一个用于创建 SQLite 触发器的 SQL 语句，该触发器用于在插入操作时检查是否存在重复的行。
 	 * 并在存在重复时用新数据覆盖旧数据。
 	 * @param {string} tblName - 表名，触发器将在该表上创建。
@@ -46,27 +47,51 @@ class CreateSql{
 			ifNotExists = IF_NOT_EXISTS
 		}
 		const sql = 
-		`CREATE TRIGGER ${ifNotExists} "${triggerName}" 
-		BEFORE INSERT ON "${tblName}"
-		FOR EACH ROW 
-		WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause})
-		BEGIN
-			UPDATE "${tblName}"
-			SET ${toSet}
-			WHERE ${whereClause};
-			SELECT RAISE(IGNORE);
-
-		END;
-		`
+`CREATE TRIGGER ${ifNotExists} "${triggerName}" 
+BEFORE INSERT ON "${tblName}"
+FOR EACH ROW 
+WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause})
+BEGIN
+	UPDATE "${tblName}"
+	SET ${toSet}
+	WHERE ${whereClause};
+	SELECT RAISE(IGNORE);
+END;
+`
 		return sql
-		/* 
-SELECT CASE WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause}) THEN
-				UPDATE "${tblName}" SET ${colNames.map(c => `"${c}"=NEW."${c}"`).join(',')} WHERE ${whereClause};
-				RAISE(IGNORE);
-				--RETURN;
-			END;
-		*/
 	}
+
+
+	static trigger_ignore_duplicate_insert(tblName:str, triggerName:str , colNames:str[], opt:CreateTriggerOpt){
+
+		/** a = NEW.a ${join} b = NEW.b ... */
+		function geneSeg(colNames:str[], join:str):str{
+			const arr = colNames.map(e=>{
+				return ` ${e}=NEW.${e} `
+			})
+			return arr.join(join)
+		}
+		const whereClause = geneSeg(colNames, ' AND ') /** a = NEW.a AND b = NEW.b ... */
+		const toSet = geneSeg(colNames, ',') /** a = NEW.a , b = NEW.b ... */
+		let ifNotExists = ''
+		if(!opt.checkExist){
+			ifNotExists = IF_NOT_EXISTS
+		}
+		const sql = 
+`CREATE TRIGGER ${ifNotExists} "${triggerName}" 
+BEFORE INSERT ON "${tblName}"
+FOR EACH ROW 
+WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause})
+BEGIN
+	-- UPDATE "${tblName}"
+	-- SET ${toSet}
+	-- WHERE ${whereClause};
+	SELECT RAISE(IGNORE);
+END;
+`
+		return sql
+	}
+
 
 	static index(tbl:str, indexName:str, cols:str[], opt:CreateIndexOpt){
 		let ifNotExists = ''

@@ -5,26 +5,28 @@ import { DbRow } from "./DictDbRow"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import * as sqliteUtil from '@backend/sqlite/sqliteUitl'
 import type sqlite3 from 'sqlite3'
+import { DictDbSrc, DictDbSrcNewOpt } from "./DictDbSrc"
 
 export class parseDbRowsOpt{
 	bufferLineNum = 65536
 
 }
 
-export class DictTbl extends Abs_Table{
+export class DictTbl{
 	protected constructor(){
-		super()
+
 	}
 
 	protected __init__(...args:Parameters<typeof DictTbl.new>){
 		const z = this
-		super.__init__(...args)
+		z._dbSrc = args[0]
+		z._tblName = args[1]
 		return z
 	}
 
-	static new(...args:Parameters<typeof Abs_Table.new>){
+	static new(dbSrc:DictDbSrc, tblName:str){
 		const z = new this()
-		z.__init__(...args)
+		z.__init__(dbSrc, tblName)
 		return z
 	}
 
@@ -34,6 +36,17 @@ export class DictTbl extends Abs_Table{
 	// 	z.__init__(tableName)
 	// 	return z
 	// }
+
+	protected _dbSrc:DictDbSrc
+	get dbSrc(){return this._dbSrc}
+	protected set dbSrc(v){this._dbSrc = v}
+
+
+	protected _tblName:str
+	get tableName(){return this._tblName}
+	protected set tableName(v){this._tblName = v}
+	
+	
 
 	/**
 	 * tsvParserʸ all linesˇ dbʰ insert

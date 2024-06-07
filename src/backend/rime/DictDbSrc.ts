@@ -30,13 +30,13 @@ export class DictDbSrc{
 	// 	return z
 	// }
 
-	protected __init__(...props:Parameters<typeof DictDbSrc.new>) {
+	protected __init__(...args:Parameters<typeof DictDbSrc.new>) {
 		const z = this
-		
+		z._db = args[0]
 		return z
 	}
 
-	static new(db:SqliteDb, opt:DictDbSrcNewOpt){
+	static new(db:SqliteDb, opt?:DictDbSrcNewOpt){
 		const z = new this()
 		z.__init__(db, opt)
 		return z
@@ -51,9 +51,9 @@ export class DictDbSrc{
 	get dbRaw(){return this._db.db}
 	
 
-	static createTableSql(tblName:str, opt?: CreateTableOpt){
+	static createTableSql(tblName:str, opt?: sqliteUtil.I_optCheckExist){
 		let ifNotExists = ''
-		if(opt?.ifNotExists){
+		if(!opt?.checkExist){
 			ifNotExists = 'IF NOT EXISTS'
 		}
 		return `CREATE TABLE ${ifNotExists} "${tblName}" (
@@ -64,12 +64,12 @@ export class DictDbSrc{
 		)`
 	}
 
-	static createTable(db:sqlite3.Database, tbl:str, opt?:CreateTableOpt){
+	static createTable(db:sqlite3.Database, tbl:str, opt?: sqliteUtil.I_optCheckExist){
 		const sql = this.createTableSql(tbl, opt)
 		return SqliteDb.run(db, sql)
 	}
 
-	createTable(tbl: string, opt?: CreateTableOpt){
+	createTable(tbl: string, opt?: sqliteUtil.I_optCheckExist){
 		const z = this
 		return z.This.createTable(z.dbRaw, tbl, opt)
 	}
@@ -77,7 +77,7 @@ export class DictDbSrc{
 	static createTrigger(db:sqlite3.Database, tbl:str, triggerName='replace_duplicate'){
 		const c = DbRow.col
 		
-		const sql = sqliteUtil.Sql.create.trigger_replaceDuplicate(
+		const sql = sqliteUtil.Sql.create.trigger_ignore_duplicate_insert(
 			tbl, triggerName, [c.text, c.code], {checkExist:false}
 		)
 		return SqliteDb.run(db, sql)
