@@ -6,9 +6,13 @@ import { DbErr } from '@backend/sqlite/Sqlite'
 import * as File from '@backend/util/File'
 import sqlite3 from 'sqlite3'
 sqlite3.verbose()
+const tblName = 'cangjie5'
 const dbPath = process.cwd()+'/test/backend/sqlite.db'
 const dictPath = process.cwd()+"/test/backend/rime/dict.dict.yaml"
+async function dropTbl(){
+	const sql = `DROP TABLE IF EXISTS ${tblName}`
 
+}
 describe('1', ()=>{
 	// async function refresh(){
 	// 	const sql = `DROP TABLE IF EXISTS ""`
@@ -23,8 +27,8 @@ describe('1', ()=>{
 				}
 			}
 			const tsvParser = Tsv.TsvParser.new(readN)
-			const dbSrc = await DictDbSrc_.DictDbSrc.New({_dbPath:dbPath})
-			const tblName = 'cangjie5'
+			const dbSrc = await DictDbSrc_.DictDbSrc.new({_dbPath:dbPath})
+			
 			await dbSrc.createTable(tblName, {ifNotExists:true})
 			await dbSrc.createTrigger(tblName)
 			await dbSrc.createIndex(tblName)

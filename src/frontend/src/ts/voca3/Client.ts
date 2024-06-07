@@ -22,9 +22,20 @@ export class Client{
 	set baseUrl(v){this._baseUrl = v}
 
 
+	/**
+	 * @deprecated
+	 * @returns 
+	 */
 	async get_randomImg2(){
 		const z = this
 		const url = new URL('/randomImg2', z.baseUrl)
+		const got = await fetch(url)
+		return got
+	}
+
+	async get_randomImg4(){
+		const z = this
+		const url = new URL('/randomImg4', z.baseUrl)
 		const got = await fetch(url)
 		return got
 	}

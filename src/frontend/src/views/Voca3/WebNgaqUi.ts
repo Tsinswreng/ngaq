@@ -7,7 +7,8 @@ import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $, delay, mergeErrStack } from "@shared/Ut"
 import { Exception } from "@shared/Exception"
-
+import * as Le from '@shared/linkedEvent'
+import EventEmitter3 from 'EventEmitter3'
 
 // function testU8ArrToBase64(uint8Array:Uint8Array){
 // // 假设您有一个名为 uint8Array 的 UInt8Array 对象
@@ -26,6 +27,17 @@ import { Exception } from "@shared/Exception"
 // const base64String = btoa(binaryString);
 // return base64String
 // }
+
+
+const EV = Le.Event.new.bind(Le.Event)
+export class UiEvents extends Le.Events{
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+	changeBg = EV<[TagImg]>('changeBg')
+}
 
 class HtmlClass{
 	/** @deprecated */
@@ -106,6 +118,7 @@ export class WebNgaqUi{
 		const z = this
 		z._svc = await WebNgaqSvc.New()
 		z._initSvcListeners()
+		z._initListener()
 		z.registerToWindow()
 		return z
 	}
@@ -113,6 +126,14 @@ export class WebNgaqUi{
 	protected _svc:WebNgaqSvc
 	get svc(){return this._svc}
 
+	protected _emitter = Le.LinkedEmitter.new(new EventEmitter3())
+	get emitter(){return this._emitter}
+	protected set emitter(v){this._emitter = v}
+
+	protected _events = UiEvents.new()
+	get events(){return this._events}
+	protected set events(v){this._events = v}
+	
 	protected _bgImg = BgImg.new()
 	get bgImg(){return this._bgImg}
 
@@ -131,6 +152,16 @@ export class WebNgaqUi{
 
 	protected _htmlId = new HtmlId()
 	get htmlId(){return this._htmlId}
+
+
+	protected _initListener(){
+		const z = this
+		const ev = z.events
+		z.emitter.on(ev.changeBg, (img)=>{
+			console.log(img.meta)
+			console.log(img.url)
+		})
+	}
 
 	registerToWindow(){
 		const z = this
@@ -338,10 +369,11 @@ export class WebNgaqUi{
 		if(z.uiStuff.lockBg.value == true){
 			return
 		}
-		const arrBuf = await z.svc.getImg_arrBuf()
-		//console.log(u8Arr instanceof Uint8Array) false
-		//console.log(u8Arr)//t +
-		return z.bgImg.setBg_arrBuf(arrBuf)
+		// const arrBuf = await z.svc.getImg_arrBuf()
+		// return z.bgImg.setBg_arrBuf(arrBuf)
+		const img = await z.svc.getImg()
+		z.emitter.emit(z.events.changeBg, img)
+		return z.bgImg.setBg_Img(img)
 	}
 
 	protected _initSvcListeners(){
@@ -476,6 +508,11 @@ class BgImg{
 		first.src = z.This.base64ImgPrefix+base64
 	}
 
+	setBg_Img(img:TagImg){
+		const z = this
+		return z.setBg_arrBuf(img.arrBuf)
+	}
+
 	// async showBg(){
 	// 	const z = this
 	// 	if(z.curBg_bytes == void 0){
@@ -489,5 +526,5 @@ class BgImg{
 
 
 import * as frut from '@ts/frut'
-import { re } from "mathjs"
+import { TagImg } from "@shared/TagImg"
 

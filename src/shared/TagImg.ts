@@ -7,6 +7,7 @@ export class TagImg extends Img{
 
 	protected __init__(...args: Parameters<typeof TagImg.new>){
 		const z = this
+		super.__init__(...args)
 		return z
 	}
 

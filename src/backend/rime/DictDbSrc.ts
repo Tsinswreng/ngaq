@@ -10,10 +10,14 @@ interface I_CreateTrigger{
 	triggerName:str
 }
 
-export class DictDbSrc extends Abs_DbSrc{
+export interface DictDbSrcNewOpt{
+
+}
+
+export class DictDbSrc{
 
 	protected constructor(){
-		super()
+		//super()
 	}
 	// protected __init__(...args: Parameters<typeof DictDbSrc.new>){
 	// 	const z = this
@@ -26,23 +30,26 @@ export class DictDbSrc extends Abs_DbSrc{
 	// 	return z
 	// }
 
-	protected async __Init__(...props:Parameters<typeof DictDbSrc.New>) {
+	protected __init__(...props:Parameters<typeof DictDbSrc.new>) {
 		const z = this
-		await super.__Init__(...props)
+		
 		return z
 	}
 
-	static override async New(...prop:Parameters<typeof Abs_DbSrc.New>){
+	static new(db:SqliteDb, opt:DictDbSrcNewOpt){
 		const z = new this()
-		await z.__Init__(...prop)
+		z.__init__(db, opt)
 		return z
-	}
-
-	static fromDb(db:sqlite3.Database){
-
 	}
 
 	get This(){return DictDbSrc}
+
+	protected _db:SqliteDb
+	get db(){return this._db}
+	protected set db(v){this._db = v}
+
+	get dbRaw(){return this._db.db}
+	
 
 	static createTableSql(tblName:str, opt?: CreateTableOpt){
 		let ifNotExists = ''
@@ -71,7 +78,7 @@ export class DictDbSrc extends Abs_DbSrc{
 		const c = DbRow.col
 		
 		const sql = sqliteUtil.Sql.create.trigger_replaceDuplicate(
-			tbl, triggerName, [c.text, c.code], {ifNotExists:true}
+			tbl, triggerName, [c.text, c.code], {checkExist:false}
 		)
 		return SqliteDb.run(db, sql)
 	}
@@ -83,7 +90,7 @@ export class DictDbSrc extends Abs_DbSrc{
 
 	static createIndexSql(tbl:str, indexName = `idx_${tbl}`){
 		const c = DbRow.col
-		const sql = sqliteUtil.Sql.create.index(tbl, indexName, [c.text, c.code], {ifNotExists:true})
+		const sql = sqliteUtil.Sql.create.index(tbl, indexName, [c.text, c.code], {checkExist:false})
 		return sql
 	}
 
@@ -95,6 +102,20 @@ export class DictDbSrc extends Abs_DbSrc{
 	createIndex(tbl:str, indexName=`idx_${tbl}`){
 		const z = this
 		return z.This.createIndex(z.dbRaw, tbl, indexName)
+	}
+
+	static dropTable(db:sqlite3.Database, tbl:str, opt:sqliteUtil.I_optCheckExist){
+		let ifExists = ''
+		if(opt.checkExist === false){
+			ifExists = 'IF EXISTS'
+		}
+		const sql = `DROP TABLE ${ifExists} "${tbl}"`
+		return SqliteDb.run(db, sql)
+	}
+
+	dropTable(tbl:str, opt:sqliteUtil.I_optCheckExist){
+		const z = this
+		return z.This.dropTable(z.dbRaw, tbl, opt)
 	}
 
 }

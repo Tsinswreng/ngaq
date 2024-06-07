@@ -1,12 +1,20 @@
 
 
-
-export class CreateTriggerOpt{
-	ifNotExists = false
+export interface I_optCheckExist{
+	/** 
+	 * checkExist潙false旹 在 創建旹 表現潙 有 if not exsists 
+	 * 在 刪除旹 表現潙 有 if EXISTS
+	 */
+	checkExist:bool
 }
 
-export class CreateIndexOpt{
-	ifNotExists = false
+
+export interface CreateTriggerOpt extends I_optCheckExist{
+	// ifNotExists = false
+}
+
+export interface CreateIndexOpt extends I_optCheckExist{
+
 }
 const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
@@ -34,8 +42,8 @@ class CreateSql{
 		const whereClause = geneSeg(colNames, ' AND ') /** a = NEW.a AND b = NEW.b ... */
 		const toSet = geneSeg(colNames, ',') /** a = NEW.a , b = NEW.b ... */
 		let ifNotExists = ''
-		if(opt.ifNotExists){
-			ifNotExists = 'IF NOT EXISTS'
+		if(!opt.checkExist){
+			ifNotExists = IF_NOT_EXISTS
 		}
 		const sql = 
 		`CREATE TRIGGER ${ifNotExists} "${triggerName}" 
@@ -62,7 +70,7 @@ SELECT CASE WHEN EXISTS (SELECT 1 FROM "${tblName}" WHERE ${whereClause}) THEN
 
 	static index(tbl:str, indexName:str, cols:str[], opt:CreateIndexOpt){
 		let ifNotExists = ''
-		if(opt.ifNotExists){
+		if(!opt.checkExist){
 			ifNotExists = IF_NOT_EXISTS
 		}
 		const sql = `CREATE INDEX ${ifNotExists} "${indexName}" ON ${tbl} (${cols.join(',')})`

@@ -1,5 +1,5 @@
 
-#20240603195837662
+#20240607003758918
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -9,6 +9,8 @@ sort: by_weight
 use_preset_vocabulary: true
 ...
 
+辣	rˁat	10000%
+征	teŋ	10000%
 ⿰	;;;	
 ⿱	;;;	
 ⿲	;;;	
@@ -13134,7 +13136,6 @@ use_preset_vocabulary: true
 蜡	tsʰas	
 蜡	dzrˁajs	
 瘌	rˁat	
-辣	rˁat	
 蝲	rˁat	
 䗶	rˁap	
 𦅶	rˁap	
@@ -25499,7 +25500,6 @@ use_preset_vocabulary: true
 黮	tʰˁəmʔ	
 佂	teŋ	
 𨒌	teŋ	
-征	teŋ	
 爭	tsrˁeŋ	
 怔	teŋ	
 埩	tsrˁeŋ	
