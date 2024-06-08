@@ -14,7 +14,7 @@ import * as Sros from "@shared/Sros";
 //import { WordWeight } from "@shared/WordWeight/_Base";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
-import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
+import { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord";
 
 //type import
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
@@ -92,7 +92,7 @@ class Statistics{
 	/** 憶ᵗ次、若遇加ˡ事件則置零 */
 	cnt_validRmb = 0 
 	finalAddEventPos = 0
-	records:ChangeRecord[] = []
+	records:TempusEventRecord[] = []
 }
 
 
@@ -117,9 +117,9 @@ export class WordWeight implements I_WordWeight{
 	get word__changeRecord(){return this._word__changeRecord}
 
 
-	addChangeRecord(word:Word, changeRecord:ChangeRecord){
+	addChangeRecord(word:Word, changeRecord:TempusEventRecord){
 		const z = this
-		ChangeRecord.push(z.word__changeRecord, word, changeRecord)
+		TempusEventRecord.push(z.word__changeRecord, word, changeRecord)
 		// let dʼʹ = 1
 		// let ˊ = 3
 		
@@ -161,7 +161,7 @@ export class WordWeight implements I_WordWeight{
 			_tempus__event:Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
 
-			addRecord(record:ChangeRecord){
+			addRecord(record:TempusEventRecord){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
@@ -198,7 +198,7 @@ export class WordWeight implements I_WordWeight{
 					st.weight, z.This.defaultOpt.addWeight
 				) // *= 默認加ˡ權重
 				//錄ᵣ此輪迭代ʸ權重ᵗ變
-				const rec = ChangeRecord.new1(
+				const rec = TempusEventRecord.new1(
 					z._tempus__event
 					, st.weight
 				)
@@ -225,7 +225,7 @@ export class WordWeight implements I_WordWeight{
 						weight_ = s.n(1.01)
 					}
 				}
-				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
+				const rec = TempusEventRecord.new1(z._tempus__event, st.weight)
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
@@ -265,7 +265,7 @@ export class WordWeight implements I_WordWeight{
 					weight = s.n(1.5)
 				}
 				st.weight = s.m( st.weight, weight )
-				const rec = ChangeRecord.new1(z._tempus__event, st.weight)
+				const rec = TempusEventRecord.new1(z._tempus__event, st.weight)
 				z.addRecord(rec)
 			}
 		}

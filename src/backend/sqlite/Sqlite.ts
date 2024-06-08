@@ -109,7 +109,7 @@ export class SqliteDb extends Object{
 	 * @param sql 
 	 * @returns Promise<[sqlite3.Statement, T[]]>
 	 */
-	static all<T>(db:sqlite3.Database, sql:str, params:any){
+	static all<T>(db:sqlite3.Database, sql:str, params?:any){
 		const recErr = new Error()
 		return new Promise<[sqlite3.Statement, T[]]>((res,rej)=>{
 			db.all<T>(sql, params ,function(this, err, rows){

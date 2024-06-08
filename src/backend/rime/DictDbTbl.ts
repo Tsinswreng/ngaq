@@ -1,11 +1,24 @@
 
 import * as Tsv from "./tsv"
-import { Abs_Table } from "@backend/db/sqlite/_base/Table"
 import { DbRow } from "./DictDbRow"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import * as sqliteUtil from '@backend/sqlite/sqliteUitl'
 import type sqlite3 from 'sqlite3'
 import { DictDbSrc, DictDbSrcNewOpt } from "./DictDbSrc"
+
+import EventEmitter from "eventemitter3"
+import * as Le from '@shared/linkedEvent'
+
+
+
+const EV = Le.Event.new.bind(Le.Event)
+class Events extends Le.Events{
+	static new(){
+		const z = new this()
+		return z
+	}
+
+}
 
 export class parseDbRowsOpt{
 	bufferLineNum = 65536
@@ -31,6 +44,16 @@ export class DictTbl{
 	}
 
 	get This(){return DictTbl}
+
+	protected _emitter = Le.LinkedEmitter.new(new EventEmitter())
+	get emitter(){return this._emitter}
+	protected set emitter(v){this._emitter = v}
+	
+	protected _events = Events.new()
+	get events(){return this._events}
+	protected set events(v){this._events = v}
+	
+
 	// static new(tableName:str){
 	// 	const z = new this()
 	// 	z.__init__(tableName)
@@ -101,6 +124,22 @@ export class DictTbl{
 	insertDbRows_fn(rows:DbRow[]){
 		const z = this
 		return z.This.insertDbRows_fn(z.dbSrc.db.db, z.tableName, rows)
+	}
+
+	static sql_selectCodeByText(tbl:str){
+		const c = DbRow.col
+		let sql = `SELECT ${c.code} FROM ${tbl} WHERE ${c.text}=?`
+		return sql
+	}
+
+	static selectCodeByText(db:sqlite3.Database, tbl:str, text:str){
+		const z = this
+		const sql = z.sql_selectCodeByText(tbl)
+		return SqliteDb.all(db, sql, [text])
+	}
+
+	selectCodeByText(text:str){
+
 	}
 
 }

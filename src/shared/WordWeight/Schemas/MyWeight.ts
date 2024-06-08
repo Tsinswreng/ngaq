@@ -1,8 +1,8 @@
 //<@delete>
 import * as _ENV from '@shared/WordWeight/weightEnv'
 //type import
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
-import { InstanceType_ } from "@shared/Type"
+import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { InstanceType_ } from "@shared/Type"
 //</@delete>
 /* 
 自定義權重算法ʹ例
@@ -14,6 +14,12 @@ import { InstanceType_ } from "@shared/Type"
 需return 一對象 芝叶I_WordWeightˉ 接口者
 */
 
+// async function testImport(){
+// 	const path = ''
+// 	const e = await import(path)
+// 	console.log(e)
+// }
+// testImport().then()
 
 const sros = _ENV.Sros_.Sros.new()
 const s = sros.short
@@ -32,8 +38,11 @@ const last = _ENV.Ut.lastOf
 const SvcWord = _ENV.SvcWord
 type SvcWord = InstanceType_<typeof _ENV.SvcWord>
 
-const ChangeRecord = _ENV.ChangeRecord
-type ChangeRecord =_ENV.ChangeRecord
+const ChangeRecord = _ENV.Record.ChangeRecord
+type ChangeRecord = _ENV.Record.ChangeRecord
+
+const TempusEventRecord = _ENV.Record.TempusEventRecord
+type TempusEventRecord = _ENV.Record.TempusEventRecord
 
 const Base = _ENV.BaseWeight
 type Base = _ENV.BaseWeight
@@ -222,7 +231,7 @@ class WordWeight extends Base implements I_WordWeight{
 					st.weight, addWeight
 				) // *= 默認加ˡ權重
 				//錄ᵣ此輪迭代ʸ權重ᵗ變
-				const rec = ChangeRecord.new1(
+				const rec = TempusEventRecord.new1(
 					z._cur_tempus__event
 					, st.weight
 					, addWeight
@@ -240,7 +249,7 @@ class WordWeight extends Base implements I_WordWeight{
 				st.cnt_rmb++
 				st.cnt_validRmb++
 				let weight_ = s.n(1.1)
-				const lastRec = last(z._statistics.records)
+				const lastRec = last(z._statistics.records) as TempusEventRecord
 				if(lastRec == void 0){
 					throw new Error('last changeRecord is undef')
 				}else if(WordEvent.ADD === lastRec.event){ //若上個事件潙 添
@@ -254,7 +263,7 @@ class WordWeight extends Base implements I_WordWeight{
 						weight_ = s.n(1.01)
 					}
 				}
-				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
+				const rec = TempusEventRecord.new1(z._cur_tempus__event, st.weight)
 				// if(z._mw.word.wordShape === 'disguise'){ //t
 				// 	console.log(st.curPos, st.finalAddEventPos, last(z._mw.date__event).event)
 				// }
@@ -290,7 +299,7 @@ class WordWeight extends Base implements I_WordWeight{
 
 			protected handle_fgt(){
 				const z = this
-				const lastRec = last(z._statistics.records)
+				const lastRec = last(z._statistics.records) as TempusEventRecord
 				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 				const st = z._statistics
 				if(st.cnt_add >= 3){
@@ -303,7 +312,7 @@ class WordWeight extends Base implements I_WordWeight{
 					weight = s.n(1.5)
 				}
 				st.weight = s.m( st.weight, weight )
-				const rec = ChangeRecord.new1(z._cur_tempus__event, st.weight)
+				const rec = TempusEventRecord.new1(z._cur_tempus__event, st.weight)
 				z.addRecord(rec)
 				return st
 			}
@@ -319,7 +328,7 @@ class WordWeight extends Base implements I_WordWeight{
 					z._statistics.weight = s.m(
 						z._statistics.weight, bonus
 					)
-					const rec = ChangeRecord.new1(
+					const rec = TempusEventRecord.new1(
 						z._cur_tempus__event
 						, z._statistics.weight
 					)
@@ -442,6 +451,15 @@ class WordWeight extends Base implements I_WordWeight{
 			ans.push(w)
 		}
 		return ans
+	}
+
+	filterByTags(words:SvcWord[]){
+		const z = this
+		function one(word:SvcWord){
+			if(word.word.tag.length > 0 || word.word.annotation.length > 0){
+				const rec = ChangeRecord
+			}
+		}
 	}
 
 	calc0(mWord:SvcWord){

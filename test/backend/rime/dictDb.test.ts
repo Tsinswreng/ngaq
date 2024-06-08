@@ -10,8 +10,9 @@ sqlite3.verbose()
 const tblName = 'cangjie5'
 const dbPath = process.cwd()+'/test/backend/sqlite.db'
 const dictPath = process.cwd()+"/test/backend/rime/dict.dict.yaml"
+//const dictPath = 'D:/Program Files/Rime/User_Data/essay.dict.yaml'
 
-describe('1', ()=>{
+describe('cangjie5', ()=>{
 	// async function refresh(){
 	// 	const sql = `DROP TABLE IF EXISTS ""`
 	// }
@@ -44,7 +45,7 @@ describe('1', ()=>{
 			throw error
 		}
 
-	})
+	}, 99999)
 })
 
 
@@ -53,7 +54,7 @@ describe('test insert duplicate', ()=>{
 	// async function refresh(){
 	// 	const sql = `DROP TABLE IF EXISTS ""`
 	// }
-
+	const bufNum = 9999
 	/**
 	 * 先刪表再褈建表再插入
 	 */
@@ -72,7 +73,7 @@ describe('test insert duplicate', ()=>{
 			await dbSrc.createTable(tblName, {checkExist:false})
 			await dbSrc.createTrigger(tblName)
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
-			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
+			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: bufNum})
 			await dbSrc.createIndex(tblName)
 		} catch (error) {
 			if(error instanceof DbErr){
@@ -103,7 +104,7 @@ describe('test insert duplicate', ()=>{
 			// await dbSrc.createIndex(tblName)
 			//const tbl = DictTbl_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
-			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
+			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: bufNum})
 		} catch (error) {
 			if(error instanceof DbErr){
 				console.error(error)

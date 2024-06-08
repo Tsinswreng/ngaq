@@ -1,6 +1,6 @@
 type Fn<Return=any> = (...args:any[])=>Return
 import { SvcWord } from "@shared/entities/Word/SvcWord"
-import { ChangeRecord } from "@shared/WordWeight/ChangeRecord"
+import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
 import { Word } from "@shared/entities/Word/Word"
 export interface I_WordWeight{
 	/**

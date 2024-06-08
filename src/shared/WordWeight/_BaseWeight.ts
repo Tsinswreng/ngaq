@@ -1,6 +1,6 @@
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { SvcWord } from "@shared/entities/Word/SvcWord";
-import { ChangeRecord } from "@shared/WordWeight/ChangeRecord";
+import { TempusEventRecord } from "@shared/WordWeight/ChangeRecord";
 
 export class BaseWeight implements I_WordWeight{
 
@@ -12,7 +12,7 @@ export class BaseWeight implements I_WordWeight{
 
 	}
 
-	protected _changeRecord:ChangeRecord[] = []
+	protected _changeRecord:TempusEventRecord[] = []
 	get changeRecord(){return this._changeRecord}
 	set changeRecord(v){this._changeRecord = v}
 
