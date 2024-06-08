@@ -359,6 +359,7 @@ class WordWeight extends Base implements I_WordWeight{
 			}
 			z.calc0(uWord)
 			//uWord.weight = 114514 //t
+			z.calcTags(uWord)
 		}
 		mWords.sort((b,a)=>s.c(a.weight, b.weight))
 		//console.log(z.word__changeRecord)//t *
@@ -369,7 +370,6 @@ class WordWeight extends Base implements I_WordWeight{
 		const z = this
 		mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)
-		mWords = z.filterByTags(mWords)
 		mWords = await z.filterByTbl(mWords)
 		mWords = z.shuffer(mWords)
 		return mWords
@@ -454,20 +454,37 @@ class WordWeight extends Base implements I_WordWeight{
 		return ans
 	}
 
-	filterByTags(words:SvcWord[]){
+	/** 
+	 * 據 標籤 與 註釋 算權重
+	 * 使有(特定)標籤或註釋者 權重更高
+	 */
+	calcTags(word:SvcWord){
 		const z = this
-		function one(word:SvcWord){
-			if(word.word.tag.length > 0 || word.word.annotation.length > 0){
-				word.weight = s.m(
-					word.weight, 10
-				)
-				const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
-				ChangeRecord.push(z.word__changeRecord, word.word, rec)
-			}
+		if(word.word.tag.length > 0 || word.word.annotation.length > 0){
+			word.weight = s.m(
+				word.weight, 10
+			)
+			const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
+			ChangeRecord.push(z.word__changeRecord, word.word, rec)
 		}
-		words.map(e=>one(e))
-		return words
+		return word
 	}
+
+
+	// calcTags(words:SvcWord[]){
+	// 	const z = this
+	// 	function one(word:SvcWord){
+	// 		if(word.word.tag.length > 0 || word.word.annotation.length > 0){
+	// 			word.weight = s.m(
+	// 				word.weight, 10
+	// 			)
+	// 			const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
+	// 			ChangeRecord.push(z.word__changeRecord, word.word, rec)
+	// 		}
+	// 	}
+	// 	words.map(e=>one(e))
+	// 	return words
+	// }
 
 	calc0(mWord:SvcWord){
 		const z = this
