@@ -369,6 +369,7 @@ class WordWeight extends Base implements I_WordWeight{
 		const z = this
 		mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)
+		mWords = z.filterByTags(mWords)
 		mWords = await z.filterByTbl(mWords)
 		mWords = z.shuffer(mWords)
 		return mWords
@@ -457,9 +458,15 @@ class WordWeight extends Base implements I_WordWeight{
 		const z = this
 		function one(word:SvcWord){
 			if(word.word.tag.length > 0 || word.word.annotation.length > 0){
-				const rec = ChangeRecord
+				word.weight = s.m(
+					word.weight, 10
+				)
+				const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
+				ChangeRecord.push(z.word__changeRecord, word.word, rec)
 			}
 		}
+		words.map(e=>one(e))
+		return words
 	}
 
 	calc0(mWord:SvcWord){
