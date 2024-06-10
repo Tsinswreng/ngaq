@@ -1,4 +1,4 @@
-import { Line } from "./tsv"
+import { DictLine } from "./tsv"
 
 class Col{
 	static readonly id='id'
@@ -17,16 +17,17 @@ export class DbRow{
 	protected constructor(){}
 
 	/**
-	 * 
+	 * //TODO const [text, code] = v.split('\t') 列ʹ順序ˋ未必如是
+	 * @deprecated
 	 * @param lines 正文ʹ行、不含元數據
 	 * @returns 
 	 */
-	static linesToDbRows(lines:Line[]){
+	static linesToDbRows(lines:DictLine[]){
 		const valids = lines.map(e=>e.processedText())
 		const dbRows = [] as DbRow[]
 		for(const v of valids){
 			if(v == void 0 || v === ''){continue}
-			const [text, code] = v.split('\t')
+			const [text, code] = v.split('\t') //TODO
 			const row:DbRow = {
 				text:text
 				,code:code

@@ -50,7 +50,7 @@ function set_page(){
 		<button @click="ui.prepareEtStart()">始</button>
 		<button @click="ui.save()">存</button>
 		<button>改</button>
-		<button @click="ui.restart()">重開</button>
+		<button @click="ui.restart()">🔄</button>
 		<button @click="ui.uiStuff.lockBg.value = !ui.uiStuff.lockBg.value">
 			{{ ui.uiStuff.lockBg.value==true?
 				'變景'

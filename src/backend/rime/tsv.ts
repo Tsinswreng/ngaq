@@ -4,6 +4,7 @@
 //'abcd'.indexOf('1') -> -1
 
 import { $, $a } from "@shared/Ut"
+import { Line } from "./Line"
 
 interface I_next<T>{
 	next():T
@@ -26,23 +27,22 @@ class LineType{
 	isBody=false
 }
 
-export class Line{
+
+export class DictLine extends Line{
 	protected static lineCommentMark = '#'
-	protected constructor(){}
-	protected __init__(...args:Parameters<typeof Line.new>){
+	protected constructor(){super()}
+	protected __init__(...args:Parameters<typeof DictLine.new>){
 		const z = this
-		z.rawText = args[0]
-		z.index = args[1]
+		super.__init__(...args)
+		return z
 	}
 	static new(text:str, index:int){
 		const z = new this()
 		z.__init__(text, index)
 		return z
 	}
-	rawText:str
-	index:int
-	type = new LineType()
 
+	type = new LineType()
 
 	/**
 	 * 取字串芝除註釋後者
@@ -51,11 +51,7 @@ export class Line{
 	 */
 	static rmComment(text:str){
 		const z = this
-		const pos = text.indexOf(z.lineCommentMark)
-		if(pos < 0){
-			return text
-		}
-		return text.slice(0, pos)
+		return super.rmComment(text, z.lineCommentMark)
 	}
 
 	processedText():str{
@@ -63,7 +59,7 @@ export class Line{
 		if(z.type.noComment){
 			return z.rawText
 		}
-		return Line.rmComment(z.rawText)
+		return DictLine.rmComment(z.rawText)
 	}
 }
 
@@ -158,7 +154,7 @@ export class TsvParser{
 			z.status.end = true
 			return []
 		}
-		const ans:Line[] = []
+		const ans:DictLine[] = []
 		for(const lineTxt of lines){
 			if(lineTxt == void 0){continue}
 			const ua = z.handleLine(lineTxt)
@@ -172,7 +168,7 @@ export class TsvParser{
 		z._linePos ++
 		// const lineTxt = await z._nextObj.next()
 		const noCommentPattern = z.This.noCommentPattern
-		const line = Line.new(lineTxt, z._linePos)
+		const line = DictLine.new(lineTxt, z._linePos)
 		if(z.status.nextLineNoComment === true){ //即上一行有 no comment 指令
 			line.type.noComment = true
 		}else{

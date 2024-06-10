@@ -19,8 +19,8 @@ sort: by_weight
 use_preset_vocabulary: true
 import_tables:  #加載其它外部碼表 似不支持多級引入
   #- cangjie7-1ForLookUp2
-  #- nonKanji
-  #- chineseDict
+  - nonKanji
+  - chineseDict
 ...
 
 #<reset-weight>
@@ -28,6 +28,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #喇	rˁat	1%
 征	teŋ	10000%
 旨	kiʔ	10000%
+趣	tsʰos	10000%
 #</reset-weight>
 ⿰	;;;
 ⿱	;;;
