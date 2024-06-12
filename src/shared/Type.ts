@@ -86,3 +86,7 @@ export type PrimitiveTypeStr = 'number' | 'string' | 'boolean' | 'null' | 'undef
 export interface I_readN<T>{
 	read(n:int):T
 }
+
+export interface I_perBatch{
+	perBatch:num
+}
