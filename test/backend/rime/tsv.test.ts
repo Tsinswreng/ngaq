@@ -12,7 +12,7 @@ describe('read', ()=>{
 				return frl.read(n)
 			}
 		}
-		const tsvParser = Tsv.TsvParser.new(readN)
+		const tsvParser = Tsv.DictTsvParser.new(readN)
 		for(let i = 0; i < 100; i++){
 			const line = await tsvParser.readLines(1)
 			//console.log(line[0].text)
@@ -34,7 +34,7 @@ describe('comment', ()=>{
 			}
 		}
 		
-		const tsvParser = Tsv.TsvParser.new(readN)
+		const tsvParser = Tsv.DictTsvParser.new(readN)
 		const raw__ripe = [] as [string, string][]
 		for(let i = 0; i < 100; i++){
 			const line = await tsvParser.readLines(1)

@@ -16,7 +16,7 @@ export interface CreateTriggerOpt extends I_optCheckExist{
 export interface CreateIndexOpt extends I_optCheckExist{
 
 }
-const IF_NOT_EXISTS = 'IF NOT EXISTS'
+export const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
 class CreateSql{
 	
@@ -98,9 +98,9 @@ END;
 	}
 
 
-	static index(tbl:str, indexName:str, cols:str[], opt:CreateIndexOpt){
+	static index(tbl:str, indexName:str, cols:str[], opt?:CreateIndexOpt){
 		let ifNotExists = ''
-		if(!opt.checkExist){
+		if(!opt?.checkExist){
 			ifNotExists = IF_NOT_EXISTS
 		}
 		const sql = `CREATE INDEX ${ifNotExists} "${indexName}" ON ${tbl} (${cols.join(',')})`

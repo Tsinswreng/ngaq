@@ -12,6 +12,6 @@ export function mkTsvInst(...args:Parameters<typeof File.FileReadLine.new>){
 			return frl.read(n)
 		}
 	}
-	const tsvParser = Tsv.TsvParser.new(readN)
+	const tsvParser = Tsv.DictTsvParser.new(readN)
 	return tsvParser
 }

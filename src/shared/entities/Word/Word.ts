@@ -86,16 +86,16 @@ export class Word{
 	 * 所屬ᵗ表
 	 */
 	protected _table:string = ''
-	;public get table(){return this._table;};
+	get table(){return this._table;};
 
 	protected _id?:number
-	;public get id(){return this._id;};
+	get id(){return this._id;};
 
 	/**
 	 * 詞形
 	 */
 	protected _wordShape:string=''
-	;public get wordShape(){return this._wordShape;};
+	get wordShape(){return this._wordShape;};
 
 	/**
 	 * 變形
@@ -108,36 +108,36 @@ export class Word{
 	 * 意
 	 */
 	protected _mean:string[] = []
-	;public get mean(){return this._mean;};
+	get mean(){return this._mean;};
 
 	/**
 	 * 音
 	 */
 	protected _pronounce:string[] = []
-	;public get pronounce(){return this._pronounce;};
+	get pronounce(){return this._pronounce;};
 
 	/**
 	 * 用戶手動畀單詞加之註、在源txt詞表中用<<>>括着ᵗ部。
 	 */
 	protected _annotation:string[] = []
-	;public get annotation(){return this._annotation;};
+	get annotation(){return this._annotation;};
 
 	/**
 	 * 標籤。用戶ˋ定ᶦ。可潙四六級詞之屬。
 	 */
 	protected _tag:string[] = []
-	;public get tag(){return this._tag;};
+	get tag(){return this._tag;};
 
 	/**
 	 * 添ᵗ日期
 	 */
 	protected _dates_add:Tempus[] = []
-	;public get dates_add(){return this._dates_add;};
+	get dates_add(){return this._dates_add;};
 
 	/**
 	 * 添ᵗ次
 	 */
-	;public get times_add(){
+	get times_add(){
 		return this.dates_add.length;
 	}
 
@@ -145,9 +145,9 @@ export class Word{
 	 * remember
 	 */
 	protected _dates_rmb:Tempus[]=[]
-	;public get dates_rmb(){return this._dates_rmb;};
+	get dates_rmb(){return this._dates_rmb;};
 
-	public get times_rmb(){
+	get times_rmb(){
 		return this.dates_rmb.length
 	}
 
@@ -155,9 +155,9 @@ export class Word{
 	 * forget
 	 */
 	protected _dates_fgt:Tempus[] = []
-	;public get dates_fgt(){return this._dates_fgt;};
+	get dates_fgt(){return this._dates_fgt;};
 
-	public get times_fgt(){
+	get times_fgt(){
 		return this.dates_fgt.length
 	}
 
@@ -165,7 +165,7 @@ export class Word{
 	 * ʃᙆ添。可潙書名等。
 	 */
 	protected _source:string[] = []
-	;public get source(){return this._source;};
+	get source(){return this._source;};
 
 	
 	// public toRowObj(){
@@ -179,9 +179,9 @@ export class Word{
 	 * 複製對象
 	 * @param o 
 	 */
-	public static clone(o:Word):Word
-	public static clone(o:IVocaRow):IVocaRow
-	public static clone(o:Word|IVocaRow){
+	static clone(o:Word):Word
+	static clone(o:IVocaRow):IVocaRow
+	static clone(o:Word|IVocaRow){
 		if(o instanceof Word){
 			return Word.toJsObj(Word.toDbObj(o))
 		}else{

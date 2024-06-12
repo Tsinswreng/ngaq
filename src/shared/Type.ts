@@ -82,3 +82,7 @@ export type ParseType<T extends string> =
 
 /** 基本數據類型 */
 export type PrimitiveTypeStr = 'number' | 'string' | 'boolean' | 'null' | 'undefined' | 'bigint' | 'symbol';
+
+export interface I_readN<T>{
+	read(n:int):T
+}

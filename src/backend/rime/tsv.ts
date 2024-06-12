@@ -5,13 +5,10 @@
 
 import { $, $a } from "@shared/Ut"
 import { Line } from "./Line"
+import {I_readN} from '@shared/Type'
 
 interface I_next<T>{
 	next():T
-}
-
-export interface I_readN<T>{
-	read(n:int):T
 }
 
 
@@ -64,11 +61,11 @@ export class DictLine extends Line{
 }
 
 /** 按行解析 */
-export class TsvParser{
+export class DictTsvParser{
 
 	protected constructor(){}
 
-	protected __init__(...args:Parameters<typeof TsvParser.new>){
+	protected __init__(...args:Parameters<typeof DictTsvParser.new>){
 		const z = this
 		z._readNObj = args[0]
 		return z
@@ -80,7 +77,7 @@ export class TsvParser{
 		return z
 	}
 
-	get This(){return TsvParser}
+	get This(){return DictTsvParser}
 
 	// protected _nextObj:I_next<Promise<str>>
 	// get nextObj(){return this._nextObj}
@@ -201,4 +198,14 @@ export class TsvParser{
 
 
 
+/* 
 
+我現在有多種輸入法方案的字表。我想把它們放到數據庫裏。我是否應該在數據中 爲每種不同方案專門建不同的表?
+比如拼音的字表和五筆的字表在不同的表裏。
+還是全部存到一張表裏、再加一個字段表示來源的輸入方案字表？
+
+
+如果我選擇每種方案分不同的表來存、但是爲了安全起見(如防止sql注入)、表名不能和輸入方案的名稱一樣、而是另由程序分配。
+需要 同一個輸入方案名唯一對應一種表名; 不同的輸入方案名產生的表名不同; 輸入方案名和表名之間能雙嚮查詢。
+如何實現
+*/

@@ -20,7 +20,7 @@ class Events extends Le.Events{
 
 }
 
-export class parseDbRowsOpt{
+export class insertByTsvParserOpt{
 	bufferLineNum = 65536
 
 }
@@ -69,6 +69,9 @@ export class DictTbl{
 	get tableName(){return this._tblName}
 	protected set tableName(v){this._tblName = v}
 	
+	protected _dictName:str = ''
+	get dictName(){return this._dictName}
+	set dictName(v){this._dictName = v}
 	
 
 	/**
@@ -77,7 +80,7 @@ export class DictTbl{
 	 * @param opt 
 	 * @returns 
 	 */
-	async insertByTsvParser(tsvParser:Tsv.TsvParser, opt:parseDbRowsOpt){
+	async insertByTsvParser(tsvParser:Tsv.DictTsvParser, opt:insertByTsvParserOpt){
 		const z = this
 		const bufferLineNum = opt.bufferLineNum
 		//const runResults = [] as RunResult[]
@@ -88,7 +91,7 @@ export class DictTbl{
 			}
 			const lines = await tsvParser.readLines(bufferLineNum)
 			const bodyLines = lines.filter(e=>e.type.isBody)
-			const dbRows = DbRow.linesToDbRows(bodyLines)
+			const dbRows = DbRow.linesToDbRows(bodyLines, z.dictName)
 			const fn = await z.insertDbRows_fn(dbRows)
 			if(fn != void 0){
 				const ua = await fn()

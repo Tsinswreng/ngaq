@@ -1,5 +1,5 @@
 
-#20240608230053958
+#20240612171030358
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -10,8 +10,10 @@ use_preset_vocabulary: true
 ...
 
 辣	rˁat	10000%
+吾	ŋˁa	10000%
 征	teŋ	10000%
 旨	kiʔ	10000%
+趣	tsʰos	10000%
 ⿰	;;;	
 ⿱	;;;	
 ⿲	;;;	
@@ -24,6 +26,8 @@ use_preset_vocabulary: true
 ⿹	;;;	
 ⿺	;;;	
 ⿻	;;;	
+因	ʔiŋ	
+印	ʔiŋs	
 硅	hʷrˁak	
 硅	kʷˁe	
 矽	kʷˁe	
@@ -69,8 +73,10 @@ use_preset_vocabulary: true
 襟	krəm	
 㦗	krəm	
 月	ŋot	
-天	lʰˁin	
-兲	tʰˁin	
+天	lʰˁiŋ	
+兲	lʰˁin	
+賓	piŋ	
+頻	biŋ	
 還	wˁen	
 旋	sʷen	
 旋	sʷens	
@@ -350,7 +356,6 @@ use_preset_vocabulary: true
 謘	lrəj	
 謘	lrəjs	
 𡎰	lrəj	
-致	driks	
 蔓	mˁans	
 墀	lrəj	
 信	nʰiŋs	
@@ -644,7 +649,6 @@ use_preset_vocabulary: true
 調	dˁiw	
 織	təks	
 幟	tʰəks	
-至	tits	
 執	tip	
 摯	tips	
 汁	kip	
@@ -1327,7 +1331,6 @@ use_preset_vocabulary: true
 込	kom	
 田	lˁiŋ	
 甸	lˁins	
-電	lˁins	0%
 電	lˁiŋs	
 潛	dzom	
 蠶	dzˁom	
@@ -1465,7 +1468,9 @@ use_preset_vocabulary: true
 瑁	mˁuks	
 冃	mˁuks	
 治	lrəs	
+至	tits	
 致	trits	
+致	drits	
 雉	lriʔ	
 薙	lriʔ	
 遲	lrəj	
@@ -2638,10 +2643,14 @@ use_preset_vocabulary: true
 那	nˁal	
 哪	nˁalʔ	
 奈	nˁats	
-攝	nʰap	
-聶	nrap	
-躡	nrap	
-鑷	nrap	
+攝	nʰep	
+聶	nrep	
+躡	nrep	
+鑷	nrep	
+懾	tep	
+囁	nep	
+囁	tep	
+襵	tep	
 涉	dep	
 昏	mʰˁən	
 婚	mʰˁun	
@@ -2655,19 +2664,20 @@ use_preset_vocabulary: true
 曝	bˁawk	
 樸	pʰrˁok	
 朴	pʰrˁoks	
-眠	mˁiŋ	
 民	miŋ	
-怋	miŋ	
-抿	miŋʔ	
+眠	mˁin	
+怋	min	
+抿	minʔ	
+泯	minʔ	0%
 泯	miŋʔ	
-珉	mriŋ	
-岷	mriŋ	
-緡	mriŋ	
-苠	mriŋ	
-罠	mriŋ	
-愍	mriŋʔ	
-暋	mriŋʔ	
-敃	mriŋʔ	
+珉	mrin	
+岷	mrin	
+緡	mrin	
+苠	mrin	
+罠	mrin	
+愍	mrinʔ	
+暋	mrinʔ	
+敃	mrinʔ	
 瞴	mra	
 膴	mra	
 蕪	mra	
@@ -2803,13 +2813,15 @@ use_preset_vocabulary: true
 乇	trˁak	
 嫡	tˁek	
 誦	lʰoŋs	
+神	mliŋ	
+神	mlin	
 躋	tsˁi	
 遣	kʰenʔ	
 譴	kʰens	
 湄	mrəl	
 楣	mrəl	
 嵋	mrəl	
-旬	zin	
+旬	ziŋ	
 洵	zin	
 詢	sʷin	
 荀	sʷin	
@@ -2826,6 +2838,21 @@ use_preset_vocabulary: true
 徇	zins	
 侚	zins	
 勻	win	
+勻	wiŋ	
+吉	kik	
+匹	pʰik	
+實	mlit	
+實	mlik	
+質	tik	
+質	triks	0%
+躓	triks	
+疐	tˁiks	
+疐	triks	
+嚏	tˁiks	
+嚔	tˁiks	
+懥	triks	
+懥	tiks	
+一	ʔik	
 燼	dzins	
 循	mlunʔ	
 遁	lˁuns	
@@ -2885,7 +2912,6 @@ use_preset_vocabulary: true
 畋	lˁin	
 畋	lˁins	
 沺	lˁin	
-田	lˁin	
 鈿	lˁins	
 嗔	dˁin	
 嗔	tʰˁin	
@@ -3597,6 +3623,9 @@ use_preset_vocabulary: true
 朵	tˁojʔ	
 躲	zˁojs	
 朵	zˁojʔ	
+親	tsʰiŋ	
+親	tsʰiŋs	
+秦	dziŋ	
 港	krˁoŋʔ	0%
 港	kʰrˁoŋʔ	
 港	ɡˁoŋs	
@@ -3928,8 +3957,7 @@ use_preset_vocabulary: true
 祘	sˁolʔ	
 養	laŋʔ	
 癢	laŋʔ	
-薪	stin	
-薪	tsiŋ	
+薪	sinʔ	
 薪	sin	0%
 嶄	dzramʔ	
 竹	druk	
@@ -5325,7 +5353,6 @@ use_preset_vocabulary: true
 斌	prən	
 㻞	prən	
 𧶉	pin	
-賓	pin	
 𡪛	pin	
 賔	pin	
 儐	pin	
@@ -10909,7 +10936,6 @@ use_preset_vocabulary: true
 及	ɡəp	
 伋	kəp	
 㲺	tsit	
-吉	kit	
 岌	ŋəp	
 彶	kəp	
 汲	kəp	
@@ -15920,8 +15946,6 @@ use_preset_vocabulary: true
 櫱	ŋˁat	
 櫱	ŋret	
 齧	ŋˁet	
-囁	tap	
-囁	nap	
 𣀳	nrep	
 𧕏	ŋret	
 𣌍	nrep	
@@ -16466,7 +16490,6 @@ use_preset_vocabulary: true
 蠯	brˁeŋʔ	
 𩫫	be	
 𧖈	bi	
-匹	pʰit	
 庀	pʰeʔ	
 圮	brəjʔ	
 仳	brəjʔ	
@@ -16599,7 +16622,6 @@ use_preset_vocabulary: true
 玭	bˁen	
 玭	bin	
 琕	bˁen	
-頻	bin	
 薲	bin	
 嬪	bin	
 矉	pin	
@@ -17458,7 +17480,6 @@ use_preset_vocabulary: true
 㪁	kʰam	
 㪁	kʰams	
 㪁	kʰˁəm	
-秦	dzin	
 耹	ɡəm	
 菦	kənʔ	
 㕋	ɡəm	
@@ -17583,8 +17604,6 @@ use_preset_vocabulary: true
 靘	tsʰˁeŋs	
 箐	tseŋ	
 磬	kʰˁeŋs	
-親	tsʰin	
-親	tsʰins	
 罄	kʰˁeŋs	
 㵾	tsʰreŋs	
 㵾	dzeŋs	
@@ -17839,8 +17858,6 @@ use_preset_vocabulary: true
 㧁	kʰas	
 㧁	kʰˁəp	
 㧁	kˁəp	
-趣	tsʰˁoʔ	
-趣	tsʰos	
 𩿟	kʰas	
 麮	kʰas	
 麮	kʰaʔ	
@@ -18772,7 +18789,6 @@ use_preset_vocabulary: true
 麝	ʑæs	
 麝	ʑek	
 灄	ɕap	
-懾	tap	
 欇	ɕap	
 欇	dap	
 𥍉	ɕap	
@@ -18819,7 +18835,6 @@ use_preset_vocabulary: true
 𩺵	srin	
 䯂	srin	
 䯂	dzrəp	
-神	ʑin	
 䰠	ɕin	
 邥	ɕəmʔ	
 抌	lu	
@@ -20136,11 +20151,9 @@ use_preset_vocabulary: true
 䎮	tʰˁes	
 鬀	dˁes	
 鬀	tʰˁes	
-嚏	tˁes	
 䯜	sek	
 䯜	tʰˁek	
 鬄	sek	
-嚔	tˁes	
 𩮜	ɕek	
 𩮜	tʰˁek	
 籊	dˁek	
@@ -23375,7 +23388,6 @@ use_preset_vocabulary: true
 鸈	ŋap	
 𩼋	ŋap	
 䲜	ŋap	
-一	ʔit	
 弌	ʔit	
 衤	ʔəj	
 伊	ʔi	
@@ -23767,7 +23779,6 @@ use_preset_vocabulary: true
 虉	ŋrˁek	
 鷾	ʔəs	
 乚	ʔənʔ	
-因	ʔin	
 㘻	ʔin	
 㧢	ʔin	
 茵	ʔin	
@@ -23899,7 +23910,6 @@ use_preset_vocabulary: true
 𩖄	kʰəmʔ	
 𪙤	ŋrənʔ	
 廴	linʔ	
-印	ʔins	
 茚	ʔins	
 𦙍	lins	
 胤	lins	
@@ -25384,8 +25394,6 @@ use_preset_vocabulary: true
 𪐏	trˁak	
 𪐏	trek	
 讋	tap	
-襵	tap	
-襵	trep	
 䝕	tap	
 赭	tæʔ	
 鍺	tˁojʔ	
@@ -25760,8 +25768,6 @@ use_preset_vocabulary: true
 𡠗	tis	
 𡠗	təp	
 䎺	tets	
-疐	tˁes	
-疐	trəjs	
 𡙮	drit	
 㗧	tˁet	
 㗧	trit	
@@ -25777,8 +25783,6 @@ use_preset_vocabulary: true
 𨖹	trit	
 𣉻	tres	
 稺	drəjs	
-質	tit	
-質	trəjs	50%
 膣	trit	
 潪	drek	
 潪	tres	
@@ -25801,8 +25805,6 @@ use_preset_vocabulary: true
 螲	trit	
 劕	tit	
 䚦	dreʔ	
-懥	tis	
-懥	trəjs	
 𢷐	trəjs	
 𡂒	tit	
 懫	tit	
@@ -25831,7 +25833,6 @@ use_preset_vocabulary: true
 𩹈	drəjs	
 䲀	tis	
 𨇈	trəjs	
-躓	trəjs	
 鑕	tit	
 𩻼	drets	
 中	truŋ	

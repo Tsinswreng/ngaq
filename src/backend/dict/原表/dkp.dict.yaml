@@ -25,6 +25,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #<reset-weight>
 辣	rˁat	10000%
+吾	ŋˁa	10000%
 #喇	rˁat	1%
 征	teŋ	10000%
 旨	kiʔ	10000%
@@ -42,6 +43,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 ⿹	;;;
 ⿺	;;;
 ⿻	;;;
+
+
+因	ʔiŋ
+印	ʔiŋs
+
 
 硅	hʷrˁak
 硅	kʷˁe	# ts
@@ -98,8 +104,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 月	ŋot	# ms
 #月	ŋʷat	# bs sch
-天	lʰˁin
-兲	tʰˁin
+#天	lʰˁin
+天	lʰˁiŋ
+兲	lʰˁin
+
+賓	piŋ
+頻	biŋ
+
 
 #還	wrˁen
 還	wˁen	# sch
@@ -461,7 +472,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 謘	lrəjs
 𡎰	lrəj
 
-致	driks
+
 
 蔓	mˁans	# ts 與萬ᵗ反查碼ˋ別
 墀	lrəj
@@ -839,7 +850,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 調	dˁiw
 織	təks
 幟	tʰəks
-至	tits
+
+
 執	tip
 摯	tips
 汁	kip	# ms
@@ -1739,7 +1751,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 込	kom
 田	lˁiŋ
 甸	lˁins
-電	lˁins	0%
+#電	lˁins	0%
 電	lˁiŋs
 #甸	lˁiŋs
 
@@ -1920,7 +1932,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 瑁	mˁuks
 冃	mˁuks
 治	lrəs
+至	tits
+#至	tiks
 致	trits
+#致	triks
+致	drits
 
 雉	lriʔ	# 矢聲
 薙	lriʔ
@@ -3378,10 +3394,21 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 哪	nˁalʔ
 奈	nˁats
 
-攝	nʰap	# ms
-聶	nrap	# ms
-躡	nrap	# ms
-鑷	nrap	# ms
+# 攝	nʰap	# ms
+# 聶	nrap	# ms
+# 躡	nrap	# ms
+# 鑷	nrap	# ms
+
+攝	nʰep
+聶	nrep
+躡	nrep
+鑷	nrep
+懾	tep
+囁	nep
+囁	tep
+襵	tep
+
+
 
 涉	dep	# ptl
 昏	mʰˁən	# ms
@@ -3397,19 +3424,23 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 曝	bˁawk
 樸	pʰrˁok
 朴	pʰrˁoks	# ptl
-眠	mˁiŋ
+
 民	miŋ
-怋	miŋ
-抿	miŋʔ
+眠	mˁin
+怋	min
+抿	minʔ
+
+泯	minʔ	0%
 泯	miŋʔ
-珉	mriŋ
-岷	mriŋ
-緡	mriŋ
-苠	mriŋ
-罠	mriŋ
-愍	mriŋʔ
-暋	mriŋʔ
-敃	mriŋʔ
+
+珉	mrin
+岷	mrin
+緡	mrin
+苠	mrin
+罠	mrin
+愍	mrinʔ
+暋	mrinʔ
+敃	mrinʔ
 
 # 蕪
 # 蕪
@@ -3592,6 +3623,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #訟	soŋs	#*s.[ɢ]oŋ-s
 誦	lʰoŋs	# ts
 
+神	mliŋ
+神	mlin
 
 #虧	kʷʰaj
 
@@ -3602,7 +3635,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 楣	mrəl
 嵋	mrəl
 #旬	win	# ptl
-旬	zin	# ts
+#旬	zin	# ts
+旬	ziŋ	# ts
 洵	zin	# ts
 詢	sʷin
 荀	sʷin
@@ -3625,6 +3659,24 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 徇	zins	# ts
 侚	zins	# ts
 勻	win
+勻	wiŋ
+
+吉	kik
+匹	pʰik
+實	mlit
+實	mlik
+質	tik
+質	triks	0%
+躓	triks
+疐	tˁiks
+疐	triks
+嚏	tˁiks
+嚔	tˁiks
+懥	triks
+懥	tiks
+一	ʔik
+
+
 
 燼	dzins
 
@@ -3699,7 +3751,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 畋	lˁin
 畋	lˁins
 沺	lˁin
-田	lˁin
+#田	lˁin
 鈿	lˁins
 嗔	dˁin
 嗔	tʰˁin
@@ -4589,6 +4641,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 躲	zˁojs	# 避 輔助碼ᵗ亦同
 朵	zˁojʔ
 
+親	tsʰiŋ
+親	tsʰiŋs
+秦	dziŋ
+
+
 港	krˁoŋʔ	0%
 港	kʰrˁoŋʔ
 港	ɡˁoŋs
@@ -5182,8 +5239,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 養	laŋʔ	# ts
 癢	laŋʔ	# ts
 #洋	jˁaŋ	# ts
-薪	stin	# ts
-薪	tsiŋ	# ts
+#薪	stin	# ts
+#薪	tsiŋ	# ts
+薪	sinʔ	# ts
 薪	sin	0%
 嶄	dzramʔ	# ts
 竹	druk	# ts

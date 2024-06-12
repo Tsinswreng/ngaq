@@ -1,13 +1,14 @@
 import * as DictDbSrc_ from '@backend/rime/DictDbSrc' 
 import * as DictTbl_ from '@backend/rime/DictDbTbl'
-import { TsvParser } from '@backend/rime/tsv'
+import { DictTsvParser } from '@backend/rime/tsv'
 import * as Tsv from '@backend/rime/tsv'
 import { DbErr, SqliteDb } from '@backend/sqlite/Sqlite'
 import * as File from '@backend/util/File'
 import now from 'performance-now'
 import sqlite3 from 'sqlite3'
 sqlite3.verbose()
-const tblName = 'cangjie5'
+const tblName = 'dict'
+const dictName = 'cangjie5'
 const dbPath = process.cwd()+'/test/backend/sqlite.db'
 const dictPath = process.cwd()+"/test/backend/rime/dict.dict.yaml"
 //const dictPath = 'D:/Program Files/Rime/User_Data/essay.dict.yaml'
@@ -25,7 +26,7 @@ describe('cangjie5', ()=>{
 					return frl.read(n)
 				}
 			}
-			const tsvParser = Tsv.TsvParser.new(readN)
+			const tsvParser = Tsv.DictTsvParser.new(readN)
 			const db = SqliteDb.new(new sqlite3.Database(dbPath))
 			const dbSrc = await DictDbSrc_.DictDbSrc.new(db)
 			await dbSrc.dropTable(tblName, {checkExist:false})
@@ -34,6 +35,7 @@ describe('cangjie5', ()=>{
 			await dbSrc.createIndex(tblName)
 			//const tbl = DictTbl_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
+			tbl.dictName = dictName
 			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: 1000})
 			console.log(ans)
 			console.log('done')
@@ -66,13 +68,14 @@ describe('test insert duplicate', ()=>{
 					return frl.read(n)
 				}
 			}
-			const tsvParser = Tsv.TsvParser.new(readN)
+			const tsvParser = Tsv.DictTsvParser.new(readN)
 			const db = SqliteDb.new(new sqlite3.Database(dbPath))
 			const dbSrc = await DictDbSrc_.DictDbSrc.new(db)
 			await dbSrc.dropTable(tblName, {checkExist:false})
 			await dbSrc.createTable(tblName, {checkExist:false})
 			await dbSrc.createTrigger(tblName)
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
+			tbl.dictName = dictName
 			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: bufNum})
 			await dbSrc.createIndex(tblName)
 		} catch (error) {
@@ -95,7 +98,7 @@ describe('test insert duplicate', ()=>{
 					return frl.read(n)
 				}
 			}
-			const tsvParser = Tsv.TsvParser.new(readN)
+			const tsvParser = Tsv.DictTsvParser.new(readN)
 			const db = SqliteDb.new(new sqlite3.Database(dbPath))
 			const dbSrc = await DictDbSrc_.DictDbSrc.new(db)
 			//await dbSrc.dropTable(tblName, {checkExist:false})
@@ -104,6 +107,7 @@ describe('test insert duplicate', ()=>{
 			// await dbSrc.createIndex(tblName)
 			//const tbl = DictTbl_.DictTbl.new({_dbSrc: dbSrc, _tableName:'cangjie5'})
 			const tbl = DictTbl_.DictTbl.new(dbSrc, tblName)
+			tbl.dictName = dictName
 			const ans = await tbl.insertByTsvParser(tsvParser, {bufferLineNum: bufNum})
 		} catch (error) {
 			if(error instanceof DbErr){

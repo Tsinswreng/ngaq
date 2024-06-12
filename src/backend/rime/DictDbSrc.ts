@@ -6,6 +6,11 @@ import {DbRow} from './DictDbRow'
 export {DbRow}
 
 
+class TblNames{
+	/**  */
+	readonly dict = 'dict'
+}
+
 interface I_CreateTrigger{
 	triggerName:str
 }
@@ -52,15 +57,17 @@ export class DictDbSrc{
 	
 
 	static createTableSql(tblName:str, opt?: sqliteUtil.I_optCheckExist){
+		const c = DbRow.col
 		let ifNotExists = ''
 		if(!opt?.checkExist){
 			ifNotExists = 'IF NOT EXISTS'
 		}
 		return `CREATE TABLE ${ifNotExists} "${tblName}" (
 			id INTEGER PRIMARY KEY
-			,text TEXT
-			,code TEXT
-			,UNIQUE(text, code)
+			,${c.dict_name} TEXT NOT NULL
+			,${c.text} TEXT
+			,${c.code} TEXT
+			,UNIQUE(${c.dict_name}, ${c.text}, ${c.code})
 		)`
 	}
 
@@ -78,7 +85,7 @@ export class DictDbSrc{
 		const c = DbRow.col
 		
 		const sql = sqliteUtil.Sql.create.trigger_ignore_duplicate_insert(
-			tbl, triggerName, [c.text, c.code], {checkExist:false}
+			tbl, triggerName, [c.dict_name, c.text, c.code], {checkExist:false}
 		)
 		return SqliteDb.run(db, sql)
 	}
@@ -88,20 +95,33 @@ export class DictDbSrc{
 		return z.This.createTrigger(z.dbRaw, tbl, triggerName)
 	}
 
-	static createIndexSql(tbl:str, indexName = `idx_${tbl}`){
+	static geneSql_createText_CodeIdx(tbl:str, indexName:str){
 		const c = DbRow.col
 		const sql = sqliteUtil.Sql.create.index(tbl, indexName, [c.text, c.code], {checkExist:false})
 		return sql
 	}
 
-	static createIndex(db:sqlite3.Database, tbl:str, indexName=`idx_${tbl}`){
-		const sql = this.createIndexSql(tbl, indexName)
-		return SqliteDb.run(db, sql)
+	static geneSql_createDictNameIdx(tbl:str, indexName:str){
+		const c = DbRow.col
+		const sql = sqliteUtil.Sql.create.index(tbl, indexName, [c.dict_name], {checkExist:false})
+		return sql
+	}
+
+
+
+	static async createIndex(db:sqlite3.Database, tbl:str){
+		const idx_text_code = 'idx_text_code'
+		const idx_dictName = 'idx_dict_name'
+		const text_codeSql = this.geneSql_createText_CodeIdx(tbl, idx_text_code)
+		await SqliteDb.run(db, text_codeSql)
+		const dictNameSql = this.geneSql_createDictNameIdx(tbl, idx_dictName)
+		await SqliteDb.run(db, dictNameSql)
+		return true
 	}
 
 	createIndex(tbl:str, indexName=`idx_${tbl}`){
 		const z = this
-		return z.This.createIndex(z.dbRaw, tbl, indexName)
+		return z.This.createIndex(z.dbRaw, tbl)
 	}
 
 	static dropTable(db:sqlite3.Database, tbl:str, opt:sqliteUtil.I_optCheckExist){

@@ -1,3 +1,303 @@
+
+###
+<2024-06-10T16:29:47.782+08:00,>
+我要寫一個單詞管理系統。數據庫用sqlite。幫我設計一下數據庫的架構。
+用法是、用戶在閱讀文章的時候、先把生詞,釋義,註釋等記到文本中。然後用解析器將文本中的單詞及釋義等信息導入數據庫。
+一個單詞可以被多次添加。每次添加時 單詞的添加時間日期和釋義,註釋等信息都需要記錄。
+需要記錄該單詞所屬的語言(英語,日語 等)。
+一個單詞可以被學習多次。每次學習時都有一個學習結果。學習結果有兩種: 記得 與 不記得。單詞被學習的時候也要記錄時間日期。
+
+
+
+`Tempus`是記錄時間日期的。我原先的設計大致像這樣:
+```ts
+class Word{
+	/**
+	 * 所屬ᵗ表
+	 */
+	protected _table:string = ''
+	;public get table(){return this._table;};
+
+	protected _id?:number
+	;public get id(){return this._id;};
+
+	/**
+	 * 詞形
+	 */
+	protected _wordShape:string=''
+	;public get wordShape(){return this._wordShape;};
+
+	/**
+	 * 變形
+	 * 始于2024-01-13T10:48:35.000+08:00
+	 */
+	protected _variant:string[] = []
+	get variant(){return this._variant}
+
+	/**
+	 * 意
+	 */
+	protected _mean:string[] = []
+	;public get mean(){return this._mean;};
+
+	/**
+	 * 音
+	 */
+	protected _pronounce:string[] = []
+	;public get pronounce(){return this._pronounce;};
+
+	/**
+	 * 用戶手動畀單詞加之註、在源txt詞表中用<<>>括着ᵗ部。
+	 */
+	protected _annotation:string[] = []
+	;public get annotation(){return this._annotation;};
+
+	/**
+	 * 標籤。用戶ˋ定ᶦ。可潙四六級詞之屬。
+	 */
+	protected _tag:string[] = []
+	;public get tag(){return this._tag;};
+
+	/**
+	 * 添之日期
+	 */
+	protected _dates_add:Tempus[] = []
+	;public get dates_add(){return this._dates_add;};
+
+	/**
+	 * 添之次
+	 */
+	;public get times_add(){
+		return this.dates_add.length;
+	}
+
+	/**
+	 * remember
+	 */
+	protected _dates_rmb:Tempus[]=[]
+	get dates_rmb(){return this._dates_rmb;};
+
+	public get times_rmb(){
+		return this.dates_rmb.length
+	}
+
+	/**
+	 * forget
+	 */
+	protected _dates_fgt:Tempus[] = []
+	get dates_fgt(){return this._dates_fgt;};
+
+	get times_fgt(){
+		return this.dates_fgt.length
+	}
+
+	/**
+	 * 添之所從來。可潙書名等。
+	 */
+	protected _source:string[] = []
+	get source(){return this._source;};
+}
+```
+我原先的做法是: 不同語言的單詞存在不同的表。比如英語單詞存在英語表。
+需要記錄多個日期時、把日期轉iso8601格式然後用json記到一個格子裏。
+比如`["2024-06-10T16:46:55.380Z", "2024-04-10T16:46:55.380Z"]`這樣的。
+當需要新添加一個日期的時候就把整個日期json轉數組、給數組新加一個日期、再轉回json寫入數據庫。
+但是這樣設計是有不少問題的。比如難以查詢日期。
+
+我原先的做法: 區別單詞是否爲同一個單詞的做法是看單詞的詞形(`wordShape`)是否相同。
+
+現在我有判斷變體和詞族的需求。比如英語`realize`和`realise`可以看作同一個單詞的不同變體、
+日語的`思い`,`想い`和`おもい`可以看作同一個單詞的不同變體、
+拉丁語不同變格變位的詞也可以歸入同一變體、如`magnus`,`magnum`,`magna`;
+英語的`act`,`active`和`actively`可以歸入同一詞族、日語的`思い`和`思う`可以歸入同一詞族。
+
+兩個不同詞形的詞 是否爲變體或詞族 、需要用戶判斷。數據庫中要支持對變體和詞族信息的儲存。
+
+
+學習單詞時需要對所有單詞計算權重、然有按權重從高到低排序。計算一個單詞權重時需要用到的參數有: 當前的時間,該單詞被加入數據庫的次數和時間,該單詞被記得和忘記的次數及其各自的時間 等。計算過程較複雜、且要用到當前時間作爲參數。所以我不計劃在數據庫中儲存權重而是每次學習時都現代算。如果你有更好的想法也可以提。
+
+數據庫用sqlite。幫我設計一下數據庫的架構。
+
+
+現在還有單機使用和聯網使用的需求。
+聯網使用時支持多用戶。用戶單機學習或添加新詞後、雲端儲存的單詞表和用戶本地的單詞表會出現新舊程度不一致。
+需有高效合併的辦法。
+服務端使用mysql儲存用戶信息。
+需要支持通過用戶查詢到該用戶的單詞管理架構。
+用戶可以設置自己的哪些單詞表公開展示。比如用戶A有英語表和日語表、選擇公開英語表。其他用戶可以看到他的英語表的內容。
+
+爲了省事能不能在服務端存單詞表的時候也用sqlite數據庫?
+比如用mysql存用戶、分別每個用戶開一個sqlite文件。然後mysql中儲存用戶對該用戶的sqlite文件所在路徑的映射
+
+
+根據你的需求，我設計了一個SQLite數據庫架構，以下是詳細的數據庫表結構：
+
+### 1. `languages` 表
+存儲所有支持的語言。
+
+```sql
+CREATE TABLE languages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+```
+
+### 2. `words` 表
+存儲單詞的基本信息。
+
+```sql
+CREATE TABLE words (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_shape TEXT NOT NULL,
+    language_id INTEGER,
+    FOREIGN KEY (language_id) REFERENCES languages(id)
+);
+```
+
+### 3. `variants` 表
+存儲單詞的變體。
+
+```sql
+CREATE TABLE variants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    variant TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 4. `word_meanings` 表
+存儲單詞的釋義。
+
+```sql
+CREATE TABLE word_meanings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    meaning TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 5. `annotations` 表
+存儲用戶對單詞的註釋。
+
+```sql
+CREATE TABLE annotations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    annotation TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 6. `tags` 表
+存儲單詞的標籤。
+
+```sql
+CREATE TABLE tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    tag TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 7. `sources` 表
+存儲單詞的來源信息。
+
+```sql
+CREATE TABLE sources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    source TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 8. `additions` 表
+存儲單詞的添加時間。
+
+```sql
+CREATE TABLE additions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 9. `studies` 表
+存儲單詞的學習記錄。
+
+```sql
+CREATE TABLE studies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    study_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    result TEXT CHECK(result IN ('remember', 'forget')),
+    FOREIGN KEY (word_id) REFERENCES words(id)
+);
+```
+
+### 10. `families` 表
+存儲詞族信息。
+
+```sql
+CREATE TABLE families (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    family_name TEXT NOT NULL
+);
+```
+
+### 11. `word_families` 表
+將單詞與詞族關聯起來。
+
+```sql
+CREATE TABLE word_families (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    family_id INTEGER,
+    FOREIGN KEY (word_id) REFERENCES words(id),
+    FOREIGN KEY (family_id) REFERENCES families(id)
+);
+```
+
+### 12. `word_relations` 表
+存儲變體和詞族信息。
+
+```sql
+CREATE TABLE word_relations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER,
+    related_word_id INTEGER,
+    relation_type TEXT CHECK(relation_type IN ('variant', 'family')),
+    FOREIGN KEY (word_id) REFERENCES words(id),
+    FOREIGN KEY (related_word_id) REFERENCES words(id)
+);
+
+CREATE TABLE change_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    table_name TEXT NOT NULL,
+    record_id INTEGER NOT NULL,
+    operation TEXT CHECK(operation IN ('INSERT', 'UPDATE', 'DELETE')),
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 關鍵點總結
+1. 每個單詞存儲在 `words` 表中，包含其詞形和語言。
+2. 單詞的變體、釋義、註釋、標籤和來源信息分別存儲在 `variants`、`word_meanings`、`annotations`、`tags` 和 `sources` 表中。
+3. 單詞的添加時間存儲在 `additions` 表中。
+4. 學習記錄存儲在 `studies` 表中，包括學習日期和結果。
+5. 詞族信息存儲在 `families` 和 `word_families` 表中。
+6. 單詞之間的關聯（變體和詞族）存儲在 `word_relations` 表中。
+
+這樣的設計可以靈活地擴展和管理單詞信息，並且支持用戶自定義變體和詞族信息。權重計算可以根據上述結構中的數據進行計算，不需要額外存儲在數據庫中。
+
+
+
+
+
 ###
 <2024-05-16T10:08:32.018+08:00>
 svc增接口、褈讀代碼加載權重算法
