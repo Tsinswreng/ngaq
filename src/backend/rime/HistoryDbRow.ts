@@ -1,7 +1,7 @@
 
 class ColNames{
 	readonly id='id'
-	readonly text_='text'
+	readonly text='text'
 	readonly cnt='cnt'
 	readonly created_time='created_time'
 	readonly modified_time='modified_time'

@@ -9,9 +9,13 @@ import { SqliteDb } from "@backend/sqlite/Sqlite"
 
 class Names{
 	idx_text='idx_text'
-	trig_updateOnDuplicateInsert='trig_update_on_duplicate_insert'
-	trig_chkModifiedTime = 'trig_chkModifiedTime'
+	//trig_updateOnDuplicateInsert='trig_onUuplicate_insert'
+	trig_chkModifiedTime = 'chkModifiedTime'
 	errMsg_chkModifiedTime = 'modified_time cannot be earlier than created_time'
+	//trig_uniqueTextEtCreatedTime = 'trig_unique_text__created_time'
+	//errMsg_uniqueTextEtCreatedTime = '(text,created_time) is duplicated'
+	trig_earlierDuplicate = 'earlierDuplicate'
+	trig_laterDuplicate = 'laterDuplicate'
 }
 
 
@@ -49,7 +53,7 @@ export class HistoryTbl{
 	static sql_createTextIdx(tblName:str, idxName:str){
 		const z = this
 		const c = HistoryDbRow.col
-		return SqliteUitl.Sql.create.index(tblName, idxName, [c.text_], {checkExist:false})
+		return SqliteUitl.Sql.create.index(tblName, idxName, [c.text], {checkExist:false})
 	}
 
 
@@ -58,7 +62,8 @@ export class HistoryTbl{
 		const z = this
 		await z.createTextIdx()
 		await z.mkTrig_chkModifiedTime()
-		await z.mkTrig_updateOnDuplicateInsert()
+		await z.mkTrig_laterDuplicate()
+		await z.mkTrig_earlierDuplicate()
 		return true
 	}
 
@@ -72,7 +77,7 @@ export class HistoryTbl{
 		const sql = 
 `CREATE TABLE ${ifNotExists} "${tbl}"(
 	${c.id} INTEGER PRIMARY KEY
-	,${c.text_} TEXT NOT NULL UNIQUE
+	,${c.text} TEXT NOT NULL UNIQUE
 	,${c.cnt} INT DEFAULT 1
 	,${c.created_time} INTEGER DEFAULT (strftime('%s', 'now'))
 	,${c.modified_time} INTEGER DEFAULT (strftime('%s', 'now'))
@@ -98,10 +103,17 @@ export class HistoryTbl{
 		return z.db.run(sql)
 	}
 
+
 	/**
-	 * if( NEW.text_ 既存于表 ){ 改潙update、cnt+=NEW.cnt??1、modified_time = NEW.modified_time??now() }
+	 * if(text 相同 && NEW.created_time 更早)
+	 * {update set created_time=新, cnt=MAX(新,舊), modified_time取最新}
+	 * @param tbl 
+	 * @param trig 
+	 * @param errMsg 
+	 * @param opt 
+	 * @returns 
 	 */
-	static sql_mkTrig_updateOnDuplicateInsert(tbl:str, trig:str, opt?:I_optCheckExist){
+	static sql_mkTrig_earlierDuplicate(tbl:str, trig:str, opt?:I_optCheckExist){
 		let ifNE = ''
 		if(opt?.checkExist === false){
 			ifNE = SqliteUitl.IF_NOT_EXISTS
@@ -112,7 +124,62 @@ export class HistoryTbl{
 `
 CREATE TRIGGER ${ifNE} "${trig}" BEFORE INSERT ON "${tbl}"
 FOR EACH ROW
-WHEN EXISTS(SELECT 1 FROM "${tbl}" WHERE ${c.text_} = NEW.${c.text_})
+WHEN EXISTS(
+	SELECT 1 FROM "${tbl}"
+	WHERE ${c.text} = NEW.${c.text} AND ${c.created_time} >= NEW.${c.created_time}
+)
+BEGIN
+	UPDATE "${tbl}"
+	SET
+	${c.created_time} = NEW.${c.created_time}
+	,${c.cnt} = CASE
+		WHEN NEW.${c.cnt} > ${c.cnt} THEN NEW.${c.cnt}
+		ELSE ${c.cnt}
+	END
+	,${c.modified_time}=
+	CASE
+		WHEN NEW.${c.modified_time} > ${c.modified_time} THEN NEW.${c.modified_time}
+		ELSE ${c.modified_time}
+	END
+	WHERE ${c.text}=NEW.${c.text};
+	SELECT RAISE(IGNORE);
+END;
+`
+		return sql
+	}
+
+	mkTrig_earlierDuplicate(){
+		const z = this
+		const sql = z.This.sql_mkTrig_earlierDuplicate(
+			z.tblName, z.names.trig_earlierDuplicate, {checkExist:false}
+		)
+		return z.db.run(sql)
+	}
+
+	/**
+	 * if( NEW.text_ 既存于表 && NEW.created_time更晚 )
+	 * { 改潙update、cnt+=NEW.cnt??1
+	 * 	if(NEW.modified_time is null){modified_time = now()}
+	 * 	else if(NEW.modified_time 更晚){modified_time = new的}
+	 * 	else {不改modified_time}
+	 * }
+	 */
+	static sql_mkTrig_laterDuplicate(tbl:str, trig:str, opt?:I_optCheckExist){
+		let ifNE = ''
+		if(opt?.checkExist === false){
+			ifNE = SqliteUitl.IF_NOT_EXISTS
+		}
+		const z = this
+		const c = HistoryDbRow.col
+		const sql =
+`
+CREATE TRIGGER ${ifNE} "${trig}" BEFORE INSERT ON "${tbl}"
+FOR EACH ROW
+WHEN EXISTS(
+	SELECT 1 FROM "${tbl}"
+	WHERE ${c.text} = NEW.${c.text} 
+	AND ${c.created_time} < NEW.${c.created_time}
+)
 BEGIN
 	UPDATE "${tbl}"
 	SET 
@@ -124,23 +191,25 @@ BEGIN
 	${c.modified_time}=
 	CASE
 		WHEN NEW.${c.modified_time} IS NULL THEN (strftime('%s', 'now'))
-		ELSE NEW.${c.modified_time}
+		WHEN NEW.${c.modified_time} > ${c.modified_time} THEN NEW.${c.modified_time}
+		ELSE ${c.modified_time}
 	END
-	WHERE ${c.text_}=NEW.${c.text_};
+	WHERE ${c.text}=NEW.${c.text};
 	SELECT RAISE(IGNORE);
 END;
 `
 		return sql
 	}
 
-	async mkTrig_updateOnDuplicateInsert(){
+	async mkTrig_laterDuplicate(){
 		const z = this
-		const sql = z.This.sql_mkTrig_updateOnDuplicateInsert(
-			z.tblName, z.names.trig_updateOnDuplicateInsert, {checkExist:false}
+		const sql = z.This.sql_mkTrig_laterDuplicate(
+			z.tblName, z.names.trig_laterDuplicate, {checkExist:false}
 		)
 		await z.db.run(sql)
 		return true
 	}
+
 
 	/**
 	 * modified_time < created_time 旹拋錯
@@ -149,7 +218,7 @@ END;
 	 * @param errMsg 勿有特殊字符。因佢ˇ直ᵈ插入sql之引號中。
 	 * @param opt 
 	 */
-	static sql_mkTrig_chkModifiedTime(tbl:str, trig:str, errMsg:str, opt?:I_optCheckExist){
+	static sql_mkTrig_chkModifiedTimeGeCreatedTime(tbl:str, trig:str, errMsg:str, opt?:I_optCheckExist){
 		let ifNE = ''
 		if(opt?.checkExist === false){
 			ifNE = SqliteUitl.IF_NOT_EXISTS
@@ -160,7 +229,7 @@ END;
 `CREATE TRIGGER ${ifNE} "${trig}"
 BEFORE UPDATE ON "${tbl}"
 FOR EACH ROW
-WHEN NEW.${c.modified_time} < OLD.${c.modified_time}
+WHEN NEW.${c.modified_time} < OLD.${c.created_time}
 BEGIN
 	SELECT RAISE(ABORT, '${errMsg}');
 END;
@@ -172,7 +241,7 @@ END;
 		const z = this
 		const tbl = z.tblName
 		const trig = z.names.trig_chkModifiedTime
-		const sql = z.This.sql_mkTrig_chkModifiedTime(
+		const sql = z.This.sql_mkTrig_chkModifiedTimeGeCreatedTime(
 			tbl, trig, z.names.errMsg_chkModifiedTime, {checkExist:false}
 		)
 		return z.db.run(sql)
