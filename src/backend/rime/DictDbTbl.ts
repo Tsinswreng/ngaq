@@ -1,5 +1,5 @@
 
-import * as Tsv from "./tsv"
+import * as Tsv from "./dictTsv"
 import { DbRow } from "./DictDbRow"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import * as sqliteUtil from '@backend/sqlite/sqliteUitl'

@@ -1,4 +1,4 @@
-import * as Tsv from '@backend/rime/tsv'
+import * as Tsv from '@backend/rime/dictTsv'
 import * as File from '@backend/util/File'
 
 

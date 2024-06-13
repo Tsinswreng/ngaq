@@ -1,4 +1,4 @@
-import { DictLine } from "./tsv"
+import { DictLine } from "./dictTsv"
 
 class Col{
 	static readonly id='id'
