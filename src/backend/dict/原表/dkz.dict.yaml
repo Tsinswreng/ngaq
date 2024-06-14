@@ -1,5 +1,5 @@
 
-#20240612171030358
+#20240613215509255
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1470,7 +1470,8 @@ use_preset_vocabulary: true
 治	lrəs	
 至	tits	
 致	trits	
-致	drits	
+緻	driks	
+致	drits	0%
 雉	lriʔ	
 薙	lriʔ	
 遲	lrəj	
@@ -1640,6 +1641,7 @@ use_preset_vocabulary: true
 吸	həp	
 附	bos	
 復	buk	
+複	puk	
 覆	pʰuk	
 學	grˁuk	
 腦	nˁuʔ	
@@ -2154,10 +2156,8 @@ use_preset_vocabulary: true
 篦	pˁi	
 蓖	pˁi	
 鎞	pˁi	
-真	tin	0%
 真	tiŋ	
 臣	ɡiŋ	
-臣	ɡin	0%
 茞	ɡin	
 䢻	ɡin	
 辰	dəl	
@@ -2378,6 +2378,7 @@ use_preset_vocabulary: true
 押	ʔrˁap	
 鴨	ʔrˁap	
 核	ɡrˁək	
+覈	ɡrˁewk	
 臺	dˁə	
 擡	dˁə	
 抬	lˁə	
@@ -2719,6 +2720,13 @@ use_preset_vocabulary: true
 灞	prˁaks	
 把	prˁaʔ	
 靶	prˁas	
+耙	prˁas	
+弝	prˁas	
+芭	prˁa	
+疤	prˁa	
+粑	prˁa	
+鈀	prˁa	
+鈀	pʰrˁa	
 氧	jaŋʔ	
 訊	siŋs	
 迅	sins	
@@ -3103,6 +3111,9 @@ use_preset_vocabulary: true
 掭	lʰˁims	
 㮇	lʰˁims	
 刮	kʷrˁat	
+颳	kʷrˁat	
+鴰	kʷrˁat	
+趏	kʷrˁat	
 剔	lʰˁek	
 踢	lʰˁek	
 惕	lʰˁek	
@@ -3628,7 +3639,15 @@ use_preset_vocabulary: true
 秦	dziŋ	
 港	krˁoŋʔ	0%
 港	kʰrˁoŋʔ	
-港	ɡˁoŋs	
+港	ɡˁoŋs	0%
+準	tulʔ	
+準	tot	
+註	tros	
+注	tos	
+醇	dul	
+淳	dul	
+鶉	dul	
+焞	dul	
 蛾	ŋˁaj	
 蛾	ŋajʔ	0%
 騁	lʰreŋʔ	
@@ -4652,10 +4671,8 @@ use_preset_vocabulary: true
 叭	pʰrˁet	
 玐	prˁet	
 朳	prˁet	
-芭	prˁaj	
 岜	prˁaj	
 㺴	prˁet	
-疤	prˁaj	
 㿬	prˁaj	
 捌	prˁat	
 捌	prˁet	
@@ -4664,7 +4681,6 @@ use_preset_vocabulary: true
 哵	prˁet	
 釟	prˁet	
 羓	prˁaj	
-粑	prˁaj	
 㭭	pˁet	
 㭭	prˁat	
 豝	prˁaj	
@@ -4695,7 +4711,6 @@ use_preset_vocabulary: true
 鼥	bˁat	
 𢃳	daw	
 𢑦	daw	
-弝	prˁajs	
 𥝧	brˁajs	
 垻	prˁajs	
 𦫙	brˁajs	
@@ -6702,18 +6717,15 @@ use_preset_vocabulary: true
 純	dun	99%
 䣩	drun	
 䣩	dun	
-淳	dun	
 犉	nun	
 蒓	dun	
 滣	ʑun	
 䔚	ʑun	
 漘	ʑun	
-醇	dun	
 錞	dˁujs	
 錞	dˁujʔ	
 錞	dun	
 𦎧	dun	
-鶉	dun	
 𦚧	tʰunʔ	
 偆	tʰunʔ	
 偆	tʰrunʔ	
@@ -8838,8 +8850,6 @@ use_preset_vocabulary: true
 𤸑	bus	
 𤸑	buk	
 𤸑	pʰus	
-複	bus	10%
-複	puk	
 𩬙	pa	
 𩬙	pas	
 駙	bas	
@@ -9425,8 +9435,6 @@ use_preset_vocabulary: true
 劀	kʷrˁet	
 𠟽	kʷrˁet	
 䯏	kˁot	
-鴰	krˁot	
-鴰	kˁot	
 卦	kʷrˁes	
 挂	kʷrˁes	
 掛	kʷrˁes	
@@ -10057,8 +10065,6 @@ use_preset_vocabulary: true
 䫘	ɡˁat	
 䫘	hˁat	
 𩩲	ɡˁat	
-覈	ɡˁet	5%
-覈	ɡrˁek	
 𨶩	ɡˁap	
 䶅	ɡˁak	
 䶅	rˁak	
@@ -10786,8 +10792,6 @@ use_preset_vocabulary: true
 耠	ɡˁəp	
 劐	hʷˁak	
 䦝	hʷrˁek	
-趏	kʰrˁat	
-趏	krˁot	
 𢋒	ɡʷˁak	
 𤻙	ɡʷˁak	
 灬	hˁojʔ	
@@ -11050,7 +11054,6 @@ use_preset_vocabulary: true
 幾	kəjʔ	
 麂	krəjʔ	
 撠	krek	
-颳	krˁot	
 穖	kəjʔ	
 𪊨	krəjʔ	
 蟣	ɡəj	
@@ -16163,11 +16166,7 @@ use_preset_vocabulary: true
 𨋐	pʰrˁet	
 𧣃	pʰrˁaj	
 葩	pʰrˁaj	
-耙	brˁajs	
-耙	prˁajs	
 掱	brˁaj	
-鈀	pʰrˁaj	
-鈀	prˁaj	
 筢	brˁaj	
 𪗔	pʰrˁet	
 拍	pʰrˁak	
@@ -20515,7 +20514,6 @@ use_preset_vocabulary: true
 㷟	tʰˁuj	
 駾	tʰˁots	
 涒	tʰˁun	
-焞	dun	
 暾	tʰˁun	
 黗	tʰˁun	
 黗	tʰˁunʔ	
@@ -25796,7 +25794,6 @@ use_preset_vocabulary: true
 㿃	tˁats	
 㿃	trets	
 瀄	tsrit	
-緻	drəjs	
 𦃘	drəjs	
 擿	drek	
 擲	drek	
@@ -26052,7 +26049,6 @@ use_preset_vocabulary: true
 杼	draʔ	
 杼	ʑaʔ	
 㹥	tos	
-注	tos	
 壴	tros	
 柷	tʰuk	
 柷	tuk	
@@ -26075,8 +26071,6 @@ use_preset_vocabulary: true
 貯	traʔ	
 跓	droʔ	
 嵀	droʔ	
-註	tos	
-註	tros	
 馵	tos	
 筯	dras	
 鉒	tros	
@@ -26255,8 +26249,6 @@ use_preset_vocabulary: true
 埻	kʷrˁek	
 埻	kʷˁak	
 稕	tuns	
-準	tot	10%
-準	tunʔ	
 𦽑	tuns	
 捉	tsrˁok	
 倬	trˁok	

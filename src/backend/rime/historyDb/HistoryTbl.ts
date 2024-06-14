@@ -79,8 +79,8 @@ export class HistoryTbl{
 	${c.id} INTEGER PRIMARY KEY
 	,${c.text} TEXT NOT NULL UNIQUE
 	,${c.cnt} INT DEFAULT 1
-	,${c.created_time} INTEGER DEFAULT (strftime('%s', 'now'))
-	,${c.modified_time} INTEGER DEFAULT (strftime('%s', 'now'))
+	,${c.createdTime} INTEGER DEFAULT (strftime('%s', 'now'))
+	,${c.modifiedTime} INTEGER DEFAULT (strftime('%s', 'now'))
 )`
 		return sql
 	}
@@ -126,20 +126,20 @@ CREATE TRIGGER ${ifNE} "${trig}" BEFORE INSERT ON "${tbl}"
 FOR EACH ROW
 WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
-	WHERE ${c.text} = NEW.${c.text} AND ${c.created_time} >= NEW.${c.created_time}
+	WHERE ${c.text} = NEW.${c.text} AND ${c.createdTime} >= NEW.${c.createdTime}
 )
 BEGIN
 	UPDATE "${tbl}"
 	SET
-	${c.created_time} = NEW.${c.created_time}
+	${c.createdTime} = NEW.${c.createdTime}
 	,${c.cnt} = CASE
 		WHEN NEW.${c.cnt} > ${c.cnt} THEN NEW.${c.cnt}
 		ELSE ${c.cnt}
 	END
-	,${c.modified_time}=
+	,${c.modifiedTime}=
 	CASE
-		WHEN NEW.${c.modified_time} > ${c.modified_time} THEN NEW.${c.modified_time}
-		ELSE ${c.modified_time}
+		WHEN NEW.${c.modifiedTime} > ${c.modifiedTime} THEN NEW.${c.modifiedTime}
+		ELSE ${c.modifiedTime}
 	END
 	WHERE ${c.text}=NEW.${c.text};
 	SELECT RAISE(IGNORE);
@@ -178,7 +178,7 @@ FOR EACH ROW
 WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
 	WHERE ${c.text} = NEW.${c.text} 
-	AND ${c.created_time} < NEW.${c.created_time}
+	AND ${c.createdTime} < NEW.${c.createdTime}
 )
 BEGIN
 	UPDATE "${tbl}"
@@ -188,11 +188,11 @@ BEGIN
 		WHEN NEW.${c.cnt} IS NULL THEN 1
 		ELSE NEW.${c.cnt}
 	END,
-	${c.modified_time}=
+	${c.modifiedTime}=
 	CASE
-		WHEN NEW.${c.modified_time} IS NULL THEN (strftime('%s', 'now'))
-		WHEN NEW.${c.modified_time} > ${c.modified_time} THEN NEW.${c.modified_time}
-		ELSE ${c.modified_time}
+		WHEN NEW.${c.modifiedTime} IS NULL THEN (strftime('%s', 'now'))
+		WHEN NEW.${c.modifiedTime} > ${c.modifiedTime} THEN NEW.${c.modifiedTime}
+		ELSE ${c.modifiedTime}
 	END
 	WHERE ${c.text}=NEW.${c.text};
 	SELECT RAISE(IGNORE);
@@ -229,7 +229,7 @@ END;
 `CREATE TRIGGER ${ifNE} "${trig}"
 BEFORE UPDATE ON "${tbl}"
 FOR EACH ROW
-WHEN NEW.${c.modified_time} < OLD.${c.created_time}
+WHEN NEW.${c.modifiedTime} < OLD.${c.createdTime}
 BEGIN
 	SELECT RAISE(ABORT, '${errMsg}');
 END;

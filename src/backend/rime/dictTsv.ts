@@ -6,13 +6,14 @@
 import { $, $a } from "@shared/Ut"
 import { Line } from "./Line"
 import {I_readN} from '@shared/Type'
+import { Tsv, Status as Status_ } from "./Tsv"
 
 interface I_next<T>{
 	next():T
 }
 
 
-class Status{
+class Status extends Status_{
 	nextLineNoComment=false
 	in_meta = false
 	in_body = false
@@ -60,10 +61,14 @@ export class DictLine extends Line{
 	}
 }
 
-/** 按行解析 */
-export class DictTsvParser{
 
-	protected constructor(){}
+
+/** 按行解析 */
+export class DictTsvParser extends Tsv{
+
+	protected constructor(){
+		super()
+	}
 
 	protected __init__(...args:Parameters<typeof DictTsvParser.new>){
 		const z = this
@@ -84,8 +89,8 @@ export class DictTsvParser{
 
 	static readonly noCommentPattern = '# no comment'
 
-	protected _readNObj:I_readN<Promise<str[]>>
-	get readNObj(){return this._readNObj}
+	// protected _readNObj:I_readN<Promise<str[]>>
+	// get readNObj(){return this._readNObj}
 
 	protected _status = new Status()
 	get status(){return this._status}
