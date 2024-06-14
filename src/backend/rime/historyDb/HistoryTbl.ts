@@ -77,10 +77,12 @@ export class HistoryTbl{
 		const sql = 
 `CREATE TABLE ${ifNotExists} "${tbl}"(
 	${c.id} INTEGER PRIMARY KEY
-	,${c.text} TEXT NOT NULL UNIQUE
+	,${c.belong} TEXT NOT NULL
+	,${c.text} TEXT NOT NULL
 	,${c.cnt} INT DEFAULT 1
 	,${c.createdTime} INTEGER DEFAULT (strftime('%s', 'now'))
 	,${c.modifiedTime} INTEGER DEFAULT (strftime('%s', 'now'))
+	,UNIQUE(${c.text},${c.belong})
 )`
 		return sql
 	}
@@ -126,7 +128,8 @@ CREATE TRIGGER ${ifNE} "${trig}" BEFORE INSERT ON "${tbl}"
 FOR EACH ROW
 WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
-	WHERE ${c.text} = NEW.${c.text} AND ${c.createdTime} >= NEW.${c.createdTime}
+	WHERE ${c.text} = NEW.${c.text} AND ${c.belong} = NEW.${c.belong}
+	AND ${c.createdTime} >= NEW.${c.createdTime}
 )
 BEGIN
 	UPDATE "${tbl}"
@@ -178,6 +181,7 @@ FOR EACH ROW
 WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
 	WHERE ${c.text} = NEW.${c.text} 
+	AND ${c.belong} = NEW.${c.belong}
 	AND ${c.createdTime} < NEW.${c.createdTime}
 )
 BEGIN
@@ -270,10 +274,9 @@ END;
 		return await z.db.transaction(fn)
 	}
 
-	async insert(readN:I_readN<HistoryDbRow[]>, opt:I_perBatch){
+	async insertStrm(readN:I_readN<Promise<HistoryDbRow[]>>, opt:I_perBatch){
 		let perBatch = opt?.perBatch??9999
 		const z = this
-		
 		const rows = await readN.read(perBatch)
 		if(rows != void 0 && rows.length > 0){
 			await z.insertRows(rows)

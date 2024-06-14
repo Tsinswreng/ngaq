@@ -14,6 +14,16 @@ export class Line{
 	rawText:str
 	index:int
 
+	/**
+	 * 留予子類褈寫
+	 * 如刪注釋等
+	 * @returns 
+	 */
+	processRaw(){
+		const z = this
+		return z.rawText
+	}
+
 		/**
 	 * 取字串芝除註釋後者
 	 * @param text 

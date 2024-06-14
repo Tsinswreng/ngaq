@@ -6,27 +6,16 @@ import { HistoryDbSrc } from "@backend/rime/historyDb/HistoryDbSrc";
 import { HistoryTbl } from "@backend/rime/historyDb/HistoryTbl";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import sqlite3 from "sqlite3";
-class Opt{
-	dbPath = './rime.sqlite'
-//	tblName = 'commit_history'
-}
+import { historyOpt } from "./opt";
+import { stuff } from "./stuff";
 
-const opt = new Opt()
-
-class Mod{
-	dbRaw = new sqlite3.Database(opt.dbPath)
-	db = SqliteDb.new(this.dbRaw)
-	dbSrc = HistoryDbSrc.new(this.db)
-	//tbl = HistoryTbl.new(this.dbSrc, opt.tblName)
-}
-
-const mod = new Mod()
-
+const opt = historyOpt
+const mod = stuff
 
 async function main(){
 
 	const dbSrc = mod.dbSrc
-	const tblObj = dbSrc.getTblByName(dbSrc.names.tbl_commit_history)
+	const tblObj = dbSrc.getTblByName(dbSrc.names.tbl_commitHistory)
 	await tblObj.createTbl({checkExist:false})
 }
 

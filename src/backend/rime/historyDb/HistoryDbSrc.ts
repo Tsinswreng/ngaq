@@ -39,7 +39,7 @@ class Names{
 	// idx_text='idx_text'
 	// trigger_replace_duplicate='trigger_replace_duplicate'
 	// errMsg_chkModifiedTime = 'modified_time cannot be earlier than created_time'
-	tbl_commit_history = 'commit_history'
+	tbl_commitHistory = 'commitHistory'
 }
 
 export class HistoryDbSrc{

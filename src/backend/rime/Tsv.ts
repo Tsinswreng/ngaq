@@ -4,6 +4,7 @@ import { Line } from "./Line"
 
 export class Status{
 	end = false
+	linePos = -1
 }
 
 export class Tsv{
@@ -27,9 +28,9 @@ export class Tsv{
 	protected set readNObj(v){this._readNObj = v}
 
 	/** 當前処理ʹ行號 */
-	protected _linePos = -1
-	get linePos(){return this._linePos}
-	protected set linePos(v){this._linePos = v}
+	//protected _linePos = -1
+	get linePos(){return this.status.linePos}
+	protected set linePos(v){this.status.linePos = v}
 
 	protected _status
 	get status(){return this._status}
