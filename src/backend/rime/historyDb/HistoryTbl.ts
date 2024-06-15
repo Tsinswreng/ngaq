@@ -50,7 +50,7 @@ export class HistoryTbl{
 	get names(){return this._names}
 	protected set names(v){this._names = v}
 	
-	static sql_createTextIdx(tblName:str, idxName:str){
+	static sql_mkIdx_text(tblName:str, idxName:str){
 		const z = this
 		const c = HistoryDbRow.col
 		return SqliteUitl.Sql.create.index(tblName, idxName, [c.text], {checkExist:false})
@@ -101,7 +101,7 @@ export class HistoryTbl{
 		const z = this
 		const tblName = z.tblName
 		const idxName = z.names.idx_text
-		const sql = z.This.sql_createTextIdx(tblName, idxName)
+		const sql = z.This.sql_mkIdx_text(tblName, idxName)
 		return z.db.run(sql)
 	}
 
