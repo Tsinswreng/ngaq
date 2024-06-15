@@ -5,6 +5,9 @@ export class BaseTblNames{
 
 }
 
+/**
+ * @deprecated
+ */
 export abstract class BaseTbl{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof BaseTbl.new>){

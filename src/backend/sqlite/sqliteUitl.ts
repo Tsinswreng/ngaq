@@ -1,3 +1,16 @@
+export enum SqliteMasterType{
+	table='table'
+	,index='index'
+	,trigger='trigger'
+}
+
+export class SqliteMaster{
+	type:SqliteMasterType
+	name:str
+	tbl_name:str
+	rootpage:int
+	sql:str
+}
 
 
 export interface I_optCheckExist{
@@ -6,6 +19,20 @@ export interface I_optCheckExist{
 	 * 在 刪除旹 表現潙 有 if EXISTS
 	 */
 	checkExist:bool
+}
+
+
+/**
+ * 默認有IF NOT EXISTS
+ * @param opt 
+ * @returns 
+ */
+export function geneIfNotExists(opt:I_optCheckExist|undef){
+	let ifNE = IF_NOT_EXISTS
+	if(opt?.checkExist === true){
+		ifNE = ''
+	}
+	return ifNE
 }
 
 
