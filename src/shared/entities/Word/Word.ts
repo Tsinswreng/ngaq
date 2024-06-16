@@ -6,11 +6,45 @@ import { $, simpleUnion } from '@shared/Ut';
 //import _, { last } from 'lodash';
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
+/** 舊 */
 import { WordDbRow } from '@shared/dbRow/Word';
-import { InstanceType_ } from '@shared/Type';
+import type { InstanceType_, NonFuncProp } from '@shared/Type';
+import * as Rows_ from '@backend/ngaq3/DbRows/wordDbRows'
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
+
+
+
+class WordRows{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof WordRows.new>){
+		const z = this
+		const prop = args[0]
+		Object.assign(z,prop)
+		return z
+	}
+
+	static new(
+		// prop:Exclude<
+		// 	InstanceType_<typeof WordRows>
+		// 	,typeof this.prototype.__init__
+		// >
+		prop:NonFuncProp<WordRows>
+	){
+		const z = new this()
+		z.__init__(prop)
+		return z
+	}
+
+	get This(){return WordRows}
+	word:Rows_.WordRow
+	property:Rows_.PropertyRow
+	learn:Rows_.LearnRow
+	//TODO
+	//wordRelation:
+	//relation
+}
 
 
 const Ut = {
@@ -67,7 +101,7 @@ export class Word{
 		//@ts-ignore
 		const o = new this()
 		o._id=props.id
-		o._table=props.table
+		o._belong=props.table
 		o._wordShape=props.wordShape
 		o._variant=props.variant?.slice()??[]
 		o._pronounce = props.pronounce?.slice()??[]
@@ -85,8 +119,8 @@ export class Word{
 	/**
 	 * 所屬ᵗ表
 	 */
-	protected _table:string = ''
-	get table(){return this._table;};
+	protected _belong:string = ''
+	get belong(){return this._belong;};
 
 	protected _id?:number
 	get id(){return this._id;};
@@ -172,6 +206,18 @@ export class Word{
 	// 	return SingleWord2.fieldStringfy(this)
 	// }
 
+	static toRows(w:Word){
+		const tempus_event = Word.getSortedDateToEventObjs(w)
+		const word:Rows_.WordRow = {
+			id:w.id
+			,belong:w.belong
+			,text:w.wordShape
+			,createdTime:Tempus.toUnixTime_mills(w.dates_add[0])
+			,modifiedTime: Tempus.toUnixTime_mills($(tempus_event.at(-1)).tempus)
+		}
+
+	}
+
 	static toJsObj = WordDbRow.toEntity.bind(WordDbRow)
 	static toDbObj = WordDbRow.toPlain.bind(WordDbRow)
 
@@ -201,13 +247,13 @@ export class Word{
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.wordShape !== w2.wordShape`)
 		}
-		if(w1.table!==w2.table){
+		if(w1.belong!==w2.belong){
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.ling!==w2.ling`)
 		}
 		let o = Word.new({
 			id:w1.id,
-			table:w1.table,
+			table:w1.belong,
 			wordShape:w1.wordShape,
 			mean:Ut.union(w1.mean, w2.mean),
 			annotation:Ut.union(w1.annotation, w2.annotation),
@@ -284,12 +330,12 @@ export class Word{
 	static classify(sws:Word[]){
 		const tableToWordsMap = new Map<string, Word[]>()
 		for(const wordToAdd of sws){
-			const innerWords = tableToWordsMap.get(wordToAdd.table)
+			const innerWords = tableToWordsMap.get(wordToAdd.belong)
 			if(innerWords === void 0){
-				tableToWordsMap.set(wordToAdd.table, [wordToAdd])
+				tableToWordsMap.set(wordToAdd.belong, [wordToAdd])
 			}else{
 				innerWords.push(wordToAdd)
-				tableToWordsMap.set(wordToAdd.table, innerWords)
+				tableToWordsMap.set(wordToAdd.belong, innerWords)
 			}
 		}
 		return tableToWordsMap
@@ -304,7 +350,7 @@ export class Word{
 	 * @param sw 
 	 * @returns 
 	 */
-	public static getSortedDateToEventObjs(sw:Word): Tempus_Event[]{
+	static getSortedDateToEventObjs(sw:Word): Tempus_Event[]{
 		const addMap = Word.getDateToEventMap(sw.dates_add, WordEvent.ADD)
 		const rmbMap = Word.getDateToEventMap(sw.dates_rmb, WordEvent.RMB)
 		const fgtMap = Word.getDateToEventMap(sw.dates_fgt, WordEvent.FGT)
@@ -326,7 +372,7 @@ export class Word{
 	 * @param event 
 	 * @returns 
 	 */
-	public static getDateToEventMap(dates:Tempus[], event:WordEvent){
+	static getDateToEventMap(dates:Tempus[], event:WordEvent){
 		const map = new Map<Tempus, WordEvent>()
 		for(const d of dates){
 			map.set(d,event)

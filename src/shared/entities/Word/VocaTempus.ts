@@ -63,7 +63,7 @@ export default class VocaTempus{
 		function forOne(jso:C){
 			const ans:Db_VocaTempus = {
 				id: jso.id
-				,unix_time: Tempus.toUnixTime(jso.tempus, 'bigint')+''
+				,unix_time: Tempus.toUnixTime_mills(jso.tempus, 'bigint')+''
 				,word_id:jso.word_id
 				,table:jso.table
 				,event: C.checkEvent(jso.event)
@@ -125,7 +125,7 @@ export default class VocaTempus{
 				let unus:VocaTempus = 
 				{
 					tempus:tempus,
-					table:sw.table,
+					table:sw.belong,
 					word_id:$(sw.id),
 					event:WordDbRow.dates_add
 				}
@@ -141,7 +141,7 @@ export default class VocaTempus{
 				const unus:VocaTempus = 
 				{
 					tempus:tempus,
-					table:sw.table,
+					table:sw.belong,
 					word_id:$(sw.id),
 					event:WordDbRow.dates_rmb
 				}
@@ -157,7 +157,7 @@ export default class VocaTempus{
 				let unus:VocaTempus = 
 				{
 					tempus:tempus,
-					table:sw.table,
+					table:sw.belong,
 					word_id:$(sw.id),
 					event:WordDbRow.dates_fgt
 				}

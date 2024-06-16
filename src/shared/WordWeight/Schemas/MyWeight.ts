@@ -395,7 +395,7 @@ class WordWeight extends Base implements I_WordWeight{
 		//按表名分類
 		const tbl__words = new Map<string, SvcWord[]>()
 		for(const w of words){
-			const tbl = (w.word.table)
+			const tbl = (w.word.belong)
 			const habere = tbl__words.get(tbl)
 			if( habere == void 0 ){
 				tbl__words.set(tbl, [w])

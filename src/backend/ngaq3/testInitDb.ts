@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 import { NgaqDbSrc } from "./NgaqDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
+import Tempus from "@shared/Tempus";
 
 async function main(){
 	try {
@@ -18,4 +19,5 @@ async function main(){
 
 }
 
-main().catch(e=>console.error(e))
+
+//main().catch(e=>console.error(e))

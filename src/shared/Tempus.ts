@@ -16,23 +16,33 @@ export default class Tempus{
 	public static readonly ISO8601FULL_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
 	public static readonly REGEXP_ISO8601FULL_DATE_FORMAT_ZERO = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z'
 
+
 	public static new(date?:string|number|bigint, format?:string){
 		const o = new this()
 		if(typeof date === 'bigint'){
 			date = Number(date) // 
 		}
-		o._iso = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
-		if(o.iso === null){
-			console.error(Tempus.rely);console.error(date);console.error(format)
-			throw new Error(`date format is not proper`)
-		}
+		o._value = Tempus.rely(date).valueOf()
 		return o
-		// if(!new RegExp('^'+Tempus.REGEXPoFiSO8601FULLdATEfORMAT_ZERO+'$').test(this.time)){
-		// 	throw new Error(`!new RegExp('^'+Tempus.REGEXPoFiSO8601FULLdATEfORMAT_ZERO+'$').test(this.time)`)
-		// }
 	}
 
-	protected constructor(){}
+	// public static new(date?:string|number|bigint, format?:string){
+	// 	const o = new this()
+	// 	if(typeof date === 'bigint'){
+	// 		date = Number(date) // 
+	// 	}
+	// 	o._iso = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
+	// 	if(o.iso === null){
+	// 		console.error(Tempus.rely);console.error(date);console.error(format)
+	// 		throw new Error(`date format is not proper`)
+	// 	}
+	// 	return o
+	// 	// if(!new RegExp('^'+Tempus.REGEXPoFiSO8601FULLdATEfORMAT_ZERO+'$').test(this.time)){
+	// 	// 	throw new Error(`!new RegExp('^'+Tempus.REGEXPoFiSO8601FULLdATEfORMAT_ZERO+'$').test(this.time)`)
+	// 	// }
+	// }
+
+	private constructor(){}
 
 	// public constructor(date?:string|number, format?:string){
 	// 	this._iso = JSON.parse(JSON.stringify(Tempus.rely(date, format))) //<坑>{若 外ʸ不套JSON.parse() 則會多一對雙引號}
@@ -48,26 +58,34 @@ export default class Tempus{
 	/**
 	 * 形如'YYYY-MM-DDTHH:mm:ss.SSSZ'。用中時區。
 	 */
-	private _iso:string = ''
-	;public get iso(){return this._iso;};
-
+	//protected _iso:string = ''
+	get iso(){return Tempus.toISO8601(this)};
+	protected _value:int
 	public static toISO8601(tempus:Tempus){
-		return tempus.iso
+		//return tempus.iso
+		return JSON.stringify(Tempus.rely(tempus._value))
 	}
 
 	private static toRelyObj(tempus:Tempus){
-		return Tempus.rely(tempus.iso)
+		//return Tempus.rely(tempus.iso)
+		return Tempus.rely(tempus._value)
 	}
 
 	public static format(tempus:Tempus, format=Tempus.ISO8601FULL_DATE_FORMAT){
-		return Tempus.rely(tempus.iso).format(format)
+		//return Tempus.rely(tempus.iso).format(format)
+		return Tempus.rely(tempus._value).format(format)
 	}
 
-	public static diff_mills(a:Tempus, b:Tempus){
-		let oa = Tempus.toRelyObj(a); let ob = Tempus.toRelyObj(b)
-		return oa.diff(ob, 'milliseconds')
+	// public static diff_mills(a:Tempus, b:Tempus){
+	// 	let oa = Tempus.toRelyObj(a); let ob = Tempus.toRelyObj(b)
+	// 	return oa.diff(ob, 'milliseconds')
+	// }
+
+	static diff_mills(a:Tempus, b:Tempus){
+		return a._value - b._value
 	}
 
+	/** @deprecated */
 	public static getSort(tempi:Tempus[]){
 		let copy = tempi.slice()
 		copy.sort((a,b)=>{return Tempus.diff_mills(a,b)})
@@ -78,14 +96,19 @@ export default class Tempus{
 		return Tempus.format(tempus, 'YYYYMMDDHHmmssSSS')
 	}
 
-	public static toUnixTime(tempus:Tempus):number
-	public static toUnixTime(tempus:Tempus, type:'number'):number
-	public static toUnixTime(tempus:Tempus, type:'bigint'):bigint
-	public static toUnixTime(tempus:Tempus, type:'number'|'bigint'='number'){
+	/**
+	 * millis
+	 */
+	public static toUnixTime_mills(tempus:Tempus):number
+	public static toUnixTime_mills(tempus:Tempus, type:'number'):number
+	public static toUnixTime_mills(tempus:Tempus, type:'bigint'):bigint
+	public static toUnixTime_mills(tempus:Tempus, type:'number'|'bigint'='number'){
 		if(type === 'bigint'){
-			return BigInt(this.rely(tempus.iso).valueOf())
+			//return BigInt(this.rely(tempus.iso).valueOf())
+			return BigInt(tempus._value)
 		}else{
-			return this.rely(tempus.iso).valueOf()
+			//return this.rely(tempus.iso).valueOf()
+			return tempus._value
 		}
 	}
 

@@ -67,7 +67,7 @@ export class WordDbRow{
 			const sf = JSON.stringify
 			let result:IVocaRow = {
 				id:sw.id,
-				table:sw.table,
+				table:sw.belong,
 				wordShape:sw.wordShape
 				//variant: sf(sw._variant)
 				,pronounce: sf(sw.pronounce),

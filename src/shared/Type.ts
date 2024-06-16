@@ -90,3 +90,28 @@ export interface I_readN<T>{
 export interface I_perBatch{
 	perBatch:num
 }
+
+
+/* 
+除函數外、取對象ʹ䀬ʹ鍵ʹ聯合類型
+for(const K of T){
+	if(T[K] extends Function){
+		return never
+	}else{
+		return K
+	}
+}
+最後 [keyof T] 用于提取映射类型中的值并形成联合类型 卒得 "key1"|"key2"...
+*/
+export type NonFuncKeys<T> = {
+	/* for */[K in keyof T]: //{
+		/* if */T[K] extends Function ? 
+		/* then return */never 
+		/* else return */: K
+	//}
+}[keyof T];
+
+/** 
+ * 除函數外、對象ʹ䀬ʹ鍵ˋʃ成對象ʹ類型ˇ取
+ */
+export type NonFuncProp<T> = Pick<T, NonFuncKeys<T>>;

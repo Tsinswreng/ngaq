@@ -90,8 +90,8 @@ export class WordTable extends Abs_Table{
 	 */
 	static checkTable(table:string, words:Word[]){
 		for(const w of words){
-			if(w.table !== table){
-				throw new Error(`w.table !== table\n${w.wordShape}\t${w.table}`)
+			if(w.belong !== table){
+				throw new Error(`w.table !== table\n${w.wordShape}\t${w.belong}`)
 			}
 		}
 	}
@@ -199,7 +199,7 @@ export class WordTable extends Abs_Table{
 		$a(words)
 		
 		//const tableToWordsMap = SingleWord2.classify(words)
-		const table0 = $(words[0].table)
+		const table0 = $(words[0].belong)
 		WordTable.checkTable(table0, words)
 		const fn = async()=>{
 			return await addWordsOfSameTable(db, table0, words)

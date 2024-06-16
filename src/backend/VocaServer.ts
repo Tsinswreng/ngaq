@@ -238,7 +238,7 @@ export default class VocaServer{
 						_dbPath:(configInst.config.backupDbPath)
 						, _mode:Sqlite.openMode.DEFAULT_CREATE
 				})
-				await WordDbSrc.backupTable(VocaServer.wordDbSrc.dbRaw, sws[0].table, backupDb.dbRaw) //* 無調用堆棧
+				await WordDbSrc.backupTable(VocaServer.wordDbSrc.dbRaw, sws[0].belong, backupDb.dbRaw) //* 無調用堆棧
 				//throw new Error('mis')
 				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
 				const [init, modified] = await Sqlite.transaction(
@@ -248,8 +248,8 @@ export default class VocaServer{
 				 //<待改>{config.dbPath等ˇ皆未用、實則猶存于 VocaServer.sqltDbObj處。}
 				console.log(init)
 				console.log(modified)//t
-				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].table, init)
-				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].table, modified)
+				const addedWords_init:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].belong, init)
+				const addedWords_modified:string[] = await WordDbSrc.getWordShapesByIds(VocaServer.wordDbSrc.dbRaw, sws[0].belong, modified)
 				const addedWords = [...addedWords_init,...addedWords_modified]
 				res.send(addedWords+'\n'+Tempus.format(nunc)) //t
 			}catch(e){
