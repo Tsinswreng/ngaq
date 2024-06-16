@@ -155,6 +155,24 @@ interface I_IgnoredKeys{
 export interface Opt_insert{
 	orIgnore:bool
 }
+
+export class Qry{
+	protected constructor(){}
+	protected __init__(...args:Parameters<typeof Qry.new>){
+		const z = this
+		z.sql = args[0]
+		z.param = args[1]
+		return z
+	}
+	static new(sql:str, params:any[]){
+		const z = new this()
+		z.__init__(sql, params)
+		return z
+	}
+	sql:str
+	param:any[]
+}
+
 class ObjSql{
 	protected constructor(){}
 	protected __init__(...args:Parameters<typeof ObjSql.new>){
@@ -222,7 +240,7 @@ class ObjSql{
 		return `INSERT ${orIgnore} INTO '${tbl}' (${columns}) VALUES (${placeholders})`
 	}
 
-
+	
 
 }
 

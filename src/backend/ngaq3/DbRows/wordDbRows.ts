@@ -61,8 +61,9 @@ class PropertyCol{
 }
 
 
-enum PropertyBelong{
-	tag='tag'
+export enum PropertyBelong{
+	mean='mean'
+	,tag='tag'
 	,annotation='annotation'
 	/** from what book, etc */
 	,source='source'
@@ -129,14 +130,6 @@ export class WordRelationRow{
 	[wordRelationCol.ct]:int
 	[wordRelationCol.mt]:int
 }
-
-
-
-
-class JoinedWord{
-
-}
-
 
 
 

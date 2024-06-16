@@ -3,12 +3,12 @@ import { NgaqDbSrc } from "./NgaqDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import Tempus from "@shared/Tempus";
 
-async function main(){
+const dbPath = './ngaq.sqlite'
+const dbRaw = new sqlite3.Database(dbPath)
+const db = SqliteDb.new(dbRaw)
+const dbSrc = NgaqDbSrc.new(db)
+async function init(){
 	try {
-		const dbPath = './ngaq.sqlite'
-		const dbRaw = new sqlite3.Database(dbPath)
-		const db = SqliteDb.new(dbRaw)
-		const dbSrc = NgaqDbSrc.new(db)
 		await dbSrc.init()
 	} catch (err) {
 		if(err instanceof DbErr){
@@ -18,6 +18,27 @@ async function main(){
 	}
 
 }
+//init().catch(e=>console.error(e))
+
+async function testSelect(){
+	const sql = 
+`SELECT
+    word.id
+     , word.belong
+     , word.text wt
+     , word.ct
+     , word.mt
+    , property.text "p.t"
+FROM word
+LEFT JOIN property on word.id = property.wid
+LEFT JOIN learn on word.id = learn.wid
+WHERE word.id = 1`
+	const ans = await dbSrc.db.all(sql)
+	console.log(ans)
+}
+testSelect()
 
 
-//main().catch(e=>console.error(e))
+
+
+

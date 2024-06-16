@@ -206,21 +206,7 @@ export class Word{
 	// 	return SingleWord2.fieldStringfy(this)
 	// }
 
-	/** //TODO */
-	static toRows(w:Word){
-		const tempus_event = Word.getSortedDateToEventObjs(w)
-		const word:Rows_.WordRow = {
-			id:w.id
-			,belong:w.belong
-			,text:w.wordShape
-			,createdTime:Tempus.toUnixTime_mills(w.dates_add[0])
-			,modifiedTime: Tempus.toUnixTime_mills($(tempus_event.at(-1)).tempus)
-		}
-		// const property:Rows_.PropertyRow = {
-			
-		// }
 
-	}
 
 	static toJsObj = WordDbRow.toEntity.bind(WordDbRow)
 	static toDbObj = WordDbRow.toPlain.bind(WordDbRow)

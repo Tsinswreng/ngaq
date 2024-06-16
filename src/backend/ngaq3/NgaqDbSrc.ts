@@ -7,7 +7,11 @@ import {
 	WordRelationRow,
 	WordRow
 } from '@backend/ngaq3/DbRows/wordDbRows'
+
+import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
+
 import { SqliteDb } from '@backend/sqlite/Sqlite'
+import { JoinedRow } from './DbRows/JoinedRow'
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
 	protected constructor(){super()}
@@ -217,6 +221,48 @@ export class NgaqDbSrc{
 		return true
 	}
 
+
+	qry_addWord(row:Rows.WordRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.WordRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_word.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+	qry_addLearn(row:Rows.LearnRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.LearnRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_learn.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+	qry_addProperty(row:Rows.PropertyRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.PropertyRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_property.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+	qry_addJoinedRow(row:JoinedRow){
+		const z = this
+		const qrys = [] as SqliteUitl.Qry[]
+		const learn = z.qry_addLearn()
+	}
+
+
+
 	selectAllWords(){
 		
 	}
@@ -225,6 +271,8 @@ export class NgaqDbSrc{
 		const z = this
 
 	}
+
+	
 
 
 
