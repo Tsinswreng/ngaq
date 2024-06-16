@@ -1,5 +1,5 @@
 
-#20240614233436365
+#20240616160911586
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2156,6 +2156,8 @@ use_preset_vocabulary: true
 篦	pˁi	
 蓖	pˁi	
 鎞	pˁi	
+盡	dziŋʔ	
+儘	tsiŋʔ	
 真	tiŋ	
 臣	ɡiŋ	
 茞	ɡin	
@@ -11800,7 +11802,6 @@ use_preset_vocabulary: true
 槿	kənʔ	
 㹏	kənʔ	
 𪏴	kənʔ	
-儘	tsinʔ	
 錦	kəmʔ	
 㯸	tsinʔ	
 謹	kənʔ	
@@ -11829,8 +11830,6 @@ use_preset_vocabulary: true
 慬	ɡən	
 慬	kənʔ	
 𡩻	tsəmʔ	
-盡	tsinʔ	
-盡	dzinʔ	
 歏	ɡrəns	
 殣	ɡrəns	
 僸	kəms	

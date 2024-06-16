@@ -91,8 +91,8 @@ class InitSchemaSql{
 	${c.id} INTEGER PRIMARY KEY
 	,${c.belong} TEXT NOT NULL
 	,${c.text} TEXT NOT NULL
-	,${c.createdTime} INTEGER NOT NULL
-	,${c.modifiedTime} INTEGER NOT NULL
+	,${c.ct} INTEGER NOT NULL
+	,${c.mt} INTEGER NOT NULL
 )`
 		return ans
 	}
@@ -106,8 +106,9 @@ class InitSchemaSql{
 `CREATE TABLE ${ifNE} "${tbl}"(
 	${c.id} INTEGER PRIMARY KEY
 	,${c.wid} INTEGER NOT NULL
-	,${c.time} INTEGER NOT NULL
 	,${c.status} TEXT NOT NULL
+	,${c.ct} INTEGER NOT NULL
+	,${c.mt} INTEGER NOT NULL
 	,FOREIGN KEY(${c.wid}) REFERENCES ${z.items.tbl_word.name}(${WordRow.col.id})
 )`
 		return ans
@@ -124,7 +125,8 @@ class InitSchemaSql{
 	,${c.belong} TEXT NOT NULL
 	,${c.wid} INTEGER NOT NULL
 	,${c.text} TEXT NOT NULL
-	,${c.createdTime} INTEGER NOT NULL
+	,${c.ct} INTEGER NOT NULL
+	,${c.mt} INTEGER NOT NULL
 	,FOREIGN KEY(${c.wid}) REFERENCES "${z.items.tbl_word.name}"(${WordRow.col.id})
 )`
 		return ans
@@ -140,6 +142,8 @@ class InitSchemaSql{
 	${c.id} INTEGER PRIMARY KEY
 	,${c.belong} TEXT NOT NULL
 	,${c.name} TEXT NOT NULL
+	,${c.ct} INTEGER NOT NULL
+	,${c.mt} INTEGER NOT NULL
 )`
 		return ans
 	}
@@ -154,6 +158,8 @@ class InitSchemaSql{
 	${c.id} INTEGER PRIMARY KEY
 	,${c.wid} INTEGER NOT NULL
 	,${c.rid} INTEGER NOT NULL
+	,${c.ct} INTEGER NOT NULL
+	,${c.mt} INTEGER NOT NULL
 	,FOREIGN KEY(${c.wid}) REFERENCES "${z.items.tbl_word.name}"(${WordRow.col.id})
 	,FOREIGN KEY(${c.rid}) REFERENCES "${z.items.tbl_relation.name}"(${RelationRow.col.id})
 )`
@@ -212,8 +218,15 @@ export class NgaqDbSrc{
 	}
 
 	selectAllWords(){
-		//...
+		
 	}
+
+	seekWordById(id:int){
+		const z = this
+
+	}
+
+
 
 }
 

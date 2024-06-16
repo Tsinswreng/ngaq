@@ -4,8 +4,8 @@ class WordCol{
 	readonly id='id'
 	readonly belong='belong'
 	readonly text='text'
-	readonly createdTime = 'createdTime'
-	readonly modifiedTime = 'modifiedTime'
+	readonly ct = 'ct'
+	readonly mt = 'mt'
 }
 const wordCol = new WordCol()
 
@@ -17,16 +17,17 @@ export class WordRow{
 	[wordCol.belong]:str
 	/** 詞形 */
 	[wordCol.text]:str
-	[wordCol.createdTime]:int
+	[wordCol.ct]:int
 	/** 增 新ʹ learnStatus行 或 property行 旹、視潙更改 */
-	[wordCol.modifiedTime]:int
+	[wordCol.mt]:int
 }
 
 class LearnCol{
 	readonly id='id'
 	readonly wid='wid'
-	readonly time='time'
 	readonly status='status'
+	readonly ct='ct'
+	readonly mt='mt'
 }
 
 export enum LearnStatus{
@@ -45,8 +46,9 @@ export class LearnRow{
 	protected constructor(){}
 	[learnCol.id]?:int
 	[learnCol.wid]:int
-	[learnCol.time]:int
 	[learnCol.status]:LearnStatus
+	[learnCol.ct]:int
+	[learnCol.mt]:int
 }
 
 class PropertyCol{
@@ -54,7 +56,8 @@ class PropertyCol{
 	readonly belong='belong'
 	readonly wid='wid'
 	readonly text='text'
-	readonly createdTime='createdTime'
+	readonly ct='ct'
+	readonly mt='mt'
 }
 
 
@@ -76,13 +79,16 @@ export class PropertyRow{
 	[propertyCol.belong]:PropertyBelong
 	[propertyCol.wid]:int
 	[propertyCol.text]:str
-	[propertyCol.createdTime]:int
+	[propertyCol.ct]:int
+	[propertyCol.mt]:int
 }
 
 class RelationCol{
 	readonly id='id'
 	readonly belong='belong'
 	readonly name='name'
+	readonly ct='ct'
+	readonly mt='mt'
 }
 
 export enum WordRelationBelong{
@@ -100,12 +106,16 @@ export class RelationRow{
 	[relationCol.id]?:int
 	[relationCol.belong]: WordRelationBelong
 	[relationCol.name]:str
+	[relationCol.ct]:int
+	[relationCol.mt]:int
 }
 
 class WordRelationCol{
 	readonly id='id'
 	readonly wid='wid'
 	readonly rid='rid'
+	readonly ct='ct'
+	readonly mt='mt'
 }
 
 const wordRelationCol = new WordRelationCol()
@@ -116,6 +126,15 @@ export class WordRelationRow{
 	[wordRelationCol.id]?:int
 	[wordRelationCol.wid]:int
 	[wordRelationCol.rid]:int
+	[wordRelationCol.ct]:int
+	[wordRelationCol.mt]:int
+}
+
+
+
+
+class JoinedWord{
+
 }
 
 

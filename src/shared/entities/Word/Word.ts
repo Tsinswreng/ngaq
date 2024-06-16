@@ -206,6 +206,7 @@ export class Word{
 	// 	return SingleWord2.fieldStringfy(this)
 	// }
 
+	/** //TODO */
 	static toRows(w:Word){
 		const tempus_event = Word.getSortedDateToEventObjs(w)
 		const word:Rows_.WordRow = {
@@ -215,6 +216,9 @@ export class Word{
 			,createdTime:Tempus.toUnixTime_mills(w.dates_add[0])
 			,modifiedTime: Tempus.toUnixTime_mills($(tempus_event.at(-1)).tempus)
 		}
+		// const property:Rows_.PropertyRow = {
+			
+		// }
 
 	}
 
