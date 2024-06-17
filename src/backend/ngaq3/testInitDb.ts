@@ -18,7 +18,7 @@ async function init(){
 	}
 
 }
-//init().catch(e=>console.error(e))
+init().catch(e=>console.error(e))
 
 async function testSelect(){
 	const sql = 
@@ -36,7 +36,7 @@ WHERE word.id = 1`
 	const ans = await dbSrc.db.all(sql)
 	console.log(ans)
 }
-testSelect()
+//testSelect()
 
 
 

@@ -3276,6 +3276,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 吊	tˁiwk	# bs
 弔	tˁiwk
 
+頗	pʰˁaj	# 捨他音
+
 驕	kaw
 短	tˁolʔ
 債	tsrˁeks	# 舍他音
@@ -6499,6 +6501,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 韱	tsʰem
 纖	sem
 韱	sem
+
+經	kˁeŋ
+經	kˁeŋs	0%
+
+朋	bˁəŋ	0%
+朋	bˁəŋʔ	#ts
 
 
 # #付	@付

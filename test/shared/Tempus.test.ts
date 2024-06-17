@@ -17,4 +17,11 @@ describe('1', ()=>{
 		const t = Tempus.new(1718506984251)
 		console.log(t)
 	})
+
+	it('4', ()=>{
+		const t = Tempus.toISO8601(
+			Tempus.new(1700000000000)
+		)
+		console.log(t)
+	})
 })

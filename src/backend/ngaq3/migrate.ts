@@ -3,28 +3,35 @@ import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc"
 import type { WordTable } from "@backend/db/sqlite/Word/Table"
 import { WordDbRow } from "@shared/dbRow/Word"
 import { WordToRows } from "./WordToRows"
-
-
+import { NgaqDbSrc } from "./NgaqDbSrc"
+import sqlite3 from 'sqlite3'
+import { SqliteDb } from "@backend/sqlite/Sqlite"
 class Migrate{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof Migrate.new>){
 		const z = this
-		z._dbSrc = args[0]
-		z._tblNames = args[1]
+		z._oldDbSrc = args[0]
+		z._ngaqDbSrc = args[1]
+		z._tblNames = args[2]
 		return z
 	}
 
-	static new(dbSrc:WordDbSrc, tblNames:str[]){
+	static new(oldDbSrc:WordDbSrc, neoDbSrc:NgaqDbSrc, tblNames:str[]){
 		const z = new this()
-		z.__init__(dbSrc, tblNames)
+		z.__init__(oldDbSrc, neoDbSrc, tblNames)
 		return z
 	}
 
 	get This(){return Migrate}
 
-	protected _dbSrc:WordDbSrc
-	get dbSrc(){return this._dbSrc}
-	protected set dbSrc(v){this._dbSrc = v}
+	protected _oldDbSrc:WordDbSrc
+	get oldDbSrc(){return this._oldDbSrc}
+	protected set oldDbSrc(v){this._oldDbSrc = v}
+
+	protected _ngaqDbSrc:NgaqDbSrc
+	get ngaqDbSrc(){return this._ngaqDbSrc}
+	protected set ngaqDbSrc(v){this._ngaqDbSrc = v}
+	
 
 	protected _tblNames:str[]
 	get tblNames(){return this._tblNames}
@@ -34,7 +41,7 @@ class Migrate{
 
 	async selectAllFromOneTbl(tblName:str){
 		const z = this
-		const dbSrc = z.dbSrc
+		const dbSrc = z.oldDbSrc
 		const tbl = dbSrc.loadTable(tblName)
 		const ans = await tbl.selectAllWithTblName()
 		return ans
@@ -56,22 +63,33 @@ class Migrate{
 		const z = this
 		const rows = await z.getRowsOfAllTbl()
 		const words = rows.map(e=>WordDbRow.toEntity(e))
-		const ans = words.map(e=>{
+		const joinedRows = words.map(e=>{
 			const wtr = WordToRows.new(e)
 			return wtr.geneJoinedRow()
 		})
-		return ans
+		await z.ngaqDbSrc.test_addJoinedRows_deprecated(joinedRows)
+		// z.ngaqDbSrc.db.beginTrans()
+		// for(const row of joinedRows){
+		// 	await z.ngaqDbSrc.test_addJoinedRows(row)
+		// }
+		// z.ngaqDbSrc.db.commit()
+		return true
 	}
 }
 
 
 async function main(){
-	const dbPath = './db/voca.db'
-	const dbSrc = await WordDbSrc.New({
-		_dbPath: dbPath
+	console.log('start')
+	const oldDbPath = './db/voca.db'
+	const oldDbSrc = await WordDbSrc.New({
+		_dbPath: oldDbPath
 	})
-	const mig = Migrate.new(dbSrc, [
-		'english', 'japanese'
+	const neoDbPath = './ngaq.sqlite'
+	const neoDbRaw = new sqlite3.Database(neoDbPath)
+	const neoDb = SqliteDb.new(neoDbRaw)
+	const neoDbSrc = NgaqDbSrc.new(neoDb)
+	const mig = Migrate.new(oldDbSrc, neoDbSrc, [
+		'english'//, 'japanese'
 	])
 	const ans = await mig.migrate()
 	console.log(ans)

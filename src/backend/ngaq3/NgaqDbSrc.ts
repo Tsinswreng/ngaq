@@ -12,6 +12,7 @@ import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from './DbRows/JoinedRow'
+import { NonFuncKeys } from '@shared/Type'
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
 	protected constructor(){super()}
@@ -39,14 +40,104 @@ class SchemaItem extends SqliteUitl.SqliteMaster{
 	get This(){return SchemaItem}
 }
 
+class Tbl<T extends kvobj=kvobj>{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Tbl.new>){
+		const z = this
+		z.schemaItem = args[0]
+		return z
+	}
+
+	static new(schemaItem:SchemaItem){
+		const z = new this()
+		z.__init__(schemaItem)
+		return z
+	}
+
+	get This(){return Tbl}
+
+	protected _schemaItem:SchemaItem
+	get schemaItem(){return this._schemaItem}
+	protected set schemaItem(v){this._schemaItem = v}
+	
+	get name(){return this.schemaItem.name}
+	get type(){return this.schemaItem.type}
+	get tbl_name(){return this.schemaItem.tbl_name}
+
+
+	protected _db:SqliteDb
+	get db(){return this._db}
+	set db(v){this._db = v}
+	
+	
+	// qry_addOne(row:T){
+	// 	const z = this
+	// 	const sqlObj = SqliteUitl.Sql.obj.new(row)
+	// 	const sql = sqlObj.geneFullInsertSql(z.tbl_name)
+	// 	const param = sqlObj.getParams()
+	// 	const qry = SqliteUitl.Qry.new(sql, param)
+	// 	return qry
+	// }
+
+
+	
+	qry_addMulti(row:T[]){
+		const z = this
+		const first = row[0]
+		if(first == void 0){
+			throw new Error(`row is empty`)
+		}
+		const sqlObj = SqliteUitl.Sql.obj.new(first, {ignoredKeys: ['id']})//TODO
+		return sqlObj
+	}
+
+
+	/** @deprecated */
+	async addMulti(rows:T[]){
+		const z = this
+		const sqlObj = z.qry_addMulti(rows)
+		const sql = sqlObj.geneFullInsertSql(z.tbl_name)
+		const stmt = await z.db.prepare(sql)
+		for(let i = 0; i < rows.length; i++){
+			const row = rows[i]
+			const param = sqlObj.getParams(row)
+			const result = await stmt.run(param)
+		}
+		return true
+	}
+}
+
+class WordTbl extends Tbl<WordRow>{
+
+}
+
+class LearnTbl extends Tbl<WordRow>{
+
+}
+
+class PropertyTbl extends Tbl<WordRow>{
+
+}
+
+
+
+
 const SI = SchemaItem.new.bind(SchemaItem)
+const TBL = (name:str, type?:SqliteUitl.SqliteMasterType.table)=>{
+	const schemaItem = SchemaItem.new(
+		name
+		, type??SqliteUitl.SqliteMasterType.table
+	)
+	const tbl = Tbl.new(schemaItem)
+	return tbl
+}
 const SMT = SqliteUitl.SqliteMasterType
 class SchemaItems{
-	tbl_word = SI('word', SMT.table)
-	tbl_learn=SI('learn', SMT.table)
-	tbl_property=SI('property', SMT.table)
-	tbl_relation=SI('relation', SMT.table)
-	tbl_wordRelation=SI('wordRelation', SMT.table)
+	tbl_word = TBL('word', SMT.table)
+	tbl_learn=TBL('learn', SMT.table)
+	tbl_property=TBL('property', SMT.table)
+	tbl_relation=TBL('relation', SMT.table)
+	tbl_wordRelation=TBL('wordRelation', SMT.table)
 	idx_wordText = SI('idx_wordText', SMT.index, this.tbl_word.tbl_name)
 }
 
@@ -188,6 +279,7 @@ export class NgaqDbSrc{
 	protected __init__(...args: Parameters<typeof NgaqDbSrc.new>){
 		const z = this
 		z._db = args[0]
+		z.injectDb()
 		return z
 	}
 
@@ -219,6 +311,18 @@ export class NgaqDbSrc{
 			await z.db.run(sql)
 		}
 		return true
+	}
+
+	protected injectDb(){
+		const z = this
+		const items = z.schemaItems
+		const keys = Object.keys(items)
+		for(const key of keys){
+			const item = items[key]
+			if(item?.type === SqliteUitl.SqliteMasterType.table){
+				(item as Tbl).db = z.db
+			}
+		}
 	}
 
 
@@ -255,13 +359,57 @@ export class NgaqDbSrc{
 		return qry
 	}
 
-	qry_addJoinedRow(row:JoinedRow){
-		const z = this
-		const qrys = [] as SqliteUitl.Qry[]
-		const learn = z.qry_addLearn()
+	// qry_addJoinedRow(row:JoinedRow){
+	// 	const z = this
+	// 	const qrys = [] as SqliteUitl.Qry[]
+	// 	const learn = z.qry_addLearn()
+	// }
+
+	getTbl(tbl:NonFuncKeys<typeof SchemaItems.prototype>){
+		
 	}
 
 
+	async test_addJoinedRows_deprecated(rows:JoinedRow[]){
+		const z = this
+		const si = z.schemaItems
+
+		const addOther=async(row:JoinedRow)=>{
+			//await si.tbl_word.addMulti([row.word])
+			await si.tbl_learn.addMulti(row.learns)
+			await si.tbl_property.addMulti(row.propertys)
+		}
+		const addWord=async(row:JoinedRow)=>{
+			await si.tbl_word.addMulti([row.word])
+			await addOther(row)
+		}
+		z.db.beginTrans()
+		for(let i = 0; i < rows.length; i++){
+			const row = rows[i]
+			await addWord(row)
+		}
+		z.db.commit()
+		return true
+	}
+
+	async test_addJoinedRows(rows:JoinedRow[]){
+		const z = this
+		const si = z.schemaItems
+
+		const first = rows[0]
+		if(first == void 0){
+			return true
+		}
+		
+		// async function one(row:JoinedRow){
+		// 	const sqlObj = SqliteUitl.Sql.obj.new(row, {ignoredKeys: [Rows.WordRow.col.id]})
+		// 	const sql = sqlObj.geneFullInsertSql(si.tbl_word.tbl_name)
+		// 	const params = sqlObj.getParams()
+		// 	const stmt = z.db.prepare(sql)
+
+		// 	row.word
+		// }
+	}
 
 	selectAllWords(){
 		
@@ -269,14 +417,27 @@ export class NgaqDbSrc{
 
 	seekWordById(id:int){
 		const z = this
-
 	}
-
-	
-
-
-
 }
 
 
 
+/* 
+
+我有一個單詞管理系統、有兩個表、一個是單詞表(word):
+id(數字自增主鍵), text, createdTime, modifiedTime
+
+還有一個屬性表
+
+id(數字自增主鍵), belong, wid(外鍵,引用word表的id), text, createdTime, modifiedTime
+
+一個單詞可以有多個屬性(property)。
+如
+單詞: {id:1, text:'watch'}
+可以有:
+{id:1, belong:'mean', wid:1, text: '觀看'}
+,{id:2, belong:'mean', wid:1, text: '手錶'}
+
+現在我 需要將一個單詞插入數據庫。但是property中wid必須引用word的id、但是word的id是插入進數據庫之後纔給分配的。
+有沒有辦法改進? 或者重新設計數據庫架構
+*/

@@ -1,5 +1,5 @@
 
-#20240616192357695
+#20240617215052327
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2541,6 +2541,7 @@ use_preset_vocabulary: true
 裊	nˁiwʔ	
 吊	tˁiwk	
 弔	tˁiwk	
+頗	pʰˁaj	
 驕	kaw	
 短	tˁolʔ	
 債	tsrˁeks	
@@ -4278,6 +4279,10 @@ use_preset_vocabulary: true
 韱	tsʰem	
 纖	sem	
 韱	sem	
+經	kˁeŋ	
+經	kˁeŋs	0%
+朋	bˁəŋ	0%
+朋	bˁəŋʔ	
 謬	mriws	
 聊	rˁiw	
 寥	rˁiwk	
@@ -11880,8 +11885,6 @@ use_preset_vocabulary: true
 睛	tsʰeŋʔ	
 睛	tseŋ	
 粳	krˁaŋ	
-經	kˁeŋ	
-經	kˁeŋs	
 聙	tseŋ	
 兢	kəŋ	
 精	tseŋ	
@@ -16335,7 +16338,6 @@ use_preset_vocabulary: true
 閛	pʰrˁeŋ	
 漰	pʰˁəŋ	
 嘭	brˁaŋ	
-朋	bˁəŋ	
 莑	pʰoŋ	
 倗	bˁəŋ	
 倗	bˁəŋs	
@@ -16724,9 +16726,6 @@ use_preset_vocabulary: true
 𦐦	pʰˁak	
 蒪	pʰˁak	
 𧟳	prˁajs	
-頗	pʰˁaj	
-頗	pʰˁajs	
-頗	pʰˁajʔ	
 𢶉	pʰrˁek	
 𨂩	pʰˁat	
 𦿍	pʰˁak	

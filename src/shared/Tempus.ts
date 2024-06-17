@@ -63,7 +63,8 @@ export default class Tempus{
 	protected _value:int
 	public static toISO8601(tempus:Tempus){
 		//return tempus.iso
-		return JSON.stringify(Tempus.rely(tempus._value))
+		//return JSON.stringify(Tempus.rely(tempus._value))
+		return Tempus.rely(tempus._value).toISOString()
 	}
 
 	private static toRelyObj(tempus:Tempus){
