@@ -20,12 +20,11 @@ class SchemaItem extends SqliteUitl.SqliteMaster{
 		const z = this
 		z.name = args[0]
 		z.type = args[1]
-		if(z.type = SMT.table){
+		if(z.type === SMT.table){
 			z.tbl_name = z.name
 		}else{
 			z.tbl_name = $(args[2])
 		}
-		
 		return z
 	}
 
@@ -39,6 +38,25 @@ class SchemaItem extends SqliteUitl.SqliteMaster{
 
 	get This(){return SchemaItem}
 }
+
+class Trigger{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Trigger.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	get This(){return Trigger}
+
+	
+}
+
 
 class Tbl<T extends kvobj=kvobj>{
 	protected constructor(){}
@@ -68,6 +86,8 @@ class Tbl<T extends kvobj=kvobj>{
 	protected _db:SqliteDb
 	get db(){return this._db}
 	set db(v){this._db = v}
+
+
 	
 	
 	// qry_addOne(row:T){
@@ -80,7 +100,7 @@ class Tbl<T extends kvobj=kvobj>{
 	// }
 
 
-	
+	/** @deprecated */
 	qry_addMulti(row:T[]){
 		const z = this
 		const first = row[0]
@@ -138,7 +158,13 @@ class SchemaItems{
 	tbl_property=TBL('property', SMT.table)
 	tbl_relation=TBL('relation', SMT.table)
 	tbl_wordRelation=TBL('wordRelation', SMT.table)
+	
 	idx_wordText = SI('idx_wordText', SMT.index, this.tbl_word.tbl_name)
+	idx_wordCt = SI('idx_wordCt', SMT.index, this.tbl_word.tbl_name)
+	idx_wordMt = SI('idx_wordMt', SMT.index, this.tbl_word.tbl_name)
+	idx_learnWid = SI('idx_learnWid', SMT.index, this.tbl_learn.tbl_name)
+	idx_learnCt = SI('idx_learnCt', SMT.index, this.tbl_learn.tbl_name)
+	idx_propertyWid = SI('idx_propertyWid', SMT.index, this.tbl_property.tbl_name)
 }
 
 const schemaItems = new SchemaItems()
@@ -163,7 +189,7 @@ class InitSchemaSql{
 	get items(){return this._items}
 	protected set items(v){this._items = v}
 
-	getAllSql(){
+	getAllMkTblSql(){
 		const z = this
 		const ans:str[] = [
 			z.mkTbl_word()
@@ -171,7 +197,20 @@ class InitSchemaSql{
 			,z.mkTbl_learn()
 			,z.mkTbl_relation()
 			,z.mkTbl_wordRelation()
-			,z.mkIdx_wordText()
+			//,z.mkIdx_wordText()
+		]
+		return ans
+	}
+
+	getAllIdxSql(){
+		const z = this
+		const ans:str[] = [
+			z.mkIdx_wordText()
+			,z.mkIdx_propertyWid()
+			,z.mkIdx_learnWid()
+			,z.mkIdx_learnCt()
+			,z.mkIdx_wordCt()
+			,z.mkIdx_wordMt()
 		]
 		return ans
 	}
@@ -264,14 +303,73 @@ class InitSchemaSql{
 	mkIdx_wordText(){
 		const z = this
 		const ifNE = SqliteUitl.IF_NOT_EXISTS
-		const c = WordRow.col
-		const tbl = z.items.tbl_word.name
-		const idx = z.items.idx_wordText.name
+		const c = WordRow.col //
+		const tbl = z.items.tbl_word.name //
+		const idx = z.items.idx_wordText.name //
 		const ans = 
 `CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.text})`
 		return ans
 	}
 
+	mkIdx_propertyWid(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.PropertyRow.col //
+		const item = z.items.idx_propertyWid //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.wid})`
+		return ans
+	}
+
+	mkIdx_learnWid(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.LearnRow.col //
+		const item = z.items.idx_learnWid //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.wid})`
+		return ans
+	}
+
+	mkIdx_learnCt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.LearnRow.col //
+		const item = z.items.idx_learnCt //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.ct})`
+		return ans
+	}
+
+	mkIdx_wordCt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.WordRow.col //
+		const item = z.items.idx_wordCt //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.ct})`
+		return ans
+	}
+
+	mkIdx_wordMt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.WordRow.col //
+		const item = z.items.idx_wordCt //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.mt})`
+		return ans
+	}
 }
 
 export class NgaqDbSrc{
@@ -306,10 +404,17 @@ export class NgaqDbSrc{
 	
 	async init(){
 		const z = this
-		const sqls = z.initSql.getAllSql()
+		const sqls = z.initSql.getAllMkTblSql()
+		await z.db.beginTrans()
 		for(const sql of sqls){
 			await z.db.run(sql)
 		}
+
+		const sqlsIdx = z.initSql.getAllIdxSql()
+		for(const sql of sqlsIdx){
+			await z.db.run(sql)
+		}
+		await z.db.commit()
 		return true
 	}
 

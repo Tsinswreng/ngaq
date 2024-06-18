@@ -1,5 +1,10 @@
 
 
+class Col{
+
+}
+
+
 class WordCol{
 	readonly id='id'
 	readonly belong='belong'
@@ -10,8 +15,8 @@ class WordCol{
 const wordCol = new WordCol()
 
 export class WordRow{
-	static col = wordCol
-	protected constructor(){}
+	static col = wordCol;
+	//protected constructor(){}
 	[wordCol.id]?:int
 	/** english, japanese, etc. */
 	[wordCol.belong]:str
@@ -102,8 +107,8 @@ export enum WordRelationBelong{
 const relationCol = new RelationCol()
 
 export class RelationRow{
-	static col = relationCol
-	protected constructor(){}
+	static col = relationCol;
+	//protected constructor(){}
 	[relationCol.id]?:int
 	[relationCol.belong]: WordRelationBelong
 	[relationCol.name]:str
@@ -122,8 +127,8 @@ class WordRelationCol{
 const wordRelationCol = new WordRelationCol()
 
 export class WordRelationRow{
-	static col = wordRelationCol
-	protected constructor(){}
+	static col = wordRelationCol;
+	//protected constructor(){}
 	[wordRelationCol.id]?:int
 	[wordRelationCol.wid]:int
 	[wordRelationCol.rid]:int
@@ -172,3 +177,5 @@ export class WordRelationRow{
 // 	readonly text='text'
 // 	readonly createdTime='createdTime'
 // }
+
+
