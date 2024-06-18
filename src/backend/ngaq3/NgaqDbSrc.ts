@@ -395,12 +395,60 @@ export class NgaqDbSrc{
 	async test_addJoinedRows(rows:JoinedRow[]){
 		const z = this
 		const si = z.schemaItems
-
-		const first = rows[0]
-		if(first == void 0){
+		const db = z.db
+		const rowFirst = rows[0]
+		if(rowFirst == void 0){
 			return true
 		}
+		const SqlObj = SqliteUitl.Sql.obj
+		const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
+		const wordSql = wordSqlObj.geneFullInsertSql(si.tbl_word.tbl_name)
+		const wordStmt = await db.prepare(wordSql)
 		
+		const learnSqlObj = SqlObj.new((new Rows.LearnRow()))
+		const learnSql = learnSqlObj.geneFullInsertSql(si.tbl_learn.tbl_name)
+		const learnStmt = await db.prepare(learnSql)
+
+		const propSqlObj = SqlObj.new((new Rows.PropertyRow()))
+		const propSql = propSqlObj.geneFullInsertSql(si.tbl_property.tbl_name)
+		const propStmt = await db.prepare(propSql)
+
+		await db.beginTrans()
+		for(let i = 0; i < rows.length; i++){
+			const jr = rows[i]
+			const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
+			const lastId = res.lastID
+			
+			for(let j = 0; i < jr.learns.length; i++){
+				jr.learns[j].wid = lastId
+				await learnStmt.run(learnSqlObj.getParams(jr.learns[j]))
+			}
+			for(let j = 0; i < jr.propertys.length; i++){
+				jr.propertys[j].wid = lastId
+				await propStmt.run(propSqlObj.getParams(jr.propertys[j]))
+			}
+		}
+		return await db.commit()
+		// const sqls = [] as str[]
+		// function pushSql(sqls:str[], tblName:str, rows:any[]){
+		// 	const first = rows[0]
+		// 	if(first == void 0){
+		// 		return
+		// 	}
+		// 	const sqlObj = SqliteUitl.Sql.obj.new(first)
+		// 	const sql = sqlObj.geneFullInsertSql(tblName)
+		// 	sqls.push(sql)
+		// }
+		// pushSql(sqls, si.tbl_learn.tbl_name, rowFirst.learns)
+		// pushSql(sqls, si.tbl_property.tbl_name, rowFirst.propertys)
+		// const stmts = await Promise.all(sqls.map(e=>db.prepare(e)))
+		// const stmts = [] as (Awaited<ReturnType<typeof db.prepare>>)[]
+		// for(const sql of sqls){
+		// 	const ua = await db.prepare(sql)
+		// 	stmts.push(ua)
+		// }
+
+
 		// async function one(row:JoinedRow){
 		// 	const sqlObj = SqliteUitl.Sql.obj.new(row, {ignoredKeys: [Rows.WordRow.col.id]})
 		// 	const sql = sqlObj.geneFullInsertSql(si.tbl_word.tbl_name)

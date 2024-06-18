@@ -42,8 +42,8 @@ export enum LearnStatus{
 const learnCol = new LearnCol()
 
 export class LearnRow{
-	static col = learnCol
-	protected constructor(){}
+	static col = learnCol;
+	//protected constructor(){}
 	[learnCol.id]?:int
 	[learnCol.wid]:int
 	[learnCol.status]:LearnStatus
@@ -75,7 +75,7 @@ const propertyCol = new PropertyCol()
 /** 單詞ʹ屬性 */
 export class PropertyRow{
 	static col = propertyCol
-	protected constructor(){}
+	;//protected constructor(){}
 	[propertyCol.id]?:int
 	[propertyCol.belong]:PropertyBelong
 	[propertyCol.wid]:int
