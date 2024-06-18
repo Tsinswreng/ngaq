@@ -1,5 +1,5 @@
 
-#20240618002908087
+#20240618105305750
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -140,6 +140,8 @@ use_preset_vocabulary: true
 匿	nrit	
 手	nʰuʔ	
 意	ʔəks	
+噫	ʔrˁəks	
+意	ʔə	
 讀	lˁok	
 讀	ŋˁok	
 犢	lˁok	
@@ -23413,8 +23415,6 @@ use_preset_vocabulary: true
 銥	ʔəj	
 漪	ʔaj	
 褘	hʷəj	
-噫	ʔə	
-噫	ʔrˁəs	
 檹	ʔaj	
 毉	ʔə	
 醫	ʔə	

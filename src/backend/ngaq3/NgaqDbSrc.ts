@@ -418,13 +418,13 @@ export class NgaqDbSrc{
 			const jr = rows[i]
 			const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
 			const lastId = res.lastID
-			
-			for(let j = 0; i < jr.learns.length; i++){
+			for(let j = 0; j < jr.learns.length; j++){
 				jr.learns[j].wid = lastId
 				await learnStmt.run(learnSqlObj.getParams(jr.learns[j]))
 			}
-			for(let j = 0; i < jr.propertys.length; i++){
+			for(let j = 0; j < jr.propertys.length; j++){
 				jr.propertys[j].wid = lastId
+				const cur = jr.propertys[j]
 				await propStmt.run(propSqlObj.getParams(jr.propertys[j]))
 			}
 		}
