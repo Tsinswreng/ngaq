@@ -406,9 +406,15 @@ class WordWeight extends Base implements I_WordWeight{
 		}
 
 		const ans = [] as SvcWord[]
-		const eng = $(tbl__words.get('english'))
-		const jap = $(tbl__words.get('japanese'))
-		const latin = $(tbl__words.get('latin'))
+		// const eng = $(tbl__words.get('english'))
+		// const jap = $(tbl__words.get('japanese'))
+		// const latin = $(tbl__words.get('latin'))
+		const eng = tbl__words.get('english')
+		const jap = tbl__words.get('japanese')
+		const latin = tbl__words.get('latin')
+		if(eng == void 0 || jap == void 0 || latin == void 0){
+			return words
+		}
 		let i = 0
 		function engFn(){
 			const e = eng.pop()
@@ -437,19 +443,22 @@ class WordWeight extends Base implements I_WordWeight{
 			engFn();japFn();
 			engFn();japFn();
 			latinFn();
+			//engFn()
 		}
 		return ans
 	}
 
 	filter(words:SvcWord[]){
+		//return words
 		return words
 		const z = this
 		const ans = [] as SvcWord[]
-		for(const w of words){
-			// if(w.word.times_add===1){
+		for(let i = 0; i < words.length; i++){
+			const w = words[i]
+			const tag = w.word.tag
+			// if(tag.includes('跨文化')){
 			// 	ans.push(w)
 			// }
-			ans.push(w)
 		}
 		return ans
 	}

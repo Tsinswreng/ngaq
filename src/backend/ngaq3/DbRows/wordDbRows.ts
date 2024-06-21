@@ -1,41 +1,55 @@
 
-
-class Col{
-
-}
-
-
-class WordCol{
+export class Col{
 	readonly id='id'
 	readonly belong='belong'
-	readonly text='text'
 	readonly ct = 'ct'
 	readonly mt = 'mt'
 }
+
+const col = new Col
+
+export class Row{
+	static col = col;
+	[col.id]?:int
+	[col.belong]:str
+	[col.ct]:int
+	[col.mt]:int
+}
+
+export class WidCol extends Col{
+	readonly wid='wid'
+}
+const widCol = new WidCol()
+export class WidRow extends Row{
+	static col = widCol;
+	[widCol.wid]?:int
+}
+
+class WordCol extends Col{
+	// readonly [col.id]=col.id
+	// readonly [col.belong]=col.belong
+	// readonly [col.ct] = col.ct
+	// readonly [col.mt] = col.mt
+	readonly text='text'
+}
 const wordCol = new WordCol()
 
-export class WordRow{
+export class WordRow extends Row{
 	static col = wordCol;
 	//protected constructor(){}
-	[wordCol.id]?:int
+	
 	/** english, japanese, etc. */
-	[wordCol.belong]:str
+	
 	/** 詞形 */
 	[wordCol.text]:str
-	[wordCol.ct]:int
 	/** 增 新ʹ learnStatus行 或 property行 旹、視潙更改 */
-	[wordCol.mt]:int
 }
 
-class LearnCol{
-	readonly id='id'
-	readonly wid='wid'
-	readonly status='status'
-	readonly ct='ct'
-	readonly mt='mt'
+class LearnCol extends WidCol{
+
 }
 
-export enum LearnStatus{
+export enum LearnBelong{
 	/** add */
 	add='add'
 	/** remember */
@@ -46,23 +60,23 @@ export enum LearnStatus{
 
 const learnCol = new LearnCol()
 
-export class LearnRow{
+export class LearnRow extends WidRow{
 	static col = learnCol;
+	[learnCol.belong]:LearnBelong
 	//protected constructor(){}
-	[learnCol.id]?:int
-	[learnCol.wid]:int
-	[learnCol.status]:LearnStatus
-	[learnCol.ct]:int
-	[learnCol.mt]:int
+	// [learnCol.id]?:int
+	// [learnCol.wid]:int
+	// [learnCol.ct]:int
+	// [learnCol.mt]:int
 }
 
-class PropertyCol{
-	readonly id='id'
-	readonly belong='belong'
-	readonly wid='wid'
+class PropertyCol extends WidCol{
+	// readonly id='id'
+	// readonly belong='belong'
+	// readonly wid='wid'
 	readonly text='text'
-	readonly ct='ct'
-	readonly mt='mt'
+	// readonly ct='ct'
+	// readonly mt='mt'
 }
 
 
@@ -78,23 +92,23 @@ export enum PropertyBelong{
 const propertyCol = new PropertyCol()
 
 /** 單詞ʹ屬性 */
-export class PropertyRow{
-	static col = propertyCol
-	;//protected constructor(){}
-	[propertyCol.id]?:int
-	[propertyCol.belong]:PropertyBelong
-	[propertyCol.wid]:int
+export class PropertyRow extends WidRow{
+	static col = propertyCol;
+	//protected constructor(){}
 	[propertyCol.text]:str
-	[propertyCol.ct]:int
-	[propertyCol.mt]:int
+	[propertyCol.belong]:PropertyBelong
+	// [propertyCol.id]?:int
+	// [propertyCol.wid]:int
+	// [propertyCol.ct]:int
+	// [propertyCol.mt]:int
 }
 
-class RelationCol{
-	readonly id='id'
-	readonly belong='belong'
+class RelationCol extends Col{
 	readonly name='name'
-	readonly ct='ct'
-	readonly mt='mt'
+	// readonly id='id'
+	// readonly belong='belong'
+	// readonly ct='ct'
+	// readonly mt='mt'
 }
 
 export enum WordRelationBelong{
@@ -106,35 +120,37 @@ export enum WordRelationBelong{
 
 const relationCol = new RelationCol()
 
-export class RelationRow{
+export class RelationRow extends Row{
 	static col = relationCol;
 	//protected constructor(){}
-	[relationCol.id]?:int
-	[relationCol.belong]: WordRelationBelong
 	[relationCol.name]:str
-	[relationCol.ct]:int
-	[relationCol.mt]:int
+	[relationCol.belong]: WordRelationBelong
+	// [relationCol.id]?:int
+	// [relationCol.ct]:int
+	// [relationCol.mt]:int
+	
 }
 
-class WordRelationCol{
-	readonly id='id'
-	readonly wid='wid'
+class WordRelationCol extends WidCol{
 	readonly rid='rid'
-	readonly ct='ct'
-	readonly mt='mt'
+	// readonly id='id'
+	// readonly wid='wid'
+	// readonly ct='ct'
+	// readonly mt='mt'
 }
 
 const wordRelationCol = new WordRelationCol()
 
-export class WordRelationRow{
+export class WordRelationRow extends WidRow{
 	static col = wordRelationCol;
 	//protected constructor(){}
-	[wordRelationCol.id]?:int
-	[wordRelationCol.wid]:int
 	[wordRelationCol.rid]:int
-	[wordRelationCol.ct]:int
-	[wordRelationCol.mt]:int
+	// [wordRelationCol.id]?:int
+	// [wordRelationCol.wid]:int
+	// [wordRelationCol.ct]:int
+	// [wordRelationCol.mt]:int
 }
+
 
 
 

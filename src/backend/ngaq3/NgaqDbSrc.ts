@@ -240,7 +240,7 @@ class InitSchemaSql{
 `CREATE TABLE ${ifNE} "${tbl}"(
 	${c.id} INTEGER PRIMARY KEY
 	,${c.wid} INTEGER NOT NULL
-	,${c.status} TEXT NOT NULL
+	,${c.belong} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
 	,FOREIGN KEY(${c.wid}) REFERENCES ${z.items.tbl_word.name}(${WordRow.col.id})
@@ -497,7 +497,7 @@ export class NgaqDbSrc{
 		return true
 	}
 
-	async test_addJoinedRows(rows:JoinedRow[]){
+	async addJoinedRows(rows:JoinedRow[]){
 		const z = this
 		const si = z.schemaItems
 		const db = z.db
@@ -570,6 +570,18 @@ export class NgaqDbSrc{
 
 	seekWordById(id:int){
 		const z = this
+	}
+
+	sql_seekWordByText(belong:str){
+		const z = this
+		const items = z.schemaItems
+		const c = Rows.WordRow.col
+		const sql = 
+`SELECT * FROM "${items.tbl_word.name}"
+WHERE ${c.text}=?
+AND ${c.belong}=?
+`
+		return sql
 	}
 }
 

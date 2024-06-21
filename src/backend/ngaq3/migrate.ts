@@ -68,7 +68,7 @@ class Migrate{
 			return wtr.geneJoinedRow()
 		})
 		//await z.ngaqDbSrc.test_addJoinedRows_deprecated(joinedRows)
-		await z.ngaqDbSrc.test_addJoinedRows(joinedRows)
+		await z.ngaqDbSrc.addJoinedRows(joinedRows)
 		// z.ngaqDbSrc.db.beginTrans()
 		// for(const row of joinedRows){
 		// 	await z.ngaqDbSrc.test_addJoinedRows(row)
@@ -90,7 +90,7 @@ async function main(){
 	const neoDb = SqliteDb.new(neoDbRaw)
 	const neoDbSrc = NgaqDbSrc.new(neoDb)
 	const mig = Migrate.new(oldDbSrc, neoDbSrc, [
-		'english' , 'japanese'
+		'english' , 'japanese' //TODO 檢查 '勢い'、胡只有四個mean?
 	])
 	const ans = await mig.migrate()
 	console.log(ans)

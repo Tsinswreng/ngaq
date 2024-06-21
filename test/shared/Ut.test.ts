@@ -220,3 +220,45 @@ describe('classify', ()=>{
 		console.log(ans)
 	})
 })
+
+
+
+describe('hasOwnProperty', ()=>{
+	class Pa{
+		a
+		b=1
+		c='c'
+	}
+
+	class Ch extends Pa{
+		ch1
+		ch2=2
+		get chg(){return ''}
+	}
+	const ch = new Ch()
+	it('1',()=>{
+		for(const key in ch){
+			console.log(key)
+		}
+	})
+	it('2', ()=>{
+		const keys = Object.getOwnPropertyNames(ch)
+		console.log(keys)
+	})
+})
+
+describe('assignExisting', ()=>{
+	class WordRow{
+		id
+		text
+		ct
+	}
+	class Word{
+		id?:number
+		text:string
+		ct:Tempus
+	}
+	it('1',()=>{
+
+	})
+})

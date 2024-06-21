@@ -180,7 +180,7 @@ export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeS
 }
 
 /** primitiveAs */
-export function As<Target extends string>(src, target:Target, errMsg?:any):Ty.ParseType<Target>
+export function As<Target extends jstype>(src, target:Target, errMsg?:any):Ty.ParseType<Target>
 
 /** instanceAs */
 export function As<Target extends { prototype: any }>(src, target:Target, errMsg?:any):Ty.InstanceType_<Target>
@@ -722,6 +722,7 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
 	}
 	
 }
+
 
 
 /**

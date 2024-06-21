@@ -45,13 +45,13 @@ export class WordToRows{
 		return wordRow
 	}
 
-	protected geneOneLearnRow(tempus:Tempus, status:Rows_.LearnStatus){
+	protected geneOneLearnRow(tempus:Tempus, status:Rows_.LearnBelong){
 		const z = this
 		const word = z.word
 		const c = Rows_.LearnRow.col
 		const ans:Rows_.LearnRow = {
 			[c.wid]: $(word.id)
-			,[c.status]: status
+			,[c.belong]: status
 			,[c.ct]: Tempus.toUnixTime_mills(tempus)
 			,[c.mt]: Tempus.toUnixTime_mills(tempus)
 		}
@@ -63,15 +63,15 @@ export class WordToRows{
 		const w = z.word
 		const ans = [] as Rows_.LearnRow[]
 		for(const tempus of w.dates_add){
-			const row =  z.geneOneLearnRow(tempus, Rows_.LearnStatus.add)
+			const row =  z.geneOneLearnRow(tempus, Rows_.LearnBelong.add)
 			ans.push(row)
 		}
 		for(const tempus of w.dates_rmb){
-			const row =  z.geneOneLearnRow(tempus, Rows_.LearnStatus.rmb)
+			const row =  z.geneOneLearnRow(tempus, Rows_.LearnBelong.rmb)
 			ans.push(row)
 		}
 		for(const tempus of w.dates_fgt){
-			const row =  z.geneOneLearnRow(tempus, Rows_.LearnStatus.fgt)
+			const row =  z.geneOneLearnRow(tempus, Rows_.LearnBelong.fgt)
 			ans.push(row)
 		}
 

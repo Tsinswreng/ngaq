@@ -115,3 +115,19 @@ export type NonFuncKeys<T> = {
  * 除函數外、對象ʹ䀬ʹ鍵ˋʃ成對象ʹ類型ˇ取
  */
 export type NonFuncProp<T> = Pick<T, NonFuncKeys<T>>;
+
+
+/**
+ * 取一個類之setter
+ * 實際上getter亦可被取、非唯setter
+ */
+export type SetterKeys<T> = {
+	[K in keyof T]: T[K] extends { set(value: infer V): void } ? K : never
+}[keyof T];
+
+export type SetterProp<T> = Pick<T, SetterKeys<T>>
+
+
+
+
+
