@@ -10,6 +10,7 @@ import { WordPriority } from '@shared/entities/Word/WordPriority';
 import { WordDbRow } from '@shared/dbRow/Word';
 import type { InstanceType_, PubNonFuncProp } from '@shared/Type';
 import * as Rows_ from '@backend/ngaq3/DbRows/wordDbRows'
+import type { JoinedWord } from './JoinedWord';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
@@ -51,7 +52,7 @@ const Ut = {
 	union : simpleUnion
 };
 
-export type IVocaRow = WordDbRow
+
 
 
 
@@ -98,7 +99,6 @@ export class Word{
 		dates_fgt?:Tempus[]
 		source?:string[]
 	}){
-		//@ts-ignore
 		const o = new this()
 		o._id=props.id
 		o._belong=props.table
@@ -124,6 +124,11 @@ export class Word{
 
 	protected _id?:number
 	get id(){return this._id;};
+
+	protected _joinedWord?:JoinedWord
+	get joinedWord(){return this._joinedWord}
+	set joinedWord(v){this._joinedWord = v}
+	
 
 	/**
 	 * 詞形
@@ -216,8 +221,8 @@ export class Word{
 	 * @param o 
 	 */
 	static clone(o:Word):Word
-	static clone(o:IVocaRow):IVocaRow
-	static clone(o:Word|IVocaRow){
+	static clone(o:WordDbRow):WordDbRow
+	static clone(o:Word|WordDbRow){
 		if(o instanceof Word){
 			return Word.toJsObj(Word.toDbObj(o))
 		}else{
@@ -232,7 +237,7 @@ export class Word{
 	 * @param w2 
 	 * @returns 
 	 */
-	public static intersect(w1:Word, w2:Word){
+	static intersect(w1:Word, w2:Word){
 		if(w1.wordShape!==w2.wordShape){
 			console.error(w1);console.error(w2)
 			throw new Error(`w1.wordShape !== w2.wordShape`)
@@ -287,18 +292,18 @@ export class Word{
 	 * @param row2 
 	 * @param ignoredKeys 忽略之字段
 	 */
-	static isWordsEqual(row1: IVocaRow, row2:IVocaRow, ignoredKeys?:string[]):boolean
+	static isWordsEqual(row1: WordDbRow, row2:WordDbRow, ignoredKeys?:string[]):boolean
 	static isWordsEqual(row1: Word, row2:Word,ignoredKeys?:string[]):boolean
 
-	static isWordsEqual(row1: IVocaRow|Word, row2:IVocaRow|Word, ignoredKeys?:string[]){
-		let c1:IVocaRow
-		let c2:IVocaRow
+	static isWordsEqual(row1: WordDbRow|Word, row2:WordDbRow|Word, ignoredKeys?:string[]){
+		let c1:WordDbRow
+		let c2:WordDbRow
 		if(row1 instanceof Word){
 			c1 = Word.toDbObj(row1)
 			c2 = Word.toDbObj(row2 as Word)
 		}else{
 			c1 = this.clone(row1)
-			c2 = this.clone(row2 as IVocaRow)
+			c2 = this.clone(row2 as WordDbRow)
 		}
 		if(ignoredKeys !== void 0){
 			for(const k of ignoredKeys){
@@ -371,44 +376,19 @@ export class Word{
 	}
 
 
-/* 
-	public static intersectTwoWord(w1:IVocaRow, w2:IVocaRow){
-		let c = VocaTableColumnName
-		function unionStringfiedArr<T>(s1:string, s2:string){
-			let arr1:T[] = JSON.parse(s1)
-			let arr2:T[] = JSON.parse(s2)
-			return JSON.stringify(Ut.union(arr1, arr2))
-		}
-		function batchKeys(w1:IVocaRow,w2:IVocaRow,keys:string[]){
-			let obj:IVocaRow = JSON.parse(JSON.stringify(w1))
-			for(const k of keys){
-				obj[k]=unionStringfiedArr(w1[k], w2[k])
-			}
-			return obj
-		}
-		if(w1.wordShape !== w2.wordShape){
-			console.error(w1);console.error(w2)
-			throw new Error(`w1.wordShape !== w2.wordShape`)
-		}
-		batchKeys(w1, w2, [c.mean, c.dates_add, c.dates_rmb, c.dates_fgt])
-		//待改:唯與數據庫存取詞旹 用IVocaRowˉ接口、処理單詞旹皆當用SingleWord2對象
-	}
- */
-	//public static 
-
-	/**
-	 * 根據事件ⁿ珩函數數組
-	 * @param event 
-	 * @param fn 
-	 */
-	public static switchEvent(event:WordEvent, fn:(Function|undefined)[]){
-		switch (event){
-			case WordEvent.ADD:$(fn[0])();break;
-			case WordEvent.RMB:$(fn[1])();break;
-			case WordEvent.FGT:$(fn[2])();break
-			default: throw new Error('default');
-		}
-	}
+	// /**
+	//  * 根據事件ⁿ珩函數數組
+	//  * @param event 
+	//  * @param fn 
+	//  */
+	// public static switchEvent(event:WordEvent, fn:(Function|undefined)[]){
+	// 	switch (event){
+	// 		case WordEvent.ADD:$(fn[0])();break;
+	// 		case WordEvent.RMB:$(fn[1])();break;
+	// 		case WordEvent.FGT:$(fn[2])();break
+	// 		default: throw new Error('default');
+	// 	}
+	// }
 
 	static get Tempus_Event(){
 		return class Tempus_Event{

@@ -7,7 +7,7 @@ class Routes{
 	addWords='/addWords'
 	backupAll='/backupAll'
 	backup='/backup'
-	createTable='/createTable'
+	createTable='/creatTable' // 與舊Manage.ts 一致
 	compileTs='/compileTs'
 	wordsFromAllTables='/wordsFromAllTables'
 	tables='/tables'

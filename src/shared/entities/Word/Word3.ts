@@ -121,14 +121,18 @@ class BaseInst<RowType extends Rows.Row = Rows.Row> implements I_BaseInst{
 	get belong_(){return this.belong}
 	protected set belong_(v){this.belong = v}
 
-	toRow(){
+	//toRow():RowType
+	//TODO  <RowType extends Rows.Row = Rows.Row> 斷言爲RowType則後ʸ報錯
+	toRow<T=this>(){
 		const z = this
-		z.Static.toRow(z) as RowType
+		//@ts-ignore
+		const ans = z.Static.toRow(z)// as RowType
+		return ans as T
 	}
 }
 
 class BaseStatic<
-	InstType extends BaseInst<any> = BaseInst<any>
+	InstType extends BaseInst = BaseInst
 	,RowType extends Rows.Row = Rows.Row
 >
 implements I_BaseStatic<Rows.Row>{
@@ -205,7 +209,8 @@ const Base = new BaseStatic()
 
 
 class WordInst extends BaseInst<Rows.WordRow>{
-	override Static = Word
+	override Static = Word;
+	[Rows.WordRow.col.text]:str
 }
 
 class WordStatic extends BaseStatic<WordInst, Rows.WordRow>{
@@ -219,7 +224,8 @@ export type Word = WordInst
 
 
 class PropertyInst extends BaseInst<Rows.PropertyRow>{
-	override Static = Property
+	override Static = Property;
+	[Rows.PropertyRow.col.text]:str
 }
 
 class PropertyStatic extends BaseStatic<PropertyInst, Rows.PropertyRow>{
@@ -240,6 +246,32 @@ class LearnStatic extends BaseStatic<LearnInst, Rows.LearnRow>{
 
 export const Learn = new LearnStatic()
 export type Learn = LearnInst
+
+
+
+class Pa1{
+	pa1
+}
+
+class Ch1 extends Pa1{
+	ch1
+}
+
+class Pa<T>{
+	pa
+	fn(){
+		let a
+		return a as T
+	}
+}
+
+class Ch extends Pa<Ch1>{
+	ch
+	fn(){
+		let a 
+		return a as Ch1
+	}
+}
 
 
 

@@ -46,8 +46,12 @@ export class SvcWord{
 	get This(){return SvcWord}
 
 
-	/** Word實體 */
+	/** 
+	 * Word實體 
+	 * @deprecated
+	 */
 	protected _word:Word
+	/** @deprecated */
 	get word(){return this._word}
 
 	/** 權重 */

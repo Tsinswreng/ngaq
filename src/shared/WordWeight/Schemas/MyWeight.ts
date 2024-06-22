@@ -412,7 +412,9 @@ class WordWeight extends Base implements I_WordWeight{
 		const eng = tbl__words.get('english')
 		const jap = tbl__words.get('japanese')
 		const latin = tbl__words.get('latin')
-		if(eng == void 0 || jap == void 0 || latin == void 0){
+		const italian = tbl__words.get('italian')
+		if(eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0){
+			console.warn(`eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0`)
 			return words
 		}
 		let i = 0
@@ -437,12 +439,20 @@ class WordWeight extends Base implements I_WordWeight{
 			}
 			ans.push(e);i++
 		}
+		function italianFn(){
+			const e = italian.pop()
+			if(e == void 0){
+				return
+			}
+			ans.push(e);i++
+		}
 		for(; i < words.length;){
 			engFn();japFn();
 			engFn();japFn();
 			engFn();japFn();
 			engFn();japFn();
 			latinFn();
+			italianFn();
 			//engFn()
 		}
 		return ans

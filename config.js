@@ -13,6 +13,7 @@
 		,`japanese`
 		// ,`kvvts_ruts_ngrun`
 		,`latin`
+		,`italian`
 		// ,`cet6`
 	]
 	,dbPath: `./db/voca.db`
