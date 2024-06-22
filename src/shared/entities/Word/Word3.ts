@@ -1,7 +1,7 @@
 import { JoinedRow } from '@backend/ngaq3/DbRows/JoinedRow'
 import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 import Tempus from '@shared/Tempus'
-import type { PubNonFuncProp, SetterProp } from '@shared/Type'
+import type { InstanceType_, PubNonFuncProp, SetterProp } from '@shared/Type'
 import { As } from '@shared/Ut';
 
 
@@ -99,11 +99,12 @@ interface I_BaseStatic<RowT extends Rows.Row>{
 	Row:typeof Rows.Row
 }
 
-class BaseInst implements I_BaseInst{
+class BaseInst<RowType extends Rows.Row = Rows.Row> implements I_BaseInst{
 	__init__(){
 		return this
 	}
 	This=BaseInst;
+	Static=Base
 	;[Rows.Row.col.id]: number;
 	get id_(){return this.id}
 	protected set id_(v){this.id = v}
@@ -119,9 +120,18 @@ class BaseInst implements I_BaseInst{
 	[Rows.Row.col.belong]: string;
 	get belong_(){return this.belong}
 	protected set belong_(v){this.belong = v}
+
+	toRow(){
+		const z = this
+		z.Static.toRow(z) as RowType
+	}
 }
 
-class BaseStatic<InstType extends BaseInst> implements I_BaseStatic<Rows.Row>{
+class BaseStatic<
+	InstType extends BaseInst<any> = BaseInst<any>
+	,RowType extends Rows.Row = Rows.Row
+>
+implements I_BaseStatic<Rows.Row>{
 	new(...args:any[]){
 		const z = new BaseInst()
 		z.__init__()
@@ -146,35 +156,86 @@ class BaseStatic<InstType extends BaseInst> implements I_BaseStatic<Rows.Row>{
 		z.correctObj(ans)
 		return ans as InstType
 	}
+	toRow(inst:InstType){
+		const z = this
+		const ans = new z.Row()
+		assign(ans, inst)
+		z.correctRow(ans)
+		return ans as RowType
+	}
+}
+const Base = new BaseStatic()
+
+// class Mk<RowType extends Rows.Row = Rows.Row>{
+// 	protected constructor(){}
+// 	protected __init__(){
+// 		const z = this
+// 		z.mkStatic()
+// 		z.mkInst()
+// 		return z
+// 	}
+// 	static new<RowType extends Rows.Row = Rows.Row>(){
+// 		const z = new this<RowType>()
+// 		z.__init__()
+// 		return z
+// 	}
+
+// 	Row:Rows.Row
+// 	InstCls:typeof BaseInst
+// 	staticObj:BaseStatic
+// 	protected mkStatic(){
+// 		const z = this
+// 		const Ans = class extends BaseStatic{
+
+// 		}
+// 		const ans = new Ans()
+// 		z.staticObj = ans
+// 	}
+// 	protected mkInst(){
+// 		const z = this
+// 		z.InstCls = class extends BaseInst<RowType>{
+
+// 		}
+// 		z.staticObj.Inst = z.InstCls
+// 	}
+// }
+
+// const MkT = Mk.new<Rows.WordRow>()
+// const W2 = MkT.staticObj
+
+
+class WordInst extends BaseInst<Rows.WordRow>{
+	override Static = Word
 }
 
-class WordInst extends BaseInst{
-
-}
-
-class WordStatic extends BaseStatic<WordInst>{
+class WordStatic extends BaseStatic<WordInst, Rows.WordRow>{
 	override Inst=WordInst
+	override Row = Rows.WordRow
 }
 
 export const Word = new WordStatic()
 export type Word = WordInst
 
-class PropertyInst extends BaseInst{
 
+
+class PropertyInst extends BaseInst<Rows.PropertyRow>{
+	override Static = Property
 }
 
-class PropertyStatic extends BaseStatic<PropertyInst>{
+class PropertyStatic extends BaseStatic<PropertyInst, Rows.PropertyRow>{
 	override Inst=PropertyInst
+	override Row = Rows.PropertyRow
 }
 
 export const Property = new PropertyStatic()
 export type Property = PropertyInst
-class LearnInst extends BaseInst{
-
+class LearnInst extends BaseInst<Rows.LearnRow>{
+	override Static = Learn
 }
 
-class LearnStatic extends BaseStatic<LearnInst>{
+class LearnStatic extends BaseStatic<LearnInst, Rows.LearnRow>{
 	override Inst = LearnInst
+	override Row = Rows.LearnRow
 }
 
 export const Learn = new LearnStatic()

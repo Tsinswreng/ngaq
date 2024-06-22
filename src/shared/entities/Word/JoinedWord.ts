@@ -1,5 +1,6 @@
-import type { JoinedRow } from "@backend/ngaq3/DbRows/JoinedRow"
+import { JoinedRow } from "@backend/ngaq3/DbRows/JoinedRow"
 import * as Objs from '@shared/entities/Word/Word3'
+import Tempus from "@shared/Tempus"
 
 export class JoinedWord{
 	protected constructor(){}
@@ -30,5 +31,30 @@ export class JoinedWord{
 	protected _learns:Objs.Learn[]
 	get learns(){return this._learns}
 	protected set learns(v){this._learns = v}
+
+
+	static toRow(j:JoinedWord):JoinedRow{
+		const ans = JoinedRow.new({
+			word: 
+			,
+		})
+	}
+
+	//TODO
+	static intersect(w1:JoinedWord, w2:JoinedWord){
+		for(let i = 0; i < w2.propertys.length; i++){
+			if(w1.propertys[i] == void 0){
+				w1.propertys[i] = w2.propertys[i]
+				continue
+			}
+			if(Tempus.diff_mills(
+				w1.propertys[i].mt,
+				w2.propertys[i].mt
+			)<0){ // w2.propertys[i].mt之修改時間更晚
+				w1.propertys[i] = w2.propertys[i]
+			}
+		}
+	}
+
 
 }
