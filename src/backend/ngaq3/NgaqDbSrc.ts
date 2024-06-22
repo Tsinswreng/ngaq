@@ -12,7 +12,7 @@ import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from './DbRows/JoinedRow'
-import { NonFuncKeys } from '@shared/Type'
+import { PubNonFuncKeys } from '@shared/Type'
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
 	protected constructor(){super()}
@@ -470,7 +470,7 @@ export class NgaqDbSrc{
 	// 	const learn = z.qry_addLearn()
 	// }
 
-	getTbl(tbl:NonFuncKeys<typeof SchemaItems.prototype>){
+	getTbl(tbl:PubNonFuncKeys<typeof SchemaItems.prototype>){
 		
 	}
 

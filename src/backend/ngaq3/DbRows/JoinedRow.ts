@@ -1,5 +1,5 @@
 import { LearnRow, PropertyRow, WordRow } from "./wordDbRows"
-import { NonFuncProp } from "@shared/Type"
+import { PubNonFuncProp } from "@shared/Type"
 
 
 export class JoinedRow{
@@ -11,7 +11,7 @@ export class JoinedRow{
 		return z
 	}
 
-	static new(prop:NonFuncProp<JoinedRow>){
+	static new(prop:PubNonFuncProp<JoinedRow>){
 		const z = new this()
 		z.__init__(prop)
 		return z

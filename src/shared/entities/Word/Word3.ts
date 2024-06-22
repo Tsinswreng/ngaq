@@ -1,7 +1,7 @@
 import { JoinedRow } from '@backend/ngaq3/DbRows/JoinedRow'
 import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 import Tempus from '@shared/Tempus'
-import { NonFuncProp, SetterProp } from '@shared/Type'
+import type { PubNonFuncProp, SetterProp } from '@shared/Type'
 import { As } from '@shared/Ut';
 
 
@@ -139,12 +139,12 @@ class BaseStatic<InstType extends BaseInst> implements I_BaseStatic<Rows.Row>{
 		row.mt = Tempus.toUnixTime_mills(As(row.mt, Tempus))
 		return row
 	}
-	fromRow(row: Rows.Row): I_BaseInst {
+	fromRow(row: Rows.Row): InstType {
 		const z = this
 		const ans = new z.Inst()
 		assign(ans, row)
 		z.correctObj(ans)
-		return ans
+		return ans as InstType
 	}
 }
 
@@ -153,35 +153,52 @@ class WordInst extends BaseInst{
 }
 
 class WordStatic extends BaseStatic<WordInst>{
-
+	override Inst=WordInst
 }
+
 export const Word = new WordStatic()
+export type Word = WordInst
 
 class PropertyInst extends BaseInst{
 
 }
 
 class PropertyStatic extends BaseStatic<PropertyInst>{
-
+	override Inst=PropertyInst
 }
 
 export const Property = new PropertyStatic()
-
+export type Property = PropertyInst
 class LearnInst extends BaseInst{
 
 }
 
 class LearnStatic extends BaseStatic<LearnInst>{
-
+	override Inst = LearnInst
 }
 
 export const Learn = new LearnStatic()
+export type Learn = LearnInst
 
 
 
 
+// class Cl{
+// 	fn(){
+// 		const o = new Cl()
+// 	}
+// }
 
+// class Test{
+// 	public pub
+// 	get pub_(){return this.pub}
+// 	protected pro
+// 	get pro_(){return this.pro}
+// 	private pri
+// }
 
+// type Te = {[k in keyof Test]:Test[k]}
+// declare let te:Te
 
 // class Base_0<RowType extends Rows.Row = Rows.Row> extends IdCtMt{
 // 	protected constructor(){super()}

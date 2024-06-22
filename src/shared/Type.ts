@@ -102,8 +102,10 @@ for(const K of T){
 	}
 }
 最後 [keyof T] 用于提取映射类型中的值并形成联合类型 卒得 "key1"|"key2"...
+只取公開者
+含 訪問器與修改器
 */
-export type NonFuncKeys<T> = {
+export type PubNonFuncKeys<T> = {
 	/* for */[K in keyof T]: //{
 		/* if */T[K] extends Function ? 
 		/* then return */never 
@@ -113,8 +115,10 @@ export type NonFuncKeys<T> = {
 
 /** 
  * 除函數外、對象ʹ䀬ʹ鍵ˋʃ成對象ʹ類型ˇ取
+ * 只取公開者
+ * 含 訪問器與修改器
  */
-export type NonFuncProp<T> = Pick<T, NonFuncKeys<T>>;
+export type PubNonFuncProp<T> = Pick<T, PubNonFuncKeys<T>>;
 
 
 /**

@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
 /** 舊 */
 import { WordDbRow } from '@shared/dbRow/Word';
-import type { InstanceType_, NonFuncProp } from '@shared/Type';
+import type { InstanceType_, PubNonFuncProp } from '@shared/Type';
 import * as Rows_ from '@backend/ngaq3/DbRows/wordDbRows'
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
@@ -30,7 +30,7 @@ class WordRows{
 		// 	InstanceType_<typeof WordRows>
 		// 	,typeof this.prototype.__init__
 		// >
-		prop:NonFuncProp<WordRows>
+		prop:PubNonFuncProp<WordRows>
 	){
 		const z = new this()
 		z.__init__(prop)
