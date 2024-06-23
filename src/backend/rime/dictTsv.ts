@@ -72,7 +72,7 @@ export class DictTsvParser extends Tsv{
 
 	protected __init__(...args:Parameters<typeof DictTsvParser.new>){
 		const z = this
-		z._readNObj = args[0]
+		z._reader = args[0]
 		return z
 	}
 
@@ -151,7 +151,7 @@ export class DictTsvParser extends Tsv{
 
 	async readLines(num:int){
 		const z = this
-		const lines = await z.readNObj.read(num)
+		const lines = await z.reader.read(num)
 		if(lines == void 0 || lines.length === 0){
 			z.status.end = true
 			return []

@@ -90,7 +90,7 @@ async function main(){
 	const neoDb = SqliteDb.new(neoDbRaw)
 	const neoDbSrc = NgaqDbSrc.new(neoDb)
 	const mig = Migrate.new(oldDbSrc, neoDbSrc, [
-		'english' , 'japanese' //TODO 檢查 '勢い'、胡只有四個mean?
+		'english' , 'japanese'
 	])
 	const ans = await mig.migrate()
 	console.log(ans)

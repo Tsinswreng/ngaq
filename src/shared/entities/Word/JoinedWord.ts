@@ -23,9 +23,9 @@ export class JoinedWord{
 	}
 
 	get This(){return JoinedWord}
-	protected _word:Objs.Word
-	get textWord(){return this._word}
-	protected set textWord(v){this._word = v}
+	protected _textWord:Objs.Word
+	get textWord(){return this._textWord}
+	protected set textWord(v){this._textWord = v}
 
 	protected _propertys:Objs.Property[]
 	get propertys(){return this._propertys}
@@ -69,8 +69,22 @@ export class JoinedWord{
 		return ans
 	}
 
-	//TODO
-	static intersect(w1:JoinedWord, w2:JoinedWord){
+	/**
+	 * 同ʹ兩詞 合併䀬ʹproperty。以mt更晚者潙準。
+	 * @param w1 數據庫中既有ʹ詞
+	 * @param w2 待合入ʹ詞
+	 */
+	static mergeProperty(w1:JoinedWord, w2:JoinedWord){
+		if(w1.textWord.text !== w2.textWord.text
+			|| w1.textWord.belong !== w2.textWord.belong
+		){
+			throw new Error(
+`${w1.textWord.text}\t${w1.textWord.belong}\
+\n${w2.textWord.text}\t${w2.textWord.belong}\n\
+w1 and w2 is not the same word`
+			)
+		}
+
 		for(let i = 0; i < w2.propertys.length; i++){
 			if(w1.propertys[i] == void 0){
 				w1.propertys[i] = w2.propertys[i]
@@ -79,10 +93,22 @@ export class JoinedWord{
 			if(Tempus.diff_mills(
 				w1.propertys[i].mt,
 				w2.propertys[i].mt
-			)<0){ // w2.propertys[i].mt之修改時間更晚
+			)<0){ // 若w2.propertys[i].mt之修改時間更晚
 				w1.propertys[i] = w2.propertys[i]
 			}
 		}
+		// for(let i = 0; i < w2.learns.length; i++){
+		// 	if(w1.learns[i] == void 0){
+		// 		w1.learns[i] = w2.learns[i]
+		// 		continue
+		// 	}
+		// 	if(Tempus.diff_mills(
+		// 		w1.learns[i].mt,
+		// 		w2.learns[i].mt
+		// 	)<0){ // 若w2.propertys[i].mt之修改時間更晚
+		// 		w1.learns[i] = w2.learns[i]
+		// 	}
+		// }
 	}
 
 }

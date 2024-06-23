@@ -166,6 +166,10 @@ class SchemaItems{
 	idx_learnWid = SI('idx_learnWid', SMT.index, this.tbl_learn.tbl_name)
 	idx_learnCt = SI('idx_learnCt', SMT.index, this.tbl_learn.tbl_name)
 	idx_propertyWid = SI('idx_propertyWid', SMT.index, this.tbl_property.tbl_name)
+
+	trig_aftIns_learnAltWordMt = SI('aftIns_learnAltWordMt', SMT.trigger, this.tbl_learn.tbl_name)
+	trig_aftIns_propertyAltWordMt = SI('aftIns_propertyAltWordMt', SMT.trigger, this.tbl_property.tbl_name)
+	trig_aftUpd_propertyAltWordMt = SI('aftUpd_propertyAltWordMt', SMT.trigger, this.tbl_property.tbl_name)
 }
 
 const schemaItems = new SchemaItems()
@@ -212,6 +216,16 @@ class InitSql{
 			,z.mkIdx_learnMt()
 			,z.mkIdx_wordCt()
 			,z.mkIdx_wordMt()
+		]
+		return ans
+	}
+
+	getAllTrigSql(){
+		const z = this
+		const ans:str[] = [
+			z.mkTrig_aftIns_learnAltWordMt()
+			,z.mkTrig_aftIns_propertyAltWordMt()
+			,z.mkTrig_aftUpd_propertyAltWordMt()
 		]
 		return ans
 	}
@@ -384,6 +398,57 @@ class InitSql{
 `CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.mt})`
 		return ans
 	}
+
+	mkTrig_aftIns_learnAltWordMt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const item = z.items
+		const trig = z.items.trig_aftIns_learnAltWordMt
+		const c = Rows.WordRow.col
+		const ans = 
+`CREATE TRIGGER ${ifNE} "${trig.name}"
+AFTER INSERT ON ${trig.tbl_name}
+FOR EACH ROW
+BEGIN
+	UPDATE ${item.tbl_word.tbl_name} SET ${c.mt} = NEW.${c.mt};
+END;
+`
+		return ans
+	}
+
+	mkTrig_aftIns_propertyAltWordMt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const item = z.items
+		const trig = z.items.trig_aftIns_propertyAltWordMt
+		const c = Rows.WordRow.col
+		const ans = 
+`CREATE TRIGGER ${ifNE} "${trig.name}"
+AFTER INSERT ON ${trig.tbl_name}
+FOR EACH ROW
+BEGIN
+	UPDATE ${item.tbl_word.tbl_name} SET ${c.mt} = NEW.${c.mt};
+END;
+`
+		return ans
+	}
+
+	mkTrig_aftUpd_propertyAltWordMt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const item = z.items
+		const trig = z.items.trig_aftUpd_propertyAltWordMt
+		const c = Rows.WordRow.col
+		const ans = 
+`CREATE TRIGGER ${ifNE} "${trig.name}"
+AFTER UPDATE ON ${trig.tbl_name}
+FOR EACH ROW
+BEGIN
+	UPDATE ${item.tbl_word.tbl_name} SET ${c.mt} = NEW.${c.mt};
+END;
+`
+		return ans
+	}
 }
 
 const Qry = SqliteUitl.Qry
@@ -508,6 +573,11 @@ export class NgaqDbSrc{
 		for(const sql of sqlsIdx){
 			await z.db.run(sql)
 		}
+
+		const sqlTrig = z.initSql.getAllTrigSql()
+		for(const sql of sqlTrig){
+			await z.db.run(sql)
+		}
 		await z.db.commit()
 		return true
 	}
@@ -559,6 +629,7 @@ export class NgaqDbSrc{
 	// 	z.db.commit()
 	// 	return true
 	// }
+
 
 	async addJoinedRows(rows:JoinedRow[]){
 		const z = this
@@ -631,16 +702,27 @@ export class NgaqDbSrc{
 	}
 
 
-
-	async addWord(words:JoinedWord[]){
+	/**
+	 * 
+	 * @param words 
+	 * @returns return [existingWords, nonExistingWords]
+	 */
+	async classifyWordsByIsExist(words:JoinedWord[]){
 		const z = this
 		const sql = z.qrys.selectExistFromWord('_')
 		const stmt = await z.db.prepare(sql)
+		const existingWords = [] as JoinedWord[]
+		const nonExistingWords = [] as JoinedWord[]
 		for(const w of words){
 			const param = [w.textWord.belong, w.textWord.text]
-			const ua = await stmt.all<{_:int}>(param)
+			const [runRes, ua] = await stmt.all<{_:int}>(param)
+			if(ua[0]?._ === 1){ //exist
+				existingWords.push(w)
+			}else{
+				nonExistingWords.push(w)
+			}
 		}
-		
+		return [existingWords, nonExistingWords]
 	}
 
 

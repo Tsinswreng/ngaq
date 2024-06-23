@@ -120,8 +120,8 @@ export class HistoryTsv extends Tsv{
 	get This(){return HistoryTsv}
 
 	//protected _readNObj:I_readN<Promise<str[]>>
-	get readNObj(){return this._readNObj}
-	protected set readNObj(v){this._readNObj = v}
+	get reader(){return this._reader}
+	protected set reader(v){this._reader = v}
 
 
 	protected _status = new HistoryTsvStatus()
@@ -141,7 +141,7 @@ export class HistoryTsv extends Tsv{
 
 	override async readLines(num: int): Promise<HistoryLine[]> {
 		const z = this
-		const strArr = await z.readNObj.read(num)
+		const strArr = await z.reader.read(num)
 		if(strArr ==void 0 || strArr.length === 0){
 			return []
 		}
