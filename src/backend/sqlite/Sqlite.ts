@@ -411,7 +411,7 @@ export class Statement extends Object{
 	 */
 	static get<T=ResultEleType>(db:sqlite3.Statement, params?:ParamType){
 		const recErr = new Error()
-		return new Promise<[sqlite3.Statement, T?]>((res,rej)=>{
+		return new Promise<[sqlite3.RunResult, T?]>((res,rej)=>{
 			db.get<T>(params, function(this, err, row){
 				if(err != void 0){
 					rej(DE(err, void 0 ,recErr));return
@@ -427,7 +427,7 @@ export class Statement extends Object{
 		const recErr = new Error()
 		const db = z.db
 		const sql = z.sql
-		return new Promise<[sqlite3.Statement, T?]>((res,rej)=>{
+		return new Promise<[sqlite3.RunResult, T?]>((res,rej)=>{
 			db.get<T>(params, function(this, err, row){
 				if(err != void 0){
 					rej(DE(err, sql ,recErr));return
