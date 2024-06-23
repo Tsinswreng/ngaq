@@ -168,13 +168,23 @@ export class Qry{
 		z.param = args[1]
 		return z
 	}
-	static new(sql:str, params:any[]){
+	static new(sql:str, params?:any[]){
 		const z = new this()
 		z.__init__(sql, params)
 		return z
 	}
-	sql:str
-	param:any[]
+
+	protected _sql:str
+	get sql(){return this._sql}
+	set sql(v){this._sql = v}
+
+
+	protected _param?:any[]
+	get param(){return this._param}
+	set param(v){
+		this._param = v
+	}
+
 
 	async prepare(db:SqliteDb){
 		const z = this

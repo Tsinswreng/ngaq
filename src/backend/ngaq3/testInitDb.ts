@@ -18,10 +18,10 @@ async function init(){
 	}
 
 }
-init().catch(e=>console.error(e))
+//init().catch(e=>console.error(e))
 
 async function testSelect(){
-	const sql = 
+	
 `SELECT
     word.id
      , word.belong
@@ -33,10 +33,11 @@ FROM word
 LEFT JOIN property on word.id = property.wid
 LEFT JOIN learn on word.id = learn.wid
 WHERE word.id = 1`
+	const sql = `SELECT EXISTS (SELECT * from word)`
 	const ans = await dbSrc.db.all(sql)
 	console.log(ans)
 }
-//testSelect()
+testSelect()
 
 
 

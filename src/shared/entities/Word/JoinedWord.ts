@@ -10,7 +10,7 @@ export class JoinedWord{
 	protected __init__(...args: Parameters<typeof JoinedWord.new>){
 		const z = this
 		const row = args[0]
-		z.word = Objs.Word.fromRow(row.word)
+		z.textWord = Objs.Word.fromRow(row.word)
 		z.propertys = row.propertys.map(e=>Objs.Property.fromRow(e))
 		z.learns = row.learns.map(e=>Objs.Learn.fromRow(e))
 		return z
@@ -24,8 +24,8 @@ export class JoinedWord{
 
 	get This(){return JoinedWord}
 	protected _word:Objs.Word
-	get word(){return this._word}
-	protected set word(v){this._word = v}
+	get textWord(){return this._word}
+	protected set textWord(v){this._word = v}
 
 	protected _propertys:Objs.Property[]
 	get propertys(){return this._propertys}
@@ -37,7 +37,7 @@ export class JoinedWord{
 
 	static toRow(j:JoinedWord):JoinedRow{
 		const ans = JoinedRow.new({
-			word: j.word.toRow()
+			word: j.textWord.toRow()
 			,learns: j.learns.map(e=>e.toRow())
 			,propertys: j.propertys.map(e=>e.toRow())
 		})
@@ -55,9 +55,9 @@ export class JoinedWord{
 		const propMap = classify(jw.propertys, (e)=>e.belong)
 		const learnMap = classify(jw.learns, (e)=>e.belong)
 		const ans = Word.new({
-			id: jw.word.id
-			,table: jw.word.belong
-			,wordShape: jw.word.text
+			id: jw.textWord.id
+			,table: jw.textWord.belong
+			,wordShape: jw.textWord.text
 			,mean: (propMap.get(Rows.PropertyBelong.mean)??[]).map(e=>e.text)
 			,tag: (propMap.get(Rows.PropertyBelong.tag)??[]).map(e=>e.text)
 			,annotation: (propMap.get(Rows.PropertyBelong.annotation)??[]).map(e=>e.text)

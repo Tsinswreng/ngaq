@@ -101,31 +101,31 @@ class Tbl<T extends kvobj=kvobj>{
 	// }
 
 
-	/** @deprecated */
-	qry_addMulti(row:T[]){
-		const z = this
-		const first = row[0]
-		if(first == void 0){
-			throw new Error(`row is empty`)
-		}
-		const sqlObj = SqliteUitl.Sql.obj.new(first, {ignoredKeys: ['id']})//TODO
-		return sqlObj
-	}
+	///** @deprecated */
+	// qry_addMulti(row:T[]){
+	// 	const z = this
+	// 	const first = row[0]
+	// 	if(first == void 0){
+	// 		throw new Error(`row is empty`)
+	// 	}
+	// 	const sqlObj = SqliteUitl.Sql.obj.new(first, {ignoredKeys: ['id']})//TODO
+	// 	return sqlObj
+	// }
 
 
-	/** @deprecated */
-	async addMulti(rows:T[]){
-		const z = this
-		const sqlObj = z.qry_addMulti(rows)
-		const sql = sqlObj.geneFullInsertSql(z.tbl_name)
-		const stmt = await z.db.prepare(sql)
-		for(let i = 0; i < rows.length; i++){
-			const row = rows[i]
-			const param = sqlObj.getParams(row)
-			const result = await stmt.run(param)
-		}
-		return true
-	}
+	///** @deprecated */
+	// async addMulti(rows:T[]){
+	// 	const z = this
+	// 	const sqlObj = z.qry_addMulti(rows)
+	// 	const sql = sqlObj.geneFullInsertSql(z.tbl_name)
+	// 	const stmt = await z.db.prepare(sql)
+	// 	for(let i = 0; i < rows.length; i++){
+	// 		const row = rows[i]
+	// 		const param = sqlObj.getParams(row)
+	// 		const result = await stmt.run(param)
+	// 	}
+	// 	return true
+	// }
 }
 
 class WordTbl extends Tbl<WordRow>{
@@ -408,17 +408,21 @@ class Qrys{
 	protected set schemaItems(v){this._schemaItems = v}
 	
 
-	selectExistFromWord(text:str, belong:str){
+	/**
+	 * WHERE ${c.belong} = ? AND ${c.text} = ?
+	 * @returns 
+	 */
+	selectExistFromWord(colAlias='_'){
 		const z = this
 		const items = z.schemaItems
+		const c = Rows.WordRow.col
 		const sql = 
 `SELECT EXISTS(
 	SELECT * FROM ${items.tbl_word} 
-	WHERE ${Rows.WordRow.col.text} = ? AND belong = ?
-)`
-		const param = [text, belong]
-		const qry = Qry.new(sql, param)
-		return qry
+	WHERE ${c.belong} = ? AND ${c.text} = ?
+) AS "${colAlias}"`
+
+		return sql
 	}
 
 	addTextWordRow(row:Rows.WordRow){ //
@@ -454,9 +458,6 @@ class Qrys{
 		const qry = SqliteUitl.Qry.new(sql, param)
 		return qry
 	}
-
-	
-
 }
 
 
@@ -632,7 +633,14 @@ export class NgaqDbSrc{
 
 
 	async addWord(words:JoinedWord[]){
-
+		const z = this
+		const sql = z.qrys.selectExistFromWord('_')
+		const stmt = await z.db.prepare(sql)
+		for(const w of words){
+			const param = [w.textWord.belong, w.textWord.text]
+			const ua = await stmt.all<{_:int}>(param)
+		}
+		
 	}
 
 
