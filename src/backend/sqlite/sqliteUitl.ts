@@ -1,3 +1,7 @@
+import type { SqliteDb } from "./Sqlite"
+
+
+
 export enum SqliteMasterType{
 	table='table'
 	,index='index'
@@ -171,6 +175,12 @@ export class Qry{
 	}
 	sql:str
 	param:any[]
+
+	async prepare(db:SqliteDb){
+		const z = this
+		const stmt = await db.prepare(z.sql, z.param)
+		return stmt
+	}
 }
 
 class ObjSql{

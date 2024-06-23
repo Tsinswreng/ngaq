@@ -211,6 +211,8 @@ export class Word{
 	// 	return SingleWord2.fieldStringfy(this)
 	// }
 
+	
+
 
 
 	static toJsObj = WordDbRow.toEntity.bind(WordDbRow)

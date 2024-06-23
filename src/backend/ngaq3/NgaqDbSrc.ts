@@ -13,6 +13,7 @@ import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from './DbRows/JoinedRow'
 import { PubNonFuncKeys } from '@shared/Type'
+import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
 	protected constructor(){super()}
@@ -169,10 +170,9 @@ class SchemaItems{
 
 const schemaItems = new SchemaItems()
 
-class InitSchemaSql{
-
+class InitSql{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof InitSchemaSql.new>){
+	protected __init__(...args: Parameters<typeof InitSql.new>){
 		const z = this
 		return z
 	}
@@ -183,7 +183,7 @@ class InitSchemaSql{
 		return z
 	}
 
-	get This(){return InitSchemaSql}
+	get This(){return InitSql}
 
 	protected _items = schemaItems
 	get items(){return this._items}
@@ -209,6 +209,7 @@ class InitSchemaSql{
 			,z.mkIdx_propertyWid()
 			,z.mkIdx_learnWid()
 			,z.mkIdx_learnCt()
+			,z.mkIdx_learnMt()
 			,z.mkIdx_wordCt()
 			,z.mkIdx_wordMt()
 		]
@@ -227,6 +228,7 @@ class InitSchemaSql{
 	,${c.text} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
+	,UNIQUE(${c.belong}, ${c.text})
 )`
 		return ans
 	}
@@ -347,6 +349,18 @@ class InitSchemaSql{
 		return ans
 	}
 
+	mkIdx_learnMt(){
+		const z = this
+		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const c = Rows.LearnRow.col //
+		const item = z.items.idx_learnCt //
+		const tbl = item.tbl_name
+		const idx = item.name
+		const ans = 
+`CREATE INDEX ${ifNE} "${idx}" ON ${tbl}(${c.mt})`
+		return ans
+	}
+
 	mkIdx_wordCt(){
 		const z = this
 		const ifNE = SqliteUitl.IF_NOT_EXISTS
@@ -371,6 +385,80 @@ class InitSchemaSql{
 		return ans
 	}
 }
+
+const Qry = SqliteUitl.Qry
+
+class Qrys{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Qrys.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	get This(){return Qrys}
+
+	protected _schemaItems = schemaItems
+	get schemaItems(){return this._schemaItems}
+	protected set schemaItems(v){this._schemaItems = v}
+	
+
+	selectExistFromWord(text:str, belong:str){
+		const z = this
+		const items = z.schemaItems
+		const sql = 
+`SELECT EXISTS(
+	SELECT * FROM ${items.tbl_word} 
+	WHERE ${Rows.WordRow.col.text} = ? AND belong = ?
+)`
+		const param = [text, belong]
+		const qry = Qry.new(sql, param)
+		return qry
+	}
+
+	addTextWordRow(row:Rows.WordRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.WordRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_word.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+	addLearnRow(row:Rows.LearnRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.LearnRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_learn.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+
+	addPropertyRow(row:Rows.PropertyRow){ //
+		const z = this
+		const sqlObj = SqliteUitl.Sql.obj.new(
+			row//, {ignoredKeys: [Rows.PropertyRow.col.id]} //
+		)
+		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_property.name) //
+		const param = sqlObj.getParams()
+		const qry = SqliteUitl.Qry.new(sql, param)
+		return qry
+	}
+
+	
+
+}
+
 
 export class NgaqDbSrc{
 	protected constructor(){}
@@ -398,9 +486,14 @@ export class NgaqDbSrc{
 	get schemaItems(){return this._schemaItems}
 	protected set schemaItems(v){this._schemaItems = v}
 
-	protected _initSql = InitSchemaSql.new()
+	protected _initSql = InitSql.new()
 	get initSql(){return this._initSql}
 	protected set initSql(v){this._initSql = v}
+
+	protected _qrys:Qrys = Qrys.new()
+	get qrys(){return this._qrys}
+	set qrys(v){this._qrys = v}
+	
 	
 	async init(){
 		const z = this
@@ -431,38 +524,7 @@ export class NgaqDbSrc{
 	}
 
 
-	qry_addWord(row:Rows.WordRow){ //
-		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.WordRow.col.id]} //
-		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_word.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
-	}
 
-	qry_addLearn(row:Rows.LearnRow){ //
-		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.LearnRow.col.id]} //
-		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_learn.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
-	}
-
-	qry_addProperty(row:Rows.PropertyRow){ //
-		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.PropertyRow.col.id]} //
-		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_property.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
-	}
 
 	// qry_addJoinedRow(row:JoinedRow){
 	// 	const z = this
@@ -475,27 +537,27 @@ export class NgaqDbSrc{
 	}
 
 
-	async test_addJoinedRows_deprecated(rows:JoinedRow[]){
-		const z = this
-		const si = z.schemaItems
+	// async test_addJoinedRows_deprecated(rows:JoinedRow[]){
+	// 	const z = this
+	// 	const si = z.schemaItems
 
-		const addOther=async(row:JoinedRow)=>{
-			//await si.tbl_word.addMulti([row.word])
-			await si.tbl_learn.addMulti(row.learns)
-			await si.tbl_property.addMulti(row.propertys)
-		}
-		const addWord=async(row:JoinedRow)=>{
-			await si.tbl_word.addMulti([row.word])
-			await addOther(row)
-		}
-		z.db.beginTrans()
-		for(let i = 0; i < rows.length; i++){
-			const row = rows[i]
-			await addWord(row)
-		}
-		z.db.commit()
-		return true
-	}
+	// 	const addOther=async(row:JoinedRow)=>{
+	// 		//await si.tbl_word.addMulti([row.word])
+	// 		await si.tbl_learn.addMulti(row.learns)
+	// 		await si.tbl_property.addMulti(row.propertys)
+	// 	}
+	// 	const addWord=async(row:JoinedRow)=>{
+	// 		await si.tbl_word.addMulti([row.word])
+	// 		await addOther(row)
+	// 	}
+	// 	z.db.beginTrans()
+	// 	for(let i = 0; i < rows.length; i++){
+	// 		const row = rows[i]
+	// 		await addWord(row)
+	// 	}
+	// 	z.db.commit()
+	// 	return true
+	// }
 
 	async addJoinedRows(rows:JoinedRow[]){
 		const z = this
@@ -521,6 +583,9 @@ export class NgaqDbSrc{
 		await db.beginTrans()
 		for(let i = 0; i < rows.length; i++){
 			const jr = rows[i]
+			// if(jr.word.text === '勢い'){ //t
+			// 	console.log(jr)
+			// }
 			const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
 			const lastId = res.lastID
 			for(let j = 0; j < jr.learns.length; j++){
@@ -563,6 +628,14 @@ export class NgaqDbSrc{
 		// 	row.word
 		// }
 	}
+
+
+
+	async addWord(words:JoinedWord[]){
+
+	}
+
+
 
 	selectAllWords(){
 		
