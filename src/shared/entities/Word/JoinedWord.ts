@@ -49,8 +49,6 @@ export class JoinedWord{
 		return z.This.toRow(z)
 	}
 
-
-
 	static toOldWord(jw:JoinedWord){
 		const propMap = classify(jw.propertys, (e)=>e.belong)
 		const learnMap = classify(jw.learns, (e)=>e.belong)
@@ -69,10 +67,22 @@ export class JoinedWord{
 		return ans
 	}
 
+
+	/**
+	 * w1有洏w2無 者
+	 */
+	static diffProperty(w1:JoinedWord, w2:JoinedWord){
+		function diff<Arr extends any[], Fld>(arr1:Arr, arr2:Arr, fn:(key:str)=>Fld){
+	
+		}
+		w1.propertys
+	}
+
 	/**
 	 * 同ʹ兩詞 合併䀬ʹproperty。以mt更晚者潙準。
 	 * @param w1 數據庫中既有ʹ詞
 	 * @param w2 待合入ʹ詞
+	 * //TODO 考慮 順序不對應
 	 */
 	static mergeProperty(w1:JoinedWord, w2:JoinedWord){
 		if(w1.textWord.text !== w2.textWord.text

@@ -529,7 +529,7 @@ class Qrys{
 		return qry
 	}
 
-	addLearnRow(row:Rows.LearnRow){ //
+	addLearnRow(row = new Rows.LearnRow()){ //
 		const z = this
 		const sqlObj = SqliteUitl.Sql.obj.new(
 			row//, {ignoredKeys: [Rows.LearnRow.col.id]} //
@@ -541,7 +541,7 @@ class Qrys{
 	}
 
 
-	addPropertyRow(row:Rows.PropertyRow){ //
+	addPropertyRow(row = new Rows.PropertyRow()){ //
 		const z = this
 		const sqlObj = SqliteUitl.Sql.obj.new(
 			row//, {ignoredKeys: [Rows.PropertyRow.col.id]} //
@@ -671,16 +671,18 @@ export class NgaqDbSrc{
 	// }
 
 
-	async addJoinedRows(rows:JoinedRow[]){
+	async fn_addJoinedRows(){
 		const z = this
 		const si = z.schemaItems
 		const db = z.db
-		const rowFirst = rows[0]
-		if(rowFirst == void 0){
-			return true
-		}
+		// const rowFirst = rows[0]
+		// if(rowFirst == void 0){
+		// 	return true
+		// }
 		const SqlObj = SqliteUitl.Sql.obj
-		const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
+		
+		//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
+		const wordSqlObj = SqliteUitl.Sql.obj.new(new Rows.WordRow(), {ignoredKeys: [Rows.WordRow.col.id]})
 		const wordSql = wordSqlObj.geneFullInsertSql(si.tbl_word.tbl_name)
 		const wordStmt = await db.prepare(wordSql)
 		
@@ -692,25 +694,27 @@ export class NgaqDbSrc{
 		const propSql = propSqlObj.geneFullInsertSql(si.tbl_property.tbl_name)
 		const propStmt = await db.prepare(propSql)
 
-		await db.beginTrans()
-		for(let i = 0; i < rows.length; i++){
-			const jr = rows[i]
-			// if(jr.word.text === '勢い'){ //t
-			// 	console.log(jr)
-			// }
-			const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
-			const lastId = res.lastID
-			for(let j = 0; j < jr.learns.length; j++){
-				jr.learns[j].wid = lastId
-				await learnStmt.run(learnSqlObj.getParams(jr.learns[j]))
-			}
-			for(let j = 0; j < jr.propertys.length; j++){
-				jr.propertys[j].wid = lastId
-				const cur = jr.propertys[j]
-				await propStmt.run(propSqlObj.getParams(jr.propertys[j]))
+		
+		const fn = async(rows:JoinedRow[])=>{
+			for(let i = 0; i < rows.length; i++){
+				const jr = rows[i]
+				// if(jr.word.text === '勢い'){ //t
+				// 	console.log(jr)
+				// }
+				const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
+				const lastId = res.lastID
+				for(let j = 0; j < jr.learns.length; j++){
+					jr.learns[j].wid = lastId
+					await learnStmt.run(learnSqlObj.getParams(jr.learns[j]))
+				}
+				for(let j = 0; j < jr.propertys.length; j++){
+					jr.propertys[j].wid = lastId
+					const cur = jr.propertys[j]
+					await propStmt.run(propSqlObj.getParams(jr.propertys[j]))
+				}
 			}
 		}
-		return await db.commit()
+		return fn
 		// const sqls = [] as str[]
 		// function pushSql(sqls:str[], tblName:str, rows:any[]){
 		// 	const first = rows[0]
@@ -740,7 +744,6 @@ export class NgaqDbSrc{
 		// 	row.word
 		// }
 	}
-
 
 	/**
 	 * 
@@ -778,6 +781,36 @@ export class NgaqDbSrc{
 			}
 		}
 		return ans
+	}
+
+
+	async fn_updateOrAddWords(words:JoinedWord[]){
+		const z = this
+		const [duplicateNeoWords, nonExistWords] = await z.classifyWordsByIsExist(words)
+		const add = await z.fn_addJoinedRows()
+		const seekById = await z.fn_seekJoinedRowById()
+
+		const mergedWords = [] as JoinedWord[]
+		for(const neo of duplicateNeoWords){
+			const oldRow = await seekById(neo.textWord.id)
+			if(oldRow == null){
+				throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
+			}
+			const oldJw = JoinedWord.new(oldRow)
+			JoinedWord.mergeProperty( //TODO 當取差集
+				oldJw
+				, neo
+			)
+			mergedWords.push(oldJw)
+		}
+		await add(nonExistWords.map(e=>e.toRow()))
+		const qry = z.qrys.addLearnRow()
+		const stmt = await qry.prepare(z.db)
+		for(const merged of mergedWords){
+			merged.propertys //TODO 當取差集
+		}
+		//await add(mergedWords.map(e=>e.toRow()))
+		return true
 	}
 
 	async fn_seekJoinedRowById(){
