@@ -490,6 +490,34 @@ class Qrys{
 		return sql
 	}
 
+	selectTextWordById(){
+		const z = this
+		const items = z.schemaItems
+		const c = Rows.WordRow.col
+		const sql = 
+`SELECT * FROM ${items.tbl_word.tbl_name} WHERE ${c.id} = ?`
+		return sql
+	}
+
+	selectPropertysByWid(){
+		const z = this
+		const items = z.schemaItems
+		const c = Rows.PropertyRow.col
+		const sql = 
+`SELECT * FROM ${items.tbl_property.tbl_name} WHERE ${c.wid} = ?`
+		return sql
+	}
+
+	selectLearnsByWid(){
+		const z = this
+		const items = z.schemaItems
+		const c = Rows.LearnRow.col
+		const sql = 
+`SELECT * FROM ${items.tbl_learn.tbl_name} WHERE ${c.wid} = ?`
+		return sql
+	}
+
+
 	addTextWordRow(row:Rows.WordRow){ //
 		const z = this
 		const sqlObj = SqliteUitl.Sql.obj.new(
@@ -523,6 +551,18 @@ class Qrys{
 		const qry = SqliteUitl.Qry.new(sql, param)
 		return qry
 	}
+
+
+	getAllWordId(colAlias='_'){
+		const z = this
+		const item = z.schemaItems
+		const c = Rows.WordRow.col
+		const ans = 
+`SELECT ${c.id} AS "${colAlias}" FROM ${item.tbl_word.tbl_name}`
+		return ans
+	}
+
+
 }
 
 
@@ -725,27 +765,64 @@ export class NgaqDbSrc{
 		return [existingWords, nonExistingWords]
 	}
 
-
-
-	selectAllWords(){
-		
-	}
-
-	seekWordById(id:int){
+	async getAllJoinedRow(){
 		const z = this
+		const allIdSql = z.qrys.getAllWordId('_')
+		const [,allId] = await z.db.all<{_:int}>(allIdSql)
+		const seekRowFn = await z.fn_seekJoinedRowById()
+		const ans = [] as JoinedRow[]
+		for(const id of allId){
+			const ua = await seekRowFn(id._)
+			if(ua != null){
+				ans.push(ua)
+			}
+		}
+		return ans
 	}
 
-	sql_seekWordByText(belong:str){
+	async fn_seekJoinedRowById(){
 		const z = this
-		const items = z.schemaItems
-		const c = Rows.WordRow.col
-		const sql = 
-`SELECT * FROM "${items.tbl_word.name}"
-WHERE ${c.text}=?
-AND ${c.belong}=?
-`
-		return sql
+		const sqlTw = z.qrys.selectTextWordById()
+		const stmtTw = await z.db.prepare(sqlTw)
+		const sqlPr = z.qrys.selectPropertysByWid()
+		const stmtPr = await z.db.prepare(sqlPr)
+		const sqlLe = z.qrys.selectLearnsByWid()
+		const stmtLe = await z.db.prepare(sqlLe)
+
+		// if(textW){}
+		const fn = async(id:int|str)=>{
+			const [,textWords] = await stmtTw.all<Rows.WordRow>([id])
+			if(textWords.length === 0){
+				return null
+			}
+			if(textWords.length !== 1){
+				throw new Error(`${JSON.stringify(textWords)}\ntextWords.length !== 1`)
+			}
+
+			const textWord = textWords[0]
+			const [,propertys] = await stmtPr.all<Rows.PropertyRow>([id])
+			const [,learns] = await stmtLe.all<Rows.LearnRow>([id])
+			const jRow = JoinedRow.new({
+				word: textWord
+				,propertys: propertys
+				,learns: learns
+			})
+			return jRow
+		}
+		return fn
 	}
+
+// 	sql_seekWordByText(belong:str){
+// 		const z = this
+// 		const items = z.schemaItems
+// 		const c = Rows.WordRow.col
+// 		const sql = 
+// `SELECT * FROM "${items.tbl_word.name}"
+// WHERE ${c.text}=?
+// AND ${c.belong}=?
+// `
+// 		return sql
+// 	}
 }
 
 

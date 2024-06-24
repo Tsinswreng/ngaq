@@ -74,6 +74,12 @@ export class SqliteDb extends Object{
 		return z
 	}
 
+	static fromPath(...args:ConstructorParameters<typeof sqlite3.Database>){
+		const db = new sqlite3.Database(...args)
+		const ans = SqliteDb.new(db)
+		return ans
+	}
+
 	/**
 	 * console.log(2)之後卡死不動
 	 * @deprecated

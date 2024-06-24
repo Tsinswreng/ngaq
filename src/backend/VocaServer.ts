@@ -194,7 +194,7 @@ export default class VocaServer{
 		//VocaServer.app.use(express.bodyParser({limit: '50mb'}));
 		VocaServer.app.use(bodyParser.json());//??{}??
 		VocaServer.app.use(session({
-			secret: 'hocEstMeusSecretusKeyus114514810893shitJeanPinkGetDown',
+			secret: 'hocEstMeusSecretusKeyus114514810893',
 			cookie: {maxAge: oneDaySec},
 			saveUninitialized:true,
 			resave: false
