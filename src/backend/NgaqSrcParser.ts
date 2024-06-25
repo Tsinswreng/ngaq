@@ -106,7 +106,7 @@ export class NgaqSrcParser{
 	eat(str:str, required?:bool){
 		const z = this
 		const len = str.length
-		
+
 	}
 
 	async readN(n:int){
@@ -116,13 +116,34 @@ export class NgaqSrcParser{
 	}
 
 	readDateBlock(){
+		const z = this
 
+		if(z.status.location.stack.length === 0){
+
+		}
 	}
 
 	readWhite(){
 		const z = this
 		
 	}
+
+	test(){
+		const z = this
+		
+		for(;;){
+			z.status.index++
+			const curChar = z.peek()
+			if(
+				z.status.location.stack.length ===0
+				&& curChar === '['
+			){
+
+			}
+		}
+	}
+
+
 
 }
 

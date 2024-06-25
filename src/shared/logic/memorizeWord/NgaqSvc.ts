@@ -291,19 +291,21 @@ export abstract class NgaqSvc{
 		return Promise.resolve(true)
 	}
 
-	protected abstract _save(words:Word[]):Task<any>
+	protected abstract _saveOld(words:Word[]):Task<any>
 
-	async save(){
+	async saveOld(){
 		const z = this
 		z._status.start = false
 		const svcWords = z.mergeLearnedWords()
 		const words = svcWords.map(e=>e.word)
 		//const ans = await z.dbSrc.saveWords(words)
-		const ans = await z._save(words)
+		const ans = await z._saveOld(words)
 		z.emitter.emit(z.events.save, svcWords)
 		z._status.save = true
 		return true
 	}
+
+	
 
 	/** @deprecated */
 	protected abstract _restart():Task<boolean>

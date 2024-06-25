@@ -259,7 +259,7 @@ export class FileNgaqSvc extends NgaqSvc{
 	// 	return true
 	// }
 
-	protected override async _save(words:Word[]){
+	protected override async _saveOld(words:Word[]){
 		//console.log('file save')//t + 
 		// console.log(`console.log(words)`)
 		// console.log(words) //+
@@ -268,8 +268,8 @@ export class FileNgaqSvc extends NgaqSvc{
 		return ans
 	}
 
-	async save(){
-		return super.save()
+	async saveOld(){
+		return super.saveOld()
 	}
 
 	// sort(): Promise<boolean> {

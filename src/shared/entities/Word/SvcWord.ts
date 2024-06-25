@@ -3,7 +3,8 @@ import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Ut";
-
+import * as Objs from '@shared/entities/Word/Word3'
+import { LearnBelong } from "@backend/ngaq3/DbRows/wordDbRows";
 export type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
 export type RMB_FGT_nil = typeof WordEvent.FGT|typeof WordEvent.RMB|undefined
 //type WordEvent = typeof WordEvent
@@ -154,6 +155,29 @@ export class SvcWord{
 		z.innerWordMerge()
 		z.sortDate__Event()
 		return z
+	}
+
+	
+	toLearnObj(){
+		const z = this
+		if(z.status.memorize == void 0 || z.status.date == void 0){
+			return null
+		}
+		let belong:LearnBelong
+		if(z.status.memorize === WordEvent.RMB){
+			belong = LearnBelong.rmb
+		}else if(z.status.memorize === WordEvent.FGT){
+			belong = LearnBelong.fgt
+		}else{
+			throw new Error()
+		}
+		const learn = Objs.Learn.new({
+			wid: $(z.word.id)
+			,ct: z.status.date
+			,mt: z.status.date
+			,belong: belong
+		})
+		return learn
 	}
 
 }

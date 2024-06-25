@@ -4,6 +4,7 @@ import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
 import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
 import { Word } from "@shared/entities/Word/Word"
+import { diffArr } from "@shared/algo"
 
 export class JoinedWord{
 	protected constructor(){}
@@ -69,20 +70,37 @@ export class JoinedWord{
 
 
 	/**
+	 * 以mt潙準取差集
 	 * w1有洏w2無 者
+	 * //TODO test
 	 */
 	static diffProperty(w1:JoinedWord, w2:JoinedWord){
-		function diff<Arr extends any[], Fld>(arr1:Arr, arr2:Arr, fn:(key:str)=>Fld){
-	
+		if(w1.textWord.text !== w2.textWord.text
+			|| w1.textWord.belong !== w2.textWord.belong
+		){
+			throw new Error(
+`${w1.textWord.text}\t${w1.textWord.belong}\
+\n${w2.textWord.text}\t${w2.textWord.belong}\n\
+w1 and w2 is not the same word`
+			)
 		}
-		w1.propertys
+		const diff = diffArr(
+			w1.propertys
+			,w2.propertys
+			,(e)=>Tempus.toUnixTime_mills(e.mt)
+		)
+		const ans = [] as Objs.Property[]
+		for(const [k,v] of diff){
+			ans.push(...v)
+		}
+		return ans
 	}
 
 	/**
 	 * 同ʹ兩詞 合併䀬ʹproperty。以mt更晚者潙準。
 	 * @param w1 數據庫中既有ʹ詞
 	 * @param w2 待合入ʹ詞
-	 * //TODO 考慮 順序不對應
+	 * @deprecated //TODO 考慮 順序不對應
 	 */
 	static mergeProperty(w1:JoinedWord, w2:JoinedWord){
 		if(w1.textWord.text !== w2.textWord.text

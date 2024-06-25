@@ -239,3 +239,22 @@ describe('abc_to_c_bc_abc',()=>{
 		).toBe(true)
 	})
 })
+
+
+describe('diffAs', ()=>{
+	const fn = algo.diffArr
+	it('1',()=>{
+		const arr1=[
+			{text:'a', num:1}
+			,{text:'b', num:2}
+			,{text:'c', num:3}
+		]
+		const arr2=[
+			{text:'a', num:1}
+			,{text:'b', num:2}
+			,{text:'d', num:4}
+		]
+		const ans = fn(arr1, arr2, (e)=>e.num)
+		console.log(ans)
+	})
+})

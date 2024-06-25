@@ -9,11 +9,12 @@ import {
 } from '@backend/ngaq3/DbRows/wordDbRows'
 
 import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
-
+import * as Objs from '@shared/entities/Word/Word3'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from './DbRows/JoinedRow'
 import { PubNonFuncKeys } from '@shared/Type'
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
+
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
 	protected constructor(){super()}
@@ -517,40 +518,60 @@ class Qrys{
 		return sql
 	}
 
-
-	addTextWordRow(row:Rows.WordRow){ //
+	async fn_addPropertyRow(db:SqliteDb){
 		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.WordRow.col.id]} //
+		const sqlObjPr = SqliteUitl.Sql.obj.new(new Rows.PropertyRow())
+		const stmtPr = await db.prepare(
+			sqlObjPr.geneFullInsertSql(z.schemaItems.tbl_property.tbl_name)
 		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_word.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
+		return async(e:Rows.PropertyRow)=>{
+			return await stmtPr.run(sqlObjPr.getParams(e))
+		}
 	}
 
-	addLearnRow(row = new Rows.LearnRow()){ //
+	async fn_addLearnRow(db:SqliteDb){
 		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.LearnRow.col.id]} //
+		const sqlObjPr = SqliteUitl.Sql.obj.new(new Rows.LearnRow())
+		const stmtPr = await db.prepare(
+			sqlObjPr.geneFullInsertSql(z.schemaItems.tbl_learn.tbl_name)
 		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_learn.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
+		return async(e:Rows.LearnRow)=>{
+			return await stmtPr.run(sqlObjPr.getParams(e))
+		}
 	}
 
+	// addTextWordRow(row:Rows.WordRow){ //
+	// 	const z = this
+	// 	const sqlObj = SqliteUitl.Sql.obj.new(
+	// 		row//, {ignoredKeys: [Rows.WordRow.col.id]} //
+	// 	)
+	// 	const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_word.name) //
+	// 	const param = sqlObj.getParams()
+	// 	const qry = SqliteUitl.Qry.new_deprecated(sql, param)
+	// 	return qry
+	// }
 
-	addPropertyRow(row = new Rows.PropertyRow()){ //
-		const z = this
-		const sqlObj = SqliteUitl.Sql.obj.new(
-			row//, {ignoredKeys: [Rows.PropertyRow.col.id]} //
-		)
-		const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_property.name) //
-		const param = sqlObj.getParams()
-		const qry = SqliteUitl.Qry.new(sql, param)
-		return qry
-	}
+	// addLearnRow(rows = [new Rows.LearnRow()]){ //
+	// 	const z = this
+	// 	const sqlObj = SqliteUitl.Sql.obj.new(
+	// 		new Rows.LearnRow()
+	// 	)
+	// 	const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_learn.name) //
+	// 	const param = sqlObj.getParams()
+	// 	const qry = SqliteUitl.Qry.new_deprecated(sql, param)
+	// 	return qry
+	// }
+
+	// addPropertyRow(rows = [new Rows.PropertyRow()]){ //
+	// 	const z = this
+	// 	const sqlObj = SqliteUitl.Sql.obj.new(
+	// 		new Rows.PropertyRow()
+	// 	)
+	// 	const sql = sqlObj.geneFullInsertSql(z.schemaItems.tbl_property.name) //
+	// 	const param = sqlObj.getParams()
+	// 	const qry = SqliteUitl.Qry.new_deprecated(sql, param)
+	// 	return qry
+	// }
 
 
 	getAllWordId(colAlias='_'){
@@ -784,32 +805,34 @@ export class NgaqDbSrc{
 	}
 
 
-	async fn_updateOrAddWords(words:JoinedWord[]){
+	/**
+	 * 加詞、能防褈添
+	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
+	 * @param words 
+	 * @returns 
+	 */
+	async addWordsDistinctProperty(words:JoinedWord[]){
 		const z = this
 		const [duplicateNeoWords, nonExistWords] = await z.classifyWordsByIsExist(words)
 		const add = await z.fn_addJoinedRows()
 		const seekById = await z.fn_seekJoinedRowById()
-
-		const mergedWords = [] as JoinedWord[]
-		for(const neo of duplicateNeoWords){
+		/** 㕥存 未加過之prop */
+		const diffPropertys = [] as Objs.Property[]
+		for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
 			const oldRow = await seekById(neo.textWord.id)
 			if(oldRow == null){
 				throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
 			}
 			const oldJw = JoinedWord.new(oldRow)
-			JoinedWord.mergeProperty( //TODO 當取差集
-				oldJw
-				, neo
-			)
-			mergedWords.push(oldJw)
+			const ua = JoinedWord.diffProperty(oldJw, neo)
+			diffPropertys.push(...ua)
 		}
+		
+		const addPr = await z.qrys.fn_addPropertyRow(z.db)
 		await add(nonExistWords.map(e=>e.toRow()))
-		const qry = z.qrys.addLearnRow()
-		const stmt = await qry.prepare(z.db)
-		for(const merged of mergedWords){
-			merged.propertys //TODO 當取差集
+		for(const e of diffPropertys){
+			await addPr(e.toRow())
 		}
-		//await add(mergedWords.map(e=>e.toRow()))
 		return true
 	}
 
@@ -845,17 +868,6 @@ export class NgaqDbSrc{
 		return fn
 	}
 
-// 	sql_seekWordByText(belong:str){
-// 		const z = this
-// 		const items = z.schemaItems
-// 		const c = Rows.WordRow.col
-// 		const sql = 
-// `SELECT * FROM "${items.tbl_word.name}"
-// WHERE ${c.text}=?
-// AND ${c.belong}=?
-// `
-// 		return sql
-// 	}
 }
 
 

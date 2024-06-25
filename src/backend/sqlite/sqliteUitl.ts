@@ -58,8 +58,8 @@ class CreateSql{
 	 * @param {string} tblName - 表名，触发器将在该表上创建。
 	 * @param {string} triggerName - 触发器名称，用于在数据库中标识触发器。
 	 * @param {string[]} colNames - 列名数组，触发器将检查重复值的列。
-	 * @param {object} opt - 选项对象，包含是否应检查触发器是否已存在的标志（ifNotExists）。
-	 * @param {boolean} opt.ifNotExists - 如果为 true，则创建触发器之前检查触发器是否已存在。
+	 * @param_deprecated {object} opt - 选项对象，包含是否应检查触发器是否已存在的标志（ifNotExists）。
+	 * @param {boolean} param_deprecated.ifNotExists - 如果为 true，则创建触发器之前检查触发器是否已存在。
 	 * @returns {string} 返回一个包含触发器创建 SQL 语句的字符串。
 	 */
 	static trigger_replaceDuplicate(tblName:str, triggerName:str , colNames:str[], opt:CreateTriggerOpt){
@@ -160,17 +160,34 @@ export interface Opt_insert{
 	orIgnore:bool
 }
 
+type ParamType = any[]
+
+
+/** @deprecated  */
 export class Qry{
 	protected constructor(){}
-	protected __init__(...args:Parameters<typeof Qry.new>){
+	protected __init__deprecated(...args:Parameters<typeof Qry.new_deprecated>){
 		const z = this
 		z.sql = args[0]
-		z.param = args[1]
+		z.param_deprecated = args[1]
 		return z
 	}
-	static new(sql:str, params?:any[]){
+	static new_deprecated(sql:str, params?:any[]){
 		const z = new this()
-		z.__init__(sql, params)
+		z.__init__deprecated(sql, params)
+		return z
+	}
+
+	protected __init__(...args:Parameters<typeof Qry.new>){
+		const z = this
+		z._sql = args[0]
+		z._param2dArr = args[1]
+		return z
+	}
+
+	static new(sql:str, param2dArr:ParamType[]){
+		const z = new this()
+		z.__init__(sql ,param2dArr)
 		return z
 	}
 
@@ -178,17 +195,23 @@ export class Qry{
 	get sql(){return this._sql}
 	set sql(v){this._sql = v}
 
+	/** 多組參數 */
+	protected _param2dArr:ParamType[]
+	get paramArr(){return this._param2dArr}
+	set paramArr(v){this._param2dArr = v}
+	
 
-	protected _param?:any[]
-	get param(){return this._param}
-	set param(v){
-		this._param = v
+
+	protected _param_deprecated?:any[]
+	get param_deprecated(){return this._param_deprecated}
+	set param_deprecated(v){
+		this._param_deprecated = v
 	}
 
 
 	async prepare(db:SqliteDb){
 		const z = this
-		const stmt = await db.prepare(z.sql, z.param)
+		const stmt = await db.prepare(z.sql, z.param_deprecated)
 		return stmt
 	}
 }
@@ -260,7 +283,7 @@ class ObjSql{
 		return `INSERT ${orIgnore} INTO '${tbl}' (${columns}) VALUES (${placeholders})`
 	}
 
-	
+
 
 }
 

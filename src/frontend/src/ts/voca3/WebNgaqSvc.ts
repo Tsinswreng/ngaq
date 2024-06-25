@@ -150,7 +150,7 @@ export class WebNgaqSvc extends NgaqSvc{
 
 
 
-	protected async _save(words: Word[]): Promise<any> {
+	protected override async _saveOld(words: Word[]): Promise<any> {
 		const z = this
 		const rows = words.map(e=>WordDbRow.toPlain(e))
 		//const ans = await z.dbSrc.saveWords(words)

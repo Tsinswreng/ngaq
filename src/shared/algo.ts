@@ -1,4 +1,4 @@
-import { $ } from "./Ut"
+import {$} from "./Ut"
 
 /**
  * 自作于2024-02-16T02:26:25.000+08:00
@@ -496,3 +496,80 @@ export function abc_to_c_bc_abc<T>(arr:T[]){
 }
 
 
+/**
+ * //TODO test
+ * @param arr 
+ * @param fn 
+ * @returns 
+ */
+export function distinct<T, U>(arr:T[], fn:(ele:T)=>U){
+	const ans = [] as T[]
+	const set = new Set<U>()
+	for(let i = 0; i < arr.length; i++){
+		const ele = arr[i]
+		const v = fn(ele)
+		if(set.has(v)){
+
+		}else{
+			ans.push(ele)
+			set.add(v)
+		}
+	}
+	return ans
+}
+
+/**
+ * 
+ * @param arr 
+ * @param keyOfMap 返ᵗ值ˋ作Map之鍵
+ * @returns 
+ */
+export function classify<Ele,Key>(arr:Ele[], keyOfMap:(ele:Ele)=>Key){
+	const ans = new Map<Key, Ele[]>()
+	for(const e of arr){
+		const key = keyOfMap(e)
+		let got = ans.get(key)
+		if(got == void 0){
+			ans.set(key, [e])
+		}else{
+			got.push(e)
+			ans.set(key, got)
+		}
+	}
+	return ans
+}
+
+
+export function diffMapByKey<K, V>(map1: Map<K, V>, map2: Map<K, V>): Map<K, V> {
+	const ans = new Map<K, V>();
+	map1.forEach((value, key) => {
+		if (!map2.has(key)) {
+			ans.set(key, value);
+		}
+	});
+
+	return ans;
+}
+
+/* 
+arr1=[
+	{text:'a', num:1}
+	,{text:'b', num:2}
+	,{text:'c', num:3}
+]
+arr2=[
+	{text:'a', num:1}
+	,{text:'b', num:2}
+	,{text:'d', num:4}
+]
+diffAs(arr1, arr2, (e)=>e.num)
+//TODO test
+*/
+export function diffArr<ArrEle, Fld>(arr1:ArrEle[], arr2:ArrEle[], fn:(key:ArrEle)=>Fld){
+	// const map1 = new Map<Fld, ArrEle>()
+	// const map2 = new Map<Fld, ArrEle>()
+	const map1 = classify(arr1, fn)
+	const map2 = classify(arr2, fn)
+	const ans = diffMapByKey(map1, map2)
+	return ans
+}

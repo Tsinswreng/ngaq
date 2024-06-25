@@ -100,7 +100,7 @@ interface I_BaseStatic<RowT extends Rows.Row>{
 }
 
 class BaseInst<RowType extends Rows.Row = Rows.Row> implements I_BaseInst{
-	__init__(){
+	__init__(...args:any[]){
 		return this
 	}
 	This=BaseInst;
@@ -136,6 +136,8 @@ class BaseStatic<
 	,RowType extends Rows.Row = Rows.Row
 >
 implements I_BaseStatic<Rows.Row>{
+
+	new(...args:any[]):InstType
 	new(...args:any[]){
 		const z = new BaseInst()
 		z.__init__()
@@ -237,11 +239,27 @@ export const Property = new PropertyStatic()
 export type Property = PropertyInst
 class LearnInst extends BaseInst<Rows.LearnRow>{
 	override Static = Learn
+	__init__(...args:Parameters<typeof LearnStatic.prototype.new>): this {
+		const z = this
+		Object.assign(z, ...args)
+		return z
+	}
 }
 
 class LearnStatic extends BaseStatic<LearnInst, Rows.LearnRow>{
 	override Inst = LearnInst
 	override Row = Rows.LearnRow
+	
+	override new(prop:{
+		[Rows.LearnRow.col.wid]:int
+		,[Rows.LearnRow.col.belong]:Rows.LearnBelong
+		,[Rows.LearnRow.col.ct]:Tempus
+		,[Rows.LearnRow.col.mt]:Tempus
+	}):LearnInst{
+		const z = new LearnInst()
+		z.__init__(prop)
+		return z
+	}
 }
 
 export const Learn = new LearnStatic()

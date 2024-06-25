@@ -276,7 +276,7 @@ export class FileNgaqUi{
 
 			async save(){
 				const z = this.ui
-				const ans = await z.svc.save()
+				const ans = await z.svc.saveOld()
 				z.exput(ans+'')
 				return ans
 			}
