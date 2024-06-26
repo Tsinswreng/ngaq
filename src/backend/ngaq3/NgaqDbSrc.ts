@@ -6,12 +6,12 @@ import {
 	RelationRow,
 	WordRelationRow,
 	WordRow
-} from '@backend/ngaq3/DbRows/wordDbRows'
+} from '@shared/dbRow/wordDbRows'
 
-import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
-import * as Objs from '@shared/entities/Word/Word3'
+import * as Rows from '@shared/dbRow/wordDbRows'
+import * as Objs from '@shared/entities/Word/NgaqModels'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
-import { JoinedRow } from './DbRows/JoinedRow'
+import { JoinedRow } from '../../shared/dbRow/JoinedRow'
 import { PubNonFuncKeys } from '@shared/Type'
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 

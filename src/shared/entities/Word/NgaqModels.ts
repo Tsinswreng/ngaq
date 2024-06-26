@@ -1,5 +1,5 @@
-import { JoinedRow } from '@backend/ngaq3/DbRows/JoinedRow'
-import * as Rows from '@backend/ngaq3/DbRows/wordDbRows'
+import { JoinedRow } from '@shared/dbRow/JoinedRow'
+import * as Rows from '@shared/dbRow/wordDbRows'
 import Tempus from '@shared/Tempus'
 import type { InstanceType_, PubNonFuncProp, SetterProp } from '@shared/Type'
 import { As } from '@shared/Ut';

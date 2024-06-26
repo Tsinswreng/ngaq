@@ -9,7 +9,7 @@ import { WordPriority } from '@shared/entities/Word/WordPriority';
 /** 舊 */
 import { WordDbRow } from '@shared/dbRow/Word';
 import type { InstanceType_, PubNonFuncProp } from '@shared/Type';
-import * as Rows_ from '@backend/ngaq3/DbRows/wordDbRows'
+import * as Rows_ from '@shared/dbRow/wordDbRows'
 import type { JoinedWord } from './JoinedWord';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
