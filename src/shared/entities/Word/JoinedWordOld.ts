@@ -1,8 +1,8 @@
-import { JoinedRow } from '@shared/dbRow/JoinedRow'
-import * as Mod from '@shared/model/NgaqModels'
+import { JoinedRow } from "@shared/dbRow/JoinedRowOld"
+import * as Objs from '@shared/entities/Word/NgaqModels'
 import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
-import * as Row from '@shared/dbRow/NgaqRows'
+import * as Rows from '@shared/dbRow/wordDbRowsOld'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"
 
@@ -11,9 +11,9 @@ export class JoinedWord{
 	protected __init__(...args: Parameters<typeof JoinedWord.new>){
 		const z = this
 		const row = args[0]
-		z.textWord = Mod.TextWord.fromRow(row.word)
-		z.propertys = row.propertys.map(e=>Mod.Property.fromRow(e))
-		z.learns = row.learns.map(e=>Mod.Learn.fromRow(e))
+		z.textWord = Objs.Word.fromRow(row.word)
+		z.propertys = row.propertys.map(e=>Objs.Property.fromRow(e))
+		z.learns = row.learns.map(e=>Objs.Learn.fromRow(e))
 		return z
 	}
 
@@ -24,15 +24,15 @@ export class JoinedWord{
 	}
 
 	get This(){return JoinedWord}
-	protected _textWord:Mod.TextWord
+	protected _textWord:Objs.Word
 	get textWord(){return this._textWord}
 	protected set textWord(v){this._textWord = v}
 
-	protected _propertys:Mod.Property[]
+	protected _propertys:Objs.Property[]
 	get propertys(){return this._propertys}
 	protected set propertys(v){this._propertys = v}
 
-	protected _learns:Mod.Learn[]
+	protected _learns:Objs.Learn[]
 	get learns(){return this._learns}
 	protected set learns(v){this._learns = v}
 
@@ -57,14 +57,14 @@ export class JoinedWord{
 			id: jw.textWord.id
 			,table: jw.textWord.belong
 			,wordShape: jw.textWord.text
-			,mean: (propMap.get(Row.PropertyBelong.mean)??[]).map(e=>e.text)
-			,tag: (propMap.get(Row.PropertyBelong.tag)??[]).map(e=>e.text)
-			,annotation: (propMap.get(Row.PropertyBelong.annotation)??[]).map(e=>e.text)
-			,dates_add: (learnMap.get(Row.LearnBelong.add)??[]).map(e=>e.mt)
-			,dates_rmb: (learnMap.get(Row.LearnBelong.rmb)??[]).map(e=>e.mt)
-			,dates_fgt: (learnMap.get(Row.LearnBelong.fgt)??[]).map(e=>e.mt)
+			,mean: (propMap.get(Rows.PropertyBelong.mean)??[]).map(e=>e.text)
+			,tag: (propMap.get(Rows.PropertyBelong.tag)??[]).map(e=>e.text)
+			,annotation: (propMap.get(Rows.PropertyBelong.annotation)??[]).map(e=>e.text)
+			,dates_add: (learnMap.get(Rows.LearnBelong.add)??[]).map(e=>e.mt)
+			,dates_rmb: (learnMap.get(Rows.LearnBelong.rmb)??[]).map(e=>e.mt)
+			,dates_fgt: (learnMap.get(Rows.LearnBelong.fgt)??[]).map(e=>e.mt)
 		})
-		//ans.joinedWordOld = jw
+		ans.joinedWordOld = jw
 		return ans
 	}
 
@@ -89,7 +89,7 @@ w1 and w2 is not the same word`
 			,w2.propertys
 			,(e)=>Tempus.toUnixTime_mills(e.mt)
 		)
-		const ans = [] as Mod.Property[]
+		const ans = [] as Objs.Property[]
 		for(const [k,v] of diff){
 			ans.push(...v)
 		}

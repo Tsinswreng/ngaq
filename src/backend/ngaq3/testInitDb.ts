@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { NgaqDbSrc } from "./NgaqDbSrc";
+import { NgaqDbSrc } from "./NgaqDbSrcOld";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import Tempus from "@shared/Tempus";
 

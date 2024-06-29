@@ -99,7 +99,7 @@ class TextWordFact extends IdBlCtMtFact<TextWordInst, Row.TextWord>{
 	//@ts-ignore
 	Inst = TextWordInst
 }
-export const TextWord = TextWordFact
+export const TextWord = TextWordFact.new() as TextWordFact
 export type TextWord = TextWordInst
 
 
@@ -114,7 +114,7 @@ class PropertyFact extends IdBlCtMtFact<PropertyInst, Row.Property>{
 	//@ts-ignore
 	Inst = PropertyInst
 }
-export const Property = PropertyFact
+export const Property = PropertyFact.new() as PropertyFact
 export type Property = PropertyInst
 
 
@@ -128,8 +128,36 @@ class LearnFact extends IdBlCtMtFact<LearnInst, Row.Learn>{
 	//@ts-ignore
 	Inst = LearnInst
 }
-export const Learn = LearnFact
+export const Learn = LearnFact.new() as LearnFact
 export type Learn = LearnInst
+
+
+
+class RelationInst extends IdBlCtMtInst<Row.Relation>{
+	override get Row(){return Row.Relation}
+	text:str
+}
+class RelationFact extends IdBlCtMtFact<RelationInst, Row.Relation>{
+	Row = Row.Relation
+	//@ts-ignore
+	Inst = RelationInst
+}
+export const Relation = RelationFact.new() as RelationFact
+export type Relation = RelationInst
+
+
+class WordRelationInst extends IdBlCtMtInst<Row.WordRelation>{
+	override get Row(){return Row.WordRelation}
+	text:str
+}
+class WordRelationFact extends IdBlCtMtFact<WordRelationInst, Row.WordRelation>{
+	Row = Row.WordRelation
+	//@ts-ignore
+	Inst = WordRelationInst
+}
+export const WordRelation = WordRelationFact.new() as WordRelationFact
+export type WordRelation = WordRelationInst
+
 
 
 

@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from "body-parser";
 
 import { SqliteDb } from '../sqlite/Sqlite';
-import { NgaqDbSrc } from '../ngaq3/NgaqDbSrc';
+import { NgaqDbSrc } from '../ngaq3/NgaqDbSrcOld';
 class Opt{
 	_port:int = 6324
 	

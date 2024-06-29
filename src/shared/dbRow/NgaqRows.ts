@@ -3,7 +3,7 @@ export class Row{
 }
 
 export class Row4 extends Row{
-	id?:int
+	id:int
 	belong:str
 	ct:int
 	mt:int
@@ -56,11 +56,11 @@ export enum WordRelationBelong{
 	,family='family'
 }
 
-export class RelationRow extends Row4{
+export class Relation extends Row4{
 	name:str
 	declare belong: WordRelationBelong
 }
 
-export class WordRelationRow extends WidRow{
+export class WordRelation extends WidRow{
 	rid:int
 }
