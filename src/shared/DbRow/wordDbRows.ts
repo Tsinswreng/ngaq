@@ -1,3 +1,41 @@
+/* 
+現在我要用typescript和sqlite數據庫交互、不用關係映射
+有以下需求:
+1.需要把列名和表名等名稱存在變量中、禁止在sql中硬編碼
+如 const sql = `SELECT * FROM ${tbls.user.tbl_name} WHERE ${tbls.user.col.id}=?`
+
+2.需要有表示數據庫的行的類型 如用UserRow表示user表中的每一行
+如 const result = await db.all<UserRow>(sql......)
+則推斷出result 是 UserRow[] 類型
+
+3.除此外還需一個表示程序中的user對象的類、該類與UserRow有些許不同
+
+如
+
+class UserRow{
+	id:int
+	name:str
+	createdTime:int //在數據庫中用int64儲存時間
+}
+
+class User{
+	id:int
+	name:str
+	createdTime:Time //在程序中用Time實例表示時間
+}
+
+需要有 Obj和Row相互轉化的方法
+
+如
+declare let userRow:UserRow
+const user:User = User.fromRow(userRow) //userRow轉程序對象
+user.toRow() //程序對象轉數據庫對象
+
+下面是我原來的做法。
+當數據庫中的表很多時、就很麻煩了。幫我想一種設計模式、簡化代碼。
+
+*/
+
 
 export class Col{
 	readonly id='id'
@@ -26,20 +64,13 @@ export class WidRow extends Row{
 }
 
 class WordCol extends Col{
-	// readonly [col.id]=col.id
-	// readonly [col.belong]=col.belong
-	// readonly [col.ct] = col.ct
-	// readonly [col.mt] = col.mt
 	readonly text='text'
 }
 const wordCol = new WordCol()
 
 export class WordRow extends Row{
 	static col = wordCol;
-	//protected constructor(){}
-	
 	/** english, japanese, etc. */
-	
 	/** 詞形 */
 	[wordCol.text]:str
 	/** 增 新ʹ learnStatus行 或 property行 旹、視潙更改 */
@@ -63,20 +94,10 @@ const learnCol = new LearnCol()
 export class LearnRow extends WidRow{
 	static col = learnCol;
 	[learnCol.belong]:LearnBelong
-	//protected constructor(){}
-	// [learnCol.id]?:int
-	// [learnCol.wid]:int
-	// [learnCol.ct]:int
-	// [learnCol.mt]:int
 }
 
 class PropertyCol extends WidCol{
-	// readonly id='id'
-	// readonly belong='belong'
-	// readonly wid='wid'
 	readonly text='text'
-	// readonly ct='ct'
-	// readonly mt='mt'
 }
 
 
@@ -94,21 +115,12 @@ const propertyCol = new PropertyCol()
 /** 單詞ʹ屬性 */
 export class PropertyRow extends WidRow{
 	static col = propertyCol;
-	//protected constructor(){}
 	[propertyCol.text]:str
 	[propertyCol.belong]:PropertyBelong
-	// [propertyCol.id]?:int
-	// [propertyCol.wid]:int
-	// [propertyCol.ct]:int
-	// [propertyCol.mt]:int
 }
 
 class RelationCol extends Col{
 	readonly name='name'
-	// readonly id='id'
-	// readonly belong='belong'
-	// readonly ct='ct'
-	// readonly mt='mt'
 }
 
 export enum WordRelationBelong{
@@ -122,76 +134,17 @@ const relationCol = new RelationCol()
 
 export class RelationRow extends Row{
 	static col = relationCol;
-	//protected constructor(){}
 	[relationCol.name]:str
 	[relationCol.belong]: WordRelationBelong
-	// [relationCol.id]?:int
-	// [relationCol.ct]:int
-	// [relationCol.mt]:int
-	
 }
 
 class WordRelationCol extends WidCol{
 	readonly rid='rid'
-	// readonly id='id'
-	// readonly wid='wid'
-	// readonly ct='ct'
-	// readonly mt='mt'
 }
 
 const wordRelationCol = new WordRelationCol()
 
 export class WordRelationRow extends WidRow{
 	static col = wordRelationCol;
-	//protected constructor(){}
 	[wordRelationCol.rid]:int
-	// [wordRelationCol.id]?:int
-	// [wordRelationCol.wid]:int
-	// [wordRelationCol.ct]:int
-	// [wordRelationCol.mt]:int
 }
-
-
-
-
-// class MeanCol{
-// 	readonly id='id'
-// 	readonly wid='wid'
-// 	readonly text='text'
-// }
-
-// const meanCol = new MeanCol()
-// export class MeanRow{
-// 	static col = meanCol
-// 	protected constructor(){}
-// 	[meanCol.id]?:int
-// 	[meanCol.wid]?:int
-// 	[meanCol.text]:str
-// }
-
-// class TagCol{
-// 	readonly id='id'
-// 	readonly wid='wid'
-// 	readonly text='text'
-// 	readonly createdTime='createdTime'
-// }
-
-// const tagCol = new TagCol()
-
-// export class TagRow{
-// 	static col = tagCol
-// 	protected constructor(){}
-// 	[tagCol.id]?:int
-// 	[tagCol.wid]:int
-// 	[tagCol.text]:str
-// 	[tagCol.createdTime]:int
-// }
-
-// export class AnnotationCol{
-// 	readonly id='id'
-// 	readonly wid='wid'
-// 	readonly text='text'
-// 	readonly createdTime='createdTime'
-// }
-
-

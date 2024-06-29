@@ -140,3 +140,42 @@ w1 and w2 is not the same word`
 	}
 
 }
+
+
+class Ent_{
+
+}
+
+// class BaseInst{
+
+// }
+// class BaseStatic<InstType=BaseInst>{
+// 	new:(...args:any[])=>InstType
+// 	correctRow(){
+
+// 	}
+// }
+
+
+
+
+// class Vord_ extends Ent_{
+// 	id:int|undef
+// 	text:str
+// 	mt:int|Tempus
+// }
+
+
+// class VordRow extends Vord_{
+// 	declare mt:int
+// }
+
+// class VordStatic{
+
+// }
+
+// class VordInst extends Vord_{
+// 	declare mt:Tempus
+// }
+
+

@@ -164,19 +164,6 @@ export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeS
 			throw errMsg
 		}
 	}
-	// function check<T extends string>(v, type_:T){
-	// 	if(typeof v === type_){
-	// 		return v as ParseType<T>
-	// 	}else{
-	// 		if( typeof errMsg === 'string'){
-	// 			throw new Error(errMsg)
-	// 		}else{
-	// 			throw errMsg
-	// 		}
-	// 	}
-	// }
-	
-	// return check(src, target)
 }
 
 /** primitiveAs */

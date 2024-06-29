@@ -1,3 +1,32 @@
+### 雙線平行繼承 類型推斷
+<2024-06-29T10:32:49.457+08:00,>
+```ts
+class A{
+
+}
+
+class B extends A{
+	id
+}
+
+
+class Parent{
+	foo = A
+	fn(){
+		return new this.foo()
+	}
+}
+
+
+class Child extends Parent{
+	override foo = B
+}
+
+Parent.prototype.fn()
+
+Child.prototype.fn() // 在運行時、Child.prototype.fn()應當返回B的實例、但是typescript卻把它的返回值推斷爲A的實例。怎麼辦?
+```
+
 
 ###
 <2024-06-10T16:29:47.782+08:00,>

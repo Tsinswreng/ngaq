@@ -2817,6 +2817,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #晨	dil	# ts
 晨	nəl	# ts
 
+囂	haw
+嚻	haw
+
 腭	ŋˁak
 
 疹	trənʔ
@@ -2824,7 +2827,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 沾	trem
 
 丩	kiw
-糾	kriwʔ	# 未改
+糾	kriwʔ	0%	# 未改
+糾	kiwʔ
 赳	kriwʔ	# 未改
 
 桃	lˁaw

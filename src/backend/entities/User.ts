@@ -1,7 +1,34 @@
+import { NgaqDbSrc } from "@backend/ngaq3/NgaqDbSrc"
 
 
+export class User{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof User.new>){
+		const z = this
+		return z
+	}
 
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
 
+	get This(){return User}
+
+	protected _id:int
+	get id(){return this._id}
+	set id(v){this._id = v}
+
+	protected _name:str
+	get name(){return this._name}
+	set name(v){this._name = v}
+	
+	protected _ngaqSchema:NgaqDbSrc
+	get ngaqSchema(){return this._ngaqSchema}
+	set ngaqSchema(v){this._ngaqSchema = v}
+	
+}
 
 
 // import Tempus from "@shared/Tempus"

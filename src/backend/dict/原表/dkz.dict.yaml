@@ -1,5 +1,5 @@
 
-#20240622164504788
+#20240627195748914
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2196,12 +2196,15 @@ use_preset_vocabulary: true
 娠	stəl	
 震	təls	
 晨	nəl	
+囂	haw	
+嚻	haw	
 腭	ŋˁak	
 疹	trənʔ	
 軫	trənʔ	
 沾	trem	
 丩	kiw	
-糾	kriwʔ	
+糾	kriwʔ	0%
+糾	kiwʔ	
 赳	kriwʔ	
 桃	lˁaw	
 挑	lʰˁew	
@@ -21952,8 +21955,6 @@ use_preset_vocabulary: true
 髇	hrˁaw	
 䬘	hrˁaw	
 譊	nrˁaw	
-嚻	hraw	
-囂	hraw	
 驍	kˁew	
 蠨	sˁew	
 毊	ɡraw	

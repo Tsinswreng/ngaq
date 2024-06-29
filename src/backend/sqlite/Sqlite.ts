@@ -1,4 +1,3 @@
-import { mergeErrStack } from "@shared/Ut";
 import sqlite3, { Database } from "sqlite3";
 
 type ParamType = any[]
