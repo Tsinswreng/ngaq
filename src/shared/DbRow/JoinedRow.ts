@@ -1,4 +1,4 @@
-import { LearnRow, PropertyRow, WordRow } from "@shared/dbRow/wordDbRows"
+import { LearnRow, PropertyRow, WordRow } from "@shared/dbRow/wordDbRowsOld"
 import { PubNonFuncProp } from "@shared/Type"
 
 

@@ -1,3 +1,4 @@
+import { KeyMirror } from "./Type"
 import {$} from "./Ut"
 
 /**
@@ -572,4 +573,13 @@ export function diffArr<ArrEle, Fld>(arr1:ArrEle[], arr2:ArrEle[], fn:(key:ArrEl
 	const map2 = classify(arr2, fn)
 	const ans = diffMapByKey(map1, map2)
 	return ans
+}
+
+export function keyMirror<T extends kvobj>(obj:T){
+	const ans = {}
+	const keys = Object.keys(obj)
+	for(const k of keys){
+		ans[k] = k
+	}
+	return ans as KeyMirror<T>
 }

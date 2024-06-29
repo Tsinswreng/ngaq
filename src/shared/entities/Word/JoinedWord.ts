@@ -2,7 +2,7 @@ import { JoinedRow } from "@shared/dbRow/JoinedRow"
 import * as Objs from '@shared/entities/Word/NgaqModels'
 import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
-import * as Rows from '@shared/dbRow/wordDbRows'
+import * as Rows from '@shared/dbRow/wordDbRowsOld'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"
 

@@ -1,5 +1,5 @@
 import Word from "@shared/SingleWord2"
-import * as Rows_ from '@shared/dbRow/wordDbRows'
+import * as Rows_ from '@shared/dbRow/wordDbRowsOld'
 import Tempus from "@shared/Tempus"
 import { $ } from "@shared/Ut"
 import { JoinedRow } from "../../shared/dbRow/JoinedRow"

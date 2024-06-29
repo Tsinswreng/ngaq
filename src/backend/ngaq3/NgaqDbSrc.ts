@@ -6,9 +6,9 @@ import {
 	RelationRow,
 	WordRelationRow,
 	WordRow
-} from '@shared/dbRow/wordDbRows'
+} from '@shared/dbRow/wordDbRowsOld'
 
-import * as Rows from '@shared/dbRow/wordDbRows'
+import * as Rows from '@shared/dbRow/wordDbRowsOld'
 import * as Objs from '@shared/entities/Word/NgaqModels'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from '../../shared/dbRow/JoinedRow'

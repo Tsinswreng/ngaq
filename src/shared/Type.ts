@@ -131,7 +131,17 @@ export type SetterKeys<T> = {
 
 export type SetterProp<T> = Pick<T, SetterKeys<T>>
 
-
-
-
-
+/** 
+ *
+ * class A{
+	a
+	b
+	c
+	d
+}
+type Result = KeyAsValue<A>
+Result === {a:'a', b:'b', c:'c', d:'d'}
+ */
+export type KeyMirror<T> = {
+	[K in keyof T]: K;
+}
