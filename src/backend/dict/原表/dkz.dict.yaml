@@ -1,5 +1,5 @@
 
-#20240627195748914
+#20240630232259305
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -876,7 +876,12 @@ use_preset_vocabulary: true
 腋	jak	
 射	mlAks	
 謝	slAks	
-將	tsaŋ	
+將	tsaŋ	0%
+將	tsAŋ	
+獎	tsaŋʔ	0%
+獎	tsAŋʔ	
+漿	tsaŋ	
+漿	stˁaŋ	
 搶	tsʰaŋʔ	
 槍	tsʰaŋ	
 乾	ɡrˁal	
@@ -1211,7 +1216,9 @@ use_preset_vocabulary: true
 舊	ɡʷəs	
 水	stulʔ	
 塵	drən	
+陳	lriŋ	
 陳	lrin	
+陣	lriŋs	
 陣	lrins	
 愁	dzriw	
 島	tˁuʔ	
@@ -3938,8 +3945,6 @@ use_preset_vocabulary: true
 版	pʰrˁanʔ	
 培	bˁo	
 培	bˁə	
-漿	tsaŋ	0%
-漿	stˁaŋ	
 違	woj	
 謂	wuts	
 政	tʰeŋs	
@@ -11489,7 +11494,6 @@ use_preset_vocabulary: true
 㢡	tsaŋʔ	
 㯍	tsaŋʔ	
 槳	tsaŋʔ	
-獎	tsaŋʔ	
 耩	krˁoŋʔ	
 膙	kaŋʔ	
 䉃	tsaŋʔ	

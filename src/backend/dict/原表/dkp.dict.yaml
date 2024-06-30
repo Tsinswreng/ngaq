@@ -1135,7 +1135,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 腋	jak
 射	mlAks
 謝	slAks
-將	tsaŋ
+將	tsaŋ	0%
+將	tsAŋ	# ts
+獎	tsaŋʔ	0%
+獎	tsAŋʔ	# ts
+漿	tsaŋ
+漿	stˁaŋ	# ts
+
+
 搶	tsʰaŋʔ
 槍	tsʰaŋ
 乾	ɡrˁal
@@ -1602,7 +1609,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 水	stulʔ	# bs
 
 塵	drən
+陳	lriŋ
 陳	lrin
+陣	lriŋs
 陣	lrins
 愁	dzriw
 島	tˁuʔ
@@ -5208,8 +5217,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #碼	mrˁajʔ	# ts
 #漿	tsˁaɑŋ	# ts
-漿	tsaŋ	0%
-漿	stˁaŋ	# ts
+
 #攬	rˁomʔ	# ts
 違	woj	# ts
 謂	wuts	# ts

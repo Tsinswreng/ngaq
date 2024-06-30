@@ -1,3 +1,4 @@
+/** @deprecated */
 import { $, $a} from "@shared/Ut";
 import { Abs_Table } from "../_base/Table";
 import { RunResult } from "sqlite3";
