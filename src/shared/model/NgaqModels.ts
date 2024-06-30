@@ -161,5 +161,7 @@ export type WordRelation = WordRelationInst
 
 
 
-
-
+// function isNumber(value: any): value is number {
+//     return typeof value === 'number';
+// }
+// let a = isNumber('') //推斷出a是boolean類型

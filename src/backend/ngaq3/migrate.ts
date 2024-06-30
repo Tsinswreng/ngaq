@@ -3,7 +3,7 @@ import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc"
 import type { WordTable } from "@backend/db/sqlite/Word/Table"
 import { WordDbRow } from "@shared/dbRow/Word"
 import { WordToRows } from "./WordToRows"
-import { NgaqDbSrc } from "./NgaqDbSrcOld"
+import { NgaqDbSrc } from "./NgaqDbSrc"
 import sqlite3 from 'sqlite3'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 class Migrate{

@@ -1,8 +1,9 @@
 import Word from "@shared/SingleWord2"
-import * as Rows_ from '@shared/dbRow/wordDbRowsOld'
+import * as Rows_ from '@shared/dbRow/NgaqRows'
 import Tempus from "@shared/Tempus"
 import { $ } from "@shared/Ut"
-import { JoinedRow } from "../../shared/dbRow/JoinedRowOld"
+import { JoinedRow } from "@shared/dbRow/JoinedRow"
+import * as Mod from '@shared/model/NgaqModels'
 
 export class WordToRows{
 	protected constructor(){}
@@ -24,7 +25,7 @@ export class WordToRows{
 	get word(){return this._word}
 	protected set word(v){this._word = v}
 	
-	protected _wordRow:Rows_.WordRow
+	protected _wordRow:Rows_.TextWord
 	get wordRow(){return this._wordRow}
 	protected set wordRow(v){this._wordRow = v}
 	
@@ -33,9 +34,9 @@ export class WordToRows{
 		const z = this
 		const w = z.word
 		const tempus_event = Word.getSortedDateToEventObjs(w)
-		let wc = Rows_.WordRow.col
-		const wordRow:Rows_.WordRow = {
-			[wc.id]:w.id
+		let wc = Mod.TextWord.col
+		const wordRow:Rows_.TextWord = {
+			[wc.id]:w.id as int
 			,[wc.belong]:w.belong
 			,[wc.text]:w.wordShape
 			,[wc.ct]:Tempus.toUnixTime_mills(w.dates_add[0])
@@ -48,9 +49,11 @@ export class WordToRows{
 	protected geneOneLearnRow(tempus:Tempus, status:Rows_.LearnBelong){
 		const z = this
 		const word = z.word
-		const c = Rows_.LearnRow.col
-		const ans:Rows_.LearnRow = {
-			[c.wid]: $(word.id)
+		//const c = Rows_.LearnRow.col
+		const c = Mod.Learn.col
+		const ans:Rows_.Learn = {
+			id: NaN
+			,[c.wid]: $(word.id)
 			,[c.belong]: status
 			,[c.ct]: Tempus.toUnixTime_mills(tempus)
 			,[c.mt]: Tempus.toUnixTime_mills(tempus)
@@ -61,7 +64,7 @@ export class WordToRows{
 	geneLearnRows(){
 		const z = this
 		const w = z.word
-		const ans = [] as Rows_.LearnRow[]
+		const ans = [] as Rows_.Learn[]
 		for(const tempus of w.dates_add){
 			const row =  z.geneOneLearnRow(tempus, Rows_.LearnBelong.add)
 			ans.push(row)
@@ -81,9 +84,11 @@ export class WordToRows{
 	protected geneOneProperty(text:str, belong:Rows_.PropertyBelong){
 		const z = this
 		const w = z.word
-		const c = Rows_.PropertyRow.col
-		const ans:Rows_.PropertyRow={
-			[c.belong]:belong
+		//const c = Rows_.PropertyRow.col
+		const c = Mod.Property.col
+		const ans:Rows_.Property={
+			id:NaN
+			,[c.belong]:belong
 			,[c.wid]:$(w.id)
 			,[c.text]:text
 			,[c.ct]: $(z.wordRow.ct)
@@ -95,7 +100,7 @@ export class WordToRows{
 	genePropertyRows(){
 		const z = this
 		const w = z.word
-		const ans = [] as Rows_.PropertyRow[]
+		const ans = [] as Rows_.Property[]
 
 		for(const txt of w.mean){
 			const ua = z.geneOneProperty(txt, Rows_.PropertyBelong.mean)

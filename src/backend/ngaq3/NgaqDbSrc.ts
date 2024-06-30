@@ -141,8 +141,8 @@ class SchemaItems{
 	idx_wordCt = IDX('idx_wordCt', tbls.textWord, c=>[c.ct])
 	idx_wordMt = IDX('idx_wordMt', tbls.textWord, c=>[c.mt])
 	idx_learnWid = IDX('idx_learnWid', tbls.learn, c=>[c.wid])
-	idx_learnCt = IDX('idx_learnCt', tbls.textWord, c=>[c.ct])
-	idx_learnMt = IDX('idx_learnCt', tbls.textWord, c=>[c.mt])
+	idx_learnCt = IDX('idx_learnCt', tbls.learn, c=>[c.ct])
+	//idx_learnMt = IDX('idx_learnMt', tbls.learn, c=>[c.mt])
 	idx_propertyWid = IDX('idx_propertyWid', tbls.property, c=>[c.wid])
 
 	trig_aftIns_learnAltWordMt = SI('aftIns_learnAltWordMt', SMT.trigger, tbls.learn.name)
