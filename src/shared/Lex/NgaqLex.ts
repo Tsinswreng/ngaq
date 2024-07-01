@@ -100,8 +100,17 @@ export class NgaqLex extends Lex{
 		const metadata = z.read_metadata()
 		z.read_white()
 		const dateBlocks = [] as DateBlock[]
-		for(;z.index < z.text.length;){
+		for(let i = 0;z.index < z.text.length && !z.status.end;i++){
+			// console.log(i, 'start')//t
+			// if(i === 2){
+			// 	console.log(z.index)
+			// 	console.log(z.locate())
+			// }
 			z.read_white()
+			// console.log(z.index, 'wh')//t
+			if(z.index >= z.text.length -1){
+				break
+			}
 			const ua = z.read_dateBlock()
 			dateBlocks.push(ua)
 		}

@@ -7,6 +7,7 @@ describe('parseFile',()=>{
 	const lex = NgaqLex.new(text)
 	it('1',()=>{
 		try {
+			//console.log(text.length)// 383
 			const ans = lex.parse()
 			console.log(ans)
 			console.log('aaaa')

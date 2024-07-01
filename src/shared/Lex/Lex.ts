@@ -6,7 +6,7 @@
  */
 function locate(text: string, index: number) {
 	if (index < 0 || index >= text.length) {
-		throw new RangeError("Index out of bounds");
+		throw new RangeError(`${index}\nIndex out of bounds`);
 	}
 
 	let line = 1;
@@ -50,6 +50,7 @@ export class Location{
 export class Status{
 	index:int = 0
 	location = new Location()
+	end=false
 }
 
 
@@ -77,7 +78,14 @@ export class Lex{
 	protected set status(v){this._status = v}
 
 	get index(){return this.status.index}
-	set index(v){this.status.index = v}
+	set index(v){
+		// if(v < this.text.length){
+		// 	this.status.index = v
+		// }else{
+		// 	this.status.end = true
+		// }
+		this.status.index = v
+	}
 
 
 	static locate(...args:Parameters<typeof locate>){
