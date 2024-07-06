@@ -1,9 +1,74 @@
+export class ParseResult{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof ParseResult.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	//get This(){return ParseResult}
+	rawText:str = ''
+	pos:int = 0
+}
+
+
+/**
+ * all from 0
+ */
+export class Location{
+
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Location.new>){
+		const z = this
+		z.pos = args[0]
+		z.line = args[1]
+		z.col = args[2]
+		return z
+	}
+
+	static new(pos:int, line:int, col:int){
+		const z = new this()
+		z.__init__(pos, line, col)
+		return z
+	}
+
+	get This(){return Location}
+
+	pos:int = 0
+	line:int = 0
+	col:int = 0
+
+	static locate(text:str, pos:int){
+		const pair = getLocatePair(text, pos)
+		const ans = Location.new(pos, pair[0], pair[1])
+		return ans
+	}
+
+	static add(base:Location, l2:Location){
+		const pos = base.pos + l2.pos
+		let col = l2.col
+		if(l2.line === 0){
+			col += base.col
+		}
+		const line = base.line + l2.line
+		const ans = Location.new(pos, line, col)
+		return ans
+	}
+
+	addBase(base:Location){
+		return Location.add(base, this)
+	}
+}
 
 /**
  * 行號,列號
  */
 export type LocatePair = [int, int]
-
 
 
 /**
@@ -12,7 +77,7 @@ export type LocatePair = [int, int]
  * @param index 
  * @returns [行,列]
  */
-function locate(text: string, index: number):LocatePair{
+function getLocatePair(text: string, index: number):LocatePair{
 	if (index < 0 || index >= text.length) {
 		throw new RangeError(`${index}\nIndex out of bounds`);
 	}
@@ -51,13 +116,13 @@ export class ParseError extends Error{
 	col:int
 }
 
-export class Location{
+export class LexLocation{
 	stack:str[]=[]
 }
 
 export class Status{
 	index:int = 0
-	location = new Location()
+	location = new LexLocation()
 	end=false
 }
 
@@ -95,23 +160,37 @@ export class Lex{
 		this.status.index = v
 	}
 
+	// /**
+	//  * @deprecated
+	//  * @param args 
+	//  * @returns 
+	//  */
+	// static getLocatePair(...args:Parameters<typeof getLocatePair>){
+	// 	return getLocatePair(...args)
+	// }
 
-	static locate(...args:Parameters<typeof locate>){
-		return locate(...args)
-	}
+	// /**
+	//  * @deprecated
+	//  * @returns 
+	//  */
+	// locatePair(){
+	// 	const z = this
+	// 	return z.This.getLocatePair(z.text, z.index)
+	// }
 
 	locate(){
 		const z = this
-		return z.This.locate(z.text, z.index)
+		return Location.locate(z.text, z.index)
 	}
 
 	getErr(msg:str){
 		const z = this
 		const err = ParseError.new(msg)
 		err.index = z.index
-		const [line, col] = z.locate()
-		err.line = line
-		err.col = col
+		//const [line, col] = z.locatePair()
+		const location = z.locate()
+		err.line = location.line
+		err.col = location.col
 		return err
 	}
 	

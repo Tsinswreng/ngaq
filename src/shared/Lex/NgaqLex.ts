@@ -4,8 +4,11 @@ import * as Mod from '@shared/model/NgaqModels'
 import * as algo from '@shared/algo'
 
 class DateBlock{
-	date:str
-	text:str
+	/** [2024-07-06T21:38:55.163+08:00] */
+	date:str = ''
+	text:str = ''
+	/** 整個日期塊內 䀬ʹ詞ʰ皆加ʹ屬性、如來源 等 */
+	commonProp:str = ''
 }
 
 class Patterns{
@@ -56,6 +59,10 @@ export class NgaqLex extends Lex{
 		}
 	}
 
+	/**
+	 * <metadata>......</metadata>
+	 * @returns 
+	 */
 	protected read_metadata(){
 		const z = this
 		//console.log(z.locate())//t
@@ -68,6 +75,10 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
+	/**
+	 * [2024-07-06T20:24:47.929+08:00]
+	 * @returns 
+	 */
 	protected read_date(){
 		const z = this
 		z.eat('[', true)
@@ -124,6 +135,11 @@ export class NgaqLex extends Lex{
 
 }
 
+
+class WordBlock{
+	text:str = ""
+	prop:str = ""
+}
 
 
 class WordBlockParser extends Lex{
@@ -200,6 +216,46 @@ class WordBlockParser extends Lex{
 		z.eat('\n', true)
 		return ans
 	}
+
+	read_prop(){
+		const z = this
+		z.eat('[[', true)
+		const propStr = z.readUntilStr(']]')
+		z.eat(']]', true)
+		return propStr
+	}
+
+	parse_prop(){
+		const z = this
+	}
+
+	/**
+	 * 
+abc123
+[[a this is annotation]]
+def
+	 */
+	read_bodyEtProp(){
+		const z = this
+		const text = [] as str[]
+		const ans = new WordBlock()
+		for(;z.index < z.text.length; z.index++){
+			const cur = z.text[z.index]
+			if(cur ==='[' && z.text[z.index+1] === '['){
+				z.eat('[[', true)
+				const propStr = z.readUntilStr(']]')
+				ans.prop = propStr
+				z.eat(']]', true)
+			}else{
+				text.push(cur)
+			}
+		}
+		ans.text = text.join('')
+		return ans
+	}
+
+
+
 
 	
 

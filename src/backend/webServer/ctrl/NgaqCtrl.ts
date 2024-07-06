@@ -11,6 +11,7 @@ export class NgaqCtrl extends BaseCtrl{
 	protected __init__(...args: Parameters<typeof NgaqCtrl.new>){
 		const z = this
 		z.svc = args[0]
+		super.__init__()
 		return z
 	}
 
@@ -19,6 +20,10 @@ export class NgaqCtrl extends BaseCtrl{
 		z.__init__(svc)
 		return z
 	}
+
+
+	static inst = NgaqCtrl.new(NgaqDbSvc.inst)
+
 	//@ts-ignore
 	get This(){return NgaqCtrl}
 
@@ -33,13 +38,27 @@ export class NgaqCtrl extends BaseCtrl{
 		return ans
 	}
 
-	override InitRouter(): Promise<Router> {
+	onErr(err){
+		const z = this
+		console.error(err)
+	}
+
+	override initRouter(){
 		const z = this
 		const r = z.router
 		r.get('/allWords', async(req,res)=>{
-
+			try {
+				const ans = await z.svc.GetAllWords()
+				const json = JSON.stringify(ans)
+				res.status(200).send(json)
+			} catch (err) {
+				res.status(500).send('')
+				z.onErr(err)
+			}
 		})
-		return Promise.resolve(z.router)
+
+		
+		return z.router
 	}
 
 }

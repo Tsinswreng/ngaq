@@ -13,6 +13,7 @@ export class BaseCtrl{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof BaseCtrl.new>){
 		const z = this
+		z.initRouter()
 		return z
 	}
 
@@ -57,7 +58,7 @@ export class BaseCtrl{
 	// 	// this.emit(e=>e.httpErr) //他應該產生編譯錯誤。 幫我完成類型約束
 	// }
 	
-	async InitRouter(){
+	protected initRouter(){
 		const z = this
 		return z.router
 	}

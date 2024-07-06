@@ -4,6 +4,7 @@ import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Rows from '@shared/dbRow/NgaqRows'
 import * as Mod from '@shared/model/NgaqModels'
 
+import {env} from '@backend/ENV'
 
 
 export class NgaqDbSvc{
@@ -19,6 +20,9 @@ export class NgaqDbSvc{
 		z.__init__(dbSrc)
 		return z
 	}
+
+	static inst = NgaqDbSvc.new(env.ngaqDbSrc)
+
 
 	get This(){return NgaqDbSvc}
 

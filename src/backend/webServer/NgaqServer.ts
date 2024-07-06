@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 import { SqliteDb } from '../sqlite/Sqlite';
 import { NgaqDbSrc } from '../ngaq3/NgaqDbSrc';
+import { NgaqCtrl } from './ctrl/NgaqCtrl';
 class Opt{
 	_port:int = 6324
 	
@@ -56,14 +57,18 @@ class Server{
 
 	initRoutes(){
 		const z = this
-		z.app.get('/unixMills',(req,res)=>{
+		z.app.get('/tempus',(req,res)=>{
 			const tem = Tempus.new()
 			res.send(Tempus.toISO8601(tem))
 		})
-		z.app.get('/allJoinedRows', async(req,res)=>{
-			const rows = await mod.dbSrc.GetAllJoinedRow()
-			res.json(rows)
-		})
+		// z.app.get('/allJoinedRows', async(req,res)=>{
+		// 	const rows = await mod.dbSrc.GetAllJoinedRow()
+		// 	res.json(rows)
+		// })
+
+		z.app.use('/api/ngaq', NgaqCtrl.inst.router)
+
+		// 在末
 		z.app.get('*', (req, res)=>{
 			res.setHeader('content-type','text;charset=utf-8')
 			res.sendFile(cwd+'/out/frontend/dist/index.html')

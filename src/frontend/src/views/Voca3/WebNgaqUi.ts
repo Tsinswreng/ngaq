@@ -6,7 +6,7 @@ import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $, delay, mergeErrStack } from "@shared/Ut"
-import { Exception } from "@shared/Exception"
+import { Exception } from "@shared/error/Exception"
 import * as Le from '@shared/linkedEvent'
 import EventEmitter3 from 'EventEmitter3'
 

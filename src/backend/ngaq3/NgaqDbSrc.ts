@@ -471,7 +471,7 @@ class Qrys{
 
 	getAllWordId(colAlias='_'){
 		const z = this
-		const tbl = z.tbls.wordRelation
+		const tbl = z.tbls.textWord
 		const ans = 
 `SELECT ${tbl.col.id} AS "${colAlias}" FROM ${tbl.name}`
 		return ans
@@ -610,10 +610,10 @@ export class NgaqDbSrc{
 		const z = this
 		const allIdSql = z.qrys.getAllWordId('_')
 		const [,allId] = await z.db.All<{_:int}>(allIdSql)
-		const seekRowFn = await z.Fn_seekJoinedRowById()
+		const SeekRowFn = await z.Fn_seekJoinedRowById()
 		const ans = [] as JoinedRow[]
 		for(const id of allId){
-			const ua = await seekRowFn(id._)
+			const ua = await SeekRowFn(id._)
 			if(ua != null){
 				ans.push(ua)
 			}
