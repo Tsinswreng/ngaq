@@ -9,7 +9,7 @@ import * as Le from '@shared/linkedEvent'
 // import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileNgaqSvc as FileNgaqSvc } from './logic/FileNgaqSvc';
 import { SvcWord } from '@shared/entities/Word/SvcWord';
-import { Exception, Reason } from '@shared/Exception';
+import { Exception, Reason } from '@shared/error/Exception';
 import chalk from 'chalk'
 import util from 'util'
 import * as fs from 'fs'

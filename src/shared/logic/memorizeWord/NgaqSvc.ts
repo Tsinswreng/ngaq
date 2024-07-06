@@ -1,7 +1,7 @@
 import { SvcWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord";
-import { Reason } from "@shared/Exception";
+import { Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
-import { Exception } from "@shared/Exception";
+import { Exception } from "@shared/error/Exception";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { Word, WordEvent } from "@shared/entities/Word/Word";
 

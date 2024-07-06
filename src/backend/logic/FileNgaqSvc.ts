@@ -8,7 +8,7 @@ import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
 import { SvcWord, RMB_FGT } from '@shared/entities/Word/SvcWord';
-import { Exception, Reason } from '@shared/Exception';
+import { Exception, Reason } from '@shared/error/Exception';
 import * as fs from 'fs' //TODO remove
 import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
