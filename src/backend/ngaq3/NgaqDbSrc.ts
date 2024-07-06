@@ -9,6 +9,7 @@ import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Rows from '@shared/dbRow/NgaqRows'
 import * as Mod from '@shared/model/NgaqModels'
 
+const ObjSql = SqliteUitl.Sql.obj
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -447,22 +448,22 @@ class Qrys{
 	async fn_addPropertyRow(db:SqliteDb){
 		const z = this
 		const sqlObjPr = SqliteUitl.Sql.obj.new(new Rows.Property())
-		const stmtPr = await db.prepare(
+		const stmtPr = await db.Prepare(
 			sqlObjPr.geneFullInsertSql(z.tbls.property.name)
 		)
 		return async(e:Rows.Property)=>{
-			return await stmtPr.run(sqlObjPr.getParams(e))
+			return await stmtPr.Run(sqlObjPr.getParams(e))
 		}
 	}
 
 	async fn_addLearnRow(db:SqliteDb){
 		const z = this
 		const sqlObjPr = SqliteUitl.Sql.obj.new(new Rows.Learn())
-		const stmtPr = await db.prepare(
+		const stmtPr = await db.Prepare(
 			sqlObjPr.geneFullInsertSql(z.tbls.learn.name)
 		)
 		return async(e:Rows.Learn)=>{
-			return await stmtPr.run(sqlObjPr.getParams(e))
+			return await stmtPr.Run(sqlObjPr.getParams(e))
 		}
 	}
 
@@ -522,21 +523,21 @@ export class NgaqDbSrc{
 	async init(){
 		const z = this
 		const sqls = z.initSql.getAllMkTblSql()
-		await z.db.beginTrans()
+		await z.db.BeginTrans()
 		for(const sql of sqls){
-			await z.db.run(sql)
+			await z.db.Run(sql)
 		}
 
 		const sqlsIdx = z.initSql.getAllIdxSql()
 		for(const sql of sqlsIdx){
-			await z.db.run(sql)
+			await z.db.Run(sql)
 		}
 
 		const sqlTrig = z.initSql.getAllTrigSql()
 		for(const sql of sqlTrig){
-			await z.db.run(sql)
+			await z.db.Run(sql)
 		}
-		await z.db.commit()
+		await z.db.Commit()
 		return true
 	}
 
@@ -551,30 +552,30 @@ export class NgaqDbSrc{
 		//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
 		const wordSqlObj = SqliteUitl.Sql.obj.new(new Rows.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
 		const wordSql = wordSqlObj.geneFullInsertSql(tbls.textWord.name)
-		const wordStmt = await db.prepare(wordSql)
+		const wordStmt = await db.Prepare(wordSql)
 		
 		const learnSqlObj = SqlObj.new((new Rows.Learn()))
 		const learnSql = learnSqlObj.geneFullInsertSql(tbls.learn.name)
-		const learnStmt = await db.prepare(learnSql)
+		const learnStmt = await db.Prepare(learnSql)
 
 		const propSqlObj = SqlObj.new((new Rows.Property()))
 		const propSql = propSqlObj.geneFullInsertSql(tbls.property.name)
-		const propStmt = await db.prepare(propSql)
+		const propStmt = await db.Prepare(propSql)
 
 		
 		const fn = async(rows:JoinedRow[])=>{
 			for(let i = 0; i < rows.length; i++){
 				const jr = rows[i]
-				const res = await wordStmt.run(wordSqlObj.getParams(jr.word))
+				const res = await wordStmt.Run(wordSqlObj.getParams(jr.word))
 				const lastId = res.lastID
 				for(let j = 0; j < jr.learns.length; j++){
 					jr.learns[j].wid = lastId
-					await learnStmt.run(learnSqlObj.getParams(jr.learns[j]))
+					await learnStmt.Run(learnSqlObj.getParams(jr.learns[j]))
 				}
 				for(let j = 0; j < jr.propertys.length; j++){
 					jr.propertys[j].wid = lastId
 					const cur = jr.propertys[j]
-					await propStmt.run(propSqlObj.getParams(jr.propertys[j]))
+					await propStmt.Run(propSqlObj.getParams(jr.propertys[j]))
 				}
 			}
 		}
@@ -589,12 +590,12 @@ export class NgaqDbSrc{
 	async classifyWordsByIsExist(words:JoinedWord[]){
 		const z = this
 		const sql = z.qrys.selectExistFromWord('_')
-		const stmt = await z.db.prepare(sql)
+		const stmt = await z.db.Prepare(sql)
 		const existingWords = [] as JoinedWord[]
 		const nonExistingWords = [] as JoinedWord[]
 		for(const w of words){
 			const param = [w.textWord.belong, w.textWord.text]
-			const [runRes, ua] = await stmt.all<{_:int}>(param)
+			const [runRes, ua] = await stmt.All<{_:int}>(param)
 			if(ua[0]?._ === 1){ //exist
 				existingWords.push(w)
 			}else{
@@ -607,7 +608,7 @@ export class NgaqDbSrc{
 	async getAllJoinedRow(){
 		const z = this
 		const allIdSql = z.qrys.getAllWordId('_')
-		const [,allId] = await z.db.all<{_:int}>(allIdSql)
+		const [,allId] = await z.db.All<{_:int}>(allIdSql)
 		const seekRowFn = await z.fn_seekJoinedRowById()
 		const ans = [] as JoinedRow[]
 		for(const id of allId){
@@ -659,14 +660,14 @@ export class NgaqDbSrc{
 	async fn_seekJoinedRowById(){
 		const z = this
 		const sqlTw = z.qrys.selectTextWordById()
-		const stmtTw = await z.db.prepare(sqlTw)
+		const stmtTw = await z.db.Prepare(sqlTw)
 		const sqlPr = z.qrys.selectPropertysByWid()
-		const stmtPr = await z.db.prepare(sqlPr)
+		const stmtPr = await z.db.Prepare(sqlPr)
 		const sqlLe = z.qrys.selectLearnsByWid()
-		const stmtLe = await z.db.prepare(sqlLe)
+		const stmtLe = await z.db.Prepare(sqlLe)
 
 		const fn = async(id:int|str)=>{
-			const [,textWords] = await stmtTw.all<Rows.TextWord>([id])
+			const [,textWords] = await stmtTw.All<Rows.TextWord>([id])
 			if(textWords.length === 0){
 				return null
 			}
@@ -675,8 +676,8 @@ export class NgaqDbSrc{
 			}
 
 			const textWord = textWords[0]
-			const [,propertys] = await stmtPr.all<Rows.Property>([id])
-			const [,learns] = await stmtLe.all<Rows.Learn>([id])
+			const [,propertys] = await stmtPr.All<Rows.Property>([id])
+			const [,learns] = await stmtLe.All<Rows.Learn>([id])
 			const jRow = JoinedRow.new({
 				word: textWord
 				,propertys: propertys
@@ -697,9 +698,9 @@ export class NgaqDbSrc{
 		const tbl = tbls.textWord
 		const seekById = await z.fn_seekJoinedRowById()
 		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
-		const stmt = await z.db.prepare(sql)
+		const stmt = await z.db.Prepare(sql)
 		const fn = async(val:str)=>{
-			const [, gotWords] = await stmt.all<Rows.TextWord>([val])
+			const [, gotWords] = await stmt.All<Rows.TextWord>([val])
 			const ans = [] as JoinedRow[]
 			for(const word of gotWords){
 				const id = word.id
@@ -716,7 +717,9 @@ export class NgaqDbSrc{
 	async fn_addLearnRecords(){
 		const z = this
 		const tbl = z.tbls.learn
-		tbl.objSql.geneFullInsertSql(tbl.name)
+		const objSql = ObjSql.new(tbl.emptyRow)
+		const sql = objSql.geneFullInsertSql(tbl.name)
+		const stmt = await z.db.Prepare(sql)
 	}
 
 }

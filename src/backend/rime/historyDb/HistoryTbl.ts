@@ -92,7 +92,7 @@ export class HistoryTbl{
 		const tbl = z.tblName//args[0]
 		//const opt = args[1]
 		const sql = z.This.sql_createTbl(tbl, opt)
-		await z.db.run(sql)
+		await z.db.Run(sql)
 		await z.init()
 		return true
 	}
@@ -102,7 +102,7 @@ export class HistoryTbl{
 		const tblName = z.tblName
 		const idxName = z.names.idx_text
 		const sql = z.This.sql_mkIdx_text(tblName, idxName)
-		return z.db.run(sql)
+		return z.db.Run(sql)
 	}
 
 
@@ -156,7 +156,7 @@ END;
 		const sql = z.This.sql_mkTrig_earlierDuplicate(
 			z.tblName, z.names.trig_earlierDuplicate, {checkExist:false}
 		)
-		return z.db.run(sql)
+		return z.db.Run(sql)
 	}
 
 	/**
@@ -210,7 +210,7 @@ END;
 		const sql = z.This.sql_mkTrig_laterDuplicate(
 			z.tblName, z.names.trig_laterDuplicate, {checkExist:false}
 		)
-		await z.db.run(sql)
+		await z.db.Run(sql)
 		return true
 	}
 
@@ -248,7 +248,7 @@ END;
 		const sql = z.This.sql_mkTrig_chkModifiedTimeGeCreatedTime(
 			tbl, trig, z.names.errMsg_chkModifiedTime, {checkExist:false}
 		)
-		return z.db.run(sql)
+		return z.db.Run(sql)
 	}
 
 
@@ -264,14 +264,14 @@ END;
 			ignoredKeys: [col.id]
 		})
 		const sql = sqlObj.geneFullInsertSql(z._tblName, {orIgnore:false})
-		const stmt = await z.db.prepare(sql)
+		const stmt = await z.db.Prepare(sql)
 		const fn = async()=>{
 			for(const row of rows){
 				const params = sqlObj.getParams(row)
-				await stmt.run(params)
+				await stmt.Run(params)
 			}
 		}
-		return await z.db.transaction(fn)
+		return await z.db.Transaction(fn)
 	}
 
 	async insertStrm(readN:I_readN<Promise<HistoryDbRow[]>>, opt:I_perBatch){

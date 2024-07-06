@@ -34,7 +34,7 @@ LEFT JOIN property on word.id = property.wid
 LEFT JOIN learn on word.id = learn.wid
 WHERE word.id = 1`
 	const sql = `SELECT EXISTS (SELECT * from word)`
-	const ans = await dbSrc.db.all(sql)
+	const ans = await dbSrc.db.All(sql)
 	console.log(ans)
 }
 //testSelect()

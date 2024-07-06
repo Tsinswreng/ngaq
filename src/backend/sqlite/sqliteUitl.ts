@@ -211,7 +211,7 @@ export class Qry{
 
 	async prepare(db:SqliteDb){
 		const z = this
-		const stmt = await db.prepare(z.sql, z.param_deprecated)
+		const stmt = await db.Prepare(z.sql, z.param_deprecated)
 		return stmt
 	}
 }

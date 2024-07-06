@@ -69,9 +69,9 @@ class Migrate{
 		})
 		//await z.ngaqDbSrc.test_addJoinedRows_deprecated(joinedRows)
 		const fn = await z.ngaqDbSrc.fn_addJoinedRows()
-		z.ngaqDbSrc.db.beginTrans()
+		z.ngaqDbSrc.db.BeginTrans()
 		await fn(joinedRows)
-		z.ngaqDbSrc.db.commit()
+		z.ngaqDbSrc.db.Commit()
 		// z.ngaqDbSrc.db.beginTrans()
 		// for(const row of joinedRows){
 		// 	await z.ngaqDbSrc.test_addJoinedRows(row)

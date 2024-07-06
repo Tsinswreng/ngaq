@@ -73,7 +73,7 @@ export class DictDbSrc{
 
 	static createTable(db:sqlite3.Database, tbl:str, opt?: sqliteUtil.I_optCheckExist){
 		const sql = this.createTableSql(tbl, opt)
-		return SqliteDb.run(db, sql)
+		return SqliteDb.Run(db, sql)
 	}
 
 	createTable(tbl: string, opt?: sqliteUtil.I_optCheckExist){
@@ -87,7 +87,7 @@ export class DictDbSrc{
 		const sql = sqliteUtil.Sql.create.trigger_ignore_duplicate_insert(
 			tbl, triggerName, [c.dict_name, c.text, c.code], {checkExist:false}
 		)
-		return SqliteDb.run(db, sql)
+		return SqliteDb.Run(db, sql)
 	}
 
 	createTrigger(tbl:str, triggerName='ignore_duplicate_insert'){
@@ -113,9 +113,9 @@ export class DictDbSrc{
 		const idx_text_code = 'idx_text_code'
 		const idx_dictName = 'idx_dict_name'
 		const text_codeSql = this.geneSql_createText_CodeIdx(tbl, idx_text_code)
-		await SqliteDb.run(db, text_codeSql)
+		await SqliteDb.Run(db, text_codeSql)
 		const dictNameSql = this.geneSql_createDictNameIdx(tbl, idx_dictName)
-		await SqliteDb.run(db, dictNameSql)
+		await SqliteDb.Run(db, dictNameSql)
 		return true
 	}
 
@@ -130,7 +130,7 @@ export class DictDbSrc{
 			ifExists = 'IF EXISTS'
 		}
 		const sql = `DROP TABLE ${ifExists} "${tbl}"`
-		return SqliteDb.run(db, sql)
+		return SqliteDb.Run(db, sql)
 	}
 
 	dropTable(tbl:str, opt:sqliteUtil.I_optCheckExist){

@@ -84,7 +84,7 @@ export class DictTbl{
 		const z = this
 		const bufferLineNum = opt.bufferLineNum
 		//const runResults = [] as RunResult[]
-		await z.dbSrc.db.beginTrans()
+		await z.dbSrc.db.BeginTrans()
 		for(let i = 0;;i++){
 			if(tsvParser.status.end){
 				break
@@ -97,7 +97,7 @@ export class DictTbl{
 				const ua = await fn()
 			}
 		}
-		return await z.dbSrc.db.commit()
+		return await z.dbSrc.db.Commit()
 	}
 
 	static async insertDbRows_fn(db:sqlite3.Database, tbl:str, rows:DbRow[]){
@@ -108,13 +108,13 @@ export class DictTbl{
 
 		const sqlObj = sqliteUtil.Sql.obj.new(dbRows[0])
 		const insertSql = sqlObj.geneFullInsertSql(tbl, {orIgnore:true})
-		const stmt = await SqliteDb.prepare(db, insertSql)
+		const stmt = await SqliteDb.Prepare(db, insertSql)
 		//console.log(stmt.sql)//t
 		const fn = async()=>{
 			//const prms = [] as Promise<sqlite3.RunResult>[]
 			for(const row of dbRows){
 				const params = sqlObj.getParams(row)
-				const pr = await stmt.run(params)
+				const pr = await stmt.Run(params)
 				//prms.push(pr)
 			}
 			//return Promise.all(prms)
@@ -138,7 +138,7 @@ export class DictTbl{
 	static selectCodeByText(db:sqlite3.Database, tbl:str, text:str){
 		const z = this
 		const sql = z.sql_selectCodeByText(tbl)
-		return SqliteDb.all(db, sql, [text])
+		return SqliteDb.All(db, sql, [text])
 	}
 
 	selectCodeByText(text:str){
