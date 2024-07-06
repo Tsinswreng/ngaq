@@ -27,12 +27,13 @@ export class NgaqDbSvc{
 	protected set dbSrc(v){this._dbSrc = v}
 	
 
-	async getAllWords(){
+	async GetAllWords(){
 		const z = this
-		const ans = await z.dbSrc.getAllJoinedRow()
+		const ans = await z.dbSrc.GetAllJoinedRow()
+		return ans
 	}
 
-	async save(){
+	async Save(){
 
 	}
 	

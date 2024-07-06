@@ -61,7 +61,7 @@ class Server{
 			res.send(Tempus.toISO8601(tem))
 		})
 		z.app.get('/allJoinedRows', async(req,res)=>{
-			const rows = await mod.dbSrc.getAllJoinedRow()
+			const rows = await mod.dbSrc.GetAllJoinedRow()
 			res.json(rows)
 		})
 		z.app.get('*', (req, res)=>{

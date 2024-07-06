@@ -32,4 +32,9 @@
 			}
 		]
 	}
+
+	,ngaq: {
+		userName: 'ngaq'
+		,password: 'ngaq'
+	}
 })

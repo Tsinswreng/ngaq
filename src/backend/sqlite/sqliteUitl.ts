@@ -260,7 +260,7 @@ class ObjSql{
 		return placeholders
 	}
 
-	getParams(obj=this.obj){
+	getParams(obj=this.obj):ParamType{
 		const z = this
 		const keys = z.keys
 		const ans = keys.map(e=>obj[e])

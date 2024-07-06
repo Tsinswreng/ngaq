@@ -9,7 +9,7 @@ const db = SqliteDb.new(dbRaw)
 const dbSrc = NgaqDbSrc.new(db)
 async function init(){
 	try {
-		await dbSrc.init()
+		await dbSrc.Init()
 	} catch (err) {
 		if(err instanceof DbErr){
 			console.error(err.sql)

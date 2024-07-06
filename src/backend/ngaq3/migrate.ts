@@ -68,7 +68,7 @@ class Migrate{
 			return wtr.geneJoinedRow()
 		})
 		//await z.ngaqDbSrc.test_addJoinedRows_deprecated(joinedRows)
-		const fn = await z.ngaqDbSrc.fn_addJoinedRows()
+		const fn = await z.ngaqDbSrc.Fn_addJoinedRows()
 		z.ngaqDbSrc.db.BeginTrans()
 		await fn(joinedRows)
 		z.ngaqDbSrc.db.Commit()

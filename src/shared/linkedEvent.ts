@@ -114,3 +114,16 @@ emt.on(myEvents.parent, (num:number, str:string)=>{
 
 })
 emt.emit(myEvents.child, 114, '514') */
+
+
+/* 
+	emit<T extends Le.Event<any[]>>(
+		fn: (ev: typeof this.events) => T,
+		...args: T extends Le.Event<infer U> ? U : never
+	){
+		const z = this
+		const ev = fn(z.events)
+		z.emitter.emit(ev, ...args)
+	}
+
+*/
