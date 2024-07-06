@@ -1,4 +1,7 @@
-import { Lex } from "./Lex"
+import { Lex, LocatePair } from "./Lex"
+import { JoinedWord } from '@shared/entities/Word/JoinedWord'
+import * as Mod from '@shared/model/NgaqModels'
+import * as algo from '@shared/algo'
 
 class DateBlock{
 	date:str
@@ -23,6 +26,7 @@ export class NgaqLex extends Lex{
 	protected __init__(...args: Parameters<typeof NgaqLex.new>){
 		const z = this
 		super.__init__(...args)
+		z.text = z.text.replace(/\r\n/g, '\n')
 		return z
 	}
 
@@ -118,4 +122,86 @@ export class NgaqLex extends Lex{
 	}
 
 
+}
+
+
+
+class WordBlockParser extends Lex{
+	protected constructor(){super()}
+	//@ts-ignore
+	protected __init__(...args: Parameters<typeof WordBlockParser.new>){
+		const z = this
+		const text = args[0]
+		const prop = args[1]
+		super.__init__(text)
+		z.baseIndex = prop.baseIndex
+		z.baseLocate = prop.baseLocate
+		return z
+	}
+
+	static new(text:str, opt:{
+		baseIndex:int
+		,baseLocate:LocatePair
+	}){
+		const z = new this()
+		z.__init__(text, opt)
+		return z
+	}
+
+	static mk(prop:{
+		text:int
+		,baseIndex:int
+		,baseLocate:LocatePair
+	}){
+		const z = new this()
+	}
+
+	//@ts-ignore
+	get This(){return WordBlockParser}
+
+	protected _baseIndex:int
+	get baseIndex(){return this._baseIndex}
+	protected set baseIndex(v){this._baseIndex = v}
+
+	protected _baseLocate: LocatePair
+	get baseLocate(){return this._baseLocate}
+	protected set baseLocate(v){this._baseLocate = v}
+	
+	protected _delimiter:str
+	get delimiter(){return this._delimiter}
+	protected set delimiter(v){this._delimiter = v}
+
+	protected _dateStr:str
+	get date(){return this._dateStr}
+	protected set date(v){this._dateStr = v}
+	
+	// protected _text:str
+	// get text(){return this._text}
+	// protected set text(v){this._text = v}
+
+	// override locate(){
+	// 	const z = this
+	// 	z.This.locate()
+	// }
+	
+	parse(){
+		const z = this
+		const sp = z.text.split(z.delimiter)
+	}
+
+	parseOneWordBlock(text:str){
+		//const firstNewLine = text.indexOf('\n')
+
+	}
+
+	read_wordText(){
+		const z = this
+		const ans = z.readUntilStr('\n')
+		z.eat('\n', true)
+		return ans
+	}
+
+	
+
+	
 }

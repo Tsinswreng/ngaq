@@ -1,10 +1,18 @@
+
+/**
+ * 行號,列號
+ */
+export type LocatePair = [int, int]
+
+
+
 /**
  * 
  * @param text 
  * @param index 
  * @returns [行,列]
  */
-function locate(text: string, index: number) {
+function locate(text: string, index: number):LocatePair{
 	if (index < 0 || index >= text.length) {
 		throw new RangeError(`${index}\nIndex out of bounds`);
 	}
@@ -96,14 +104,20 @@ export class Lex{
 		const z = this
 		return z.This.locate(z.text, z.index)
 	}
-	
-	error(msg:str){
+
+	getErr(msg:str){
 		const z = this
 		const err = ParseError.new(msg)
 		err.index = z.index
-		const [line, col] = z.This.locate(z.text, z.index)
+		const [line, col] = z.locate()
 		err.line = line
 		err.col = col
+		return err
+	}
+	
+	error(msg:str){
+		const z = this
+		const err = z.getErr(msg)
 		throw err
 	}
 
@@ -129,6 +143,8 @@ export class Lex{
 
 		return null;
 	}
+
+
 
 	peek(){
 		const z = this

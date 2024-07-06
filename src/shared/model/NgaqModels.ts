@@ -36,9 +36,13 @@ export class BaseFactory<
 	//col = keyAsValue(neow this.Row()) as KeyAsValue<RowT>
 	//繼承時 先初始化父類中 直接賦值ʹ字段
 	col:KeyMirror<RowT>
+	/** 空行、用于生成sql等 */
+	emptyRow:RowT
 	protected constructor(){}
 	protected __init__(){
-		this.col = keyMirror(new this.Row()) as KeyMirror<RowT> //晚初始化
+		const z = this
+		z.emptyRow = new this.Row() as RowT
+		z.col = keyMirror(z.emptyRow) as KeyMirror<RowT> //晚初始化
 	}
 	static new(){
 		const z = new this()

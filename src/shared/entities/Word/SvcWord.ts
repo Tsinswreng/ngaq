@@ -3,7 +3,7 @@ import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Ut";
-import * as Objs from '@shared/entities/Word/NgaqModels'
+import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import { LearnBelong } from "@shared/dbRow/wordDbRowsOld";
 export type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
 export type RMB_FGT_nil = typeof WordEvent.FGT|typeof WordEvent.RMB|undefined

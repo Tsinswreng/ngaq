@@ -1,11 +1,14 @@
+import type { PubNonFuncKeys } from '@shared/Type'
+
 import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
 import { $ } from '@shared/Ut'
-import * as Rows from '@shared/dbRow/NgaqRows'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
+
 import { JoinedRow } from '@shared/dbRow/JoinedRow'
-import { PubNonFuncKeys } from '@shared/Type'
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
+import * as Rows from '@shared/dbRow/NgaqRows'
 import * as Mod from '@shared/model/NgaqModels'
+
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -14,7 +17,8 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		z.name = args[0]
 		//@ts-ignore
 		z.factory = args[1]
-		z._col = z.factory.col
+		//z._col = z.factory.col
+		//z._objSql = SqliteUitl.Sql.obj.new(new z.factory.Row())
 		return z
 	}
 
@@ -34,10 +38,22 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	get factory(){return this._factory}
 	protected set factory(v){this._factory = v}
 	
-	protected _col:FactT['col']
-	get col(){return this._col}
-	protected set col(v){this._col = v}
-	
+	//protected _col:FactT['col']
+	get col():FactT['col']{
+		return this.factory.col
+	}
+
+	get emptyRow(){
+		return this.factory.emptyRow
+	}
+	//protected set col(v){this._col = v}
+
+
+
+	// protected _objSql:ReturnType<typeof SqliteUitl.Sql.obj.new>
+	// get objSql(){return this._objSql}
+	// protected set objSql(v){this._objSql = v}
+
 }
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
@@ -695,6 +711,12 @@ export class NgaqDbSrc{
 			return ans
 		}
 		return fn
+	}
+
+	async fn_addLearnRecords(){
+		const z = this
+		const tbl = z.tbls.learn
+		tbl.objSql.geneFullInsertSql(tbl.name)
 	}
 
 }

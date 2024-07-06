@@ -9,7 +9,7 @@ import {
 } from '@shared/dbRow/wordDbRowsOld'
 
 import * as Rows from '@shared/dbRow/wordDbRowsOld'
-import * as Objs from '@shared/entities/Word/NgaqModels'
+import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from '../../shared/dbRow/JoinedRowOld'
 import { PubNonFuncKeys } from '@shared/Type'

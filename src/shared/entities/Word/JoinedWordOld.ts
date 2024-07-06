@@ -1,5 +1,5 @@
 import { JoinedRow } from "@shared/dbRow/JoinedRowOld"
-import * as Objs from '@shared/entities/Word/NgaqModels'
+import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
 import * as Rows from '@shared/dbRow/wordDbRowsOld'
