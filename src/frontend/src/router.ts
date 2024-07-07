@@ -9,6 +9,7 @@ import Manage from '@views/Manage/Manage.vue';
 import SignUp from '@views/SignUp/SignUp.vue'
 import Setttings from '@views/Settings/Settings.vue'
 import Voca3 from '@views/Voca3/Voca3.vue';
+import Ngaq4 from '@views/Ngaq4/Voca3.vue';
 
 /* interface Route{
 	path:string
@@ -36,6 +37,10 @@ const routes:RouteRecordRaw[] =
 	{
 		path: '/voca3'
 		,component: Voca3
+	},
+	{
+		path: '/ngaq4'
+		,component: Ngaq4
 	},
 	{
 		path: '/Manage',
