@@ -2,18 +2,22 @@ export class ParseResult{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof ParseResult.new>){
 		const z = this
+		z.start = args[0]
+		z.end = args[1]
+		z.rawText = args[2]
 		return z
 	}
 
-	static new(){
+	static new(start:int, end:int, rawText:str){
 		const z = new this()
-		z.__init__()
+		z.__init__(start, end, rawText)
 		return z
 	}
 
 	//get This(){return ParseResult}
 	rawText:str = ''
-	pos:int = 0
+	start:int = 0
+	end:int = 0
 }
 
 
@@ -72,7 +76,7 @@ export type LocatePair = [int, int]
 
 
 /**
- * 
+ * from 0
  * @param text 
  * @param index 
  * @returns [行,列]
@@ -82,13 +86,13 @@ function getLocatePair(text: string, index: number):LocatePair{
 		throw new RangeError(`${index}\nIndex out of bounds`);
 	}
 
-	let line = 1;
-	let column = 1;
+	let line = 0;
+	let column = 0;
 
 	for (let i = 0; i < index; i++) {
 		if (text[i] === '\n') {
 			line++;
-			column = 1;
+			column = 0;
 		} else {
 			column++;
 		}

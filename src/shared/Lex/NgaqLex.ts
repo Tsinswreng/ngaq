@@ -1,14 +1,65 @@
-import { Lex, LocatePair } from "./Lex"
+import { Lex, LocatePair, ParseResult } from "./Lex"
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Mod from '@shared/model/NgaqModels'
 import * as algo from '@shared/algo'
+import { PubNonFuncProp } from "@shared/Type"
+import type { MakeOptional } from "@shared/Type"
+
+
+
+
+class Result{
+
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Result.new>){
+		const z = this
+		const prop = args[0]
+		Object.assign(z, prop)
+		return z
+	}
+
+	static new(
+		prop:MakeOptional<
+			PubNonFuncProp<Result>
+			,'name'
+		>
+	){
+		const z = new this()
+		z.__init__(prop)
+		return z
+	}
+
+	//get This(){return Result}
+	name:str = ""
+	metadata:ParseResult
+	dateBlocks:DateBlock[] = []
+}
 
 class DateBlock{
+
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof DateBlock.new>){
+		const z = this
+		const prop = args[0]
+		Object.assign(z, prop)
+		return z
+	}
+
+	static new(prop:PubNonFuncProp<DateBlock>){
+		const z = new this()
+		z.__init__(prop)
+		return z
+	}
+
+	//get This(){return DateBlock}
+
+	start:int
+	end:int
 	/** [2024-07-06T21:38:55.163+08:00] */
-	date:str = ''
-	text:str = ''
+	date:ParseResult
+	content:ParseResult
 	/** 整個日期塊內 䀬ʹ詞ʰ皆加ʹ屬性、如來源 等 */
-	commonProp:str = ''
+	commonProp?:ParseResult
 }
 
 class Patterns{
@@ -19,10 +70,6 @@ class Patterns{
 	dateBlockContentEnd = '}}'
 }
 
-class Result{
-	metadata:str
-	dateBlocks:DateBlock[] = []
-}
 
 export class NgaqLex extends Lex{
 	protected constructor(){super()}
@@ -63,15 +110,14 @@ export class NgaqLex extends Lex{
 	 * <metadata>......</metadata>
 	 * @returns 
 	 */
-	protected read_metadata(){
+	protected read_metadata():ParseResult{
 		const z = this
-		//console.log(z.locate())//t
+		const start = z.index
 		z.eat(z.patterns.metadataStart, true)
 		const end = z.patterns.metadataEnd
-		const ans = z.readUntilStr(end, true)
+		const str = z.readUntilStr(end, true)
 		z.eat(end, true)
-		//console.log(z.locate())//t
-		//console.log(ans)
+		const ans = ParseResult.new(start, z.index, str)
 		return ans
 	}
 
@@ -79,34 +125,90 @@ export class NgaqLex extends Lex{
 	 * [2024-07-06T20:24:47.929+08:00]
 	 * @returns 
 	 */
-	protected read_date(){
+	protected read_date():ParseResult{
 		const z = this
+		const start = z.index
 		z.eat('[', true)
-		const ans = z.readUntilStr(']', true)
+		const str = z.readUntilStr(']', true)
 		z.eat(']', true)
+		const ans = ParseResult.new(start, z.index, str)
 		return ans
 	}
 
-	protected read_dateBlockContent(){
+	/**
+	 * {{ ...... }}
+	 */
+	protected read_dateBlockContent():ParseResult{
 		const z = this
+		const start = z.index
 		z.eat(z.patterns.dateBlockContentStart, true)
 		const end = z.patterns.dateBlockContentEnd
-		const ans = z.readUntilStr(end, true)
+		const str = z.readUntilStr(end, true)
 		z.eat(end, true)
+		const ans = ParseResult.new(start, z.index, str)
 		return ans
-		//return z.readUntil(new RegExp(z.patterns.dateBlockContentEnd))
 	}
 
-	protected read_dateBlock(){
+	/**
+	 * 
+	 * @returns 
+	 */
+	protected read_dateBlock():DateBlock{
 		const z = this
+		const start = z.index
 		const date = z.read_date()
 		z.read_white()
+		const prop = z.read_prop()
+		z.read_white()
 		const content = z.read_dateBlockContent()
-		const ans = new DateBlock()
-		ans.date = date
-		ans.text = content
+		// const ans = new DateBlockDeprecated()
+		// ans.date = date
+		// ans.text = content
+		const ans = DateBlock.new({
+			start:start
+			,end:z.index
+			,date: date
+			,content: content
+			,commonProp: prop
+		})
 		return ans
 	}
+
+	/**
+	 * 
+abc123
+[[a this is annotation]]
+def
+	 */
+	read_bodyEtProp(){
+		const z = this
+		const text = [] as str[]
+		const ans = new WordBlock()
+		for(;z.index < z.text.length; z.index++){
+			const cur = z.text[z.index]
+			if(cur ==='[' && z.text[z.index+1] === '['){
+				z.eat('[[', true)
+				const propStr = z.readUntilStr(']]')
+				ans.prop = propStr
+				z.eat(']]', true)
+			}else{
+				text.push(cur)
+			}
+		}
+		ans.text = text.join('')
+		return ans
+	}
+
+	protected read_prop():ParseResult{
+		const z = this
+		const start = z.index
+		z.eat('[[', true)
+		const propStr = z.readUntilStr(']]')
+		z.eat(']]', true)
+		const ans = ParseResult.new(start, z.index, propStr)
+		return ans
+	}
+
 
 	parse(){
 		const z = this
@@ -116,23 +218,20 @@ export class NgaqLex extends Lex{
 		z.read_white()
 		const dateBlocks = [] as DateBlock[]
 		for(let i = 0;z.index < z.text.length && !z.status.end;i++){
-			// console.log(i, 'start')//t
-			// if(i === 2){
-			// 	console.log(z.index)
-			// 	console.log(z.locate())
-			// }
 			z.read_white()
-			// console.log(z.index, 'wh')//t
 			if(z.index >= z.text.length -1){
 				break
 			}
 			const ua = z.read_dateBlock()
 			dateBlocks.push(ua)
 		}
-		return dateBlocks
+		//return dateBlocks
+		const ans = Result.new({
+			metadata: metadata
+			,dateBlocks: dateBlocks
+		})
+		return ans
 	}
-
-
 }
 
 
@@ -217,47 +316,11 @@ class WordBlockParser extends Lex{
 		return ans
 	}
 
-	read_prop(){
-		const z = this
-		z.eat('[[', true)
-		const propStr = z.readUntilStr(']]')
-		z.eat(']]', true)
-		return propStr
-	}
+
 
 	parse_prop(){
 		const z = this
 	}
 
-	/**
-	 * 
-abc123
-[[a this is annotation]]
-def
-	 */
-	read_bodyEtProp(){
-		const z = this
-		const text = [] as str[]
-		const ans = new WordBlock()
-		for(;z.index < z.text.length; z.index++){
-			const cur = z.text[z.index]
-			if(cur ==='[' && z.text[z.index+1] === '['){
-				z.eat('[[', true)
-				const propStr = z.readUntilStr(']]')
-				ans.prop = propStr
-				z.eat(']]', true)
-			}else{
-				text.push(cur)
-			}
-		}
-		ans.text = text.join('')
-		return ans
-	}
 
-
-
-
-	
-
-	
 }

@@ -145,3 +145,12 @@ Result === {a:'a', b:'b', c:'c', d:'d'}
 export type KeyMirror<T> = {
 	[K in keyof T]: K;
 }
+
+
+/**
+ * 创建一个新的类型，将指定的属性变为可选
+ * type MyType = { name: string; age: number };
+ * 使用 MakeOptional 类型将 MyType 中的 name 属性变为可选
+ * type Got = MakeOptional<MyType, 'name'>;
+ */
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
