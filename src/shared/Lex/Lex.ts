@@ -115,7 +115,8 @@ export class ParseError extends Error{
 	}
 
 	get This(){return ParseError}
-	index:int
+	start:int
+	end?:int
 	line:int
 	col:int
 }
@@ -190,7 +191,7 @@ export class Lex{
 	getErr(msg:str){
 		const z = this
 		const err = ParseError.new(msg)
-		err.index = z.index
+		err.start = z.index
 		//const [line, col] = z.locatePair()
 		const location = z.locate()
 		err.line = location.line

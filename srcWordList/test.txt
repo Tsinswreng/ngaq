@@ -30,7 +30,7 @@ ABC456
 {{
 
 abc123
-[[a this is annotation]]
+[[annotation| this is annotation]]
 def
 -/-/-/-/-
 

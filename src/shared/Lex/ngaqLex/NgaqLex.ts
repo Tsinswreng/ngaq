@@ -1,17 +1,18 @@
-import { Lex, LocatePair, ParseResult } from "./Lex"
+import { Lex, LocatePair, ParseError, ParseResult } from "../Lex"
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Mod from '@shared/model/NgaqModels'
 import * as algo from '@shared/algo'
 import { PubNonFuncProp } from "@shared/Type"
 import type { MakeOptional } from "@shared/Type"
+import Tempus from "@shared/Tempus"
 
 
 
 
-class Result{
+class CrudeResult{
 
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof Result.new>){
+	protected __init__(...args: Parameters<typeof CrudeResult.new>){
 		const z = this
 		const prop = args[0]
 		Object.assign(z, prop)
@@ -20,7 +21,7 @@ class Result{
 
 	static new(
 		prop:MakeOptional<
-			PubNonFuncProp<Result>
+			PubNonFuncProp<CrudeResult>
 			,'name'
 		>
 	){
@@ -174,31 +175,6 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
-	/**
-	 * 
-abc123
-[[a this is annotation]]
-def
-	 */
-	read_bodyEtProp(){
-		const z = this
-		const text = [] as str[]
-		const ans = new WordBlock()
-		for(;z.index < z.text.length; z.index++){
-			const cur = z.text[z.index]
-			if(cur ==='[' && z.text[z.index+1] === '['){
-				z.eat('[[', true)
-				const propStr = z.readUntilStr(']]')
-				ans.prop = propStr
-				z.eat(']]', true)
-			}else{
-				text.push(cur)
-			}
-		}
-		ans.text = text.join('')
-		return ans
-	}
-
 	protected read_prop():ParseResult{
 		const z = this
 		const start = z.index
@@ -210,7 +186,7 @@ def
 	}
 
 
-	parse(){
+	parseCrude(){
 		const z = this
 		//z.index++
 		z.read_white()
@@ -226,7 +202,7 @@ def
 			dateBlocks.push(ua)
 		}
 		//return dateBlocks
-		const ans = Result.new({
+		const ans = CrudeResult.new({
 			metadata: metadata
 			,dateBlocks: dateBlocks
 		})
@@ -235,92 +211,214 @@ def
 }
 
 
-class WordBlock{
-	text:str = ""
-	prop:str = ""
+function seekKeyWithUndefVal(obj:kvobj){
+	const keys = Object.keys(obj)
+	for(const k of keys){
+		const v = obj[k]
+		if(v === void 0){
+			return k
+		}
+	}
+	return ""
+}
+
+class Metadata{
+	belong:str
+	delimiter:str
+	dateFormat = Tempus.ISO8601FULL_DATE_FORMAT
 }
 
 
-class WordBlockParser extends Lex{
-	protected constructor(){super()}
-	//@ts-ignore
-	protected __init__(...args: Parameters<typeof WordBlockParser.new>){
+class DateBlockParser{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof DateBlockParser.new>){
 		const z = this
-		const text = args[0]
-		const prop = args[1]
-		super.__init__(text)
-		z.baseIndex = prop.baseIndex
-		z.baseLocate = prop.baseLocate
+		z.metadata = args[0]
+		z.dateBlock = args[1]
 		return z
 	}
 
-	static new(text:str, opt:{
-		baseIndex:int
-		,baseLocate:LocatePair
-	}){
+	static new(metadata:Metadata, dateBlock:DateBlock){
 		const z = new this()
-		z.__init__(text, opt)
+		z.__init__(metadata, dateBlock)
 		return z
 	}
 
-	static mk(prop:{
-		text:int
-		,baseIndex:int
-		,baseLocate:LocatePair
-	}){
+	get This(){return DateBlockParser}
+
+	dateBlock:DateBlock
+	metadata:Metadata
+
+	date:Tempus
+
+	parse_date(){
+		const z = this
+		z.date = Tempus.new(
+			z.dateBlock.date.rawText
+			,z.metadata.dateFormat
+		)
+	}
+
+	static parse_prop(prop:ParseResult){
+		
+	}
+
+	parse_wordBody(){
+		const z = this
+		//this.dateBlock.
+	}
+}
+
+
+class Fine{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Fine.new>){
+		const z = this
+		z.crude = args[0]
+		z.metadata = z.parse_metadata(z.crude.metadata)
+		return z
+	}
+
+	static new(crude:CrudeResult){
 		const z = new this()
+		z.__init__(crude)
+		return z
 	}
+	get This(){return Fine}
 
-	//@ts-ignore
-	get This(){return WordBlockParser}
+	crude:CrudeResult
 
-	protected _baseIndex:int
-	get baseIndex(){return this._baseIndex}
-	protected set baseIndex(v){this._baseIndex = v}
+	metadata:Metadata
 
-	protected _baseLocate: LocatePair
-	get baseLocate(){return this._baseLocate}
-	protected set baseLocate(v){this._baseLocate = v}
-	
-	protected _delimiter:str
-	get delimiter(){return this._delimiter}
-	protected set delimiter(v){this._delimiter = v}
-
-	protected _dateStr:str
-	get date(){return this._dateStr}
-	protected set date(v){this._dateStr = v}
-	
-	// protected _text:str
-	// get text(){return this._text}
-	// protected set text(v){this._text = v}
-
-	// override locate(){
-	// 	const z = this
-	// 	z.This.locate()
-	// }
-	
-	parse(){
-		const z = this
-		const sp = z.text.split(z.delimiter)
-	}
-
-	parseOneWordBlock(text:str){
-		//const firstNewLine = text.indexOf('\n')
-
-	}
-
-	read_wordText(){
-		const z = this
-		const ans = z.readUntilStr('\n')
-		z.eat('\n', true)
+	static parseMetadata(text:str){
+		const obj = JSON.parse(text)
+		const ans = new Metadata()
+		Object.assign(ans, obj)
+		const keyWithUndef = seekKeyWithUndefVal(ans)
+		if(keyWithUndef !== ""){
+			throw ParseError.new(`${keyWithUndef}\nis expected in metadata`)
+		}
 		return ans
 	}
 
-
-
-	parse_prop(){
+	parse_metadata(metadata:ParseResult){
 		const z = this
+		try {
+			return z.This.parseMetadata(metadata.rawText)
+		} catch (err) {
+			if(err instanceof ParseError){
+				err.start = metadata.start
+				err.end = metadata.end
+			}
+			throw err
+		}
 	}
 
+	static parse_dateBlock(dateBlock:DateBlock){
+		
+	}
 
 }
+
+
+
+
+
+// class WordBlockParser extends Lex{
+// 	protected constructor(){super()}
+// 	//@ts-ignore
+// 	protected __init__(...args: Parameters<typeof WordBlockParser.new>){
+// 		const z = this
+// 		const text = args[0]
+// 		const prop = args[1]
+// 		super.__init__(text)
+// 		z.baseIndex = prop.baseIndex
+// 		z.baseLocate = prop.baseLocate
+// 		return z
+// 	}
+
+// 	static new(text:str, opt:{
+// 		baseIndex:int
+// 		,baseLocate:LocatePair
+// 	}){
+// 		const z = new this()
+// 		z.__init__(text, opt)
+// 		return z
+// 	}
+
+// 	static mk(prop:{
+// 		text:int
+// 		,baseIndex:int
+// 		,baseLocate:LocatePair
+// 	}){
+// 		const z = new this()
+// 	}
+
+// 	//@ts-ignore
+// 	get This(){return WordBlockParser}
+
+// 	protected _baseIndex:int
+// 	get baseIndex(){return this._baseIndex}
+// 	protected set baseIndex(v){this._baseIndex = v}
+
+// 	protected _baseLocate: LocatePair
+// 	get baseLocate(){return this._baseLocate}
+// 	protected set baseLocate(v){this._baseLocate = v}
+	
+// 	protected _delimiter:str
+// 	get delimiter(){return this._delimiter}
+// 	protected set delimiter(v){this._delimiter = v}
+
+// 	protected _dateStr:str
+// 	get date(){return this._dateStr}
+// 	protected set date(v){this._dateStr = v}
+	
+// 	// protected _text:str
+// 	// get text(){return this._text}
+// 	// protected set text(v){this._text = v}
+
+// 	// override locate(){
+// 	// 	const z = this
+// 	// 	z.This.locate()
+// 	// }
+
+
+// 	/**
+// 	 * 
+// abc123
+// [[a this is annotation]]
+// def
+// 	 */
+// 	read_bodyEtProp(){
+// 		const z = this
+// 		const text = [] as str[]
+// 		const ans = new WordBlock()
+// 		for(;z.index < z.text.length; z.index++){
+// 			const cur = z.text[z.index]
+// 			if(cur ==='[' && z.text[z.index+1] === '['){
+// 				z.eat('[[', true)
+// 				const propStr = z.readUntilStr(']]')
+// 				ans.prop = propStr
+// 				z.eat(']]', true)
+// 			}else{
+// 				text.push(cur)
+// 			}
+// 		}
+// 		ans.text = text.join('')
+// 		return ans
+// 	}
+
+	
+// 	parseOneWordBlock(text:str){
+// 		//const firstNewLine = text.indexOf('\n')
+// 	}
+
+// 	read_wordText(){
+// 		const z = this
+// 		const ans = z.readUntilStr('\n')
+// 		z.eat('\n', true)
+// 		return ans
+// 	}
+
+
+// }
