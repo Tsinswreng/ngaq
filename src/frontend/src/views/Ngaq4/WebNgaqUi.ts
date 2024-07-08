@@ -192,11 +192,25 @@ export class WebNgaqUi{
 	}
 
 	handleErr(err:any){
+		const z = this
 		if(err instanceof Error){
 			if(err instanceof Exception){
+
+				if(err.reason === z.svc.errReasons.load_err){
+					// 在if塊外、err.reason是Reason<any[]>類型、errReasons.load_err是Reason<[string]>類型
+					// 運行時、已知若err.reason === z.svc.errReasons.load_err爲真、則兩者的泛型類型也必然相同
+					// 但是在if塊內、typescript仍把 err.reason推斷爲Reason<any[]>類型、而不是期望的Reason<[string]>類型類型
+					// 能否讓typescript 自動在此if塊中推斷出err.reason的具體類型? 需要自動推斷、而不是手動類型斷言
+					console.error(err)
+					console.error(err.reason.args)
+					return
+				}
 				console.error(err)
 				alert(err.reason.name)
 			}
+		}else{
+			alert('unknown error')
+			console.error(err)
 		}
 	}
 	
@@ -233,6 +247,7 @@ export class WebNgaqUi{
 	learnOrUndoByIndex(index:int, event:RMB_FGT){
 		const z = this
 		//return z.svc.learnOrUndoByIndex(index, event)
+		//console.log(1)//t
 		const mw = $(z.svc.wordsToLearn[index], 'z.svc.wordsToLearn[index]')
 		z._curWord = mw
 		z.fresh_wordInfo()
@@ -527,4 +542,5 @@ class BgImg{
 
 import * as frut from '@ts/frut'
 import { TagImg } from "@shared/TagImg"
+import { cosDependencies } from "mathjs"
 

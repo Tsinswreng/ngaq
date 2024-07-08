@@ -15,11 +15,11 @@ export class Event<Arg extends any[] =any[]>{
 	}
 	static new<Arg extends any[] =any[]>(name:string, base?:Event<Arg>){
 		const o = new this<Arg>()
-		o.__init__deprecated(name, base)
+		o.__init__(name, base)
 		return o
 	}
 
-	protected __init__deprecated(...args:Parameters<typeof Event.new>){
+	protected __init__(...args:Parameters<typeof Event.new>){
 		const o = this
 		o._name = args[0]
 		o._base = args[1]

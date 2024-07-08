@@ -6,7 +6,7 @@ import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
-import { Exception } from "@shared/Exception";
+import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
@@ -14,6 +14,8 @@ import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
 import { TagImg } from "@shared/TagImg";
+import { JoinedRow } from "@shared/dbRow/JoinedRow";
+import { JoinedWord } from "@shared/entities/Word/JoinedWord";
 
 export class WebNgaqSvc extends NgaqSvc{
 
@@ -74,8 +76,10 @@ export class WebNgaqSvc extends NgaqSvc{
 	protected async _load(){
 		const z = this
 		const jsonRows = await z.client.getWordsFromAllTables()
-		const rows:WordDbRow[] = JSON.parse(jsonRows)
-		const words = rows.map(e=>WordDbRow.toEntity(e))
+		const rows:JoinedRow[] = JSON.parse(jsonRows)
+		
+		const jwords = rows.map(e=>JoinedWord.new(e))
+		const words = jwords.map(e=>JoinedWord.toOldWord(e))
 		const memorizeWords = words.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords
 		return true

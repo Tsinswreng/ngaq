@@ -9,21 +9,21 @@ export class Reason<Arg extends any[] = any[]> extends Event{
 		super()
 	}
 
-	static new_deprecated<Arg extends any[]>(msg:string='' ,prop?:{
-		//_msg:string
-	}){
-		const z = new this<Arg>()
-		z.__init__deprecated(msg, prop)
-		return z
-	}
+	// static new_deprecated<Arg extends any[]>(msg:string='' ,prop?:{
+	// 	//_msg:string
+	// }){
+	// 	const z = new this<Arg>()
+	// 	z.__init__deprecated(msg, prop)
+	// 	return z
+	// }
 
-	protected __init__deprecated(name:string, prop?){
-		const z = this
-		super.__init__deprecated(name)
-		z._name = name
-		Object.assign(z,prop)
-		return z
-	}
+	// protected __init__deprecated(name:string, prop?){
+	// 	const z = this
+	// 	super.__init__deprecated(name)
+	// 	z._name = name
+	// 	Object.assign(z,prop)
+	// 	return z
+	// }
 
 	static new<Arg extends any[]>(name:string, base?:Reason){
 		const z = new this<Arg>()
@@ -42,8 +42,23 @@ export class Reason<Arg extends any[] = any[]> extends Event{
 	set name(v){this._name = v}
 
 	protected _args:Arg
-	get args(){return this.args}
+	get args(){return this._args}
 	set args(v){this._args = v}
+
+	/**
+	if(err.reason.is( z.svc.errReasons.load_err )){
+		err.reason //推斷爲load_err的類型 不效
+	}
+	 * @param reason 
+	 * @returns 
+	 */
+	is<T extends any[]>(reason:Reason<T>): reason is Reason<T>{
+		const z = this as Reason
+		if(z === reason){
+			return true
+		}
+		return false
+	}
 }
 
 
@@ -52,17 +67,17 @@ export class Exception extends Error{
 		super(...args)
 	}
 
-	protected static new_deprecated(msg:string='', opt?){
-		const z = new this()
-		z.__init__deprecated(msg, opt)
-		return z
-	}
+	// protected static new_deprecated(msg:string='', opt?){
+	// 	const z = new this()
+	// 	z.__init__deprecated(msg, opt)
+	// 	return z
+	// }
 
-	protected __init__deprecated(msg:string='', opt?){
-		const z = this
-		z.message = msg
-		return z
-	}
+	// protected __init__deprecated(msg:string='', opt?){
+	// 	const z = this
+	// 	z.message = msg
+	// 	return z
+	// }
 
 	protected static new(reason:Reason){
 		const z = new this()
@@ -80,9 +95,10 @@ export class Exception extends Error{
 		reason:Reason<Arg>
 		, ...args:Arg
 	){
-		const o = this.new(reason)
-		o._reason = reason
-		return o
+		const z = this.new(reason)
+		z._reason = reason
+		z.reason.args = args
+		return z
 	}
 
 

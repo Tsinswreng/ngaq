@@ -52,7 +52,7 @@ export class Client{
 	
 	async getWordsFromAllTables(){
 		const z = this
-		const url = new URL('/wordsFromAllTables', z.baseUrl)
+		const url = new URL('/api/ngaq/allWords', z.baseUrl)
 		const got = await fetch(url)
 		const text = await got.text()
 		return text

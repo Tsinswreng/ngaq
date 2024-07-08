@@ -6,7 +6,7 @@ import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
-import { Exception } from "@shared/Exception";
+import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
