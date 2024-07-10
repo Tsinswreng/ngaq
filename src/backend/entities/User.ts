@@ -1,4 +1,4 @@
-import type { NgaqDbSrc } from "@backend/ngaq3/NgaqDbSrc"
+import type { NgaqDbSrc } from "@backend/ngaq4/NgaqDbSrc"
 
 
 export class User{
@@ -28,7 +28,7 @@ export class User{
 	get ngaqSchema(){return this._ngaqSchema}
 	protected set ngaqSchema(v){this._ngaqSchema = v}
 
-	
+
 }
 
 

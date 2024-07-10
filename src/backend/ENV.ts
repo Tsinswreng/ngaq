@@ -1,4 +1,4 @@
-import { NgaqDbSrc } from "./ngaq3/NgaqDbSrc"
+import { NgaqDbSrc } from "./ngaq4/NgaqDbSrc"
 import { SqliteDb } from "./sqlite/Sqlite"
 
 class Opt{

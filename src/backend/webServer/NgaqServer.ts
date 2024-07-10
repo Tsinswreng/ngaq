@@ -2,7 +2,7 @@ import Tempus from '@shared/Tempus'
 import express from 'express'
 import bodyParser from "body-parser";
 import { SqliteDb } from '../sqlite/Sqlite';
-import { NgaqDbSrc } from '../ngaq3/NgaqDbSrc';
+import { NgaqDbSrc } from '../ngaq4/NgaqDbSrc';
 import { NgaqCtrl } from './ctrl/NgaqCtrl';
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
