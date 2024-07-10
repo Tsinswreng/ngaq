@@ -1,7 +1,7 @@
 import type { PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
-import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
+import * as SqliteUitl from '@backend/sqlite/sqliteUtil'
 import { $ } from '@shared/Ut'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 

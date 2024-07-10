@@ -1,9 +1,9 @@
 import type { HistoryDbSrc } from "./HistoryDbSrc"
 import type {I_perBatch, I_readN} from '@shared/Type'
-import type { I_optCheckExist } from "@backend/sqlite/sqliteUitl"
+import type { I_optCheckExist } from "@backend/sqlite/sqliteUtil"
 
 import { HistoryDbRow } from "./HistoryDbRow"
-import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
+import * as SqliteUitl from '@backend/sqlite/sqliteUtil'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 
 

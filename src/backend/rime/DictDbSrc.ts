@@ -1,7 +1,7 @@
 import { Abs_DbSrc, CreateTableOpt } from "@backend/db/sqlite/_base/DbSrc"
 import sqlite3, { RunResult } from "sqlite3"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
-import * as sqliteUtil from '@backend/sqlite/sqliteUitl'
+import * as sqliteUtil from '@backend/sqlite/sqliteUtil'
 import {DbRow} from './DictDbRow'
 export {DbRow}
 

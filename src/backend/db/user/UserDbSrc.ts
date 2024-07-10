@@ -1,13 +1,13 @@
 import type { PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
-import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
+import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
 import { $ } from '@shared/Ut'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 
 import * as Mod from '@shared/model/user/UserModel'
-const ObjSql = SqliteUitl.Sql.obj
-const ifNE = SqliteUitl.IF_NOT_EXISTS
+const ObjSql = SqliteUtil.Sql.obj
+const ifNE = SqliteUtil.IF_NOT_EXISTS
 
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{

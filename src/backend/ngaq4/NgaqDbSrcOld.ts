@@ -1,4 +1,4 @@
-import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
+import * as SqliteUitl from '@backend/sqlite/sqliteUtil'
 import { $ } from '@shared/Ut'
 import {
 	LearnRow,

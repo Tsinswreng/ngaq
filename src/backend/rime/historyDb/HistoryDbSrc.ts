@@ -1,10 +1,10 @@
 import { HistoryTbl } from "./HistoryTbl";
 
-import type { I_optCheckExist } from "@backend/sqlite/sqliteUitl";
+import type { I_optCheckExist } from "@backend/sqlite/sqliteUtil";
 import type { sqlite3 } from "sqlite3";
 
 import { SqliteDb } from "@backend/sqlite/Sqlite";
-import * as SqliteUitl from "@backend/sqlite/sqliteUitl";
+import * as SqliteUitl from "@backend/sqlite/sqliteUtil";
 import { HistoryDbRow } from "./HistoryDbRow";
 
 

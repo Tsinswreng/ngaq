@@ -2,7 +2,7 @@
 import * as Tsv from "./dictTsv"
 import { DbRow } from "./DictDbRow"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
-import * as sqliteUtil from '@backend/sqlite/sqliteUitl'
+import * as sqliteUtil from '@backend/sqlite/sqliteUtil'
 import type sqlite3 from 'sqlite3'
 import { DictDbSrc, DictDbSrcNewOpt } from "./DictDbSrc"
 
