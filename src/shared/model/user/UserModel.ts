@@ -106,3 +106,45 @@ class UserFact extends IdBlCtMtFact<UserInst, Row.User>{
 export const User = UserFact.new() as UserFact
 export type User = UserInst
 
+
+class PasswordInst extends IdBlCtMtInst<Row.Password>{
+	override get Row(){return Row.Password}
+	declare belong: Row.PasswordBelong;
+	fid:int
+	salt:str
+	hash:str
+}
+class PasswordFact extends IdBlCtMtFact<PasswordInst, Row.Password>{
+	Row = Row.Password
+	//@ts-ignore
+	Inst = PasswordInst
+}
+export const Password = PasswordFact.new() as PasswordFact
+export type Password = PasswordInst
+
+
+
+class SessionInst extends IdBlCtMtInst<Row.Session>{
+	override get Row(){return Row.Session}
+	userId:int
+	token:str
+	expirationTime:Tempus
+	override correctRow(row: Row.Session): Row.Session {
+		row.expirationTime = Tempus.toUnixTime_mills(As(
+			row.expirationTime, Tempus
+		))
+		return row
+	}
+}
+class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
+	Row = Row.Session
+	//@ts-ignore
+	Inst = SessionInst
+	override correctInst(inst: SessionInst): SessionInst {
+		inst.expirationTime = Tempus.new(As(inst.expirationTime, 'number'))
+		return inst
+	}
+}
+export const Session = SessionFact.new() as SessionFact
+export type Session = SessionInst
+

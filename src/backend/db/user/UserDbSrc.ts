@@ -50,59 +50,41 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
 	user = TBL('user', Mod.User)
+	password = TBL('password', Mod.Password)
+	session = TBL('session', Mod.Session)
 }
 const tbls = new Tbls()
-
-
-class InitSql{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof InitSql.new>){
-		const z = this
-		return z
-	}
-
-	static new(){
-		const z = new this()
-		z.__init__()
-		return z
-	}
-
-	get This(){return InitSql}
-
-	protected _tbls = tbls
-	get tbls(){return this._tbls}
-	protected set tbls(v){this._tbls = v}
-
-	mkTbl_user(){
-		const z = this
-		const tbl = z.tbls.user
-		const c = tbl.col
-		const sn = SqliteUtil.snippet
-		const ans = 
-`CREATE TABLE ${ifNE} ${tbl.name}(
-	${c.id}
-)`
-	}
-	
-	
-}
-
 
 
 export class UserDbSrc{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof UserDbSrc.new>){
 		const z = this
+		z.db = args[0]
 		return z
 	}
 
-	static new(){
+	static new(db:SqliteDb){
 		const z = new this()
-		z.__init__()
+		z.__init__(db)
 		return z
 	}
 
-	get This(){return UserDbSrc}
+	static tbls = tbls
+
+	//get This(){return UserDbSrc}
+	protected _tbls = tbls
+	get tbls(){return this._tbls}
+	protected set tbls(v){this._tbls = v}
+
+	protected _db:SqliteDb
+	get db(){return this._db}
+	protected set db(v){this._db = v}
+
+	async Fn_seekUserBy(){
+		const z = this
+	}
+
 }
 
 

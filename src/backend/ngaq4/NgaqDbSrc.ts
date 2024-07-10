@@ -514,7 +514,7 @@ export class NgaqDbSrc{
 	
 	
 	
-	async Init(){
+	async MkSchema(){
 		const z = this
 		const sqls = z.initSql.getAllMkTblSql()
 		await z.db.BeginTrans()

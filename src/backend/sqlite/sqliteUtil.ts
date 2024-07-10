@@ -59,6 +59,12 @@ class Snippet{
 	colType = new ColType()
 	IF_NOT_EXISTS = 'IF NOT EXISTS'
 	integerPrimaryKey = 'INTEGER PRIMARY KEY'
+	notNull = 'NOT NULL'
+	foreignKey(key:str, refTbl:str, refCol:str){
+		const ans = 
+`FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol})`
+		return ans
+	}
 }
 
 export const snippet = new Snippet()
