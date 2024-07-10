@@ -1,7 +1,9 @@
 import { Router } from "express-serve-static-core"
 import { NgaqDbSvc } from "../svc/NgaqDbSvc"
 import { BaseCtrl } from "./BaseCtrl"
-
+import Config from "@backend/Config"
+import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor"
+const configInst = Config.getInstance()
 //import { NgaqDbSrc } from "@backend/ngaq3/NgaqDbSrc"
 
 
@@ -57,7 +59,18 @@ export class NgaqCtrl extends BaseCtrl{
 			}
 		})
 
-		
+		r.get('/weightAlgoJs0', async(req,res)=>{
+			try {
+				WeightCodeProcessor
+				res.status(200).send('')
+			} catch (err) {
+				res.status(500).send('')
+				z.onErr(err)
+			}
+		})
+
+
+
 		return z.router
 	}
 

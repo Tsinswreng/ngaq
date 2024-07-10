@@ -1,6 +1,5 @@
 // @ts-check
 //@import {  } from "module";
-
 ({
 	port: 1919
 	//待添: 隨機圖之路徑, 數據庫ᵗ路徑
@@ -36,5 +35,20 @@
 	,ngaq: {
 		userName: 'ngaq'
 		,password: 'ngaq'
+		,port:6324
+		,wordWeight: {
+			schemas: [
+				{
+					name:'my'
+					,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
+					,lang: 'ts'
+					,params: [
+						1
+						,2
+						,3
+					]
+				}
+			]
+		}
 	}
 })

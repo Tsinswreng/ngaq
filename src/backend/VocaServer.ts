@@ -12,7 +12,7 @@ import { IVocaRow } from "@shared/SingleWord2";
 import { $, absPath, compileTs_deprecated, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
-import Config from "@shared/Config";
+import Config from "@backend/Config";
 import Sqlite from "@backend/db/Sqlite";
 import json5 from 'json5'
 import * as fs from 'fs'

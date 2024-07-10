@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register'
 import { NgaqSvc as NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
-import Config from '@shared/Config';
+import Config from '@backend/Config';
 import { WordTable } from "@backend/db/sqlite/Word/Table";
 //import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
 import EventEmitter3 from 'eventemitter3';

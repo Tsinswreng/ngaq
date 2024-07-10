@@ -77,7 +77,6 @@ export class WebNgaqSvc extends NgaqSvc{
 		const z = this
 		const jsonRows = await z.client.getWordsFromAllTables()
 		const rows:JoinedRow[] = JSON.parse(jsonRows)
-		
 		const jwords = rows.map(e=>JoinedWord.new(e))
 		const words = jwords.map(e=>JoinedWord.toOldWord(e))
 		const memorizeWords = words.map(e=>WebSvcWord.new(e))

@@ -2,7 +2,7 @@ import 'tsconfig-paths/register'
 import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
 import {WordDbSrc} from './db/sqlite/Word/DbSrc';
 import { Word } from '@shared/entities/Word/Word';
-import Config from '@shared/Config';
+import Config from '@backend/Config';
 import { WordTable } from './db/sqlite/Word/Table';
 import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'

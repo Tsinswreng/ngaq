@@ -1,5 +1,8 @@
 import { WordDbRow } from "@shared/dbRow/Word"
 import LocalStorage from "@ts/LocalStorage"
+
+const ngaqUrl = '/api/ngaq'
+
 const LS = LocalStorage
 /** Voca3 */
 export class Client{
@@ -43,7 +46,7 @@ export class Client{
 	
 	async getWeightAlgoJs0(){
 		const z = this
-		const url = new URL('/weightAlgoJs0', z.baseUrl)
+		const url = new URL(`${ngaqUrl}/weightAlgoJs0`, z.baseUrl)
 		const got = await fetch(url)
 		const text = await got.text()
 		return text
@@ -52,7 +55,7 @@ export class Client{
 	
 	async getWordsFromAllTables(){
 		const z = this
-		const url = new URL('/api/ngaq/allWords', z.baseUrl)
+		const url = new URL(`${ngaqUrl}/allWords`, z.baseUrl)
 		const got = await fetch(url)
 		const text = await got.text()
 		return text

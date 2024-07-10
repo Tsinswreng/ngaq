@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //import { ref, defineProps, withContext } from 'vue';
-import WordCard from '@views/Voca3/cpnt/WordCard.vue'
+import WordCard from '@views/Ngaq4/cpnt/WordCard.vue'
 import WordInfo from './cpnt/WordInfo.vue';
 import {WebNgaqUi} from './WebNgaqUi';
 import { $ } from '@shared/Ut';
@@ -57,7 +57,6 @@ const Pro = Promise
 <Suspense>
 
 <div class="MultiMode" v-if="loaded"> 
-
 <!-- <button @click="start()">開始</button> -->
 <!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
 

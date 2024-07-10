@@ -1,8 +1,8 @@
 import { RMB_FGT } from "@shared/entities/Word/SvcWord"
 import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc"
 import { WordEvent } from "@shared/SingleWord2"
-import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"
-import { WebNgaqSvc } from "@ts/voca3/WebNgaqSvc"
+import { WebSvcWord } from "@ts/ngaq4/entities/WebSvcWord"
+import { WebNgaqSvc } from "@ts/ngaq4/WebNgaqSvc"
 import { ref, Ref } from "vue"
 import lodash from 'lodash'
 import { $, delay, mergeErrStack } from "@shared/Ut"
@@ -197,10 +197,10 @@ export class WebNgaqUi{
 			if(err instanceof Exception){
 
 				if(err.reason === z.svc.errReasons.load_err){
-					// 在if塊外、err.reason是Reason<any[]>類型、errReasons.load_err是Reason<[string]>類型
-					// 運行時、已知若err.reason === z.svc.errReasons.load_err爲真、則兩者的泛型類型也必然相同
-					// 但是在if塊內、typescript仍把 err.reason推斷爲Reason<any[]>類型、而不是期望的Reason<[string]>類型類型
-					// 能否讓typescript 自動在此if塊中推斷出err.reason的具體類型? 需要自動推斷、而不是手動類型斷言
+// 在if塊外、err.reason是Reason<any[]>類型、errReasons.load_err是Reason<[string]>類型
+// 運行時、已知若err.reason === z.svc.errReasons.load_err爲真、則兩者的泛型類型也必然相同
+// 但是在if塊內、typescript仍把 err.reason推斷爲Reason<any[]>類型、而不是期望的Reason<[string]>類型類型
+// 能否讓typescript 自動在此if塊中推斷出err.reason的具體類型? 需要自動推斷、而不是手動類型斷言
 					console.error(err)
 					console.error(err.reason.args)
 					return

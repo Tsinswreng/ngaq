@@ -1,10 +1,41 @@
 import Tempus from '@shared/Tempus'
 import express from 'express'
 import bodyParser from "body-parser";
-
 import { SqliteDb } from '../sqlite/Sqlite';
 import { NgaqDbSrc } from '../ngaq3/NgaqDbSrc';
 import { NgaqCtrl } from './ctrl/NgaqCtrl';
+import * as dotenv from 'dotenv'
+import * as fs from 'fs'
+import Config from '@backend/Config';
+dotenv.config()
+Config.readOuterConfig(process.env['CONFIG_PATH'] as str)
+const configJsStr = fs.readFileSync(
+	process.env['CONFIG_PATH'] as str
+	, {encoding:'utf-8'}
+)
+const configInst = Config.getInstance()
+
+
+// const fnBody = `return ${configJsStr}`
+// const config_ = new Function(fnBody)
+// console.log(fnBody)
+// console.log(config_)
+// console.log(config_())
+// interface ProcessEnv{
+// 	CONFIG_PATH:str
+// }
+
+// declare namespace NodeJS {
+// 	interface ProcessEnv {
+// 		PORT: string;
+// 		DATABASE_URL: string;
+// 		// 在这里添加你需要的其他环境变量
+// 		[key: string]: string | undefined;
+// 	}
+// }
+
+
+
 class Opt{
 	_port:int = 6324
 	

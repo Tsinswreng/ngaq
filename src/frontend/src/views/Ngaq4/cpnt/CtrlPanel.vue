@@ -3,7 +3,6 @@
 //import {ref} from 'vue'
 import Log from '@shared/Log';
 import {WebNgaqUi} from '../WebNgaqUi';
-import Recite from '@ts/voca/Recite';
 import {ref, onBeforeMount} from 'vue'
 import LS from '@ts/LocalStorage';
 

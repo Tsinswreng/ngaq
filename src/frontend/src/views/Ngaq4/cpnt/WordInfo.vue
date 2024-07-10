@@ -4,7 +4,7 @@ import { $ } from '@shared/Ut';
 import {SvcWord} from '@shared/entities/Word/SvcWord'
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
-import { WebSvcWord } from '@ts/voca3/entities/WebSvcWord';
+import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
 import Tempus from '@shared/Tempus';
 const loaded = ref(false)
 let ui:WebNgaqUi

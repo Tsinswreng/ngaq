@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {WebSvcWord} from '@ts/voca3/entities/WebSvcWord'
+import {WebSvcWord} from '@ts/ngaq4/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
 import { WordEvent } from '@shared/entities/Word/Word';
