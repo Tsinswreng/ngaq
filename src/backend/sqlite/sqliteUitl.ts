@@ -49,6 +49,19 @@ export interface CreateIndexOpt extends I_optCheckExist{
 }
 export const IF_NOT_EXISTS = 'IF NOT EXISTS'
 
+class ColType{
+	int = 'INT'
+	integer = 'INTEGER'
+	text = 'TEXT'
+}
+
+class Snippet{
+	colType = new ColType()
+	IF_NOT_EXISTS = 'IF NOT EXISTS'
+	integerPrimaryKey = 'INTEGER PRIMARY KEY'
+}
+
+export const snippet = new Snippet()
 class CreateSql{
 	
 	/**

@@ -1,4 +1,5 @@
 import type { PubNonFuncKeys } from '@shared/Type'
+import type { RunResult } from 'sqlite3'
 
 import * as SqliteUitl from '@backend/sqlite/sqliteUitl'
 import { $ } from '@shared/Ut'
@@ -8,7 +9,7 @@ import { JoinedRow } from '@shared/dbRow/JoinedRow'
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Row from '@shared/dbRow/NgaqRows'
 import * as Mod from '@shared/model/NgaqModels'
-import { RunResult } from 'sqlite3'
+
 
 const ObjSql = SqliteUitl.Sql.obj
 
@@ -48,14 +49,6 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	get emptyRow(){
 		return this.factory.emptyRow
 	}
-	//protected set col(v){this._col = v}
-
-
-
-	// protected _objSql:ReturnType<typeof SqliteUitl.Sql.obj.new>
-	// get objSql(){return this._objSql}
-	// protected set objSql(v){this._objSql = v}
-
 }
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
