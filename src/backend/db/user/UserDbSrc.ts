@@ -150,6 +150,42 @@ export class UserDbSrc{
 		return ans
 	}
 
+	async Fn_add_password(){
+		const z = this
+		const tbl = z.tbls.password
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await z.db.Prepare(sql)
+		const ans = async(inst:Mod.Password)=>{
+			const row = inst.toRow()
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+	// async Fn_add<InstT extends Mod.BaseInst<any>>(tbl:Tbl<typeof Mod.IdBlCtMt>){
+	// 	const z = this
+	// 	//const tbl = z.tbls.password
+	// 	const row = tbl.factory.emptyRow
+	// 	const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
+	// 	const sql = objsql.geneFullInsertSql(tbl.name)
+	// 	const stmt = await z.db.Prepare(sql)
+	// 	const ans = async(inst:Mod.Password)=>{
+	// 		const row = inst.toRow()
+	// 		const params = objsql.getParams(row)
+	// 		const runRes = await stmt.Run(params)
+	// 		const ans = QryAns.fromRunResult(runRes)
+	// 		return ans
+	// 	}
+	// 	return ans
+	// }
+
+
+
 
 	async Fn_add_session(){
 		const z = this

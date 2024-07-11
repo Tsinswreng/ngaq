@@ -10,4 +10,4 @@ declare type num = number
 declare type str = string
 declare type bool = boolean
 declare type undef = undefined
-declare type Task = Promise
+declare type Task<T> = Promise<T>

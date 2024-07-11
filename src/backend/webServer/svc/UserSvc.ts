@@ -10,21 +10,26 @@ import Config from "@backend/Config"
 import Tempus from "@shared/Tempus"
 const configInst = Config.getInstance()
 
-
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
 import { mkEmitter } from "@shared/infra/EventEmitter"
+import { $ } from "@shared/Ut"
 
 const EV = Le.Event.new.bind(Le.Event)
 const RN = Reason.new.bind(Reason)
 
 class Events extends Le.Events{
-	/** [user id] */
+	/** [userId] */
 	login = EV<[int|str]>('loginById')
+	/** [userId] */
+	signUp = EV<[int|str]>('signUp')
 }
 
 class ErrReason{
-	
+	no_such_user = RN('no_such_user')
+	pswd_not_match = RN('pswd_not_match')
+	/** [已有ʹ userId:int] */
+	user_already_existed = RN<[int]>('user_already_existed')
 }
 
 
@@ -48,6 +53,11 @@ export class UserSvc{
 	get dbSrc(){return this._dbSrc}
 	protected set dbSrc(v){this._dbSrc = v}
 
+	protected _errReasons = new ErrReason()
+	get errReasons(){return this._errReasons}
+	protected set errReasons(v){this._errReasons = v}
+	
+
 	protected _emitter = mkEmitter()
 	get emitter(){return this._emitter}
 	protected set emitter(v){this._emitter = v}
@@ -65,16 +75,20 @@ export class UserSvc{
 		z.emitter.emit(ev, ...args)
 	}
 
+	/**
+	 * 
+	 * @param id 
+	 * @param password 
+	 * @returns session實例
+	 */
 	async LoginById(id:str|int, password:str){
 		const z = this
 		const Seek = await z.dbSrc.Fn_seekPasswordByUserId()
 		const got = await Seek(id)
 		const gotPswd = got?.data[0]
-		const err = new Error()//todo
 		if(gotPswd == null){
-			throw err
+			throw Exception.for(z.errReasons.no_such_user)
 		}
-		//gotPswd //有hash,salt屬性。 hash和salt在數據庫中是分兩列存的。
 		// 自動處理鹽
 		const b = await argon2.verify(
 			gotPswd.text,
@@ -82,7 +96,7 @@ export class UserSvc{
 			//salt(password, gotPswd.salt)
 		)
 		if(!b){
-			throw err
+			throw Exception.for(z.errReasons.pswd_not_match)
 		}
 		const token = jwt.sign(
 			gotPswd.fid+''
@@ -106,20 +120,63 @@ export class UserSvc{
 		return session
 	}
 	
-
+	/**
+	 * 
+	 * @param uniqueName 
+	 * @param password 
+	 * @returns session實例
+	 */
 	async LoginByName(uniqueName:str, password:str){
 		const z = this
 		const Seek = await z.dbSrc.Fn_seekIdByUniqueName()
 		const got = await Seek(uniqueName)
 		const id = got.data[0]?._
 		if(id == void 0){
-			throw new Error()
+			throw Exception.for(z.errReasons.no_such_user)
 		}
 		const ans = z.LoginById(id, password)
 		return ans
 	}
 
+	/**
+	 * 
+	 * @param uniqueName 
+	 * @param password 
+	 * @returns 新用戶id
+	 */
+	async SignUp(uniqueName:str, password:str):Task<int>{
+		const z = this
+		const Seek = await z.dbSrc.Fn_seekIdByUniqueName()
+		const got = await Seek(uniqueName)
+		const oldId = got.data[0]?._
+		if(oldId != void 0){
+			throw Exception.for(z.errReasons.user_already_existed, oldId)
+		}
+		const nunc = Tempus.new()
+		const userInst = Mod.User.new({
+			id:NaN
+			,belong:""
+			,ct: nunc
+			,mt: nunc
+			,uniqueName:uniqueName
+		})
+		const AddUser = await z.dbSrc.Fn_add_user()
+		const addAns = await AddUser(userInst)
+		const neoId = $(addAns.lastId, `addAns.lastId is nil`)
+		const hash = await argon2.hash(password)
+		const passwordInst = Mod.Password.new({
+			id:NaN
+			,belong: Row.PasswordBelong.argon2
+			,ct: nunc
+			,mt: nunc
+			,fid: neoId
+			,text: hash
+			,salt: '' //已包含在hash中、懶得提取
+		})
+		const AddPswd = await z.dbSrc.Fn_add_password()
+		await AddPswd(passwordInst)
+		z.emit(e=>e.signUp, neoId)
+		return neoId
+	}
 
-
-	
 }

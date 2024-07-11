@@ -93,8 +93,12 @@ class IdBlCtMtFact<
 	}
 }
 
+export const IdBlCtMt = IdBlCtMtFact.new() as IdBlCtMtFact<any, any>
+export type IdBlCtMt<A extends Row.IdCtMtBl> = IdBlCtMtInst<A>
+
 
 class UserInst extends IdBlCtMtInst<Row.User>{
+	uniqueName:str
 	override get Row(){return Row.User}
 }
 class UserFact extends IdBlCtMtFact<UserInst, Row.User>{
