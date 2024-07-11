@@ -6,6 +6,7 @@ import { $ } from '@shared/Ut'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 
 import * as Mod from '@shared/model/user/UserModel'
+import * as Row from '@shared/dbRow/user/UserRows'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
@@ -81,8 +82,15 @@ export class UserDbSrc{
 	get db(){return this._db}
 	protected set db(v){this._db = v}
 
-	async Fn_seekUserBy(){
+	async Fn_seekPasswordByUserId(){
 		const z = this
+		const tbl = z.tbls.password
+		const sql = `SELECT * FROM ${tbl.name} WHERE ${tbl.col.fid}=?`
+		const stmt = await z.db.Prepare(sql)
+		return async(userId:int|str)=>{
+			const ans = await stmt.All<Row.Password>([userId])
+			return ans
+		}
 	}
 
 }

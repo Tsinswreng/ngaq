@@ -1,4 +1,4 @@
-import { KeyMirror } from "@shared/Type";
+import { KeyMirror } from "@shared/TypeOld";
 import { As } from "@shared/Ut";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/dbRow/user/UserRows"

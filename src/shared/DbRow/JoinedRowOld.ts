@@ -1,5 +1,5 @@
 import { LearnRow, PropertyRow, WordRow } from "@shared/dbRow/wordDbRowsOld"
-import { PubNonFuncProp } from "@shared/Type"
+import { PubNonFuncProp } from "@shared/TypeOld"
 
 
 export class JoinedRow{

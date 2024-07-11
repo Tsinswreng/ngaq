@@ -1,4 +1,4 @@
-import { KeyMirror } from "./Type"
+import { KeyMirror } from "./TypeOld"
 import {$} from "./Ut"
 
 /**
