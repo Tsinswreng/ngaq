@@ -1,3 +1,4 @@
+import type sqlite3 from "sqlite3"
 import type { SqliteDb } from "./Sqlite"
 import * as DbQry from '@shared/interfaces/DbQryResult'
 
@@ -17,6 +18,25 @@ DbQry.I_data<T>
 		const z = new this<T>()
 		z.__init__(data)
 		return z
+	}
+
+	static fromPair<T>(pair:[sqlite3.RunResult, T[]]){
+		// const ans = SqliteQryResult.new(pair[1])
+		// ans.lastId = pair[0]?.lastID
+		// ans.affectedRows = pair[0]?.changes
+		// return ans
+		const data = pair[1]
+		const runResult = pair[0]
+		const ans = this.fromRunResult<T[]>(runResult)
+		ans.data = data
+		return ans
+	}
+
+	static fromRunResult<T=undef>(runResult:sqlite3.RunResult){
+		const ans = SqliteQryResult.new<T>(void 0 as T)
+		ans.lastId = runResult.lastID
+		ans.affectedRows = runResult.changes
+		return ans
 	}
 
 	//get This(){return SqliteQryResult}
@@ -91,6 +111,7 @@ class Snippet{
 	IF_NOT_EXISTS = 'IF NOT EXISTS'
 	integerPrimaryKey = 'INTEGER PRIMARY KEY'
 	notNull = 'NOT NULL'
+	unique = 'UNIQUE'
 	foreignKey(key:str, refTbl:str, refCol:str){
 		const ans = 
 `FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol})`

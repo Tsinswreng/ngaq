@@ -42,6 +42,7 @@ class ServerConfig extends BaseConfig{
 }
 
 class Ngaq extends BaseConfig{
+	jwtKey = "TsinswrengGw'ang"
 	userName = 'ngaq'
 	password = 'ngaq'
 	port = 6324

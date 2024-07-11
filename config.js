@@ -32,9 +32,11 @@
 		]
 	}
 
+	// 單機
 	,ngaq: {
-		userName: 'ngaq'
-		,password: 'ngaq'
+		// userName: 'ngaq'
+		// ,password: 'ngaq'
+		jwtKey: "TsinswrengGw'ang"
 		,port:6324
 		,wordWeight: {
 			schemas: [

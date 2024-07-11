@@ -10,6 +10,17 @@ import * as Row from '@shared/dbRow/user/UserRows'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
+const QryAns = SqliteUtil.SqliteQryResult
+type QryAns<T> = SqliteUtil.SqliteQryResult<T>
+
+/**
+ * 用""引起來
+ * @param text 
+ * @returns 
+ */
+const qt = (text:str)=>{
+	return `"${text}"`
+}
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -89,10 +100,75 @@ export class UserDbSrc{
 		const stmt = await z.db.Prepare(sql)
 		return async(userId:int|str)=>{
 			const ans = await stmt.All<Row.Password>([userId])
-			return ans
+			return QryAns.fromPair(ans)
 		}
 	}
 
+	async Fn_seekIdByUniqueName(colAlias='_'){
+		const z = this
+		const tbl = z.tbls.user
+		const sql = 
+`SELECT ${tbl.col.id} AS ${qt(colAlias)} FROM ${tbl.name} WHERE ${tbl.col.uniqueName}=?`
+		const stmt = await z.db.Prepare(sql)
+		return async(uniqueName:str)=>{
+			const ans = await stmt.All<{_:int}>([uniqueName])
+			return QryAns.fromPair(ans)
+		}
+	}
+
+	async Fn_seekPasswordByUniqueName(){
+		const z = this
+		const SeekIdByUniqueName = await z.Fn_seekIdByUniqueName()
+		const SeekPasswordByUserId = await z.Fn_seekPasswordByUserId()
+		const ans = async(uniqueName:str)=>{
+			const qry = await SeekIdByUniqueName(uniqueName)
+			const id = qry.data[0]?._
+			if(id == void 0){
+				return null
+			}
+			const pswd = await SeekPasswordByUserId(id)
+			return pswd
+		}
+		return ans
+	}
+
+
+	async Fn_add_user(){
+		const z = this
+		const tbl = z.tbls.user
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await z.db.Prepare(sql)
+		const ans = async(inst:Mod.User)=>{
+			const row = inst.toRow()
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+
+	async Fn_add_session(){
+		const z = this
+		const tbl = z.tbls.session
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await z.db.Prepare(sql)
+		const ans = async(inst:Mod.Session)=>{
+			const row = inst.toRow()
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+	
 }
 
 

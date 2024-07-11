@@ -54,7 +54,7 @@ class InitSql{
 	,${c.belong} ${ty.text}
 	,${c.ct} ${ty.int}
 	,${c.mt} ${ty.int}
-	,${c.uniqueName} ${ty.text}
+	,${c.uniqueName} ${ty.text} ${sn.unique}
 )`
 		return ans
 	}
@@ -73,7 +73,7 @@ class InitSql{
 	,${c.ct} ${ty.int} ${sn.notNull}
 	,${c.mt} ${ty.int} ${sn.notNull}
 	,${c.salt} ${ty.text} ${sn.notNull}
-	,${c.hash} ${ty.text} ${sn.notNull}
+	,${c.text} ${ty.text} ${sn.notNull}
 	${sn.foreignKey(c.fid, tbl.name, z.tbls.user.name)}
 )`
 		return ans
@@ -99,5 +99,5 @@ class InitSql{
 		return ans
 	}
 
-	
+
 }

@@ -1,4 +1,4 @@
-import { KeyMirror } from "@shared/Type";
+import { KeyMirror, PubNonFuncKeys } from "@shared/Type";
 import { As } from "@shared/Ut";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/dbRow/NgaqRows"
@@ -49,7 +49,7 @@ export class BaseFactory<
 		z.__init__()
 		return z
 	}
-	new(prop:InstT):InstT{
+	new(prop:PubNonFuncKeys<InstT>):InstT{
 		const z = this
 		const ans = new z.Inst()
 		assign(ans, prop)

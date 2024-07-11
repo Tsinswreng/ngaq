@@ -24,7 +24,7 @@ export class Password extends IdCtMtBl{
 	/** userId */
 	fid:int
 	salt:str
-	hash:str
+	text:str
 }
 
 export class Profile extends IdCtMtBl{

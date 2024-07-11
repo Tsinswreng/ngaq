@@ -35,6 +35,10 @@ export interface I_perBatch{
 	perBatch:num
 }
 
+export interface I_WrapFn<Arg extends any[], Ret>{
+	fn(...args:Arg):Ret
+}
+
 
 /* 
 除函數外、取對象ʹ䀬ʹ鍵ʹ聯合類型

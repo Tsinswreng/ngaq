@@ -1,4 +1,4 @@
-import { KeyMirror } from "@shared/TypeOld";
+import { KeyMirror, PubNonFuncProp } from "@shared/Type";
 import { As } from "@shared/Ut";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/dbRow/user/UserRows"
@@ -49,7 +49,7 @@ export class BaseFactory<
 		z.__init__()
 		return z
 	}
-	new(prop:InstT):InstT{
+	new(prop:PubNonFuncProp<InstT>):InstT{
 		const z = this
 		const ans = new z.Inst()
 		assign(ans, prop)
@@ -96,7 +96,6 @@ class IdBlCtMtFact<
 
 class UserInst extends IdBlCtMtInst<Row.User>{
 	override get Row(){return Row.User}
-	text:str
 }
 class UserFact extends IdBlCtMtFact<UserInst, Row.User>{
 	Row = Row.User
@@ -112,7 +111,7 @@ class PasswordInst extends IdBlCtMtInst<Row.Password>{
 	declare belong: Row.PasswordBelong;
 	fid:int
 	salt:str
-	hash:str
+	text:str
 }
 class PasswordFact extends IdBlCtMtFact<PasswordInst, Row.Password>{
 	Row = Row.Password

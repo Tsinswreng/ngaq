@@ -1,4 +1,4 @@
-import { KeyMirror } from "./TypeOld"
+import { KeyMirror } from "./Type"
 import {$} from "./Ut"
 
 /**
@@ -582,4 +582,8 @@ export function keyMirror<T extends kvobj>(obj:T){
 		ans[k] = k
 	}
 	return ans as KeyMirror<T>
+}
+
+export function salt(text:str, salt:str){
+	return text+':'+salt
 }

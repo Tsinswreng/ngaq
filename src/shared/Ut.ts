@@ -267,6 +267,7 @@ export function addFn(obj:Object, name:string, Fn:Function){
 
 /**
  * 網絡錯誤類
+ * @deprecated
  */
 export class NetworkError extends Error{
 	private constructor(message?: string | undefined){
@@ -473,6 +474,7 @@ export function blobToBase64_fr(blob:Blob):Promise<string | ArrayBuffer | null>{
  * 新建一級目錄
  * @param dir 
  * @param ifNotExists 默認潙假、即目录既存旹報錯
+ * @deprecated
  */
 export function mkdir(dir:string, ifNotExists=false){
 	const absolutePath = Path.resolve(dir);
@@ -493,6 +495,7 @@ export function mkdir(dir:string, ifNotExists=false){
  * @param filePath 
  * @param ifNotExists 默認潙假、即文件既存旹報錯
  * @returns 
+ * @deprecated
  */
 export function creatFileSync(filePath:string, ifNotExists=false){
 	const absolutePath = Path.resolve(filePath);
