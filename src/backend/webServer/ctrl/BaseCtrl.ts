@@ -37,6 +37,10 @@ export class BaseCtrl{
 	get router(){return this._router}
 	protected set router(v){this._router = v}
 
+	onErr(v){
+		console.error(v)
+	}
+
 
 	//this.emitter.emit(z.events.httpErr, 11, 'str')
 	//簡化爲this.emit(e=>e.httpErr, 11, 'str')

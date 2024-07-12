@@ -18,7 +18,7 @@ interface I_ItemNewOpt<T>{
 	decode?(str:str):T
 }
 
-export class Item<T=str>{
+export class Item<T=any>{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof Item.new>){
 		const z = this
@@ -31,7 +31,9 @@ export class Item<T=str>{
 		return z
 	}
 
-	static new<T=str>(key:str, opt?:I_ItemNewOpt<T>){
+	static new<T>(key:str, opt?:I_ItemNewOpt<T>):Item<T>
+	static new<T>(...args:any[]):Item<T>
+	static new<T>(key:str, opt?:I_ItemNewOpt<T>){
 		const z = new this<T>()
 		z.__init__(key, opt)
 		return z
@@ -81,7 +83,27 @@ export class Item<T=str>{
 }
 
 
+/* 
+类静态侧“typeof NumItem”错误扩展基类静态侧“typeof Item”。
+  属性“new”的类型不兼容。
+    不能将类型“(key: string, opt?: I_ItemNewOpt<number> | undefined) => NumItem”分配给类型“<T>(key: string, opt?: I_ItemNewOpt<T> | undefined) => Item<T>”。
+      参数“opt”和“opt” 的类型不兼容。
+        不能将类型“I_ItemNewOpt<T> | undefined”分配给类型“I_ItemNewOpt<number> | undefined”。
+          不能将类型“I_ItemNewOpt<T>”分配给类型“I_ItemNewOpt<number>”。
+            不能将类型“T”分配给类型“number”。ts(2417)
+Item.ts(34, 13): 此类型参数可能需要 `extends number` 约束。
+*/
 export class NumItem extends Item<number>{
+
+	protected constructor(){super()}
+
+	static override new(key:str, opt?:I_ItemNewOpt<num>):NumItem
+	static new(key:str, opt?:I_ItemNewOpt<num>){
+		const z = new this()
+		z.__init__(key, opt)
+		return z
+	}
+
 	override encode(val: number): str {
 		return val+''
 	}
@@ -92,6 +114,14 @@ export class NumItem extends Item<number>{
 }
 
 export class JsonItem<T> extends Item<T>{
+
+	static override new<T>(key:str, opt?:I_ItemNewOpt<num>):JsonItem<T>
+	static new(key:str, opt?:I_ItemNewOpt<num>){
+		const z = new this()
+		z.__init__(key, opt)
+		return z
+	}
+
 	override encode(val: T): str {
 		return JSON.stringify(val)
 	}

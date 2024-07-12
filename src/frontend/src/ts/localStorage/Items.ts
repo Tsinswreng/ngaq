@@ -24,4 +24,4 @@ class Items{
 	session = J<Row.Session>('session')
 }
 
-export const items = new Items()
+export const lsItems = new Items()

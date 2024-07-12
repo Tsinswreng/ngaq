@@ -2,6 +2,7 @@
 import VocaClient, { LsItemNames } from '@ts/voca/VocaClient';
 import Manage from './Manage'
 import {ref} from 'vue'
+import { lsItems } from '@ts/localStorage/Items';
 const manage = Manage.getInstance()
 
 const tip = 
@@ -42,17 +43,6 @@ function lsGet(key:string){
 		<div>
 			<button @click="manage.set_PriorityClass()">設權重算法</button>
 			<textarea cols="30" rows="10" :id="Manage.id_wordPriorityAlgorithm" :value="lsGet(LsItemNames.priorityAlgorithmTs)??''"></textarea>
-		</div>
-		<div>
-			<button>設配置</button>
-			<textarea name="" id="" cols="30" rows="10"></textarea>
-		</div>
-		<div>
-			<button @click="manage.testStream()">test</button>
-
-		</div>
-		<div class="tip">
-			{{ tipRef }}
 		</div>
 	</div>
 </template>
