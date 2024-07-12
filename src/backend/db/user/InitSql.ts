@@ -9,7 +9,7 @@ import * as Mod from '@shared/model/user/UserModel'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
-class InitSql{
+export class InitSql{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof InitSql.new>){
 		const z = this
@@ -30,7 +30,22 @@ class InitSql{
 
 	async MkSchema(db:SqliteDb){
 		const z = this
-		
+		await db.BeginTrans()
+		const sqls = z.getAllSql()
+		const ans = [] as RunResult[]
+		for(const sql of sqls){
+			const ua = await db.Run(sql)
+			ans.push(ua)
+		}
+		await db.Commit()
+		return ans
+	}
+
+	getAllSql():str[]{
+		const z = this
+		return [
+			...z.mkAllTbl()
+		]
 	}
 
 
@@ -39,6 +54,7 @@ class InitSql{
 		return [
 			z.mkTbl_user()
 			,z.mkTbl_password()
+			,z.mkTbl_session()
 		]
 	}
 
@@ -74,7 +90,7 @@ class InitSql{
 	,${c.mt} ${ty.int} ${sn.notNull}
 	,${c.salt} ${ty.text} ${sn.notNull}
 	,${c.text} ${ty.text} ${sn.notNull}
-	${sn.foreignKey(c.fid, tbl.name, z.tbls.user.name)}
+	,${sn.foreignKey(c.fid, z.tbls.user.name, z.tbls.user.col.id)}
 )`
 		return ans
 	}
@@ -94,7 +110,7 @@ class InitSql{
 	,${c.mt} ${ty.int} ${sn.notNull}
 	,${c.expirationTime} ${ty.int} ${sn.notNull}
 	,${c.token} ${ty.text} ${sn.notNull}
-	${sn.foreignKey(c.userId, tbl.name, z.tbls.user.name)}
+	,${sn.foreignKey(c.userId, z.tbls.user.name, z.tbls.user.col.id)}
 )`
 		return ans
 	}

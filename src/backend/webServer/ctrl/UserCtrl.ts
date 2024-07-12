@@ -8,7 +8,7 @@ import { UserSvc } from "../svc/UserSvc"
 
 const configInst = Config.getInstance()
 
-class UserCtrl extends BaseCtrl{
+export class UserCtrl extends BaseCtrl{
 	protected constructor(){super()}
 	//@ts-ignore
 	protected __init__(...args: Parameters<typeof UserCtrl.new>){
@@ -22,6 +22,8 @@ class UserCtrl extends BaseCtrl{
 		z.__init__(svc)
 		return z
 	}
+
+	
 
 	//get This(){return UserCtrl}
 

@@ -52,5 +52,8 @@
 				}
 			]
 		}
+		,server:{
+			dbPath: "./db/server.sqlite"
+		}
 	}
 })

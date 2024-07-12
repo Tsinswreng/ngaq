@@ -4,5 +4,6 @@ export interface I_login{
 }
 
 export interface I_signUp{
-
+	uniqueName:str
+	password:str
 }

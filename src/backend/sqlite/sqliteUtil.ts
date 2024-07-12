@@ -32,6 +32,7 @@ DbQry.I_data<T>
 		return ans
 	}
 
+	
 	static fromRunResult<T=undef>(runResult:sqlite3.RunResult){
 		const ans = SqliteQryResult.new<T>(void 0 as T)
 		ans.lastId = runResult.lastID

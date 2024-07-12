@@ -47,6 +47,8 @@ export class UserSvc{
 		return z
 	}
 
+	static inst = UserSvc.new()
+
 	//get This(){return UserSvc}
 
 	protected _dbSrc:UserDbSrc

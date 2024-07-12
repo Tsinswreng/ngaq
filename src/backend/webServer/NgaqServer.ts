@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import { SqliteDb } from '../sqlite/Sqlite';
 import { NgaqDbSrc } from '../ngaq4/NgaqDbSrc';
 import { NgaqCtrl } from './ctrl/NgaqCtrl';
+import { UserCtrl } from './ctrl/UserCtrl';
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import Config from '@backend/Config';
@@ -80,6 +81,12 @@ class Server{
 			res.header("Access-Control-Allow-Origin", "*");
 			res.header("Access-Control-Allow-Methods", "*");
 			res.header("Access-Control-Allow-Headers", "*");
+			// 处理预检请求
+			if (req.method === 'OPTIONS') {
+				res.sendStatus(200); // 直接返回 HTTP 200 状态
+			} else {
+				next();
+			}
 			next()
 		})
 		z.app.use(express.static('./out/frontend/dist'));
@@ -96,8 +103,9 @@ class Server{
 		// 	const rows = await mod.dbSrc.GetAllJoinedRow()
 		// 	res.json(rows)
 		// })
-
+		
 		z.app.use('/api/ngaq', NgaqCtrl.inst.router)
+		z.app.use('/api/ngaq', UserCtrl.inst.router)
 
 		// 在末
 		z.app.get('*', (req, res)=>{

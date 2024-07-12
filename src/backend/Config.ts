@@ -36,9 +36,14 @@ class WordWeightConfig extends BaseConfig{
 	schemas:WordWeightSchema[] = []
 }
 
-class ServerConfig extends BaseConfig{
+class OldServerConfig extends BaseConfig{
 	dbPath= './db/server.db'
 	userTableName: 'user'
+}
+
+class ServerConfig extends BaseConfig{
+	dbPath = "./db/server.sqlite"
+	port = 6324
 }
 
 class Ngaq extends BaseConfig{
@@ -49,6 +54,7 @@ class Ngaq extends BaseConfig{
 	ngaqDbPath = './ngaq.sqlite'
 	//weightAlgoPath = './src/shared/WordWeight/Schemas/MyWeight.ts' 
 	wordWeight = new WordWeightConfig()
+	server = new ServerConfig()
 }
 
 class DefaultConfig extends BaseConfig{
@@ -58,7 +64,7 @@ class DefaultConfig extends BaseConfig{
 	randomImgDir= [] as string[]
 	backupDbPath= `./db/vocaBackup.db`
 	tables=[] as string[]
-	server= new ServerConfig()
+	server= new OldServerConfig()
 	wordWeight = new WordWeightConfig()
 	ngaq = new Ngaq()
 }

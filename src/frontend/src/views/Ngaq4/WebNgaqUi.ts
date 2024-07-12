@@ -191,6 +191,15 @@ export class WebNgaqUi{
 		}
 	}
 
+	/**
+	 * test
+	 */
+	SignUp(opt){
+		const z = this
+		const client = Client.new()
+		client.SignUp(opt)
+	}
+
 	handleErr(err:any){
 		const z = this
 		if(err instanceof Error){
@@ -543,4 +552,5 @@ class BgImg{
 import * as frut from '@ts/frut'
 import { TagImg } from "@shared/TagImg"
 import { cosDependencies } from "mathjs"
+import { Client } from "@ts/ngaq4/Client"
 

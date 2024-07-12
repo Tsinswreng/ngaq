@@ -1,5 +1,5 @@
 import { WordDbRow } from "@shared/dbRow/Word"
-import { I_login } from "@shared/model/web/auth"
+import { I_login, I_signUp } from "@shared/model/web/auth"
 import LocalStorage from "@ts/LocalStorage"
 
 import * as Mod from '@shared/model/user/UserModel'
@@ -34,6 +34,34 @@ export class Client{
 	/**便于在dev模式調試 */
 	set baseUrl(v){this._baseUrl = v}
 
+	async SignUp(opt:{
+		uniqueName:str
+		password:str
+	}){
+		const z = this
+		//const url = new URL(`/signUp`, z.baseUrl+'/'+urlB.user)
+		const url = new URL(`${urlB.user}/signUp`, z.baseUrl)
+		console.log(url.toString())// => http://127.0.0.1:6324/signUp
+		const body:I_signUp = {
+			uniqueName: opt.uniqueName
+			,password: opt.password
+		}
+		const requestOptions: RequestInit = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json', // 设置请求头为 JSON 格式
+			},
+			body: JSON.stringify(body), // 将数据对象转换为 JSON 字符串
+		};
+		const got = await fetch(url, requestOptions)
+		console.log(got)//t
+		if(!got.ok){
+			//todo
+			return
+		}
+		
+	}
+
 
 	async LoginByUniqueName(uniqueName:str, password:str){
 		const z = this
@@ -57,8 +85,10 @@ export class Client{
 		const json = await got.text()
 		const sessionRow = JSON.parse(json) as Row.Session
 		const session = Mod.Session.fromRow(sessionRow)
+		lsItems.session.set(sessionRow)
 		lsItems.userId.set(session.userId)
-		
+		lsItems.token.set(session.token) //todo 網絡請求與理則分離
+		return session
 	}
 
 
