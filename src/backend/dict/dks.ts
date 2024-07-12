@@ -10,7 +10,7 @@ import { DictDb, DictRaw, Dict, MinimalPairUtil,ChieneseSyllable } from "./Dict"
 
 import { partial } from 'lodash';
 import { RegexReplacePair, printArr, regexStrArrToObjs } from '@shared/Ut';
-import { DictDbRow, cn } from '@shared/Type';
+import { DictDbRow, cn } from '@shared/TypeOld';
 import * as fs from 'fs'
 //const rootDir:string = require('app-root-path').path
 import appRootPath from 'app-root-path'

@@ -14,10 +14,10 @@ const rootDir = appRootPath.path
 //import Txt from '../../../shared/Txt';
 import Txt from "@shared/Txt"
 import {RegexReplacePair} from '@shared/Ut';
-import * as Tp from '@shared/Type'
-import {Duplication,DictDbRow,DictRawConfig, cn} from '@shared/Type'
+import * as Tp from '@shared/TypeOld'
+import {Duplication,DictDbRow,DictRawConfig, cn} from '@shared/TypeOld'
 import SqliteTableInfo from "@backend/db/Sqlite"
-import * as DictType from '@shared/Type'
+import * as DictType from '@shared/TypeOld'
 import _, { sum } from 'lodash';
 import moment from 'moment'
 import Sqlite from '@backend/db/Sqlite';
