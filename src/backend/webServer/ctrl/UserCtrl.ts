@@ -17,19 +17,21 @@ export class UserCtrl extends BaseCtrl{
 		return z
 	}
 
-	static new(svc){
+	static new(svc:UserSvc){
 		const z = new this()
 		z.__init__(svc)
 		return z
 	}
 
-	
+	static inst = UserCtrl.new(UserSvc.inst)
 
 	//get This(){return UserCtrl}
 
 	protected _svc:UserSvc
 	get svc(){return this._svc}
 	protected set svc(v){this._svc = v}
+
+
 	
 	
 	protected override initRouter(): Router {

@@ -16,41 +16,12 @@ const configJsStr = fs.readFileSync(
 )
 const configInst = Config.getInstance()
 
-
-// const fnBody = `return ${configJsStr}`
-// const config_ = new Function(fnBody)
-// console.log(fnBody)
-// console.log(config_)
-// console.log(config_())
-// interface ProcessEnv{
-// 	CONFIG_PATH:str
-// }
-
-// declare namespace NodeJS {
-// 	interface ProcessEnv {
-// 		PORT: string;
-// 		DATABASE_URL: string;
-// 		// 在这里添加你需要的其他环境变量
-// 		[key: string]: string | undefined;
-// 	}
-// }
-
-
-
 class Opt{
 	_port:int = 6324
 	
 }
 
-class ModOpt{
-	dbPath = './ngaq.sqlite'
-}
-const modOpt = new ModOpt()
-class Mod{
-	db = SqliteDb.fromPath(modOpt.dbPath)
-	dbSrc = NgaqDbSrc.new(this.db)
-}
-const mod = new Mod()
+
 
 const cwd = process.cwd()
 
@@ -85,36 +56,48 @@ class Server{
 			if (req.method === 'OPTIONS') {
 				res.sendStatus(200); // 直接返回 HTTP 200 状态
 			} else {
-				next();
+				//next();
 			}
 			next()
 		})
-		z.app.use(express.static('./out/frontend/dist'));
 		z.app.use(bodyParser.json({limit:'64MB'}))
+		z.app.use(express.static('./out/frontend/dist')); //會攔截請求
 	}
 
 	initRoutes(){
 		const z = this
+
 		z.app.get('/tempus',(req,res)=>{
 			const tem = Tempus.new()
 			res.send(Tempus.toISO8601(tem))
 		})
+
+
 		// z.app.get('/allJoinedRows', async(req,res)=>{
 		// 	const rows = await mod.dbSrc.GetAllJoinedRow()
 		// 	res.json(rows)
 		// })
 		
+		z.app.use('/api/user', UserCtrl.inst.router)
 		z.app.use('/api/ngaq', NgaqCtrl.inst.router)
-		z.app.use('/api/ngaq', UserCtrl.inst.router)
+
 
 		// 在末
 		z.app.get('*', (req, res)=>{
-			res.setHeader('content-type','text;charset=utf-8')
-			res.sendFile(cwd+'/out/frontend/dist/index.html')
+			console.log(`*`)
+			try {
+				res.setHeader('content-type','text;charset=utf-8')
+				res.sendFile(cwd+'/out/frontend/dist/index.html')
+			} catch (err) {
+				console.error(err)
+				console.error(`*`)
+			}
 		})
-		z.app.use((req,res,next)=>{
-			res.status(404).send('<h1>404 mitukerarenai</h1>')
-		})
+
+
+		// z.app.use((req,res,next)=>{
+		// 	res.status(404).send('<h1>404 mitukerarenai</h1>')
+		// })
 	}
 
 	async start(){
@@ -128,8 +111,14 @@ class Server{
 }
 
 export function main(){
-	const server = Server.new({_port:6324})
-	server.start()
+	try {
+		const server = Server.new({_port:6324})
+		server.start()
+	} catch (err) {
+		console.error(err)
+		console.error(`Uncaught Error`)
+	}
+
 }
 main()
 
