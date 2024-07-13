@@ -151,3 +151,49 @@ class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
 export const Session = SessionFact.new() as SessionFact
 export type Session = SessionInst
 
+
+class ProfileInst extends IdBlCtMtInst<Row.Profile>{
+	/** userId */
+	fid:int
+	nickName:str
+	sex:str
+	birth:int
+	email:str
+	override get Row(){return Row.Profile}
+}
+class ProfileFact extends IdBlCtMtFact<ProfileInst, Row.Profile>{
+	Row = Row.Profile
+	//@ts-ignore
+	Inst = ProfileInst
+}
+export const Profile = ProfileFact.new() as ProfileFact
+export type Profile = ProfileInst
+
+
+
+class NgaqSchemaInst extends IdBlCtMtInst<Row.NgaqSchema>{
+	name:str
+	path:str
+	override get Row(){return Row.NgaqSchema}
+}
+class NgaqSchemaFact extends IdBlCtMtFact<NgaqSchemaInst, Row.NgaqSchema>{
+	Row = Row.NgaqSchema
+	//@ts-ignore
+	Inst = NgaqSchemaInst
+}
+export const NgaqSchema = NgaqSchemaFact.new() as NgaqSchemaFact
+export type NgaqSchema = NgaqSchemaInst
+
+
+class User__NgaqDbInst extends IdBlCtMtInst<Row.User__NgaqDb>{
+	userId:int
+	dbId:int
+	override get Row(){return Row.User__NgaqDb}
+}
+class User__NgaqDbFact extends IdBlCtMtFact<User__NgaqDbInst, Row.User__NgaqDb>{
+	Row = Row.User__NgaqDb
+	//@ts-ignore
+	Inst = User__NgaqDbInst
+}
+export const User__NgaqDb = User__NgaqDbFact.new() as User__NgaqDbFact
+export type User__NgaqDb = User__NgaqDbInst

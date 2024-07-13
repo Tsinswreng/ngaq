@@ -15,6 +15,8 @@ import * as Le from '@shared/linkedEvent'
 import { mkEmitter } from "@shared/infra/EventEmitter"
 import { $ } from "@shared/Ut"
 
+import {env} from '@backend/ENV'
+
 const EV = Le.Event.new.bind(Le.Event)
 const RN = Reason.new.bind(Reason)
 
@@ -47,7 +49,7 @@ export class UserSvc{
 		return z
 	}
 
-	static inst = UserSvc.new()
+	static inst = UserSvc.new(env.serverDbSrc)
 
 	//get This(){return UserSvc}
 

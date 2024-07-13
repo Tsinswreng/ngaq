@@ -31,6 +31,9 @@ export class Profile extends IdCtMtBl{
 	/** userId */
 	fid:int
 	nickName:str
+	sex:str
+	birth:int
+	email:str
 }
 
 
@@ -41,4 +44,15 @@ export class Session extends IdCtMtBl{
 	userId:int
 	token:str
 	expirationTime:int
+}
+
+
+export class NgaqSchema extends IdCtMtBl{
+	name:str
+	path:str
+}
+
+export class User__NgaqDb extends IdCtMtBl{
+	userId:int
+	dbId:int
 }
