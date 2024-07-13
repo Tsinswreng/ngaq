@@ -55,8 +55,7 @@ class Server{
 			// 处理预检请求
 			if (req.method === 'OPTIONS') {
 				res.sendStatus(200); // 直接返回 HTTP 200 状态
-			} else {
-				//next();
+				return
 			}
 			next()
 		})

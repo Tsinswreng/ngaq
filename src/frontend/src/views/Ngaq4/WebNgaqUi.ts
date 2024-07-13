@@ -194,10 +194,16 @@ export class WebNgaqUi{
 	/**
 	 * test
 	 */
-	SignUp(opt){
+	async SignUp(opt){
 		const z = this
 		const client = Client.new()
-		client.SignUp(opt)
+		return await client.SignUp(opt)
+	}
+
+	async Login(uniqueName:str, password:str){
+		const z = this
+		const client = Client.new()
+		return await client.LoginByUniqueName(uniqueName, password)
 	}
 
 	handleErr(err:any){

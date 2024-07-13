@@ -65,7 +65,7 @@ export class Client{
 
 	async LoginByUniqueName(uniqueName:str, password:str){
 		const z = this
-		const url = new URL(`/login`, z.baseUrl+'/'+urlB.user)
+		const url = new URL(`${urlB.user}/login`, z.baseUrl)
 		const body:I_login = {
 			uniqueName:uniqueName
 			,password: password
@@ -78,11 +78,12 @@ export class Client{
 			body: JSON.stringify(body), // 将数据对象转换为 JSON 字符串
 		};
 		const got = await fetch(url, requestOptions)
+
+		const json = await got.text()
 		if(!got.ok){
 			//todo
-			return
+			return json
 		}
-		const json = await got.text()
 		const sessionRow = JSON.parse(json) as Row.Session
 		const session = Mod.Session.fromRow(sessionRow)
 		lsItems.session.set(sessionRow)

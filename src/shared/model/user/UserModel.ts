@@ -133,6 +133,7 @@ class SessionInst extends IdBlCtMtInst<Row.Session>{
 	token:str
 	expirationTime:Tempus
 	override correctRow(row: Row.Session): Row.Session {
+		row = super.correctRow(row)
 		row.expirationTime = Tempus.toUnixTime_mills(As(
 			row.expirationTime, Tempus
 		))
@@ -144,6 +145,7 @@ class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
 	//@ts-ignore
 	Inst = SessionInst
 	override correctInst(inst: SessionInst): SessionInst {
+		inst = super.correctInst(inst)
 		inst.expirationTime = Tempus.new(As(inst.expirationTime, 'number'))
 		return inst
 	}
@@ -161,6 +163,7 @@ class ProfileInst extends IdBlCtMtInst<Row.Profile>{
 	email:str
 	override get Row(){return Row.Profile}
 	override correctRow(row: Row.Profile): Row.Profile {
+		row = super.correctRow(row)
 		row.birth = Tempus.toUnixTime_mills(As(
 			row.birth, Tempus
 		))
@@ -172,6 +175,7 @@ class ProfileFact extends IdBlCtMtFact<ProfileInst, Row.Profile>{
 	//@ts-ignore
 	Inst = ProfileInst
 	override correctInst(inst: ProfileInst): ProfileInst {
+		inst = super.correctInst(inst)
 		inst.birth = Tempus.new(As(inst.birth, 'number'))
 		return inst
 	}

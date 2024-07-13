@@ -1,7 +1,8 @@
 import { UserDbSrc } from "@backend/db/user/UserDbSrc"
 import { salt } from "@shared/algo"
 import argon2 from 'argon2'
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+
 
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/dbRow/user/UserRows'
@@ -102,8 +103,9 @@ export class UserSvc{
 		if(!b){
 			throw Exception.for(z.errReasons.pswd_not_match)
 		}
+		
 		const token = jwt.sign(
-			gotPswd.fid+''
+			{userId: gotPswd.fid+''}
 			, configInst.config.ngaq.jwtKey
 			, { expiresIn: '1d' }
 		)
@@ -119,7 +121,8 @@ export class UserSvc{
 			)
 		})
 		const AddSession = await z.dbSrc.Fn_add_session()
-		await AddSession(session)
+		const dbAns = await AddSession(session)
+		session.id = dbAns.lastId
 		z.emit(e=>e.login, id)
 		return session
 	}

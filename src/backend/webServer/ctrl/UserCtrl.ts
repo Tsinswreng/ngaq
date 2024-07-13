@@ -5,7 +5,7 @@ import Config from "@backend/Config"
 import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor"
 import { Exception } from "@shared/error/Exception"
 import { UserSvc } from "../svc/UserSvc"
-import { I_signUp } from "@shared/model/web/auth"
+import { I_login, I_signUp } from "@shared/model/web/auth"
 import { As } from "@shared/Ut"
 import Tempus from "@shared/Tempus"
 
@@ -57,10 +57,16 @@ export class UserCtrl extends BaseCtrl{
 
 		r.post('/login', async(req,res)=>{
 			try {
-				console.log(req.body)
+				const body = req.body as I_login
+				const uniqueName = As(body?.uniqueName, 'string')
+				const password = As(body?.password, 'string')
+				const session = await z.svc.LoginByName(uniqueName, password)
+				const row = session.toRow()
+				res.status(200).json(row)
 			} catch (err) {
 				if(err instanceof Exception){
 					res.status(401).json(err)
+					return
 				}
 				z.onErr(err)
 				res.status(401).send('')
@@ -79,6 +85,7 @@ export class UserCtrl extends BaseCtrl{
 			} catch (err) {
 				if(err instanceof Exception){
 					res.status(401).json(err)
+					return
 				}
 				z.onErr(err)
 				res.status(401).send('')
