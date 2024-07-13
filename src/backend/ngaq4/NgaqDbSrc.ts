@@ -1,7 +1,7 @@
 import type { PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
-import * as SqliteUitl from '@backend/sqlite/sqliteUtil'
+import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
 import { $ } from '@shared/Ut'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 
@@ -11,7 +11,7 @@ import * as Row from '@shared/dbRow/NgaqRows'
 import * as Mod from '@shared/model/NgaqModels'
 
 
-const ObjSql = SqliteUitl.Sql.obj
+const ObjSql = SqliteUtil.Sql.obj
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -61,7 +61,7 @@ class Tbls{
 const tbls = new Tbls()
 
 
-class SchemaItem extends SqliteUitl.SqliteMaster{
+class SchemaItem extends SqliteUtil.SqliteMaster{
 	protected constructor(){super()}
 	protected __init__(...args: Parameters<typeof SchemaItem.new>){
 		const z = this
@@ -75,9 +75,9 @@ class SchemaItem extends SqliteUitl.SqliteMaster{
 		return z
 	}
 
-	static new(name:str, type:SqliteUitl.SqliteMasterType.table):SchemaItem
-	static new(name:str, type:SqliteUitl.SqliteMasterType, tbl_name?:str):SchemaItem
-	static new(name:str, type:SqliteUitl.SqliteMasterType, tbl_name?:str){
+	static new(name:str, type:SqliteUtil.SqliteMasterType.table):SchemaItem
+	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str):SchemaItem
+	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str){
 		const z = new this()
 		z.__init__(name, type, tbl_name)
 		return z
@@ -127,7 +127,7 @@ class Index extends SchemaItem{
 	//get This(){return Index}
 }
 const SI = SchemaItem.new.bind(SchemaItem)
-const SMT = SqliteUitl.SqliteMasterType
+const SMT = SqliteUtil.SqliteMasterType
 
 const IDX = <Fact>(
 	name:str
@@ -212,7 +212,7 @@ class InitSql{
 
 	getAllIdxSql(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const keys = Object.keys(z.items)
 		const ans = [] as str[]
 		for(const k of keys){
@@ -220,12 +220,12 @@ class InitSql{
 			if(
 				!(
 					cur instanceof Index
-					&& cur.type === SqliteUitl.SqliteMasterType.index
+					&& cur.type === SqliteUtil.SqliteMasterType.index
 				)
 			){
 				continue
 			}
-			const sql = SqliteUitl.Sql.create.index(cur.tbl_name, cur.name, cur.cols, {checkExist: false})
+			const sql = SqliteUtil.Sql.create.index(cur.tbl_name, cur.name, cur.cols, {checkExist: false})
 			ans.push(sql)
 		}
 		return ans
@@ -233,7 +233,7 @@ class InitSql{
 
 	mkTbl_word(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const tbl = z.tbls.textWord
 		const c = tbl.col
 		const ans = 
@@ -250,7 +250,7 @@ class InitSql{
 
 	mkTbl_learn(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const tbl = z.tbls.learn
 		const c = tbl.col
 		const ans = 
@@ -267,7 +267,7 @@ class InitSql{
 
 	mkTbl_property(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const tbl = z.tbls.property
 		const c = tbl.col
 		const ans = 
@@ -285,7 +285,7 @@ class InitSql{
 
 	mkTbl_relation(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const tbl = z.tbls.relation
 		const c = tbl.col
 		const ans = 
@@ -301,7 +301,7 @@ class InitSql{
 
 	mkTbl_wordRelation(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const tbl = z.tbls.wordRelation
 		const c = tbl.col
 		const ans = 
@@ -321,7 +321,7 @@ class InitSql{
 
 	mkTrig_aftIns_learnAltWordMt(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const trig = z.items.trig_aftIns_learnAltWordMt
 		const c = z.tbls.learn.col
 		const ans = 
@@ -337,7 +337,7 @@ END;
 
 	mkTrig_aftIns_propertyAltWordMt(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const item = z.items
 		const trig = z.items.trig_aftIns_propertyAltWordMt
 		const c = z.tbls.textWord.col
@@ -354,7 +354,7 @@ END;
 
 	mkTrig_aftUpd_propertyAltWordMt(){
 		const z = this
-		const ifNE = SqliteUitl.IF_NOT_EXISTS
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const item = z.items
 		const trig = z.items.trig_aftUpd_propertyAltWordMt
 		const c = z.tbls.textWord.col
@@ -441,7 +441,7 @@ class Qrys{
 
 	async fn_addPropertyRow(db:SqliteDb){
 		const z = this
-		const sqlObjPr = SqliteUitl.Sql.obj.new(new Row.Property())
+		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Property())
 		const stmtPr = await db.Prepare(
 			sqlObjPr.geneFullInsertSql(z.tbls.property.name)
 		)
@@ -452,7 +452,7 @@ class Qrys{
 
 	async fn_addLearnRow(db:SqliteDb){
 		const z = this
-		const sqlObjPr = SqliteUitl.Sql.obj.new(new Row.Learn())
+		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Learn())
 		const stmtPr = await db.Prepare(
 			sqlObjPr.geneFullInsertSql(z.tbls.learn.name)
 		)
@@ -541,10 +541,10 @@ export class NgaqDbSrc{
 		const si = z.schemaItems
 		const tbls = z.tbls
 		const db = z.db
-		const SqlObj = SqliteUitl.Sql.obj
+		const SqlObj = SqliteUtil.Sql.obj
 		
 		//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
-		const wordSqlObj = SqliteUitl.Sql.obj.new(new Row.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
+		const wordSqlObj = SqliteUtil.Sql.obj.new(new Row.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
 		const wordSql = wordSqlObj.geneFullInsertSql(tbls.textWord.name)
 		const wordStmt = await db.Prepare(wordSql)
 		

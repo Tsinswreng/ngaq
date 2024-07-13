@@ -64,8 +64,104 @@ class Tbls{
 	user = TBL('user', Mod.User)
 	password = TBL('password', Mod.Password)
 	session = TBL('session', Mod.Session)
+	profile = TBL('profile', Mod.Profile)
+	ngaqSchema = TBL('ngaqSchema', Mod.NgaqSchema)
+	user__nagqDb = TBL('user__nagqDb', Mod.User__NgaqDb)
 }
 const tbls = new Tbls()
+
+
+class SchemaItem extends SqliteUtil.SqliteMaster{
+	protected constructor(){super()}
+	protected __init__(...args: Parameters<typeof SchemaItem.new>){
+		const z = this
+		z.name = args[0]
+		z.type = args[1]
+		if(z.type === SMT.table){
+			z.tbl_name = z.name
+		}else{
+			z.tbl_name = $(args[2])
+		}
+		return z
+	}
+
+	static new(name:str, type:SqliteUtil.SqliteMasterType.table):SchemaItem
+	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str):SchemaItem
+	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str){
+		const z = new this()
+		z.__init__(name, type, tbl_name)
+		return z
+	}
+
+	get This(){return SchemaItem}
+}
+
+class Trigger extends SchemaItem{
+	protected constructor(){super()}
+	protected __init__(...args: Parameters<typeof Trigger.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	get This(){return Trigger}
+}
+
+class Index extends SchemaItem{
+	protected constructor(){super()}
+	protected __init__(...args: Parameters<typeof Index.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	protected _cols:str[]
+	get cols(){return this._cols}
+	set cols(v){this._cols = v}
+	
+	protected _tbl:Tbl<any>
+	get tbl(){return this._tbl}
+	set tbl(v){this._tbl = v}
+	
+
+	//get This(){return Index}
+}
+const SI = SchemaItem.new.bind(SchemaItem)
+const SMT = SqliteUtil.SqliteMasterType
+
+const IDX = <Fact>(
+	name:str
+	//@ts-ignore
+	, tbl:Tbl<Fact>
+	//@ts-ignore
+	, fn: (e:Tbl<Fact>['col'])=>str[]
+)=>{
+	const ans = Index.new()
+	ans.name = name
+	ans.type = SMT.index
+	ans.tbl = tbl
+	ans.tbl_name = tbl.name
+	ans.cols = fn(ans.tbl.col)
+	//SI(name, SMT.index, tbl.name)
+	return ans
+}
+
+class SchemaItems{
+	//tbls=tbls
+	idx_sessionFid = IDX('idx_sessionFid', tbls.session, c=>[c.userId])
+}
+
+const schemaItems = new SchemaItems()
 
 
 export class UserDbSrc{

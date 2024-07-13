@@ -157,14 +157,24 @@ class ProfileInst extends IdBlCtMtInst<Row.Profile>{
 	fid:int
 	nickName:str
 	sex:str
-	birth:int
+	birth:Tempus
 	email:str
 	override get Row(){return Row.Profile}
+	override correctRow(row: Row.Profile): Row.Profile {
+		row.birth = Tempus.toUnixTime_mills(As(
+			row.birth, Tempus
+		))
+		return row
+	}
 }
 class ProfileFact extends IdBlCtMtFact<ProfileInst, Row.Profile>{
 	Row = Row.Profile
 	//@ts-ignore
 	Inst = ProfileInst
+	override correctInst(inst: ProfileInst): ProfileInst {
+		inst.birth = Tempus.new(As(inst.birth, 'number'))
+		return inst
+	}
 }
 export const Profile = ProfileFact.new() as ProfileFact
 export type Profile = ProfileInst
