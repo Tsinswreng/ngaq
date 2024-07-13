@@ -148,8 +148,12 @@ export class UserSvc{
 	 * @param password 
 	 * @returns 新用戶id
 	 */
-	async SignUp(uniqueName:str, password:str):Task<int>{
+	async SignUp(opt:{
+		uniqueName:str, password:str
+	}):Task<int>{
 		const z = this
+		const uniqueName = opt.uniqueName
+		const password = opt.password
 		const Seek = await z.dbSrc.Fn_seekIdByUniqueName()
 		const got = await Seek(uniqueName)
 		const oldId = got.data[0]?._

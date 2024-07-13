@@ -5,6 +5,9 @@ import Config from "@backend/Config"
 import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor"
 import { Exception } from "@shared/error/Exception"
 import { UserSvc } from "../svc/UserSvc"
+import { I_signUp } from "@shared/model/web/auth"
+import { As } from "@shared/Ut"
+import Tempus from "@shared/Tempus"
 
 const configInst = Config.getInstance()
 
@@ -14,6 +17,7 @@ export class UserCtrl extends BaseCtrl{
 	protected __init__(...args: Parameters<typeof UserCtrl.new>){
 		const z = this
 		z.svc = args[0]
+		super.__init__()
 		return z
 	}
 
@@ -37,6 +41,20 @@ export class UserCtrl extends BaseCtrl{
 	protected override initRouter(): Router {
 		const z = this
 		const r = z.router
+
+		r.get('/', (req,res)=>{
+			try {
+				res.send(Tempus.new())
+			} catch (err) {
+				if(err instanceof Exception){
+					res.status(401).json(err)
+				}
+				z.onErr(err)
+				res.status(401).send('')
+			}
+		})
+
+
 		r.post('/login', async(req,res)=>{
 			try {
 				console.log(req.body)
@@ -48,7 +66,24 @@ export class UserCtrl extends BaseCtrl{
 				res.status(401).send('')
 			}
 		})
-
+		//_.SignUp({uniqueName:'TswG', password:'TswG'})
+		r.post('/signUp', async(req,res)=>{
+			try {
+				const body:I_signUp = req.body
+				const uniqueName = As(body?.uniqueName, 'string')
+				const password = As(body?.password, 'string')
+				await z.svc.SignUp({
+					uniqueName:uniqueName
+					,password: password
+				})
+			} catch (err) {
+				if(err instanceof Exception){
+					res.status(401).json(err)
+				}
+				z.onErr(err)
+				res.status(401).send('')
+			}
+		})
 		return r
 	}
 }

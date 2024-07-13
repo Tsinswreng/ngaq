@@ -3,6 +3,7 @@ import { NgaqDbSvc } from "../svc/NgaqDbSvc"
 import { BaseCtrl } from "./BaseCtrl"
 import Config from "@backend/Config"
 import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor"
+import Tempus from "@shared/Tempus"
 const configInst = Config.getInstance()
 //import { NgaqDbSrc } from "@backend/ngaq3/NgaqDbSrc"
 
@@ -48,6 +49,15 @@ export class NgaqCtrl extends BaseCtrl{
 	override initRouter(){
 		const z = this
 		const r = z.router
+
+		r.get('/',(req, res)=>{
+			try {
+				res.send(Tempus.new())
+			} catch (err) {
+				z.onErr(err)
+			}
+		})
+
 		r.get('/allWords', async(req,res)=>{
 			try {
 				const ans = await z.svc.GetAllWords()
