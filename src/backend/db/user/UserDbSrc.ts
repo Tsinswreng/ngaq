@@ -1,4 +1,4 @@
-import type { PubNonFuncKeys } from '@shared/Type'
+import type { InstanceType_, PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
 import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
@@ -21,6 +21,8 @@ type QryAns<T> = SqliteUtil.SqliteQryResult<T>
 const qt = (text:str)=>{
 	return `"${text}"`
 }
+
+type AddInstOpt = Parameters<typeof ObjSql.new>[1]
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -58,6 +60,28 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	get emptyRow(){
 		return this.factory.emptyRow
 	}
+
+	async Fn_addInst(db:SqliteDb, opt?:AddInstOpt){
+		const z = this
+		const tbl = z
+		if(opt == void 0){
+			opt = {ignoredKeys: [tbl.col.id]}
+		}
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, opt)
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await db.Prepare(sql)
+		const ans = async(inst:InstanceType_<FactT['Inst']>)=>{
+			const row = inst.toRow()
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+
 }
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
@@ -65,8 +89,8 @@ class Tbls{
 	password = TBL('password', Mod.Password)
 	session = TBL('session', Mod.Session)
 	profile = TBL('profile', Mod.Profile)
-	ngaqSchema = TBL('ngaqSchema', Mod.NgaqSchema)
-	user__nagqDb = TBL('user__nagqDb', Mod.User__NgaqDb)
+	userDb = TBL('userDb', Mod.UserDb)
+	user__db = TBL('user__db', Mod.User__db)
 }
 const tbls = new Tbls()
 
@@ -189,6 +213,23 @@ export class UserDbSrc{
 	get db(){return this._db}
 	protected set db(v){this._db = v}
 
+
+	/* 
+	已知 如果tbl是Tbl<User>類型的、那麼tbl.Fn_addInst返回函數 (inst:User)=>any
+	下面的方法 如何推斷出傳入fn的tbl的泛型類型、使得返回正確類型的函數?
+	如 GetFn_addInst(e=>e.user) 則返回(inst:User)=>any、
+	傳入GetFn_addInst(e=>e.password) 則返回(inst:Password)=>any 已解決
+	*/
+	async GetFn_addInst<T extends Tbl<any>>(
+		fn: (tbl:typeof this.tbls)=>T
+		,opt?:AddInstOpt
+	){
+		const z = this
+		const tbl = fn(z.tbls)
+		const ans = await tbl.Fn_addInst(z.db, opt)
+		return ans as ReturnType<T['Fn_addInst']>
+	}
+
 	async Fn_seekPasswordByUserId(){
 		const z = this
 		const tbl = z.tbls.password
@@ -228,81 +269,6 @@ export class UserDbSrc{
 		return ans
 	}
 
-
-	async Fn_add_user(){
-		const z = this
-		const tbl = z.tbls.user
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await z.db.Prepare(sql)
-		const ans = async(inst:Mod.User)=>{
-			const row = inst.toRow()
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	async Fn_add_password(){
-		const z = this
-		const tbl = z.tbls.password
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await z.db.Prepare(sql)
-		const ans = async(inst:Mod.Password)=>{
-			const row = inst.toRow()
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	// async Fn_add<InstT extends Mod.BaseInst<any>>(tbl:Tbl<typeof Mod.IdBlCtMt>){
-	// 	const z = this
-	// 	//const tbl = z.tbls.password
-	// 	const row = tbl.factory.emptyRow
-	// 	const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
-	// 	const sql = objsql.geneFullInsertSql(tbl.name)
-	// 	const stmt = await z.db.Prepare(sql)
-	// 	const ans = async(inst:Mod.Password)=>{
-	// 		const row = inst.toRow()
-	// 		const params = objsql.getParams(row)
-	// 		const runRes = await stmt.Run(params)
-	// 		const ans = QryAns.fromRunResult(runRes)
-	// 		return ans
-	// 	}
-	// 	return ans
-	// }
-
-
-
-
-	async Fn_add_session(){
-		const z = this
-		const tbl = z.tbls.session
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, {ignoredKeys: [tbl.col.id]})
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await z.db.Prepare(sql)
-		const ans = async(inst:Mod.Session)=>{
-			const row = inst.toRow()
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	
-
-	
 }
 
 

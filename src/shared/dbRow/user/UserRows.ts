@@ -47,12 +47,12 @@ export class Session extends IdCtMtBl{
 }
 
 
-export class NgaqSchema extends IdCtMtBl{
+export class UserDb extends IdCtMtBl{
 	name:str
 	path:str
 }
 
-export class User__NgaqDb extends IdCtMtBl{
+export class User__db extends IdCtMtBl{
 	userId:int
 	dbId:int
 }

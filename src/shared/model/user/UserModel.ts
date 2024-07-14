@@ -185,29 +185,29 @@ export type Profile = ProfileInst
 
 
 
-class NgaqSchemaInst extends IdBlCtMtInst<Row.NgaqSchema>{
+class UserDbInst extends IdBlCtMtInst<Row.UserDb>{
 	name:str
 	path:str
-	override get Row(){return Row.NgaqSchema}
+	override get Row(){return Row.UserDb}
 }
-class NgaqSchemaFact extends IdBlCtMtFact<NgaqSchemaInst, Row.NgaqSchema>{
-	Row = Row.NgaqSchema
+class UserDbFact extends IdBlCtMtFact<UserDbInst, Row.UserDb>{
+	Row = Row.UserDb
 	//@ts-ignore
-	Inst = NgaqSchemaInst
+	Inst = UserDbInst
 }
-export const NgaqSchema = NgaqSchemaFact.new() as NgaqSchemaFact
-export type NgaqSchema = NgaqSchemaInst
+export const UserDb = UserDbFact.new() as UserDbFact
+export type UserDb = UserDbInst
 
 
-class User__NgaqDbInst extends IdBlCtMtInst<Row.User__NgaqDb>{
+class User__dbInst extends IdBlCtMtInst<Row.User__db>{
 	userId:int
 	dbId:int
-	override get Row(){return Row.User__NgaqDb}
+	override get Row(){return Row.User__db}
 }
-class User__NgaqDbFact extends IdBlCtMtFact<User__NgaqDbInst, Row.User__NgaqDb>{
-	Row = Row.User__NgaqDb
+class User__dbFact extends IdBlCtMtFact<User__dbInst, Row.User__db>{
+	Row = Row.User__db
 	//@ts-ignore
-	Inst = User__NgaqDbInst
+	Inst = User__dbInst
 }
-export const User__NgaqDb = User__NgaqDbFact.new() as User__NgaqDbFact
-export type User__NgaqDb = User__NgaqDbInst
+export const User__db = User__dbFact.new() as User__dbFact
+export type User__db = User__dbInst

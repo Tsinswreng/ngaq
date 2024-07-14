@@ -157,7 +157,7 @@ export class UserSvc{
 				Tempus.toUnixTime_mills(Tempus.new())+1000*60*60*24 // 1 day
 			)
 		})
-		const AddSession = await z.dbSrc.Fn_add_session()
+		const AddSession = await z.dbSrc.GetFn_addInst(e=>e.session)
 		const dbAns = await AddSession(session)
 		session.id = dbAns.lastId
 		z.emit(e=>e.login, id)
@@ -208,7 +208,7 @@ export class UserSvc{
 			,mt: nunc
 			,uniqueName:uniqueName
 		})
-		const AddUser = await z.dbSrc.Fn_add_user()
+		const AddUser = await z.dbSrc.GetFn_addInst(e=>e.user)
 		const addAns = await AddUser(userInst)
 		const neoId = $(addAns.lastId, `addAns.lastId is nil`)
 		const hash = await argon2.hash(password)
@@ -221,7 +221,7 @@ export class UserSvc{
 			,text: hash
 			,salt: '' //已包含在hash中、懶得提取
 		})
-		const AddPswd = await z.dbSrc.Fn_add_password()
+		const AddPswd = await z.dbSrc.GetFn_addInst(e=>e.password)
 		await AddPswd(passwordInst)
 		z.emit(e=>e.signUp, neoId)
 		return neoId

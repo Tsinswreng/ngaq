@@ -142,7 +142,7 @@ export class InitSql{
 
 	mkTbl_ngaqSchema(){
 		const z = this
-		const tbl = z.tbls.ngaqSchema
+		const tbl = z.tbls.userDb
 		const c = tbl.col
 		const sn = SqliteUtil.snippet
 		const ty = sn.colType
@@ -161,7 +161,7 @@ export class InitSql{
 
 	mkTbl_user__ngaqDb(){
 		const z = this
-		const tbl = z.tbls.user__nagqDb
+		const tbl = z.tbls.user__db
 		const c = tbl.col
 		const sn = SqliteUtil.snippet
 		const ty = sn.colType
@@ -174,7 +174,7 @@ export class InitSql{
 	,${c.ct} ${ty.int} ${sn.notNull}
 	,${c.mt} ${ty.int} ${sn.notNull}
 	,${sn.foreignKey(c.userId, z.tbls.user.name, z.tbls.user.col.id)}
-	,${sn.foreignKey(c.dbId, z.tbls.ngaqSchema.name, z.tbls.ngaqSchema.col.id)}
+	,${sn.foreignKey(c.dbId, z.tbls.userDb.name, z.tbls.userDb.col.id)}
 )`
 		return ans
 	}
