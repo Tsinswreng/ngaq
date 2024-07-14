@@ -1,5 +1,5 @@
 
-#20240711211109002
+#20240714103922856
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1909,7 +1909,7 @@ use_preset_vocabulary: true
 輫	brəj	
 徘	bˁəj	
 背	pˁəks	
-背	bˁəks	
+揹	bˁəks	
 輩	pˁəjs	
 怫	buts	
 院	wrans	
@@ -2684,6 +2684,7 @@ use_preset_vocabulary: true
 曝	bˁawk	
 樸	pʰrˁok	
 朴	pʰrˁoks	
+渴	kʰˁat	
 民	miŋ	
 眠	mˁiŋ	
 怋	min	
@@ -4897,7 +4898,6 @@ use_preset_vocabulary: true
 盃	pˁə	
 桮	pˁə	
 𢃍	pe	
-揹	pˁə	
 㽡	paj	
 㗗	paj	
 㗗	pajʔ	
@@ -12723,8 +12723,6 @@ use_preset_vocabulary: true
 敤	kʰˁojʔ	
 㪙	kʰˁojs	
 嵑	kʰˁat	
-渴	ɡret	
-渴	kʰˁat	
 𤸎	kʰˁat	
 㵣	kʰˁat	
 剋	kʰˁək	

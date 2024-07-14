@@ -118,9 +118,18 @@ export function deepType<T>(o:T):DeepType<T>{
  * let c = instanceAs(idk, Father) //c:Father ok
  * @param src 源實例
  * @param TargetClass 目標類
- * @param errMsg 
+ * @param errMsg 若潙null則返null、不拋錯
  * @returns 
  */
+
+export function instanceAs<Target extends { prototype: any }>
+	(src, TargetClass: Target, errMsg:null)
+	: Ty.InstanceType_<Target>|null
+
+export function instanceAs<Target extends { prototype: any }>
+	(src, TargetClass: Target, errMsg?:any)
+	: Ty.InstanceType_<Target>
+
 export function instanceAs<Target extends { prototype: any }>(src, TargetClass: Target, errMsg:any=''){
 	if(TargetClass?.constructor == void 0){
 		if( typeof errMsg === 'string' ){
@@ -135,6 +144,8 @@ export function instanceAs<Target extends { prototype: any }>(src, TargetClass: 
 	}else{
 		if( typeof errMsg === 'string' ){
 			throw new Error(errMsg)
+		}else if(errMsg === null){
+			return null
 		}else{
 			throw errMsg
 		}
@@ -150,28 +161,65 @@ export function instanceAs<Target extends { prototype: any }>(src, TargetClass: 
  * 
  * @param src 
  * @param target 
- * @param errMsg 
+ * @param errMsg 若傳入null則返回null、不拋錯誤
  * @returns 
  */
+export function primitiveAs<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
+	:null|Ty.ParseType<Target>
 
+export function primitiveAs<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
+	:Ty.ParseType<Target>
 export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeStr|Target, errMsg:any=''){
 	if(typeof src === target){
 		return src as Ty.ParseType<Target>
 	}else{
 		if( typeof errMsg === 'string'){
 			throw new Error(errMsg)
+		}else if(errMsg === null){
+			return null
 		}else{
 			throw errMsg
 		}
 	}
 }
 
-/** primitiveAs */
-export function As<Target extends jstype>(src, target:Target, errMsg?:any):Ty.ParseType<Target>
+
+
+// /** primitiveAs */
+// export function As<Target extends jstype>(src, target:Target, errMsg?:any):Ty.ParseType<Target>
+
+// /** instanceAs */
+// export function As<Target extends { prototype: any }>(src, target:Target, errMsg?:any):Ty.InstanceType_<Target>
+
 
 /** instanceAs */
-export function As<Target extends { prototype: any }>(src, target:Target, errMsg?:any):Ty.InstanceType_<Target>
+export function As<Target extends { prototype: any }>
+	(src, TargetClass: Target, errMsg:null)
+	: asserts src is Ty.InstanceType_<Target>|null
+/** instanceAs */
+export function As<Target extends { prototype: any }>
+	(src, TargetClass: Target, errMsg?:any)
+	: asserts src is Ty.InstanceType_<Target>
 
+/** primitiveAs */
+export function As<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
+	: asserts src is null|Ty.ParseType<Target>
+
+/** primitiveAs */
+export function As<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
+	: asserts src is Ty.ParseType<Target>
+
+/**
+ * 
+ * @param src 
+ * @param target 
+ * @param errMsg 若傳入null則返回null、不拋錯誤
+ * @returns 
+ */
 export function As<Target extends string|{ prototype: any }>(src, target:Target, errMsg:any=''){
 	if(typeof target === 'string'){
 		return primitiveAs(src, target, errMsg)

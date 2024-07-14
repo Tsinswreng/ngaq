@@ -190,6 +190,13 @@ export class UserSvc{
 		return neoId
 	}
 
+	async MkUserNgaqDb(opt:{
+		userId:int
+		dbPath?:str
+	}){
+		
+	}
+
 
 
 }

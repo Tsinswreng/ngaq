@@ -51,20 +51,22 @@ class ServerConfig extends BaseConfig{
 class DefaultUserConfig extends BaseConfig{
 	uniqueName: 'ngaq'
 	password: 'ngaq'
-	ngaqDbPath: './db/userNgaqSchemas/ngaq.sqlite'
+	userDbPath: './db/userDb/ngaq.sqlite'
 	wordWeightConfig = new WordWeightConfig()
+}
+
+class UserDb extends BaseConfig{
+	baseDir: './db/userDb'
+	prefix: 'user-'
+	suffix: '.sqlite'
 }
 
 class Ngaq extends BaseConfig{
 	
-	// userName = 'ngaq'
-	// password = 'ngaq'
 	defaultUser = new DefaultUserConfig()
-	port = 6324
-	// ngaqDbPath = './ngaq.sqlite'
-	//weightAlgoPath = './src/shared/WordWeight/Schemas/MyWeight.ts' 
 	wordWeight = new WordWeightConfig()
 	server = new ServerConfig()
+	userDb = new UserDb()
 }
 
 class DefaultConfig extends BaseConfig{

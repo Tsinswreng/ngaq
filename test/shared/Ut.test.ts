@@ -6,6 +6,15 @@ const ast = (b:boolean)=>{
 	expect(b).toBe(true)
 }
 
+
+describe('As', ()=>{
+	const As = Ut.As
+	it('primitiveAs1', ()=>{
+		let a:any = 1
+		let ans = As(a, 'number')
+	})
+})
+
 describe('object_keys', ()=>{
 	const fn = Ut.object_keys
 	it('1', ()=>{

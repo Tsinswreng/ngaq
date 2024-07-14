@@ -37,7 +37,7 @@
 		defaultUser: {
 			uniqueName: 'ngaq'
 			,password: 'ngaq'
-			,ngaqDbPath: './db/userNgaqSchemas/ngaq.sqlite'
+			,userDbPath: './db/userDb/ngaq.sqlite'
 			,wordWeight: {
 				schemas: [
 					{
@@ -58,5 +58,10 @@
 			,dbPath: "./db/server.sqlite"
 			,jwtKey: "TsinswrengGw'ang"
 		}
+	}
+	,userDb: {
+		baseDir: './db/userDb'
+		,prefix: 'user-'
+		,suffix: '.sqlite'
 	}
 })
