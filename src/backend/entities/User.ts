@@ -1,4 +1,4 @@
-import type { NgaqDbSrc } from "@backend/ngaq4/NgaqDbSrc"
+import type { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
 
 
 export class User{

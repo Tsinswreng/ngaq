@@ -1,4 +1,4 @@
-import { NgaqDbSrc } from "@backend/ngaq4/NgaqDbSrc"
+import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
 import { JoinedRow } from '@shared/dbRow/JoinedRow'
 import { JoinedWord } from '@shared/entities/Word/JoinedWord'
 import * as Rows from '@shared/dbRow/NgaqRows'

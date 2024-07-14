@@ -1,6 +1,7 @@
 import Path from "path";
 import { clearObj, lodashMerge } from "@shared/Ut"
 import * as fs from 'fs'
+import * as fse from 'fs-extra'
 type IConfig = typeof Config.defaultConfig
 
 /**
@@ -44,14 +45,23 @@ class OldServerConfig extends BaseConfig{
 class ServerConfig extends BaseConfig{
 	dbPath = "./db/server.sqlite"
 	port = 6324
+	jwtKey = "TsinswrengGw'ang"
+}
+
+class DefaultUserConfig extends BaseConfig{
+	uniqueName: 'ngaq'
+	password: 'ngaq'
+	ngaqDbPath: './db/userNgaqSchemas/ngaq.sqlite'
+	wordWeightConfig = new WordWeightConfig()
 }
 
 class Ngaq extends BaseConfig{
-	jwtKey = "TsinswrengGw'ang"
-	userName = 'ngaq'
-	password = 'ngaq'
+	
+	// userName = 'ngaq'
+	// password = 'ngaq'
+	defaultUser = new DefaultUserConfig()
 	port = 6324
-	ngaqDbPath = './ngaq.sqlite'
+	// ngaqDbPath = './ngaq.sqlite'
 	//weightAlgoPath = './src/shared/WordWeight/Schemas/MyWeight.ts' 
 	wordWeight = new WordWeightConfig()
 	server = new ServerConfig()

@@ -5,11 +5,51 @@ import LocalStorage from "@ts/LocalStorage"
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/dbRow/user/UserRows'
 import { lsItems } from "@ts/localStorage/Items"
+import axios from 'axios'
+
+type Req_method_t = 'GET' | 'POST'
+// 封装请求函数
+const apiRequest = (url:str, method:Req_method_t = "GET", data = null) => {
+	const userId = lsItems.userId.get()
+	const token = lsItems.token.get()
+	return axios({
+		method: method,
+		url: url,
+		data: data,
+		headers: {
+			'Content-Type': 'application/json',
+//Bearer: HTTP 协议中用于身份验证的一种令牌类型。 持票人令牌
+			'Authorization': `Bearer ${token}`, 
+			'X-User-ID': userId
+		}
+	});
+};
+
+// 使用封装的请求函数发送请求
+// apiRequest('https://your-api-endpoint.com')
+//     .then(response => {
+//         console.log(response.data);
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+
+axios.interceptors.response.use(
+	response => response,
+	error => {
+		if (error.response.status === 401) {
+			// 重定向到登录页面或刷新令牌
+			window.location.href = '/login';
+		}
+		return Promise.reject(error);
+	}
+);
 
 const ngaqUrl = '/api/ngaq'
 
 class UrlBases{
 	user='/api/user'
+	ngaq='/api/ngaq'
 }
 const urlB = new UrlBases()
 

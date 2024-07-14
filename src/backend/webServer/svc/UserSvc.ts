@@ -106,7 +106,7 @@ export class UserSvc{
 		
 		const token = jwt.sign(
 			{userId: gotPswd.fid+''}
-			, configInst.config.ngaq.jwtKey
+			, configInst.config.ngaq.server.jwtKey
 			, { expiresIn: '1d' }
 		)
 		const session = Mod.Session.new({
@@ -189,5 +189,7 @@ export class UserSvc{
 		z.emit(e=>e.signUp, neoId)
 		return neoId
 	}
+
+
 
 }

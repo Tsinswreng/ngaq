@@ -34,26 +34,29 @@
 
 	// 單機
 	,ngaq: {
-		// userName: 'ngaq'
-		// ,password: 'ngaq'
-		jwtKey: "TsinswrengGw'ang"
-		,port:6324
-		,wordWeight: {
-			schemas: [
-				{
-					name:'my'
-					,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
-					,lang: 'ts'
-					,params: [
-						1
-						,2
-						,3
-					]
-				}
-			]
+		defaultUser: {
+			uniqueName: 'ngaq'
+			,password: 'ngaq'
+			,ngaqDbPath: './db/userNgaqSchemas/ngaq.sqlite'
+			,wordWeight: {
+				schemas: [
+					{
+						name:'my'
+						,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
+						,lang: 'ts'
+						,params: [
+							1
+							,2
+							,3
+						]
+					}
+				]
+			}
 		}
 		,server:{
-			dbPath: "./db/server.sqlite"
+			port:6324
+			,dbPath: "./db/server.sqlite"
+			,jwtKey: "TsinswrengGw'ang"
 		}
 	}
 })
