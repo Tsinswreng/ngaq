@@ -18,15 +18,23 @@ import { mkEmitter } from "@shared/infra/EventEmitter"
 import { $, As } from "@shared/Ut"
 
 import {env} from '@backend/ENV'
+import Path from 'path'
+import * as fse from 'fs-extra'
+import { SqliteDb } from "@backend/sqlite/Sqlite"
+import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
+import { InitSql_ngaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/Initer_ngaqDbSrc"
 
 const EV = Le.Event.new.bind(Le.Event)
 const RN = Reason.new.bind(Reason)
+type Id_t = int|str
 
 class Events extends Le.Events{
 	/** [userId] */
 	login = EV<[int|str]>('loginById')
 	/** [userId] */
 	signUp = EV<[int|str]>('signUp')
+	/** [userId] */
+	mkUserDb = EV<[Id_t]>('mkUserDb')
 }
 
 class ErrReason{
@@ -34,6 +42,8 @@ class ErrReason{
 	pswd_not_match = RN('pswd_not_match')
 	/** [已有ʹ userId:int] */
 	user_already_existed = RN<[int]>('user_already_existed')
+	/** [已有ʹdbʹ路徑] */
+	userDb_already_existed = RN<[str]>('userDb_already_existed')
 }
 
 
@@ -42,6 +52,7 @@ export class UserSvc{
 	protected __init__(...args: Parameters<typeof UserSvc.new>){
 		const z = this
 		z.dbSrc = args[0]
+		z.initListeners()
 		return z
 	}
 
@@ -79,6 +90,31 @@ export class UserSvc{
 		const z = this
 		const ev = fn(z.events)
 		z.emitter.emit(ev, ...args)
+	}
+
+	on<T extends Le.Event<any[]>>(
+		fn: (ev: typeof this.events) => T,
+		callback: (...args: T extends Le.Event<infer U> ? U : never)=>void
+	){
+		const z = this
+		const ev = fn(z.events)
+		z.emitter.on(ev, callback)
+	}
+
+
+	initListeners(){
+		const z = this
+		z.on(e=>e.signUp, (id)=>{
+			z.MkUserDb({
+				userId:id
+			}).catch(e=>{
+				z.emit(e=>e.error, e)
+			})
+		})
+
+		z.on(e=>e.error, (err)=>{
+			console.error(err)
+		})
 	}
 
 	/**
@@ -191,12 +227,36 @@ export class UserSvc{
 		return neoId
 	}
 
-	async MkUserNgaqDb(opt:{
-		userId:int
+	mkUserDbPath(userId:int|str){
+		const {baseDir, prefix, suffix} = config.ngaq.userDb
+		const fileName = prefix+userId+suffix
+		return Path.resolve(baseDir, fileName)
+	}
+
+	/**
+	 * 
+	 * @param opt 
+	 * @returns 
+	 * @throws {DbErr} 初始化架構失敗時可能拋出
+	 */
+	async MkUserDb(opt:{
+		userId:int|str
 		dbPath?:str
 	}){
-		const dbPath = As(opt?.dbPath, 'string', null)
+		const z = this
+		const dbPath = opt?.dbPath??z.mkUserDbPath(opt.userId)
+		const isExist = fse.existsSync(dbPath)
+		if(isExist){
+			throw Exception.for(z.errReasons.userDb_already_existed, dbPath)
+		}
+		fse.ensureFileSync(dbPath)
+		const db = SqliteDb.fromPath(dbPath)
+		const dbSrc = NgaqDbSrc.new(db)
+		await InitSql_ngaqDbSrc.MkSchema(dbSrc.db)
+		z.emit(e=>e.mkUserDb, opt.userId)
+		return true
 	}
+
 
 
 

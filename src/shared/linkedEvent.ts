@@ -85,7 +85,7 @@ export class Events{
 		return o
 	}
 	protected __init__(){}
-	error = Event.new('error')
+	error = Event.new<[any]>('error')
 }
 
 // export const Emitter = _Emitter

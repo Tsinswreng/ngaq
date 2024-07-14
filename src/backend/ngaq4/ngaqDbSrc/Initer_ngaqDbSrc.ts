@@ -3,9 +3,9 @@ import { Index } from "./NgaqDbSrc"
 import { NgaqDbSrc } from "./NgaqDbSrc"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 
-export class InitSql{
+export class InitSql_ngaqDbSrc{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof InitSql.new>){
+	protected __init__(...args: Parameters<typeof InitSql_ngaqDbSrc.new>){
 		const z = this
 		return z
 	}
@@ -16,7 +16,7 @@ export class InitSql{
 		return z
 	}
 
-	get This(){return InitSql}
+	get This(){return InitSql_ngaqDbSrc}
 
 	protected _items = NgaqDbSrc.schemaItems
 	get items(){return this._items}
@@ -25,6 +25,16 @@ export class InitSql{
 	protected _tbls = NgaqDbSrc.tbls
 	get tbls(){return this._tbls}
 	protected set tbls(v){this._tbls = v}
+
+	static async MkSchema(db:SqliteDb){
+		const z = InitSql_ngaqDbSrc.new()
+		return await z.MkSchema(db)
+	}
+
+	// static MkSchema(db:SqliteDb){
+	// 	const z = InitSql_ngaqDbSrc.new()
+	// 	return z.MkSchema(db)
+	// }
 
 	async MkSchema(db:SqliteDb){
 		const x = this

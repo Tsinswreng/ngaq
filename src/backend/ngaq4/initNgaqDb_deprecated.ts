@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { NgaqDbSrc } from "./ngaqDbSrc/NgaqDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import Tempus from "@shared/Tempus";
-import { InitSql } from "./ngaqDbSrc/Initer_ngaqDbSrc";
+import { InitSql_ngaqDbSrc } from "./ngaqDbSrc/Initer_ngaqDbSrc";
 
 const dbPath = './ngaq.sqlite'
 const dbRaw = new sqlite3.Database(dbPath)
@@ -10,7 +10,7 @@ const db = SqliteDb.new(dbRaw)
 const dbSrc = NgaqDbSrc.new(db)
 async function init(){
 	try {
-		const initer = InitSql.new()
+		const initer = InitSql_ngaqDbSrc.new()
 		await initer.MkSchema(dbSrc.db)
 	} catch (err) {
 		if(err instanceof DbErr){

@@ -1,12 +1,12 @@
 import sqlite3 from "sqlite3";
-import { NgaqDbSrc } from "./NgaqDbSrcOld";
+import { NgaqDbSrcOld } from "./NgaqDbSrcOld";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import Tempus from "@shared/Tempus";
 
 const dbPath = './ngaq.sqlite'
 const dbRaw = new sqlite3.Database(dbPath)
 const db = SqliteDb.new(dbRaw)
-const dbSrc = NgaqDbSrc.new(db)
+const dbSrc = NgaqDbSrcOld.new(db)
 async function init(){
 	try {
 		await dbSrc.init()

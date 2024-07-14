@@ -1,6 +1,6 @@
 import { User } from "@backend/entities/User"
 import { UserDbRow } from "@shared/dbRow/User"
-import { UserDbSrc } from "@backend/db/sqlite/User/DbSrc"
+import { UserDbSrc } from "@backend/db/sqlite/UserOld/DbSrc"
 import Sqlite, {SqliteType} from '@backend/db/Sqlite'
 import { VocaDbTable } from '@shared/SingleWord2'
 import { $, $a } from '@shared/Ut'

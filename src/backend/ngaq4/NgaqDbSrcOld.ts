@@ -587,9 +587,9 @@ class Qrys{
 }
 
 
-export class NgaqDbSrc{
+export class NgaqDbSrcOld{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof NgaqDbSrc.new>){
+	protected __init__(...args: Parameters<typeof NgaqDbSrcOld.new>){
 		const z = this
 		z._db = args[0]
 		z.injectDb()
@@ -602,7 +602,7 @@ export class NgaqDbSrc{
 		return z
 	}
 
-	get This(){return NgaqDbSrc}
+	get This(){return NgaqDbSrcOld}
 
 	protected _db:SqliteDb
 	get db(){return this._db}

@@ -3,7 +3,7 @@ import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc"
 import type { WordTable } from "@backend/db/sqlite/Word/Table"
 import { WordDbRow } from "@shared/dbRow/Word"
 import { WordToRows } from "./WordToRowsOld"
-import { NgaqDbSrc } from "./NgaqDbSrcOld"
+import { NgaqDbSrcOld } from "./NgaqDbSrcOld"
 import sqlite3 from 'sqlite3'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 class Migrate{
@@ -16,7 +16,7 @@ class Migrate{
 		return z
 	}
 
-	static new(oldDbSrc:WordDbSrc, neoDbSrc:NgaqDbSrc, tblNames:str[]){
+	static new(oldDbSrc:WordDbSrc, neoDbSrc:NgaqDbSrcOld, tblNames:str[]){
 		const z = new this()
 		z.__init__(oldDbSrc, neoDbSrc, tblNames)
 		return z
@@ -28,7 +28,7 @@ class Migrate{
 	get oldDbSrc(){return this._oldDbSrc}
 	protected set oldDbSrc(v){this._oldDbSrc = v}
 
-	protected _ngaqDbSrc:NgaqDbSrc
+	protected _ngaqDbSrc:NgaqDbSrcOld
 	get ngaqDbSrc(){return this._ngaqDbSrc}
 	protected set ngaqDbSrc(v){this._ngaqDbSrc = v}
 	
@@ -91,7 +91,7 @@ async function main(){
 	const neoDbPath = './ngaq.sqlite'
 	const neoDbRaw = new sqlite3.Database(neoDbPath)
 	const neoDb = SqliteDb.new(neoDbRaw)
-	const neoDbSrc = NgaqDbSrc.new(neoDb)
+	const neoDbSrc = NgaqDbSrcOld.new(neoDb)
 	const mig = Migrate.new(oldDbSrc, neoDbSrc, [
 		'english' , 'japanese'
 	])

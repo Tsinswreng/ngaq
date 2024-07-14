@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { UserDbSrc } from "@backend/db/sqlite/User/DbSrc";
+import { UserDbSrc } from "@backend/db/sqlite/UserOld/DbSrc";
 import Config from "@backend/Config";
 import Sqlite from '@backend/db/Sqlite';
 
