@@ -197,21 +197,21 @@ export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeS
 /** instanceAs */
 export function As<Target extends { prototype: any }>
 	(src, TargetClass: Target, errMsg:null)
-	: asserts src is Ty.InstanceType_<Target>|null
+	: Ty.InstanceType_<Target>|null
 /** instanceAs */
 export function As<Target extends { prototype: any }>
 	(src, TargetClass: Target, errMsg?:any)
-	: asserts src is Ty.InstanceType_<Target>
+	: Ty.InstanceType_<Target>
 
 /** primitiveAs */
 export function As<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
-	: asserts src is null|Ty.ParseType<Target>
+	: Ty.ParseType<Target>|null
 
 /** primitiveAs */
 export function As<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
-	: asserts src is Ty.ParseType<Target>
+	: Ty.ParseType<Target>
 
 /**
  * 
@@ -227,6 +227,35 @@ export function As<Target extends string|{ prototype: any }>(src, target:Target,
 		return instanceAs(src, target, errMsg)
 	}
 }
+
+/** instanceassert */
+export function asrt<Target extends { prototype: any }>
+	(src, TargetClasserts: Target, errMsg:null)
+	: asserts src is Ty.InstanceType_<Target>|null
+/** instanceassert */
+export function asrt<Target extends { prototype: any }>
+	(src, TargetClasserts: Target, errMsg?:any)
+	: asserts src is Ty.InstanceType_<Target>
+
+/** primitiveassert */
+export function asrt<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
+	: asserts src is Ty.ParseType<Target>|null
+
+/** primitiveassert */
+export function asrt<Target extends string>
+	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
+	: asserts src is Ty.ParseType<Target>
+
+export function asrt<Target extends string|{ prototype: any }>(src, target:Target, errMsg:any=''){
+	if(typeof target === 'string'){
+		return primitiveAs(src, target, errMsg)
+	}else{
+		return instanceAs(src, target, errMsg)
+	}
+}
+
+
 
 
 // //typescript幫我寫一個函數、返回值的類型爲傳入的字符串字面量的類型

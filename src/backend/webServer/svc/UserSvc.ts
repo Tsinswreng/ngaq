@@ -10,11 +10,12 @@ import * as Row from '@shared/dbRow/user/UserRows'
 import Config from "@backend/Config"
 import Tempus from "@shared/Tempus"
 const configInst = Config.getInstance()
+const config = configInst.config
 
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
 import { mkEmitter } from "@shared/infra/EventEmitter"
-import { $ } from "@shared/Ut"
+import { $, As } from "@shared/Ut"
 
 import {env} from '@backend/ENV'
 
@@ -194,7 +195,7 @@ export class UserSvc{
 		userId:int
 		dbPath?:str
 	}){
-		
+		const dbPath = As(opt?.dbPath, 'string', null)
 	}
 
 
