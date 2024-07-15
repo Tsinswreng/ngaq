@@ -49,16 +49,16 @@ class ServerConfig extends BaseConfig{
 }
 
 class DefaultUserConfig extends BaseConfig{
-	uniqueName: 'ngaq'
-	password: 'ngaq'
-	userDbPath: './db/userDb/ngaq.sqlite'
+	uniqueName = 'ngaq'
+	password = 'ngaq'
+	userDbPath = './db/userDb/ngaq.sqlite'
 	wordWeightConfig = new WordWeightConfig()
 }
 
 class UserDb extends BaseConfig{
-	baseDir: './db/userDb'
-	prefix: 'user-'
-	suffix: '.sqlite'
+	baseDir = './db/userDb'
+	prefix = 'user-'
+	suffix = '.sqlite'
 }
 
 class Ngaq extends BaseConfig{

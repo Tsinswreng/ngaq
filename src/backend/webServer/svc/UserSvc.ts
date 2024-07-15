@@ -20,6 +20,7 @@ import { $, As } from "@shared/Ut"
 import {env} from '@backend/ENV'
 import Path from 'path'
 import * as fse from 'fs-extra'
+import * as fs from 'fs'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
 import { InitSql_ngaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/Initer_ngaqDbSrc"
@@ -107,13 +108,13 @@ export class UserSvc{
 
 	initListeners(){
 		const z = this
-		z.on(e=>e.signUp, (id)=>{
-			z.MkUserDb({
-				userId:id
-			}).catch(e=>{
-				z.emit(e=>e.error, e)
-			})
-		})
+		// z.on(e=>e.signUp, (id)=>{
+		// 	z.MkUserDb({
+		// 		userId:id
+		// 	}).catch(e=>{
+		// 		z.emit(e=>e.error, e)
+		// 	})
+		// })
 
 		z.on(e=>e.error, (err)=>{
 			console.error(err)
@@ -212,7 +213,10 @@ export class UserSvc{
 			,uniqueName:uniqueName
 		})
 		const AddUser = await z.dbSrc.GetFn_addInst(e=>e.user)
+		const AddPswd = await z.dbSrc.GetFn_addInst(e=>e.password)
+		await z.dbSrc.db.BeginTrans()
 		const addAns = await AddUser(userInst)
+		// 新用戶ʹid
 		const neoId = $(addAns.lastId, `addAns.lastId is nil`)
 		const hash = await argon2.hash(password)
 		const passwordInst = Mod.Password.new({
@@ -224,8 +228,12 @@ export class UserSvc{
 			,text: hash
 			,salt: '' //已包含在hash中、懶得提取
 		})
-		const AddPswd = await z.dbSrc.GetFn_addInst(e=>e.password)
+		
 		await AddPswd(passwordInst)
+		await z.MkUserDb({
+			userId: neoId
+		})
+		await z.dbSrc.db.Commit()
 		z.emit(e=>e.signUp, neoId)
 		return neoId
 	}
@@ -248,7 +256,7 @@ export class UserSvc{
 	}){
 		const z = this
 		const dbPath = opt?.dbPath??z.mkUserDbPath(opt.userId)
-		const isExist = fse.existsSync(dbPath)
+		const isExist = fs.existsSync(dbPath)
 		if(isExist){
 			throw Exception.for(z.errReasons.userDb_already_existed, dbPath)
 		}
@@ -283,5 +291,7 @@ export class UserSvc{
 		await AddUser__db(user__dbInst)
 		return dbSrc
 	}
+
+
 
 }
