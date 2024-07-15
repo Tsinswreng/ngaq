@@ -25,3 +25,7 @@ export interface I_changedRows{
 	changedRows:int|undef
 }
 
+
+// export interface I_qryRecord{
+
+// }

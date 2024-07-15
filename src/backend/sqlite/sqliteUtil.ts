@@ -1,6 +1,7 @@
 import type sqlite3 from "sqlite3"
 import type { SqliteDb } from "./Sqlite"
 import * as DbQry from '@shared/interfaces/DbQryResult'
+import Tempus from "@shared/Tempus"
 
 export class SqliteQryResult<T> implements
 DbQry.I_data<T>
@@ -53,6 +54,42 @@ DbQry.I_data<T>
 	get affectedRows(){return this._affectedRows}
 	protected set affectedRows(v){this._affectedRows = v}
 }
+
+// export class SqliteQryRec{
+// 	protected constructor(){}
+// 	protected __init__(...args: Parameters<typeof SqliteQryRec.new>){
+// 		const z = this
+// 		return z
+// 	}
+
+// 	static new(){
+// 		const z = new this()
+// 		z.__init__()
+// 		return z
+// 	}
+
+// 	//get This(){return SqliteQryRec}
+
+// 	protected _time = Tempus.new()
+// 	get time(){return this._time}
+// 	protected set time(v){this._time = v}
+
+// 	protected _sql:str
+// 	get sql(){return this._sql}
+// 	protected set sql(v){this._sql = v}
+
+// 	protected _params:any
+// 	get params(){return this._params}
+// 	protected set params(v){this._params = v}
+	
+// 	protected _qryResult:SqliteQryResult
+// 	get qryResult(){return this._qryResult}
+// 	set qryResult(v){this._qryResult = v}
+	
+// }
+
+
+
 
 export enum SqliteMasterType{
 	table='table'

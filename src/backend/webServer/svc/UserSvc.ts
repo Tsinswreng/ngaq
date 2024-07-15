@@ -23,9 +23,12 @@ import * as fse from 'fs-extra'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
 import { InitSql_ngaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/Initer_ngaqDbSrc"
+import { getRelativePath } from "@backend/util/File"
 
 const EV = Le.Event.new.bind(Le.Event)
+//const EV = Le.SelfEmitEvent.new.bind(Le.SelfEmitEvent)
 const RN = Reason.new.bind(Reason)
+const cwd = process.cwd()
 type Id_t = int|str
 
 class Events extends Le.Events{
@@ -236,7 +239,7 @@ export class UserSvc{
 	/**
 	 * 
 	 * @param opt 
-	 * @returns 
+	 * @returns dbSrc
 	 * @throws {DbErr} 初始化架構失敗時可能拋出
 	 */
 	async MkUserDb(opt:{
@@ -254,10 +257,31 @@ export class UserSvc{
 		const dbSrc = NgaqDbSrc.new(db)
 		await InitSql_ngaqDbSrc.MkSchema(dbSrc.db)
 		z.emit(e=>e.mkUserDb, opt.userId)
-		return true
+
+		
+		const AddUserDb = await z.dbSrc.GetFn_addInst(e=>e.userDb)
+		const nunc = Tempus.new()
+		const userDb = Mod.UserDb.new({
+			id:NaN
+			,belong: ""
+			,ct: nunc
+			,mt: nunc
+			,name: ""
+			,path: getRelativePath(cwd, dbPath)
+		})
+
+		const userDbAns = await AddUserDb(userDb)
+		const AddUser__db = await z.dbSrc.GetFn_addInst(e=>e.user__db)
+		const user__dbInst = Mod.User__db.new({
+			id: NaN
+			,userId: Number(opt.userId)
+			,dbId: $(userDbAns.lastId)
+			,belong: ""
+			,ct: nunc
+			,mt: nunc
+		})
+		await AddUser__db(user__dbInst)
+		return dbSrc
 	}
-
-
-
 
 }

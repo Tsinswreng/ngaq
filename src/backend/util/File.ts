@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as ReadLine from 'readline'
-
+import Path from 'path'
 type ReadStreamOpt = Parameters<typeof fs.createReadStream>[1]
 
 export class FileReadLine{
@@ -78,6 +78,27 @@ export class FileReadLine{
 	}
 }
 
+
+/**
+ * 	// 测试示例
+	const basePath = 'C:\\Users\\Username\\Documents';
+	const targetPath = 'C:\\Users\\Username\\Documents\\Project\\file.txt';
+	const relativePath = getRelativePath(basePath, targetPath);
+	console.log(relativePath); // 输出：Project/file.txt
+ * @param basePath 基絕對路徑 'C:\\Users\\Username\\Documents'
+ * @param targetPath 絕對路徑 'C:\\Users\\Username\\Documents\\Project\\file.txt'
+ * @returns 以正斜槓分隔 Project/file.txt
+ */
+export function getRelativePath(basePath:string, targetPath:string) {
+	// 解析为绝对路径
+	const absoluteBasePath = Path.resolve(basePath);
+	const absoluteTargetPath = Path.resolve(targetPath);
+	// 获取相对路径
+	const relativePath = Path.relative(absoluteBasePath, absoluteTargetPath);
+	// 将反斜杠替换为正斜杠
+	const unixRelativePath = relativePath.replace(/\\/g, '/');
+	return unixRelativePath;
+}
 
 
 // import { merge } from '@shared/Ut'

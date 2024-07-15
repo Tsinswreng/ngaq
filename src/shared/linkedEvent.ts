@@ -5,6 +5,7 @@ type Args<T> = T extends any[] ? T : [T]
 
 export class Event<Arg extends any[] =any[]>{
 	protected _name:string
+	/** unique */
 	get name(){return this._name}
 
 	protected _base:Event<Arg>|undefined
@@ -14,15 +15,51 @@ export class Event<Arg extends any[] =any[]>{
 
 	}
 	static new<Arg extends any[] =any[]>(name:string, base?:Event<Arg>){
-		const o = new this<Arg>()
-		o.__init__(name, base)
-		return o
+		const z = new this<Arg>()
+		z.__init__(name, base)
+		return z
 	}
 
 	protected __init__(...args:Parameters<typeof Event.new>){
-		const o = this
-		o._name = args[0]
-		o._base = args[1]
+		const z = this
+		z._name = args[0]
+		z._base = args[1]
+		return z
+	}
+}
+
+export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
+
+
+	static new<Arg extends any[] =any[]>(name:string, base:Event<Arg>, emitter:I_EventEmitter){
+		const z = new this<Arg>()
+		z.__init__(name, base, emitter)
+		return z
+	}
+
+	//@ts-ignore
+	protected __init__(...args:Parameters<typeof SelfEmitEvent.new>){
+		const z = this
+		// z._name = args[0]
+		// z._base = args[1]
+		//@ts-ignore
+		super.__init__(...args)
+		z._emitter = args[2]
+		return z
+	}
+
+	protected _emitter:I_EventEmitter
+	get emitter(){return this._emitter}
+	protected set emitter(v){this._emitter = v}
+
+	emit(...args:Arg){
+		const z = this
+		z.emitter.emit(z.name, args)
+	}
+	
+	on(listener: (...args:Arg)=>void){
+		const z = this
+		z.emitter.on(z.name, listener)
 	}
 }
 

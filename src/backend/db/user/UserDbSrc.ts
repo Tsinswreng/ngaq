@@ -23,6 +23,10 @@ const qt = (text:str)=>{
 }
 
 type AddInstOpt = Parameters<typeof ObjSql.new>[1]
+interface I_AddInstOpt extends NonNullable<AddInstOpt>{
+	cb?:()=>{}
+}
+
 
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
@@ -67,6 +71,7 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		if(opt == void 0){
 			opt = {ignoredKeys: [tbl.col.id]}
 		}
+
 		const row = tbl.factory.emptyRow
 		const objsql = ObjSql.new(row, opt)
 		const sql = objsql.geneFullInsertSql(tbl.name)

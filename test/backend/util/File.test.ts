@@ -2,7 +2,7 @@ import 'tsconfig-paths/register'
 import * as fs from 'fs'
 import * as File from '@backend/util/File'
 import * as fse from 'fs-extra'
-
+import Path from 'path'
 
 describe('FileReadLine', ()=>{
 	it('1', async()=>{
@@ -39,6 +39,9 @@ describe('File',()=>{
 		console.log(ans)
 		expect(1).toBe(1)
 	})
+})
+
+describe('path', ()=>{
 })
 // const dir = `D:\\_code\\voca\\src`
 // const ans = fs.readdirSync(dir, {
