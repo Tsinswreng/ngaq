@@ -72,7 +72,7 @@ class DefaultOpt{
 	}
 	/** 加ˡ事件ᵗ權重 */
 	addWeightDefault = 0xfff
-	addWeight = [0x1, 0xff, 0x7f0, 0xff0]
+	addWeight = [0x1, 0x1ff, 0x7f0, 0xff0]
 	/** ˣ削弱ᵗ分母 */
 	debuffNumerator = 599999*1000*3600*24*90
 	base = 20

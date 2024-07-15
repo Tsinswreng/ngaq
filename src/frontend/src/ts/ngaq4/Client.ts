@@ -5,24 +5,32 @@ import LocalStorage from "@ts/LocalStorage"
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/dbRow/user/UserRows'
 import { lsItems } from "@ts/localStorage/Items"
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
 type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
-const apiRequest = (url:str, method:Req_method_t = "GET", data = null) => {
+
+//function apiRequest(url:str, method:Req_method_t, data)
+function apiRequest(url:str, method:Req_method_t = "GET", data:kvobj|undef){
 	const userId = lsItems.userId.get()
 	const token = lsItems.token.get()
-	return axios({
+	const opt:AxiosRequestConfig<any> = {
 		method: method,
 		url: url,
-		data: data,
+		//data: data,
 		headers: {
 			'Content-Type': 'application/json',
 //Bearer: HTTP 协议中用于身份验证的一种令牌类型。 持票人令牌
 			'Authorization': `Bearer ${token}`, 
 			'X-User-ID': userId
 		}
-	});
+	}
+	if(method === 'GET' || data != void 0){
+		opt.params = data
+	}else if(data != void 0){
+		opt.data = data
+	}
+	return axios(opt);
 };
 
 // 使用封装的请求函数发送请求
@@ -161,13 +169,22 @@ export class Client{
 		return text
 	}
 
-	
-	async getWordsFromAllTables(){
+	async getWordsFromAllTables_old(){
 		const z = this
 		const url = new URL(`${ngaqUrl}/allWords`, z.baseUrl)
 		const got = await fetch(url)
 		const text = await got.text()
 		return text
+	}
+
+	async GetWordsFromAllTables(){
+		const z = this
+		const url = new URL(`${urlB.user}/allWords`, z.baseUrl)
+		const got = await apiRequest(url.toString(), "POST", {})
+		//const got = await fetch(url)
+		return got.data
+		//const text = await got.text()
+		//return text
 	}
 
 	/**

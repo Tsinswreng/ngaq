@@ -3,7 +3,6 @@ import { salt } from "@shared/algo"
 import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 
-
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/dbRow/user/UserRows'
 
@@ -52,6 +51,32 @@ class ErrReason{
 	connect_userDb_err = RN<[Id_t]>('connect_userDb_err')
 }
 
+class UserDb{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof UserDb.new>){
+		const z = this
+		z.dbSrc = args[0]
+		return z
+	}
+
+	static new(dbSrc:NgaqDbSrc){
+		const z = new this()
+		z.__init__(dbSrc)
+		return z
+	}
+
+	//get This(){return UserDb}
+	protected _dbSrc:NgaqDbSrc
+	get dbSrc(){return this._dbSrc}
+	protected set dbSrc(v){this._dbSrc = v}
+	
+}
+
+
+class UserDbManager{
+	pool = new Map<Id_t, UserDb>()
+}
+
 
 export class UserSvc{
 	protected constructor(){}
@@ -80,7 +105,6 @@ export class UserSvc{
 	get errReasons(){return this._errReasons}
 	protected set errReasons(v){this._errReasons = v}
 	
-
 	protected _emitter = mkEmitter()
 	get emitter(){return this._emitter}
 	protected set emitter(v){this._emitter = v}
@@ -88,6 +112,11 @@ export class UserSvc{
 	protected _events = new Events()
 	get events(){return this._events}
 	protected set events(v){this._events = v}
+
+	protected _userDbManager = new UserDbManager()
+	get userDbManager(){return this._userDbManager}
+	protected set userDbManager(v){this._userDbManager = v}
+	
 	
 	emit<T extends Le.Event<any[]>>(
 		fn: (ev: typeof this.events) => T,
@@ -301,11 +330,17 @@ export class UserSvc{
 		return dbSrc
 	}
 
+	
 	ConnectUserDbByPath(path:str){
 		return UserSvc.ConnectUserDbByPath(path)
 	}
 
-	async GetUserDbByUserId(userId:int|str){
+	/**
+	 * 不經緩存池
+	 * @param userId 
+	 * @returns 
+	 */
+	async ConnectUserDbByUserId(userId:int|str){
 		const z = this
 		const Seek = await z.dbSrc.Fn_Seek_userDb_by_userId()
 		const got = await Seek(userId)
@@ -320,6 +355,20 @@ export class UserSvc{
 			,row.path
 		)
 		const dbSrc = await z.ConnectUserDbByPath(fullPath)
+		return dbSrc
+	}
+
+	/**
+	 * 用緩存池
+	 */
+	async GetUserDbByUserId(userId:Id_t){
+		const z = this
+		const got = z.userDbManager.pool.get(userId)
+		if(got != void 0){
+			return got
+		}
+		const dbSrc = await z.ConnectUserDbByUserId(userId)
+		z.userDbManager.pool.set(userId, UserDb.new(dbSrc))
 		return dbSrc
 	}
 }

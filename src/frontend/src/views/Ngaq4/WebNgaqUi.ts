@@ -191,6 +191,12 @@ export class WebNgaqUi{
 		}
 	}
 
+	async Test(){
+		const z = this
+		const client = Client.new()
+		return await client.GetWordsFromAllTables()
+	}
+
 	/**
 	 * test
 	 */

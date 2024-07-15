@@ -1,4 +1,9 @@
-import { Router } from "express-serve-static-core"
+import { 
+	Router 
+	,Request
+	,Response
+	,NextFunction
+} from "express-serve-static-core"
 import { NgaqDbSvc } from "../svc/NgaqDbSvc"
 import { BaseCtrl } from "./BaseCtrl"
 import Config from "@backend/Config"
@@ -6,6 +11,7 @@ import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcess
 import { Exception } from "@shared/error/Exception"
 import { UserSvc } from "../svc/UserSvc"
 import { I_login, I_signUp } from "@shared/model/web/auth"
+import * as If from "@shared/model/web/auth"
 import { As } from "@shared/Ut"
 import Tempus from "@shared/Tempus"
 
@@ -34,6 +40,32 @@ export class UserCtrl extends BaseCtrl{
 	protected _svc:UserSvc
 	get svc(){return this._svc}
 	protected set svc(v){this._svc = v}
+
+	// validateHeaders(req:Request, res:Response, next:NextFunction){
+	// 	// 检查 Authorization 头部是否存在且格式正确
+	// 	const authorizationHeader = req.headers['authorization'];
+	// 	if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+	// 		return res.status(401).json({ error: 'Unauthorized' });
+	// 	}
+	
+	// 	// 检查 X-User-ID 头部是否存在
+	// 	const xUserIdHeader = req.headers['x-user-id'];
+	// 	if (!xUserIdHeader) {
+	// 		return res.status(400).json({ error: 'X-User-ID header is required' });
+	// 	}
+	
+	// 	// 进行更复杂的身份验证逻辑，例如验证令牌的有效性等
+	// 	// 这里假设验证通过，可以在实际应用中调用你的身份验证逻辑
+	
+	// 	// 如果验证通过，则将用户 ID 存储到请求对象中，以便后续路由处理函数使用
+	// 	req.userId = xUserIdHeader;
+	
+	// 	// 继续处理下一个中间件或路由处理函数
+	// 	next();
+	// };
+
+	
+	
 
 
 	
@@ -91,6 +123,19 @@ export class UserCtrl extends BaseCtrl{
 				res.status(401).send('')
 			}
 		})
+
+		r.post('/allWords', async(req, res)=>{
+			try {
+				console.log(req.body)
+				console.log(req.headers)
+				console.log(req.header('X-User-ID'))
+				res.send('123')
+			} catch (err) {
+				z.onErr(err)
+				res.status(500).send('')
+			}
+		})
+
 		return r
 	}
 }
