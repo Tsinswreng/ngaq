@@ -42,6 +42,8 @@ describe('File',()=>{
 })
 
 describe('path', ()=>{
+	const got = File.getRelativePath('.', `D:/_code/voca/test/backend/util/File.test.ts`)
+	console.log(got)
 })
 // const dir = `D:\\_code\\voca\\src`
 // const ans = fs.readdirSync(dir, {

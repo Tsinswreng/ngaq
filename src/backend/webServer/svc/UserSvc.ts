@@ -48,6 +48,8 @@ class ErrReason{
 	user_already_existed = RN<[int]>('user_already_existed')
 	/** [已有ʹdbʹ路徑] */
 	userDb_already_existed = RN<[str]>('userDb_already_existed')
+	/** userId */
+	connect_userDb_err = RN<[Id_t]>('connect_userDb_err')
 }
 
 
@@ -275,7 +277,7 @@ export class UserSvc{
 			,ct: nunc
 			,mt: nunc
 			,name: ""
-			,path: getRelativePath(cwd, dbPath)
+			,path: getRelativePath(config.ngaq.userDb.baseDir, dbPath)
 		})
 
 		const userDbAns = await AddUserDb(userDb)
@@ -292,6 +294,32 @@ export class UserSvc{
 		return dbSrc
 	}
 
+	static async ConnectUserDbByPath(path:str){
+		//const z = this
+		const db = SqliteDb.fromPath(path)
+		const dbSrc = NgaqDbSrc.new(db)
+		return dbSrc
+	}
 
+	ConnectUserDbByPath(path:str){
+		return UserSvc.ConnectUserDbByPath(path)
+	}
 
+	async GetUserDbByUserId(userId:int|str){
+		const z = this
+		const Seek = await z.dbSrc.Fn_Seek_userDb_by_userId()
+		const got = await Seek(userId)
+
+		//只取首元素
+		const row = got[0]?.data[0]
+		if(row === void 0){
+			throw Exception.for(z.errReasons.connect_userDb_err, userId)
+		}
+		const fullPath = Path.resolve(
+			config.ngaq.userDb.baseDir
+			,row.path
+		)
+		const dbSrc = await z.ConnectUserDbByPath(fullPath)
+		return dbSrc
+	}
 }

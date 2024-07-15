@@ -12,6 +12,7 @@ const ifNE = SqliteUtil.IF_NOT_EXISTS
 
 const QryAns = SqliteUtil.SqliteQryResult
 type QryAns<T> = SqliteUtil.SqliteQryResult<T>
+type Id_t = int|str
 
 /**
  * 用""引起來
@@ -272,6 +273,56 @@ export class UserDbSrc{
 			return pswd
 		}
 		return ans
+	}
+
+
+	async Fn_Seek_userDbId_by_userId(){
+		const z = this
+		const tbl = z.tbls.user__db
+		const sql = 
+`SELECT ${tbl.col.dbId} AS _ FROM ${tbl.name} WHERE ${tbl.col.userId} = ?`
+		const stmt = await z.db.Prepare(sql)
+		const fn = async(userId:int|str)=>{
+			const params = [userId]
+			const got = await stmt.All<{_:int}>(params)
+			const ans = QryAns.fromPair(got)
+			return ans
+		}
+		return fn
+	}
+
+	async Fn_Seek_userDb_by_id(){
+		const z = this
+		const tbl = z.tbls.userDb
+		const c = tbl.col
+		const sql = 
+`SELECT * FROM ${tbl.name} WHERE ${c.id} = ?`
+		const stmt = await z.db.Prepare(sql)
+		const fn = async(id:Id_t)=>{
+			const params = [id]
+			const got = await stmt.All<Row.UserDb>(params)
+			const qryAns = QryAns.fromPair(got)
+			return qryAns
+		}
+		return fn
+	}
+
+	async Fn_Seek_userDb_by_userId(){
+		const z = this
+		const Seek_userDbId_by_userId = await z.Fn_Seek_userDbId_by_userId()
+		const Seek_userDb_by_id = await z.Fn_Seek_userDb_by_id()
+		const fn = async(id:Id_t)=>{
+			const userDbIdQry = await Seek_userDbId_by_userId(id)
+			const userDbIds = userDbIdQry.data
+			const ans = [] as SqliteUtil.SqliteQryResult<Row.UserDb[]>[]
+			for(const idObj of userDbIds){
+				const id = idObj._
+				const ua = await Seek_userDb_by_id(id)
+				ans.push(ua)
+			}
+			return ans
+		}
+		return fn
 	}
 
 }
