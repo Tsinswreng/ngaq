@@ -7,8 +7,26 @@ import * as Ut from '@shared/Ut'
 import * as Record from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 import * as algo from '@shared/algo'
+import * as NgaqModels from '@shared/model/NgaqModels'
+import * as NgaqRows from '@shared/dbRow/NgaqRows'
+import { JoinedRow } from "@shared/dbRow/JoinedRow";
+import { JoinedWord } from "@shared/entities/Word/JoinedWord";
 
-export {Tempus, SvcWord as SvcWord, Word_, Sros_, lodash, Ut, Record, BaseWeight, algo}
+export {
+	Tempus
+	,SvcWord
+	,Word_
+	,Sros_
+	,lodash
+	,Ut
+	,Record
+	,BaseWeight
+	,algo
+	,NgaqModels
+	,NgaqRows
+	,JoinedRow
+	,JoinedWord
+}
 
 //import type Tempus_ from "@shared/Tempus";
 

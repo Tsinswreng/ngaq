@@ -114,12 +114,12 @@ export class WordWeight implements I_WordWeight{
 	readonly This = WordWeight
 
 	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
-	get word__changeRecord(){return this._word__changeRecord}
+	get word__changeRecordOld(){return this._word__changeRecord}
 
 
 	addChangeRecord(word:Word, changeRecord:TempusEventRecord){
 		const z = this
-		TempusEventRecord.push(z.word__changeRecord, word, changeRecord)
+		TempusEventRecord.push(z.word__changeRecordOld, word, changeRecord)
 		// let dʼʹ = 1
 		// let ˊ = 3
 		

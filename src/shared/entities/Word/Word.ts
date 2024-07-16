@@ -10,7 +10,7 @@ import { WordPriority } from '@shared/entities/Word/WordPriority';
 import { WordDbRow } from '@shared/dbRow/Word';
 import type { InstanceType_, PubNonFuncProp } from '@shared/Type';
 import * as Rows_ from '@shared/dbRow/wordDbRowsOld'
-import type { JoinedWord } from './JoinedWordOld';
+import type { JoinedWordOld } from './JoinedWordOld';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})
 // const $n = sros.createNumber.bind(sros)
@@ -126,7 +126,7 @@ export class Word{
 	get id(){return this._id;};
 
 	/** @deprecated */
-	protected _joinedWordOld?:JoinedWord
+	protected _joinedWordOld?:JoinedWordOld
 	/** @deprecated */
 	get joinedWordOld(){return this._joinedWordOld}
 	/** @deprecated */

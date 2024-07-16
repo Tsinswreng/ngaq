@@ -10,8 +10,6 @@ export type RMB_FGT_nil = typeof WordEvent.FGT|typeof WordEvent.RMB|undefined
 //type WordEvent = typeof WordEvent
 
 
-
-
 class Status{
 	static new(){
 		const o = new this()
@@ -69,6 +67,14 @@ export class SvcWord{
 	protected _index:int|undef
 	get index(){return this._index}
 	set index(v){this._index = v}
+
+	/**
+	 * 待初始化
+	 */
+	protected _id:str = ""
+	get id(){return this._id}
+	protected set id(v){this._id = v}
+	
 
 
 	sortDate__Event(){

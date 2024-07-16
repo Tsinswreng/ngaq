@@ -31,7 +31,9 @@ type WordEvent = _ENV.Word_.WordEvent
 const Tempus = _ENV.Tempus
 type Tempus = InstanceType_<typeof _ENV.Tempus>
 type N2S = _ENV.Sros_.N2S
-const Word = _ENV.Word_.Word
+// const Word = _ENV.Word_.Word
+// type Word = InstanceType_<typeof Word>
+const Word = _ENV.JoinedWord
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
 const last = _ENV.Ut.lastOf
@@ -125,8 +127,12 @@ class WordWeight extends Base implements I_WordWeight{
 
 	readonly This = WordWeight
 
-	protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
-	get word__changeRecordOld(){return this._word__changeRecord}
+	//protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
+	//get word__changeRecordOld(){return this._word__changeRecord}
+	protected _wordId__changeRec = new Map<str, ChangeRecord[]>()
+	get wordId__changeRec(){return this._wordId__changeRec}
+	protected set wordId__changeRec(v){this._wordId__changeRec = v}
+	
  
 	// protected _changeRecord:_ENV.ChangeRecord[] = []
 	// get changeRecord(){return this._changeRecord}
@@ -141,15 +147,8 @@ class WordWeight extends Base implements I_WordWeight{
 	addChangeRecords(word:Word, changeRecords:ChangeRecord[]){
 		const z = this
 		for(const r of changeRecords){
-			ChangeRecord.push(z.word__changeRecordOld, word, r)
+			ChangeRecord.push(z.wordId__changeRec, word.textWord.id+'', r)
 		}
-		// let dʼʹ = 1
-		// let ˊ = 3
-		
-		// let ˮ = 4
-		// let ʼʽ·ˆˇˈˉˊˋːˤˌ
-		// let 
-
 	}
 
 	static get Statistics(){
@@ -484,7 +483,7 @@ class WordWeight extends Base implements I_WordWeight{
 				word.weight, 10
 			)
 			const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
-			ChangeRecord.push(z.word__changeRecordOld, word.word, rec)
+			ChangeRecord.push(z.wordId__changeRec, word.id, rec)
 		}
 		return word
 	}

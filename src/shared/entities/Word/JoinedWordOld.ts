@@ -6,9 +6,9 @@ import * as Rows from '@shared/dbRow/wordDbRowsOld'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"
 
-export class JoinedWord{
+export class JoinedWordOld{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof JoinedWord.new>){
+	protected __init__(...args: Parameters<typeof JoinedWordOld.new>){
 		const z = this
 		const row = args[0]
 		z.textWord = Objs.Word.fromRow(row.word)
@@ -23,7 +23,7 @@ export class JoinedWord{
 		return z
 	}
 
-	get This(){return JoinedWord}
+	get This(){return JoinedWordOld}
 	protected _textWord:Objs.Word
 	get textWord(){return this._textWord}
 	protected set textWord(v){this._textWord = v}
@@ -36,7 +36,7 @@ export class JoinedWord{
 	get learns(){return this._learns}
 	protected set learns(v){this._learns = v}
 
-	static toRow(j:JoinedWord):JoinedRow{
+	static toRow(j:JoinedWordOld):JoinedRow{
 		const ans = JoinedRow.new({
 			word: j.textWord.toRow()
 			,learns: j.learns.map(e=>e.toRow())
@@ -50,7 +50,7 @@ export class JoinedWord{
 		return z.This.toRow(z)
 	}
 
-	static toOldWord(jw:JoinedWord){
+	static toOldWord(jw:JoinedWordOld){
 		const propMap = classify(jw.propertys, (e)=>e.belong)
 		const learnMap = classify(jw.learns, (e)=>e.belong)
 		const ans = Word.new({
@@ -74,7 +74,7 @@ export class JoinedWord{
 	 * w1有洏w2無 者
 	 * //TODO test
 	 */
-	static diffProperty(w1:JoinedWord, w2:JoinedWord){
+	static diffProperty(w1:JoinedWordOld, w2:JoinedWordOld){
 		if(w1.textWord.text !== w2.textWord.text
 			|| w1.textWord.belong !== w2.textWord.belong
 		){
@@ -102,7 +102,7 @@ w1 and w2 is not the same word`
 	 * @param w2 待合入ʹ詞
 	 * @deprecated //TODO 考慮 順序不對應
 	 */
-	static mergeProperty(w1:JoinedWord, w2:JoinedWord){
+	static mergeProperty(w1:JoinedWordOld, w2:JoinedWordOld){
 		if(w1.textWord.text !== w2.textWord.text
 			|| w1.textWord.belong !== w2.textWord.belong
 		){

@@ -78,7 +78,7 @@ export class WebNgaqSvc extends NgaqSvc{
 		const jsonRows = await z.client.GetWordsFromAllTables()
 		const rows:JoinedRow[] = JSON.parse(jsonRows)
 		const jwords = rows.map(e=>JoinedWord.new(e))
-		const words = jwords.map(e=>JoinedWord.toOldWord(e))
+		const words = jwords.map(e=>JoinedWord.toPlainWord(e))
 		const memorizeWords = words.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords
 		return true

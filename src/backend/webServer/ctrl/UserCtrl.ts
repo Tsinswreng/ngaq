@@ -150,8 +150,7 @@ export class UserCtrl extends BaseCtrl{
 		r.post('/allWords', async(req, res)=>{
 			try {
 				if(!await z.ValidateHeaders(req, res)){return}
-				console.log(req.body)
-				console.log(req.headers)
+				
 				res.send('123')
 			} catch (err) {
 				z.onErr(err)

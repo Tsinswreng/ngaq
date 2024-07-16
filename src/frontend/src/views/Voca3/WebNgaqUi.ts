@@ -347,14 +347,14 @@ export class WebNgaqUi{
 
 	changeRec(){
 		const z = this
-		return z.svc.weightAlgo?.word__changeRecord
+		return z.svc.weightAlgo?.word__changeRecordOld
 	}
 
 
 	//TODO 把changeRecord作潙可選屬性 集于MemorizeWord
 	seekChangeRec(index:int){
 		const z = this
-		const recs = z.svc.weightAlgo?.word__changeRecord
+		const recs = z.svc.weightAlgo?.word__changeRecordOld
 		if(recs == void 0){
 			console.log(`recs == void 0`)
 			return

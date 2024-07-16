@@ -50,7 +50,7 @@ export class JoinedWord{
 		return z.This.toRow(z)
 	}
 
-	static toOldWord(jw:JoinedWord){
+	static toPlainWord(jw:JoinedWord){
 		const propMap = classify(jw.propertys, (e)=>e.belong)
 		const learnMap = classify(jw.learns, (e)=>e.belong)
 		const ans = Word.new({

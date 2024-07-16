@@ -13,7 +13,7 @@ import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { JoinedRow } from '../../shared/dbRow/JoinedRowOld'
 import { PubNonFuncKeys } from '@shared/Type'
-import { JoinedWord } from '@shared/entities/Word/JoinedWordOld'
+import { JoinedWordOld } from '@shared/entities/Word/JoinedWordOld'
 
 
 class SchemaItem extends SqliteUitl.SqliteMaster{
@@ -771,12 +771,12 @@ export class NgaqDbSrcOld{
 	 * @param words 
 	 * @returns return [existingWords, nonExistingWords]
 	 */
-	async classifyWordsByIsExist(words:JoinedWord[]){
+	async classifyWordsByIsExist(words:JoinedWordOld[]){
 		const z = this
 		const sql = z.qrys.selectExistFromWord('_')
 		const stmt = await z.db.Prepare(sql)
-		const existingWords = [] as JoinedWord[]
-		const nonExistingWords = [] as JoinedWord[]
+		const existingWords = [] as JoinedWordOld[]
+		const nonExistingWords = [] as JoinedWordOld[]
 		for(const w of words){
 			const param = [w.textWord.belong, w.textWord.text]
 			const [runRes, ua] = await stmt.All<{_:int}>(param)
@@ -811,7 +811,7 @@ export class NgaqDbSrcOld{
 	 * @param words 
 	 * @returns 
 	 */
-	async addWordsDistinctProperty(words:JoinedWord[]){
+	async addWordsDistinctProperty(words:JoinedWordOld[]){
 		const z = this
 		const [duplicateNeoWords, nonExistWords] = await z.classifyWordsByIsExist(words)
 		const add = await z.fn_addJoinedRows()
@@ -823,8 +823,8 @@ export class NgaqDbSrcOld{
 			if(oldRow == null){
 				throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
 			}
-			const oldJw = JoinedWord.new(oldRow)
-			const ua = JoinedWord.diffProperty(oldJw, neo)
+			const oldJw = JoinedWordOld.new(oldRow)
+			const ua = JoinedWordOld.diffProperty(oldJw, neo)
 			diffPropertys.push(...ua)
 		}
 		

@@ -24,6 +24,8 @@ import { SqliteDb } from "@backend/sqlite/Sqlite"
 import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
 import { InitSql_ngaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/Initer_ngaqDbSrc"
 import { getRelativePath } from "@backend/util/File"
+import { UserDb } from "./UserDb"
+import { JoinedWord } from "@shared/entities/Word/JoinedWord"
 
 const EV = Le.Event.new.bind(Le.Event)
 //const EV = Le.SelfEmitEvent.new.bind(Le.SelfEmitEvent)
@@ -54,26 +56,7 @@ class ErrReason{
 	session_expired = RN<[Mod.Session]>('session_expired')
 }
 
-class UserDb{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof UserDb.new>){
-		const z = this
-		z.dbSrc = args[0]
-		return z
-	}
 
-	static new(dbSrc:NgaqDbSrc){
-		const z = new this()
-		z.__init__(dbSrc)
-		return z
-	}
-
-	//get This(){return UserDb}
-	protected _dbSrc:NgaqDbSrc
-	get dbSrc(){return this._dbSrc}
-	protected set dbSrc(v){this._dbSrc = v}
-	
-}
 
 
 class UserDbManager{
@@ -390,7 +373,17 @@ export class UserSvc{
 			return got
 		}
 		const dbSrc = await z.ConnectUserDbByUserId(userId)
-		z.userDbManager.pool.set(userId, UserDb.new(dbSrc))
-		return dbSrc
+		const userDb = UserDb.new(dbSrc)
+		z.userDbManager.pool.set(userId, userDb)
+		return userDb
+	}
+
+	async GetAllWords(userId:Id_t){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const joinedRows = await userDb.dbSrc.GetAllJoinedRow()
+		const jwords = joinedRows.map(e=>JoinedWord.new(e))
+		const plainWords = jwords.map(e=>JoinedWord.toPlainWord(e))
+		
 	}
 }

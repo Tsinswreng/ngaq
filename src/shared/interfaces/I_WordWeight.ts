@@ -1,7 +1,7 @@
 type Fn<Return=any> = (...args:any[])=>Return
-import { SvcWord } from "@shared/entities/Word/SvcWord"
+import type { SvcWord } from "@shared/entities/Word/SvcWord"
 import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
-import { Word } from "@shared/entities/Word/Word"
+import type { Word } from "@shared/entities/Word/Word"
 export interface I_WordWeight{
 	/**
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
@@ -9,7 +9,8 @@ export interface I_WordWeight{
 	 */
 	run(mWords:SvcWord[]):Promise<SvcWord[]>
 	// changeRecord?:ChangeRecord[]
-	word__changeRecord?:Map<Word, ChangeRecord[]>
+	word__changeRecordOld?:Map<Word, ChangeRecord[]>
+	wordId__changeRec?: Map<str, ChangeRecord[]>
 	/**
 	 * 權重參數設置
 	 * 如
