@@ -1,4 +1,4 @@
-import { RMB_FGT } from "@shared/entities/Word/SvcWord"
+import { RMB_FGT } from "@shared/entities/Word/SvcWord3"
 import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc"
 import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/voca3/entities/WebSvcWord"

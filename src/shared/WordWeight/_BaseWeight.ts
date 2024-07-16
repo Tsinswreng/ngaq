@@ -1,5 +1,5 @@
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
-import { SvcWord } from "@shared/entities/Word/SvcWord";
+import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import { TempusEventRecord } from "@shared/WordWeight/ChangeRecord";
 
 export class BaseWeight implements I_WordWeight{
@@ -22,7 +22,7 @@ export class BaseWeight implements I_WordWeight{
 		//this._paramOpt = v
 	}
 
-	async run(mWords: SvcWord[]){
+	async run(mWords: SvcWord3[]){
 		return mWords
 	}
 	

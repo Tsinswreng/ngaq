@@ -4,7 +4,7 @@ import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
 import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
-import {SvcWord} from '@shared/entities/Word/SvcWord'
+import {SvcWord3} from '@shared/entities/Word/SvcWord3'
 import Tempus from '@shared/Tempus';
 
 const loaded = ref(false)
@@ -90,7 +90,7 @@ function fmtNum(num:number, fix:number){
 // 	return ui.undoByWord($(mw))
 // }
 
-function lastEventSymbol(w:SvcWord){
+function lastEventSymbol(w:SvcWord3){
 	switch(w.date__event[w.date__event.length-1].event){
 		case WordEvent.ADD:
 			return '🤔'
@@ -118,7 +118,7 @@ class WordColor{
 	green = ref('green')
 	blue = ref('blue')
 	red = ref('red')
-	get(svcWord:SvcWord){
+	get(svcWord:SvcWord3){
 		const z = this
 		const c = svcWord.word.times_add
 		//return ref('testDefault')
@@ -341,4 +341,4 @@ span{
 }
 </style>
 
-../Status@shared/entities/Word/SvcWord@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi@shared/WordWeight/weightDependensy
+../Status@shared/entities/Word/SvcWord3@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi@shared/WordWeight/weightDependensy

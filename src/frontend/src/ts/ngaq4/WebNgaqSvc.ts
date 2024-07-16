@@ -1,4 +1,4 @@
-import { SvcWord, RMB_FGT } from "@shared/entities/Word/SvcWord";
+import { SvcWord3, RMB_FGT } from "@shared/entities/Word/SvcWord3";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
 import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
@@ -132,7 +132,7 @@ export class WebNgaqSvc extends NgaqSvc{
 	// }
 
 
-	protected async _sortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
+	protected async _sortWords(svcWords: SvcWord3[]): Promise<SvcWord3[]> {
 		const z = this
 		//await z._initWeightAlgo_deprecated()
 		await z.initWeightAlgo()

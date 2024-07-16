@@ -1,7 +1,7 @@
 <!-- 固定ʹ 單詞詳情框 -->
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
-import {SvcWord} from '@shared/entities/Word/SvcWord'
+import {SvcWord3} from '@shared/entities/Word/SvcWord3'
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
@@ -13,12 +13,12 @@ let ui:WebNgaqUi
 	loaded.value = true
 })()
 // const props = defineProps<{
-// 	memorizeWord: SvcWord|undefined
+// 	memorizeWord: SvcWord3|undefined
 // }>()
 
 function eventsMark(ui:WebNgaqUi){
 	const sb = [] as str[]
-	function _(word:SvcWord){
+	function _(word:SvcWord3){
 		for(let i = 0; i < word.date__event.length; i++){
 			const event = word.date__event[i].event
 			const ua = WebSvcWord.eventMark(event)
@@ -49,7 +49,7 @@ function tags(ui:WebNgaqUi){
 }
 
 function addDates(ui:WebNgaqUi){
-	function _(svcWord:SvcWord){
+	function _(svcWord:SvcWord3){
 		const dates = svcWord.word.dates_add
 		return dates.map(e=>Tempus.format(e, 'YY.MM.DD')).join('|')
 	}

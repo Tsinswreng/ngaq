@@ -3,9 +3,7 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="axios" level="application" />
-    <orderEntry type="library" name="vue.global" level="application" />
-    <orderEntry type="library" name="moment.js" level="application" />
   </component>
 </module>

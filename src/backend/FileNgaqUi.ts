@@ -8,7 +8,7 @@ import Sqlite from './db/Sqlite';
 import * as Le from '@shared/linkedEvent'
 // import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileNgaqSvc as FileNgaqSvc } from './logic/FileNgaqSvc';
-import { SvcWord } from '@shared/entities/Word/SvcWord';
+import { SvcWord3 } from '@shared/entities/Word/SvcWord3';
 import { Exception, Reason } from '@shared/error/Exception';
 import chalk from 'chalk'
 import util from 'util'
@@ -99,7 +99,7 @@ export class FileNgaqUi{
 	 * 生成rime候選詞ʹcomment
 	 * @param mw 
 	 */
-	geneCandComment(mw:SvcWord):string{
+	geneCandComment(mw:SvcWord3):string{
 		const z = this
 		let ans = mw.word.times_add + ':' + mw.word.times_rmb + ':' + mw.word.times_fgt
 		if(mw.word.times_add>=3){
@@ -109,7 +109,7 @@ export class FileNgaqUi{
 		return ans
 	}
 
-	getFinalEventSymbol(mw:SvcWord){
+	getFinalEventSymbol(mw:SvcWord3){
 		switch(mw.date__event.at(-1)?.event){
 			case WordEvent.ADD:
 				return '🤔'
@@ -126,7 +126,7 @@ export class FileNgaqUi{
 	protected _initListeners(){
 		const z = this
 		const ev = z.svc.events
-		z.svc.emitter.on(ev.save, (sws:SvcWord[])=>{
+		z.svc.emitter.on(ev.save, (sws:SvcWord3[])=>{
 			console.log(sws.map(e=>e.word.wordShape)) //t
 		})
 	}

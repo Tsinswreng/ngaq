@@ -1,4 +1,4 @@
-import { SvcWord, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord";
+import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
@@ -27,20 +27,20 @@ export class SvcEvents extends Le.Events{
 	 */
 	//neoEvent = EV<[MemorizeWord, RMB_FGT_nil]>('neoEvent')
 	/** RMB_FGT_nil: 撤銷前ʹ事件 */
-	undo = EV<[SvcWord, RMB_FGT_nil]>('undo')
+	undo = EV<[SvcWord3, RMB_FGT_nil]>('undo')
 	start = EV<[]>('start')
 	//test=EV('')
-	learnBySvcWord = EV<[SvcWord, RMB_FGT]>('learnByWord')
+	learnBySvcWord = EV<[SvcWord3, RMB_FGT]>('learnByWord')
 
 	/**
 	 * 在wordsToLearn中ʹ索引, 詞ˉ自身, 新ʹ事件
 	 * @deprecated
 	 */
-	learnByIndex = EV<[int, SvcWord, RMB_FGT]>('learnByIndex')
+	learnByIndex = EV<[int, SvcWord3, RMB_FGT]>('learnByIndex')
 	/**
-	 * SvcWord[] 保存ʹ諸詞
+	 * SvcWord3[] 保存ʹ諸詞
 	 */
-	save = EV<[SvcWord[]]>('save')
+	save = EV<[SvcWord3[]]>('save')
 
 	/**
 	 * _loadWeightAlgo拋錯旹則觸此事件、然後隱ᵈ用默認權重洏不強ᵈ退ᵣ流程
@@ -107,23 +107,23 @@ export abstract class NgaqSvc{
 	protected _errReasons = new SvcErrReason()
 	get errReasons(){return this._errReasons}
 
-	protected _wordsToLearn:SvcWord[] = []
+	protected _wordsToLearn:SvcWord3[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
 	/** 已背ʹ單詞中 憶者 */
-	// protected _rmbWords:SvcWord[] = []
+	// protected _rmbWords:SvcWord3[] = []
 	// get rmbWords(){return this._rmbWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _rmbWord__index:Map<SvcWord, int> = new Map()
+	protected _rmbWord__index:Map<SvcWord3, int> = new Map()
 	get rmbWord__index(){return this._rmbWord__index}
 
 	// /** 已背ʹ單詞中 忘者 */
-	// protected _fgtWords:SvcWord[] = []
+	// protected _fgtWords:SvcWord3[] = []
 	// get fgtWords(){return this._fgtWords}
 
 	/** 已背ʹ單詞中 忘者 */
-	protected _fgtWord__index: Map<SvcWord, int> = new Map()
+	protected _fgtWord__index: Map<SvcWord3, int> = new Map()
 	get fgtWord__index(){return this._fgtWord__index}
 
 	/** 權重算法 */
@@ -171,7 +171,7 @@ export abstract class NgaqSvc{
 	 */
 	merge_LearnedWords__index(){
 		const z = this
-		return new Map<SvcWord, int>([
+		return new Map<SvcWord3, int>([
 			...z.rmbWord__index
 			,...z.fgtWord__index
 		])
@@ -245,7 +245,7 @@ export abstract class NgaqSvc{
 	 * 用于初排序。返ᵣ排序後ʹ詞、不改ᵣ他ʹ數據。
 	 * @param svcWords 
 	 */
-	protected abstract _sortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+	protected abstract _sortWords(svcWords:SvcWord3[]):Task<SvcWord3[]>
 
 
 	protected abstract _resort():Task<bool>
@@ -255,7 +255,7 @@ export abstract class NgaqSvc{
 	 * 只需重算 剛背過ʹ詞權重 及褈打亂
 	 * @param svcWords 
 	 */
-	//protected abstract _resortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+	//protected abstract _resortWords(svcWords:SvcWord3[]):Task<SvcWord3[]>
 
 	/** 
 	 * 可據SvcWord對象之Status 判斷此詞是否在上一輪中背ʴ過
@@ -264,7 +264,7 @@ export abstract class NgaqSvc{
 		const z = this
 		return z._resort()
 		// const learnedWord__index = z.merge_LearnedWords__index()
-		// const wordsToResort = [] as SvcWord[]
+		// const wordsToResort = [] as SvcWord3[]
 		// for(const [sw, index] of learnedWord__index){
 		// 	wordsToResort.push(sw)
 		// }
@@ -336,7 +336,7 @@ export abstract class NgaqSvc{
 		return true
 	}
 
-	protected rmb(mw:SvcWord){
+	protected rmb(mw:SvcWord3){
 		const z = this
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.RMB)
@@ -346,7 +346,7 @@ export abstract class NgaqSvc{
 		return ans
 	}
 
-	protected fgt(mw:SvcWord){
+	protected fgt(mw:SvcWord3){
 		const z = this
 		z.startedOp()
 		const ans = mw.setInitEvent(WordEvent.FGT)
@@ -356,7 +356,7 @@ export abstract class NgaqSvc{
 		return ans
 	}
 
-	undo(mw:SvcWord){
+	undo(mw:SvcWord3){
 		const z = this
 		z.startedOp()
 		const old = mw.undo()
@@ -375,7 +375,7 @@ export abstract class NgaqSvc{
 	 */
 	getSvcWordsToSave(){
 		const z = this
-		const svcWords = [] as SvcWord[]
+		const svcWords = [] as SvcWord3[]
 		for(const [w] of z.rmbWord__index){
 			svcWords.push(w)
 		}
@@ -388,7 +388,7 @@ export abstract class NgaqSvc{
 	}
 
 
-	// static mergeSvcWords(toSave:SvcWord[]){
+	// static mergeSvcWords(toSave:SvcWord3[]){
 	// 	return toSave.map(e=>e.innerWordMerge())
 	// }
 
@@ -397,7 +397,7 @@ export abstract class NgaqSvc{
 	 */
 	mergeLearnedWords(){
 		const z = this
-		const learnedSvcWords = [] as SvcWord[]
+		const learnedSvcWords = [] as SvcWord3[]
 		for(const [word, index] of z.rmbWord__index){
 			z.wordsToLearn[index] = word.selfMerge()
 			learnedSvcWords.push(z.wordsToLearn[index])
@@ -484,7 +484,7 @@ export abstract class NgaqSvc{
 	 * @param event 
 	 * @returns 
 	 */
-	learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
+	learnByWord(mw:SvcWord3, event:RMB_FGT):boolean{
 		const z = this
 		z.startedOp()
 		if(event === WordEvent.RMB){

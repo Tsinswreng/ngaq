@@ -7,14 +7,14 @@ import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
 import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
 import { WordDbRow } from '@shared/dbRow/Word';
-import { SvcWord, RMB_FGT } from '@shared/entities/Word/SvcWord';
+import { SvcWord3, RMB_FGT } from '@shared/entities/Word/SvcWord3';
 import { Exception, Reason } from '@shared/error/Exception';
 import * as fs from 'fs' //TODO remove
 import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight';
 import { $ } from '@shared/Ut';
 import { WordEvent } from '@shared/SingleWord2';
-import { RMB_FGT_nil } from '@shared/entities/Word/SvcWord';
+import { RMB_FGT_nil } from '@shared/entities/Word/SvcWord3';
 import { Word } from '@shared/entities/Word/Word';
 
 const configInst = Config.getInstance()
@@ -114,12 +114,12 @@ export class FileNgaqSvc extends NgaqSvc{
 	// 		const tbl = z.dbSrc.loadTable(tblName)
 	// 		const rows = await tbl.selectAllWithTblName()
 	// 		const words = rows.map(e=>WordDbRow.toEntity(e))
-	// 		const mWords = words.map(e=>SvcWord.new(e))
+	// 		const mWords = words.map(e=>SvcWord3.new(e))
 	// 		return mWords
 	// 	}
 	// 	try {
 	// 		const tblNames = z.configInst.config.tables
-	// 		const mWords = [] as SvcWord[]
+	// 		const mWords = [] as SvcWord3[]
 	// 		for(const tblN of tblNames){
 	// 			if(tblN == void 0 || tblN.length === 0){continue}
 	// 			const um = await oneTbl(tblN)
@@ -141,11 +141,11 @@ export class FileNgaqSvc extends NgaqSvc{
 			const tbl = z.dbSrc.loadTable(tblName)
 			const rows = await tbl.selectAllWithTblName()
 			const words = rows.map(e=>WordDbRow.toEntity(e))
-			const mWords = words.map(e=>SvcWord.new(e))
+			const mWords = words.map(e=>SvcWord3.new(e))
 			return mWords
 		}
 		const tblNames = z.configInst.config.tables
-		const mWords = [] as SvcWord[]
+		const mWords = [] as SvcWord3[]
 		for(const tblN of tblNames){
 			if(tblN == void 0 || tblN.length === 0){continue}
 			const um = await oneTbl(tblN)
@@ -162,7 +162,7 @@ export class FileNgaqSvc extends NgaqSvc{
 		// return false
 	}
 
-	protected async _sortWords(svcWords: SvcWord[]){
+	protected async _sortWords(svcWords: SvcWord3[]){
 		const z = this
 		const outErr = new Error()
 		try {
@@ -222,7 +222,7 @@ export class FileNgaqSvc extends NgaqSvc{
 
 
 	/** @deprecated */
-	learnByMWord(mword:SvcWord, event:RMB_FGT){
+	learnByMWord(mword:SvcWord3, event:RMB_FGT){
 		const z = this
 		const ans = mword.setInitEvent(event)
 		if(ans){

@@ -37,8 +37,8 @@ const Word = _ENV.JoinedWord
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
 const last = _ENV.Ut.lastOf
-const SvcWord = _ENV.SvcWord
-type SvcWord = InstanceType_<typeof _ENV.SvcWord>
+const SvcWord = _ENV.SvcWord3
+type SvcWord = InstanceType_<typeof _ENV.SvcWord3>
 
 const ChangeRecord = _ENV.Record.ChangeRecord
 type ChangeRecord = _ENV.Record.ChangeRecord
@@ -339,7 +339,7 @@ class WordWeight extends Base implements I_WordWeight{
 		return Handle3Events
 	}
 
-	// checkIsResort(words:SvcWord[]){
+	// checkIsResort(words:SvcWord3[]){
 
 	// }
 
@@ -489,9 +489,9 @@ class WordWeight extends Base implements I_WordWeight{
 	}
 
 
-	// calcTags(words:SvcWord[]){
+	// calcTags(words:SvcWord3[]){
 	// 	const z = this
-	// 	function one(word:SvcWord){
+	// 	function one(word:SvcWord3){
 	// 		if(word.word.tag.length > 0 || word.word.annotation.length > 0){
 	// 			word.weight = s.m(
 	// 				word.weight, 10

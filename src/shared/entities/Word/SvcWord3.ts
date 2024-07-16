@@ -22,7 +22,7 @@ class Status{
 }
 
 
-export class SvcWord {
+export class SvcWord3 {
 
 	protected constructor(){
 
@@ -42,7 +42,7 @@ export class SvcWord {
 		return z
 	}
 
-	get This(){return SvcWord}
+	get This(){return SvcWord3}
 
 
 	/** 
@@ -192,20 +192,20 @@ class ResortSvcWord{
 
 	protected constructor(){}
 
-	protected __init__(svcWord:SvcWord, index:int){
+	protected __init__(svcWord:SvcWord3, index:int){
 		const z = this
 		z._svcWord = svcWord
 		z._index = index
 		return z
 	}
 
-	static new(svcWord:SvcWord, index:int){
+	static new(svcWord:SvcWord3, index:int){
 		const z = new this()
 		z.__init__(svcWord, index)
 		return z
 	}
 
-	protected _svcWord:SvcWord
+	protected _svcWord:SvcWord3
 	get svcWord(){return this._svcWord}
 
 	protected _index:int

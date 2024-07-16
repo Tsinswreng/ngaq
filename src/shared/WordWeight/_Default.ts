@@ -8,7 +8,7 @@
 
 //</@delete>
 import Tempus from "@shared/Tempus";
-import { SvcWord } from "@shared/entities/Word/SvcWord";
+import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import * as Word from '@shared/entities/Word/Word'
 import * as Sros from "@shared/Sros";
 //import { WordWeight } from "@shared/WordWeight/_Base";
@@ -155,7 +155,7 @@ export class WordWeight implements I_WordWeight{
 			}
 
 			readonly This = Handle3Events
-			_mw:SvcWord
+			_mw:SvcWord3
 			_ww:WordWeight
 			_statistics:Statistics
 			_tempus__event:Tempus_Event
@@ -272,7 +272,7 @@ export class WordWeight implements I_WordWeight{
 		return Handle3Events
 	}
 
-	run(mWords:SvcWord[]) {
+	run(mWords:SvcWord3[]) {
 		const z = this
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
@@ -280,7 +280,7 @@ export class WordWeight implements I_WordWeight{
 		}
 	}
 
-	calc0(mWord:SvcWord){
+	calc0(mWord:SvcWord3){
 		const z = this
 		const finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
 		const st = z.This.Statistics.new(finalAddEventPos)

@@ -1,5 +1,5 @@
 import Tempus from "@shared/Tempus";
-import { SvcWord } from "@shared/entities/Word/SvcWord";
+import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import * as Word_ from '@shared/entities/Word/Word'
 import * as Sros_ from "@shared/Sros";
 import lodash from 'lodash'
@@ -14,7 +14,7 @@ import { JoinedWord } from "@shared/entities/Word/JoinedWord";
 
 export {
 	Tempus
-	,SvcWord
+	,SvcWord3
 	,Word_
 	,Sros_
 	,lodash
