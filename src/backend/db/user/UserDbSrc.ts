@@ -316,7 +316,7 @@ export class UserDbSrc{
 			const userDbIds = userDbIdQry.data
 			const ans = [] as SqliteUtil.SqliteQryResult<Row.UserDb[]>[]
 			for(const idObj of userDbIds){
-				const id = idObj._
+				const id = $(idObj)._
 				const ua = await Seek_userDb_by_id(id)
 				ans.push(ua)
 			}

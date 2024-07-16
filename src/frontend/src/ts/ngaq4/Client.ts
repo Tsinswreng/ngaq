@@ -6,6 +6,7 @@ import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/dbRow/user/UserRows'
 import { lsItems } from "@ts/localStorage/Items"
 import axios, { AxiosRequestConfig } from 'axios'
+import { Exception, Reason } from "@shared/error/Exception";
 
 type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
@@ -62,8 +63,16 @@ class UrlBases{
 const urlB = new UrlBases()
 
 const LS = LocalStorage
-/** Voca3 */
+/** ngaq4 */
+
+const RN = Reason.new.bind(Reason)
+class ErrReason{
+	login_err = RN('login_err')
+}
+
 export class Client{
+
+	static inst = Client.new()
 
 	get This(){return Client}
 	static new(){
@@ -81,6 +90,18 @@ export class Client{
 	get baseUrl(){return this._baseUrl}
 	/**便于在dev模式調試 */
 	set baseUrl(v){this._baseUrl = v}
+
+	protected _errReason = new ErrReason()
+	get errReason(){return this._errReason}
+	protected set errReason(v){this._errReason = v}
+	
+
+
+	setSession(session:Row.Session){
+		lsItems.session.set(session)
+		lsItems.userId.set(session.userId)
+		lsItems.token.set(session.token)
+	}
 
 	async SignUp(opt:{
 		uniqueName:str
@@ -102,12 +123,11 @@ export class Client{
 			body: JSON.stringify(body), // 将数据对象转换为 JSON 字符串
 		};
 		const got = await fetch(url, requestOptions)
-		console.log(got)//t
+		//console.log(got)//t
 		if(!got.ok){
 			//todo
 			return
 		}
-		
 	}
 
 
@@ -129,18 +149,13 @@ export class Client{
 
 		const json = await got.text()
 		if(!got.ok){
-			//todo
-			return json
+			throw Exception.for(z.errReason.login_err, json)
 		}
 		const sessionRow = JSON.parse(json) as Row.Session
 		const session = Mod.Session.fromRow(sessionRow)
-		lsItems.session.set(sessionRow)
-		lsItems.userId.set(session.userId)
-		lsItems.token.set(session.token) //todo 網絡請求與理則分離
+		z.setSession(sessionRow)
 		return session
 	}
-
-
 
 	/**
 	 * @deprecated
