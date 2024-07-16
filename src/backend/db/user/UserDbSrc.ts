@@ -325,6 +325,25 @@ export class UserDbSrc{
 		return fn
 	}
 
+	async Fn_Seek_sessions_by_userId(){
+		const z = this
+		const tbl = z.tbls.session
+		const c = tbl.col
+		const sql = 
+`SELECT * FROM ${tbl.name}
+WHERE ${c.userId} = ?
+ORDER BY ${c.ct} DESC
+LIMIT ?
+`
+		const stmt = await z.db.Prepare(sql)
+		const fn = async(userId:Id_t, limit=1)=>{
+			const params = [userId, limit]
+			const got = await stmt.All<Row.Session>(params)
+			const qryAns = QryAns.fromPair(got)
+			return qryAns
+		}
+		return fn
+	}
 }
 
 

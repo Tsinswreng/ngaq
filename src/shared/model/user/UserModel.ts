@@ -139,6 +139,15 @@ class SessionInst extends IdBlCtMtInst<Row.Session>{
 		))
 		return row
 	}
+	isValid():bool{
+		const z = this
+		const nunc = Tempus.new()
+		const diff = Tempus.diff_mills(nunc, z.expirationTime)
+		if(diff >= 0){
+			return false
+		}
+		return true
+	}
 }
 class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
 	Row = Row.Session

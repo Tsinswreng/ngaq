@@ -2,16 +2,29 @@ import type sqlite3 from "sqlite3"
 import type { SqliteDb } from "./Sqlite"
 import * as DbQry from '@shared/interfaces/DbQryResult'
 import Tempus from "@shared/Tempus"
+import { NullableEleArr } from "@shared/Type"
+
+/**
+ * 若T是數組 如str[]、 則得 (str|undef)[]
+ * 若T非數組、則得T
+ */
+type SelfOrNullableEleArr<T> = T extends Array<infer Ele>?
+NullableEleArr<Ele>
+:T
+
+type NS<T> = SelfOrNullableEleArr<T>
 
 export class SqliteQryResult<T> implements
-DbQry.I_data<T>
+DbQry.I_data<
+	NS<T>
+>
 ,DbQry.I_lastId
 ,DbQry.I_affectedRows
 {
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof SqliteQryResult.new>){
 		const z = this
-		z.data = args[0] as T
+		z.data = args[0] as NS<T>
 		return z
 	}
 
@@ -42,7 +55,7 @@ DbQry.I_data<T>
 	}
 
 	//get This(){return SqliteQryResult}
-	protected _data:T
+	protected _data:NS<T>
 	get data(){return this._data}
 	protected set data(v){this._data = v}
 

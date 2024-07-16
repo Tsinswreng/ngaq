@@ -49,6 +49,9 @@ class ErrReason{
 	userDb_already_existed = RN<[str]>('userDb_already_existed')
 	/** userId */
 	connect_userDb_err = RN<[Id_t]>('connect_userDb_err')
+	/** userId */
+	validate_err = RN<[Id_t]>('validate_err')
+	session_expired = RN<[Mod.Session]>('session_expired')
 }
 
 class UserDb{
@@ -198,6 +201,25 @@ export class UserSvc{
 		z.emit(e=>e.login, id)
 		return session
 	}
+
+	/**
+	 * 
+	 * @param userId 
+	 * @param token 
+	 * @returns 
+	 * @throws
+	 */
+	async ValidateUserIdEtToken(userId:Id_t, token:str){
+		const z = this
+		const Seek = await z.dbSrc.Fn_Seek_sessions_by_userId()
+		const got = await Seek(userId)
+		const lastSession = got.data[0]
+		if(lastSession == void 0){
+			throw Exception.for(z.errReasons.validate_err, userId)
+		}
+		const session = Mod.Session.fromRow(lastSession)
+		return session.isValid()
+	}
 	
 	/**
 	 * 
@@ -330,7 +352,7 @@ export class UserSvc{
 		return dbSrc
 	}
 
-	
+
 	ConnectUserDbByPath(path:str){
 		return UserSvc.ConnectUserDbByPath(path)
 	}

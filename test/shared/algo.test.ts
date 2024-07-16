@@ -258,3 +258,10 @@ describe('diffAs', ()=>{
 		console.log(ans)
 	})
 })
+
+
+describe('sliceHead', ()=>{
+	const fn = algo.splitAtHeadLength
+	const got = fn('Bearer 114514', 'Bearer ')
+	console.log(got)
+})

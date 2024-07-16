@@ -14,6 +14,7 @@ import { I_login, I_signUp } from "@shared/model/web/auth"
 import * as If from "@shared/model/web/auth"
 import { As } from "@shared/Ut"
 import Tempus from "@shared/Tempus"
+import { splitAtLength } from "@shared/algo"
 
 const configInst = Config.getInstance()
 
@@ -64,12 +65,34 @@ export class UserCtrl extends BaseCtrl{
 	// 	next();
 	// };
 
-	
-	
+	async ValidateHeaders(req:Request, res:Response){
+		try {
+			const z = this
+			const userId = req.header('X-User-ID')
+			const authHead = req.header('authorization')
+			if(userId == void 0 || authHead == void 0){
+				res.status(401).json({error: 'Unauthorized'})
+				return false
+			}
+			const bearer = 'Bearer '
+			const [gotBearer, token] = splitAtLength(authHead, bearer.length)
+			if(bearer !== gotBearer){
+				res.status(401).json({error: 'Unauthorized: Invalid authorization header'})
+				return false
+			}
+			const got = await z.svc.ValidateUserIdEtToken(userId, token)
+			if(!got){
+				res.status(401).json({error: 'Unauthorized'})
+				return false
+			}
+			return true
+		} catch (err) {
+			res.status(401).json({error: 'Unauthorized'})
+			return false
+		}
+		return false
+	}
 
-
-	
-	
 	protected override initRouter(): Router {
 		const z = this
 		const r = z.router
@@ -126,9 +149,9 @@ export class UserCtrl extends BaseCtrl{
 
 		r.post('/allWords', async(req, res)=>{
 			try {
+				if(!await z.ValidateHeaders(req, res)){return}
 				console.log(req.body)
 				console.log(req.headers)
-				console.log(req.header('X-User-ID'))
 				res.send('123')
 			} catch (err) {
 				z.onErr(err)
