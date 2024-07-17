@@ -2,7 +2,7 @@ export class Row{
 
 }
 
-export class Row4 extends Row{
+export class IdBlCtMt extends Row{
 	id:int
 	belong:str
 	ct:int
@@ -10,11 +10,11 @@ export class Row4 extends Row{
 }
 
 
-export class WidRow extends Row4{
+export class WidRow extends IdBlCtMt{
 	wid:int
 }
 
-export class TextWord extends Row4{
+export class TextWord extends IdBlCtMt{
 	/** english, japanese, etc. */
 	/** 詞形 */
 	text:str
@@ -29,6 +29,15 @@ export enum LearnBelong{
 	/** forget */
 	,fgt='fgt'
 }
+
+// class LearnBelong_{
+// 	readonly add='add'
+// 	readonly rmb='rmb'
+// 	readonly fgt='fgt'
+// }
+
+// const LearnBelong = new LearnBelong_()
+// type LearnBelong = LearnBelong_
 
 export class Learn extends WidRow{
 	declare belong:LearnBelong
@@ -56,7 +65,7 @@ export enum WordRelationBelong{
 	,family='family'
 }
 
-export class Relation extends Row4{
+export class Relation extends IdBlCtMt{
 	name:str
 	declare belong: WordRelationBelong
 }

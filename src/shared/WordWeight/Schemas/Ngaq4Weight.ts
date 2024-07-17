@@ -25,8 +25,8 @@ const sros = _ENV.Sros_.Sros.new()
 const s = sros.short
 const Tempus_Event = _ENV.Word_.Tempus_Event
 type Tempus_Event = InstanceType_<typeof Tempus_Event>
-const WordEvent = _ENV.Word_.WordEvent
-type WordEvent = _ENV.Word_.WordEvent
+// const WordEvent = _ENV.Word_.WordEvent
+// type WordEvent = _ENV.Word_.WordEvent
 //type WordEvent = InstanceType_<typeof WordEvent>
 const Tempus = _ENV.Tempus
 type Tempus = InstanceType_<typeof _ENV.Tempus>
@@ -37,8 +37,8 @@ const Word = _ENV.JoinedWord
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
 const last = _ENV.Ut.lastOf
-const SvcWord = _ENV.SvcWord3
-type SvcWord = InstanceType_<typeof _ENV.SvcWord3>
+const SvcWord = _ENV.SvcWord
+type SvcWord = InstanceType_<typeof _ENV.SvcWord>
 
 const ChangeRecord = _ENV.Record.ChangeRecord
 type ChangeRecord = _ENV.Record.ChangeRecord
@@ -48,9 +48,23 @@ type TempusEventRecord = _ENV.Record.TempusEventRecord
 
 const Base = _ENV.BaseWeight
 type Base = _ENV.BaseWeight
+
+const Row = _ENV.NgaqRows
+type Row = typeof Row
+const Mod = _ENV.NgaqModels
+type Mod = typeof Mod
+
+class WordEvent{
+	static readonly ADD=Row.LearnBelong.add
+	static readonly RMB=Row.LearnBelong.rmb
+	static readonly FGT=Row.LearnBelong.fgt
+}
+
 //type Statistics = InstanceType_<typ
 
 //___________________________________________________
+
+
 
 
 class InMills{

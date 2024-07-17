@@ -1,4 +1,4 @@
-import { KeyMirror, PubNonFuncKeys } from "@shared/Type";
+import { KeyMirror, PubNonFuncProp } from "@shared/Type";
 import { As } from "@shared/Ut";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/dbRow/NgaqRows"
@@ -49,7 +49,7 @@ export class BaseFactory<
 		z.__init__()
 		return z
 	}
-	new(prop:PubNonFuncKeys<InstT>):InstT{
+	new(prop:PubNonFuncProp<InstT>):InstT{
 		const z = this
 		const ans = new z.Inst()
 		assign(ans, prop)
@@ -67,13 +67,13 @@ export class BaseFactory<
 	}
 }
 
-class IdBlCtMtInst<Row extends Row.Row4> extends BaseInst<Row>{
-	get Row(){return Row.Row4}
+class IdBlCtMtInst<Row extends Row.IdBlCtMt> extends BaseInst<Row>{
+	get Row(){return Row.IdBlCtMt}
 	id:int|undef
 	belong:str
 	ct:Tempus
 	mt:Tempus
-	override correctRow(row: Row.Row4){
+	override correctRow(row: Row.IdBlCtMt){
 		row.ct = Tempus.toUnixTime_mills(As(row.ct, Tempus))
 		row.mt = Tempus.toUnixTime_mills(As(row.mt, Tempus))
 		return row as Row
@@ -81,9 +81,9 @@ class IdBlCtMtInst<Row extends Row.Row4> extends BaseInst<Row>{
 }
 
 class IdBlCtMtFact<
-	InstT extends IdBlCtMtInst<Row.Row4>, RowT extends Row.Row4
+	InstT extends IdBlCtMtInst<Row.IdBlCtMt>, RowT extends Row.IdBlCtMt
 > extends BaseFactory<InstT, RowT>{
-	override Row=Row.Row4
+	override Row=Row.IdBlCtMt
 	//@ts-ignore
 	override Inst=IdBlCtMtInst
 	override correctInst(inst) {
@@ -110,6 +110,7 @@ export type TextWord = TextWordInst
 
 class PropertyInst extends IdBlCtMtInst<Row.Property>{
 	override get Row(){return Row.Property}
+	wid:int
 	text:str
 	declare belong: Row.PropertyBelong
 }
@@ -124,7 +125,7 @@ export type Property = PropertyInst
 
 class LearnInst extends IdBlCtMtInst<Row.Learn>{
 	override get Row(){return Row.Learn}
-	text:str
+	wid:int
 	declare belong: Row.LearnBelong
 }
 class LearnFact extends IdBlCtMtFact<LearnInst, Row.Learn>{
@@ -152,7 +153,8 @@ export type Relation = RelationInst
 
 class WordRelationInst extends IdBlCtMtInst<Row.WordRelation>{
 	override get Row(){return Row.WordRelation}
-	text:str
+	wid:int
+	rid:int
 }
 class WordRelationFact extends IdBlCtMtFact<WordRelationInst, Row.WordRelation>{
 	Row = Row.WordRelation

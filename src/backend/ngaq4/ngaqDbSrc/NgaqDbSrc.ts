@@ -1,4 +1,4 @@
-import type { PubNonFuncKeys } from '@shared/Type'
+import type { InstanceType_, PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
 import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
@@ -13,6 +13,10 @@ import * as Mod from '@shared/model/NgaqModels'
 
 const ObjSql = SqliteUtil.Sql.obj
 
+const QryAns = SqliteUtil.SqliteQryResult
+type QryAns<T> = SqliteUtil.SqliteQryResult<T>
+type Id_t = int|str
+type AddInstOpt = Parameters<typeof ObjSql.new>[1]
 class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof Tbl.new>){
@@ -49,6 +53,28 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	get emptyRow(){
 		return this.factory.emptyRow
 	}
+
+	async Fn_addInst(db:SqliteDb, opt?:AddInstOpt){
+		const z = this
+		const tbl = z
+		if(opt == void 0){
+			opt = {ignoredKeys: [tbl.col.id]}
+		}
+
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, opt)
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await db.Prepare(sql)
+		const ans = async(inst:InstanceType_<FactT['Inst']>)=>{
+			const row = inst.toRow()
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
 }
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{

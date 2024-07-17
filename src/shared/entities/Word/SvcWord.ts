@@ -1,13 +1,43 @@
 import { InstanceType_ } from "@shared/Type";
-import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
+//import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
+import { JoinedWord } from "./JoinedWord";
+//import { WordEvent, Tempus_Event } from "@shared/SingleWord2";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Ut";
-import * as Objs from '@shared/entities/Word/NgaqModelsOld'
-import { LearnBelong } from "@shared/dbRow/wordDbRowsOld";
-export type RMB_FGT = typeof WordEvent.FGT|typeof WordEvent.RMB
-export type RMB_FGT_nil = typeof WordEvent.FGT|typeof WordEvent.RMB|undefined
+import * as Mod from '@shared/model/NgaqModels'
+import * as Row from "@shared/dbRow/NgaqRows";
+export type rmb_fgt = typeof WordEvent.fgt|typeof WordEvent.rmb
+export type rmb_fgt_nil = typeof WordEvent.fgt|typeof WordEvent.rmb|undefined
+
+type WordEvent = Row.LearnBelong
+const WordEvent = Row.LearnBelong
+
+type Word = JoinedWord
 //type WordEvent = typeof WordEvent
+
+const LearnBelong = Row.LearnBelong
+type LearnBelong = Row.LearnBelong
+
+export class Tempus_Event{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Tempus_Event.new>){
+		const z = this
+		z.tempus = args[0]
+		z.event = args[1]
+		return z
+	}
+
+	static new(tempus:Tempus, event:LearnBelong){
+		const z = new this()
+		z.__init__(tempus, event)
+		return z
+	}
+
+	//get This(){return Tempus_Event}
+	tempus:Tempus
+	event:LearnBelong
+}
 
 
 class Status{
@@ -16,7 +46,7 @@ class Status{
 		return o
 	}
 	/** 憶|忘|未背 */
-	memorize:typeof WordEvent.RMB| typeof WordEvent.FGT|undefined = void 0
+	memorize:typeof WordEvent.rmb| typeof WordEvent.fgt|null = null
 	/** memorize狀態ˋ變ʹ時間 */
 	date:Tempus|undefined
 }
@@ -46,7 +76,7 @@ export class SvcWord {
 
 
 	/** 
-	 * Word實體 
+	 * JoinedWord
 	 */
 	protected _word:Word
 	get word(){return this._word}
@@ -76,10 +106,17 @@ export class SvcWord {
 	protected set id(v){this._id = v}
 	
 
+	static getSortedDateToEventObjs(word:JoinedWord){
+		const tes = word.learns.map(e=>
+			Tempus_Event.new(e.ct, e.belong)
+		)
+		tes.sort((a,b)=>Tempus.diff_mills(a.tempus,b.tempus))
+		return tes
+	}
 
 	sortDate__Event(){
 		const z = this
-		z._date__event = Word.getSortedDateToEventObjs(z.word)
+		z._date__event = SvcWord.getSortedDateToEventObjs(z.word)
 	}
 
 
@@ -89,7 +126,7 @@ export class SvcWord {
 	 * @param ev 
 	 * @returns 
 	 */
-	setInitEvent(ev:RMB_FGT){
+	setInitEvent(ev:rmb_fgt){
 		const z = this
 		const mw = this
 		if(mw.status.memorize == void 0){
@@ -109,27 +146,27 @@ export class SvcWord {
 		const z = this
 		const mw = this
 		const oriMemorizeState = mw.status.memorize
-		mw.status.memorize = void 0
+		mw.status.memorize = null
 		return oriMemorizeState
 		//z.emitter.emit(z.events.undo, mw, oriMemorizeState)
 	}
 
-	/**
-	 * SvcWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
-	 * 只合入內ʹword實例 洏 不改自ʹ_date__event
-	 * 原地改
-	 */
-	innerWordMerge(){
-		const z = this
-		if(z.status.memorize === WordEvent.RMB){
-			z.word.dates_rmb.push($(z.status.date))
-		}else if(z.status.memorize === WordEvent.FGT){
-			z.word.dates_fgt.push($(z.status.date))
-		}else{
+	// /**
+	//  * SvcWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
+	//  * 只合入內ʹword實例 洏 不改自ʹ_date__event
+	//  * 原地改
+	//  */
+	// innerWordMerge(){
+	// 	const z = this
+	// 	if(z.status.memorize === WordEvent.rmb){
+	// 		z.word.dates_rmb.push($(z.status.date))
+	// 	}else if(z.status.memorize === WordEvent.fgt){
+	// 		z.word.dates_fgt.push($(z.status.date))
+	// 	}else{
 
-		}
-		return z
-	}
+	// 	}
+	// 	return z
+	// }
 
 	/** 褈初始化。清ᵣ己ʹ狀態與權重等。 */
 	reInit(){
@@ -158,27 +195,28 @@ export class SvcWord {
 	/** 合入 新加ʹ背ˡ狀態及日期 */
 	selfMerge(){
 		const z = this
-		z.innerWordMerge()
+		//z.innerWordMerge()
 		z.sortDate__Event()
 		return z
 	}
 
 	
-	toLearnObj(){
+	statusToLearnObj(){
 		const z = this
 		if(z.status.memorize == void 0 || z.status.date == void 0){
 			return null
 		}
 		let belong:LearnBelong
-		if(z.status.memorize === WordEvent.RMB){
+		if(z.status.memorize === WordEvent.rmb){
 			belong = LearnBelong.rmb
-		}else if(z.status.memorize === WordEvent.FGT){
+		}else if(z.status.memorize === WordEvent.fgt){
 			belong = LearnBelong.fgt
 		}else{
 			throw new Error()
 		}
-		const learn = Objs.Learn.new({
-			wid: $(z.word.id)
+		const learn = Mod.Learn.new({
+			id: NaN
+			,wid: $(Number(z.id))
 			,ct: z.status.date
 			,mt: z.status.date
 			,belong: belong
