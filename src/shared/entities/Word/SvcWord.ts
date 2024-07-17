@@ -7,8 +7,9 @@ import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Ut";
 import * as Mod from '@shared/model/NgaqModels'
 import * as Row from "@shared/dbRow/NgaqRows";
-import { I_SvcWord } from "@shared/interfaces/I_SvcWord";
+import * as WordIf from "@shared/interfaces/I_SvcWord";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
+import { algo } from "@shared/WordWeight/weightEnv";
 
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
@@ -54,12 +55,15 @@ class Status{
 }
 
 
-export class SvcWord implements I_SvcWord{
+export class SvcWord implements
+	WordIf.I_WordWithStatus, WordIf.I_LearnBl__Learns, WordIf.I_weight
+	,WordIf.I_learns, WordIf.I_propertys, WordIf.I_PropertyBl_Propertys
+{
 
 	protected constructor(){
 
 	}
-
+	
 	static new(word:Word){
 		const o = new this()
 		o.__init__(word)
@@ -71,8 +75,10 @@ export class SvcWord implements I_SvcWord{
 		z._word = word
 		z.id = word.textWord.id+''
 		z._status = Status.new()
+		z._init_learnBl__learns()
+		z._init_propertyBl_propertys()
 		z._sortLearns()
-		z.sortDate__Event()
+		//z.sortDate__Event()
 		return z
 	}
 
@@ -90,9 +96,9 @@ export class SvcWord implements I_SvcWord{
 	get weight(){return this._weight}
 	set weight(v){this._weight = v}
 
-	/** 原有ᐪ */
-	protected _date__event:Tempus_Event[]
-	get date__event(){return this._date__event}
+	///** 原有ᐪ */
+	// protected _date__event:Tempus_Event[]
+	// get date__event(){return this._date__event}
 
 	protected _status = Status.new()
 	get status(){return this._status}
@@ -102,6 +108,36 @@ export class SvcWord implements I_SvcWord{
 	get index(){return this._index}
 	set index(v){this._index = v}
 
+	protected _event__learns: Map<Row.LearnBelong, Mod.Learn[]> = new Map()
+	get learnBl__learns(){return this._event__learns}
+	protected set learnBl__learns(v){this._event__learns = v}
+
+	protected _propertyBl__propertys : Map<Row.PropertyBelong, Mod.Property[]> = new Map()
+	get propertyBl__propertys(){return this._propertyBl__propertys}
+	protected set propertyBl__propertys(v){this._propertyBl__propertys = v}
+	
+	
+	get times_add():int{
+		return this._event__learns.get(LearnBelong.add)?.length??0
+	}
+
+	get times_rmb():int{
+		return this._event__learns.get(LearnBelong.rmb)?.length??0
+	}
+
+	get times_fgt():int{
+		return this._event__learns.get(LearnBelong.fgt)?.length??0
+	}
+
+	get learns(){
+		return this.word.learns
+	}
+
+	get propertys(){
+		return this.word.propertys
+	}
+
+
 	/**
 	 * 待初始化
 	 */
@@ -109,6 +145,17 @@ export class SvcWord implements I_SvcWord{
 	get id(){return this._id}
 	protected set id(v){this._id = v}
 	
+	protected _init_learnBl__learns(){
+		const z = this
+		const ans = algo.classify(z.word.learns, (e)=>e.belong)
+		z.learnBl__learns = ans
+	}
+
+	protected _init_propertyBl_propertys(){
+		const z = this
+		const ans = algo.classify(z.word.propertys, (e)=>e.belong)
+		z.propertyBl__propertys = ans
+	}
 
 	static getSortedDateToEventObjs(word:JoinedWord){
 		const tes = word.learns.map(e=>
@@ -123,10 +170,11 @@ export class SvcWord implements I_SvcWord{
 		z.word.sortLearnsByCt()
 	}
 
-	sortDate__Event(){
-		const z = this
-		z._date__event = SvcWord.getSortedDateToEventObjs(z.word)
-	}
+	// /** @deprecated 當置於子類 */
+	// sortDate__Event(){
+	// 	const z = this
+	// 	z._date__event = SvcWord.getSortedDateToEventObjs(z.word)
+	// }
 
 
 	/**
@@ -205,7 +253,7 @@ export class SvcWord implements I_SvcWord{
 	selfMerge(){
 		const z = this
 		//z.innerWordMerge()
-		z.sortDate__Event()
+		//z.sortDate__Event()
 		return z
 	}
 

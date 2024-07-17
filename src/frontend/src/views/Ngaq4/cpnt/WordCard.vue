@@ -97,7 +97,7 @@ function fmtNum(num:number, fix:number){
 // }
 
 function lastEventSymbol(w:SvcWord){
-	switch(w.date__event[w.date__event.length-1].event){
+	switch(w.learns[w.learns.length-1].belong){
 		case WordEvent.add:
 			return '🤔'
 		break;
@@ -126,7 +126,7 @@ class WordColor{
 	red = ref('red')
 	get(svcWord:SvcWord){
 		const z = this
-		const c = svcWord.word.times_add
+		const c = svcWord.times_add
 		//return ref('testDefault')
 		if(c<= 1){
 			return z.gray
@@ -161,18 +161,18 @@ function fmtDate(tempus:Tempus){
 
 		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)">{{ props.loopIndex }}</span>
 		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.rmb)" @contextmenu="rightClick">
-			{{ mw.word.wordShape }}
+			{{ mw.word.textWord.text }}
 		</span>
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
-		<span class="timesCnt">{{ mw.word.times_add }}</span>
-		<span class="timesCnt">{{ mw.word.times_rmb }}</span>
-		<span class="timesCnt">{{ mw.word.times_fgt }}</span>
+		<span class="timesCnt">{{ mw.times_add }}</span>
+		<span class="timesCnt">{{ mw.times_rmb }}</span>
+		<span class="timesCnt">{{ mw.times_fgt }}</span>
 		<!-- <span>_____</span> -->
 		<span class="w-weight">{{ fmtNum(mw.weight,2) }}</span>
-		<span class="w-lastRvwDate">{{ fmtDate(mw.date__event[mw.date__event.length-1].tempus) }}</span>
+		<span class="w-lastRvwDate">{{ fmtDate($(mw.learns.at(-1)).ct) }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<!-- <span class="w-eventsSymbols">{{  }}</span> -->
 		

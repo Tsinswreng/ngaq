@@ -1,7 +1,8 @@
 <!-- 固定ʹ 單詞詳情框 -->
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
-import {SvcWord3} from '@shared/entities/Word/SvcWord3'
+import {SvcWord} from '@shared/entities/Word/SvcWord'
+
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
@@ -13,14 +14,15 @@ let ui:WebNgaqUi
 	loaded.value = true
 })()
 // const props = defineProps<{
-// 	memorizeWord: SvcWord3|undefined
+// 	memorizeWord: SvcWord|undefined
 // }>()
 
 function eventsMark(ui:WebNgaqUi){
 	const sb = [] as str[]
-	function _(word:SvcWord3){
-		for(let i = 0; i < word.date__event.length; i++){
-			const event = word.date__event[i].event
+	function _(word:SvcWord){
+		for(let i = 0; i < word.learns.length; i++){
+			//const event = word.date__event[i].event
+			const event = word.learns[i].belong
 			const ua = WebSvcWord.eventMark(event)
 			sb.push(ua)
 		}
@@ -32,31 +34,35 @@ function eventsMark(ui:WebNgaqUi){
 	return ''
 }
 
+//TODO
 function annotation(ui:WebNgaqUi){
-	const tar = ui.curWord?.word.annotation??''
-	if(tar.length > 0){
-		return JSON.stringify(tar)
-	}
+	// const tar = ui.curWord?.propertys??''
+	// if(tar.length > 0){
+	// 	return JSON.stringify(tar)
+	// }
 	return ''
 }
 
+//TODO
 function tags(ui:WebNgaqUi){
-	const tar = ui.curWord?.word.tag??''
-	if(tar.length > 0){
-		return JSON.stringify(tar)
-	}
+	// const tar = ui.curWord?.word.tag??''
+	// if(tar.length > 0){
+	// 	return JSON.stringify(tar)
+	// }
 	return ''
 }
 
+//TODO
 function addDates(ui:WebNgaqUi){
-	function _(svcWord:SvcWord3){
-		const dates = svcWord.word.dates_add
-		return dates.map(e=>Tempus.format(e, 'YY.MM.DD')).join('|')
-	}
-	if(ui.curWord == void 0){
-		return ''
-	}
-	return _(ui.curWord)
+	// function _(svcWord:SvcWord){
+	// 	const dates = svcWord.word.dates_add
+	// 	return dates.map(e=>Tempus.format(e, 'YY.MM.DD')).join('|')
+	// }
+	// if(ui.curWord == void 0){
+	// 	return ''
+	// }
+	// return _(ui.curWord)
+	return ''
 }
 </script>
 <template>
@@ -64,19 +70,19 @@ function addDates(ui:WebNgaqUi){
 		<div class="wordInfo" v-if="ui.uiStuff.isShowWordInfo.value"> <!-- 要寫.value -->
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
 			<!-- <div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div> -->
-			<div>{{ (ui.curWord?.word.belong??'') + (ui.curWord?.word.id??'') }}</div>
+			<div>{{ 'belong+id' }}</div>
 			<div class="w-eventSymbols"> {{ eventsMark(ui) }} </div>
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
 			<div>{{ addDates(ui) }}</div>
 			<hr class="w-hr">
-			<div class="w-shape">{{ ui.curWord?.word.wordShape??'' }}</div>
+			<div class="w-shape">{{ ui.curWord?.word.textWord.text }}</div>
 			<div>
 				<!-- <span>{{ ui.curWord?.word.annotation.length?'':ui.curWord?.word.annotation }}</span> -->
 				<span> {{ annotation(ui) }} </span>
 				<span>{{ tags(ui) }}</span>
 			</div>
 			<hr class="w-hr">
-			<div class="w-mean">{{ ui.curWord?.word.mean.join('\n')}}</div>
+			<div class="w-mean">{{ 'mean' }}</div>
 		</div>
 	</div>
 </template>
