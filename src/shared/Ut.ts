@@ -1,4 +1,4 @@
-
+/* @deprecated */
 //[23.07.09-2232,]
 //const fs = require('fs')
 //import {RegexReplacePair} from '';
@@ -778,6 +778,7 @@ export function simpleUnion<T>(s1:T[]|Set<T>, s2:T[]|Set<T>){
  * 批量ᵈ檢ᵣ文件ˋ存否
  * @param paths 
  * @returns 
+ * @deprecated
  */
 export function areFilesExist(paths:string[]){
 	let result = true
@@ -789,26 +790,12 @@ export function areFilesExist(paths:string[]){
 	return result
 }
 
-/**
- * 解析潙絕對路徑並檢ˌ存否
- * @param dir 
- * @returns 
- */
-export function absPath(dir:string|null|undefined){
-	if(dir == null){
-		throw new Error(`dir == null`)
-	}
-	if(!fs.existsSync(dir as string)){
-		const abs = Path.resolve(dir)
-		throw new Error("path not exist\n"+abs)
-	}
-	return Path.resolve(dir)
-}
 
 /**
  * 檢 路徑是存在、若存在則原樣返回
  * @param dir 
  * @returns 
+ * @deprecated
  */
 export function pathAt(dir:string, errMsg?:string):string{
 	if(!fs.existsSync(dir)){

@@ -9,7 +9,7 @@ import Tempus from "@shared/Tempus";
 //import SingleWord2 from "@shared/SingleWord2";
 import { Word } from "@shared/entities/Word/Word";
 import { IVocaRow } from "@shared/SingleWord2";
-import { $, absPath, compileTs_deprecated, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
+import { $, compileTs_deprecated, fileToBase64, lodashMerge, measurePromiseTime } from "@shared/Ut";
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@backend/Config";
