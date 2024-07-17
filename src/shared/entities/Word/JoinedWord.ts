@@ -68,6 +68,23 @@ export class JoinedWord{
 		return ans
 	}
 
+	/**
+	 * 升序
+	 * @param learns 
+	 */
+	static sortLearnsByCt(learns:Mod.Learn[]){
+		const z = this
+		learns.sort((a,b)=>Tempus.diff_mills(a.ct, b.ct))
+	}
+
+	/**
+	 * 升序
+	 */
+	sortLearnsByCt(){
+		const z = this
+		return JoinedWord.sortLearnsByCt(z.learns)
+	}
+
 
 	/**
 	 * 以mt潙準取差集

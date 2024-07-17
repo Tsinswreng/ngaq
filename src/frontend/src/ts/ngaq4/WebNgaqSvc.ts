@@ -11,7 +11,7 @@ import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
 import { TagImg } from "@shared/TagImg";
 import { JoinedRow } from "@shared/dbRow/JoinedRow";

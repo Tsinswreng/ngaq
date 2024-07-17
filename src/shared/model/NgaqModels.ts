@@ -69,7 +69,7 @@ export class BaseFactory<
 
 class IdBlCtMtInst<Row extends Row.IdBlCtMt> extends BaseInst<Row>{
 	get Row(){return Row.IdBlCtMt}
-	id:int|undef
+	id:int
 	belong:str
 	ct:Tempus
 	mt:Tempus

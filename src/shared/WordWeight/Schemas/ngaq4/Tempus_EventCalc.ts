@@ -3,6 +3,11 @@ import * as _ENV from '@shared/WordWeight/weightEnv'
 //type import
 import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
+import type { 
+	I_Tempus_Event
+	, I_Tempus_EventWord
+}
+from '@shared/interfaces/ngaqWeightWord/Tempus_eventWord'
 //</@delete>
 /* 
 自定義權重算法ʹ例
@@ -23,8 +28,9 @@ import type { InstanceType_ } from "@shared/Type"
 
 const sros = _ENV.Sros_.Sros.new()
 const s = sros.short
-const Tempus_Event = _ENV.Word_.Tempus_Event
-type Tempus_Event = InstanceType_<typeof Tempus_Event>
+// const Tempus_Event = _ENV.Word_.Tempus_Event
+// type Tempus_Event = InstanceType_<typeof Tempus_Event>
+
 // const WordEvent = _ENV.Word_.WordEvent
 // type WordEvent = _ENV.Word_.WordEvent
 //type WordEvent = InstanceType_<typeof WordEvent>
@@ -36,6 +42,7 @@ type N2S = _ENV.Sros_.N2S
 const Word = _ENV.JoinedWord
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
+const $ = _ENV.Ut.$
 const last = _ENV.Ut.lastOf
 const SvcWord = _ENV.SvcWord
 type SvcWord = InstanceType_<typeof _ENV.SvcWord>
@@ -54,11 +61,15 @@ type Row = typeof Row
 const Mod = _ENV.NgaqModels
 type Mod = typeof Mod
 
-class WordEvent{
-	static readonly ADD=Row.LearnBelong.add
-	static readonly RMB=Row.LearnBelong.rmb
-	static readonly FGT=Row.LearnBelong.fgt
-}
+const WordEvent = Row.LearnBelong
+type WordEvent = typeof WordEvent
+
+
+// class WordEvent{
+// 	static readonly ADD=Row.LearnBelong.add
+// 	static readonly RMB=Row.LearnBelong.rmb
+// 	static readonly FGT=Row.LearnBelong.fgt
+// }
 
 //type Statistics = InstanceType_<typ
 
@@ -126,7 +137,7 @@ class Statistics{
 	records:ChangeRecord[] = []
 }
 
-type Word_t = SvcWord
+type Word_t = I_Tempus_EventWord
 
 class WordWeight implements I_WordWeight<Word_t>{
 
@@ -162,11 +173,10 @@ class WordWeight implements I_WordWeight<Word_t>{
 		return false
 	}
 
-	//TODO
-	addChangeRecords(word:Word, changeRecords:ChangeRecord[]){
+	addChangeRecords(id:str, changeRecords:ChangeRecord[]){
 		const z = this
 		for(const r of changeRecords){
-			ChangeRecord.push(z.wordId__changeRec, word.textWord.id+'', r)
+			ChangeRecord.push(z.wordId__changeRec, id, r)
 		}
 	}
 
@@ -197,10 +207,10 @@ class WordWeight implements I_WordWeight<Word_t>{
 			}
 
 			readonly This = Handle3Events
-			_mw:SvcWord
+			_mw:Word_t
 			_ww:WordWeight
 			_statistics:Statistics
-			_cur_tempus__event:Tempus_Event
+			_cur_tempus__event:I_Tempus_Event
 			static defaultOpt = WordWeight.defaultOpt
 
 			addRecord(record:ChangeRecord){
@@ -210,7 +220,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				z._statistics.records.push(record)
 			}
 
-			handleAll(tempus_events:Tempus_Event[]){
+			handleAll(tempus_events:I_Tempus_Event[]){
 				const z = this
 				for(const t_e of tempus_events){
 					z._cur_tempus__event = t_e
@@ -225,13 +235,13 @@ class WordWeight implements I_WordWeight<Word_t>{
 				z._statistics.curPos ++
 				const WE = WordEvent
 				switch (z._cur_tempus__event.event){
-					case WE.ADD:
+					case WE.add:
 						return z.handle_add()
 					break;
-					case WE.RMB:
+					case WE.rmb:
 						return z.handle_rmb()
 					break;
-					case WE.FGT:
+					case WE.fgt:
 						return z.handle_fgt()
 					break;
 					default:
@@ -270,12 +280,13 @@ class WordWeight implements I_WordWeight<Word_t>{
 				const lastRec = last(z._statistics.records) as TempusEventRecord
 				if(lastRec == void 0){
 					throw new Error('last changeRecord is undef')
-				}else if(WordEvent.ADD === lastRec.event){ //若上個事件潙 添
+				}else if(WordEvent.add === lastRec.event){ //若上個事件潙 添
 					st.weight = $n( s.d(st.weight, 1.1) ) //自除以1.1
 				}else{
 					weight_ = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 					weight_ = s.d(
-						weight_, z._mw.word.times_add
+						//weight_, z._mw.word.times_add
+						weight_, $(z._mw.event__times.get(WordEvent.add), '')
 					)
 					if(s.c(weight_, 0)<=1){
 						weight_ = s.n(1.01)
@@ -287,14 +298,15 @@ class WordWeight implements I_WordWeight<Word_t>{
 				// }
 
 				// 算 debuff
-				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
+				if(st.curPos >= st.finalAddEventPos && last(z._mw.tempus_event_s).event === WordEvent.rmb ){
 					//console.log(1)//t
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._cur_tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
 						s.m(
 							nowDiffThen
 							, sros.pow(
-								s.a(z.This.defaultOpt.base, z._mw.word.times_add)
+								//s.a(z.This.defaultOpt.base, z._mw.word.times_add)
+								s.a( z.This.defaultOpt.base, $( z._mw.event__times.get(WordEvent.add) ) )
 								,st.cnt_add
 							)
 						),
@@ -341,7 +353,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				const thatTime = z._cur_tempus__event.tempus
 				const nunc = _ENV.Tempus.new()
 				const diffMills = Tempus.diff_mills(nunc, thatTime)
-				if(curEv === WordEvent.ADD){
+				if(curEv === WordEvent.add){
 					const bonus = z._ww.calcLastAddBonus(diffMills)
 					z._statistics.weight = s.m(
 						z._statistics.weight, bonus
@@ -362,150 +374,150 @@ class WordWeight implements I_WordWeight<Word_t>{
 
 	// }
 
-	async run0(mWords:SvcWord[]) {
+	async run0(mWords:Word_t[]) {
 		const z = this
 		
 		for(let i = 0; i < mWords.length; i++){
 			const uWord = mWords[i]
-			// 若已有匪權重 且未背過 則跳過 㕥應resort
-			if(
-				uWord.weight != void 0 
-				&& uWord.weight !== 0
-				&& uWord.status.memorize == void 0
-			){
-				continue
-			}
+			// // 若已有匪權重 且未背過 則跳過 㕥應resort
+			// if(
+			// 	uWord.weight != void 0 
+			// 	&& uWord.weight !== 0
+			// 	&& uWord.status.memorize == void 0
+			// ){
+			// 	continue
+			// }
 			z.calc0(uWord)
 			//uWord.weight = 114514 //t
-			z.calcTags(uWord)
+			//z.calcTags(uWord)
 		}
 		mWords.sort((b,a)=>s.c(a.weight, b.weight))
 		//console.log(z.word__changeRecord)//t *
 		return mWords
 	}
 
-	async run(mWords:SvcWord[]) {
+	async run(mWords:Word_t[]) {
 		const z = this
-		mWords = z.filter(mWords)
+		//mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)
-		mWords = await z.filterByTbl(mWords)
+		//mWords = await z.filterByTbl(mWords)
 		mWords = z.shuffer(mWords)
 		return mWords
 	}
 
-	shuffer(words:SvcWord[]){
+	shuffer(words:Word_t[]){
 		return _ENV.algo.getShuffle(
 			words, 8, 
 			Math.floor(words.length / 8)
 		)
 	}
 
-	/**
-	 * 英日英日英日英日拉
-	 * @param words 
-	 */
-	filterByTbl(
-		words:SvcWord[] // 權重高者在前
-	){
-		const $ = _ENV.Ut.$
-		words = words.slice()
-		words = words.reverse() // 此後 權重高者在末
-		//按表名分類
-		const tbl__words = new Map<string, SvcWord[]>()
-		for(const w of words){
-			const tbl = (w.word.textWord.belong)
-			const habere = tbl__words.get(tbl)
-			if( habere == void 0 ){
-				tbl__words.set(tbl, [w])
-			}else{
-				habere.push(w)
-				tbl__words.set(tbl, habere)
-			}
-		}
+	// /**
+	//  * 英日英日英日英日拉
+	//  * @param words 
+	//  */
+	// filterByTbl(
+	// 	words:SvcWord[] // 權重高者在前
+	// ){
+	// 	const $ = _ENV.Ut.$
+	// 	words = words.slice()
+	// 	words = words.reverse() // 此後 權重高者在末
+	// 	//按表名分類
+	// 	const tbl__words = new Map<string, SvcWord[]>()
+	// 	for(const w of words){
+	// 		const tbl = (w.word.textWord.belong)
+	// 		const habere = tbl__words.get(tbl)
+	// 		if( habere == void 0 ){
+	// 			tbl__words.set(tbl, [w])
+	// 		}else{
+	// 			habere.push(w)
+	// 			tbl__words.set(tbl, habere)
+	// 		}
+	// 	}
 
-		const ans = [] as SvcWord[]
-		// const eng = $(tbl__words.get('english'))
-		// const jap = $(tbl__words.get('japanese'))
-		// const latin = $(tbl__words.get('latin'))
-		const eng = tbl__words.get('english')
-		const jap = tbl__words.get('japanese')
-		const latin = tbl__words.get('latin')
-		const italian = tbl__words.get('italian')
-		if(eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0){
-			console.warn(`eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0`)
-			return words
-		}
-		let i = 0
-		function engFn(){
-			const e = eng.pop()
-			if(e == void 0){
-				return
-			}
-			ans.push(e);i++
-		}
-		function japFn(){
-			const e = jap.pop()
-			if(e == void 0){
-				return
-			}
-			ans.push(e);i++
-		}
-		function latinFn(){
-			const e = latin.pop()
-			if(e == void 0){
-				return
-			}
-			ans.push(e);i++
-		}
-		function italianFn(){
-			const e = italian.pop()
-			if(e == void 0){
-				return
-			}
-			ans.push(e);i++
-		}
-		for(; i < words.length;){
-			engFn();japFn();
-			engFn();japFn();
-			engFn();japFn();
-			engFn();japFn();
-			latinFn();
-			italianFn();
-			//engFn()
-		}
-		return ans
-	}
+	// 	const ans = [] as SvcWord[]
+	// 	// const eng = $(tbl__words.get('english'))
+	// 	// const jap = $(tbl__words.get('japanese'))
+	// 	// const latin = $(tbl__words.get('latin'))
+	// 	const eng = tbl__words.get('english')
+	// 	const jap = tbl__words.get('japanese')
+	// 	const latin = tbl__words.get('latin')
+	// 	const italian = tbl__words.get('italian')
+	// 	if(eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0){
+	// 		console.warn(`eng == void 0 || jap == void 0 || latin == void 0 || italian == void 0`)
+	// 		return words
+	// 	}
+	// 	let i = 0
+	// 	function engFn(){
+	// 		const e = eng.pop()
+	// 		if(e == void 0){
+	// 			return
+	// 		}
+	// 		ans.push(e);i++
+	// 	}
+	// 	function japFn(){
+	// 		const e = jap.pop()
+	// 		if(e == void 0){
+	// 			return
+	// 		}
+	// 		ans.push(e);i++
+	// 	}
+	// 	function latinFn(){
+	// 		const e = latin.pop()
+	// 		if(e == void 0){
+	// 			return
+	// 		}
+	// 		ans.push(e);i++
+	// 	}
+	// 	function italianFn(){
+	// 		const e = italian.pop()
+	// 		if(e == void 0){
+	// 			return
+	// 		}
+	// 		ans.push(e);i++
+	// 	}
+	// 	for(; i < words.length;){
+	// 		engFn();japFn();
+	// 		engFn();japFn();
+	// 		engFn();japFn();
+	// 		engFn();japFn();
+	// 		latinFn();
+	// 		italianFn();
+	// 		//engFn()
+	// 	}
+	// 	return ans
+	// }
 
-	filter(words:SvcWord[]){
-		//return words
-		return words
-		const z = this
-		const ans = [] as SvcWord[]
-		for(let i = 0; i < words.length; i++){
-			const w = words[i]
-			const tag = w.word.propertys
-			// if(tag.includes('跨文化')){
-			// 	ans.push(w)
-			// }
-		}
-		return ans
-	}
+	// filter(words:Word_t[]){
+	// 	//return words
+	// 	return words
+	// 	// const z = this
+	// 	// const ans = [] as SvcWord[]
+	// 	// for(let i = 0; i < words.length; i++){
+	// 	// 	const w = words[i]
+	// 	// 	const tag = w.word.propertys
+	// 	// 	// if(tag.includes('跨文化')){
+	// 	// 	// 	ans.push(w)
+	// 	// 	// }
+	// 	// }
+	// 	// return ans
+	// }
 
-	/** 
-	 * 據 標籤 與 註釋 算權重
-	 * 使有(特定)標籤或註釋者 權重更高
-	 */
-	calcTags(word:SvcWord){
-		const z = this
-		if(word.word.tag.length > 0 || word.word.annotation.length > 0){
-			word.weight = s.m(
-				word.weight, 10
-			)
-			const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
-			ChangeRecord.push(z.wordId__changeRec, word.id, rec)
-		}
-		return word
-	}
+	// /** 
+	//  * 據 標籤 與 註釋 算權重
+	//  * 使有(特定)標籤或註釋者 權重更高
+	//  */
+	// calcTags(word:SvcWord){
+	// 	const z = this
+	// 	if(word.word.tag.length > 0 || word.word.annotation.length > 0){
+	// 		word.weight = s.m(
+	// 			word.weight, 10
+	// 		)
+	// 		const rec = ChangeRecord.new(word.weight, 'tag_or_annotation')
+	// 		ChangeRecord.push(z.wordId__changeRec, word.id, rec)
+	// 	}
+	// 	return word
+	// }
 
 
 	// calcTags(words:SvcWord3[]){
@@ -523,9 +535,9 @@ class WordWeight implements I_WordWeight<Word_t>{
 	// 	return words
 	// }
 
-	calc0(mWord:SvcWord){
+	calc0(mWord:Word_t){
 		const z = this
-		const finalAddEventPos = z.This.finalAddEventPos(mWord.date__event)
+		const finalAddEventPos = z.This.finalAddEventPos(mWord.tempus_event_s)
 		const st = z.This.Statistics.new(finalAddEventPos)
 		const Handle3Events = z.This.Handle3Events
 		const h3 = Handle3Events.new({
@@ -539,9 +551,9 @@ class WordWeight implements I_WordWeight<Word_t>{
 		// 	const st = h3.handleOne()
 		// 	console.log(st.records.length)//t
 		// }
-		const ans = h3.handleAll(mWord.date__event)
+		const ans = h3.handleAll(mWord.tempus_event_s)
 		mWord.weight = ans.weight
-		z.addChangeRecords(mWord.word, ans.records)
+		z.addChangeRecords(mWord.id, ans.records)
 		
 		// mWord.weight = h3._statistics.weight
 		// z.addChangeRecords(mWord.word, h3._statistics.records)
@@ -556,10 +568,10 @@ class WordWeight implements I_WordWeight<Word_t>{
 	 * @param tempus__event 
 	 * @returns 
 	 */
-	static finalAddEventPos(tempus__event:Tempus_Event[]){
+	static finalAddEventPos(tempus__event:I_Tempus_Event[]){
 		let ans = 0
 		for(let i = tempus__event.length-1; i>=0; i--){
-			if(tempus__event[i].event === WordEvent.ADD){
+			if(tempus__event[i].event === WordEvent.add){
 				ans = i;
 				break
 			}
@@ -630,6 +642,6 @@ class WordWeight implements I_WordWeight<Word_t>{
 	}
 }
 
-//throw new Error()
+
 //@ts-ignore
 return WordWeight.new()

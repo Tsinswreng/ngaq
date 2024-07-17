@@ -17,7 +17,7 @@ import * as Ut from '@shared/Ut'
 import { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord";
 
 //type import
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight3"
 import { InstanceType_ } from "@shared/TypeOld"
 
 const sros = Sros.Sros.new()

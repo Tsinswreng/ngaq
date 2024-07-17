@@ -1,7 +1,7 @@
 import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { Word, WordEvent } from "@shared/entities/Word/Word";
 
 //type Asyncable<T> = T|Promise<T>

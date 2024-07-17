@@ -67,7 +67,9 @@ export class SvcWord {
 	protected __init__(word:Word){
 		const z = this
 		z._word = word
+		z.id = word.textWord.id+''
 		z._status = Status.new()
+		z._sortLearns()
 		z.sortDate__Event()
 		return z
 	}
@@ -112,6 +114,11 @@ export class SvcWord {
 		)
 		tes.sort((a,b)=>Tempus.diff_mills(a.tempus,b.tempus))
 		return tes
+	}
+
+	protected _sortLearns(){
+		const z = this
+		z.word.sortLearnsByCt()
 	}
 
 	sortDate__Event(){
@@ -223,8 +230,9 @@ export class SvcWord {
 		})
 		return learn
 	}
-
 }
+
+
 
 class ResortSvcWord{
 
