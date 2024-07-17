@@ -1,7 +1,7 @@
 //import { SvcWord3, RMB_FGT } from "@shared/entities/Word/SvcWord3";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
-import { NgaqSvc } from "@shared/logic/memorizeWord/LearnSvc";
+import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
@@ -17,7 +17,7 @@ import { JoinedRow } from "@shared/dbRow/JoinedRow";
 import { JoinedWord } from "@shared/entities/Word/JoinedWord";
 import { SvcWord } from "@shared/entities/Word/SvcWord";
 
-export class WebNgaqSvc extends NgaqSvc{
+export class WebNgaqSvc extends LearnSvc{
 
 
 	readonly This = WebNgaqSvc
@@ -76,7 +76,9 @@ export class WebNgaqSvc extends NgaqSvc{
 	protected async _load(){
 		const z = this
 		const jsonRows = await z.client.GetWordsFromAllTables()
-		const rows:JoinedRow[] = JSON.parse(jsonRows)
+		//console.log(jsonRows)//t
+		//const rows:JoinedRow[] = JSON.parse(jsonRows)
+		const rows:JoinedRow[] = jsonRows
 		const jwords = rows.map(e=>JoinedWord.new(e))
 		//const words = jwords.map(e=>JoinedWord.toPlainWord(e))
 		const memorizeWords = jwords.map(e=>WebSvcWord.new(e))

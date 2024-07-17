@@ -11,7 +11,7 @@ import {
 import * as Rows from '@shared/dbRow/wordDbRowsOld'
 import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
-import { JoinedRow } from '../../shared/dbRow/JoinedRowOld'
+import { JoinedRowOld } from '../../shared/dbRow/JoinedRowOld'
 import { PubNonFuncKeys } from '@shared/Type'
 import { JoinedWordOld } from '@shared/entities/Word/JoinedWordOld'
 
@@ -716,7 +716,7 @@ export class NgaqDbSrcOld{
 		const propStmt = await db.Prepare(propSql)
 
 		
-		const fn = async(rows:JoinedRow[])=>{
+		const fn = async(rows:JoinedRowOld[])=>{
 			for(let i = 0; i < rows.length; i++){
 				const jr = rows[i]
 				// if(jr.word.text === '勢い'){ //t
@@ -794,7 +794,7 @@ export class NgaqDbSrcOld{
 		const allIdSql = z.qrys.getAllWordId('_')
 		const [,allId] = await z.db.All<{_:int}>(allIdSql)
 		const seekRowFn = await z.fn_seekJoinedRowById()
-		const ans = [] as JoinedRow[]
+		const ans = [] as JoinedRowOld[]
 		for(const id of allId){
 			const ua = await seekRowFn(id._)
 			if(ua != null){
@@ -858,7 +858,7 @@ export class NgaqDbSrcOld{
 			const textWord = textWords[0]
 			const [,propertys] = await stmtPr.All<Rows.PropertyRow>([id])
 			const [,learns] = await stmtLe.All<Rows.LearnRow>([id])
-			const jRow = JoinedRow.new({
+			const jRow = JoinedRowOld.new({
 				word: textWord
 				,propertys: propertys
 				,learns: learns

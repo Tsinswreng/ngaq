@@ -1,5 +1,7 @@
+import { LearnBelong } from '@shared/dbRow/NgaqRows'
 import {SvcWord} from '@shared/entities/Word/SvcWord'
-import { WordEvent } from '@shared/SingleWord2'
+//import { WordEvent } from '@shared/SingleWord2'
+
 import {Ref, ref} from 'vue'
 
 class UiStuff{
@@ -30,15 +32,15 @@ export class WebSvcWord extends SvcWord{
 	protected _uiStuff = new UiStuff()
 	get uiStuff(){return this._uiStuff}
 
-	static eventMark(event:WordEvent, add='🤔', rmb='✅', fgt='❌'){
+	static eventMark(event:LearnBelong, add='🤔', rmb='✅', fgt='❌'){
 		switch(event){
-			case WordEvent.ADD:
+			case LearnBelong.add:
 				return add
 			break
-			case WordEvent.RMB:
+			case LearnBelong.rmb:
 				return rmb
 			break
-			case WordEvent.FGT:
+			case LearnBelong.fgt:
 				return fgt
 			break
 		}

@@ -1,5 +1,5 @@
 import { RMB_FGT } from "@shared/entities/Word/LearnEvents"
-import { NgaqSvc } from "@shared/logic/memorizeWord/LearnSvc"
+import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc"
 //import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/ngaq4/entities/WebSvcWord"
 import { WebNgaqSvc } from "@ts/ngaq4/WebNgaqSvc"

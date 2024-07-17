@@ -2,7 +2,7 @@ import Word from "@shared/SingleWord2"
 import * as Rows_ from '@shared/dbRow/wordDbRowsOld'
 import Tempus from "@shared/Tempus"
 import { $ } from "@shared/Ut"
-import { JoinedRow } from "../../shared/dbRow/JoinedRowOld"
+import { JoinedRowOld } from "../../shared/dbRow/JoinedRowOld"
 
 export class WordToRows{
 	protected constructor(){}
@@ -118,7 +118,7 @@ export class WordToRows{
 		const word = z.geneWordRow()
 		const learns = z.geneLearnRows()
 		const propertys = z.genePropertyRows()
-		const ans = JoinedRow.new({
+		const ans = JoinedRowOld.new({
 			word:word
 			,learns:learns
 			,propertys:propertys

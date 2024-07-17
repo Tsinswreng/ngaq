@@ -1,4 +1,4 @@
-import { JoinedRow } from "@shared/dbRow/JoinedRowOld"
+import { JoinedRowOld } from "@shared/dbRow/JoinedRowOld"
 import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
@@ -17,7 +17,7 @@ export class JoinedWordOld{
 		return z
 	}
 
-	static new(row:JoinedRow){
+	static new(row:JoinedRowOld){
 		const z = new this()
 		z.__init__(row)
 		return z
@@ -36,8 +36,8 @@ export class JoinedWordOld{
 	get learns(){return this._learns}
 	protected set learns(v){this._learns = v}
 
-	static toRow(j:JoinedWordOld):JoinedRow{
-		const ans = JoinedRow.new({
+	static toRow(j:JoinedWordOld):JoinedRowOld{
+		const ans = JoinedRowOld.new({
 			word: j.textWord.toRow()
 			,learns: j.learns.map(e=>e.toRow())
 			,propertys: j.propertys.map(e=>e.toRow())

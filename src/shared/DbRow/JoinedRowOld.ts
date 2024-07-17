@@ -1,23 +1,23 @@
 import { LearnRow, PropertyRow, WordRow } from "@shared/dbRow/wordDbRowsOld"
-import { PubNonFuncProp } from "@shared/TypeOld"
+import { PubNonFuncProp } from "@shared/Type"
 
 
-export class JoinedRow{
+export class JoinedRowOld{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof JoinedRow.new>){
+	protected __init__(...args: Parameters<typeof JoinedRowOld.new>){
 		const z = this
 		const prop = args[0]
 		Object.assign(z, prop)
 		return z
 	}
 
-	static new(prop:PubNonFuncProp<JoinedRow>){
+	static new(prop:PubNonFuncProp<JoinedRowOld>){
 		const z = new this()
 		z.__init__(prop)
 		return z
 	}
 
-	get This(){return JoinedRow}
+	get This(){return JoinedRowOld}
 
 	word:WordRow
 	learns:LearnRow[]

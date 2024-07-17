@@ -7,6 +7,7 @@ import * as Row from '@shared/dbRow/user/UserRows'
 import { lsItems } from "@ts/localStorage/Items"
 import axios, { AxiosRequestConfig } from 'axios'
 import { Exception, Reason } from "@shared/error/Exception";
+import { JoinedRow } from "@shared/dbRow/JoinedRow"
 
 type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
@@ -197,7 +198,7 @@ export class Client{
 		const url = new URL(`${urlB.user}/allWords`, z.baseUrl)
 		const got = await apiRequest(url.toString(), "POST", {})
 		//const got = await fetch(url)
-		return got.data
+		return got.data as JoinedRow[]
 		//const text = await got.text()
 		//return text
 	}
