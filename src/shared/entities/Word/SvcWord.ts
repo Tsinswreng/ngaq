@@ -7,11 +7,13 @@ import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Ut";
 import * as Mod from '@shared/model/NgaqModels'
 import * as Row from "@shared/dbRow/NgaqRows";
-export type rmb_fgt = typeof WordEvent.fgt|typeof WordEvent.rmb
-export type rmb_fgt_nil = typeof WordEvent.fgt|typeof WordEvent.rmb|undefined
+import { I_SvcWord } from "@shared/interfaces/I_SvcWord";
+import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
 
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
+// export type RMB_FGT = typeof WordEvent.fgt|typeof WordEvent.rmb
+// export type RMB_FGT_nil = typeof WordEvent.fgt|typeof WordEvent.rmb|null
 
 type Word = JoinedWord
 //type WordEvent = typeof WordEvent
@@ -52,7 +54,7 @@ class Status{
 }
 
 
-export class SvcWord {
+export class SvcWord implements I_SvcWord{
 
 	protected constructor(){
 
@@ -133,7 +135,7 @@ export class SvcWord {
 	 * @param ev 
 	 * @returns 
 	 */
-	setInitEvent(ev:rmb_fgt){
+	setInitEvent(ev:RMB_FGT){
 		const z = this
 		const mw = this
 		if(mw.status.memorize == void 0){

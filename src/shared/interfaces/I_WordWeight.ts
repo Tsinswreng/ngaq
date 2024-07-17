@@ -1,6 +1,9 @@
 type Fn<Return=any> = (...args:any[])=>Return
 import type { SvcWord } from "@shared/entities/Word/SvcWord"
 import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
+import type Tempus from "@shared/Tempus"
+import type { LearnBelong } from "@shared/dbRow/NgaqRows"
+
 export interface I_WordWeight<Word_t>{
 	/**
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
@@ -18,3 +21,4 @@ export interface I_WordWeight<Word_t>{
 	paramOpt?:kvobj
 	setParam(key:string, v):boolean
 }
+

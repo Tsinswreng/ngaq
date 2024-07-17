@@ -72,25 +72,25 @@ export class UserCtrl extends BaseCtrl{
 			const authHead = req.header('authorization')
 			if(userId == void 0 || authHead == void 0){
 				res.status(401).json({error: 'Unauthorized'})
-				return false
+				return null
 			}
 			const bearer = 'Bearer '
 			const [gotBearer, token] = splitAtLength(authHead, bearer.length)
 			if(bearer !== gotBearer){
 				res.status(401).json({error: 'Unauthorized: Invalid authorization header'})
-				return false
+				return null
 			}
 			const got = await z.svc.ValidateUserIdEtToken(userId, token)
 			if(!got){
 				res.status(401).json({error: 'Unauthorized'})
-				return false
+				return null
 			}
-			return true
+			return userId
 		} catch (err) {
 			res.status(401).json({error: 'Unauthorized'})
-			return false
+			return null
 		}
-		return false
+		return null
 	}
 
 	protected override initRouter(): Router {
@@ -149,9 +149,10 @@ export class UserCtrl extends BaseCtrl{
 
 		r.post('/allWords', async(req, res)=>{
 			try {
-				if(!await z.ValidateHeaders(req, res)){return}
-				
-				res.send('123')
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){return}
+				const joinedRows = await z.svc.GetAllWords(userId)
+				res.status(200).json(joinedRows)
 			} catch (err) {
 				z.onErr(err)
 				res.status(500).send('')

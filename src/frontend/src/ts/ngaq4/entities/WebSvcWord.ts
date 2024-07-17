@@ -1,4 +1,4 @@
-import {SvcWord3} from '@shared/entities/Word/SvcWord3'
+import {SvcWord} from '@shared/entities/Word/SvcWord'
 import { WordEvent } from '@shared/SingleWord2'
 import {Ref, ref} from 'vue'
 
@@ -12,9 +12,9 @@ class UiStuff{
 }
 
 
-export class WebSvcWord extends SvcWord3{
+export class WebSvcWord extends SvcWord{
 
-	static new(...args:Parameters<typeof SvcWord3.new>){
+	static new(...args:Parameters<typeof SvcWord.new>){
 		const z = new this()
 		z.__init__(...args)
 		return z

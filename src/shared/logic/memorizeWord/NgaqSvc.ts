@@ -5,7 +5,7 @@ import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { Word, WordEvent } from "@shared/entities/Word/Word";
 
 //type Asyncable<T> = T|Promise<T>
-type Task<T> = Promise<T>
+//type Task<T> = Promise<T>
 
 const EV = Le.Event.new.bind(Le.Event)
 

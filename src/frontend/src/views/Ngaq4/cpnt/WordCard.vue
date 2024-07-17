@@ -2,10 +2,16 @@
 import {WebSvcWord} from '@ts/ngaq4/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
-import { WordEvent } from '@shared/entities/Word/Word';
 import { $ } from '@shared/Ut'
-import {SvcWord3} from '@shared/entities/Word/SvcWord3'
+import {SvcWord} from '@shared/entities/Word/SvcWord'
 import Tempus from '@shared/Tempus';
+import { LearnBelong } from '@shared/dbRow/wordDbRowsOld';
+const WordEvent = LearnBelong
+// class WordEvent{
+// 	static ADD
+// 	static RMB
+// 	static FGT
+// }
 
 const loaded = ref(false)
 let ui:WebNgaqUi// = await WebVocaUi.getInstanceAsync()
@@ -60,7 +66,7 @@ function returnWordToParent(){
 
 function rightClick(event:MouseEvent){
 	event.preventDefault()
-	ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)
+	ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)
 }
 
 // function undo(){
@@ -90,27 +96,27 @@ function fmtNum(num:number, fix:number){
 // 	return ui.undoByWord($(mw))
 // }
 
-function lastEventSymbol(w:SvcWord3){
+function lastEventSymbol(w:SvcWord){
 	switch(w.date__event[w.date__event.length-1].event){
-		case WordEvent.ADD:
+		case WordEvent.add:
 			return '🤔'
 		break;
-		case WordEvent.RMB:
+		case WordEvent.rmb:
 			return '✅'
 		break;
-		case WordEvent.FGT:
+		case WordEvent.fgt:
 			return '❌'
 		break;
 	}
 }
 
 const reciteStatusRef = mw.uiStuff.reciteStatusRef
-const isAddTimeGeq3 = (wb:WebSvcWord)=>{
-	if(wb == void 0){
-		return false
-	}
-	return wb.word.times_add >= 3
-}
+// const isAddTimeGeq3 = (wb:WebSvcWord)=>{
+// 	if(wb == void 0){
+// 		return false
+// 	}
+// 	return wb.word.times_add >= 3
+// }
 
 class WordColor{
 	gray = ref('gray')
@@ -118,7 +124,7 @@ class WordColor{
 	green = ref('green')
 	blue = ref('blue')
 	red = ref('red')
-	get(svcWord:SvcWord3){
+	get(svcWord:SvcWord){
 		const z = this
 		const c = svcWord.word.times_add
 		//return ref('testDefault')
@@ -153,8 +159,8 @@ function fmtDate(tempus:Tempus){
 		:class = wordColorRef.get(svcWord).value
 	> <!-- :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0" -->
 
-		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)">{{ props.loopIndex }}</span>
-		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="rightClick">
+		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)">{{ props.loopIndex }}</span>
+		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.rmb)" @contextmenu="rightClick">
 			{{ mw.word.wordShape }}
 		</span>
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>

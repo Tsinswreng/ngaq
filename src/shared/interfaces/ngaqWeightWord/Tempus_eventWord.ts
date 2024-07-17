@@ -1,5 +1,11 @@
+/* 
+ @deprecated
+*/
+
 import type { LearnBelong } from "@shared/dbRow/NgaqRows";
 import type Tempus from "@shared/Tempus";
+export { I_Tempus_Event } from "../I_SvcWord";
+export { I_WordForCalcWeight as I_Tempus_EventWord } from "../I_SvcWord";
 
 /**
  * 單例
@@ -10,15 +16,3 @@ import type Tempus from "@shared/Tempus";
 // 	fgt:I_WordEvent
 // }
 
-export interface I_Tempus_Event{
-	tempus:Tempus
-	event:LearnBelong
-}
-
-export interface I_Tempus_EventWord{
-	id:str
-	tempus_event_s:I_Tempus_Event[]
-	weight:number
-	//times_add:int
-	event__times:Map<LearnBelong, int>
-}

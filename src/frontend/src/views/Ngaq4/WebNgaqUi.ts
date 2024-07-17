@@ -1,6 +1,6 @@
-import { RMB_FGT } from "@shared/entities/Word/SvcWord3"
-import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc"
-import { WordEvent } from "@shared/SingleWord2"
+import { RMB_FGT } from "@shared/entities/Word/LearnEvents"
+import { NgaqSvc } from "@shared/logic/memorizeWord/LearnSvc"
+//import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/ngaq4/entities/WebSvcWord"
 import { WebNgaqSvc } from "@ts/ngaq4/WebNgaqSvc"
 import { ref, Ref } from "vue"
@@ -9,6 +9,13 @@ import { $, delay, mergeErrStack } from "@shared/Ut"
 import { Exception } from "@shared/error/Exception"
 import * as Le from '@shared/linkedEvent'
 import EventEmitter3 from 'EventEmitter3'
+
+const WordEvent = LearnBelong
+
+// class WordEvent{
+// 	static rmb
+// 	static fgt
+// }
 
 // function testU8ArrToBase64(uint8Array:Uint8Array){
 // // 假设您有一个名为 uint8Array 的 UInt8Array 对象
@@ -169,28 +176,6 @@ export class WebNgaqUi{
 		window['_'] = z
 	}
 
-	/** @deprecated */
-	registerToWindow0(){
-		const z = this
-		//@ts-ignore
-		window._voca = {}
-		//@ts-ignore
-		const ui = window._voca
-		const keys = Object.getOwnPropertyNames(Object.getPrototypeOf(z))
-		//console.log(keys)
-		for(const k of keys){
-			if(k === 'registerToWindow' || k === 'constructor'){
-				continue
-			}
-			//console.log(k, typeof z[k])
-			if(typeof z[k] === 'function'){
-				ui[k] = z[k].bind(z)
-			}else{
-				ui[k] = z[k]
-			}
-		}
-	}
-
 	async Test(){
 		const z = this
 		const client = Client.new()
@@ -254,10 +239,10 @@ export class WebNgaqUi{
 		const ans = z.svc.learnByWord(mw, event)
 		if(mw instanceof WebSvcWord){
 			switch (event){
-				case WordEvent.RMB:
+				case WordEvent.rmb:
 					mw.uiStuff.reciteStatusRef.value = 'rmb'
 				break;
-				case WordEvent.FGT:
+				case WordEvent.fgt:
 					mw.uiStuff.reciteStatusRef.value = 'fgt'
 				break;
 			}
@@ -276,10 +261,10 @@ export class WebNgaqUi{
 		const ans = z.svc.learnOrUndoByIndex(index, event)
 		if(mw instanceof WebSvcWord){
 			switch (ans){
-				case WordEvent.RMB:
+				case WordEvent.rmb:
 					mw.uiStuff.reciteStatusRef.value = 'rmb'
 				break;
-				case WordEvent.FGT:
+				case WordEvent.fgt:
 					mw.uiStuff.reciteStatusRef.value = 'fgt'
 				break;
 				case void 0:
@@ -352,9 +337,11 @@ export class WebNgaqUi{
 		return z.start()
 	}
 
+	//TODO
 	async save(){
 		const z = this
-		return z.svc.saveOld()
+		//return z.svc.saveOld()
+		return true
 	}
 
 	async restart(){
@@ -388,17 +375,17 @@ export class WebNgaqUi{
 
 
 	//TODO 把changeRecord作潙可選屬性 集于MemorizeWord
-	seekChangeRec(index:int){
-		const z = this
-		const recs = z.svc.weightAlgo?.word__changeRecordOld
-		if(recs == void 0){
-			console.log(`recs == void 0`)
-			return
-		}
-		const curWord = z.wordsToLearn[index]
-		console.log(curWord)//t
-		return recs.get(curWord.word)
-	}
+	// seekChangeRec(index:int){
+	// 	const z = this
+	// 	const recs = z.svc.weightAlgo?.word__changeRecordOld
+	// 	if(recs == void 0){
+	// 		console.log(`recs == void 0`)
+	// 		return
+	// 	}
+	// 	const curWord = z.wordsToLearn[index]
+	// 	console.log(curWord)//t
+	// 	return recs.get(curWord.word)
+	// }
 
 	async nextBg(){
 		const z = this
@@ -565,4 +552,5 @@ import * as frut from '@ts/frut'
 import { TagImg } from "@shared/TagImg"
 import { cosDependencies } from "mathjs"
 import { Client } from "@ts/ngaq4/Client"
+import { LearnBelong } from "@shared/dbRow/wordDbRowsOld"
 

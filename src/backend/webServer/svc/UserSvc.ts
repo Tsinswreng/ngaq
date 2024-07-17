@@ -382,8 +382,8 @@ export class UserSvc{
 		const z = this
 		const userDb = await z.GetUserDbByUserId(userId)
 		const joinedRows = await userDb.dbSrc.GetAllJoinedRow()
-		const jwords = joinedRows.map(e=>JoinedWord.new(e))
-		const plainWords = jwords.map(e=>JoinedWord.toPlainWord(e))
-		
+		//const jwords = joinedRows.map(e=>JoinedWord.new(e))
+		//const plainWords = jwords.map(e=>JoinedWord.toPlainWord(e))
+		return joinedRows
 	}
 }

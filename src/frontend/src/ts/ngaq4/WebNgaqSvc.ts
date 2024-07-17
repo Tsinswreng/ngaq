@@ -1,14 +1,13 @@
-import { SvcWord3, RMB_FGT } from "@shared/entities/Word/SvcWord3";
+//import { SvcWord3, RMB_FGT } from "@shared/entities/Word/SvcWord3";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
-import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
+import { NgaqSvc } from "@shared/logic/memorizeWord/LearnSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { WordDbRow } from "@shared/dbRow/Word";
-import { Word } from "@shared/entities/Word/Word";
+//import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
-import { WordEvent } from "@shared/SingleWord2";
 import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
@@ -16,6 +15,7 @@ import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
 import { TagImg } from "@shared/TagImg";
 import { JoinedRow } from "@shared/dbRow/JoinedRow";
 import { JoinedWord } from "@shared/entities/Word/JoinedWord";
+import { SvcWord } from "@shared/entities/Word/SvcWord";
 
 export class WebNgaqSvc extends NgaqSvc{
 
@@ -78,8 +78,8 @@ export class WebNgaqSvc extends NgaqSvc{
 		const jsonRows = await z.client.GetWordsFromAllTables()
 		const rows:JoinedRow[] = JSON.parse(jsonRows)
 		const jwords = rows.map(e=>JoinedWord.new(e))
-		const words = jwords.map(e=>JoinedWord.toPlainWord(e))
-		const memorizeWords = words.map(e=>WebSvcWord.new(e))
+		//const words = jwords.map(e=>JoinedWord.toPlainWord(e))
+		const memorizeWords = jwords.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords
 		return true
 	}
@@ -132,19 +132,21 @@ export class WebNgaqSvc extends NgaqSvc{
 	// }
 
 
-	protected async _sortWords(svcWords: SvcWord3[]): Promise<SvcWord3[]> {
+	//TODO
+	protected async _sortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
 		//await z._initWeightAlgo_deprecated()
-		await z.initWeightAlgo()
-		if(z.weightAlgo == void 0){
-			throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
-		}
-		try {
-			const gotWords = await z.weightAlgo.run(z.wordsToLearn)
-			return gotWords
-		} catch (error) {
-			throw error //TODO 用exception
-		}
+		return svcWords
+		// await z.initWeightAlgo()
+		// if(z.weightAlgo == void 0){
+		// 	throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
+		// }
+		// try {
+		// 	const gotWords = await z.weightAlgo.run(z.wordsToLearn)
+		// 	return gotWords
+		// } catch (error) {
+		// 	throw error //TODO 用exception
+		// }
 		
 	}
 	protected _resort(): Promise<boolean> {
@@ -153,13 +155,13 @@ export class WebNgaqSvc extends NgaqSvc{
 
 
 
-	protected override async _saveOld(words: Word[]): Promise<any> {
-		const z = this
-		const rows = words.map(e=>WordDbRow.toPlain(e))
-		//const ans = await z.dbSrc.saveWords(words)
-		const ans = await z.client.saveWords(rows)
-		return ans
-	}
+	// protected override async _saveOld(words: Word[]): Promise<any> {
+	// 	const z = this
+	// 	const rows = words.map(e=>WordDbRow.toPlain(e))
+	// 	//const ans = await z.dbSrc.saveWords(words)
+	// 	const ans = await z.client.saveWords(rows)
+	// 	return ans
+	// }
 
 
 	protected async _restart(): Promise<boolean> {
