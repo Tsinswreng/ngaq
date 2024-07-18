@@ -2,6 +2,7 @@
 
 **Warning: This project has not been done yet. It is still unusable.**
 
+## 開發文檔 dev doc
 
 項目結構:
 ```
@@ -65,3 +66,9 @@ esno app.ts
 npm run devF
 ```
 
+
+## config.js 結構
+
+{
+	
+}

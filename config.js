@@ -1,7 +1,45 @@
 // @ts-check
 //@import {  } from "module";
 ({
-	port: 1919
+
+	// 單機
+	ngaq: {
+		/** 默認用戶 */
+		defaultUser: {
+			uniqueName: 'ngaq'
+			,password: 'ngaq'
+
+			,userDbPath: './db/userDb/ngaq.sqlite' //無效
+			,wordWeight: {
+				schemas: [
+					{
+						name:'my'
+						,path: './src/shared/WordWeight/Schemas/MyWeight.ts'
+						,lang: 'ts'
+						,params: [
+							1
+							,2
+							,3
+						]
+					}
+				]
+			}
+		}
+		//web服務器
+		,server:{
+			port:6324 //端口
+			,dbPath: "./db/server.sqlite" //服務器數據庫
+			,jwtKey: "TsinswrengGw'ang"
+		}
+	}
+	,userDb: {
+		baseDir: './db/userDb'
+		,prefix: 'user-'
+		,suffix: '.sqlite'
+	}
+
+	//以下內容已廢棄
+	,port: 1919
 	/** @deprecated */
 	,randomImgDir:[
 		`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
@@ -36,36 +74,4 @@
 		]
 	}
 
-	// 單機
-	,ngaq: {
-		defaultUser: {
-			uniqueName: 'ngaq'
-			,password: 'ngaq'
-			,userDbPath: './db/userDb/ngaq.sqlite'
-			,wordWeight: {
-				schemas: [
-					{
-						name:'my'
-						,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
-						,lang: 'ts'
-						,params: [
-							1
-							,2
-							,3
-						]
-					}
-				]
-			}
-		}
-		,server:{
-			port:6324
-			,dbPath: "./db/server.sqlite"
-			,jwtKey: "TsinswrengGw'ang"
-		}
-	}
-	,userDb: {
-		baseDir: './db/userDb'
-		,prefix: 'user-'
-		,suffix: '.sqlite'
-	}
 })

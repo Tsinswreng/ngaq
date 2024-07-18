@@ -1,5 +1,5 @@
 import Path from "path";
-import {merge} from 'lodash'
+import {merge} from '@shared/tools/merge'
 const lodashMerge = merge
 import * as fs from 'fs'
 import * as fse from 'fs-extra'

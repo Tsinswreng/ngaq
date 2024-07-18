@@ -3,7 +3,7 @@
  */
 import * as mathjs from 'mathjs'
 //import { lodashMerge } from '@shared/Ut'
-import {merge} from 'lodash'
+import {merge} from '@shared/tools/merge'
 const lodashMerge = merge
 
 export type BN = mathjs.BigNumber

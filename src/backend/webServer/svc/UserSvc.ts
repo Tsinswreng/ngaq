@@ -1,4 +1,4 @@
-import { UserDbSrc } from "@backend/db/user/UserDbSrc"
+import { UserDbSrc } from "@backend/db/sqlite/user/UserDbSrc"
 import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 

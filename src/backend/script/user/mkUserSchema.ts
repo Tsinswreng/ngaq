@@ -1,7 +1,7 @@
 import Config from "@backend/Config";
-import { UserDbSrc } from "@backend/db/user/UserDbSrc";
+import { UserDbSrc } from "@backend/db/sqlite/user/UserDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
-import { InitSql } from "@backend/db/user/InitSql"
+import { InitSql } from "@backend/db/sqlite/user/InitSql"
 
 const configInst = Config.getInstance()
 
