@@ -111,6 +111,15 @@ class Server{
 }
 
 export function main(){
+	process.on('uncaughtException', (err) => {
+		console.error('Global uncaught exception handler:', err);
+		//main()
+	});
+	
+	process.on('unhandledRejection', (reason, promise) => {
+		console.error('Global unhandled rejection handler:', reason);
+	});
+	
 	try {
 		const server = Server.new({_port:config.ngaq.server.port})
 		server.start()

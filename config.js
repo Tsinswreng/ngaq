@@ -63,7 +63,7 @@
 		schemas: [
 			{
 				name:'my'
-				,path: 'D:/_code/voca/src/shared/WordWeight/Schemas/MyWeight.ts'
+				,path: './src/shared/WordWeight/Schemas/MyWeight.ts'
 				,lang: 'ts'
 				,params: [
 					1

@@ -1,3 +1,12 @@
+process.on('uncaughtException', (err) => {
+	console.error('Global uncaught exception handler:', err);
+	//main()
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+	console.error('Global unhandled rejection handler:', reason);
+});
+
 
 import { WordDbSrc } from "./db/sqlite/OldWord/DbSrc";
 //const cors = require('cors')

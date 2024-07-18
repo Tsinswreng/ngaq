@@ -4,7 +4,7 @@ import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import * as Word_ from '@shared/entities/Word/Word'
 import * as Sros_ from "@shared/Sros";
 import lodash from 'lodash'
-import * as Ut from '@shared/Common'
+import * as Ut from '@shared/Ut'
 import * as Record from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 import * as algo from '@shared/algo'

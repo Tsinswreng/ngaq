@@ -34,7 +34,11 @@ type N2S = _ENV.Sros_.N2S
 const Word = _ENV.Word_.Word
 type Word = InstanceType_<typeof Word>
 const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
-const last = _ENV.Ut.lastOf
+//const last = _ENV.Ut.lastOf
+function $last<T>(arr:T[]){
+	return _ENV.Ut.$(arr.at(-1))
+}
+const last = $last
 const SvcWord = _ENV.SvcWord3
 type SvcWord = InstanceType_<typeof _ENV.SvcWord3>
 

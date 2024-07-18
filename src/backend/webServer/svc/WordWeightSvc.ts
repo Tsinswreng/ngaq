@@ -1,4 +1,4 @@
-import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser"
+import { OldWeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser"
 import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor"
 
 export class WordWeightSvc{
