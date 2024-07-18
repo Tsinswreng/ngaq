@@ -4,17 +4,23 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-	//target: 'node',
+	mode: 'production'
+	,target: 'web',
 	bail: false,
 	//externals: [nodeExternals()], // removes node_modules from your final bundle
 	entry: './out/shared/WordWeight/main.js', // make sure this matches the main root of your code 
 	output: {
-		path: path.join(__dirname, 'weight'), // this can be any path and directory you want
-		filename: 'bundle.js',
+		path: path.join(__dirname, 'bundle'), // this can be any path and directory you want
+		filename: 'weight.js',
 	},
 	optimization: {
-		minimize: false, // enabling this reduces file size and readability
+		minimize: true, // enabling this reduces file size and readability
 		emitOnErrors: true, // 在错误时仍然生成输出文件
+		usedExports: true, // 启用 Tree Shaking
+		sideEffects: false, // 通常情况下，只有纯函数库或特定功能模块才会将 sideEffects 设置为 false
+		// splitChunks: {
+		// 	chunks: 'all',
+		// },
 	},
 	resolve:{
 		alias:{
@@ -27,13 +33,16 @@ module.exports = {
 			{
 				test: /\.m?js/,
 				type: "javascript/auto",
+				sideEffects: false
 			},
 			{
 				test: /\.m?js/,
 				resolve: {
-				  fullySpecified: false,
+					fullySpecified: false,
 				},
+				sideEffects: false
 			},
 		]
 	}
+	,devtool: 'source-map',
 };

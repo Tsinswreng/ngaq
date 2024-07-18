@@ -1,4 +1,4 @@
-import * as Ty from '@shared/Type'
+import type * as Ty from '@shared/Type'
 
 /**
  * 判空後返回
