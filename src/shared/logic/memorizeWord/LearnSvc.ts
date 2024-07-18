@@ -11,7 +11,7 @@ import * as Row from "@shared/dbRow/NgaqRows";
 
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
-type SvcWord = I_SvcWord
+type SvcWord = I_WordWithStatus
 
 //import { Word, WordEvent } from "@shared/entities/Word/Word";
 
@@ -99,8 +99,8 @@ export class SvcStatus{
 /**
  * 背單詞 流程 業務理則
  */
-export abstract class NgaqSvc{
-	static async New():Promise<NgaqSvc>{
+export abstract class LearnSvc{
+	static async New():Promise<LearnSvc>{
 		//@ts-ignore
 		const z = new this()
 		z.__Init__()
