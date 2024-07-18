@@ -14,7 +14,7 @@ const config = configInst.config
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
 import { mkEmitter } from "@shared/infra/EventEmitter"
-import { $, As } from "@shared/Ut"
+import { $, As } from "@shared/Common"
 
 import {env} from '@backend/ENV'
 import Path from 'path'

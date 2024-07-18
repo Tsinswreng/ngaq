@@ -1,8 +1,8 @@
 import { KeyMirror, PubNonFuncProp } from "@shared/Type";
-import { As } from "@shared/Ut";
+import { As } from "@shared/Common";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/dbRow/NgaqRows"
-import { keyMirror } from "@shared/algo";
+import { keyMirror } from "@shared/tools/keyMirror";
 
 function assign(a,b){
 	return Object.assign(a,b)

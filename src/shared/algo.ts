@@ -552,6 +552,16 @@ export function diffMapByKey<K, V>(map1: Map<K, V>, map2: Map<K, V>): Map<K, V> 
 	return ans;
 }
 
+export function key__arrMapPush<K,VEle>(map:Map<K,VEle[]>, k:K ,ele:VEle){
+	const gotV = map.get(k)
+	if(gotV == void 0){
+		map.set(k, [ele])
+	}else{
+		gotV.push(ele)
+		map.set(k, gotV)
+	}
+}
+
 /* 
 arr1=[
 	{text:'a', num:1}
@@ -575,14 +585,8 @@ export function diffArr<ArrEle, Fld>(arr1:ArrEle[], arr2:ArrEle[], fn:(key:ArrEl
 	return ans
 }
 
-export function keyMirror<T extends kvobj>(obj:T){
-	const ans = {}
-	const keys = Object.keys(obj)
-	for(const k of keys){
-		ans[k] = k
-	}
-	return ans as KeyMirror<T>
-}
+export {keyMirror} from '@shared/tools/keyMirror'
+
 
 export function salt(text:str, salt:str){
 	return text+':'+salt

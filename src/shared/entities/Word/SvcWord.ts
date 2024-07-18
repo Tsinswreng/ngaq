@@ -4,7 +4,7 @@ import { JoinedWord } from "./JoinedWord";
 //import { WordEvent, Tempus_Event } from "@shared/SingleWord2";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
-import { $ } from "@shared/Ut";
+import { $ } from "@shared/Common";
 import * as Mod from '@shared/model/NgaqModels'
 import * as Row from "@shared/dbRow/NgaqRows";
 import * as WordIf from "@shared/interfaces/I_SvcWord";

@@ -12,7 +12,7 @@ import { Exception, Reason } from '@shared/error/Exception';
 import * as fs from 'fs' //TODO remove
 import { WeightCodeProcessor } from '@shared/WordWeight/Parser/WeightCodeProcessor';
 import { I_WordWeight } from '@shared/interfaces/I_WordWeight3';
-import { $ } from '@shared/Ut';
+import { $ } from '@shared/Common';
 import { WordEvent } from '@shared/SingleWord2';
 import { RMB_FGT_nil } from '@shared/entities/Word/SvcWord3';
 import { Word } from '@shared/entities/Word/Word';

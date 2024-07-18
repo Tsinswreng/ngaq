@@ -1,7 +1,7 @@
 import { JoinedRow } from '@shared/dbRow/JoinedRow'
 import * as Mod from '@shared/model/NgaqModels'
 import Tempus from "@shared/Tempus"
-import { classify } from "@shared/Ut"
+import { classify } from "@shared/algo"
 import * as Row from '@shared/dbRow/NgaqRows'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"

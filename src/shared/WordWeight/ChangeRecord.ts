@@ -11,7 +11,9 @@ import Tempus from "@shared/Tempus"
 import { WordEvent } from "@shared/SingleWord2"
 import { N2S } from "@shared/Sros"
 import { Tempus_Event } from "@shared/entities/Word/Word"
-import * as Ut from "@shared/Ut"
+import { key__arrMapPush } from "@shared/algo"
+//import * as Ut from "@shared/Ut"
+
 
 /** 㕥錄ᵣ 每次迭代中 權重ᵗ變 */
 
@@ -42,7 +44,7 @@ export class ChangeRecord{
 	after:N2S
 
 	static push<K,VEle>(map:Map<K,VEle[]>, k:K, ele:VEle){
-		Ut.key__arrMapPush(map, k, ele)
+		key__arrMapPush(map, k, ele)
 	}
 }
 

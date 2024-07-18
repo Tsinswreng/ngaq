@@ -2,7 +2,10 @@
  * 皆嚴格也、除非用compare以較大小、否則不會出現NaN及Infinity等、而是直ᵈ抛錯
  */
 import * as mathjs from 'mathjs'
-import { lodashMerge } from '@shared/Ut'
+//import { lodashMerge } from '@shared/Ut'
+import {merge} from 'lodash'
+const lodashMerge = merge
+
 export type BN = mathjs.BigNumber
 export type N2 = mathjs.BigNumber|number //無bigint
 export type N2S = N2|string

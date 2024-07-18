@@ -2,7 +2,7 @@ import type { PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
 import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
-import { $ } from '@shared/Ut'
+import { $ } from '@shared/Common'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 import { UserDbSrc } from './UserDbSrc'
 import * as Mod from '@shared/model/user/UserModel'

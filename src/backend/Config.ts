@@ -1,5 +1,6 @@
 import Path from "path";
-import { clearObj, lodashMerge } from "@shared/Ut"
+import {merge} from 'lodash'
+const lodashMerge = merge
 import * as fs from 'fs'
 import * as fse from 'fs-extra'
 type IConfig = typeof Config.defaultConfig

@@ -12,7 +12,7 @@ import { Exception } from "@shared/error/Exception"
 import { UserSvc } from "../svc/UserSvc"
 import { I_login, I_signUp } from "@shared/model/web/auth"
 import * as If from "@shared/model/web/auth"
-import { As } from "@shared/Ut"
+import { As } from "@shared/Common"
 import Tempus from "@shared/Tempus"
 import { splitAtLength } from "@shared/algo"
 
