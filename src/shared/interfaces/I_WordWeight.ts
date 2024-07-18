@@ -7,9 +7,9 @@ import type { LearnBelong } from "@shared/dbRow/NgaqRows"
 export interface I_WordWeight<Word_t>{
 	/**
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
-	 * @param mWords 
+	 * @param words 
 	 */
-	run(mWords:Word_t[]):Promise<Word_t[]>
+	run(words:Word_t[]):Promise<Word_t[]>
 	wordId__changeRec?: Map<str, I_ChangeRecord[]>
 	/**
 	 * 權重參數設置

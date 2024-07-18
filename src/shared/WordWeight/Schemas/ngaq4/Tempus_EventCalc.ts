@@ -1,5 +1,6 @@
-
-//type import
+/* 
+處理 詞之tempus_event_s
+*/
 import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
 import type { 
@@ -9,9 +10,6 @@ import type {
 from '@shared/interfaces/ngaqWeightWord/Tempus_eventWord'
 import { LearnBelong } from '@shared/dbRow/NgaqRows'
 import { TempusEventRecord } from "./ChangeRecord"
-//import { ChangeRecord } from "@shared/WordWeight/ChangeRecord"
-//import { TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
-
 import Tempus from "@shared/Tempus"
 import { N2S } from "@shared/Sros"
 import { Sros } from "@shared/Sros"
@@ -242,7 +240,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 					weight_ = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 					weight_ = s.d(
 						//weight_, z._mw.word.times_add
-						weight_, $(z._mw.event__times.get(WordEvent.add), '')
+						weight_, $(z._mw.learnBl__learns.get(WordEvent.add)?.length, '')
 					)
 					if(s.c(weight_, 0)<=1){
 						weight_ = s.n(1.01)
@@ -262,7 +260,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 							nowDiffThen
 							, sros.pow(
 								//s.a(z.This.defaultOpt.base, z._mw.word.times_add)
-								s.a( z.This.defaultOpt.base, $( z._mw.event__times.get(WordEvent.add) ) )
+								s.a( z.This.defaultOpt.base, $( z._mw.learnBl__learns.get(WordEvent.add)?.length ) )
 								,st.cnt_add
 							)
 						),
@@ -598,4 +596,3 @@ class WordWeight implements I_WordWeight<Word_t>{
 	}
 }
 
-__return._ = WordWeight.new()

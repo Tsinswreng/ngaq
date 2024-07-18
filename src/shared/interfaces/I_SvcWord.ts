@@ -47,12 +47,6 @@ export interface I_PropertyBl_Propertys{
 	propertyBl__propertys: Map<Row.PropertyBelong, Mod.Property[]>
 }
 
-/**
- * @deprecated 改用 @see I_LearnBl__Learns
- */
-export interface I_event__times{
-	event__times:Map<LearnBelong, int>
-}
 
 export interface I_learns{
 	learns: Mod.Learn[]
@@ -63,7 +57,7 @@ export interface I_propertys{
 }
 
 export interface I_WordForCalcWeight extends
-	I_id, I_weight, I_event__times
+	I_id, I_weight, I_LearnBl__Learns
 {
 	id:str
 	tempus_event_s:I_Tempus_Event[]
@@ -72,4 +66,12 @@ export interface I_WordForCalcWeight extends
 }
 
 
+
+
+/**
+ * @deprecated 改用 @see I_LearnBl__Learns
+ */
+export interface I_event__times{
+	event__times:Map<LearnBelong, int>
+}
 

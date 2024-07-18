@@ -265,3 +265,49 @@ describe('sliceHead', ()=>{
 	const got = fn('Bearer 114514', 'Bearer ')
 	console.log(got)
 })
+
+
+
+import {classify} from '@shared/tools/classify'
+function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
+	const ans = [] as Ele[]
+	const belong__arr:Map<Cri, Ele[]> = classify(arr, by)
+
+	for(const [k,v] of belong__arr){
+		const reversed = v.reverse()
+		belong__arr.set(k,v)
+	}
+
+	//k 用于循環遍歷order
+	for(let i = 0, k = 0; i < arr.length; i++,k++){
+		if(k>=order.length){k=0}
+		//const e = arr[i]
+		const belong:Cri = order[k]
+		const gotArr = belong__arr.get(belong)!
+		const last = gotArr.pop()
+		if(last == void 0){continue}
+		ans.push(last)
+	}
+	return ans
+}
+
+describe('groupByBelong', ()=>{
+	class Obj{
+		belong: 'a'|'b'|'c'
+		constructor(b){
+			this.belong = b
+		}
+	}
+	const B = (b)=>{
+		return new Obj(b)
+	}
+	const arr = [
+		B('a'),B('a'),B('a'),B('a'),B('a'),
+		B('b'),B('b'),B('b'),B('b'),B('b'),
+		B('c'),B('c'),B('c'),B('c'),B('c'),
+	]
+	const ans = customSort(arr, e=>e.belong, [
+		'a', 'a', 'b', 'b', 'c'
+	])
+	console.log(ans)
+})
