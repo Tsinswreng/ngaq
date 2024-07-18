@@ -18,7 +18,8 @@ import type { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeig
 
 import {getShuffle} from '@shared/tools/getShuffle'
 
-class Derangement implements I_WordWeight<any>{
+export type Word_t = any
+export class Derangement implements I_WordWeight<Word_t>{
 	protected constructor(){}
 
 	protected __init__(...args: Parameters<typeof Derangement.new>){
@@ -36,7 +37,7 @@ class Derangement implements I_WordWeight<any>{
 	setParam(key: string, v: any): boolean {
 		return true
 	}
-	run(words: any[]): Promise<any[]> {
+	Run(words: any[]): Promise<any[]> {
 		const ans = getShuffle(
 			words, 8,
 			Math.floor(words.length / 8)

@@ -2,11 +2,12 @@
 //@import {  } from "module";
 ({
 	port: 1919
-	//待添: 隨機圖之路徑, 數據庫ᵗ路徑
+	/** @deprecated */
 	,randomImgDir:[
 		`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
 		,`D:\\_\\視聽\\圖`
 	]
+	/** @deprecated */
 	,tables:[
 		,`english`
 		,`japanese`
@@ -15,8 +16,11 @@
 		,`italian`
 		// ,`cet6`
 	]
+	/** @deprecated */
 	,dbPath: `./db/voca.db`
+	/** @deprecated */
 	,backupDbPath: `./db/vocaBackup.db`
+	
 	,wordWeight: {
 		schemas: [
 			{

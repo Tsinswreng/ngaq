@@ -6,7 +6,7 @@
 
 <template>
 	<div class="welcome-box">
-		<h1>Tsinswreŋ no Voca e joːkoso!</h1>
+		<h1>joːkoso!</h1>
 	</div>
 </template>
 

@@ -8,6 +8,7 @@ import { UserCtrl } from './ctrl/UserCtrl';
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import Config from '@backend/Config';
+
 dotenv.config()
 Config.readOuterConfig(process.env['CONFIG_PATH'] as str)
 const configJsStr = fs.readFileSync(
@@ -15,7 +16,7 @@ const configJsStr = fs.readFileSync(
 	, {encoding:'utf-8'}
 )
 const configInst = Config.getInstance()
-
+const config = configInst.config
 class Opt{
 	_port:int = 6324
 	
@@ -111,7 +112,7 @@ class Server{
 
 export function main(){
 	try {
-		const server = Server.new({_port:6324})
+		const server = Server.new({_port:config.ngaq.server.port})
 		server.start()
 	} catch (err) {
 		console.error(err)
@@ -119,7 +120,7 @@ export function main(){
 	}
 
 }
-main()
+
 
 /* 
 // app.ts

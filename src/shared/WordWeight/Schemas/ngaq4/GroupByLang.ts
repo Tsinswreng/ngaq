@@ -3,9 +3,11 @@
 */
 
 import type { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import { customSort } from "@shared/tools/customSort"
 import { I_belong } from "@shared/Type"
 
-type Word_t = I_belong<str>
+export type Word_t = I_belong<str>
+
 export class GroupByLang implements I_WordWeight<Word_t>{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof GroupByLang.new>){
@@ -23,8 +25,15 @@ export class GroupByLang implements I_WordWeight<Word_t>{
 	setParam(key: string, v: any): boolean {
 		return true
 	}
-	run(words:Word_t[]){
-		return Promise.resolve()
+	Run(words:Word_t[]){
+		let e = 'english'
+		let j = 'japanese'
+		let l = 'latin'
+		let i = 'italian'
+		words = customSort(words, e=>e.belong, [
+			e,j,e,j,l,e,j,e,j,l
+		])
+		return Promise.resolve(words)
 	}
 }
 

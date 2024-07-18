@@ -71,15 +71,22 @@ class Ngaq extends BaseConfig{
 }
 
 class DefaultConfig extends BaseConfig{
+	ngaq = new Ngaq()
+	
+	wordWeight = new WordWeightConfig()
+	/** @deprecated */
 	dbPath= './db/voca.db'
+	/** @deprecated */
 	port= 1919
 	outerConfig= Path.resolve(process.cwd(), 'config.js')
+	/** @deprecated */
 	randomImgDir= [] as string[]
+	/** @deprecated */
 	backupDbPath= `./db/vocaBackup.db`
+	/** @deprecated */
 	tables=[] as string[]
+	/** @deprecated */
 	server= new OldServerConfig()
-	wordWeight = new WordWeightConfig()
-	ngaq = new Ngaq()
 }
 
 

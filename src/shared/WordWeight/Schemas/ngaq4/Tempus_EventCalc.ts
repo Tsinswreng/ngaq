@@ -97,9 +97,9 @@ class Statistics{
 	records:ChangeRecord[] = []
 }
 
-type Word_t = I_Tempus_EventWord
+export type Word_t = I_Tempus_EventWord
 
-class WordWeight implements I_WordWeight<Word_t>{
+export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 
 	protected constructor(){
 		
@@ -110,7 +110,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 		return o
 	}
 
-	readonly This = WordWeight
+	readonly This = Tempus_EventCalc
 
 	protected _wordId__changeRec = new Map<str, ChangeRecord[]>()
 	get wordId__changeRec(){return this._wordId__changeRec}
@@ -144,7 +144,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 		/** 處理單個單詞ᵗ單個Tempus_Event實例 */
 		class Handle3Events{
 			static new(prop:{
-				_ww:WordWeight
+				_ww:Tempus_EventCalc
 				//,_tempus__event:Tempus_Event
 				,_statistics:Statistics
 				,_mw:Word_t
@@ -162,10 +162,10 @@ class WordWeight implements I_WordWeight<Word_t>{
 
 			readonly This = Handle3Events
 			_mw:Word_t
-			_ww:WordWeight
+			_ww:Tempus_EventCalc
 			_statistics:Statistics
 			_cur_tempus__event:I_Tempus_Event
-			static defaultOpt = WordWeight.defaultOpt
+			static defaultOpt = Tempus_EventCalc.defaultOpt
 
 			addRecord(record:ChangeRecord){
 				const z = this
@@ -350,13 +350,13 @@ class WordWeight implements I_WordWeight<Word_t>{
 		return mWords
 	}
 
-	async run(mWords:Word_t[]) {
+	async Run(words:Word_t[]):Task<Word_t[]> {
 		const z = this
 		//mWords = z.filter(mWords)
-		mWords = await z.run0(mWords)
+		words = await z.run0(words)
 		//mWords = await z.filterByTbl(mWords)
 		//mWords = z.shuffer(mWords)
-		return mWords
+		return words
 	}
 
 	// shuffer(words:Word_t[]){

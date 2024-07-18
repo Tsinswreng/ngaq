@@ -384,7 +384,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 		return mWords
 	}
 
-	async run(mWords:SvcWord[]) {
+	async Run(mWords:SvcWord[]) {
 		const z = this
 		mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)

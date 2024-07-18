@@ -89,7 +89,7 @@
   },
   "scripts": {
     "start": "../../node_modules/.bin/webpack serve --open",
-    "dev": "cd src/frontend && vite",
+    "devF": "cd src/frontend && vite",
     "buildF": "cd src/frontend && vite build",
     "build2": "vue-tsc && vite build",
     "preview": "../../node_modules/.bin/vite preview",
