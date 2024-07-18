@@ -1,13 +1,13 @@
-import { WordDbRow } from "@shared/dbRow/Word"
+import { WordDbRow } from "@shared/old_dbRow/Word"
 import { I_login, I_signUp } from "@shared/model/web/auth"
 import LocalStorage from "@ts/LocalStorage"
 
 import * as Mod from '@shared/model/user/UserModel'
-import * as Row from '@shared/dbRow/user/UserRows'
+import * as Row from '@shared/model/user/UserRows'
 import { lsItems } from "@ts/localStorage/Items"
 import axios, { AxiosRequestConfig } from 'axios'
 import { Exception, Reason } from "@shared/error/Exception";
-import { JoinedRow } from "@shared/dbRow/JoinedRow"
+import { JoinedRow } from "@shared/model/word/JoinedRow"
 
 type Req_method_t = 'GET' | 'POST'
 // 封装请求函数

@@ -1,5 +1,5 @@
-import { LearnBelong } from '@shared/dbRow/NgaqRows'
-import {SvcWord} from '@shared/entities/Word/SvcWord'
+import { LearnBelong } from '@shared/model/word/NgaqRows'
+import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
 //import { WordEvent } from '@shared/SingleWord2'
 
 import {Ref, ref} from 'vue'

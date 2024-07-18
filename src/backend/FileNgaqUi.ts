@@ -1,10 +1,10 @@
 import 'tsconfig-paths/register'
 import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
-import {WordDbSrc} from './db/sqlite/Word/DbSrc';
+import {WordDbSrc} from './db/sqlite/OldWord/DbSrc';
 import { Word } from '@shared/entities/Word/Word';
 import Config from '@backend/Config';
-import { WordTable } from './db/sqlite/Word/Table';
-import Sqlite from './db/Sqlite';
+import { WordTable } from './db/sqlite/OldWord/Table';
+import OldSqlite from './db/OldSqlite';
 import * as Le from '@shared/linkedEvent'
 // import { ProcessEvents } from '@shared/logic/memorizeWord/Event';
 import { FileNgaqSvc as FileNgaqSvc } from './logic/FileNgaqSvc';

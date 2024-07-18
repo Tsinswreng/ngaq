@@ -1,4 +1,4 @@
-import type { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
+import type { NgaqDbSrc } from "@backend/db/sqlite/ngaq/NgaqDbSrc"
 
 export class UserDb{
 	protected constructor(){}

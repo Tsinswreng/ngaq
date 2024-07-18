@@ -1,6 +1,6 @@
 import Config from "./Config"
 import { UserDbSrc } from "./db/sqlite/user/UserDbSrc"
-import { NgaqDbSrc } from "./ngaq4/ngaqDbSrc/NgaqDbSrc"
+import { NgaqDbSrc } from "./db/sqlite/ngaq/NgaqDbSrc"
 import { SqliteDb } from "./sqlite/Sqlite"
 const configInst = Config.getInstance()
 const config = configInst.config

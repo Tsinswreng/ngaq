@@ -1,4 +1,4 @@
-import { WordDbRow } from "@shared/dbRow/Word"
+import { WordDbRow } from "@shared/old_dbRow/Word"
 import LocalStorage from "@ts/LocalStorage"
 const LS = LocalStorage
 /** Voca3 */

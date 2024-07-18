@@ -1,4 +1,4 @@
-import { RMB_FGT } from "@shared/entities/Word/LearnEvents"
+import { RMB_FGT } from "@shared/logic/memorizeWord/LearnEvents"
 import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc"
 //import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/ngaq4/entities/WebSvcWord"
@@ -552,5 +552,5 @@ import * as frut from '@ts/frut'
 import { TagImg } from "@shared/TagImg"
 import { cosDependencies } from "mathjs"
 import { Client } from "@ts/ngaq4/Client"
-import { LearnBelong } from "@shared/dbRow/wordDbRowsOld"
+import { LearnBelong } from "@shared/old_dbRow/wordDbRowsOld"
 

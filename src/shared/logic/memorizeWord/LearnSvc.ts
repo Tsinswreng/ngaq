@@ -1,13 +1,13 @@
 //import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
 
-import { RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/LearnEvents";
+import { RMB_FGT, RMB_FGT_nil } from "@shared/logic/memorizeWord/LearnEvents";
 import { I_WordWithStatus } from "@shared/interfaces/I_SvcWord";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
-import { LearnBelong } from "@shared/dbRow/NgaqRows";
-import * as Mod from '@shared/model/NgaqModels'
-import * as Row from "@shared/dbRow/NgaqRows";
+import { LearnBelong } from "@shared/model/word/NgaqRows";
+import * as Mod from '@shared/model/word/NgaqModels'
+import * as Row from "@shared/model/word/NgaqRows";
 
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong

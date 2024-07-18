@@ -1,6 +1,6 @@
 import Tempus from "@shared/Tempus";
 import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
-import { SvcWord } from "@shared/entities/Word/SvcWord";
+import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import * as Word_ from '@shared/entities/Word/Word'
 import * as Sros_ from "@shared/Sros";
 import lodash from 'lodash'
@@ -8,10 +8,10 @@ import * as Ut from '@shared/Common'
 import * as Record from "@shared/WordWeight/ChangeRecord";
 import { BaseWeight } from "./_BaseWeight";
 import * as algo from '@shared/algo'
-import * as NgaqModels from '@shared/model/NgaqModels'
-import * as NgaqRows from '@shared/dbRow/NgaqRows'
-import { JoinedRow } from "@shared/dbRow/JoinedRow";
-import { JoinedWord } from "@shared/entities/Word/JoinedWord";
+import * as NgaqModels from '@shared/model/word/NgaqModels'
+import * as NgaqRows from '@shared/model/word/NgaqRows'
+import { JoinedRow } from "@shared/model/word/JoinedRow";
+import { JoinedWord } from "@shared/model/word/JoinedWord";
 
 export {
 	Tempus

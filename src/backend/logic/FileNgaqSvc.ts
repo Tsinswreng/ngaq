@@ -1,12 +1,12 @@
 import 'tsconfig-paths/register'
 import { NgaqSvc as NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
 import Config from '@backend/Config';
-import { WordTable } from "@backend/db/sqlite/Word/Table";
+import { WordTable } from "@backend/db/sqlite/OldWord/Table";
 //import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
 import EventEmitter3 from 'eventemitter3';
 import * as Le from '@shared/linkedEvent'
-import { WordDbSrc } from '@backend/db/sqlite/Word/DbSrc';
-import { WordDbRow } from '@shared/dbRow/Word';
+import { WordDbSrc } from '@backend/db/sqlite/OldWord/DbSrc';
+import { WordDbRow } from '@shared/old_dbRow/Word';
 import { SvcWord3, RMB_FGT } from '@shared/entities/Word/SvcWord3';
 import { Exception, Reason } from '@shared/error/Exception';
 import * as fs from 'fs' //TODO remove

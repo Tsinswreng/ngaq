@@ -1,8 +1,8 @@
 import sqlite3 from "sqlite3";
-import { NgaqDbSrc } from "./ngaqDbSrc/NgaqDbSrc";
+import { NgaqDbSrc } from "../db/sqlite/ngaq/NgaqDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import Tempus from "@shared/Tempus";
-import { InitSql_ngaqDbSrc } from "./ngaqDbSrc/Initer_ngaqDbSrc";
+import { InitSql_ngaqDbSrc } from "../db/sqlite/ngaq/Initer_ngaqDbSrc";
 
 const dbPath = './ngaq.sqlite'
 const dbRaw = new sqlite3.Database(dbPath)

@@ -1,9 +1,9 @@
 import Word from "@shared/SingleWord2"
-import * as Rows_ from '@shared/dbRow/NgaqRows'
+import * as Rows_ from '@shared/model/word/NgaqRows'
 import Tempus from "@shared/Tempus"
 import { $ } from "@shared/Ut"
-import { JoinedRow } from "@shared/dbRow/JoinedRow"
-import * as Mod from '@shared/model/NgaqModels'
+import { JoinedRow } from "@shared/model/word/JoinedRow"
+import * as Mod from '@shared/model/word/NgaqModels'
 
 export class WordToRows{
 	protected constructor(){}

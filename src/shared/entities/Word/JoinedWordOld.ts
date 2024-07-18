@@ -1,8 +1,8 @@
-import { JoinedRowOld } from "@shared/dbRow/JoinedRowOld"
+import { JoinedRowOld } from "@shared/old_dbRow/JoinedRowOld"
 import * as Objs from '@shared/entities/Word/NgaqModelsOld'
 import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
-import * as Rows from '@shared/dbRow/wordDbRowsOld'
+import * as Rows from '@shared/old_dbRow/wordDbRowsOld'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"
 

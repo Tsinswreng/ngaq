@@ -1,9 +1,9 @@
-import type { LearnBelong } from "@shared/dbRow/NgaqRows"
+import type { LearnBelong } from "@shared/model/word/NgaqRows"
 import type Tempus from "@shared/Tempus"
-import type { RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/LearnEvents";
-import type { Learn } from "@shared/model/NgaqModels";
-import type * as Mod from "@shared/model/NgaqModels";
-import type * as Row from "@shared/dbRow/NgaqRows"
+import type { RMB_FGT, RMB_FGT_nil } from "@shared/logic/memorizeWord/LearnEvents";
+import type { Learn } from "@shared/model/word/NgaqModels";
+import type * as Mod from "@shared/model/word/NgaqModels";
+import type * as Row from "@shared/model/word/NgaqRows"
 
 export interface I_Status{
 	memorize: RMB_FGT_nil

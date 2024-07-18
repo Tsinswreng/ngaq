@@ -1,9 +1,9 @@
 import Word from "@shared/SingleWord2"
-import { WordDbSrc } from "@backend/db/sqlite/Word/DbSrc"
-import type { WordTable } from "@backend/db/sqlite/Word/Table"
-import { WordDbRow } from "@shared/dbRow/Word"
+import { WordDbSrc } from "@backend/db/sqlite/OldWord/DbSrc"
+import type { WordTable } from "@backend/db/sqlite/OldWord/Table"
+import { WordDbRow } from "@shared/old_dbRow/Word"
 import { WordToRows } from "./WordToRows"
-import { NgaqDbSrc } from "./ngaqDbSrc/NgaqDbSrc"
+import { NgaqDbSrc } from "../db/sqlite/ngaq/NgaqDbSrc"
 import sqlite3 from 'sqlite3'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 class Migrate{

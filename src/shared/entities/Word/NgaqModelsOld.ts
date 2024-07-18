@@ -1,5 +1,5 @@
-import { JoinedRowOld } from '@shared/dbRow/JoinedRowOld'
-import * as Rows from '@shared/dbRow/wordDbRowsOld'
+import { JoinedRowOld } from '@shared/old_dbRow/JoinedRowOld'
+import * as Rows from '@shared/old_dbRow/wordDbRowsOld'
 import Tempus from '@shared/Tempus'
 import type { InstanceType_, PubNonFuncProp, SetterProp } from '@shared/Type'
 import { As } from '@shared/Common';

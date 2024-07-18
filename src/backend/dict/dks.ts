@@ -20,7 +20,7 @@ import {replacePair as ocToOc3} from './regex/ocToOc3'
 import { replacePair as cangjieRegex } from './regex/cangjie';
 //import moment = require('moment');
 import moment from 'moment'
-import Sqlite from '@backend/db/Sqlite';
+import OldSqlite from '@backend/db/OldSqlite';
 import { transpose, $ ,YYYYMMDDHHmmssSSS} from '@shared/Ut';
 import fenbangToIPA from './regex/fenbangToIPA'
 const Ut = {
@@ -161,7 +161,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		await DictDb.creatTable(Dks.db.db, this.tempTable)
 		let columns = cn.char+','+cn.code+','+cn.ratio
 		let sql = `INSERT INTO '${this.tempTable}' (${columns}) VALUES (?,?,?)`
-		return Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
+		return OldSqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
 	}
 	
 	async putDkzInDb(){
@@ -178,7 +178,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		await DictDb.creatTable(Dks.db.db, tempTable)
 		let columns = cn.char+','+cn.code+','+cn.ratio
 		let sql = `INSERT INTO '${tempTable}' (${columns}) VALUES (?,?,?)`
-		await Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
+		await OldSqlite.deprecated_transactionForOneSql(Dks.db.db, sql, body)
 		return tempTable
 	}
 
@@ -192,19 +192,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 	async removeCharsInDb(table:string, chars:string[]){
 		let sql = `DELETE FROM '${table}' WHERE ${cn.char}=?`
-		return Sqlite.deprecated_transactionForOneSql(Dks.db.db, sql, chars)
+		return OldSqlite.deprecated_transactionForOneSql(Dks.db.db, sql, chars)
 	}
 
 	async dropTempTable(){
 		let sql = `DROP TABLE '${this.tempTable}'`
-		return Sqlite.all(Dks.db.db, sql)
+		return OldSqlite.all(Dks.db.db, sql)
 	}
 
 	async updateDkzFile(){
 		
 		let charsToBeRemoved = this.getCharOfDkp()
 		await this.removeCharsInDb(this.tempTable, charsToBeRemoved)
-		let strArr = await Sqlite.toStrTable_unsafeInt(Dks.db.db, this.tempTable, [cn.char, cn.code, cn.ratio])
+		let strArr = await OldSqlite.toStrTable_unsafeInt(Dks.db.db, this.tempTable, [cn.char, cn.code, cn.ratio])
 		let dkpBody = this.dkp.rawObj.validBody
 		let dkpStr = Txt.mergeArrIntoStr(dkpBody)
 		//console.log(dkpStr)//t
@@ -301,7 +301,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 		console.log(`console.log(頻于前950之字ᵗ加頻重碼率)`)
 		console.log(頻ˋ大於950之字ᵗ加頻重碼率)
 
-		await Sqlite.dropTable(Dks.db.db, tempTable)
+		await OldSqlite.dropTable(Dks.db.db, tempTable)
 	}
 
 
@@ -362,12 +362,12 @@ class AttachCangjie{
 		}
 		this.tempTable_Join = `temp${Ut.YYYYMMDDHHmmssSSS()}`
 		let creatSql = `CREATE TABLE '${this.tempTable_Join}' AS ` + getSql(this.tempTable_src, this.tempTable_cangjie)
-		return Sqlite.all(this.db.db, creatSql)
+		return OldSqlite.all(this.db.db, creatSql)
 		//return DictDb.all<DictDbRow & {b_code:string}>(this.db.db, getSql(this.tempTable_src, this.tempTable_cangjie))
 	}
 
 	async toTargetBody(){
-		let strArr = await Sqlite.toStrTable_unsafeInt(this.db.db, this.tempTable_Join, [cn.char, cn.code, 'b_code', cn.ratio])
+		let strArr = await OldSqlite.toStrTable_unsafeInt(this.db.db, this.tempTable_Join, [cn.char, cn.code, 'b_code', cn.ratio])
 		let 合併列:string[][] =[]
 		for(let i = 0; i < strArr.length; i++){
 			// for(let j = 0; j < strArr[i].length; i++){
@@ -383,9 +383,9 @@ class AttachCangjie{
 	}
 
 	async dropTempTable(){
-		await Sqlite.dropTable(this.db.db, this.tempTable_cangjie)
-		await Sqlite.dropTable(this.db.db, this.tempTable_src)
-		await Sqlite.dropTable(this.db.db, this.tempTable_Join)
+		await OldSqlite.dropTable(this.db.db, this.tempTable_cangjie)
+		await OldSqlite.dropTable(this.db.db, this.tempTable_src)
+		await OldSqlite.dropTable(this.db.db, this.tempTable_Join)
 	}
 
 

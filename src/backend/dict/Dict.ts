@@ -16,11 +16,11 @@ import Txt from "@shared/Txt"
 import {RegexReplacePair} from '@shared/Ut';
 import * as Tp from '@shared/TypeOld'
 import {Duplication,DictDbRow,DictRawConfig, cn} from '@shared/TypeOld'
-import SqliteTableInfo from "@backend/db/Sqlite"
+import SqliteTableInfo from "@backend/db/OldSqlite"
 import * as DictType from '@shared/TypeOld'
 import _, { sum } from 'lodash';
 import moment from 'moment'
-import Sqlite from '@backend/db/Sqlite';
+import OldSqlite from '@backend/db/OldSqlite';
 // import { transpose, nng ,YYYYMMDDHHmmssSSS, YYYYMMDDHHmmss, printArr} from '@shared/Ut';
 // const Ut = {
 // 	transpose:transpose,
@@ -78,7 +78,7 @@ export class MinimalPairUtil{
 		}
 
 		async function objTo2DArr(numArr:number[]){
-			let r = await Sqlite.deprecated_transactionForOneSql<{freq:number}>(db, sql, numArr)
+			let r = await OldSqlite.deprecated_transactionForOneSql<{freq:number}>(db, sql, numArr)
 			let arr:number[] = []
 			for(let i = 0; i < r.length; i++){
 				arr.push(r[i].freq) 
@@ -305,10 +305,10 @@ use_preset_vocabulary: true
 			
 		}else{
 			let tempTable = 'temp'+Ut.YYYYMMDDHHmmss()
-			await Sqlite.copyTable(this.dbObj.db, tempTable, this.name)
+			await OldSqlite.copyTable(this.dbObj.db, tempTable, this.name)
 			await Dict.篩頻(this.dbObj.db, tempTable, min)
 			objs = await DictDb.get重碼頻數(this.dbObj.db, tempTable)
-			await Sqlite.dropTable(this.dbObj.db, tempTable)
+			await OldSqlite.dropTable(this.dbObj.db, tempTable)
 		}
 		let sum = 0
 		for(let i = 0; i < objs.length; i++){
@@ -319,13 +319,13 @@ use_preset_vocabulary: true
 
 	public async get_字頻總和(min?:number){
 		if(min===undefined){
-			return await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+			return await OldSqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		}else{
 			let tempTable = 'temp'+Ut.YYYYMMDDHHmmss()
-			await Sqlite.copyTable(this.dbObj.db, tempTable, this.name)
+			await OldSqlite.copyTable(this.dbObj.db, tempTable, this.name)
 			await Dict.篩頻(this.dbObj.db, tempTable, min)
-			let r = await Sqlite.getSum(this.dbObj.db, tempTable, DictType.cn.freq)
-			await Sqlite.dropTable(this.dbObj.db, tempTable)
+			let r = await OldSqlite.getSum(this.dbObj.db, tempTable, DictType.cn.freq)
+			await OldSqlite.dropTable(this.dbObj.db, tempTable)
 			return r
 		}
 		
@@ -340,7 +340,7 @@ use_preset_vocabulary: true
 	 */
 	public static 篩頻(db:Database, table:string, min:number){
 		let sql = `DELETE FROM '${table}' WHERE ${cn.freq}<${min}`
-		return Sqlite.all(db, sql)
+		return OldSqlite.all(db, sql)
 	}
 
 
@@ -441,12 +441,12 @@ use_preset_vocabulary: true
 
 	public async countAll(){
 		//<待做>{驗ᵣ重複項、濾除 碼潙空字串 者}
-		await Sqlite.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
+		await OldSqlite.castNull(this.dbObj.db, this.name, DictType.cn.freq, 0)
 		await DictDb.deleteDuplication(this.dbObj.db, this.name)
 		console.log(await DictDb.getDuplication(this.dbObj.db, this.name))
-		this._無重複漢字數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
-		this._無重複音節數 = await Sqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
-		this._字頻總和 = await Sqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
+		this._無重複漢字數 = await OldSqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.char)
+		this._無重複音節數 = await OldSqlite.countDistinct(this.dbObj.db!, this.name, DictType.cn.code)
+		this._字頻總和 = await OldSqlite.getSum(this.dbObj.db, this.name, DictType.cn.freq)
 		await this.assign_重碼頻數()
 		this._加頻重碼率 = Ut.$(this.重碼頻數, 'this.重碼頻數')! / Ut.$(this.字頻總和, 'this.字頻總和')!
 	}
@@ -859,7 +859,7 @@ export class DictDb{
 		//写一个同步的typescript函数、判断一个sqlite数据库是否含有某表
 		if(!this.db){throw new Error('!this.db')}
 		if(!tableName){return false}
-		return Sqlite.deprecated_isTableExist(this.db, tableName)
+		return OldSqlite.deprecated_isTableExist(this.db, tableName)
 	}
 
 	public static async creatTable(db:Database, tableName:string){
@@ -869,7 +869,7 @@ ${cn.char} VARCHAR(1024) NOT NULL, \
 ${cn.code} VARCHAR(64) NOT NULL, \
 ${cn.ratio} VARCHAR(64) \
 )`
-		return Sqlite.all(db,sql)
+		return OldSqlite.all(db,sql)
 	}
 
 
@@ -942,14 +942,14 @@ VALUES (?,?)`)
 	 * @param essayTableName 
 	 */
 	public static async attachFreq(db:Database, tableName:string ,essayTableName='essay'){
-		let b1 = await Sqlite.isColumnExist(db, tableName ,cn.freq)
-		let b2 = await Sqlite.isColumnExist(db,tableName ,cn.essay_id)
+		let b1 = await OldSqlite.isColumnExist(db, tableName ,cn.freq)
+		let b2 = await OldSqlite.isColumnExist(db,tableName ,cn.essay_id)
 		if(!b1 || !b2){
 			let altSql = new Array<string>()
 			altSql[0] = `ALTER TABLE '${tableName}' ADD COLUMN '${cn.freq}' INTEGER`
 			altSql[1] = `ALTER TABLE '${tableName}' ADD COLUMN ${cn.essay_id} INTEGER REFERENCES ${essayTableName}(id) ON DELETE SET NULL`
-			await Sqlite.all(db, altSql[0])
-			await Sqlite.all(db, altSql[1])
+			await OldSqlite.all(db, altSql[0])
+			await OldSqlite.all(db, altSql[1])
 			
 		}
 		let attachSql = `UPDATE '${tableName}' \
@@ -961,8 +961,8 @@ VALUES (?,?)`)
 \ SET ${cn.essay_id} = COALESCE(${essayTableName}.${cn.id}, '') \
 \ FROM ${essayTableName} \
 \ WHERE '${tableName}'.${cn.char} = ${essayTableName}.${cn.char};`
-		Sqlite.all(db, attachSql)
-		Sqlite.all(db, attachSql2)
+		OldSqlite.all(db, attachSql)
+		OldSqlite.all(db, attachSql2)
 	
 	}
 
@@ -990,7 +990,7 @@ VALUES (?,?)`)
 	}
 
 	public static async serialReplace(db:Database, table:string, column:string, replacementPair:RegexReplacePair[]){
-		return Sqlite.serialReplace(db, table, column, replacementPair)
+		return OldSqlite.serialReplace(db, table, column, replacementPair)
 	}
 
 	public static toObjArr(strArr:string[][]):DictDbRow[]{
@@ -1010,7 +1010,7 @@ VALUES (?,?)`)
 	 * @param userPath User_Data的絕對路徑
 	 */
 	public static async testAll(db:Database, userPath:string='D:/Program Files/Rime/User_Data'){
-		//await Sqlite.dropAllTables(db)
+		//await OldSqlite.dropAllTables(db)
 		await DictDb.putEssay(db)
 		let paths:string[] = DictRaw.getDictYamlPaths(userPath)
 		let names:string[] = []
@@ -1035,7 +1035,7 @@ VALUES (?,?)`)
 
 	public static selectAll(db:Database, table:string){
 		let sql = `SELECT * FROM '${table}'`
-		return Sqlite.all<DictDbRow>(db, sql)
+		return OldSqlite.all<DictDbRow>(db, sql)
 	}
 
 	/**
@@ -1044,7 +1044,7 @@ VALUES (?,?)`)
 	 */
 	public static async putEssay(db:Database, path=new DictDb({}).essayPath, essayName='essay'){
 		return new Promise(async(s,j)=>{
-			let b = await Sqlite.deprecated_isTableExist(db, essayName)
+			let b = await OldSqlite.deprecated_isTableExist(db, essayName)
 			//if(!b){await DictDb.quickStart(path,essayName)}
 			if(!b){await DictDb.putNewTable(new DictRaw({srcPath:path, name:essayName}))}
 			s(0)
@@ -1088,7 +1088,7 @@ VALUES (?,?)`)
 	${DictType.cn.freq} < (SELECT MAX(${DictType.cn.freq}) FROM ${tableName} s2 WHERE s1.${DictType.cn.code} = s2.${DictType.cn.code})
 	GROUP BY
 	${DictType.cn.code};`
-		return Sqlite.all<{code:string, freq_of_homo:number}>(db, sql1)
+		return OldSqlite.all<{code:string, freq_of_homo:number}>(db, sql1)
 
 		/*
   亦可、然更慢*/
@@ -1136,7 +1136,7 @@ HAVING COUNT(*) > 1;`
 
 	public static async copyTransDb(targetDb:Database, srcDb:Database, srcTableName:string){
 
-		//await Sqlite.all(targetDb)
+		//await OldSqlite.all(targetDb)
 	}
 
 
@@ -1161,8 +1161,8 @@ HAVING COUNT(*) > 1;`
 	// 	let p:string
 	// 	let len:number
 	// 	//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
-	// 	let result1 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
-	// 	let result2 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+	// 	let result1 = await OldSqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+	// 	let result2 = await OldSqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
 	// 	let result:(DictDbRow & {position:number})[]
 	// 	//若result1結果更少、則用result1 音素替換成p2後來查。
 	// 	if(result1.length <= result2.length){
@@ -1205,8 +1205,8 @@ HAVING COUNT(*) > 1;`
 			let p:string
 			let len:number
 			//qrySql = `SELECT * FROM '${tableName}' WHERE ${columnName}='${p}'`
-			let result1 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
-			let result2 = await Sqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
+			let result1 = await OldSqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme1))
+			let result2 = await OldSqlite.all<DictDbRow & {position:number}>(db, getSql(phoneme2))
 			console.log(`console.log(result1.length)`)//t
 			console.log(result1.length)
 			console.log(`console.log(result2.length)`)//t
@@ -1237,7 +1237,7 @@ HAVING COUNT(*) > 1;`
 			console.log(strToBeQueriedForP2)//t
 			if(strToBeQueriedForP2.length !== result1.length){Promise.reject('')}
 			let sql = `SELECT * FROM '${tableName}' WHERE ${columnName}=?`
-			return await Sqlite.deprecated_transactionForOneSql<DictDbRow>(db, sql, strToBeQueriedForP2)
+			return await OldSqlite.deprecated_transactionForOneSql<DictDbRow>(db, sql, strToBeQueriedForP2)
 		}
 		let r2 = await getR2(phoneme1, phoneme2)
 		console.log(r2.length)
@@ -1361,8 +1361,8 @@ HAVING COUNT(*) > 1;`
 	 */
 	public static async multiMinimalPairs(db:Database, table:string, leftPattern:string, rightPattern:string, phoneme1:string[], phoneme2?:string[], orderBy?:'asc'|'desc'){
 		if(!phoneme2){phoneme2 = phoneme1}
-		let rows = await Sqlite.all<DictDbRow>(db, `SELECT * FROM '${table}'`)
-		let freqSum = await Sqlite.getSum(db, table, cn.freq)
+		let rows = await OldSqlite.all<DictDbRow>(db, `SELECT * FROM '${table}'`)
+		let freqSum = await OldSqlite.getSum(db, table, cn.freq)
 		let cartesianProduct = Ut.cartesianProduct(phoneme1, phoneme2)
 		cartesianProduct = Ut.filterArrLikeSets(cartesianProduct)
 		//console.log(cartesianProduct)

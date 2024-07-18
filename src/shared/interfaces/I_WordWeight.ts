@@ -1,8 +1,8 @@
 type Fn<Return=any> = (...args:any[])=>Return
-import type { SvcWord } from "@shared/entities/Word/SvcWord"
+import type { SvcWord } from "@shared/logic/memorizeWord/SvcWord"
 //import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
 import type Tempus from "@shared/Tempus"
-import type { LearnBelong } from "@shared/dbRow/NgaqRows"
+import type { LearnBelong } from "@shared/model/word/NgaqRows"
 
 
 export interface I_WordWeight<Word_t>{

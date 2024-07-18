@@ -1,6 +1,6 @@
 import { Lex, LocatePair, ParseError, ParseResult } from "../Lex"
-import { JoinedWord } from '@shared/entities/Word/JoinedWord'
-import * as Mod from '@shared/model/NgaqModels'
+import { JoinedWord } from '@shared/model/word/JoinedWord'
+import * as Mod from '@shared/model/word/NgaqModels'
 import * as algo from '@shared/algo'
 import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"

@@ -1,6 +1,6 @@
 // import { $a, delKeys } from '@shared/Ut';
 // import {Db_VocaTempus} from '@shared/VocaTempus'
-// import Sqlite, {SqliteType} from '@shared/db/Sqlite';
+// import OldSqlite, {SqliteType} from '@shared/db/OldSqlite';
 // import lodash from 'lodash'
 
 // export default class CensusDb{
@@ -18,7 +18,7 @@
 // 	}){
 // 		const o = new this()
 // 		Object.assign(o,props)
-// 		o._db = await Sqlite.newDatabase(o.dbPath)
+// 		o._db = await OldSqlite.newDatabase(o.dbPath)
 // 		return o
 // 	}
 
@@ -31,7 +31,7 @@
 // 	private _tableName?:string 
 // 	;get tableName(){return this._tableName;};;set tableName(v){this._tableName=v;};
 
-// 	private _db = Sqlite.newDatabaseAsync(this.dbPath)
+// 	private _db = OldSqlite.newDatabaseAsync(this.dbPath)
 // 	;public get db(){return this._db;};
 
 // 	public static creatTable(db:SqliteType.Database, table:string, ifNotExists=false){
@@ -51,7 +51,7 @@
 // 			);
 // 			`
 // 		}
-// 		return Sqlite.all(db, getSql(table))
+// 		return OldSqlite.all(db, getSql(table))
 // 	}
 
 // 	public creatTable(table=$a(this.tableName), ifNotExists=false){
@@ -59,13 +59,13 @@
 // 	}
 
 // 	public static genSql_insert(table:string, obj:Db_VocaTempus, ignoredKeys:string[]=[Db_VocaTempus.id]){
-// 		return Sqlite.sql.genSql_insert(table, obj, ignoredKeys)
+// 		return OldSqlite.sql.genSql_insert(table, obj, ignoredKeys)
 // 	}
 
 // 	public static insert(db:SqliteType.Database, table:string, objs:Db_VocaTempus[], ignoredKeys:string[]=[Db_VocaTempus.id]){
 // 		//let objsCopy = lodash.cloneDeep(objs)
 // 		//objsCopy.map(e=>delKeys(e,ignoredKeys))
-// 		return Sqlite.transactions.dbInsertObjs(db, table, objs, ignoredKeys)
+// 		return OldSqlite.transactions.dbInsertObjs(db, table, objs, ignoredKeys)
 // 	}
 	
 

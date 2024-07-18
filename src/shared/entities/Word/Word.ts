@@ -7,9 +7,9 @@ import { $, simpleUnion } from '@shared/Ut';
 import _ from 'lodash';
 import { WordPriority } from '@shared/entities/Word/WordPriority';
 /** 舊 */
-import { WordDbRow } from '@shared/dbRow/Word';
+import { WordDbRow } from '@shared/old_dbRow/Word';
 import type { InstanceType_, PubNonFuncProp } from '@shared/Type';
-import * as Rows_ from '@shared/dbRow/wordDbRowsOld'
+import * as Rows_ from '@shared/old_dbRow/wordDbRowsOld'
 import type { JoinedWordOld } from './JoinedWordOld';
 //const sros = Sros.new<Sros_number>()
 // const sros = Sros.new({})

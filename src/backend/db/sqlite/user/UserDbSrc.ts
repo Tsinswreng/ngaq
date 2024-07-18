@@ -6,7 +6,7 @@ import { $ } from '@shared/Ut'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
 
 import * as Mod from '@shared/model/user/UserModel'
-import * as Row from '@shared/dbRow/user/UserRows'
+import * as Row from '@shared/model/user/UserRows'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 

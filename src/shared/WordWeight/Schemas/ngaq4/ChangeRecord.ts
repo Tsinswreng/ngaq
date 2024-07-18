@@ -1,4 +1,4 @@
-import type { LearnBelong } from "@shared/dbRow/NgaqRows";
+import type { LearnBelong } from "@shared/model/word/NgaqRows";
 import type { I_Tempus_Event } from "@shared/interfaces/I_SvcWord";
 import type { I_ChangeRecord, Num_t } from "@shared/interfaces/I_WordWeight";
 import type Tempus from "@shared/Tempus";

@@ -1,7 +1,7 @@
 <!-- 固定ʹ 單詞詳情框 -->
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
-import {SvcWord} from '@shared/entities/Word/SvcWord'
+import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
 
 import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';

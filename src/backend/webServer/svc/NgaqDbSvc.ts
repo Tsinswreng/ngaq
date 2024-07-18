@@ -1,8 +1,8 @@
-import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
-import { JoinedRow } from '@shared/dbRow/JoinedRow'
-import { JoinedWord } from '@shared/entities/Word/JoinedWord'
-import * as Rows from '@shared/dbRow/NgaqRows'
-import * as Mod from '@shared/model/NgaqModels'
+import { NgaqDbSrc } from "@backend/db/sqlite/ngaq/NgaqDbSrc"
+import { JoinedRow } from '@shared/model/word/JoinedRow'
+import { JoinedWord } from '@shared/model/word/JoinedWord'
+import * as Rows from '@shared/model/word/NgaqRows'
+import * as Mod from '@shared/model/word/NgaqModels'
 
 import {env} from '@backend/ENV'
 

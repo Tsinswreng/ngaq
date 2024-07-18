@@ -4,7 +4,7 @@ import * as Le from "@shared/linkedEvent";
 import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
-import { WordDbRow } from "@shared/dbRow/Word";
+import { WordDbRow } from "@shared/old_dbRow/Word";
 //import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
@@ -13,9 +13,9 @@ import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
 import { TagImg } from "@shared/TagImg";
-import { JoinedRow } from "@shared/dbRow/JoinedRow";
-import { JoinedWord } from "@shared/entities/Word/JoinedWord";
-import { SvcWord } from "@shared/entities/Word/SvcWord";
+import { JoinedRow } from "@shared/model/word/JoinedRow";
+import { JoinedWord } from "@shared/model/word/JoinedWord";
+import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 
 export class WebNgaqSvc extends LearnSvc{
 

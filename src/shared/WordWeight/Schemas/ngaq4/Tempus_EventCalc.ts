@@ -8,7 +8,7 @@ import type {
 	, I_Tempus_EventWord
 }
 from '@shared/interfaces/ngaqWeightWord/Tempus_eventWord'
-import { LearnBelong } from '@shared/dbRow/NgaqRows'
+import { LearnBelong } from '@shared/model/word/NgaqRows'
 import { TempusEventRecord } from "./ChangeRecord"
 import Tempus from "@shared/Tempus"
 import { N2S } from "@shared/Sros"

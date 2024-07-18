@@ -2,7 +2,7 @@
 import Tempus from "@shared/Tempus";
 //import SingleWord2, {VocaDbTable} from "@shared/SingleWord2"
 import { Word } from "@shared/entities/Word/Word";
-import { WordDbRow } from "@shared/dbRow/Word";
+import { WordDbRow } from "@shared/old_dbRow/Word";
 import { $ } from "../../Ut";
 
 //VocaDbTable.dates_add|VocaDbTable.dates_rmb|VocaDbTable.dates_fgt

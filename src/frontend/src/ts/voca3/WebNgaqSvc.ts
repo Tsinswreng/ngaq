@@ -4,7 +4,7 @@ import * as Le from "@shared/linkedEvent";
 import { NgaqSvc } from "@shared/logic/memorizeWord/NgaqSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
-import { WordDbRow } from "@shared/dbRow/Word";
+import { WordDbRow } from "@shared/old_dbRow/Word";
 import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";

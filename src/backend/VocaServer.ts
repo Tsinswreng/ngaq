@@ -1,4 +1,5 @@
-import { WordDbSrc } from "./db/sqlite/Word/DbSrc";
+
+import { WordDbSrc } from "./db/sqlite/OldWord/DbSrc";
 //const cors = require('cors')
 //const express = require('express')
 import express, { Request, Response } from 'express'
@@ -13,13 +14,13 @@ import { $, compileTs_deprecated, fileToBase64, lodashMerge, measurePromiseTime 
 import session from 'express-session'
 import RandomImg from "./Img";
 import Config from "@backend/Config";
-import Sqlite from "@backend/db/Sqlite";
+import OldSqlite from "@backend/db/OldSqlite";
 import json5 from 'json5'
 import * as fs from 'fs'
 import merge from "merge-stream";
 import { Readable } from "stream";
 import jwt from 'jsonwebtoken'
-import { WordTable } from "./db/sqlite/Word/Table";
+import { WordTable } from "./db/sqlite/OldWord/Table";
 import EventEmitter from "eventemitter3";
 import { WeightCodeProcessor } from "@shared/WordWeight/Parser/WeightCodeProcessor";
 const secretKey = '114514'
@@ -130,7 +131,7 @@ export default class VocaServer{
 			if(tbl == void 0){
 				continue
 			}
-			const b = await Sqlite.isTableExist(C.wordDbSrc.dbRaw, tbl)
+			const b = await OldSqlite.isTableExist(C.wordDbSrc.dbRaw, tbl)
 			if(!b){continue}
 			ans.push(tbl)
 		}
@@ -141,7 +142,7 @@ export default class VocaServer{
 		C.wordDbSrc = await WordDbSrc.New({
 			_dbPath:configInst.config.dbPath
 			, _backupDbPath:configInst.config.backupDbPath
-			,_mode: Sqlite.openMode.DEFAULT_CREATE
+			,_mode: OldSqlite.openMode.DEFAULT_CREATE
 		})
 
 
@@ -169,7 +170,7 @@ export default class VocaServer{
 			console.log('created old tmdTable')
 		})
 		
-		// await Sqlite.prepare(VocaServer.sqltDbObj, 's')
+		// await OldSqlite.prepare(VocaServer.sqltDbObj, 's')
 		let ri :RandomImg|undefined = undefined
 		try{
 			ri = await RandomImg.konstructor(dirs)
@@ -212,7 +213,7 @@ export default class VocaServer{
 			// const fn = ()=>{
 			// 	return Promise.all(prms)
 			// }
-			// await Sqlite.transaction(C.sqlt.db, fn)
+			// await OldSqlite.transaction(C.sqlt.db, fn)
 			const nunc = Tempus.new()
 			console.log(nunc)//t
 			res.send(nunc.iso)
@@ -236,12 +237,12 @@ export default class VocaServer{
 				//const vsqlt = VocaSqlite.new({_tableName: sws[0].table})
 				const backupDb = await WordDbSrc.New({
 						_dbPath:(configInst.config.backupDbPath)
-						, _mode:Sqlite.openMode.DEFAULT_CREATE
+						, _mode:OldSqlite.openMode.DEFAULT_CREATE
 				})
 				await WordDbSrc.backupTable(VocaServer.wordDbSrc.dbRaw, sws[0].belong, backupDb.dbRaw) //* 無調用堆棧
 				//throw new Error('mis')
-				//const stmt = await Sqlite.prepare(backupDb.db, `SELECT * FROM 'a'`) 
-				const [init, modified] = await Sqlite.transaction(
+				//const stmt = await OldSqlite.prepare(backupDb.db, `SELECT * FROM 'a'`)
+				const [init, modified] = await OldSqlite.transaction(
 					VocaServer.wordDbSrc.dbRaw
 					, await WordDbSrc.addWordsOfSameTable_fn(VocaServer.wordDbSrc.dbRaw, sws)
 				)
@@ -343,7 +344,7 @@ export default class VocaServer{
 			
 			const nonNullTables:string[] = []
 			for(const u of tables){
-				const b = await Sqlite.isTableExist(C.wordDbSrc.dbRaw,u)
+				const b = await OldSqlite.isTableExist(C.wordDbSrc.dbRaw,u)
 				if(b){nonNullTables.push(u)}
 			}
 			configInst.reload()
@@ -384,7 +385,7 @@ export default class VocaServer{
 			//const vsqlt = await VocaSqlite.neW({_tableName:table})
 			configInst.reload()
 			
-			const tables = await Sqlite.filterExistTables(C.wordDbSrc.dbRaw, configInst.config.tables??[])
+			const tables = await OldSqlite.filterExistTables(C.wordDbSrc.dbRaw, configInst.config.tables??[])
 			const streams:Readable[] = new Array(tables.length)
 			for(let i = 0; i < tables.length; i++){
 				const ua = await C.wordDbSrc.readStream(tables[i])

@@ -1,7 +1,7 @@
 import { Item, NumItem, JsonItem } from "./Item"; 
 
 import type * as Mod from "@shared/model/user/UserModel";
-import type * as Row from "@shared/dbRow/user/UserRows";
+import type * as Row from "@shared/model/user/UserRows";
 
 
 

@@ -3,7 +3,7 @@ import argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 
 import * as Mod from '@shared/model/user/UserModel'
-import * as Row from '@shared/dbRow/user/UserRows'
+import * as Row from '@shared/model/user/UserRows'
 
 import Config from "@backend/Config"
 import Tempus from "@shared/Tempus"
@@ -20,11 +20,11 @@ import Path from 'path'
 import * as fse from 'fs-extra'
 import * as fs from 'fs'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
-import { NgaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/NgaqDbSrc"
-import { InitSql_ngaqDbSrc } from "@backend/ngaq4/ngaqDbSrc/Initer_ngaqDbSrc"
+import { NgaqDbSrc } from "@backend/db/sqlite/ngaq/NgaqDbSrc"
+import { InitSql_ngaqDbSrc } from "@backend/db/sqlite/ngaq/Initer_ngaqDbSrc"
 import { getRelativePath } from "@backend/util/File"
 import { UserDb } from "./UserDb"
-import { JoinedWord } from "@shared/entities/Word/JoinedWord"
+import { JoinedWord } from "@shared/model/word/JoinedWord"
 
 const EV = Le.Event.new.bind(Le.Event)
 //const EV = Le.SelfEmitEvent.new.bind(Le.SelfEmitEvent)

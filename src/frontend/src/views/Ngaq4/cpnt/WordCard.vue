@@ -3,9 +3,9 @@ import {WebSvcWord} from '@ts/ngaq4/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
 import { $ } from '@shared/Ut'
-import {SvcWord} from '@shared/entities/Word/SvcWord'
+import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
 import Tempus from '@shared/Tempus';
-import { LearnBelong } from '@shared/dbRow/wordDbRowsOld';
+import { LearnBelong } from '@shared/old_dbRow/wordDbRowsOld';
 const WordEvent = LearnBelong
 // class WordEvent{
 // 	static ADD

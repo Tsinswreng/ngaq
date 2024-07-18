@@ -1,3 +1,4 @@
+/** 第三版 */
 import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'

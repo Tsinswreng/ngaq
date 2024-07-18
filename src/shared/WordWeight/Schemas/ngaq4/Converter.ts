@@ -1,10 +1,10 @@
-import type { SvcWord } from "@shared/entities/Word/SvcWord";
+import type { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import type { Word_t } from "./main";
-import type { LearnBelong } from "@shared/dbRow/NgaqRows";
+import type { LearnBelong } from "@shared/model/word/NgaqRows";
 import type { I_Tempus_Event } from "@shared/interfaces/I_SvcWord";
-import type * as Mod from "@shared/model/NgaqModels";
-import type * as Row from "@shared/dbRow/NgaqRows"
-import { Tempus_Event } from "@shared/entities/Word/SvcWord";
+import type * as Mod from "@shared/model/word/NgaqModels";
+import type * as Row from "@shared/model/word/NgaqRows"
+import { Tempus_Event } from "@shared/logic/memorizeWord/SvcWord";
 
 
 

@@ -1,7 +1,7 @@
 import { KeyMirror, PubNonFuncProp } from "@shared/Type";
 import { As } from "@shared/Common";
 import Tempus from "@shared/Tempus";
-import * as Row from "@shared/dbRow/user/UserRows"
+import * as Row from "@shared/model/user/UserRows"
 import { keyMirror } from "@shared/tools/keyMirror";
 
 function assign(a,b){
