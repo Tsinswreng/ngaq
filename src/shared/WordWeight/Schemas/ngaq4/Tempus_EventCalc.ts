@@ -1,5 +1,4 @@
-//<@delete>
-import * as _ENV from '@shared/WordWeight/weightEnv'
+
 //type import
 import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
@@ -8,74 +7,35 @@ import type {
 	, I_Tempus_EventWord
 }
 from '@shared/interfaces/ngaqWeightWord/Tempus_eventWord'
-//</@delete>
-/* 
-自定義權重算法ʹ例
-載入旹、程序ˋ自動 添 依賴(即 L)、勿手動ᵈ褈添
-肰寫碼旹、若[不寫 import * as L from "./_lib"]則{報錯且不利代碼提示}
-遂定: <@ｄｅｌｅｔｅ></@ｄｅｌｅｔｅ> 中ʹ字串ˋ 載入旹 被刪(改半角)
-(正則暴力替換、不慮 配對否。)
-整個文件作潙一個函數、new Function('L', code)
-需return 一對象 芝叶I_WordWeightˉ 接口者
-*/
+import { LearnBelong } from '@shared/dbRow/NgaqRows'
+import { TempusEventRecord } from "./ChangeRecord"
+//import { ChangeRecord } from "@shared/WordWeight/ChangeRecord"
+//import { TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
 
-// async function testImport(){
-// 	const path = ''
-// 	const e = await import(path)
-// 	console.log(e)
-// }
-// testImport().then()
-
-const sros = _ENV.Sros_.Sros.new()
+import Tempus from "@shared/Tempus"
+import { N2S } from "@shared/Sros"
+import { Sros } from "@shared/Sros"
+import { $ } from "@shared/Common"
+import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
+/**
+ * 模塊ʹ返值。賦于__return._、㕥適new Function加載
+ */
+declare const __return:{_:any}
+const sros = Sros.new()
 const s = sros.short
-// const Tempus_Event = _ENV.Word_.Tempus_Event
-// type Tempus_Event = InstanceType_<typeof Tempus_Event>
+const $n = Sros.toNumber.bind(Sros)
 
-// const WordEvent = _ENV.Word_.WordEvent
-// type WordEvent = _ENV.Word_.WordEvent
-//type WordEvent = InstanceType_<typeof WordEvent>
-const Tempus = _ENV.Tempus
-type Tempus = InstanceType_<typeof _ENV.Tempus>
-type N2S = _ENV.Sros_.N2S
-// const Word = _ENV.Word_.Word
-// type Word = InstanceType_<typeof Word>
-const Word = _ENV.JoinedWord
-type Word = InstanceType_<typeof Word>
-const $n = _ENV.Sros_.Sros.toNumber.bind(_ENV.Sros_.Sros)
-const $ = _ENV.Ut.$
-const last = _ENV.Ut.lastOf
-const SvcWord = _ENV.SvcWord
-type SvcWord = InstanceType_<typeof _ENV.SvcWord>
 
-const ChangeRecord = _ENV.Record.ChangeRecord
-type ChangeRecord = _ENV.Record.ChangeRecord
+function $last<T>(arr:T[]){
+	return $(arr.at(-1))
+}
 
-const TempusEventRecord = _ENV.Record.TempusEventRecord
-type TempusEventRecord = _ENV.Record.TempusEventRecord
 
-const Base = _ENV.BaseWeight
-type Base = _ENV.BaseWeight
-
-const Row = _ENV.NgaqRows
-type Row = typeof Row
-const Mod = _ENV.NgaqModels
-type Mod = typeof Mod
-
-const WordEvent = Row.LearnBelong
+const WordEvent = LearnBelong
 type WordEvent = typeof WordEvent
 
 
-// class WordEvent{
-// 	static readonly ADD=Row.LearnBelong.add
-// 	static readonly RMB=Row.LearnBelong.rmb
-// 	static readonly FGT=Row.LearnBelong.fgt
-// }
-
-//type Statistics = InstanceType_<typ
-
 //___________________________________________________
-
-
 
 
 class InMills{
@@ -104,6 +64,8 @@ class DefaultOpt{
 	debuffNumerator = 599999*1000*3600*24*90
 	base = 20
 }
+
+type ChangeRecord = TempusEventRecord
 
 /** 權重ˇ算ᵗ程中ᵗ統計 */
 class Statistics{
@@ -152,16 +114,10 @@ class WordWeight implements I_WordWeight<Word_t>{
 
 	readonly This = WordWeight
 
-	//protected _word__changeRecord:Map<Word, ChangeRecord[]> = new Map()
-	//get word__changeRecordOld(){return this._word__changeRecord}
 	protected _wordId__changeRec = new Map<str, ChangeRecord[]>()
 	get wordId__changeRec(){return this._wordId__changeRec}
 	protected set wordId__changeRec(v){this._wordId__changeRec = v}
 	
- 
-	// protected _changeRecord:_ENV.ChangeRecord[] = []
-	// get changeRecord(){return this._changeRecord}
-	// set changeRecord(v){this._changeRecord = v}
 
 	protected _paramOpt = this.This.defaultOpt
 	get paramOpt(){return this._paramOpt}
@@ -176,7 +132,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 	addChangeRecords(id:str, changeRecords:ChangeRecord[]){
 		const z = this
 		for(const r of changeRecords){
-			ChangeRecord.push(z.wordId__changeRec, id, r)
+			key__arrMapPush(z.wordId__changeRec, id, r)
 		}
 	}
 
@@ -277,7 +233,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				st.cnt_rmb++
 				st.cnt_validRmb++
 				let weight_ = s.n(1.1)
-				const lastRec = last(z._statistics.records) as TempusEventRecord
+				const lastRec = $last(z._statistics.records) as TempusEventRecord
 				if(lastRec == void 0){
 					throw new Error('last changeRecord is undef')
 				}else if(WordEvent.add === lastRec.event){ //若上個事件潙 添
@@ -298,7 +254,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				// }
 
 				// 算 debuff
-				if(st.curPos >= st.finalAddEventPos && last(z._mw.tempus_event_s).event === WordEvent.rmb ){
+				if(st.curPos >= st.finalAddEventPos && $last(z._mw.tempus_event_s).event === WordEvent.rmb ){
 					//console.log(1)//t
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._cur_tempus__event.tempus)
 					let debuff = z._ww.getDebuff(
@@ -319,8 +275,8 @@ class WordWeight implements I_WordWeight<Word_t>{
 					)
 					//console.log(st.weight)//t
 					st.weight = $n( s.d(st.weight, debuff) )
-					rec.dateWeight = weight_
-					rec.debuff = debuff
+					rec.reason.dateWeight = weight_
+					rec.reason.debuff = debuff
 					rec.after = st.weight
 				}
 				z.addRecord(rec)
@@ -329,7 +285,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 
 			protected handle_fgt(){
 				const z = this
-				const lastRec = last(z._statistics.records) as TempusEventRecord
+				const lastRec = $last(z._statistics.records) as TempusEventRecord
 				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 				const st = z._statistics
 				if(st.cnt_add >= 3){
@@ -351,7 +307,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				const z = this
 				const curEv = z._cur_tempus__event.event
 				const thatTime = z._cur_tempus__event.tempus
-				const nunc = _ENV.Tempus.new()
+				const nunc = Tempus.new()
 				const diffMills = Tempus.diff_mills(nunc, thatTime)
 				if(curEv === WordEvent.add){
 					const bonus = z._ww.calcLastAddBonus(diffMills)
@@ -362,7 +318,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 						z._cur_tempus__event
 						, z._statistics.weight
 					)
-					rec.annotation = 'extraHandleFinalEvent'
+					rec.reason.comment = 'extraHandleFinalEvent'
 					z.addRecord(rec)
 				}
 			}
@@ -401,16 +357,16 @@ class WordWeight implements I_WordWeight<Word_t>{
 		//mWords = z.filter(mWords)
 		mWords = await z.run0(mWords)
 		//mWords = await z.filterByTbl(mWords)
-		mWords = z.shuffer(mWords)
+		//mWords = z.shuffer(mWords)
 		return mWords
 	}
 
-	shuffer(words:Word_t[]){
-		return _ENV.algo.getShuffle(
-			words, 8, 
-			Math.floor(words.length / 8)
-		)
-	}
+	// shuffer(words:Word_t[]){
+	// 	return _ENV.algo.getShuffle(
+	// 		words, 8, 
+	// 		Math.floor(words.length / 8)
+	// 	)
+	// }
 
 	// /**
 	//  * 英日英日英日英日拉
@@ -642,6 +598,4 @@ class WordWeight implements I_WordWeight<Word_t>{
 	}
 }
 
-
-//@ts-ignore
-return WordWeight.new()
+__return._ = WordWeight.new()

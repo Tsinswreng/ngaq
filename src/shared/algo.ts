@@ -1,4 +1,3 @@
-import { KeyMirror } from "./Type"
 import {$} from "./Common"
 
 /**
@@ -519,27 +518,8 @@ export function distinct<T, U>(arr:T[], fn:(ele:T)=>U){
 	return ans
 }
 
-/**
- * 
- * @param arr 
- * @param keyOfMap 返ᵗ值ˋ作Map之鍵
- * @returns 
- */
-export function classify<Ele,Key>(arr:Ele[], keyOfMap:(ele:Ele)=>Key){
-	const ans = new Map<Key, Ele[]>()
-	for(const e of arr){
-		const key = keyOfMap(e)
-		let got = ans.get(key)
-		if(got == void 0){
-			ans.set(key, [e])
-		}else{
-			got.push(e)
-			ans.set(key, got)
-		}
-	}
-	return ans
-}
-
+import { classify } from "./tools/classify"
+export {classify}
 
 export function diffMapByKey<K, V>(map1: Map<K, V>, map2: Map<K, V>): Map<K, V> {
 	const ans = new Map<K, V>();
@@ -552,16 +532,7 @@ export function diffMapByKey<K, V>(map1: Map<K, V>, map2: Map<K, V>): Map<K, V> 
 	return ans;
 }
 
-export function key__arrMapPush<K,VEle>(map:Map<K,VEle[]>, k:K ,ele:VEle){
-	const gotV = map.get(k)
-	if(gotV == void 0){
-		map.set(k, [ele])
-	}else{
-		gotV.push(ele)
-		map.set(k, gotV)
-	}
-}
-
+export { key__arrMapPush } from "./tools/key__arrMapPush"
 /* 
 arr1=[
 	{text:'a', num:1}
@@ -586,57 +557,5 @@ export function diffArr<ArrEle, Fld>(arr1:ArrEle[], arr2:ArrEle[], fn:(key:ArrEl
 }
 
 export {keyMirror} from '@shared/tools/keyMirror'
-
-
-export function salt(text:str, salt:str){
-	return text+':'+salt
-}
-
-
-/* 
- * 从当前字符串位置开始，尝试匹配传入的字符串 str。
- * 如果成功匹配，函数会将索引移动到匹配字符串的末尾，并返回匹配的字符串。
- */
-export function eatStr(text:str, str: string, required?: boolean) {
-	
-	let idx = 0
-	if (text.slice(idx, idx + str.length) === str) {
-		idx += str.length;
-		return str;
-	}
-	// if (required) {
-	// 	this.error(`Expected '${str}' instead of '${this.text[z.status.index]}'`);
-	// }
-
-	return null;
-}
-
-/**
- * const got = fn('Bearer 114514', 'Bearer '.length)
- * -> [ 'Bearer ', '114514' ]
- * 只按len長度截取、不檢查是否匹配
- * @param str 
- * @param head 
- * @returns 
- */
-export function splitAtLength(str:str, len:int){
-	const gotHead = str.slice(0, len)
-	const rest = str.slice(len)
-	return [gotHead, rest]
-}
-
-
-/**
- * const got = fn('Bearer 114514', 'Bearer ')
- * -> [ 'Bearer ', '114514' ]
- * 只按head長度截取、不檢查是否匹配
- * @param str 
- * @param head 
- * @returns 
- * @deprecated 改用 @see splitAtLength
- */
-export function splitAtHeadLength(str:str, head:str){
-	const gotHead = str.slice(0, head.length)
-	const rest = str.slice(head.length)
-	return [gotHead, rest]
-}
+export {splitAtLength} from '@shared/tools/splitAtLength'
+export {splitAtHeadLength} from '@shared/tools/splitAtHeadLength'

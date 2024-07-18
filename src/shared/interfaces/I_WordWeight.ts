@@ -1,6 +1,6 @@
 type Fn<Return=any> = (...args:any[])=>Return
 import type { SvcWord } from "@shared/entities/Word/SvcWord"
-import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
+//import type { ChangeRecord, TempusEventRecord } from "@shared/WordWeight/ChangeRecord"
 import type Tempus from "@shared/Tempus"
 import type { LearnBelong } from "@shared/dbRow/NgaqRows"
 
@@ -10,7 +10,7 @@ export interface I_WordWeight<Word_t>{
 	 * @param mWords 
 	 */
 	run(mWords:Word_t[]):Promise<Word_t[]>
-	wordId__changeRec?: Map<str, ChangeRecord[]>
+	wordId__changeRec?: Map<str, I_ChangeRecord[]>
 	/**
 	 * 權重參數設置
 	 * 如
@@ -22,3 +22,11 @@ export interface I_WordWeight<Word_t>{
 	setParam(key:string, v):boolean
 }
 
+
+export interface I_ChangeRecord{
+	/** 變後ʹ權重 */
+	after
+	reason?
+}
+
+export type Num_t = number
