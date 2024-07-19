@@ -111,3 +111,7 @@ export type NullableEleArr<T> = (T|undef)[]
 export interface I_belong<T>{
 	belong: T
 }
+
+export interface I__<T=any>{
+	_:T
+}

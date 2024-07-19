@@ -2,18 +2,25 @@ import { WordDbRow } from "@shared/old_dbRow/Word"
 import { I_login, I_signUp } from "@shared/model/web/auth"
 import LocalStorage from "@ts/LocalStorage"
 
-import * as Mod from '@shared/model/user/UserModel'
-import * as Row from '@shared/model/user/UserRows'
+import * as UMod from '@shared/model/user/UserModel'
+import type * as URow from '@shared/model/user/UserRows'
+
+import type * as NMod from '@shared/model/word/NgaqModels'
+import type * as NRow from '@shared/model/word/NgaqRows'
+
 import { lsItems } from "@ts/localStorage/Items"
 import axios, { AxiosRequestConfig } from 'axios'
 import { Exception, Reason } from "@shared/error/Exception";
 import { JoinedRow } from "@shared/model/word/JoinedRow"
+import { I__ } from "@shared/Type"
 
+const GET = 'GET'
+const POST = 'POST'
 type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
 
 //function apiRequest(url:str, method:Req_method_t, data)
-function apiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
+function ApiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 	const userId = lsItems.userId.get()
 	const token = lsItems.token.get()
 	const opt:AxiosRequestConfig<any> = {
@@ -25,15 +32,15 @@ function apiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 //Bearer: HTTP 协议中用于身份验证的一种令牌类型。 持票人令牌
 			'Authorization': `Bearer ${token}`, 
 			'X-User-ID': userId
-		}
+		},
 	}
-	if(method === 'GET' || data != void 0){
+	if(method === 'GET' && data != void 0){
 		opt.params = data
 	}else{ //POST
 		if(data != void 0){
 			opt.data = data
 		}else{
-			//opt.data = {}
+			opt.data = {}
 		}
 	}
 	return axios(opt);
@@ -51,7 +58,7 @@ function apiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 axios.interceptors.response.use(
 	response => response,
 	error => {
-		if (error.response.status === 401) {
+		if (error?.response?.status === 401) {
 			// 重定向到登录页面或刷新令牌
 			window.location.href = '/login';
 		}
@@ -102,7 +109,7 @@ export class Client{
 	
 
 
-	setSession(session:Row.Session){
+	setSession(session:URow.Session){
 		lsItems.session.set(session)
 		lsItems.userId.set(session.userId)
 		lsItems.token.set(session.token)
@@ -156,8 +163,8 @@ export class Client{
 		if(!got.ok){
 			throw Exception.for(z.errReason.login_err, json)
 		}
-		const sessionRow = JSON.parse(json) as Row.Session
-		const session = Mod.Session.fromRow(sessionRow)
+		const sessionRow = JSON.parse(json) as URow.Session
+		const session = UMod.Session.fromRow(sessionRow)
 		z.setSession(sessionRow)
 		return session
 	}
@@ -180,11 +187,21 @@ export class Client{
 		return got
 	}
 
+	async AddLearnRows(learnRows:NRow.Learn[]){
+		const z = this
+		//const json = JSON.stringify(learnRows)
+		const url = new URL(`${urlB.user}/addLearnRows`, z.baseUrl)
+		//console.log(learnRows)//t
+		//const data: I__ = {_: JSON.stringify(learnRows)}
+		const resp = await ApiRequest(url.toString(), POST, learnRows)
+		return resp.data
+	}
+
 	
 	async GetWeightAlgoJs0(){
 		const z = this
 		const url = new URL(`${urlB.user}/weightAlgoJs0`, z.baseUrl)
-		const got = await apiRequest(url.toString(), 'POST')
+		const got = await ApiRequest(url.toString(), 'POST')
 		const text = got.data
 		//const text = await got.text()
 		return text as str
@@ -201,7 +218,7 @@ export class Client{
 	async GetWordsFromAllTables(){
 		const z = this
 		const url = new URL(`${urlB.user}/allWords`, z.baseUrl)
-		const got = await apiRequest(url.toString(), "POST", {})
+		const got = await ApiRequest(url.toString(), "POST", {})
 		//const got = await fetch(url)
 		return got.data as JoinedRow[]
 		//const text = await got.text()

@@ -19,11 +19,11 @@ import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
 import type * as WordIF from "@shared/interfaces/I_SvcWord";
+import { Learn } from "@shared/model/word/NgaqRows";
 
 
 export class WebNgaqSvc extends LearnSvc{
-
-
+	
 	readonly This = WebNgaqSvc
 	protected constructor(){
 		super()
@@ -175,11 +175,16 @@ export class WebNgaqSvc extends LearnSvc{
 		// }
 		
 	}
+
+
 	protected _Resort(): Promise<boolean> {
 		throw new Error("Method not implemented.");
 	}
 
-
+	protected async _Save(learnRows: Learn[]): Task<any> {
+		const z = this
+		return await z.client.AddLearnRows(learnRows)
+	}
 
 	// protected override async _saveOld(words: Word[]): Promise<any> {
 	// 	const z = this

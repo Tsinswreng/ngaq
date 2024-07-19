@@ -1,8 +1,8 @@
-export class Row{
+export class URow{
 
 }
 
-export class IdCtMtBl extends Row{
+export class IdCtMtBl extends URow{
 	id:int
 	belong:str
 	ct:int

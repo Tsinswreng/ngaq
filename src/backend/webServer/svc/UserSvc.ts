@@ -5,6 +5,12 @@ import jwt from 'jsonwebtoken'
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/model/user/UserRows'
 
+import * as UMod from '@shared/model/user/UserModel'
+import type * as URow from '@shared/model/user/UserRows'
+
+import type * as NMod from '@shared/model/word/NgaqModels'
+import type * as NRow from '@shared/model/word/NgaqRows'
+
 import Config from "@backend/Config"
 import Tempus from "@shared/Tempus"
 const configInst = Config.getInstance()
@@ -25,6 +31,7 @@ import { InitSql_ngaqDbSrc } from "@backend/db/sqlite/ngaq/Initer_ngaqDbSrc"
 import { getRelativePath } from "@backend/util/File"
 import { UserDb } from "./UserDb"
 import { JoinedWord } from "@shared/model/word/JoinedWord"
+import { SqliteQryResult } from "@backend/sqlite/sqliteUtil"
 
 const EV = Le.Event.new.bind(Le.Event)
 //const EV = Le.SelfEmitEvent.new.bind(Le.SelfEmitEvent)
@@ -384,5 +391,19 @@ export class UserSvc{
 		//const jwords = joinedRows.map(e=>JoinedWord.new(e))
 		//const plainWords = jwords.map(e=>JoinedWord.toPlainWord(e))
 		return joinedRows
+	}
+
+	async AddLearns(userId:Id_t, learns:NRow.Learn[]){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Add = await userDb.dbSrc.GetFn_addRow(e=>e.learn)
+		userDb.dbSrc.db.BeginTrans()
+		const ans = [] as SqliteQryResult<undef>[]
+		for(const l of learns){
+			const ua = await Add(l)
+			ans.push(ua)
+		}
+		userDb.dbSrc.db.Commit()
+		return ans
 	}
 }

@@ -75,6 +75,27 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		return ans
 	}
 
+	async Fn_addRow(db:SqliteDb, opt?:AddInstOpt){
+		const z = this
+		const tbl = z
+		if(opt == void 0){
+			opt = {ignoredKeys: [tbl.col.id]}
+		}
+
+		const row = tbl.factory.emptyRow
+		const objsql = ObjSql.new(row, opt)
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await db.Prepare(sql)
+		const ans = async(row:InstanceType_<FactT['Row']>)=>{
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+
 }
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
@@ -333,6 +354,26 @@ export class NgaqDbSrc{
 	protected _tbls = tbls
 	get tbls(){return this._tbls}
 	protected set tbls(v){this._tbls = v}
+
+	async GetFn_addInst<T extends Tbl<any>>(
+		fn: (tbl:typeof this.tbls)=>T
+		,opt?:AddInstOpt
+	){
+		const z = this
+		const tbl = fn(z.tbls)
+		const ans = await tbl.Fn_addInst(z.db, opt)
+		return ans as ReturnType<T['Fn_addInst']>
+	}
+
+	async GetFn_addRow<T extends Tbl<any>>(
+		fn: (tbl:typeof this.tbls)=>T
+		,opt?:AddInstOpt
+	){
+		const z = this
+		const tbl = fn(z.tbls)
+		const ans = await tbl.Fn_addRow(z.db, opt)
+		return ans as ReturnType<T['Fn_addRow']>
+	}
 	
 	async Fn_addJoinedRows(){
 		const z = this

@@ -308,6 +308,17 @@ export abstract class LearnSvc{
 		return Promise.resolve(true)
 	}
 
+	protected abstract _Save(learnRows:Row.Learn[]):Task<any>
+
+	/** //TODO 合入新事件 防止褈複保存 */
+	async Save():Task<any>{
+		const z = this
+		const learnObjs = z.getLearnObjsToSave()
+		const resp = await z._Save(learnObjs.map(e=>e.toRow()))
+		console.log(resp)//t
+		return resp
+	}
+
 	// protected abstract _saveOld(words:Word[]):Task<any>
 
 	// async saveOld(){
@@ -548,6 +559,12 @@ export abstract class LearnSvc{
 			w.weight = gotRef[0]?.weight??0
 			w.index = gotRef[0]?.index
 		}
+	}
+
+	getLearnObjsToSave(){
+		const z = this
+		const learns = z.wordsToLearn.map(e=>e.statusToLearnObj()).filter(e=>e!=null)
+		return learns
 	}
 	
 

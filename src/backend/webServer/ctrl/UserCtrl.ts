@@ -15,6 +15,14 @@ import * as If from "@shared/model/web/auth"
 import { As } from "@shared/Common"
 import Tempus from "@shared/Tempus"
 import { splitAtLength } from "@shared/algo"
+import Path from 'path'
+import { I__ } from "@shared/Type"
+import * as UMod from '@shared/model/user/UserModel'
+import type * as URow from '@shared/model/user/UserRows'
+
+import type * as NMod from '@shared/model/word/NgaqModels'
+import type * as NRow from '@shared/model/word/NgaqRows'
+const cwd = process.cwd()
 
 const configInst = Config.getInstance()
 
@@ -131,6 +139,7 @@ export class UserCtrl extends BaseCtrl{
 		r.post('/signUp', async(req,res)=>{
 			try {
 				const body:I_signUp = req.body
+				console.log(body)//t
 				const uniqueName = As(body?.uniqueName, 'string')
 				const password = As(body?.password, 'string')
 				await z.svc.SignUp({
@@ -159,10 +168,25 @@ export class UserCtrl extends BaseCtrl{
 			}
 		})
 
+		r.post('/addLearnRows', async(req,res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){return}
+				//const data:I__<NRow.Learn[]> = req.body
+				const data = req.body as NRow.Learn[]
+				await z.svc.AddLearns(userId, data)
+				res.status(200).send('')
+			} catch (err) {
+				z.onErr(err, res)
+			}
+		})
+
 		/** test */
 		r.post('/weightAlgoJs0', async(req, res)=>{
 			try {
-				res.status(200).sendFile(`./bundle/weight.js`)
+				res.status(200).sendFile(
+					Path.resolve(cwd, `./bundle/weight.js`)
+				)
 			} catch (err) {
 				z.onErr(err, res)
 			}

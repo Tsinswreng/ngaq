@@ -9,8 +9,8 @@ function assign(a,b){
 }
 
 
-export class BaseInst<RowT extends Row.Row>{
-	get Row(){return Row.Row}
+export class BaseInst<RowT extends Row.URow>{
+	get Row(){return Row.URow}
 
 	toRow():RowT{
 		const z = this
@@ -27,12 +27,12 @@ export class BaseInst<RowT extends Row.Row>{
 }
 
 export class BaseFactory<
-	InstT extends BaseInst<Row.Row>
-	, RowT extends Row.Row
+	InstT extends BaseInst<Row.URow>
+	, RowT extends Row.URow
 >
 {
 	Inst:typeof BaseInst = BaseInst
-	Row:typeof Row.Row = Row.Row
+	Row:typeof Row.URow = Row.URow
 	//col = keyAsValue(neow this.Row()) as KeyAsValue<RowT>
 	//繼承時 先初始化父類中 直接賦值ʹ字段
 	col:KeyMirror<RowT>

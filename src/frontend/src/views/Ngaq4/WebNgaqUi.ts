@@ -341,7 +341,9 @@ export class WebNgaqUi{
 	async save(){
 		const z = this
 		//return z.svc.saveOld()
+		await z.svc.Save()
 		return true
+		//return true
 	}
 
 	async restart(){

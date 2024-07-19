@@ -39,6 +39,7 @@ export interface I_WordWithStatus extends
 	setInitEvent(ev:LearnBelong.rmb|LearnBelong.fgt)
 	undo()
 	selfMerge()
+	statusToLearnObj():Mod.Learn|null
 }
 
 
