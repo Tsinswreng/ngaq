@@ -159,6 +159,15 @@ export class UserCtrl extends BaseCtrl{
 			}
 		})
 
+		/** test */
+		r.post('/weightAlgoJs0', async(req, res)=>{
+			try {
+				res.status(200).sendFile(`./bundle/weight.js`)
+			} catch (err) {
+				z.onErr(err, res)
+			}
+		})
+
 		return r
 	}
 }

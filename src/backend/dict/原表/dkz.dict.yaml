@@ -1,5 +1,5 @@
 
-#20240714103922856
+#20240719105948981
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -316,6 +316,7 @@ use_preset_vocabulary: true
 殪	ʔˁits	
 曀	ʔˁits	
 廁	tsʰrəks	
+閒	ɡrˁen	
 閾	hʷək	
 訴	sˁaks	
 低	tˁi	
@@ -4461,7 +4462,6 @@ use_preset_vocabulary: true
 万	mˁək	1%
 圍	wʷəjs	1%
 戲	hˁa	1%
-閒	ɡrˁen	1%
 茲	dzə	1%
 兹	dzə	1%
 靄	ʔˁat	0%
@@ -21703,8 +21703,6 @@ use_preset_vocabulary: true
 㡉	kˁen	
 婱	ɡˁen	
 閑	ɡrˁen	
-閒	krˁen	99%
-閒	krˁens	
 蛝	ɡrˁen	
 啣	ɡrˁam	
 𢛆	ɡˁen	

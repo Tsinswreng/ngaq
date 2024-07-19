@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { Router, Request, Response } from "express"
 import * as Le from '@shared/linkedEvent'
 import EventEmitter3 from "eventemitter3"
 
@@ -37,8 +37,11 @@ export class BaseCtrl{
 	get router(){return this._router}
 	protected set router(v){this._router = v}
 
-	onErr(v){
+	onErr(v, res?:Response){
 		console.error(v)
+		if(res != void 0){
+			res.status(500).send('')
+		}
 	}
 
 

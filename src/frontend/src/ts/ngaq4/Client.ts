@@ -13,7 +13,7 @@ type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
 
 //function apiRequest(url:str, method:Req_method_t, data)
-function apiRequest(url:str, method:Req_method_t = "GET", data:kvobj|undef){
+function apiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 	const userId = lsItems.userId.get()
 	const token = lsItems.token.get()
 	const opt:AxiosRequestConfig<any> = {
@@ -29,8 +29,12 @@ function apiRequest(url:str, method:Req_method_t = "GET", data:kvobj|undef){
 	}
 	if(method === 'GET' || data != void 0){
 		opt.params = data
-	}else if(data != void 0){
-		opt.data = data
+	}else{ //POST
+		if(data != void 0){
+			opt.data = data
+		}else{
+			//opt.data = {}
+		}
 	}
 	return axios(opt);
 };
@@ -177,12 +181,13 @@ export class Client{
 	}
 
 	
-	async getWeightAlgoJs0(){
+	async GetWeightAlgoJs0(){
 		const z = this
-		const url = new URL(`${ngaqUrl}/weightAlgoJs0`, z.baseUrl)
-		const got = await fetch(url)
-		const text = await got.text()
-		return text
+		const url = new URL(`${urlB.user}/weightAlgoJs0`, z.baseUrl)
+		const got = await apiRequest(url.toString(), 'POST')
+		const text = got.data
+		//const text = await got.text()
+		return text as str
 	}
 
 	async getWordsFromAllTables_old(){

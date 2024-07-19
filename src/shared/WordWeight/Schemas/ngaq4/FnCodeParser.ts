@@ -1,6 +1,6 @@
 
 export interface I_return<T>{
-	_:T
+	_?:T
 }
 
 export class FnCodeParser{

@@ -269,28 +269,28 @@ describe('sliceHead', ()=>{
 
 
 import {classify} from '@shared/tools/classify'
-function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
-	const ans = [] as Ele[]
-	const belong__arr:Map<Cri, Ele[]> = classify(arr, by)
+// function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
+// 	const ans = [] as Ele[]
+// 	const belong__arr:Map<Cri, Ele[]> = classify(arr, by)
 
-	for(const [k,v] of belong__arr){
-		const reversed = v.reverse()
-		belong__arr.set(k,v)
-	}
+// 	for(const [k,v] of belong__arr){
+// 		const reversed = v.reverse()
+// 		belong__arr.set(k,v)
+// 	}
 
-	//k 用于循環遍歷order
-	for(let i = 0, k = 0; i < arr.length; i++,k++){
-		if(k>=order.length){k=0}
-		//const e = arr[i]
-		const belong:Cri = order[k]
-		const gotArr = belong__arr.get(belong)!
-		const last = gotArr.pop()
-		if(last == void 0){continue}
-		ans.push(last)
-	}
-	return ans
-}
-
+// 	//k 用于循環遍歷order
+// 	for(let i = 0, k = 0; i < arr.length; i++,k++){
+// 		if(k>=order.length){k=0}
+// 		//const e = arr[i]
+// 		const belong:Cri = order[k]
+// 		const gotArr = belong__arr.get(belong)!
+// 		const last = gotArr.pop()
+// 		if(last == void 0){continue}
+// 		ans.push(last)
+// 	}
+// 	return ans
+// }
+import {customSort} from '@shared/tools/customSort'
 describe('groupByBelong', ()=>{
 	class Obj{
 		belong: 'a'|'b'|'c'
@@ -310,4 +310,136 @@ describe('groupByBelong', ()=>{
 		'a', 'a', 'b', 'b', 'c'
 	])
 	console.log(ans)
+
 })
+
+
+describe('customSort', () => {
+	it('should sort array according to the given order', () => {
+	  const arr = [
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+		{ belong: 'a' },
+	  ];
+	  const order = ['a', 'b', 'c'];
+	  const sorted = customSort(arr, e => e.belong, order);
+  
+	  expect(sorted.map(e => e.belong)).toEqual([
+		'a', 'b', 'c', 'a', 'b', 'c', 'a'
+	  ]);
+	});
+  
+	it('should handle case when some groups are exhausted', () => {
+	  const arr = [
+		{ belong: 'a' },
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+	  ];
+	  const order = ['a', 'b', 'c'];
+	  const sorted = customSort(arr, e => e.belong, order);
+  
+	  expect(sorted.map(e => e.belong)).toEqual([
+		'a', 'b', 'c', 'a', 'b'
+	  ]);
+	});
+  
+	it('should handle empty array', () => {
+	  const arr: { belong: 'a' | 'b' | 'c' }[] = [];
+	  const order = ['a', 'b', 'c'];
+	  const sorted = customSort(arr, e => e.belong, order);
+  
+	  expect(sorted).toEqual([]);
+	});
+  
+	it('should handle case when order is longer than array', () => {
+	  const arr = [
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+	  ];
+	  const order = ['a', 'b', 'c', 'd', 'e'];
+	  const sorted = customSort(arr, e => e.belong, order);
+  
+	  expect(sorted.map(e => e.belong)).toEqual([
+		'a', 'b', 'c'
+	  ]);
+	});
+  
+	it('should handle case when order is shorter than array', () => {
+	  const arr = [
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+		{ belong: 'a' },
+		{ belong: 'b' },
+		{ belong: 'c' },
+		{ belong: 'a' },
+	  ];
+	  const order = ['a', 'b'];
+	  const sorted = customSort(arr, e => e.belong, order);
+  
+	  expect(sorted.map(e => e.belong)).toEqual([
+		'a', 'b', 'a', 'b', 'a'
+	  ]);
+	});
+  
+	it('should return elements in the specified order even if some elements are missing', () => {
+		const arr = [
+			{ belong: 'a' },
+			{ belong: 'a' },
+			{ belong: 'b' },
+		];
+		const order = ['a', 'b', 'c'];
+		const sorted = customSort(arr, e => e.belong, order);
+		//console.log(sorted)//t
+		expect(sorted.map(e => e.belong)).toEqual([
+			'a', 'b', 'a'
+		]);
+	});
+  
+	it('should handle case when all elements belong to one category1', () => {
+		const arr = [
+			{ belong: 'a' },
+			{ belong: 'a' },
+			{ belong: 'a' },
+		];
+		const order = ['a', 'b', 'c'];
+		const sorted = customSort(arr, e => e.belong, order);
+  
+		expect(sorted.map(e => e.belong)).toEqual([
+			'a', 'a', 'a'
+		]);
+	});
+
+	it('ca', () => {
+		const arr = [
+			{ belong: 'a' },
+			{ belong: 'a' },
+			{ belong: 'a' },
+		];
+		const order = ['c', 'a'];
+		const sorted = customSort(arr, e => e.belong, order);
+  
+		expect(sorted.map(e => e.belong)).toEqual([
+			'a', 'a', 'a'
+		]);
+	});
+
+	it('should handle case when elements belong to categories not in order', () => {
+		const arr = [
+			{ belong: 'x' },
+			{ belong: 'y' },
+			{ belong: 'z' },
+		];
+		const order = ['a', 'b', 'c'];
+		const sorted = customSort(arr, e => e.belong, order);
+
+		expect(sorted.map(e => e.belong)).toEqual([]);
+	});
+  });

@@ -23,6 +23,7 @@ export interface I_weight{
 }
 
 
+
 export interface I_WordWithStatus extends
 	I_id, I_index, I_weight
 {
@@ -32,6 +33,10 @@ export interface I_WordWithStatus extends
 	setInitEvent(ev:LearnBelong.rmb|LearnBelong.fgt)
 	undo()
 	selfMerge()
+}
+
+export interface I_id_weight extends I_id, I_weight{
+
 }
 
 export interface I_Tempus_Event{

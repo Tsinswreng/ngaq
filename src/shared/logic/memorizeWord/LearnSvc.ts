@@ -164,15 +164,15 @@ export abstract class LearnSvc{
 	 * 加載 待背ʹ詞、賦予this._wordsToLearn
 	 * 或直ᵈ取自數據庫、或發網絡請求
 	 */
-	protected abstract _load():Task<boolean>
+	protected abstract _Load():Task<boolean>
 
-	async load(){
+	async Load(){
 		const z = this
 		if(z.status.start){
 			throw Exception.for(z.errReasons.cant_load_after_start)
 		}
 		try {
-			await z._load()
+			await z._Load()
 		} catch (error) {
 			const err = error as Error
 			throw Exception.for(z.errReasons.load_err, err)
@@ -202,21 +202,21 @@ export abstract class LearnSvc{
 		}
 	}
 
-	protected abstract _loadWeightAlgo():Task<I_WordWeight>
+	protected abstract _LoadWeightAlgo():Task<I_WordWeight>
 
 
 	/**
 	 * 初加載權重算法
 	 * 若既加載、再呼此則不理
 	 */
-	async initWeightAlgo(){
+	async InitWeightAlgo(){
 		const z = this
 		// 確保只用于初加載
 		if(z.status.loadWeightAlgo === true){
 			return false
 		}
 		try {
-			z._weightAlgo = await z._loadWeightAlgo()
+			z._weightAlgo = await z._LoadWeightAlgo()
 
 			return true
 		} catch (error) {
@@ -236,24 +236,24 @@ export abstract class LearnSvc{
 	 * 緣權重算法中 可能有: 褈開再算旹詞芝權重不潙空且未背過者ʰ不復褈算權重
 	 * 可試discardChange 與load併用
 	 */
-	async reloadWeightAlgo(){
+	async ReloadWeightAlgo(){
 		const z = this
 		z.status.loadWeightAlgo = false
-		const ans = await z.initWeightAlgo()
+		const ans = await z.InitWeightAlgo()
 		return ans
 	}
 
 	/**
 	 * this._wordsToLearnˇ排序。算權重,篩選等皆由此。
 	 */
-	protected async _sort(){
+	protected async _Sort(){
 		const z = this
-		z._wordsToLearn = await z._sortWords(z.wordsToLearn)
+		z._wordsToLearn = await z._SortWords(z.wordsToLearn)
 	}
 
-	async sort(){
+	async Sort(){
 		const z = this
-		await z._sort()
+		await z._Sort()
 		z.indexWord()
 		return true
 	}
@@ -262,10 +262,10 @@ export abstract class LearnSvc{
 	 * 用于初排序。返ᵣ排序後ʹ詞、不改ᵣ他ʹ數據。
 	 * @param svcWords 
 	 */
-	protected abstract _sortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+	protected abstract _SortWords(svcWords:SvcWord[]):Task<SvcWord[]>
 
 
-	protected abstract _resort():Task<bool>
+	protected abstract _Resort():Task<bool>
 
 	/**
 	 * 背過一輪後 再排序
@@ -277,9 +277,9 @@ export abstract class LearnSvc{
 	/** 
 	 * 可據SvcWord對象之Status 判斷此詞是否在上一輪中背ʴ過
 	 */
-	async resort():Task<bool>{
+	async Resort():Task<bool>{
 		const z = this
-		return z._resort()
+		return z._Resort()
 		// const learnedWord__index = z.merge_LearnedWords__index()
 		// const wordsToResort = [] as SvcWord3[]
 		// for(const [sw, index] of learnedWord__index){
@@ -292,9 +292,9 @@ export abstract class LearnSvc{
 	 * 始背單詞。
 	 * @deprecated
 	 */
-	protected abstract _start():Task<boolean>
+	protected abstract _Start():Task<boolean>
 
-	start(){
+	Start(){
 		const z = this
 		if(!z.status.load){
 			throw Exception.for(z.errReasons.didnt_load)
@@ -324,18 +324,18 @@ export abstract class LearnSvc{
 	
 
 	/** @deprecated */
-	protected abstract _restart():Task<boolean>
+	protected abstract _Restart():Task<boolean>
 
 	/** 
 	 * 清 既學ʹ詞、褈排序
 	 * //TODO 設 褈排序算法、只褈算變˪ʹ詞ʹ權重、並打亂䀬ʹ詞ʹ權重
 	 */
-	async restart(){
+	async Restart(){
 		const z = this
 		if(!z.status.save){
 			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
-		await z.sort()
+		await z.Sort()
 		z.clearLearnedWordRecordEtItsStatus()
 		z.status.start = true
 		return true

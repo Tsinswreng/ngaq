@@ -179,7 +179,7 @@ export class WebNgaqUi{
 	async Test(){
 		const z = this
 		const client = Client.new()
-		return await client.GetWordsFromAllTables()
+		return await client.GetWeightAlgoJs0()
 	}
 
 	/**
@@ -222,7 +222,7 @@ export class WebNgaqUi{
 	
 	async start(){
 		const z = this
-		await z.svc.start()
+		await z.svc.Start()
 		z.fresh_wordBox()
 	}
 
@@ -286,7 +286,7 @@ export class WebNgaqUi{
 
 	reloadAlgoWeight(){
 		const z = this
-		return z.svc.reloadWeightAlgo()
+		return z.svc.ReloadWeightAlgo()
 	}
 
 	undoByWord(mw:WebSvcWord){
@@ -332,8 +332,8 @@ export class WebNgaqUi{
 	/** 開始按鈕 */
 	async prepareEtStart(){
 		const z = this
-		await z.svc.load()
-		await z.svc.sort()
+		await z.svc.Load()
+		await z.svc.Sort()
 		return z.start()
 	}
 
@@ -346,7 +346,7 @@ export class WebNgaqUi{
 
 	async restart(){
 		const z = this
-		await z.svc.restart()
+		await z.svc.Restart()
 		z.fresh_wordBox()
 		
 	}
@@ -394,7 +394,7 @@ export class WebNgaqUi{
 		}
 		// const arrBuf = await z.svc.getImg_arrBuf()
 		// return z.bgImg.setBg_arrBuf(arrBuf)
-		const img = await z.svc.getImg()
+		const img = await z.svc.GetImg()
 		z.emitter.emit(z.events.changeBg, img)
 		return z.bgImg.setBg_Img(img)
 	}

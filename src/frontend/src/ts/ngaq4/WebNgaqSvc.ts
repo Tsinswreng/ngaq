@@ -10,12 +10,16 @@ import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
 import { OldWeightCodeParser as WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
 import { TagImg } from "@shared/TagImg";
 import { JoinedRow } from "@shared/model/word/JoinedRow";
 import { JoinedWord } from "@shared/model/word/JoinedWord";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
+import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
+import { Opus } from "@ts/Worker/Opus";
+import * as WordIF from "@shared/interfaces/I_SvcWord";
+
 
 export class WebNgaqSvc extends LearnSvc{
 
@@ -73,7 +77,7 @@ export class WebNgaqSvc extends LearnSvc{
 	// 	return Promise.resolve(true)
 	// }
 
-	protected override async _load(){
+	protected override async _Load(){
 		const z = this
 		const jsonRows = await z.client.GetWordsFromAllTables()
 		//console.log(jsonRows)//t
@@ -90,9 +94,9 @@ export class WebNgaqSvc extends LearnSvc{
 	/**
 	 * @deprecated
 	 */
-	protected async _initWeightAlgo_deprecated(){
+	protected async _InitWeightAlgo_deprecated(){
 		const z = this
-		const algoCode = await z.client.getWeightAlgoJs0()
+		const algoCode = await z.client.GetWeightAlgoJs0()
 		try {
 			const ans = WeightCodeParser.parse(algoCode)
 			z._weightAlgo = $(ans)()
@@ -102,9 +106,9 @@ export class WebNgaqSvc extends LearnSvc{
 		}
 	}
 
-	protected async _loadWeightAlgo(): Promise<I_WordWeight> {
+	protected async _LoadWeightAlgo(){
 		const z = this
-		const algoCode = await z.client.getWeightAlgoJs0()
+		const algoCode = await z.client.GetWeightAlgoJs0()
 		try {
 			const ans = WeightCodeParser.parse(algoCode)
 			return $(ans)()
@@ -134,10 +138,26 @@ export class WebNgaqSvc extends LearnSvc{
 	// }
 
 
-	//TODO
-	protected async _sortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
+	//TODO 用web worker、先隨機打亂ⁿ示、待算完權重後再排序ⁿ褈示
+	protected override async _SortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
 		//await z._initWeightAlgo_deprecated()
+		const code = await z.client.GetWeightAlgoJs0()
+
+		const fn = FnCodeParser.parse(code)
+		const __return : {_?: I_WordWeight<SvcWord, WordIF.I_id_weight>} = {}
+		fn(__return)
+		const calc = __return?._
+		if(calc == void 0){
+			throw new Error()//TODO
+		}
+		const gotWords = await calc.Run(svcWords)
+		console.log(gotWords)//t
+		// const opus = Opus.mkByFn()
+		// opus.Run(code)
+		
+		// opus = Opus.fromCode(code)
+		
 		return svcWords
 		// await z.initWeightAlgo()
 		// if(z.weightAlgo == void 0){
@@ -151,7 +171,7 @@ export class WebNgaqSvc extends LearnSvc{
 		// }
 		
 	}
-	protected _resort(): Promise<boolean> {
+	protected _Resort(): Promise<boolean> {
 		throw new Error("Method not implemented.");
 	}
 
@@ -166,7 +186,7 @@ export class WebNgaqSvc extends LearnSvc{
 	// }
 
 
-	protected async _restart(): Promise<boolean> {
+	protected async _Restart(): Promise<boolean> {
 		return true
 	}
 
@@ -174,28 +194,28 @@ export class WebNgaqSvc extends LearnSvc{
 	// 	return true
 	// }
 
-	protected async _start(): Promise<boolean> {
+	protected async _Start(): Promise<boolean> {
 		return true
 	}
 
-	protected async getImgResp(){
+	protected async GetImgResp(){
 		const z = this
 		//return z.client.get_randomImg2()
 		return z.client.get_randomImg4()
 	}
 
-	async getImg_arrBuf(){
+	async GetImg_arrBuf(){
 		const z = this
-		const resp = await z.getImgResp()
+		const resp = await z.GetImgResp()
 		const buf = await resp.arrayBuffer()
 		const pack = BlobWithText.parse(buf)
 		console.log(pack.text)//t
 		return pack.arrBuf
 	}
 
-	async getImg(){
+	async GetImg(){
 		const z = this
-		const resp = await z.getImgResp()
+		const resp = await z.GetImgResp()
 		const buf = await resp.arrayBuffer()
 		const pack = BlobWithText.parse(buf)
 		const tagImg = TagImg.new(pack.arrBuf, pack.text)

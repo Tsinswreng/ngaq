@@ -9,7 +9,7 @@ import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
 import { WordEvent } from "@shared/SingleWord2";
-import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
+import { OldWeightCodeParser as WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
