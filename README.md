@@ -31,7 +31,7 @@ tsconfig.json	#最外層ts配置、內配有路徑別名、如 @shared對應<項
 
 ```
 
-佈署:
+部署:
 ```bash
 
 git clone xxx
