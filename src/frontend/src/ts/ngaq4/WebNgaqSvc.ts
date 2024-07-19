@@ -18,7 +18,7 @@ import { JoinedWord } from "@shared/model/word/JoinedWord";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
-import * as WordIF from "@shared/interfaces/I_SvcWord";
+import type * as WordIF from "@shared/interfaces/I_SvcWord";
 
 
 export class WebNgaqSvc extends LearnSvc{
@@ -145,14 +145,18 @@ export class WebNgaqSvc extends LearnSvc{
 		const code = await z.client.GetWeightAlgoJs0()
 
 		const fn = FnCodeParser.parse(code)
-		const __return : {_?: I_WordWeight<SvcWord, WordIF.I_id_weight>} = {}
+		const __return : {_?: I_WordWeight<SvcWord, WordIF.I_id_index_weight>} = {}
 		fn(__return)
 		const calc = __return?._
 		if(calc == void 0){
 			throw new Error()//TODO
 		}
 		const gotWords = await calc.Run(svcWords)
-		console.log(gotWords)//t
+		z.This.assignWeightByRef(svcWords, gotWords)
+		svcWords.sort((a,b)=>{
+			return $(a.index) - $(b.index)
+		})
+		return svcWords
 		// const opus = Opus.mkByFn()
 		// opus.Run(code)
 		
@@ -281,3 +285,5 @@ export class WebNgaqSvc extends LearnSvc{
 	// }
 	
 }
+
+

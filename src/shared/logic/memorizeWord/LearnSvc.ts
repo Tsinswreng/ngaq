@@ -8,7 +8,8 @@ import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { LearnBelong } from "@shared/model/word/NgaqRows";
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
-
+import {classify} from '@shared/tools/classify'
+import type * as WordIF from "@shared/interfaces/I_SvcWord";
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
 type SvcWord = I_WordWithStatus
@@ -531,5 +532,23 @@ export abstract class LearnSvc{
 		const z = this
 		z._status = new SvcStatus()
 	}
+
+	
+	static assignWeightByRef(words:SvcWord[], refArr:WordIF.I_id_index_weight[]){
+		const id__ref = classify(refArr, e=>e.id)
+		for(let i = 0; i < refArr.length; i++){
+			refArr[i].index = i
+		}
+		for(const w of words){
+			const gotRef = id__ref.get(w.id)
+			if(gotRef == void 0){
+				w.weight = 0
+				continue
+			}
+			w.weight = gotRef[0]?.weight??0
+			w.index = gotRef[0]?.index
+		}
+	}
+	
 
 }

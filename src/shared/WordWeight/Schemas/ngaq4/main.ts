@@ -34,8 +34,8 @@ class Main implements I_WordWeight<SvcWord, Word_t>{
 	}
 	async Run0(words: Word_t[]):Task<Word_t[]>{
 		words = await Tempus_EventCalc.new().Run(words) as Word_t[]
-		words = await Derangement.new().Run(words) as Word_t[]
 		words = await GroupByLang.new().Run(words) as Word_t[]
+		words = await Derangement.new().Run(words) as Word_t[]
 		return words
 	}
 

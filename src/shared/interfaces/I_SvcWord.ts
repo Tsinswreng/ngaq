@@ -22,7 +22,13 @@ export interface I_weight{
 	weight:number
 }
 
+export interface I_id_weight extends I_id, I_weight{
 
+}
+
+export interface I_id_index_weight extends I_id, I_index, I_weight{
+
+}
 
 export interface I_WordWithStatus extends
 	I_id, I_index, I_weight
@@ -35,9 +41,8 @@ export interface I_WordWithStatus extends
 	selfMerge()
 }
 
-export interface I_id_weight extends I_id, I_weight{
 
-}
+
 
 export interface I_Tempus_Event{
 	tempus:Tempus

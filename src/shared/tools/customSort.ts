@@ -19,7 +19,6 @@ a,a,b,b,c,a,a,b,b,c....一直循環下去
  * 
  */
 export function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
-	console.log(arr.length)//t
 	const ans = [] as Ele[]
 	const belong__arr:Map<Cri, Ele[]> = classify(arr, by)
 
