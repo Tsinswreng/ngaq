@@ -9,7 +9,11 @@ import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
 import * as WordIf from "@shared/interfaces/I_SvcWord";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
-import { algo } from "@shared/WordWeight/weightEnv";
+//import { algo } from "@shared/WordWeight/weightEnv";
+import {classify} from '@shared/tools/classify'
+const algo = {
+	classify
+}
 
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong

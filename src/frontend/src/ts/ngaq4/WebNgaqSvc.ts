@@ -8,7 +8,7 @@ import { WordDbRow } from "@shared/old_dbRow/Word";
 //import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
-import { WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
+import { OldWeightCodeParser as WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
 import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
@@ -73,7 +73,7 @@ export class WebNgaqSvc extends LearnSvc{
 	// 	return Promise.resolve(true)
 	// }
 
-	protected async _load(){
+	protected override async _load(){
 		const z = this
 		const jsonRows = await z.client.GetWordsFromAllTables()
 		//console.log(jsonRows)//t

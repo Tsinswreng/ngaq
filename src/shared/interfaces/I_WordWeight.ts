@@ -5,12 +5,12 @@ import type Tempus from "@shared/Tempus"
 import type { LearnBelong } from "@shared/model/word/NgaqRows"
 
 
-export interface I_WordWeight<Word_t>{
+export interface I_WordWeight<Word_t, Ret=Word_t>{
 	/**
 	 * 篩選,算權重,打亂,排序,錄ᵣ變 等 皆由此
 	 * @param words 
 	 */
-	Run<T extends Word_t>(words:T[]):Promise<Word_t[]>
+	Run<T extends Word_t>(words:T[]):Task<Ret[]>
 	wordId__changeRec?: Map<str, I_ChangeRecord[]>
 	/**
 	 * 權重參數設置

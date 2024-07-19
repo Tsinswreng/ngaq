@@ -37,6 +37,6 @@ class Word implements Word_t{
 
 }
 
-export function converter(src:SvcWord[], tar:Word_t[]):Word_t[]{
+export function converter(src:SvcWord[]):Word_t[]{
 	return src.map(e=>Word.new(e))
 }
