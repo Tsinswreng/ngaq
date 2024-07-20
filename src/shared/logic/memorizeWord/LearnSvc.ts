@@ -132,7 +132,7 @@ export abstract class LearnSvc{
 	// protected _rmbWords:SvcWord3[] = []
 	// get rmbWords(){return this._rmbWords}
 
-	/** 已背ʹ單詞中 忘者 */
+	/** 已背ʹ單詞中 憶者 *///TODO 褈構 勿蔿每事件皆增字段
 	protected _rmbWord__index:Map<SvcWord, int> = new Map()
 	get rmbWord__index(){return this._rmbWord__index}
 

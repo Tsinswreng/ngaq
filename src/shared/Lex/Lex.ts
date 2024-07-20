@@ -1,24 +1,27 @@
-export class ParseResult{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof ParseResult.new>){
-		const z = this
-		z.start = args[0]
-		z.end = args[1]
-		z.rawText = args[2]
-		return z
-	}
+import type { I_Segment } from "@shared/interfaces/I_Parse"
+import { StrSegment } from "@shared/tools/splitStr"
+export { StrSegment }
+// export class StrSegment extends StrSegment{
+// 	protected constructor(){super()}
+// 	protected __init__(...args: Parameters<typeof StrSegment.new>){
+// 		const z = this
+// 		z.start = args[0]
+// 		z.end = args[1]
+// 		z.data = args[2]
+// 		return z
+// 	}
 
-	static new(start:int, end:int, rawText:str){
-		const z = new this()
-		z.__init__(start, end, rawText)
-		return z
-	}
+// 	static new(start:int, end:int, rawText:str){
+// 		const z = new this()
+// 		z.__init__(start, end, rawText)
+// 		return z
+// 	}
 
-	//get This(){return ParseResult}
-	rawText:str = ''
-	start:int = 0
-	end:int = 0
-}
+// 	//get This(){return ParseResult}
+// 	//rawText:str = ''
+// 	//start:int = 0
+// 	//end:int = 0
+// }
 
 
 /**
@@ -101,6 +104,9 @@ function getLocatePair(text: string, index: number):LocatePair{
 	return [line, column];
 }
 
+
+
+
 export class ParseError extends Error{
 	protected constructor(msg:str){super(msg)}
 	protected __init__(...args: Parameters<typeof ParseError.new>){
@@ -117,8 +123,8 @@ export class ParseError extends Error{
 	get This(){return ParseError}
 	start:int
 	end?:int
-	line:int
-	col:int
+	line?:int
+	col?:int
 }
 
 export class LexLocation{
@@ -134,12 +140,16 @@ export class Status{
 
 export class Lex{
 	protected constructor(){}
+	protected __init__(...args:any[])
 	protected __init__(...args: Parameters<typeof Lex.new>){
 		const z = this
 		z.text = args[0]
 		return z
 	}
 
+	static new(text:str):Lex
+	static new(args:any):never
+	//static new(...args:any[]):unknown
 	static new(text:str){
 		const z = new this()
 		z.__init__(text)
@@ -183,9 +193,17 @@ export class Lex{
 	// 	return z.This.getLocatePair(z.text, z.index)
 	// }
 
-	locate(){
+	/**
+	 * @virtual 
+	 * @returns 
+	 */
+	getIndexOffset(){
+		return this.index
+	}
+
+	locate(text=this.text, index=this.index){
 		const z = this
-		return Location.locate(z.text, z.index)
+		return Location.locate(text, index)
 	}
 
 	getErr(msg:str){
@@ -256,7 +274,7 @@ export class Lex{
 		const idx = z.status.index
 		return z.text.slice(idx, idx + num)
 	}
-	
+
 	peekOne(){
 		const z = this
 		return z.text[z.index]
@@ -335,3 +353,38 @@ export class Lex{
 }
 
 
+export class SegmentLex extends Lex{
+	protected constructor(){super()}
+	protected __init__(...args: Parameters<typeof SegmentLex.new>){
+		const z = this
+		z.segment = args[0]
+		return z
+	}
+
+	static new(segment:StrSegment):SegmentLex
+	static new(arg):never
+	static new(segment:StrSegment){
+		const z = new this()
+		z.__init__(segment)
+		return z
+	}
+
+	//@ts-ignore
+	//get This(){return SegmentLex}
+
+	segment:StrSegment
+
+	override getIndexOffset(): number {
+		const z = this
+		return z.index + z.segment.start
+	}
+
+	override getErr(msg:str){
+		const z = this
+		const err = ParseError.new(msg)
+		err.start = z.getIndexOffset()
+		err.end = err.start + z.segment.data.length-1
+		//const [line, col] = z.locatePair()
+		return err
+	}
+}

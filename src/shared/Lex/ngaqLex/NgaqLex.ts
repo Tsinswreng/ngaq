@@ -1,20 +1,21 @@
-import { Lex, LocatePair, ParseError, ParseResult } from "../Lex"
+import { Lex, LocatePair, ParseError, SegmentLex, StrSegment } from "../Lex"
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as algo from '@shared/algo'
 import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
 import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
+import type { I_Segment } from "@shared/interfaces/I_Parse"
+import { splitStr } from "@shared/tools/splitStr"
 
-
-function read_prop(z:Lex):ParseResult|undef{
+function read_prop(z:Lex):StrSegment|undef{
 	const start = z.index
 	if(!z.eat('[[')){
 		return undefined
 	}
 	const propStr = z.readUntilStr(']]')
 	z.old_eat(']]', true)
-	const ans = ParseResult.new(start, z.index, propStr)
+	const ans = StrSegment.new(start, z.index, propStr)
 	return ans
 }
 
@@ -41,7 +42,7 @@ class CrudeResult{
 
 	//get This(){return Result}
 	name:str = ""
-	metadata:ParseResult
+	metadata:StrSegment
 	dateBlocks:DateBlock[] = []
 }
 
@@ -69,10 +70,10 @@ class DateBlock{
 	start:int
 	end:int
 	/** [2024-07-06T21:38:55.163+08:00] */
-	date:ParseResult
-	content:ParseResult
+	date:StrSegment
+	content:StrSegment
 	/** 整個日期塊內 䀬ʹ詞ʰ皆加ʹ屬性、如來源 等 */
-	commonProp?:ParseResult
+	commonProp?:StrSegment
 }
 
 class Patterns{
@@ -99,6 +100,7 @@ export class NgaqLex extends Lex{
 		return z
 	}
 
+	//@ts-ignore
 	get This(){return NgaqLex}
 
 	
@@ -123,14 +125,14 @@ export class NgaqLex extends Lex{
 	 * <metadata>......</metadata>
 	 * @returns 
 	 */
-	protected read_metadata():ParseResult{
+	protected read_metadata():StrSegment{
 		const z = this
 		const start = z.index
 		z.old_eat(z.patterns.metadataStart, true)
 		const end = z.patterns.metadataEnd
 		const str = z.readUntilStr(end, true)
 		z.old_eat(end, true)
-		const ans = ParseResult.new(start, z.index, str)
+		const ans = StrSegment.new(start, z.index, str)
 		return ans
 	}
 
@@ -138,27 +140,27 @@ export class NgaqLex extends Lex{
 	 * [2024-07-06T20:24:47.929+08:00]
 	 * @returns 
 	 */
-	protected read_date():ParseResult{
+	protected read_date():StrSegment{
 		const z = this
 		const start = z.index
 		z.old_eat('[', true)
 		const str = z.readUntilStr(']', true)
 		z.old_eat(']', true)
-		const ans = ParseResult.new(start, z.index, str)
+		const ans = StrSegment.new(start, z.index, str)
 		return ans
 	}
 
 	/**
 	 * {{ ...... }}
 	 */
-	protected read_dateBlockContent():ParseResult{
+	protected read_dateBlockContent():StrSegment{
 		const z = this
 		const start = z.index
 		z.old_eat(z.patterns.dateBlockContentStart, true)
 		const end = z.patterns.dateBlockContentEnd
 		const str = z.readUntilStr(end, true)
 		z.old_eat(end, true)
-		const ans = ParseResult.new(start, z.index, str)
+		const ans = StrSegment.new(start, z.index, str)
 		return ans
 	}
 
@@ -187,7 +189,7 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
-	protected read_prop():ParseResult|undef{
+	protected read_prop():StrSegment|undef{
 		const z = this
 		const start = z.index
 		if(!z.eat('[[')){
@@ -195,7 +197,7 @@ export class NgaqLex extends Lex{
 		}
 		const propStr = z.readUntilStr(']]')
 		z.old_eat(']]', true)
-		const ans = ParseResult.new(start, z.index, propStr)
+		const ans = StrSegment.new(start, z.index, propStr)
 		return ans
 	}
 
@@ -262,29 +264,51 @@ class DateBlockParser{
 
 	get This(){return DateBlockParser}
 
+	//in params
 	dateBlock:DateBlock
 	metadata:Metadata
 
+	//outcome
 	date:Tempus
+	wordBodys:StrSegment[]
 
-	parse_date(){
+	protected runAll(){
+		const z = this
+		z.parse_date()
+		z.splitWordBodys()
+	}
+
+	protected parse_date(){
 		const z = this
 		z.date = Tempus.new(
-			z.dateBlock.date.rawText
+			z.dateBlock.date.data
 			,z.metadata.dateFormat
 		)
+		return z.date
 	}
 
-	static parse_prop(prop:ParseResult){
-		const [belong, text] = splitByFirstSep(prop.rawText, '|')
-
-	}
-
-	parse_wordBody(){
+	protected splitWordBodys(){
 		const z = this
-
-		//this.dateBlock.
+		const content = z.dateBlock.content
+		//const wordBlocksStr = content.data.split(z.metadata.delimiter)
+		const wordBlocksStr = splitStr(content.data, z.metadata.delimiter)
+		const start = content.start
+		let index = start //全文中ʹ位
+		const ans = [] as StrSegment[]
+		for(const wbs of wordBlocksStr){
+			const ua = StrSegment.new(index, wbs.data.length-1, wbs.data)
+			ans.push(ua)
+			index += wbs.data.length
+		}
+		z.wordBodys = ans
+		return ans
 	}
+
+	protected parseWordBlocks(){
+
+	}
+
+
 }
 
 
@@ -302,38 +326,45 @@ class WordBlock{
 	}
 
 	//get This(){return WordBlock}
-	prop?:ParseResult
-	wordText:ParseResult
-	body:ParseResult
+	prop?:StrSegment
+	wordText:StrSegment
+	body:StrSegment
 }
 
 
-class WordBlockParser extends Lex{
+class WordBlockParser extends SegmentLex{
 	protected constructor(){super()}
+	
 	protected __init__(...args: Parameters<typeof WordBlockParser.new>){
 		const z = this
-		super.__init__(this.text)
+		const segment = args[0]
+		super.__init__(segment)
+		//z.index = z.segment.start
 		//z.text = args[0]
 		return z
 	}
+
+	static new(segment:StrSegment):WordBlockParser
+	static new(arg):never
+	static new(segment:StrSegment){
+		const z = new this()
+		z.__init__(segment)
+		return z
+	}
+
+	// in param
+	//segment:StrSegment
+	date:Tempus
+
+
 
 	result = WordBlock.new()
 	bodySb = [] as str[]
 	
 
-	static new(rawText:str){
-		const z = new this()
-		z.__init__(rawText)
-		return z
-	}
-
 	//get This(){return WordBlockParser}
 
-	static parse(rawText:str){
-		const z = WordBlockParser.new(rawText)
-		return z.parse()
-	}
-
+	
 	parse(){
 		const z = this
 		z.read_wordText()
@@ -353,7 +384,7 @@ class WordBlockParser extends Lex{
 			z.index++
 		}
 		const bodyStr = z.bodySb.join('')
-		const body = ParseResult.new(start, z.index, bodyStr)
+		const body = StrSegment.new(start, z.index, bodyStr)
 		z.result.body = body
 	}
 
@@ -362,7 +393,7 @@ class WordBlockParser extends Lex{
 		const start = z.index
 		const firstLine = z.readUntilStr('\n')
 		z.eat('\n', true)
-		z.result.wordText = ParseResult.new(start, z.index, firstLine)
+		z.result.wordText = StrSegment.new(start, z.index, firstLine)
 	}
 
 
@@ -400,10 +431,10 @@ class Fine{
 	}
 
 	/** runOnInit */
-	protected parse_metadata(metadata:ParseResult){
+	protected parse_metadata(metadata:StrSegment){
 		const z = this
 		try {
-			return z.This.parseMetadata(metadata.rawText)
+			return z.This.parseMetadata(metadata.data)
 		} catch (err) {
 			if(err instanceof ParseError){
 				err.start = metadata.start
@@ -415,7 +446,8 @@ class Fine{
 
 	protected parse_dateBlock(dateBlock:DateBlock){
 		const z = this
-		DateBlockParser.new()
+		const dp = DateBlockParser.new(z.metadata, dateBlock)
+		
 	}
 
 }
