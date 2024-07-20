@@ -1,1042 +1,1142 @@
-//@ts-nocheck
 export{}
 const util = require('./util')
+import { As, asrt } from "@shared/Common"
+import { $ } from "@shared/Common"
+// enum TokenType{
+// 	eof='eof'
+// 	,comment='comment'
+// 	,punctuator='punctuator'
+// }
+
+type TokenType = 
+'eof'
+|'comment'
+|'punctuator'
+|'string'
+|'numeric'
+|'identifier'
+|'null'
+|'boolean'
+
+
+
+type LexState = 
+'start'
+|'default'
+|'comment'
+|'identifierNameEscape'
+|'identifierName'
+|'multiLineComment'
+|'singleLineComment'
+|'multiLineCommentAsterisk'
+|'sign'
+|'decimalPointLeading'
+|'zero'
+|'decimalInteger'
+|'string'
+|'decimalPoint'
+|'decimalExponent'
+|'hexadecimal'
+|'decimalFraction'
+|'decimalExponentSign'
+|'decimalExponentInteger'
+|'hexadecimalInteger'
+|'value'
+|'identifierNameStartEscape'
+
+interface Token{
+	type:TokenType
+	value
+	line:int
+	column:int
+}
+
+type ParseState = 
+'start'
+|'end'
+|'beforePropertyValue'
+|'afterPropertyValue'
+
+|'beforeArrayValue'
+|'afterArrayValue'
+
+|'beforePropertyName'
+|'afterPropertyName'
+
+
 
 let source:string
-let parseState
-let stack
-let pos:number
+let parseState: ParseState
+let stack = [] as any[]
+let pos:number = 0
 let line:number
 let column:number
-let token
+let token:Token
 let key
 let root
 
-module.exports = function parse (text, reviver) {
-    source = String(text)
-    parseState = 'start'
-    stack = []
-    pos = 0
-    line = 1
-    column = 0
-    token = undefined
-    key = undefined
-    root = undefined
+module.exports = function parse (text:str, reviver) {
+	source = String(text)
+	parseState = 'start'
+	stack = []
+	pos = 0
+	line = 1
+	column = 0
+	token = undefined
+	key = undefined
+	root = undefined
 
-    do {
-        token = lex()
+	do {
+		token = lex()
 
-        // This code is unreachable.
-        // if (!parseStates[parseState]) {
-        //     throw invalidParseState()
-        // }
+		// This code is unreachable.
+		// if (!parseStates[parseState]) {
+		//     throw invalidParseState()
+		// }
 
-        parseStates[parseState]()
-    } while (token.type !== 'eof')
+		parseStates[parseState]()
+	} while (token.type !== 'eof')
 
-    if (typeof reviver === 'function') {
-        return internalize({'': root}, '', reviver)
-    }
+	if (typeof reviver === 'function') {
+		return internalize({'': root}, '', reviver)
+	}
 
-    return root
+	return root
 }
 
-function internalize (holder, name, reviver) {
-    const value = holder[name]
-    if (value != null && typeof value === 'object') {
-        if (Array.isArray(value)) {
-            for (let i = 0; i < value.length; i++) {
-                const key = String(i)
-                const replacement = internalize(value, key, reviver)
-                if (replacement === undefined) {
-                    delete value[key]
-                } else {
-                    Object.defineProperty(value, key, {
-                        value: replacement,
-                        writable: true,
-                        enumerable: true,
-                        configurable: true,
-                    })
-                }
-            }
-        } else {
-            for (const key in value) {
-                const replacement = internalize(value, key, reviver)
-                if (replacement === undefined) {
-                    delete value[key]
-                } else {
-                    Object.defineProperty(value, key, {
-                        value: replacement,
-                        writable: true,
-                        enumerable: true,
-                        configurable: true,
-                    })
-                }
-            }
-        }
-    }
+function internalize (holder:kvobj, name:str, reviver:Function) {
+	const value = holder[name]
+	if (value != null && typeof value === 'object') {
+		if (Array.isArray(value)) {
+			for (let i = 0; i < value.length; i++) {
+				const key = String(i)
+				const replacement = internalize(value, key, reviver)
+				if (replacement === undefined) {
+					delete value[key]
+				} else {
+					Object.defineProperty(value, key, {
+						value: replacement,
+						writable: true,
+						enumerable: true,
+						configurable: true,
+					})
+				}
+			}
+		} else {
+			for (const key in value) {
+				const replacement = internalize(value, key, reviver)
+				if (replacement === undefined) {
+					delete value[key]
+				} else {
+					Object.defineProperty(value, key, {
+						value: replacement,
+						writable: true,
+						enumerable: true,
+						configurable: true,
+					})
+				}
+			}
+		}
+	}
 
-    return reviver.call(holder, name, value)
+	return reviver.call(holder, name, value)
 }
 
-let lexState
-let buffer
-let doubleQuote
-let sign
-let c
+let lexState:LexState
+let buffer:str|undef
+let doubleQuote:bool
+let sign: 1|-1 //數字ʹ正負符號
+let c:str|undef
 
-function lex () {
-    lexState = 'default'
-    buffer = ''
-    doubleQuote = false
-    sign = 1
+function lex () :Token{
+	lexState = 'default'
+	buffer = ''
+	doubleQuote = false
+	sign = 1
 
-    for (;;) {
-        c = peek()
+	for (;;) {
+		c = peek()
 
-        // This code is unreachable.
-        // if (!lexStates[lexState]) {
-        //     throw invalidLexState(lexState)
-        // }
+		// This code is unreachable.
+		// if (!lexStates[lexState]) {
+		//     throw invalidLexState(lexState)
+		// }
 
-        const token = lexStates[lexState]()
-        if (token) {
-            return token
-        }
-    }
+		const token = lexStates[lexState]()
+		if (token) {
+			return token
+		}
+	}
 }
 
-function peek () {
-    if (source[pos]) {
-        return String.fromCodePoint(source.codePointAt(pos))
-    }
+function peek () :str|undef{
+	if (source[pos]) {
+		return String.fromCodePoint(source.codePointAt(pos)!)
+	}
 }
 
+/**
+ * 讀字符、移行列
+ * @returns 
+ */
 function read () {
-    const c = peek()
+	const c:str|undef = peek()
 
-    if (c === '\n') {
-        line++
-        column = 0
-    } else if (c) {
-        column += c.length
-    } else {
-        column++
-    }
+	if (c === '\n') {
+		line++
+		column = 0
+	} else if (c) {
+		column += c.length
+	} else { // undef旹 示 輸入流ˋ終?
+		column++
+	}
 
-    if (c) {
-        pos += c.length
-    }
+	if (c) {
+		pos += c.length
+	}
 
-    return c
+	return c
 }
 
-const lexStates = {
-    default () {
-        switch (c) {
-        case '\t':
-        case '\v':
-        case '\f':
-        case ' ':
-        case '\u00A0':
-        case '\uFEFF':
-        case '\n':
-        case '\r':
-        case '\u2028':
-        case '\u2029':
-            read()
-            return
-
-        case '/':
-            read()
-            lexState = 'comment'
-            return
-
-        case undefined:
-            read()
-            return newToken('eof')
-        }
-
-        if (util.isSpaceSeparator(c)) {
-            read()
-            return
-        }
-
-        // This code is unreachable.
-        // if (!lexStates[parseState]) {
-        //     throw invalidLexState(parseState)
-        // }
-
-        return lexStates[parseState]()
-    },
-
-    comment () {
-        switch (c) {
-        case '*':
-            read()
-            lexState = 'multiLineComment'
-            return
-
-        case '/':
-            read()
-            lexState = 'singleLineComment'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    multiLineComment () {
-        switch (c) {
-        case '*':
-            read()
-            lexState = 'multiLineCommentAsterisk'
-            return
-
-        case undefined:
-            throw invalidChar(read())
-        }
-
-        read()
-    },
-
-    multiLineCommentAsterisk () {
-        switch (c) {
-        case '*':
-            read()
-            return
-
-        case '/':
-            read()
-            lexState = 'default'
-            return
-
-        case undefined:
-            throw invalidChar(read())
-        }
-
-        read()
-        lexState = 'multiLineComment'
-    },
-
-    singleLineComment () {
-        switch (c) {
-        case '\n':
-        case '\r':
-        case '\u2028':
-        case '\u2029':
-            read()
-            lexState = 'default'
-            return
-
-        case undefined:
-            read()
-            return newToken('eof')
-        }
-
-        read()
-    },
-
-    value () {
-        switch (c) {
-        case '{':
-        case '[':
-            return newToken('punctuator', read())
-
-        case 'n':
-            read()
-            literal('ull')
-            return newToken('null', null)
-
-        case 't':
-            read()
-            literal('rue')
-            return newToken('boolean', true)
-
-        case 'f':
-            read()
-            literal('alse')
-            return newToken('boolean', false)
-
-        case '-':
-        case '+':
-            if (read() === '-') {
-                sign = -1
-            }
-
-            lexState = 'sign'
-            return
-
-        case '.':
-            buffer = read()
-            lexState = 'decimalPointLeading'
-            return
-
-        case '0':
-            buffer = read()
-            lexState = 'zero'
-            return
-
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            buffer = read()
-            lexState = 'decimalInteger'
-            return
-
-        case 'I':
-            read()
-            literal('nfinity')
-            return newToken('numeric', Infinity)
-
-        case 'N':
-            read()
-            literal('aN')
-            return newToken('numeric', NaN)
-
-        case '"':
-        case "'":
-            doubleQuote = (read() === '"')
-            buffer = ''
-            lexState = 'string'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    identifierNameStartEscape () {
-        if (c !== 'u') {
-            throw invalidChar(read())
-        }
-
-        read()
-        const u = unicodeEscape()
-        switch (u) {
-        case '$':
-        case '_':
-            break
-
-        default:
-            if (!util.isIdStartChar(u)) {
-                throw invalidIdentifier()
-            }
-
-            break
-        }
-
-        buffer += u
-        lexState = 'identifierName'
-    },
-
-    identifierName () {
-        switch (c) {
-        case '$':
-        case '_':
-        case '\u200C':
-        case '\u200D':
-            buffer += read()
-            return
-
-        case '\\':
-            read()
-            lexState = 'identifierNameEscape'
-            return
-        }
-
-        if (util.isIdContinueChar(c)) {
-            buffer += read()
-            return
-        }
-
-        return newToken('identifier', buffer)
-    },
-
-    identifierNameEscape () {
-        if (c !== 'u') {
-            throw invalidChar(read())
-        }
-
-        read()
-        const u = unicodeEscape()
-        switch (u) {
-        case '$':
-        case '_':
-        case '\u200C':
-        case '\u200D':
-            break
-
-        default:
-            if (!util.isIdContinueChar(u)) {
-                throw invalidIdentifier()
-            }
-
-            break
-        }
-
-        buffer += u
-        lexState = 'identifierName'
-    },
-
-    sign () {
-        switch (c) {
-        case '.':
-            buffer = read()
-            lexState = 'decimalPointLeading'
-            return
-
-        case '0':
-            buffer = read()
-            lexState = 'zero'
-            return
-
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            buffer = read()
-            lexState = 'decimalInteger'
-            return
-
-        case 'I':
-            read()
-            literal('nfinity')
-            return newToken('numeric', sign * Infinity)
-
-        case 'N':
-            read()
-            literal('aN')
-            return newToken('numeric', NaN)
-        }
-
-        throw invalidChar(read())
-    },
-
-    zero () {
-        switch (c) {
-        case '.':
-            buffer += read()
-            lexState = 'decimalPoint'
-            return
-
-        case 'e':
-        case 'E':
-            buffer += read()
-            lexState = 'decimalExponent'
-            return
-
-        case 'x':
-        case 'X':
-            buffer += read()
-            lexState = 'hexadecimal'
-            return
-        }
-
-        return newToken('numeric', sign * 0)
-    },
-
-    decimalInteger () {
-        switch (c) {
-        case '.':
-            buffer += read()
-            lexState = 'decimalPoint'
-            return
-
-        case 'e':
-        case 'E':
-            buffer += read()
-            lexState = 'decimalExponent'
-            return
-        }
-
-        if (util.isDigit(c)) {
-            buffer += read()
-            return
-        }
-
-        return newToken('numeric', sign * Number(buffer))
-    },
-
-    decimalPointLeading () {
-        if (util.isDigit(c)) {
-            buffer += read()
-            lexState = 'decimalFraction'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    decimalPoint () {
-        switch (c) {
-        case 'e':
-        case 'E':
-            buffer += read()
-            lexState = 'decimalExponent'
-            return
-        }
-
-        if (util.isDigit(c)) {
-            buffer += read()
-            lexState = 'decimalFraction'
-            return
-        }
-
-        return newToken('numeric', sign * Number(buffer))
-    },
-
-    decimalFraction () {
-        switch (c) {
-        case 'e':
-        case 'E':
-            buffer += read()
-            lexState = 'decimalExponent'
-            return
-        }
-
-        if (util.isDigit(c)) {
-            buffer += read()
-            return
-        }
-
-        return newToken('numeric', sign * Number(buffer))
-    },
-
-    decimalExponent () {
-        switch (c) {
-        case '+':
-        case '-':
-            buffer += read()
-            lexState = 'decimalExponentSign'
-            return
-        }
-
-        if (util.isDigit(c)) {
-            buffer += read()
-            lexState = 'decimalExponentInteger'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    decimalExponentSign () {
-        if (util.isDigit(c)) {
-            buffer += read()
-            lexState = 'decimalExponentInteger'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    decimalExponentInteger () {
-        if (util.isDigit(c)) {
-            buffer += read()
-            return
-        }
-
-        return newToken('numeric', sign * Number(buffer))
-    },
-
-    hexadecimal () {
-        if (util.isHexDigit(c)) {
-            buffer += read()
-            lexState = 'hexadecimalInteger'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    hexadecimalInteger () {
-        if (util.isHexDigit(c)) {
-            buffer += read()
-            return
-        }
-
-        return newToken('numeric', sign * Number(buffer))
-    },
-
-    string () {
-        switch (c) {
-        case '\\':
-            read()
-            buffer += escape()
-            return
-
-        case '"':
-            if (doubleQuote) {
-                read()
-                return newToken('string', buffer)
-            }
-
-            buffer += read()
-            return
-
-        case "'":
-            if (!doubleQuote) {
-                read()
-                return newToken('string', buffer)
-            }
-
-            buffer += read()
-            return
-
-        case '\n':
-        case '\r':
-            throw invalidChar(read())
-
-        case '\u2028':
-        case '\u2029':
-            separatorChar(c)
-            break
-
-        case undefined:
-            throw invalidChar(read())
-        }
-
-        buffer += read()
-    },
-
-    start () {
-        switch (c) {
-        case '{':
-        case '[':
-            return newToken('punctuator', read())
-
-        // This code is unreachable since the default lexState handles eof.
-        // case undefined:
-        //     return newToken('eof')
-        }
-
-        lexState = 'value'
-    },
-
-    beforePropertyName () {
-        switch (c) {
-        case '$':
-        case '_':
-            buffer = read()
-            lexState = 'identifierName'
-            return
-
-        case '\\':
-            read()
-            lexState = 'identifierNameStartEscape'
-            return
-
-        case '}':
-            return newToken('punctuator', read())
-
-        case '"':
-        case "'":
-            doubleQuote = (read() === '"')
-            lexState = 'string'
-            return
-        }
-
-        if (util.isIdStartChar(c)) {
-            buffer += read()
-            lexState = 'identifierName'
-            return
-        }
-
-        throw invalidChar(read())
-    },
-
-    afterPropertyName () {
-        if (c === ':') {
-            return newToken('punctuator', read())
-        }
-
-        throw invalidChar(read())
-    },
-
-    beforePropertyValue () {
-        lexState = 'value'
-    },
-
-    afterPropertyValue () {
-        switch (c) {
-        case ',':
-        case '}':
-            return newToken('punctuator', read())
-        }
-
-        throw invalidChar(read())
-    },
-
-    beforeArrayValue () {
-        if (c === ']') {
-            return newToken('punctuator', read())
-        }
-
-        lexState = 'value'
-    },
-
-    afterArrayValue () {
-        switch (c) {
-        case ',':
-        case ']':
-            return newToken('punctuator', read())
-        }
-
-        throw invalidChar(read())
-    },
-
-    end () {
-        // This code is unreachable since it's handled by the default lexState.
-        // if (c === undefined) {
-        //     read()
-        //     return newToken('eof')
-        // }
-
-        throw invalidChar(read())
-    },
+type LexStatesFn<T extends string> = {
+	[K in T]: ()=>Token|undef|void;
+};
+
+type LexStatesObj = LexStatesFn<LexState> 
+
+const lexStates:LexStatesObj = {
+	default () {
+		switch (c) {
+		case '\t':
+		case '\v': 
+		case '\f': //換頁符
+		case ' ':
+		case '\u00A0': //不间断空格、用于防止自动换行
+		case '\uFEFF': //BOM: 当它出现在文件的开头时，它被用作字节顺序标记，指示文本流的字节顺序（大端或小端）。
+		case '\n':
+		case '\r':
+		case '\u2028': //行分隔符
+		case '\u2029': //段落分隔符
+			read()
+			return
+
+		case '/':
+			read()
+			lexState = 'comment'
+			return
+
+		case undefined:
+			read()
+			return newToken('eof')
+		}
+
+		if (util.isSpaceSeparator(c)) {
+			read()
+			return
+		}
+
+		// This code is unreachable.
+		// if (!lexStates[parseState]) {
+		//     throw invalidLexState(parseState)
+		// }
+
+		return lexStates[parseState]()
+	},
+
+	// 上接 default 之case '/'
+	comment () {
+		switch (c) {
+		case '*':
+			read()
+			lexState = 'multiLineComment'
+			return
+
+		case '/':
+			read()
+			lexState = 'singleLineComment'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	multiLineComment () {
+		switch (c) {
+		case '*':
+			read()
+			lexState = 'multiLineCommentAsterisk'
+			return
+
+		case undefined:
+			throw invalidChar(read())
+		}
+
+		read()
+	},
+
+	multiLineCommentAsterisk () {
+		switch (c) {
+		case '*':
+			read()
+			return
+
+		case '/':
+			read()
+			lexState = 'default'
+			return
+
+		case undefined:
+			throw invalidChar(read())
+		}
+
+		read()
+		lexState = 'multiLineComment'
+	},
+
+	singleLineComment () {
+		switch (c) {
+		case '\n':
+		case '\r':
+		case '\u2028':
+		case '\u2029':
+			read()
+			lexState = 'default'
+			return
+
+		case undefined:
+			read()
+			return newToken('eof')
+		}
+
+		read()
+	},
+
+	value () {
+		switch (c) {
+		case '{':
+		case '[':
+			return newToken('punctuator', read())
+
+		case 'n':
+			read()
+			literal('ull')
+			return newToken('null', null)
+
+		case 't':
+			read()
+			literal('rue')
+			return newToken('boolean', true)
+
+		case 'f':
+			read()
+			literal('alse')
+			return newToken('boolean', false)
+
+		case '-':
+		case '+':
+			if (read() === '-') {
+				sign = -1
+			}
+
+			lexState = 'sign'
+			return
+
+		case '.':
+			buffer = read()
+			lexState = 'decimalPointLeading'
+			return
+
+		case '0':
+			buffer = read()
+			lexState = 'zero'
+			return
+
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			buffer = read()
+			lexState = 'decimalInteger'
+			return
+
+		case 'I':
+			read()
+			literal('nfinity')
+			return newToken('numeric', Infinity)
+
+		case 'N':
+			read()
+			literal('aN')
+			return newToken('numeric', NaN)
+
+		case '"':
+		case "'":
+			doubleQuote = (read() === '"')
+			buffer = ''
+			lexState = 'string'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	identifierNameStartEscape () {
+		if (c !== 'u') {
+			throw invalidChar(read())
+		}
+
+		read()
+		const u = unicodeEscape()
+		switch (u) {
+		case '$':
+		case '_':
+			break
+
+		default:
+			if (!util.isIdStartChar(u)) {
+				throw invalidIdentifier()
+			}
+
+			break
+		}
+
+		buffer += u
+		lexState = 'identifierName'
+	},
+
+	identifierName () {
+		switch (c) {
+		case '$':
+		case '_':
+		case '\u200C':
+		case '\u200D':
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+
+		case '\\':
+			read()
+			lexState = 'identifierNameEscape'
+			return
+		}
+
+		if (util.isIdContinueChar(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+		}
+
+		return newToken('identifier', buffer)
+	},
+
+	identifierNameEscape () {
+		if (c !== 'u') {
+			throw invalidChar(read())
+		}
+
+		read()
+		const u = unicodeEscape()
+		switch (u) {
+		case '$':
+		case '_':
+		case '\u200C':
+		case '\u200D':
+			break
+
+		default:
+			if (!util.isIdContinueChar(u)) {
+				throw invalidIdentifier()
+			}
+
+			break
+		}
+
+		buffer += u
+		lexState = 'identifierName'
+	},
+
+	sign () {
+		switch (c) {
+		case '.':
+			buffer = read()
+			lexState = 'decimalPointLeading'
+			return
+
+		case '0':
+			buffer = read()
+			lexState = 'zero'
+			return
+
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			buffer = read()
+			lexState = 'decimalInteger'
+			return
+
+		case 'I':
+			read()
+			literal('nfinity')
+			return newToken('numeric', sign * Infinity)
+
+		case 'N':
+			read()
+			literal('aN')
+			return newToken('numeric', NaN)
+		}
+
+		throw invalidChar(read())
+	},
+
+	zero () {
+		switch (c) {
+		case '.':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalPoint'
+			return
+
+		case 'e':
+		case 'E':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponent'
+			return
+
+		case 'x':
+		case 'X':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'hexadecimal'
+			return
+		}
+
+		return newToken('numeric', sign * 0)
+	},
+
+	decimalInteger () {
+		switch (c) {
+		case '.':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalPoint'
+			return
+
+		case 'e':
+		case 'E':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponent'
+			return
+		}
+
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+		}
+
+		return newToken('numeric', sign * Number(buffer))
+	},
+
+	decimalPointLeading () {
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalFraction'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	decimalPoint () {
+		switch (c) {
+		case 'e':
+		case 'E':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponent'
+			return
+		}
+
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalFraction'
+			return
+		}
+
+		return newToken('numeric', sign * Number(buffer))
+	},
+
+	decimalFraction () {
+		switch (c) {
+		case 'e':
+		case 'E':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponent'
+			return
+		}
+
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+		}
+
+		return newToken('numeric', sign * Number(buffer))
+	},
+
+	decimalExponent () {
+		switch (c) {
+		case '+':
+		case '-':
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponentSign'
+			return
+		}
+
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponentInteger'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	decimalExponentSign () {
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'decimalExponentInteger'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	decimalExponentInteger () {
+		if (util.isDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+		}
+
+		return newToken('numeric', sign * Number(buffer))
+	},
+
+	hexadecimal () {
+		if (util.isHexDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'hexadecimalInteger'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	hexadecimalInteger () {
+		if (util.isHexDigit(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+		}
+
+		return newToken('numeric', sign * Number(buffer))
+	},
+
+	string () {
+		switch (c) {
+		case '\\':
+			read()
+			asrt(buffer, 'string')
+			buffer += escape()
+			return
+
+		case '"':
+			if (doubleQuote) {
+				read()
+				return newToken('string', buffer)
+			}
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+
+		case "'":
+			if (!doubleQuote) {
+				read()
+				return newToken('string', buffer)
+			}
+			asrt(buffer, 'string')
+			buffer += read()
+			return
+
+		case '\n':
+		case '\r':
+			throw invalidChar(read())
+
+		case '\u2028':
+		case '\u2029':
+			separatorChar(c)
+			break
+
+		case undefined:
+			throw invalidChar(read())
+		}
+		asrt(buffer, 'string')
+		buffer += read()
+	},
+
+	start () {
+		switch (c) {
+		case '{':
+		case '[':
+			return newToken('punctuator', read())
+
+		// This code is unreachable since the default lexState handles eof.
+		// case undefined:
+		//     return newToken('eof')
+		}
+
+		lexState = 'value'
+	},
+
+	beforePropertyName () {
+		switch (c) {
+		case '$':
+		case '_':
+			buffer = read()
+			lexState = 'identifierName'
+			return
+
+		case '\\':
+			read()
+			lexState = 'identifierNameStartEscape'
+			return
+
+		case '}':
+			return newToken('punctuator', read())
+
+		case '"':
+		case "'":
+			doubleQuote = (read() === '"')
+			lexState = 'string'
+			return
+		}
+
+		if (util.isIdStartChar(c)) {
+			asrt(buffer, 'string')
+			buffer += read()
+			lexState = 'identifierName'
+			return
+		}
+
+		throw invalidChar(read())
+	},
+
+	afterPropertyName () {
+		if (c === ':') {
+			return newToken('punctuator', read())
+		}
+
+		throw invalidChar(read())
+	},
+
+	beforePropertyValue () {
+		lexState = 'value'
+	},
+
+	afterPropertyValue () {
+		switch (c) {
+		case ',':
+		case '}':
+			return newToken('punctuator', read())
+		}
+
+		throw invalidChar(read())
+	},
+
+	beforeArrayValue () {
+		if (c === ']') {
+			return newToken('punctuator', read())
+		}
+
+		lexState = 'value'
+	},
+
+	afterArrayValue () {
+		switch (c) {
+		case ',':
+		case ']':
+			return newToken('punctuator', read())
+		}
+
+		throw invalidChar(read())
+	},
+
+	end () {
+		// This code is unreachable since it's handled by the default lexState.
+		// if (c === undefined) {
+		//     read()
+		//     return newToken('eof')
+		// }
+
+		throw invalidChar(read())
+	},
 }
 
-function newToken (type, value) {
-    return {
-        type,
-        value,
-        line,
-        column,
-    }
+function newToken (type:TokenType, value?) :Token{
+	return {
+		type,
+		value,
+		line,
+		column,
+	}
 }
 
-function literal (s) {
-    for (const c of s) {
-        const p = peek()
+function literal (s:str) {
+	for (const c of s) {
+		const p = peek()
 
-        if (p !== c) {
-            throw invalidChar(read())
-        }
+		if (p !== c) {
+			throw invalidChar(read())
+		}
 
-        read()
-    }
+		read()
+	}
 }
 
 function escape () {
-    const c = peek()
-    switch (c) {
-    case 'b':
-        read()
-        return '\b'
+	const c = peek()
+	switch (c) {
+	case 'b':
+		read()
+		return '\b'
 
-    case 'f':
-        read()
-        return '\f'
+	case 'f':
+		read()
+		return '\f'
 
-    case 'n':
-        read()
-        return '\n'
+	case 'n':
+		read()
+		return '\n'
 
-    case 'r':
-        read()
-        return '\r'
+	case 'r':
+		read()
+		return '\r'
 
-    case 't':
-        read()
-        return '\t'
+	case 't':
+		read()
+		return '\t'
 
-    case 'v':
-        read()
-        return '\v'
+	case 'v':
+		read()
+		return '\v'
 
-    case '0':
-        read()
-        if (util.isDigit(peek())) {
-            throw invalidChar(read())
-        }
+	case '0':
+		read()
+		if (util.isDigit(peek())) {
+			throw invalidChar(read())
+		}
 
-        return '\0'
+		return '\0'
 
-    case 'x':
-        read()
-        return hexEscape()
+	case 'x':
+		read()
+		return hexEscape()
 
-    case 'u':
-        read()
-        return unicodeEscape()
+	case 'u':
+		read()
+		return unicodeEscape()
 
-    case '\n':
-    case '\u2028':
-    case '\u2029':
-        read()
-        return ''
+	case '\n':
+	case '\u2028':
+	case '\u2029':
+		read()
+		return ''
 
-    case '\r':
-        read()
-        if (peek() === '\n') {
-            read()
-        }
+	case '\r':
+		read()
+		if (peek() === '\n') {
+			read()
+		}
 
-        return ''
+		return ''
 
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-        throw invalidChar(read())
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+		throw invalidChar(read())
 
-    case undefined:
-        throw invalidChar(read())
-    }
+	case undefined:
+		throw invalidChar(read())
+	}
 
-    return read()
+	return read()
 }
 
 function hexEscape () {
-    let buffer = ''
-    let c = peek()
+	let buffer = ''
+	let c = peek()
 
-    if (!util.isHexDigit(c)) {
-        throw invalidChar(read())
-    }
+	if (!util.isHexDigit(c)) {
+		throw invalidChar(read())
+	}
 
-    buffer += read()
+	buffer += read()
 
-    c = peek()
-    if (!util.isHexDigit(c)) {
-        throw invalidChar(read())
-    }
+	c = peek()
+	if (!util.isHexDigit(c)) {
+		throw invalidChar(read())
+	}
 
-    buffer += read()
+	buffer += read()
 
-    return String.fromCodePoint(parseInt(buffer, 16))
+	return String.fromCodePoint(parseInt(buffer, 16))
 }
 
 function unicodeEscape () {
-    let buffer = ''
-    let count = 4
+	let buffer = ''
+	let count = 4
 
-    while (count-- > 0) {
-        const c = peek()
-        if (!util.isHexDigit(c)) {
-            throw invalidChar(read())
-        }
+	while (count-- > 0) {
+		const c = peek()
+		if (!util.isHexDigit(c)) {
+			throw invalidChar(read())
+		}
 
-        buffer += read()
-    }
+		buffer += read()
+	}
 
-    return String.fromCodePoint(parseInt(buffer, 16))
+	return String.fromCodePoint(parseInt(buffer, 16))
 }
 
+// class ParseStates{
+
+// }
+
+
 const parseStates = {
-    start () {
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+	start () {
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        push()
-    },
+		push()
+	},
 
-    beforePropertyName () {
-        switch (token.type) {
-        case 'identifier':
-        case 'string':
-            key = token.value
-            parseState = 'afterPropertyName'
-            return
+	beforePropertyName () {
+		switch (token.type) {
+		case 'identifier':
+		case 'string':
+			key = token.value
+			parseState = 'afterPropertyName'
+			return
 
-        case 'punctuator':
-            // This code is unreachable since it's handled by the lexState.
-            // if (token.value !== '}') {
-            //     throw invalidToken()
-            // }
+		case 'punctuator':
+			// This code is unreachable since it's handled by the lexState.
+			// if (token.value !== '}') {
+			//     throw invalidToken()
+			// }
 
-            pop()
-            return
+			pop()
+			return
 
-        case 'eof':
-            throw invalidEOF()
-        }
+		case 'eof':
+			throw invalidEOF()
+		}
 
-        // This code is unreachable since it's handled by the lexState.
-        // throw invalidToken()
-    },
+		// This code is unreachable since it's handled by the lexState.
+		// throw invalidToken()
+	},
 
-    afterPropertyName () {
-        // This code is unreachable since it's handled by the lexState.
-        // if (token.type !== 'punctuator' || token.value !== ':') {
-        //     throw invalidToken()
-        // }
+	afterPropertyName () {
+		// This code is unreachable since it's handled by the lexState.
+		// if (token.type !== 'punctuator' || token.value !== ':') {
+		//     throw invalidToken()
+		// }
 
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        parseState = 'beforePropertyValue'
-    },
+		parseState = 'beforePropertyValue'
+	},
 
-    beforePropertyValue () {
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+	beforePropertyValue () {
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        push()
-    },
+		push()
+	},
 
-    beforeArrayValue () {
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+	beforeArrayValue () {
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        if (token.type === 'punctuator' && token.value === ']') {
-            pop()
-            return
-        }
+		if (token.type === 'punctuator' && token.value === ']') {
+			pop()
+			return
+		}
 
-        push()
-    },
+		push()
+	},
 
-    afterPropertyValue () {
-        // This code is unreachable since it's handled by the lexState.
-        // if (token.type !== 'punctuator') {
-        //     throw invalidToken()
-        // }
+	afterPropertyValue () {
+		// This code is unreachable since it's handled by the lexState.
+		// if (token.type !== 'punctuator') {
+		//     throw invalidToken()
+		// }
 
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        switch (token.value) {
-        case ',':
-            parseState = 'beforePropertyName'
-            return
+		switch (token.value) {
+		case ',':
+			parseState = 'beforePropertyName'
+			return
 
-        case '}':
-            pop()
-        }
+		case '}':
+			pop()
+		}
 
-        // This code is unreachable since it's handled by the lexState.
-        // throw invalidToken()
-    },
+		// This code is unreachable since it's handled by the lexState.
+		// throw invalidToken()
+	},
 
-    afterArrayValue () {
-        // This code is unreachable since it's handled by the lexState.
-        // if (token.type !== 'punctuator') {
-        //     throw invalidToken()
-        // }
+	afterArrayValue () {
+		// This code is unreachable since it's handled by the lexState.
+		// if (token.type !== 'punctuator') {
+		//     throw invalidToken()
+		// }
 
-        if (token.type === 'eof') {
-            throw invalidEOF()
-        }
+		if (token.type === 'eof') {
+			throw invalidEOF()
+		}
 
-        switch (token.value) {
-        case ',':
-            parseState = 'beforeArrayValue'
-            return
+		switch (token.value) {
+		case ',':
+			parseState = 'beforeArrayValue'
+			return
 
-        case ']':
-            pop()
-        }
+		case ']':
+			pop()
+		}
 
-        // This code is unreachable since it's handled by the lexState.
-        // throw invalidToken()
-    },
+		// This code is unreachable since it's handled by the lexState.
+		// throw invalidToken()
+	},
 
-    end () {
-        // This code is unreachable since it's handled by the lexState.
-        // if (token.type !== 'eof') {
-        //     throw invalidToken()
-        // }
-    },
+	end () {
+		// This code is unreachable since it's handled by the lexState.
+		// if (token.type !== 'eof') {
+		//     throw invalidToken()
+		// }
+	},
 }
 
 function push () {
-    let value
+	let value
 
-    switch (token.type) {
-    case 'punctuator':
-        switch (token.value) {
-        case '{':
-            value = {}
-            break
+	switch (token.type) {
+	case 'punctuator':
+		switch (token.value) {
+		case '{':
+			value = {}
+			break
 
-        case '[':
-            value = []
-            break
-        }
+		case '[':
+			value = []
+			break
+		}
 
-        break
+		break
 
-    case 'null':
-    case 'boolean':
-    case 'numeric':
-    case 'string':
-        value = token.value
-        break
+	case 'null':
+	case 'boolean':
+	case 'numeric':
+	case 'string':
+		value = token.value
+		break
 
-    // This code is unreachable.
-    // default:
-    //     throw invalidToken()
-    }
+	// This code is unreachable.
+	// default:
+	//     throw invalidToken()
+	}
 
-    if (root === undefined) {
-        root = value
-    } else {
-        const parent = stack[stack.length - 1]
-        if (Array.isArray(parent)) {
-            parent.push(value)
-        } else {
-            Object.defineProperty(parent, key, {
-                value,
-                writable: true,
-                enumerable: true,
-                configurable: true,
-            })
-        }
-    }
+	if (root === undefined) {
+		root = value
+	} else {
+		const parent = stack[stack.length - 1]
+		if (Array.isArray(parent)) {
+			parent.push(value)
+		} else {
+			Object.defineProperty(parent, key, {
+				value,
+				writable: true,
+				enumerable: true,
+				configurable: true,
+			})
+		}
+	}
 
-    if (value !== null && typeof value === 'object') {
-        stack.push(value)
+	if (value !== null && typeof value === 'object') {
+		stack.push(value)
 
-        if (Array.isArray(value)) {
-            parseState = 'beforeArrayValue'
-        } else {
-            parseState = 'beforePropertyName'
-        }
-    } else {
-        const current = stack[stack.length - 1]
-        if (current == null) {
-            parseState = 'end'
-        } else if (Array.isArray(current)) {
-            parseState = 'afterArrayValue'
-        } else {
-            parseState = 'afterPropertyValue'
-        }
-    }
+		if (Array.isArray(value)) {
+			parseState = 'beforeArrayValue'
+		} else {
+			parseState = 'beforePropertyName'
+		}
+	} else {
+		const current = stack[stack.length - 1]
+		if (current == null) {
+			parseState = 'end'
+		} else if (Array.isArray(current)) {
+			parseState = 'afterArrayValue'
+		} else {
+			parseState = 'afterPropertyValue'
+		}
+	}
 }
 
 function pop () {
-    stack.pop()
+	stack.pop()
 
-    const current = stack[stack.length - 1]
-    if (current == null) {
-        parseState = 'end'
-    } else if (Array.isArray(current)) {
-        parseState = 'afterArrayValue'
-    } else {
-        parseState = 'afterPropertyValue'
-    }
+	const current = stack[stack.length - 1]
+	if (current == null) {
+		parseState = 'end'
+	} else if (Array.isArray(current)) {
+		parseState = 'afterArrayValue'
+	} else {
+		parseState = 'afterPropertyValue'
+	}
 }
 
 // This code is unreachable.
@@ -1049,16 +1149,16 @@ function pop () {
 //     return new Error(`JSON5: invalid lex state '${state}'`)
 // }
 
-function invalidChar (c) {
-    if (c === undefined) {
-        return syntaxError(`JSON5: invalid end of input at ${line}:${column}`)
-    }
+function invalidChar (c?:str) {
+	if (c === undefined) {
+		return syntaxError(`JSON5: invalid end of input at ${line}:${column}`)
+	}
 
-    return syntaxError(`JSON5: invalid character '${formatChar(c)}' at ${line}:${column}`)
+	return syntaxError(`JSON5: invalid character '${formatChar(c)}' at ${line}:${column}`)
 }
 
 function invalidEOF () {
-    return syntaxError(`JSON5: invalid end of input at ${line}:${column}`)
+	return syntaxError(`JSON5: invalid end of input at ${line}:${column}`)
 }
 
 // This code is unreachable.
@@ -1072,45 +1172,53 @@ function invalidEOF () {
 // }
 
 function invalidIdentifier () {
-    column -= 5
-    return syntaxError(`JSON5: invalid identifier character at ${line}:${column}`)
+	column -= 5
+	return syntaxError(`JSON5: invalid identifier character at ${line}:${column}`)
 }
 
-function separatorChar (c) {
-    console.warn(`JSON5: '${formatChar(c)}' in strings is not valid ECMAScript; consider escaping`)
+function separatorChar (c:str) {
+	console.warn(`JSON5: '${formatChar(c)}' in strings is not valid ECMAScript; consider escaping`)
 }
 
-function formatChar (c) {
-    const replacements = {
-        "'": "\\'",
-        '"': '\\"',
-        '\\': '\\\\',
-        '\b': '\\b',
-        '\f': '\\f',
-        '\n': '\\n',
-        '\r': '\\r',
-        '\t': '\\t',
-        '\v': '\\v',
-        '\0': '\\0',
-        '\u2028': '\\u2028',
-        '\u2029': '\\u2029',
-    }
+function formatChar (c:str) {
+	const replacements = {
+		"'": "\\'",
+		'"': '\\"',
+		'\\': '\\\\',
+		'\b': '\\b',
+		'\f': '\\f',
+		'\n': '\\n',
+		'\r': '\\r',
+		'\t': '\\t',
+		'\v': '\\v',
+		'\0': '\\0',
+		'\u2028': '\\u2028',
+		'\u2029': '\\u2029',
+	}
 
-    if (replacements[c]) {
-        return replacements[c]
-    }
+	if (replacements[c]) {
+		return replacements[c]
+	}
 
-    if (c < ' ') {
-        const hexString = c.charCodeAt(0).toString(16)
-        return '\\x' + ('00' + hexString).substring(hexString.length)
-    }
+	if (c < ' ') {
+		const hexString = c.charCodeAt(0).toString(16)
+		return '\\x' + ('00' + hexString).substring(hexString.length)
+	}
 
-    return c
+	return c
 }
 
-function syntaxError (message) {
-    const err = new SyntaxError(message)
-    err.lineNumber = line
-    err.columnNumber = column
-    return err
+class SynErr extends SyntaxError{
+	constructor(message:str|undef=""){
+		super(message)
+	}
+	lineNumber?:int
+	columnNumber?:int
+}
+
+function syntaxError (message:str):SynErr {
+	const err = new SynErr(message)
+	err.lineNumber = line
+	err.columnNumber = column
+	return err
 }

@@ -1,5 +1,6 @@
 
-import Ut, { $, $a } from '@shared/Ut';
+import Ut from '@shared/Ut';
+import { $, $a } from './Common';
 import Txt from '@shared/Txt';
 //import SingleWord2 from '@shared/SingleWord2';
 import { Word } from "@shared/entities/Word/Word";

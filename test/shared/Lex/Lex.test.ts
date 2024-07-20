@@ -9,10 +9,10 @@ describe('1',()=>{
 		const lex = Lex.new(text)
 		
 		expect(lex.index).toBe(0)
-		let ate = lex.eat('1')
+		let ate = lex.old_eat('1')
 		expect(ate).toBe('1')
 		expect(lex.index).toBe(1)
-		ate = lex.eat('2')
+		ate = lex.old_eat('2')
 		expect(ate).toBe('2')
 		expect(lex.index).toBe(2)
 		//console.log(ate)

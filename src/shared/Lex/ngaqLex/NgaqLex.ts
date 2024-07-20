@@ -4,9 +4,19 @@ import * as Mod from '@shared/model/word/NgaqModels'
 import * as algo from '@shared/algo'
 import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
+import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 
 
-
+function read_prop(z:Lex):ParseResult|undef{
+	const start = z.index
+	if(!z.eat('[[')){
+		return undefined
+	}
+	const propStr = z.readUntilStr(']]')
+	z.old_eat(']]', true)
+	const ans = ParseResult.new(start, z.index, propStr)
+	return ans
+}
 
 class CrudeResult{
 
@@ -34,6 +44,9 @@ class CrudeResult{
 	metadata:ParseResult
 	dateBlocks:DateBlock[] = []
 }
+
+
+
 
 class DateBlock{
 
@@ -113,10 +126,10 @@ export class NgaqLex extends Lex{
 	protected read_metadata():ParseResult{
 		const z = this
 		const start = z.index
-		z.eat(z.patterns.metadataStart, true)
+		z.old_eat(z.patterns.metadataStart, true)
 		const end = z.patterns.metadataEnd
 		const str = z.readUntilStr(end, true)
-		z.eat(end, true)
+		z.old_eat(end, true)
 		const ans = ParseResult.new(start, z.index, str)
 		return ans
 	}
@@ -128,9 +141,9 @@ export class NgaqLex extends Lex{
 	protected read_date():ParseResult{
 		const z = this
 		const start = z.index
-		z.eat('[', true)
+		z.old_eat('[', true)
 		const str = z.readUntilStr(']', true)
-		z.eat(']', true)
+		z.old_eat(']', true)
 		const ans = ParseResult.new(start, z.index, str)
 		return ans
 	}
@@ -141,10 +154,10 @@ export class NgaqLex extends Lex{
 	protected read_dateBlockContent():ParseResult{
 		const z = this
 		const start = z.index
-		z.eat(z.patterns.dateBlockContentStart, true)
+		z.old_eat(z.patterns.dateBlockContentStart, true)
 		const end = z.patterns.dateBlockContentEnd
 		const str = z.readUntilStr(end, true)
-		z.eat(end, true)
+		z.old_eat(end, true)
 		const ans = ParseResult.new(start, z.index, str)
 		return ans
 	}
@@ -174,18 +187,20 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
-	protected read_prop():ParseResult{
+	protected read_prop():ParseResult|undef{
 		const z = this
 		const start = z.index
-		z.eat('[[', true)
+		if(!z.eat('[[')){
+			return undefined
+		}
 		const propStr = z.readUntilStr(']]')
-		z.eat(']]', true)
+		z.old_eat(']]', true)
 		const ans = ParseResult.new(start, z.index, propStr)
 		return ans
 	}
 
 
-	parseCrude(){
+	crudeParse(){
 		const z = this
 		//z.index++
 		z.read_white()
@@ -207,6 +222,8 @@ export class NgaqLex extends Lex{
 		})
 		return ans
 	}
+
+	
 }
 
 
@@ -259,13 +276,96 @@ class DateBlockParser{
 	}
 
 	static parse_prop(prop:ParseResult){
-		
+		const [belong, text] = splitByFirstSep(prop.rawText, '|')
+
 	}
 
 	parse_wordBody(){
 		const z = this
+
 		//this.dateBlock.
 	}
+}
+
+
+class WordBlock{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof WordBlock.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	//get This(){return WordBlock}
+	prop?:ParseResult
+	wordText:ParseResult
+	body:ParseResult
+}
+
+
+class WordBlockParser extends Lex{
+	protected constructor(){super()}
+	protected __init__(...args: Parameters<typeof WordBlockParser.new>){
+		const z = this
+		super.__init__(this.text)
+		//z.text = args[0]
+		return z
+	}
+
+	result = WordBlock.new()
+	bodySb = [] as str[]
+	
+
+	static new(rawText:str){
+		const z = new this()
+		z.__init__(rawText)
+		return z
+	}
+
+	//get This(){return WordBlockParser}
+
+	static parse(rawText:str){
+		const z = WordBlockParser.new(rawText)
+		return z.parse()
+	}
+
+	parse(){
+		const z = this
+		z.read_wordText()
+		z.read_body()
+		return z.result
+	}
+
+	protected read_body(){
+		const z = this
+		const start = z.index
+		for(;z.index<z.text.length;){
+			if(z.peek('[['.length)==='[['){
+				z.result.prop = read_prop(z)
+				continue
+			}
+			z.bodySb.push(z.peek(1))
+			z.index++
+		}
+		const bodyStr = z.bodySb.join('')
+		const body = ParseResult.new(start, z.index, bodyStr)
+		z.result.body = body
+	}
+
+	protected read_wordText(){
+		const z = this
+		const start = z.index
+		const firstLine = z.readUntilStr('\n')
+		z.eat('\n', true)
+		z.result.wordText = ParseResult.new(start, z.index, firstLine)
+	}
+
+
 }
 
 
@@ -286,7 +386,6 @@ class Fine{
 	get This(){return Fine}
 
 	crude:CrudeResult
-
 	metadata:Metadata
 
 	static parseMetadata(text:str){
@@ -300,7 +399,8 @@ class Fine{
 		return ans
 	}
 
-	parse_metadata(metadata:ParseResult){
+	/** runOnInit */
+	protected parse_metadata(metadata:ParseResult){
 		const z = this
 		try {
 			return z.This.parseMetadata(metadata.rawText)
@@ -313,8 +413,9 @@ class Fine{
 		}
 	}
 
-	static parse_dateBlock(dateBlock:DateBlock){
-		
+	protected parse_dateBlock(dateBlock:DateBlock){
+		const z = this
+		DateBlockParser.new()
 	}
 
 }

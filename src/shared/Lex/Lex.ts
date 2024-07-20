@@ -213,7 +213,7 @@ export class Lex{
 	 * @param required 
 	 * @returns 
 	 */
-	eat(str: string, required?: boolean) {
+	old_eat(str: string, required?: boolean) {
 		const z = this
 		const idx = z.status.index
 		if (z.text.slice(idx, idx + str.length) === str) {
@@ -228,9 +228,36 @@ export class Lex{
 		return null;
 	}
 
+	/**
+	 * 从当前字符串位置开始，尝试匹配传入的字符串 str。
+	 * 如果成功匹配，函数会将索引移动到匹配字符串的末尾，并返回true
+	 * 如果未能匹配到字符串，则根据是否传入了 required 参数来决定是否抛出一个错误，或者仅仅返回 false
+	 * @param str 
+	 * @param required 
+	 * @returns 
+	 */
+	eat(str: string, required?: boolean) {
+		const z = this
+		const idx = z.status.index
+		if (z.text.slice(idx, idx + str.length) === str) {
+			z.status.index += str.length;
+			return true;
+		}
 
+		if (required) {
+			this.error(`Expected '${str}' instead of '${this.text[z.status.index]}'`);
+		}
 
-	peek(){
+		return false;
+	}
+
+	peek(num:int) {
+		const z = this
+		const idx = z.status.index
+		return z.text.slice(idx, idx + num)
+	}
+	
+	peekOne(){
 		const z = this
 		return z.text[z.index]
 	}

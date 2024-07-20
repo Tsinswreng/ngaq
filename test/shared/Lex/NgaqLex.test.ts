@@ -1,5 +1,5 @@
 import { ParseError } from '@shared/Lex/Lex'
-import {NgaqLex} from '@shared/Lex/NgaqLex'
+import {NgaqLex} from '@shared/Lex/ngaqLex/NgaqLex'
 import * as fs from 'fs'
 describe('parseFile',()=>{
 	const file = './srcWordList/test.txt'
@@ -8,10 +8,10 @@ describe('parseFile',()=>{
 	it('1',()=>{
 		try {
 			//console.log(text.length)// 383
-			const ans = lex.parse()
+			const ans = lex.crudeParse()
 			console.log(ans)
 			console.log('aaaa')
-			console.log(ans.length)
+			
 		} catch (err) {
 			if(err instanceof ParseError){
 				console.error(err)

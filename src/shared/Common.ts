@@ -17,6 +17,27 @@ export function $<T>(v:T, err:string|Error=''): NonNullable<T>{
 	return v as NonNullable<T>
 }
 
+/**
+ * nonNullable Array
+ * 數組或字符串判空後返回。
+ * @param v 
+ * @param err 
+ * @returns 
+ */
+export function $a<T>(v:T[]|undefined|null, err?:string|Error):T[]
+export function $a<T>(v:string|undefined|null, err?:string|Error):string
+
+export function $a<T>(v:T[]|string|undefined|null, err:string|Error=''){
+	if(v == null || v.length === 0){
+		if(typeof err === 'string'){
+			throw new Error(err)
+		}else{
+			throw err
+		}
+	}
+	return v
+}
+
 
 /**
  * 實例ᵗ類型轉化 並檢查
