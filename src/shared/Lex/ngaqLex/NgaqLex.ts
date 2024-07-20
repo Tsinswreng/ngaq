@@ -2,11 +2,12 @@ import { Lex, LocatePair, ParseError, SegmentLex, StrSegment } from "../Lex"
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as algo from '@shared/algo'
-import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
+import type { MakeOptional,PubNonFuncKeys,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
 import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 import type { I_Segment } from "@shared/interfaces/I_Parse"
 import { splitStr } from "@shared/tools/splitStr"
+import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
 
 function read_prop(z:Lex):StrSegment|undef{
 	const start = z.index
@@ -15,7 +16,10 @@ function read_prop(z:Lex):StrSegment|undef{
 	}
 	const propStr = z.readUntilStr(']]')
 	z.old_eat(']]', true)
-	const ans = StrSegment.new(start, z.index, propStr)
+	const ofs = z.getIndexOffset()
+	const ans = StrSegment.new(
+		ofs+start, ofs+z.index, propStr
+	)
 	return ans
 }
 
@@ -108,6 +112,15 @@ export class NgaqLex extends Lex{
 	protected _patterns = new Patterns()
 	get patterns(){return this._patterns}
 	protected set patterns(v){this._patterns = v}
+
+	parse(){
+		const z = this
+		const crude = z.crudeParse()
+		const ans = Fine.parse({
+			crude: crude
+		})
+		return ans
+	}
 	
 	protected read_white(){
 		const z = this
@@ -202,7 +215,7 @@ export class NgaqLex extends Lex{
 	}
 
 
-	crudeParse(){
+	protected crudeParse(){
 		const z = this
 		//z.index++
 		z.read_white()
@@ -256,6 +269,7 @@ class DateBlockParser{
 		return z
 	}
 
+	/** @deprecated */
 	static new(metadata:Metadata, dateBlock:DateBlock){
 		const z = new this()
 		z.__init__(metadata, dateBlock)
@@ -269,22 +283,28 @@ class DateBlockParser{
 	metadata:Metadata
 
 	//outcome
-	date:Tempus
-	wordBodys:StrSegment[]
+	// date:Tempus
+	// wordBodys:StrSegment[]
 
-	protected runAll(){
+	static parse(prop:{metadata:Metadata, dateBlock:DateBlock}){
+		const z = DateBlockParser.new(prop.metadata, prop.dateBlock)
+		return z.readAll()
+	}
+
+	protected readAll():[Tempus, StrSegment[]]{
 		const z = this
-		z.parse_date()
-		z.splitWordBodys()
+		const date = z.parse_date()
+		const wordBodys = z.splitWordBodys()
+		return [date, wordBodys]
 	}
 
 	protected parse_date(){
 		const z = this
-		z.date = Tempus.new(
+		const date = Tempus.new(
 			z.dateBlock.date.data
 			,z.metadata.dateFormat
 		)
-		return z.date
+		return date
 	}
 
 	protected splitWordBodys(){
@@ -300,14 +320,8 @@ class DateBlockParser{
 			ans.push(ua)
 			index += wbs.data.length
 		}
-		z.wordBodys = ans
 		return ans
 	}
-
-	protected parseWordBlocks(){
-
-	}
-
 
 }
 
@@ -316,12 +330,14 @@ class WordBlock{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof WordBlock.new>){
 		const z = this
+		const props = args[0]
+		Object.assign(z, props)
 		return z
 	}
 
-	static new(){
+	static new(props:PubNonFuncProp<WordBlock>){
 		const z = new this()
-		z.__init__()
+		z.__init__(props)
 		return z
 	}
 
@@ -329,6 +345,7 @@ class WordBlock{
 	prop?:StrSegment
 	wordText:StrSegment
 	body:StrSegment
+	date:Tempus
 }
 
 
@@ -344,6 +361,7 @@ class WordBlockParser extends SegmentLex{
 		return z
 	}
 
+	/** @deprecated */
 	static new(segment:StrSegment):WordBlockParser
 	static new(arg):never
 	static new(segment:StrSegment){
@@ -352,40 +370,64 @@ class WordBlockParser extends SegmentLex{
 		return z
 	}
 
+	static parse(prop:{wordSegment:StrSegment, date:Tempus}){
+		const z = WordBlockParser.new(prop.wordSegment)
+		z.date = prop.date
+		const ans = z.readAll()
+		return ans
+	}
+
+
 	// in param
 	//segment:StrSegment
 	date:Tempus
 
-
-
-	result = WordBlock.new()
-	bodySb = [] as str[]
+	// outcome
+	//result = WordBlock.new()
+	
+	// temp
+	//bodySb = [] as str[]
 	
 
 	//get This(){return WordBlockParser}
 
-	
-	parse(){
+	protected readAll(){
 		const z = this
-		z.read_wordText()
-		z.read_body()
-		return z.result
+		const wordText = z.read_wordText()
+		const [body, prop] = z.read_bodyEtProp()
+		const ans = WordBlock.new({
+			date: z.date
+			,wordText:wordText
+			,body: body
+			,prop:prop
+		})
+		return ans
 	}
 
-	protected read_body(){
+	/**
+	 * 
+	 * @returns [body, prop]
+	 */
+	protected read_bodyEtProp():[StrSegment, StrSegment|undef]{
 		const z = this
+		const bodySb = [] as str[]
 		const start = z.index
+		let prop:StrSegment|undef
 		for(;z.index<z.text.length;){
 			if(z.peek('[['.length)==='[['){
-				z.result.prop = read_prop(z)
+				prop = read_prop(z)
 				continue
 			}
-			z.bodySb.push(z.peek(1))
+			bodySb.push(z.peek(1))
 			z.index++
 		}
-		const bodyStr = z.bodySb.join('')
-		const body = StrSegment.new(start, z.index, bodyStr)
-		z.result.body = body
+		const bodyStr = bodySb.join('')
+		const body = StrSegment.new(
+			z.getIndexOffset() + start
+			,z.getIndexOffset() + z.index
+			, bodyStr
+		)
+		return [body, prop]
 	}
 
 	protected read_wordText(){
@@ -393,31 +435,42 @@ class WordBlockParser extends SegmentLex{
 		const start = z.index
 		const firstLine = z.readUntilStr('\n')
 		z.eat('\n', true)
-		z.result.wordText = StrSegment.new(start, z.index, firstLine)
+		const ofs = z.getIndexOffset()
+		const wordText = StrSegment.new(ofs+start, ofs+z.index, firstLine)
+		return wordText
 	}
 
-
 }
+
 
 
 class Fine{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof Fine.new>){
 		const z = this
-		z.crude = args[0]
+		const prop = args[0]
+		z.crude = prop.crude
+		//z.metadata = prop.metadata
 		z.metadata = z.parse_metadata(z.crude.metadata)
 		return z
 	}
 
-	static new(crude:CrudeResult){
+	protected static new(prop:{
+		crude:CrudeResult
+	}){
 		const z = new this()
-		z.__init__(crude)
+		z.__init__(prop)
 		return z
 	}
 	get This(){return Fine}
 
 	crude:CrudeResult
 	metadata:Metadata
+
+	static parse(...args:Param<typeof Fine.new>){
+		const z = this.new(...args)
+		return z.parse()
+	}
 
 	static parseMetadata(text:str){
 		const obj = JSON.parse(text)
@@ -430,7 +483,7 @@ class Fine{
 		return ans
 	}
 
-	/** runOnInit */
+	/** @runAtInit */
 	protected parse_metadata(metadata:StrSegment){
 		const z = this
 		try {
@@ -444,12 +497,39 @@ class Fine{
 		}
 	}
 
-	protected parse_dateBlock(dateBlock:DateBlock){
+	parse(){
 		const z = this
-		const dp = DateBlockParser.new(z.metadata, dateBlock)
-		
+		const ans = new Map<Tempus, WordBlock[]>()
+		for(const db of z.crude.dateBlocks){
+			const ua = z.parse_dateBlock(db)
+			if(ua.length > 0){
+				const date = ua[0].date
+				if(!ans.has(date)){
+					ans.set(date, ua)
+				}else{
+					ua.map(e=>key__arrMapPush(ans, date, e))
+				}
+			}
+		}
+		return ans
 	}
 
+	protected parse_dateBlock(dateBlock:DateBlock):WordBlock[]{
+		const z = this
+		const [tempus, wordSegs] = DateBlockParser.parse({
+			metadata: z.metadata
+			,dateBlock:dateBlock
+		})
+		const wordBlocks = [] as WordBlock[]
+		for (const ws of wordSegs){
+			const ua = WordBlockParser.parse({
+				wordSegment: ws
+				,date: tempus
+			})
+			wordBlocks.push(ua)
+		}
+		return wordBlocks
+	}
 }
 
 
