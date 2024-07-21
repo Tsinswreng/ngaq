@@ -140,15 +140,16 @@ export class Status{
 
 export class Lex{
 	protected constructor(){}
-	protected __init__(...args:any[])
-	protected __init__(...args: Parameters<typeof Lex.new>){
+	//protected __init__(...args: Parameters<typeof Lex.new>):Lex
+	//protected __init__(...args:any[]):never
+	protected __init__(text:str){
 		const z = this
-		z.text = args[0]
+		z.text = text
 		return z
 	}
 
 	static new(text:str):Lex
-	static new(args:any):never
+	//static new(...args:any):never
 	//static new(...args:any[]):unknown
 	static new(text:str){
 		const z = new this()
@@ -156,7 +157,7 @@ export class Lex{
 		return z
 	}
 
-	get This(){return Lex}
+	//get This(){return Lex}
 	protected _text:str
 	get text(){return this._text}
 	protected set text(v){this._text = v}
@@ -211,9 +212,9 @@ export class Lex{
 		const err = ParseError.new(msg)
 		err.start = z.index
 		//const [line, col] = z.locatePair()
-		const location = z.locate()
-		err.line = location.line
-		err.col = location.col
+		// const location = z.locate()
+		// err.line = location.line
+		// err.col = location.col
 		return err
 	}
 	
@@ -269,10 +270,14 @@ export class Lex{
 		return false;
 	}
 
-	peek(num:int) {
+	/** 
+	 * peek(1) is current; 
+	 * peek(2) is current+nextChar, not just next char
+	 */
+	sliceFromCurPos(amount:int) {
 		const z = this
 		const idx = z.status.index
-		return z.text.slice(idx, idx + num)
+		return z.text.slice(idx, idx + amount)
 	}
 
 	peekOne(){
@@ -349,15 +354,42 @@ export class Lex{
 		return z.text.slice(start, z.index); // Return the substring from start to the match start index
 	}
 
+	// readUntilStr(str: string, require=false) {
+	// 	const z = this;
+	// 	// console.log(str)//t
+	// 	// console.log(z.peek(), 'peek')//t
+	// 	if(z.index >= z.text.length){
+	// 		z.error('Unexpected end of input');
+	// 	}
+
+	// 	const start = z.index;
+	// 	const matchIndex = z.text.indexOf(str, start);
+
+	// 	if(matchIndex === -1){
+	// 		if(require){
+	// 			z.error(`${str}\nreadUntilStr error`)
+	// 		}
+	// 		z.index = z.text.length; // If not found, set the character pointer to the end
+	// 		return z.text.slice(start);
+	// 	}
+	// 	const end = matchIndex;
+	// 	z.index = end; // Update the current index to the match start index
+	// 	return z.text.slice(start, z.index); // Return the substring from start to the match start index
+	// }
+
+
 
 }
 
 
 export class SegmentLex extends Lex{
 	protected constructor(){super()}
-	protected __init__(...args: Parameters<typeof SegmentLex.new>){
+	
+	//@ts-ignore
+	protected __init__(segment:StrSegment){
 		const z = this
-		z.segment = args[0]
+		super.__init__(segment.data)
+		z.segment = segment
 		return z
 	}
 

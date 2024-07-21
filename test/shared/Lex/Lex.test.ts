@@ -45,4 +45,26 @@ describe('readUntilStr', ()=>{
 		expect(got).toBe('abc')
 		expect(lex.index).toBe(3)
 	})
+
+	it('3', ()=>{
+		const text = 
+`<metadata>\r\n\
+{\r\n\
+	"belong": "english"\r\n\
+	,"delimiter": "-/-/-/-/-"\r\n\
+}\r\n\
+</metadata>`
+		const lex = Lex.new(text)
+		const p0 = `<metadata>`
+		const p1 = `</metadata>`
+		console.log(lex.index, 1)
+		lex.eat(p0)
+		console.log(lex.index, 2)
+		const got = lex.readUntilStr(p1)
+		console.log(lex.index, 3)
+		lex.eat(p1)
+		console.log(lex.index, 4)
+		console.log(got)
+	})
+
 })

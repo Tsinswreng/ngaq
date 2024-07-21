@@ -1,6 +1,7 @@
 import { ParseError } from '@shared/Lex/Lex'
 import {NgaqLex} from '@shared/Lex/ngaqLex/NgaqLex'
 import * as fs from 'fs'
+import util from 'util'
 describe('parseFile',()=>{
 	const file = './srcWordList/test.txt'
 	const text = fs.readFileSync(file, {encoding: 'utf-8'})
@@ -8,14 +9,13 @@ describe('parseFile',()=>{
 	it('1',()=>{
 		try {
 			//console.log(text.length)// 383
-			const ans = lex.crudeParse()
-			console.log(ans)
-			console.log('aaaa')
-			
+			const ans = lex.parse()
+			console.log(util.inspect(ans, false, 6, true))
 		} catch (err) {
 			if(err instanceof ParseError){
 				console.error(err)
-				console.error(err.line, err.col)
+				const pos = err.start
+				console.error(lex.locate(text , pos))
 			}else{
 				throw err
 			}

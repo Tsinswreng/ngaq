@@ -2,14 +2,15 @@ import { Lex, LocatePair, ParseError, SegmentLex, StrSegment } from "../Lex"
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as algo from '@shared/algo'
-import type { MakeOptional,PubNonFuncKeys,PubNonFuncProp } from "@shared/Type"
+import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
 import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 import type { I_Segment } from "@shared/interfaces/I_Parse"
 import { splitStr } from "@shared/tools/splitStr"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
 
-function read_prop(z:Lex):StrSegment|undef{
+/** @deprecated */
+function read_prop_deprecated(z:Lex):StrSegment|undef{
 	const start = z.index
 	if(!z.eat('[[')){
 		return undefined
@@ -22,6 +23,81 @@ function read_prop(z:Lex):StrSegment|undef{
 	)
 	return ans
 }
+
+/**
+ * [[tag|N1]] ->
+ * like {belong: 'tag'
+ * text: 'N1'}
+ */
+function read_prop(z:Lex):WordProp|undef{
+	
+	if(!z.eat('[[')){
+		return undefined
+	}
+
+	let textSb = [] as str[]
+	let belongSb = [] as str[]
+	let sb = belongSb
+	const ofs = z.getIndexOffset()
+	let start = z.index
+	let belong:StrSegment|undef
+	let text:StrSegment|undef
+	let state = 'start'
+	for(;;z.index++){
+		if(z.index >= z.text.length){
+			z.error(`expected ]], got EOF`)
+		}
+		const c = z.sliceFromCurPos(1)
+		//console.log(c, 'c')
+		if(c === '|'){
+			state = '|'
+			sb=textSb
+			belong = StrSegment.new(
+				ofs+start
+				, ofs+z.index-1 //不含 '|'
+				, belongSb.join('')
+			)
+			start = z.index
+			continue
+		}
+		if(z.sliceFromCurPos(2) === ']]'){
+			if(state === '|'){
+				text = StrSegment.new(ofs+start, ofs+z.index, textSb.join(''))
+			}else{
+				belong = StrSegment.new(ofs+start, ofs+z.index, belongSb.join(''))
+			}
+			z.index+=2
+			break
+		}
+		sb.push(c)
+	}
+	if(belong == void 0){
+		z.error(`got nothing in word prop`)
+		return
+	}
+	const ans = WordProp.new(belong, text)
+	return ans
+}
+class WordProp{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof WordProp.new>){
+		const z = this
+		z.belong = args[0]
+		z.text = args[1]
+		return z
+	}
+
+	static new(belong:StrSegment, text:StrSegment|undef){
+		const z = new this()
+		z.__init__(belong, text)
+		return z
+	}
+
+	//get This(){return WordProp}
+	belong:StrSegment
+	text?:StrSegment
+}
+
 
 class CrudeResult{
 
@@ -77,7 +153,7 @@ class DateBlock{
 	date:StrSegment
 	content:StrSegment
 	/** 整個日期塊內 䀬ʹ詞ʰ皆加ʹ屬性、如來源 等 */
-	commonProp?:StrSegment
+	commonProp:WordProp[] = []
 }
 
 class Patterns{
@@ -94,7 +170,7 @@ export class NgaqLex extends Lex{
 	protected __init__(...args: Parameters<typeof NgaqLex.new>){
 		const z = this
 		super.__init__(...args)
-		z.text = z.text.replace(/\r\n/g, '\n')
+		//z.text = z.text.replace(/\r\n/g, '\n')
 		return z
 	}
 
@@ -104,10 +180,6 @@ export class NgaqLex extends Lex{
 		return z
 	}
 
-	//@ts-ignore
-	get This(){return NgaqLex}
-
-	
 
 	protected _patterns = new Patterns()
 	get patterns(){return this._patterns}
@@ -141,10 +213,10 @@ export class NgaqLex extends Lex{
 	protected read_metadata():StrSegment{
 		const z = this
 		const start = z.index
-		z.old_eat(z.patterns.metadataStart, true)
+		z.eat(z.patterns.metadataStart, true)
 		const end = z.patterns.metadataEnd
 		const str = z.readUntilStr(end, true)
-		z.old_eat(end, true)
+		z.eat(end, true)
 		const ans = StrSegment.new(start, z.index, str)
 		return ans
 	}
@@ -169,10 +241,10 @@ export class NgaqLex extends Lex{
 	protected read_dateBlockContent():StrSegment{
 		const z = this
 		const start = z.index
-		z.old_eat(z.patterns.dateBlockContentStart, true)
+		z.eat(z.patterns.dateBlockContentStart, true)
 		const end = z.patterns.dateBlockContentEnd
 		const str = z.readUntilStr(end, true)
-		z.old_eat(end, true)
+		z.eat(end, true)
 		const ans = StrSegment.new(start, z.index, str)
 		return ans
 	}
@@ -186,7 +258,8 @@ export class NgaqLex extends Lex{
 		const start = z.index
 		const date = z.read_date()
 		z.read_white()
-		const prop = z.read_prop()
+		const prop = z.read_props()
+		//console.log(prop, z.index)//t
 		z.read_white()
 		const content = z.read_dateBlockContent()
 		// const ans = new DateBlockDeprecated()
@@ -202,15 +275,15 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
-	protected read_prop():StrSegment|undef{
+	protected read_props():WordProp[]{
 		const z = this
-		const start = z.index
-		if(!z.eat('[[')){
-			return undefined
+		const ans = [] as WordProp[]
+		for(;;){
+			const ua = read_prop(z)
+			if(ua == void 0){break}
+			ans.push(ua)
+			z.read_white()
 		}
-		const propStr = z.readUntilStr(']]')
-		z.old_eat(']]', true)
-		const ans = StrSegment.new(start, z.index, propStr)
 		return ans
 	}
 
@@ -335,14 +408,19 @@ class WordBlock{
 		return z
 	}
 
-	static new(props:PubNonFuncProp<WordBlock>){
+	static new(
+		props:MakeOptional<
+			PubNonFuncProp<WordBlock>, 'commonProp'
+		>
+	){
 		const z = new this()
 		z.__init__(props)
 		return z
 	}
 
 	//get This(){return WordBlock}
-	prop?:StrSegment
+	commonProp:WordProp[] = []
+	prop:WordProp[] = []
 	wordText:StrSegment
 	body:StrSegment
 	date:Tempus
@@ -393,6 +471,7 @@ class WordBlockParser extends SegmentLex{
 
 	protected readAll(){
 		const z = this
+		z.read_white()
 		const wordText = z.read_wordText()
 		const [body, prop] = z.read_bodyEtProp()
 		const ans = WordBlock.new({
@@ -400,25 +479,46 @@ class WordBlockParser extends SegmentLex{
 			,wordText:wordText
 			,body: body
 			,prop:prop
+
 		})
 		return ans
+	}
+
+	//TODO duplicate define
+	protected read_white(){
+		const z = this
+		for(; z.index < z.text.length;){
+			const cur = z.text[z.index]
+			if(/\s/.test(cur)){
+				z.index++
+			}else{
+				break
+			}
+		}
 	}
 
 	/**
 	 * 
 	 * @returns [body, prop]
 	 */
-	protected read_bodyEtProp():[StrSegment, StrSegment|undef]{
+	protected read_bodyEtProp():[StrSegment, WordProp[]]{
 		const z = this
 		const bodySb = [] as str[]
 		const start = z.index
-		let prop:StrSegment|undef
+		//let prop:StrSegment|undef
+		const props = [] as WordProp[]
 		for(;z.index<z.text.length;){
-			if(z.peek('[['.length)==='[['){
-				prop = read_prop(z)
+			if(z.sliceFromCurPos('[['.length)==='[['){
+				const prop = read_prop(z)
+				if(prop == void 0){
+					z.error(`expected prop, got undef`)
+				}else{
+					props.push(prop)
+				}
+
 				continue
 			}
-			bodySb.push(z.peek(1))
+			bodySb.push(z.sliceFromCurPos(1))
 			z.index++
 		}
 		const bodyStr = bodySb.join('')
@@ -427,7 +527,7 @@ class WordBlockParser extends SegmentLex{
 			,z.getIndexOffset() + z.index
 			, bodyStr
 		)
-		return [body, prop]
+		return [body, props]
 	}
 
 	protected read_wordText(){
@@ -501,7 +601,7 @@ class Fine{
 		const z = this
 		const ans = new Map<Tempus, WordBlock[]>()
 		for(const db of z.crude.dateBlocks){
-			const ua = z.parse_dateBlock(db)
+			const ua = z.dateBlockToWordBlock(db)
 			if(ua.length > 0){
 				const date = ua[0].date
 				if(!ans.has(date)){
@@ -514,18 +614,23 @@ class Fine{
 		return ans
 	}
 
-	protected parse_dateBlock(dateBlock:DateBlock):WordBlock[]{
+	protected dateBlockToWordBlock(dateBlock:DateBlock):WordBlock[]{
 		const z = this
 		const [tempus, wordSegs] = DateBlockParser.parse({
 			metadata: z.metadata
 			,dateBlock:dateBlock
 		})
+		
 		const wordBlocks = [] as WordBlock[]
 		for (const ws of wordSegs){
+			if(/^(\s)*$/.test(ws.data)){
+				continue
+			}
 			const ua = WordBlockParser.parse({
 				wordSegment: ws
 				,date: tempus
 			})
+			ua.commonProp = dateBlock.commonProp
 			wordBlocks.push(ua)
 		}
 		return wordBlocks
