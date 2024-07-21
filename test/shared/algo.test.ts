@@ -242,7 +242,7 @@ describe('abc_to_c_bc_abc',()=>{
 
 
 describe('diffAs', ()=>{
-	const fn = algo.diffArr
+	const fn = algo.diffArrIntoMap
 	it('1',()=>{
 		const arr1=[
 			{text:'a', num:1}

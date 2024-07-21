@@ -4,7 +4,7 @@ import Tempus from "@shared/Tempus"
 import { classify } from "@shared/Ut"
 import * as Rows from '@shared/old_dbRow/wordDbRowsOld'
 import { Word } from "@shared/entities/Word/Word"
-import { diffArr } from "@shared/algo"
+import { diffArrIntoMap } from "@shared/algo"
 
 export class JoinedWordOld{
 	protected constructor(){}
@@ -84,7 +84,7 @@ export class JoinedWordOld{
 w1 and w2 is not the same word`
 			)
 		}
-		const diff = diffArr(
+		const diff = diffArrIntoMap(
 			w1.propertys
 			,w2.propertys
 			,(e)=>Tempus.toUnixTime_mills(e.mt)

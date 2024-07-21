@@ -3,7 +3,7 @@ import Tempus from "@shared/Tempus"
 import { classify } from "@shared/algo"
 import * as Row from '@shared/model/word/NgaqRows'
 import { Word } from "@shared/entities/Word/Word"
-import { diffArr } from "@shared/algo"
+import { diffArrIntoMap } from "@shared/algo"
 import { JoinedRow } from './JoinedRow'
 import { PubNonFuncProp } from '@shared/Type'
 
@@ -122,7 +122,7 @@ export class JoinedWord{
 w1 and w2 is not the same word`
 			)
 		}
-		const diff = diffArr(
+		const diff = diffArrIntoMap(
 			w1.propertys
 			,w2.propertys
 			,(e)=>Tempus.toUnixTime_mills(e.mt)

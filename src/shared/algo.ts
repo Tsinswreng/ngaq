@@ -408,40 +408,12 @@ export function distinct<T, U>(arr:T[], fn:(ele:T)=>U){
 import { classify } from "./tools/classify"
 export {classify}
 
-export function diffMapByKey<K, V>(map1: Map<K, V>, map2: Map<K, V>): Map<K, V> {
-	const ans = new Map<K, V>();
-	map1.forEach((value, key) => {
-		if (!map2.has(key)) {
-			ans.set(key, value);
-		}
-	});
-
-	return ans;
-}
+import { diffMapByKey } from "./tools/diffMapByKey"
+export {diffMapByKey}
 
 export { key__arrMapPush } from "./tools/key__arrMapPush"
-/* 
-arr1=[
-	{text:'a', num:1}
-	,{text:'b', num:2}
-	,{text:'c', num:3}
-]
-arr2=[
-	{text:'a', num:1}
-	,{text:'b', num:2}
-	,{text:'d', num:4}
-]
-diffAs(arr1, arr2, (e)=>e.num)
-//TODO test
-*/
-export function diffArr<ArrEle, Fld>(arr1:ArrEle[], arr2:ArrEle[], fn:(key:ArrEle)=>Fld){
-	// const map1 = new Map<Fld, ArrEle>()
-	// const map2 = new Map<Fld, ArrEle>()
-	const map1 = classify(arr1, fn)
-	const map2 = classify(arr2, fn)
-	const ans = diffMapByKey(map1, map2)
-	return ans
-}
+import { diffArrIntoMap } from "./tools/diffArrIntoMap"
+export {diffArrIntoMap}
 
 export {keyMirror} from '@shared/tools/keyMirror'
 export {splitAtLength} from '@shared/tools/splitAtLength'

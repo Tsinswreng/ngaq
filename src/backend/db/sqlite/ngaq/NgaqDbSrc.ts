@@ -95,8 +95,8 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		return ans
 	}
 
-
 }
+
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
 	textWord = TBL('textWord', Mod.TextWord)
@@ -375,7 +375,9 @@ export class NgaqDbSrc{
 		return ans as ReturnType<T['Fn_addRow']>
 	}
 	
-	async Fn_addJoinedRows(){
+
+	//TODO 褈構
+	async Fn_AddJoinedRows(){
 		const z = this
 		const si = z.schemaItems
 		const tbls = z.tbls
@@ -415,34 +417,33 @@ export class NgaqDbSrc{
 		return fn
 	}
 
-	/**
-	 * 
-	 * @param words 
-	 * @returns return [existingWords, nonExistingWords]
-	 */
-	async ClassifyWordsByIsExist(words:JoinedWord[]){
+	async Fn_ClassifyWordsByIsExist(){
 		const z = this
 		const sql = z.qrys.selectExistFromWord('_')
 		const stmt = await z.db.Prepare(sql)
-		const existingWords = [] as JoinedWord[]
-		const nonExistingWords = [] as JoinedWord[]
-		for(const w of words){
-			const param = [w.textWord.belong, w.textWord.text]
-			const [runRes, ua] = await stmt.All<{_:int}>(param)
-			if(ua[0]?._ === 1){ //exist
-				existingWords.push(w)
-			}else{
-				nonExistingWords.push(w)
+
+		const fn = async(words:JoinedWord[])=>{
+			const existingWords = [] as JoinedWord[]
+			const nonExistingWords = [] as JoinedWord[]
+			for(const w of words){
+				const param = [w.textWord.belong, w.textWord.text]
+				const [runRes, ua] = await stmt.All<{_:int}>(param)
+				if(ua[0]?._ === 1){ //exist
+					existingWords.push(w)
+				}else{
+					nonExistingWords.push(w)
+				}
 			}
+			return [existingWords, nonExistingWords]
 		}
-		return [existingWords, nonExistingWords]
+		return fn
 	}
 
 	async GetAllJoinedRow(){
 		const z = this
 		const allIdSql = z.qrys.getAllWordId('_')
 		const [,allId] = await z.db.All<{_:int}>(allIdSql)
-		const SeekRowFn = await z.Fn_seekJoinedRowById()
+		const SeekRowFn = await z.Fn_SeekJoinedRowById()
 		const ans = [] as JoinedRow[]
 		for(const id of allId){
 			const ua = await SeekRowFn(id._)
@@ -461,36 +462,44 @@ export class NgaqDbSrc{
 	 * @returns 
 	 * //TODO
 	 */
-	async AddWordsDistinctProperty(words:JoinedWord[]){
+	async Fn_AddWordsDistinctProperty(words:JoinedWord[]){
 		const z = this
-		const [duplicateNeoWords, nonExistWords] = await z.ClassifyWordsByIsExist(words)
-		const add = await z.Fn_addJoinedRows()
-		const seekById = await z.Fn_seekJoinedRowById()
-		const seekByText = await z.Fn_seekJoinedRowBy(z.tbls.textWord.col.text)
-		/** 㕥存 未加過之prop */
-		const diffPropertys = [] as Mod.Property[]
-		for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
-			//const oldRow = await seekById(neo.textWord.id)
-			const got = await seekByText(neo.textWord.text)
-			const oldRow = got[0]
-			if(oldRow == void 0){
-				throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
+
+		const ClassifyWordsByIsExist = await z.Fn_ClassifyWordsByIsExist()
+		const AddJRows = await z.Fn_AddJoinedRows()
+		const SeekById = await z.Fn_SeekJoinedRowById()
+		const SeekByText = await z.Fn_SeekJoinedRowBy(z.tbls.textWord.col.text)
+		const AddPr = await z.GetFn_addRow(e=>e.property)
+
+		const Fn = async()=>{
+			/** 㕥存 未加過之prop */
+			const diffPropertys = [] as Mod.Property[]
+			const [duplicateNeoWords, nonExistWords] = await ClassifyWordsByIsExist(words)
+			for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
+				//const oldRow = await seekById(neo.textWord.id)
+				const exsistingJoinedRows = await SeekByText(neo.textWord.text)
+				const oldRow = exsistingJoinedRows[0]
+				if(oldRow == void 0){
+					throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
+				}
+				const oldJw = JoinedWord.fromRow(oldRow)
+				const ua = JoinedWord.diffProperty(neo, oldJw)
+				diffPropertys.push(...ua)
 			}
-			const oldJw = JoinedWord.fromRow(oldRow)
-			const ua = JoinedWord.diffProperty(oldJw, neo)
-			diffPropertys.push(...ua)
+			
+			//const addPr = await z.qrys.fn_addPropertyRow(z.db)
+			
+			await AddJRows(nonExistWords.map(e=>e.toRow()))
+			for(const e of diffPropertys){
+				await AddPr(e.toRow())
+			}
+			return true
 		}
-		
-		const addPr = await z.qrys.fn_addPropertyRow(z.db)
-		await add(nonExistWords.map(e=>e.toRow()))
-		for(const e of diffPropertys){
-			await addPr(e.toRow())
-		}
-		return true
+		return Fn
 	}
 
 
-	async Fn_seekJoinedRowById(){
+	async Fn_SeekJoinedRowById(){
 		const z = this
 		const sqlTw = z.qrys.selectTextWordById()
 		const stmtTw = await z.db.Prepare(sqlTw)
@@ -525,11 +534,11 @@ export class NgaqDbSrc{
 	 * WHERE ${col}=?
 	 * @returns fn: (val: str) => Promise<JoinedRow[]>
 	 */
-	async Fn_seekJoinedRowBy(col:str){
+	async Fn_SeekJoinedRowBy(col:str){
 		const z = this
 		const tbls = z.tbls
 		const tbl = tbls.textWord
-		const seekById = await z.Fn_seekJoinedRowById()
+		const seekById = await z.Fn_SeekJoinedRowById()
 		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
 		const stmt = await z.db.Prepare(sql)
 		const fn = async(val:str)=>{
@@ -565,5 +574,6 @@ export class NgaqDbSrc{
 		}
 		return Fn
 	}
+
 
 }
