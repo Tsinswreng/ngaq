@@ -83,7 +83,7 @@ export class WebNgaqSvc extends LearnSvc{
 		//console.log(jsonRows)//t
 		//const rows:JoinedRow[] = JSON.parse(jsonRows)
 		const rows:JoinedRow[] = jsonRows
-		const jwords = rows.map(e=>JoinedWord.new(e))
+		const jwords = rows.map(e=>JoinedWord.fromRow(e))
 		//const words = jwords.map(e=>JoinedWord.toPlainWord(e))
 		const memorizeWords = jwords.map(e=>WebSvcWord.new(e))
 		z._wordsToLearn = memorizeWords

@@ -55,7 +55,7 @@ export enum PropertyBelong{
 /** 單詞ʹ屬性 */
 export class Property extends WidRow{
 	text:str
-	declare belong:PropertyBelong
+	declare belong:PropertyBelong|str
 }
 
 export enum WordRelationBelong{

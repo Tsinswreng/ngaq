@@ -185,7 +185,7 @@ export class NgaqLex extends Lex{
 	get patterns(){return this._patterns}
 	protected set patterns(v){this._patterns = v}
 
-	parse(){
+	read_tempus__wordBlocks(){
 		const z = this
 		const crude = z.crudeParse()
 		const ans = Fine.parse({
@@ -193,6 +193,9 @@ export class NgaqLex extends Lex{
 		})
 		return ans
 	}
+
+
+
 	
 	protected read_white(){
 		const z = this
@@ -569,7 +572,13 @@ class Fine{
 
 	static parse(...args:Param<typeof Fine.new>){
 		const z = this.new(...args)
-		return z.parse()
+		const tempus__wordBlocks = z.read_Tempus__wordBlocks()
+		const ans = new Map<Tempus, JoinedWord[]>()
+		for(const [tempus, wordBlocks] of tempus__wordBlocks){
+			const jwords = wordBlocks.map(e=>z.wordBlockToJoinedWord(e))
+			ans.set(tempus, jwords)
+		}
+		return ans
 	}
 
 	static parseMetadata(text:str){
@@ -597,7 +606,7 @@ class Fine{
 		}
 	}
 
-	parse(){
+	read_Tempus__wordBlocks(){
 		const z = this
 		const ans = new Map<Tempus, WordBlock[]>()
 		for(const db of z.crude.dateBlocks){
@@ -613,6 +622,41 @@ class Fine{
 		}
 		return ans
 	}
+
+	wordBlockToJoinedWord(wordBlock:WordBlock){
+		const z = this
+		const metadata = z.metadata
+		const date = wordBlock.date
+		const textWord = Mod.TextWord.new({
+			id:NaN
+			,text: wordBlock.wordText.data
+			,belong: metadata.belong
+			,ct: wordBlock.date
+			,mt: wordBlock.date
+		})
+		function parseProperty(wordProps:WordProp[]){
+			return wordProps.map(e=>
+				Mod.Property.new({
+					id:NaN
+					,belong:e.belong.data
+					,ct: date
+					,mt:date
+					,text: e.text?.data??''
+					,wid: NaN
+				})
+			)
+		}
+		const propertys = parseProperty(
+			[...wordBlock.commonProp, ...wordBlock.prop]
+		)
+		const ans = JoinedWord.new({
+			textWord: textWord
+			,propertys: propertys
+			,learns: []
+		})
+		return ans
+	}
+
 
 	protected dateBlockToWordBlock(dateBlock:DateBlock):WordBlock[]{
 		const z = this

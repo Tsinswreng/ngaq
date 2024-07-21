@@ -9,7 +9,7 @@ describe('parseFile',()=>{
 	it('1',()=>{
 		try {
 			//console.log(text.length)// 383
-			const ans = lex.parse()
+			const ans = lex.read_tempus__wordBlocks()
 			console.log(util.inspect(ans, false, 6, true))
 		} catch (err) {
 			if(err instanceof ParseError){

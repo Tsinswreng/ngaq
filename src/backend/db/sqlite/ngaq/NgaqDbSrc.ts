@@ -476,7 +476,7 @@ export class NgaqDbSrc{
 			if(oldRow == void 0){
 				throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
 			}
-			const oldJw = JoinedWord.new(oldRow)
+			const oldJw = JoinedWord.fromRow(oldRow)
 			const ua = JoinedWord.diffProperty(oldJw, neo)
 			diffPropertys.push(...ua)
 		}

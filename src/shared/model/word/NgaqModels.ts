@@ -112,7 +112,7 @@ class PropertyInst extends IdBlCtMtInst<Row.Property>{
 	override get Row(){return Row.Property}
 	wid:int
 	text:str
-	declare belong: Row.PropertyBelong
+	declare belong: Row.PropertyBelong|str
 }
 class PropertyFact extends IdBlCtMtFact<PropertyInst, Row.Property>{
 	Row = Row.Property

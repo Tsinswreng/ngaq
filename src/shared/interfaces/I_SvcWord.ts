@@ -55,7 +55,7 @@ export interface I_LearnBl__Learns{
 }
 
 export interface I_PropertyBl_Propertys{
-	propertyBl__propertys: Map<Row.PropertyBelong, Mod.Property[]>
+	propertyBl__propertys: Map<Row.PropertyBelong|str, Mod.Property[]>
 }
 
 

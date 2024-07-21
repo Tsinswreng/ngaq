@@ -4,23 +4,45 @@ import { classify } from "@shared/algo"
 import * as Row from '@shared/model/word/NgaqRows'
 import { Word } from "@shared/entities/Word/Word"
 import { diffArr } from "@shared/algo"
+import { JoinedRow } from './JoinedRow'
+import { PubNonFuncProp } from '@shared/Type'
 
 export class JoinedWord{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof JoinedWord.new>){
+
+	protected __init__(...args:Param<typeof JoinedWord.new>){
 		const z = this
-		const row = args[0]
-		z.textWord = Mod.TextWord.fromRow(row.word)
-		z.propertys = row.propertys.map(e=>Mod.Property.fromRow(e))
-		z.learns = row.learns.map(e=>Mod.Learn.fromRow(e))
+		const prop = args[0]
+		Object.assign(z, prop)
 		return z
 	}
 
-	static new(row:JoinedRow){
+	static new(prop:PubNonFuncProp<JoinedWord>){
 		const z = new this()
-		z.__init__(row)
+		z.__init__(prop)
 		return z
 	}
+
+	protected __init__fromRow(...args: Parameters<typeof JoinedWord.fromRow>){
+		const z = this
+		const row = args[0]
+		const textWord = Mod.TextWord.fromRow(row.word)
+		const propertys = row.propertys.map(e=>Mod.Property.fromRow(e))
+		const learns = row.learns.map(e=>Mod.Learn.fromRow(e))
+		z.__init__({
+			textWord
+			,propertys
+			,learns
+		})
+		return z
+	}
+
+	static fromRow(row:JoinedRow){
+		const z = new this()
+		z.__init__fromRow(row)
+		return z
+	}
+
 
 	get This(){return JoinedWord}
 	protected _textWord:Mod.TextWord

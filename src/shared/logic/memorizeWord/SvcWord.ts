@@ -116,7 +116,7 @@ export class SvcWord implements
 	get learnBl__learns(){return this._event__learns}
 	protected set learnBl__learns(v){this._event__learns = v}
 
-	protected _propertyBl__propertys : Map<Row.PropertyBelong, Mod.Property[]> = new Map()
+	protected _propertyBl__propertys : Map<Row.PropertyBelong|str, Mod.Property[]> = new Map()
 	get propertyBl__propertys(){return this._propertyBl__propertys}
 	protected set propertyBl__propertys(v){this._propertyBl__propertys = v}
 	
