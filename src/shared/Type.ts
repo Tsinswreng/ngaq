@@ -1,18 +1,23 @@
 /** 
  * Type Util
- * 專門放純ts類型、只通過import type導入
+ * 專門放純ts類型與常用接口、只通過import type導入
  */
 
 
 
 /**
  * InstanceType_<typeof MyClass>
+ * 適用于類芝厥ʹ構造函數ˋ非公開
  */
 export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 //export type InstanceType_<T> = T["prototype"];
 
 
-/** 從字串字面量解析類型 */
+/** 
+ * 從字串字面量解析類型
+ * type a = ParseType<'number'>
+ * a -> number
+ */
 export type ParseType<T extends string> =
 	T extends 'string' ? string :
 	T extends 'number' ? number :
@@ -70,6 +75,7 @@ export type PubNonFuncProp<T> = Pick<T, PubNonFuncKeys<T>>;
 
 
 /**
+ * @notWork
  * 取一個類之setter
  * 實際上getter亦可被取、非唯setter
  */
@@ -77,6 +83,9 @@ export type SetterKeys<T> = {
 	[K in keyof T]: T[K] extends { set(value: infer V): void } ? K : never
 }[keyof T];
 
+/**
+ * @notWork
+ */
 export type SetterProp<T> = Pick<T, SetterKeys<T>>
 
 /** 
@@ -104,9 +113,12 @@ export type KeyMirror<T> = {
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 /**
- * 
+ * declare let arr:NullableEleArr<number>
+ * arr[0] -> number|undefined
  */
 export type NullableEleArr<T> = (T|undef)[]
+
+export type Asyncable<T> = T|Promise<T>
 
 export interface I_belong<T>{
 	belong: T
@@ -114,4 +126,12 @@ export interface I_belong<T>{
 
 export interface I__<T=any>{
 	_:T
+}
+
+export interface I_data<T>{
+	data:T
+}
+
+export interface I_id<T>{
+	id:T
 }

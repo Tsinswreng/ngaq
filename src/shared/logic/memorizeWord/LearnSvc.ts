@@ -173,26 +173,6 @@ export abstract class LearnSvc{
 	protected _wordsToLearn:SvcWord[] = []
 	get wordsToLearn(){return this._wordsToLearn}
 
-	/** 已背ʹ單詞中 憶者 */
-	// protected _rmbWords:SvcWord3[] = []
-	// get rmbWords(){return this._rmbWords}
-
-	/** 已背ʹ單詞中 憶者 *///TODO 褈構 勿蔿每事件皆增字段
-	/** @deprecated */
-	protected _rmbWord__index:Map<SvcWord, int> = new Map()
-	/** @deprecated */
-	get rmbWord__index(){return this._rmbWord__index}
-
-	// /** 已背ʹ單詞中 忘者 */
-	// protected _fgtWords:SvcWord3[] = []
-	// get fgtWords(){return this._fgtWords}
-
-	/** 已背ʹ單詞中 忘者 */
-	/** @deprecated */
-	protected _fgtWord__index: Map<SvcWord, int> = new Map()
-	/** @deprecated */
-	get fgtWord__index(){return this._fgtWord__index}
-
 	protected _learnedWords = LearnedWords.new()
 	get learnedWords(){return this._learnedWords}
 	protected set learnedWords(v){this._learnedWords = v}
@@ -299,6 +279,13 @@ export abstract class LearnSvc{
 		return ans
 	}
 
+
+	/**
+	 * 用于初排序。返ᵣ排序後ʹ詞、不改ᵣ他ʹ數據。
+	 * @param svcWords 
+	 */
+	protected abstract _SortWords(svcWords:SvcWord[]):Task<SvcWord[]>
+
 	/**
 	 * this._wordsToLearnˇ排序。算權重,篩選等皆由此。
 	 */
@@ -315,20 +302,19 @@ export abstract class LearnSvc{
 	}
 
 	/**
-	 * 用于初排序。返ᵣ排序後ʹ詞、不改ᵣ他ʹ數據。
-	 * @param svcWords 
-	 */
-	protected abstract _SortWords(svcWords:SvcWord[]):Task<SvcWord[]>
-
-
-	protected abstract _Resort():Task<bool>
-
-	/**
 	 * 背過一輪後 再排序
 	 * 只需重算 剛背過ʹ詞權重 及褈打亂
 	 * @param svcWords 
+	 * @returns 
 	 */
-	//protected abstract _resortWords(svcWords:SvcWord3[]):Task<SvcWord3[]>
+	protected async _ResortWords(svcWords:SvcWord[]):Task<SvcWord[]>{
+		const z = this
+		return await z._SortWords(svcWords)
+	}
+
+	protected _Resort():Task<any>{
+		return this._Sort()
+	}
 
 	/** 
 	 * 可據SvcWord對象之Status 判斷此詞是否在上一輪中背ʴ過
@@ -336,19 +322,17 @@ export abstract class LearnSvc{
 	async Resort():Task<bool>{
 		const z = this
 		return z._Resort()
-		// const learnedWord__index = z.merge_LearnedWords__index()
-		// const wordsToResort = [] as SvcWord3[]
-		// for(const [sw, index] of learnedWord__index){
-		// 	wordsToResort.push(sw)
-		// }
-		// const resortedWords = await z._resortWords(wordsToResort)
 	}
+
+	
 
 	/**
 	 * 始背單詞。
-	 * @deprecated
+	 * @noUsage
 	 */
-	protected abstract _Start():Task<boolean>
+	protected _Start():Task<boolean>{
+		return Promise.resolve(true)
+	}
 
 	Start(){
 		const z = this
@@ -365,12 +349,16 @@ export abstract class LearnSvc{
 
 	protected abstract _Save(learnRows:Row.Learn[]):Task<any>
 
-	/** //TODO 合入新事件 防止褈複保存 */
+	/** 
+	 * 保存並合入事件
+	 * status會保留、下次褈算權重等旹有用
+	 */
 	async Save():Task<any>{
 		const z = this
 		z.status.start = false
 		const learnObjs = z.getLearnObjsToSave()
 		const resp = await z._Save(learnObjs.map(e=>e.toRow()))
+		z.mergeLearnedWords()
 		return resp
 	}
 
@@ -388,21 +376,21 @@ export abstract class LearnSvc{
 	// 	return true
 	// }
 
-	
-
-	/** @deprecated */
-	protected abstract _Restart():Task<boolean>
+	/** @noUsage */
+	protected _Restart():Task<boolean>{
+		return Promise.resolve(true)
+	}
 
 	/** 
 	 * 清 既學ʹ詞、褈排序
-	 * //TODO 設 褈排序算法、只褈算變˪ʹ詞ʹ權重、並打亂䀬ʹ詞ʹ權重
+	 * 
 	 */
 	async Restart(){
 		const z = this
 		if(!z.status.save){
 			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
-		await z.Sort()
+		await z.Resort()
 		z.clearLearnedWordRecordEtItsStatus()
 		z.status.start = true
 		return true
@@ -467,25 +455,7 @@ export abstract class LearnSvc{
 		z.emitter.emit(z.events.undo, mw, old)
 	}
 
-	/** 
-	 * @deprecated
-	 * @noref
-	 * 不合入 新ʹ事件
-	 * 建議用 @see mergeLearnedWords
-	 */
-	getSvcWordsToSave(){
-		const z = this
-		const svcWords = [] as SvcWord[]
-		for(const [w] of z.rmbWord__index){
-			svcWords.push(w)
-		}
-		for(const [w] of z.fgtWord__index){
-			svcWords.push(w)
-		}
-		// const words = svcWords.map(e=>e.word)
-		// return words
-		return svcWords
-	}
+
 
 
 	// static mergeSvcWords(toSave:SvcWord3[]){
@@ -650,5 +620,45 @@ export abstract class LearnSvc{
 		const z = this
 		const learns = z.wordsToLearn.map(e=>e.statusToLearnObj()).filter(e=>e!=null)
 		return learns
+	}
+
+	/** 已背ʹ單詞中 憶者 */
+	// protected _rmbWords:SvcWord3[] = []
+	// get rmbWords(){return this._rmbWords}
+
+	/** 已背ʹ單詞中 憶者 */
+	/** @deprecated */
+	protected _rmbWord__index:Map<SvcWord, int> = new Map()
+	/** @deprecated */
+	get rmbWord__index(){return this._rmbWord__index}
+
+	// /** 已背ʹ單詞中 忘者 */
+	// protected _fgtWords:SvcWord3[] = []
+	// get fgtWords(){return this._fgtWords}
+
+	/** 已背ʹ單詞中 忘者 */
+	/** @deprecated */
+	protected _fgtWord__index: Map<SvcWord, int> = new Map()
+	/** @deprecated */
+	get fgtWord__index(){return this._fgtWord__index}
+
+	/** 
+	 * @deprecated
+	 * @noref
+	 * 不合入 新ʹ事件
+	 * 建議用 @see mergeLearnedWords
+	 */
+	getSvcWordsToSave(){
+		const z = this
+		const svcWords = [] as SvcWord[]
+		for(const [w] of z.rmbWord__index){
+			svcWords.push(w)
+		}
+		for(const [w] of z.fgtWord__index){
+			svcWords.push(w)
+		}
+		// const words = svcWords.map(e=>e.word)
+		// return words
+		return svcWords
 	}
 }
