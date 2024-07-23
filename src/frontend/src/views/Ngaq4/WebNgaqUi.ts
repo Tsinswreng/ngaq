@@ -231,24 +231,24 @@ export class WebNgaqUi{
 		return z.svc.learnByIndex(index, event)
 	}
 
-	/** @deprecated */
-	learnByWord(mw:WebSvcWord, event:RMB_FGT){
-		const z = this
-		z._curWord = mw
-		z.fresh_wordInfo()
-		const ans = z.svc.learnByWord(mw, event)
-		if(mw instanceof WebSvcWord){
-			switch (event){
-				case WordEvent.rmb:
-					mw.uiStuff.reciteStatusRef.value = 'rmb'
-				break;
-				case WordEvent.fgt:
-					mw.uiStuff.reciteStatusRef.value = 'fgt'
-				break;
-			}
-		}
-		return ans
-	}
+	// /** @deprecated */
+	// learnByWord(mw:WebSvcWord, event:RMB_FGT){
+	// 	const z = this
+	// 	z._curWord = mw
+	// 	z.fresh_wordInfo()
+	// 	const ans = z.svc.learnByWord(mw, event)
+	// 	if(mw instanceof WebSvcWord){
+	// 		switch (event){
+	// 			case WordEvent.rmb:
+	// 				mw.uiStuff.reciteStatusRef.value = 'rmb'
+	// 			break;
+	// 			case WordEvent.fgt:
+	// 				mw.uiStuff.reciteStatusRef.value = 'fgt'
+	// 			break;
+	// 		}
+	// 	}
+	// 	return ans
+	// }
 
 	learnOrUndoByIndex(index:int, event:RMB_FGT){
 		const z = this

@@ -4,10 +4,9 @@
 import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
 import type { 
-	I_Tempus_Event
-	, I_Tempus_EventWord
-}
-from '@shared/interfaces/ngaqWeightWord/Tempus_eventWord'
+	I_WordForCalcWeight
+	,I_Tempus_Event
+ } from "@shared/interfaces/WordIf"
 import { LearnBelong } from '@shared/model/word/NgaqRows'
 import { TempusEventRecord } from "./ChangeRecord"
 import Tempus from "@shared/Tempus"
@@ -15,6 +14,9 @@ import { N2S } from "@shared/Sros"
 import { Sros } from "@shared/Sros"
 import { $ } from "@shared/Common"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
+
+export type Word_t = I_WordForCalcWeight
+
 /**
  * 模塊ʹ返值。賦于__return._、㕥適new Function加載
  */
@@ -97,7 +99,7 @@ class Statistics{
 	records:ChangeRecord[] = []
 }
 
-export type Word_t = I_Tempus_EventWord
+
 
 export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 
@@ -328,34 +330,23 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 
 	// }
 
-	async run0(mWords:Word_t[]) {
+	async run0(words:Word_t[]) {
 		const z = this
-		
-		for(let i = 0; i < mWords.length; i++){
-			const uWord = mWords[i]
-			// // 若已有匪權重 且未背過 則跳過 㕥應resort
-			// if(
-			// 	uWord.weight != void 0 
-			// 	&& uWord.weight !== 0
-			// 	&& uWord.status.memorize == void 0
-			// ){
-			// 	continue
-			// }
-			z.calc0(uWord)
-			//uWord.weight = 114514 //t
-			//z.calcTags(uWord)
+		for(let i = 0; i < words.length; i++){
+			const ua = words[i]
+			// 若已有匪權重 且未背過 則跳過 㕥應resort
+			if(!ua.hasBeenLearned){
+				continue
+			}
+			z.calc0(ua)
 		}
-		mWords.sort((b,a)=>s.c(a.weight, b.weight))
-		//console.log(z.word__changeRecord)//t *
-		return mWords
+		words.sort((b,a)=>s.c(a.weight, b.weight))
+		return words
 	}
 
 	async Run(words:Word_t[]):Task<Word_t[]> {
 		const z = this
-		//mWords = z.filter(mWords)
 		words = await z.run0(words)
-		//mWords = await z.filterByTbl(mWords)
-		//mWords = z.shuffer(mWords)
 		return words
 	}
 

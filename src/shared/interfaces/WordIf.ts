@@ -54,6 +54,10 @@ export interface I_LearnBl__Learns{
 	learnBl__learns: Map<LearnBelong, Learn[]>
 }
 
+export interface I_hasBeenLearned{
+	hasBeenLearned:bool
+}
+
 export interface I_PropertyBl_Propertys{
 	propertyBl__propertys: Map<Row.PropertyBelong|str, Mod.Property[]>
 }
@@ -80,7 +84,7 @@ export interface I_WordFromTxt extends
 }
 
 export interface I_WordForCalcWeight extends
-	I_id, I_weight, I_LearnBl__Learns
+	I_id, I_weight, I_LearnBl__Learns, I_hasBeenLearned
 {
 	id:str
 	tempus_event_s:I_Tempus_Event[]

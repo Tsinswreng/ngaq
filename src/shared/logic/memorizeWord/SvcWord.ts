@@ -145,6 +145,10 @@ export class SvcWord implements
 		return this.word.propertys
 	}
 
+	get hasBeenLearned(){
+		return this.status.memorize !== null
+	}
+
 
 	/**
 	 * 待初始化

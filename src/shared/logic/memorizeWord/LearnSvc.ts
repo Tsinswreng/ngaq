@@ -549,20 +549,21 @@ export abstract class LearnSvc{
 			return false
 		}
 		let ans:boolean
-		if(event === WordEvent.rmb){
-			ans = z.rmb(word)
-			if(ans){
-				z.rmbWord__index.set(word, index)
-			}
-		}else if(event === WordEvent.fgt){
-			ans = z.fgt(word)
-			if(ans){
-				z.fgtWord__index.set(word, index)
-			}
-		}else{
-			throw new Error('else')
-		}
-		return ans
+		return z.learnWord(word, event)
+		// if(event === WordEvent.rmb){
+		// 	ans = z.rmb(word)
+		// 	if(ans){
+		// 		z.rmbWord__index.set(word, index)
+		// 	}
+		// }else if(event === WordEvent.fgt){
+		// 	ans = z.fgt(word)
+		// 	if(ans){
+		// 		z.fgtWord__index.set(word, index)
+		// 	}
+		// }else{
+		// 	throw new Error('else')
+		// }
+		//return ans
 	}
 
 	/**
@@ -591,23 +592,23 @@ export abstract class LearnSvc{
 		
 	}
 
-	/**
-	 * @deprecated
-	 * @param mw 
-	 * @param event 
-	 * @returns 
-	 */
-	learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
-		const z = this
-		z.chkStart()
-		if(event === WordEvent.rmb){
-			return z.rmb(mw)
-		}else if(event === WordEvent.fgt){
-			return z.fgt(mw)
-		}else{
-			throw new Error('WordEvent error')
-		}
-	}
+	// /**
+	//  * @deprecated
+	//  * @param mw 
+	//  * @param event 
+	//  * @returns 
+	//  */
+	// learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
+	// 	const z = this
+	// 	z.chkStart()
+	// 	if(event === WordEvent.rmb){
+	// 		return z.rmb(mw)
+	// 	}else if(event === WordEvent.fgt){
+	// 		return z.fgt(mw)
+	// 	}else{
+	// 		throw new Error('WordEvent error')
+	// 	}
+	// }
 
 	/**
 	 * 捨變、清既學ʹ詞、褈置狀態、不存ʃ變
@@ -650,6 +651,4 @@ export abstract class LearnSvc{
 		const learns = z.wordsToLearn.map(e=>e.statusToLearnObj()).filter(e=>e!=null)
 		return learns
 	}
-	
-
 }
