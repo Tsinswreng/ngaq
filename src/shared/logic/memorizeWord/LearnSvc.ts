@@ -366,6 +366,9 @@ export abstract class LearnSvc{
 	 */
 	async Save():Task<any>{
 		const z = this
+		if(!z.status.start){
+			return
+		}
 		if(z.status.save){
 			z.errReasons.save_duplicated.throw()
 		}
@@ -430,28 +433,6 @@ export abstract class LearnSvc{
 		if(ans){
 			z.emitter.emit(z.events.learnBySvcWord, mw, event)
 		}
-		return ans
-	}
-
-	/** @deprecated */
-	protected rmb(mw:SvcWord){
-		const z = this
-		z.chkStart()
-		const ans = mw.setInitEvent(WordEvent.rmb)
-		if(ans){
-			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.rmb)
-		}
-		return ans
-	}
-
-	/** @deprecated */
-	protected fgt(mw:SvcWord){
-		const z = this
-		z.chkStart()
-		const ans = mw.setInitEvent(WordEvent.fgt)
-		if(ans){
-			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
-		} 
 		return ans
 	}
 
@@ -675,5 +656,27 @@ export abstract class LearnSvc{
 		// const words = svcWords.map(e=>e.word)
 		// return words
 		return svcWords
+	}
+
+	/** @deprecated */
+	protected rmb(mw:SvcWord){
+		const z = this
+		z.chkStart()
+		const ans = mw.setInitEvent(WordEvent.rmb)
+		if(ans){
+			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.rmb)
+		}
+		return ans
+	}
+
+	/** @deprecated */
+	protected fgt(mw:SvcWord){
+		const z = this
+		z.chkStart()
+		const ans = mw.setInitEvent(WordEvent.fgt)
+		if(ans){
+			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
+		} 
+		return ans
 	}
 }

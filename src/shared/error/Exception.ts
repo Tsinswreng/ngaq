@@ -52,7 +52,7 @@ export class Reason<Arg extends any[] = any[]> extends Event{
 	){
 		const z = this
 		const ex = Exception.for(z, ...args)
-		
+		return ex
 	}
 
 	throw(

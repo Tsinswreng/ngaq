@@ -26,10 +26,13 @@ export default class Tempus{
 
 	/**
 	 * 形如'YYYY-MM-DDTHH:mm:ss.SSSZ'。用中時區。
+	 * @deprecated 改用用靜態方法
 	 */
 	//protected _iso:string = ''
 	get iso(){return Tempus.toISO8601(this)};
 	protected _value:int
+	get value(){return this._value}
+
 	public static toISO8601(tempus:Tempus){
 		//return tempus.iso
 		//return JSON.stringify(Tempus.rely(tempus._value))

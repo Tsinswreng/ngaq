@@ -150,11 +150,6 @@ export class WebNgaqSvc extends LearnSvc{
 		
 	}
 
-
-	protected _Resort(): Promise<boolean> {
-		throw new Error("Method not implemented.");
-	}
-
 	protected async _Save(learnRows: Learn[]): Task<any> {
 		const z = this
 		return await z.client.AddLearnRows(learnRows)

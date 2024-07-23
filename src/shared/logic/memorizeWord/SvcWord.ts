@@ -304,30 +304,3 @@ export class SvcWord implements
 		return learn
 	}
 }
-
-
-
-class ResortSvcWord{
-
-	protected constructor(){}
-
-	protected __init__(svcWord:SvcWord, index:int){
-		const z = this
-		z._svcWord = svcWord
-		z._index = index
-		return z
-	}
-
-	static new(svcWord:SvcWord, index:int){
-		const z = new this()
-		z.__init__(svcWord, index)
-		return z
-	}
-
-	protected _svcWord:SvcWord
-	get svcWord(){return this._svcWord}
-
-	protected _index:int
-	get index(){return this._index}
-
-}

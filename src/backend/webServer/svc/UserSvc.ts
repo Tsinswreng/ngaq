@@ -393,12 +393,18 @@ export class UserSvc{
 		return joinedRows
 	}
 
+	/**
+	 * //TODO 比較 末個learn之ct、若將加ʹlearnʹctˋ更小或等 則不加
+	 * @param userId 
+	 * @param learns 
+	 * @returns 
+	 */
 	async AddLearns(userId:Id_t, learns:NRow.Learn[]){
 		const z = this
 		const userDb = await z.GetUserDbByUserId(userId)
-		const Add = await userDb.dbSrc.GetFn_addRow(e=>e.learn)
+		const Add = await userDb.dbSrc.Fn_AddValidLearnRows()
 		userDb.dbSrc.db.BeginTrans()
-		const ans = [] as SqliteQryResult<undef>[]
+		const ans = [] as (SqliteQryResult<undef>|undef)[]
 		for(const l of learns){
 			const ua = await Add(l)
 			ans.push(ua)

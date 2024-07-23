@@ -1,4 +1,4 @@
-import type { InstanceType_, PubNonFuncKeys } from '@shared/Type'
+import type { I__, InstanceType_, PubNonFuncKeys } from '@shared/Type'
 import type { RunResult } from 'sqlite3'
 
 import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
@@ -9,6 +9,7 @@ import { JoinedRow } from '@shared/model/word/JoinedRow'
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Row from '@shared/model/word/NgaqRows'
 import * as Mod from '@shared/model/word/NgaqModels'
+import Tempus from '@shared/Tempus'
 
 
 const ObjSql = SqliteUtil.Sql.obj
@@ -61,8 +62,8 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 			opt = {ignoredKeys: [tbl.col.id]}
 		}
 
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, opt)
+		const emptyRow = tbl.factory.emptyRow
+		const objsql = ObjSql.new(emptyRow, opt)
 		const sql = objsql.geneFullInsertSql(tbl.name)
 		const stmt = await db.Prepare(sql)
 		const ans = async(inst:InstanceType_<FactT['Inst']>)=>{
@@ -82,11 +83,46 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 			opt = {ignoredKeys: [tbl.col.id]}
 		}
 
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, opt)
+		const emptyRow = tbl.factory.emptyRow
+		const objsql = ObjSql.new(emptyRow, opt)
 		const sql = objsql.geneFullInsertSql(tbl.name)
 		const stmt = await db.Prepare(sql)
 		const ans = async(row:InstanceType_<FactT['Row']>)=>{
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return ans
+	}
+
+	/**
+	 * 運行旹判斷 是row抑inst
+	 * @param db 
+	 * @param opt 
+	 * @returns 
+	 */
+	async Fn_add(db:SqliteDb, opt?:AddInstOpt){
+		const z = this
+		const tbl = z
+		if(opt == void 0){
+			opt = {ignoredKeys: [tbl.col.id]}
+		}
+
+		const emptyRow = tbl.factory.emptyRow
+		const objsql = ObjSql.new(emptyRow, opt)
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await db.Prepare(sql)
+		const ans = async(
+			target:InstanceType_<FactT['Row']>
+				|InstanceType_<FactT['Inst']>
+		)=>{
+			let row:InstanceType_<FactT['Row']>
+			if(target instanceof Mod.BaseInst){
+				row = target.toRow()
+			}else{
+				row = target
+			}
 			const params = objsql.getParams(row)
 			const runRes = await stmt.Run(params)
 			const ans = QryAns.fromRunResult(runRes)
@@ -374,6 +410,17 @@ export class NgaqDbSrc{
 		const ans = await tbl.Fn_addRow(z.db, opt)
 		return ans as ReturnType<T['Fn_addRow']>
 	}
+
+
+	async GetFn_add<T extends Tbl<any>>(
+		fn: (tbl:typeof this.tbls)=>T
+		,opt?:AddInstOpt
+	){
+		const z = this
+		const tbl = fn(z.tbls)
+		const Fn = await tbl.Fn_add(z.db, opt)
+		return Fn as ReturnType<T['Fn_add']>
+	}
 	
 
 	//TODO 褈構
@@ -556,24 +603,68 @@ export class NgaqDbSrc{
 		return fn
 	}
 
-	async Fn_addLearnRecords(){
+	/**
+	 * 尋 最晚近ʹ 學ʹ記錄
+	 * @returns 
+	 */
+	async Fn_SeekLatestLearnByWid(){
 		const z = this
 		const tbl = z.tbls.learn
-		const objSql = ObjSql.new(tbl.emptyRow)
-		const sql = objSql.geneFullInsertSql(tbl.name)
-		const stmt = await z.db.Prepare(sql)
+		const sql = 
+`SELECT *, MAX(${tbl.col.ct}) AS _
+FROM ${tbl.name}
+WHERE ${tbl.col.wid}=?`
 
-		const Fn = async(rows:Row.Learn[])=>{
-			const ans = [] as RunResult[]
-			for(const row of rows){
-				const params = objSql.getParams(row)
-				const ua = await stmt.Run(params)
-				ans.push(ua)
-			}
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(wid:Id_t)=>{
+			const pair = await stmt.All<Row.Learn & I__<int>>([wid])
+			const ans = QryAns.fromPair(pair)
 			return ans
 		}
 		return Fn
 	}
+
+	/**
+	 * 確保 新加入ʹlearnˋ最新
+	 * @returns 
+	 */
+	async Fn_AddValidLearnRows(){
+		const z = this
+		const SeekLatestLearn = await z.Fn_SeekLatestLearnByWid()
+		const AddLearn = await z.GetFn_add(e=>e.learn)
+		const Fn = async(learn:(Row.Learn))=>{
+			const latestLearnAns = await SeekLatestLearn(learn.wid)
+			const latestLearn = $(latestLearnAns.data[0])
+			if(latestLearn.ct >= learn.ct){
+				return
+			}
+			const ans = await AddLearn(learn)
+			return ans
+		}
+		return Fn
+	}
+
+	// /**
+	//  * @noUsage
+	//  */
+	// async Fn_addLearnRecords(){
+	// 	const z = this
+	// 	const tbl = z.tbls.learn
+	// 	const objSql = ObjSql.new(tbl.emptyRow)
+	// 	const sql = objSql.geneFullInsertSql(tbl.name)
+	// 	const stmt = await z.db.Prepare(sql)
+
+	// 	const Fn = async(rows:Row.Learn[])=>{
+	// 		const ans = [] as RunResult[]
+	// 		for(const row of rows){
+	// 			const params = objSql.getParams(row)
+	// 			const ua = await stmt.Run(params)
+	// 			ans.push(ua)
+	// 		}
+	// 		return ans
+	// 	}
+	// 	return Fn
+	// }
 
 
 }
