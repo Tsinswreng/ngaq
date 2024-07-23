@@ -31,7 +31,7 @@ export class Event<Arg extends any[] =any[]>{
 export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 
 
-	static new<Arg extends any[] =any[]>(name:string, base:Event<Arg>, emitter:I_EventEmitter){
+	static new<Arg extends any[] =any[]>(name:string, base?:Event<Arg>, emitter?:LinkedEmitter){
 		const z = new this<Arg>()
 		z.__init__(name, base, emitter)
 		return z
@@ -44,22 +44,23 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 		// z._base = args[1]
 		//@ts-ignore
 		super.__init__(...args)
+		//@ts-ignore
 		z._emitter = args[2]
 		return z
 	}
 
-	protected _emitter:I_EventEmitter
+	protected _emitter:LinkedEmitter
 	get emitter(){return this._emitter}
 	protected set emitter(v){this._emitter = v}
 
 	emit(...args:Arg){
 		const z = this
-		z.emitter.emit(z.name, args)
+		z.emitter.emit(z, ...args)
 	}
 	
 	on(listener: (...args:Arg)=>void){
 		const z = this
-		z.emitter.on(z.name, listener)
+		z.emitter.on(z, listener)
 	}
 
 	
@@ -126,6 +127,33 @@ export class Events{
 	protected __init__(){}
 	error = Event.new<[any]>('error')
 }
+
+export class SelfEmitEvents extends Events{
+	protected constructor(){super()}
+	//@ts-ignore
+	protected __init__(...args: Parameters<typeof SelfEmitEvents.new>){
+		const z = this
+		const emitter = args[0]
+		const keys = Object.keys(z)
+		for(const k of keys){
+			const ev = z[k]
+			if(ev instanceof SelfEmitEvent){
+				//@ts-ignore
+				ev.emitter = emitter
+			}
+		}
+		return z
+	}
+
+	static new(emitter:LinkedEmitter){
+		const z = new this()
+		z.__init__(emitter)
+		return z
+	}
+
+	//get This(){return SelfEmitEvents}
+}
+
 
 // export const Emitter = _Emitter
 // export type Emitter = _Emitter

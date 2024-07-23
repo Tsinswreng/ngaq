@@ -153,8 +153,17 @@ function fmtDate(tempus:Tempus){
 		:class = wordColorRef.get(svcWord).value
 	> <!-- :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0" -->
 
-		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)">{{ props.loopIndex }}</span>
-		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)" @contextmenu="rightClick">
+		<span 
+			class="w-index" :class="reciteStatusRef" 
+			@click="ui.learnOrUndoByIndex(wordIndex, WordEvent.FGT)"
+		>
+			{{ props.loopIndex }}
+		</span>
+		<span 
+			class="w-shape" 
+			@click="ui.learnOrUndoByIndex(wordIndex, WordEvent.RMB)"
+			@contextmenu="rightClick"
+		>
 			{{ mw.word.wordShape }}
 		</span>
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>

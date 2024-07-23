@@ -31,9 +31,11 @@ export class Reason<Arg extends any[] = any[]> extends Event{
 		return z
 	}
 
+	//@ts-ignore
 	protected __init__(...params:Parameters<typeof Reason.new>){
 		const z = this
 		z._name = params[0]
+		//@ts-ignore
 		z._base = params[1]
 	}
 
@@ -44,6 +46,24 @@ export class Reason<Arg extends any[] = any[]> extends Event{
 	protected _args:Arg
 	get args(){return this._args}
 	set args(v){this._args = v}
+
+	toException(
+		...args:Arg
+	){
+		const z = this
+		const ex = Exception.for(z, ...args)
+		
+	}
+
+	throw(
+		...args:Arg
+	){
+		const z = this
+		const ex = z.toException(...args)
+		throw ex
+	}
+	
+	
 
 	/**
 	if(err.reason.is( z.svc.errReasons.load_err )){

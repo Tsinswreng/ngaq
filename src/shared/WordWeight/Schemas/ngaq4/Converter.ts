@@ -19,6 +19,7 @@ class Word implements Word_t{
 		z.id = svcWord.id
 		z.learnBl__learns = svcWord.learnBl__learns
 		z.tempus_event_s = jword.learns.map(e=>Tempus_Event.new(e.ct, e.belong))
+		z.hasBeenLearned = svcWord.hasBeenLearned
 		return z
 	}
 
@@ -32,9 +33,9 @@ class Word implements Word_t{
 	belong: string;
 	id: string;
 	tempus_event_s: I_Tempus_Event[];
-	weight: number = 0
+	weight: number|undef
 	learnBl__learns: Map<LearnBelong, Mod.Learn[]>;
-
+	hasBeenLearned: boolean = false
 }
 
 export function converter(src:SvcWord[]):Word_t[]{

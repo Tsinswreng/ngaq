@@ -117,7 +117,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 }
 
 import { routes } from "@shared/Routes";
-import { BlobWithMeta } from "@shared/BlobWithMeta";
+import { BlobWithText } from "@shared/BlobWithText";
 const RT = routes
 //console.log(RT)
 
@@ -471,7 +471,7 @@ export default class VocaServer{
 			//res.sendFile(ri.oneRandomFile())
 			const path = ri.oneRandomFile()
 			const bin = fs.readFileSync(path)
-			const pack = BlobWithMeta.pack(path, bin)
+			const pack = BlobWithText.pack(path, bin)
 			const u8arr = pack.toUint8Arr()
 			res.setHeader('Content-Type', 'application/octet-stream')
 			res.setHeader('Content-Length', u8arr.byteLength.toString())

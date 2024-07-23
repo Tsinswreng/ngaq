@@ -2,10 +2,11 @@
 import {WebSvcWord} from '@ts/ngaq4/entities/WebSvcWord'
 import {ref, Ref, onBeforeMount} from 'vue'
 import { WebNgaqUi } from '../WebNgaqUi';
-import { $ } from '@shared/Ut'
+import { $ } from '@shared/Common';
 import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
 import Tempus from '@shared/Tempus';
-import { LearnBelong } from '@shared/old_dbRow/wordDbRowsOld';
+import { LearnBelong } from '@shared/model/word/NgaqRows';
+
 const WordEvent = LearnBelong
 // class WordEvent{
 // 	static ADD
@@ -159,8 +160,17 @@ function fmtDate(tempus:Tempus){
 		:class = wordColorRef.get(svcWord).value
 	> <!-- :class="isAddTimeGeq3(mw)?'addTimeGeq3':void 0" -->
 
-		<span class="w-index" :class="reciteStatusRef" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)">{{ props.loopIndex }}</span>
-		<span class="w-shape" @click="ui.learnOrUndoByIndex(wordIndex, WordEvent.rmb)" @contextmenu="rightClick">
+		<span 
+			class="w-index" :class="reciteStatusRef" 
+			@click="ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)"
+		>
+			{{ props.loopIndex }}
+		</span>
+		<span
+			class="w-shape"
+			@click="ui.learnOrUndoByIndex(wordIndex, WordEvent.rmb)"
+			@contextmenu="rightClick"
+		>
 			{{ mw.word.textWord.text }}
 		</span>
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>

@@ -4,23 +4,22 @@ import * as Le from "@shared/linkedEvent";
 import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
-import { WordDbRow } from "@shared/old_dbRow/Word";
 //import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
-import { OldWeightCodeParser as WeightCodeParser } from "@shared/WordWeight/Parser/WeightCodeParser";
 import { $ } from "@shared/Ut";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
-import { BlobWithMeta as BlobWithText } from "@shared/BlobWithMeta";
+import { BlobWithText as BlobWithText } from "@shared/BlobWithText";
 import { TagImg } from "@shared/TagImg";
 import { JoinedRow } from "@shared/model/word/JoinedRow";
 import { JoinedWord } from "@shared/model/word/JoinedWord";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
-import type * as WordIF from "@shared/interfaces/WordIf";
+import type * as WordIf from "@shared/interfaces/WordIf";
 import { Learn } from "@shared/model/word/NgaqRows";
 
+type WeightAlgo_t = I_WordWeight<SvcWord, WordIf.I_WordForCalcWeight>
 
 export class WebNgaqSvc extends LearnSvc{
 	
@@ -46,20 +45,13 @@ export class WebNgaqSvc extends LearnSvc{
 	declare protected _wordsToLearn: WebSvcWord[];
 	get wordsToLearn(){return this._wordsToLearn}
 
-	/** 已背ʹ單詞中 憶者 */
-	// protected _rmbWord__index:WebSvcWord[] = []
-	// get rmbWord__index(){return this._rmbWord__index}
-
-	// /** 已背ʹ單詞中 忘者 */
-	// protected _fgtWord__index:WebSvcWord[] = []
-	// get fgtWord__index(){return this._fgtWord__index}
-
-	// protected _learnedWords: WebMemorizeWord[] = []
-	// get learnedWords(){return this._learnedWords}
-
 	protected _client = Client.new()
 	get client(){return this._client}
 
+	declare protected _weightAlgo: WeightAlgo_t|undefined
+	get weightAlgo(){return this._weightAlgo}
+	protected set weightAlgo(v){this._weightAlgo = v}
+	
 
 	// protected _weightAlgoParser:WeightCodeParser = 
 	// get weightAlgoParser(){return this._weightAlgoParser}
@@ -80,8 +72,6 @@ export class WebNgaqSvc extends LearnSvc{
 	protected override async _Load(){
 		const z = this
 		const jsonRows = await z.client.GetWordsFromAllTables()
-		//console.log(jsonRows)//t
-		//const rows:JoinedRow[] = JSON.parse(jsonRows)
 		const rows:JoinedRow[] = jsonRows
 		const jwords = rows.map(e=>JoinedWord.fromRow(e))
 		//const words = jwords.map(e=>JoinedWord.toPlainWord(e))
@@ -90,30 +80,20 @@ export class WebNgaqSvc extends LearnSvc{
 		return true
 	}
 
-
-	/**
-	 * @deprecated
-	 */
-	protected async _InitWeightAlgo_deprecated(){
-		const z = this
-		const algoCode = await z.client.GetWeightAlgoJs0()
-		try {
-			const ans = WeightCodeParser.parse(algoCode)
-			z._weightAlgo = $(ans)()
-		} catch (error) {
-			const err = error as Error
-			throw err
-		}
-	}
-
 	protected async _LoadWeightAlgo(){
 		const z = this
 		const algoCode = await z.client.GetWeightAlgoJs0()
 		try {
-			const ans = WeightCodeParser.parse(algoCode)
-			return $(ans)()
+			const fn = FnCodeParser.parse<WeightAlgo_t>(algoCode)
+			const __return : {_?: WeightAlgo_t} = {}
+			fn(__return)
+			const calcer = __return._
+			if(calcer == void 0 || calcer.Run == void 0){
+				throw new Error(`calcer == void 0 || calcer.Run == void 0`)
+			}
+			return calcer
 		} catch (error) {
-			const err = error as Error
+			const err = error
 			throw err
 		}
 	}
@@ -143,14 +123,7 @@ export class WebNgaqSvc extends LearnSvc{
 		const z = this
 		//await z._initWeightAlgo_deprecated()
 		const code = await z.client.GetWeightAlgoJs0()
-
-		const fn = FnCodeParser.parse(code)
-		const __return : {_?: I_WordWeight<SvcWord, WordIF.I_id_index_weight>} = {}
-		fn(__return)
-		const calc = __return?._
-		if(calc == void 0){
-			throw new Error()//TODO
-		}
+		const calc = $(z.weightAlgo, 'z.weightAlgo')
 		const gotWords = await calc.Run(svcWords)
 		z.This.assignWeightByRef(svcWords, gotWords)
 		svcWords.sort((a,b)=>{

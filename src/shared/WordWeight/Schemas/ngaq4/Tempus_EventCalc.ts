@@ -333,14 +333,21 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 	async run0(words:Word_t[]) {
 		const z = this
 		for(let i = 0; i < words.length; i++){
-			const ua = words[i]
-			// 若已有匪權重 且未背過 則跳過 㕥應resort
-			if(!ua.hasBeenLearned){
-				continue
+			const u = words[i]
+			try {
+				// 若已有匪權重 且未背過 則跳過 㕥應resort
+				if(u.weight != void 0 && !u.hasBeenLearned){
+					//console.log(ua.id, ua.weight)
+					continue
+				}
+				z.calc0(u)
+			} catch (err) {
+				console.error(err)
+				console.error(u.id)
 			}
-			z.calc0(ua)
+
 		}
-		words.sort((b,a)=>s.c(a.weight, b.weight))
+		words.sort((b,a)=>s.c($(a.weight), $(b.weight)))
 		return words
 	}
 

@@ -34,8 +34,8 @@ function handleAltS(event: KeyboardEvent) {
 	if (event.altKey && event.key === 's') {
 		// 在這裡執行你想要執行的功能
 		//console.log('Alt+S pressed!'); // 這裡示範將事件輸出到控制台
-		ui.save().then((d)=>{
-			ui.restart()
+		ui.Save().then((d)=>{
+			ui.Restart()
 		})
 	}
 }
@@ -45,7 +45,7 @@ function handleAltS(event: KeyboardEvent) {
 document.addEventListener("mousedown", (event:MouseEvent) => {
 	if (event.button === 1) { //鼠標中鍵
 		event.preventDefault();
-		ui.saveEtRestart()
+		ui.SaveEtRestart()
 	}
 });
 

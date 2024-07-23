@@ -1,40 +1,17 @@
 import { RMB_FGT } from "@shared/logic/memorizeWord/LearnEvents"
-import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc"
-//import { WordEvent } from "@shared/SingleWord2"
 import { WebSvcWord } from "@ts/ngaq4/entities/WebSvcWord"
 import { WebNgaqSvc } from "@ts/ngaq4/WebNgaqSvc"
 import { ref, Ref } from "vue"
-import lodash from 'lodash'
-import { $, delay, mergeErrStack } from "@shared/Ut"
+import { $ } from "@shared/Common"
+import {mergeErrStack} from '@shared/tools/mergeErrStack'
 import { Exception } from "@shared/error/Exception"
 import * as Le from '@shared/linkedEvent'
 import EventEmitter3 from 'EventEmitter3'
-
+import * as frut from '@ts/frut'
+import { TagImg } from "@shared/TagImg"
+import { Client } from "@ts/ngaq4/Client"
+import { LearnBelong } from "@shared/model/word/NgaqRows"
 const WordEvent = LearnBelong
-
-// class WordEvent{
-// 	static rmb
-// 	static fgt
-// }
-
-// function testU8ArrToBase64(uint8Array:Uint8Array){
-// // 假设您有一个名为 uint8Array 的 UInt8Array 对象
-
-// // 将 UInt8Array 对象转换为普通数组
-// const array = Array.from(uint8Array);
-// //const array = uint8Array
-
-// // 将数组中的每个元素转换为字符
-// const chars = array.map(byte => String.fromCharCode(byte));
-
-// // 将字符数组连接为字符串
-// const binaryString = chars.join('');
-
-// // 使用 btoa() 将二进制字符串转换为 base64 编码
-// const base64String = btoa(binaryString);
-// return base64String
-// }
-
 
 const EV = Le.Event.new.bind(Le.Event)
 export class UiEvents extends Le.Events{
@@ -252,8 +229,6 @@ export class WebNgaqUi{
 
 	learnOrUndoByIndex(index:int, event:RMB_FGT){
 		const z = this
-		//return z.svc.learnOrUndoByIndex(index, event)
-		//console.log(1)//t
 		const mw = $(z.svc.wordsToLearn[index], 'z.svc.wordsToLearn[index]')
 		z._curWord = mw
 		z.fresh_wordInfo()
@@ -279,10 +254,10 @@ export class WebNgaqUi{
 
 	}
 
-	getLearnedWords(){
-		const z = this
-		return [z.svc.rmbWord__index, z.svc.fgtWord__index]
-	}
+	// getLearnedWords(){
+	// 	const z = this
+	// 	return [z.svc.rmbWord__index, z.svc.fgtWord__index]
+	// }
 
 	reloadAlgoWeight(){
 		const z = this
@@ -338,28 +313,23 @@ export class WebNgaqUi{
 	}
 
 	//TODO
-	async save(){
+	async Save(){
 		const z = this
-		//return z.svc.saveOld()
 		await z.svc.Save()
 		return true
-		//return true
 	}
 
-	async restart(){
+	async Restart(){
 		const z = this
 		await z.svc.Restart()
 		z.fresh_wordBox()
-		
 	}
 
-	async saveEtRestart(){
+	async SaveEtRestart(){
 		const z = this
 		//debugger
-		const saveOk = await z.save()
-		//console.log(saveOk)//t
-		//await delay(1000)
-		const restartOk = await z.restart()
+		const saveOk = await z.Save()
+		const restartOk = await z.Restart()
 	}
 
 	set_page(str:string){}
@@ -372,7 +342,7 @@ export class WebNgaqUi{
 
 	changeRec(){
 		const z = this
-		return z.svc.weightAlgo?.word__changeRecordOld
+		return z.svc.weightAlgo?.wordId__changeRec
 	}
 
 
@@ -548,11 +518,3 @@ class BgImg{
 	// }
 
 }
-
-
-import * as frut from '@ts/frut'
-import { TagImg } from "@shared/TagImg"
-import { cosDependencies } from "mathjs"
-import { Client } from "@ts/ngaq4/Client"
-import { LearnBelong } from "@shared/old_dbRow/wordDbRowsOld"
-

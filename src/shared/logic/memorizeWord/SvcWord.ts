@@ -98,7 +98,7 @@ export class SvcWord implements
 	get word(){return this._word}
 
 	/** 權重 */
-	protected _weight:number = 0
+	protected _weight:number|undef = void 0
 	get weight(){return this._weight}
 	set weight(v){this._weight = v}
 

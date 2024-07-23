@@ -19,7 +19,7 @@ export interface I_index{
 }
 
 export interface I_weight{
-	weight:number
+	weight:number|undef
 }
 
 export interface I_id_weight extends I_id, I_weight{
@@ -84,11 +84,11 @@ export interface I_WordFromTxt extends
 }
 
 export interface I_WordForCalcWeight extends
-	I_id, I_weight, I_LearnBl__Learns, I_hasBeenLearned
+	I_id, I_weight, I_LearnBl__Learns, I_hasBeenLearned, I_index
 {
 	id:str
 	tempus_event_s:I_Tempus_Event[]
-	weight:number
+	weight:number|undef
 	//times_add:int
 }
 

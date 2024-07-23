@@ -6,7 +6,7 @@ import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
 import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 import type { I_Segment } from "@shared/interfaces/I_Parse"
-import { splitStr } from "@shared/tools/splitStr"
+import { splitStr } from "@shared/tools/StrSegment"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
 import type * as WordIf from '@shared/interfaces/WordIf'
 

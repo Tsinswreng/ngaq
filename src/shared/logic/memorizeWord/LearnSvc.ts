@@ -25,8 +25,6 @@ type SvcWord = I_WordWithStatus
 //type Asyncable<T> = T|Promise<T>
 //type Task<T> = Promise<T>
 
-const EV = Le.Event.new.bind(Le.Event)
-
 // function requireStatusStart(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 //     const originalMethod = descriptor.value;
 //     descriptor.value = function(...args: any[]) {
@@ -40,9 +38,14 @@ const EV = Le.Event.new.bind(Le.Event)
 // }
 
 
+const EV = Le.SelfEmitEvent.new.bind(Le.Event)
+export class Events extends Le.SelfEmitEvents{
 
-
-export class Events extends Le.Events{
+	static new(emitter:Le.LinkedEmitter){
+		const z = new this()
+		z.__init__(emitter)
+		return z
+	}
 	/** 
 	 * MemorizeWord: ʃ蔿ˋ何詞。
 	 */
@@ -82,6 +85,8 @@ export class SvcErrReason{
 	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
 	cant_load_after_start = Reason.new('cant_load_after_start')
 	cant_learn_when_unstart = Reason.new('cant_learn_when_unstart')
+	/** 褈保存 */
+	save_duplicated = RN('save_duplicated')
 }
 
 // const isb = new Int32Array(new SharedArrayBuffer(4))
@@ -155,13 +160,14 @@ export abstract class LearnSvc{
 
 	protected async __Init__(){
 		const z = this
+		z._events = Events.new(z.emitter)
 		return z
 	}
 
 	protected abstract _emitter:Le.LinkedEmitter
 	get emitter(){return this._emitter}
 
-	protected _events = new Events()
+	protected _events:Events
 	get events(){return this._events}
 
 	protected _status = new SvcStatus()
@@ -268,6 +274,7 @@ export abstract class LearnSvc{
 	}
 
 	/**
+	 * 用于顯式強制刷新權重算法ReloadWeightAlgo
 	 * reload後立即褈開、新權重算法未必生效
 	 * 緣權重算法中 可能有: 褈開再算旹詞芝權重不潙空且未背過者ʰ不復褈算權重
 	 * 可試discardChange 與load併用
@@ -291,6 +298,9 @@ export abstract class LearnSvc{
 	 */
 	protected async _Sort(){
 		const z = this
+		if(!z.status.loadWeightAlgo){
+			await z.InitWeightAlgo()
+		}
 		z._wordsToLearn = await z._SortWords(z.wordsToLearn)
 	}
 
@@ -324,7 +334,7 @@ export abstract class LearnSvc{
 		return z._Resort()
 	}
 
-	
+
 
 	/**
 	 * 始背單詞。
@@ -355,10 +365,14 @@ export abstract class LearnSvc{
 	 */
 	async Save():Task<any>{
 		const z = this
+		if(z.status.save){
+			z.errReasons.save_duplicated.throw()
+		}
 		z.status.start = false
 		const learnObjs = z.getLearnObjsToSave()
 		const resp = await z._Save(learnObjs.map(e=>e.toRow()))
 		z.mergeLearnedWords()
+		z.status.save = true
 		return resp
 	}
 
@@ -600,7 +614,7 @@ export abstract class LearnSvc{
 	}
 
 	
-	static assignWeightByRef(words:SvcWord[], refArr:WordIF.I_id_index_weight[]){
+	static assignWeightByRef(words:SvcWord[], refArr:WordIF.I_WordForCalcWeight[]){
 		const id__ref = classify(refArr, e=>e.id)
 		for(let i = 0; i < refArr.length; i++){
 			refArr[i].index = i
