@@ -154,13 +154,14 @@ export abstract class LearnSvc{
 	static async New():Promise<LearnSvc>{
 		//@ts-ignore
 		const z = new this()
-		z.__Init__()
+		await z.__Init__()
 		return z
 	}
 
 	protected async __Init__(){
 		const z = this
 		z._events = Events.new(z.emitter)
+		//console.log(z.events, 5)//t -
 		return z
 	}
 

@@ -37,6 +37,7 @@ export class WebNgaqSvc extends LearnSvc{
 
 	protected async __Init__(){
 		const z = this
+		await super.__Init__()
 		return z
 	}
 

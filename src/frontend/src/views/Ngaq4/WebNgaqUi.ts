@@ -101,6 +101,7 @@ export class WebNgaqUi{
 	protected async __Init__(){
 		const z = this
 		z._svc = await WebNgaqSvc.New()
+		//console.log(z.svc.events)//t undef
 		z._initSvcListeners()
 		z._initListener()
 		z.registerToWindow()
@@ -388,12 +389,11 @@ export class WebNgaqUi{
 					hanErr(e)
 				})
 			})
+			
 			z.svc.emitter.on(z.svc.events.load_weight_err, (err)=>{
 				alert('load_weight_err')
 				console.error(err)
 			})
-
-			
 		} catch (e) {
 			hanErr(e)
 		}

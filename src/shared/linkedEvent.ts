@@ -150,6 +150,7 @@ export class SelfEmitEvents extends Events{
 		z.__init__(emitter)
 		return z
 	}
+	error = SelfEmitEvent.new<[any]>('error')
 
 	//get This(){return SelfEmitEvents}
 }
