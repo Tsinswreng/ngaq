@@ -1,15 +1,15 @@
 //import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
 
 import { RMB_FGT, RMB_FGT_nil } from "@shared/logic/memorizeWord/LearnEvents";
-import { I_WordWithStatus } from "@shared/interfaces/I_SvcWord";
+import { I_WordWithStatus } from "@shared/interfaces/WordIf";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
+import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { LearnBelong } from "@shared/model/word/NgaqRows";
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
 import {classify} from '@shared/tools/classify'
-import type * as WordIF from "@shared/interfaces/I_SvcWord";
+import type * as WordIF from "@shared/interfaces/WordIf";
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
 type SvcWord = I_WordWithStatus
@@ -38,6 +38,9 @@ const EV = Le.Event.new.bind(Le.Event)
 //     };
 //     return descriptor;
 // }
+
+
+
 
 export class Events extends Le.Events{
 	/** 
@@ -97,6 +100,48 @@ export class SvcStatus{
 	save = true
 }
 
+export class LearnedWords{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof LearnedWords.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	//get This(){return LearnedWords}
+
+	protected _event__wordSet: Map<RMB_FGT, Map<SvcWord, undef>> = new Map()
+	get event__wordSet(){return this._event__wordSet}
+	protected set event__wordSet(v){this._event__wordSet = v}
+	
+	getWordSet(event:RMB_FGT){
+		const z = this
+		const got = z._event__wordSet.get(event)
+		return got
+	}
+
+	delete(event:RMB_FGT_nil, word:SvcWord){
+		const z = this
+		if(event == null){
+			return true
+		}
+		const got = z._event__wordSet.get(event)
+		return got?.delete(word)
+	}
+	clear(event:RMB_FGT){
+		const z = this
+		const words = z.getWordSet(event)
+		return words?.clear()
+	}
+
+}
+
+
 /**
  * 背單詞 流程 業務理則
  */
@@ -133,7 +178,9 @@ export abstract class LearnSvc{
 	// get rmbWords(){return this._rmbWords}
 
 	/** 已背ʹ單詞中 憶者 *///TODO 褈構 勿蔿每事件皆增字段
+	/** @deprecated */
 	protected _rmbWord__index:Map<SvcWord, int> = new Map()
+	/** @deprecated */
 	get rmbWord__index(){return this._rmbWord__index}
 
 	// /** 已背ʹ單詞中 忘者 */
@@ -141,11 +188,18 @@ export abstract class LearnSvc{
 	// get fgtWords(){return this._fgtWords}
 
 	/** 已背ʹ單詞中 忘者 */
+	/** @deprecated */
 	protected _fgtWord__index: Map<SvcWord, int> = new Map()
+	/** @deprecated */
 	get fgtWord__index(){return this._fgtWord__index}
 
+	protected _learnedWords = LearnedWords.new()
+	get learnedWords(){return this._learnedWords}
+	protected set learnedWords(v){this._learnedWords = v}
+	
+
 	/** 權重算法 */
-	protected _weightAlgo: I_WordWeight|undefined
+	protected _weightAlgo: I_WordWeight<any, any>|undefined
 	get weightAlgo(){return this._weightAlgo}
 
 	/** 
@@ -185,6 +239,7 @@ export abstract class LearnSvc{
 
 	/**
 	 * 合併 忘˪ʹ詞與憶˪ʹ詞
+	 * @deprecated
 	 * @returns 
 	 */
 	merge_LearnedWords__index(){
@@ -203,7 +258,7 @@ export abstract class LearnSvc{
 		}
 	}
 
-	protected abstract _LoadWeightAlgo():Task<I_WordWeight>
+	protected abstract _LoadWeightAlgo():Task<I_WordWeight<any, any>>
 
 
 	/**
@@ -313,9 +368,9 @@ export abstract class LearnSvc{
 	/** //TODO 合入新事件 防止褈複保存 */
 	async Save():Task<any>{
 		const z = this
+		z.status.start = false
 		const learnObjs = z.getLearnObjsToSave()
 		const resp = await z._Save(learnObjs.map(e=>e.toRow()))
-		console.log(resp)//t
 		return resp
 	}
 
@@ -356,7 +411,7 @@ export abstract class LearnSvc{
 	/** 
 	 * 開始後 之操作
 	 */
-	startedOp(){
+	chkStart(){
 		const z = this
 		if(!z._status.start){
 			throw Exception.for(z.errReasons.cant_learn_when_unstart)
@@ -365,9 +420,20 @@ export abstract class LearnSvc{
 		return true
 	}
 
+	learnWord(mw:SvcWord, event:RMB_FGT){
+		const z = this
+		z.chkStart()
+		const ans = mw.setInitEvent(event)
+		if(ans){
+			z.emitter.emit(z.events.learnBySvcWord, mw, event)
+		}
+		return ans
+	}
+
+	/** @deprecated */
 	protected rmb(mw:SvcWord){
 		const z = this
-		z.startedOp()
+		z.chkStart()
 		const ans = mw.setInitEvent(WordEvent.rmb)
 		if(ans){
 			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.rmb)
@@ -375,9 +441,10 @@ export abstract class LearnSvc{
 		return ans
 	}
 
+	/** @deprecated */
 	protected fgt(mw:SvcWord){
 		const z = this
-		z.startedOp()
+		z.chkStart()
 		const ans = mw.setInitEvent(WordEvent.fgt)
 		if(ans){
 			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
@@ -387,18 +454,22 @@ export abstract class LearnSvc{
 
 	undo(mw:SvcWord){
 		const z = this
-		z.startedOp()
+		z.chkStart()
 		const old = mw.undo()
-		if(old === WordEvent.rmb){
-			z.rmbWord__index.delete(mw)
-		}else if(old === WordEvent.fgt){
-			z.fgtWord__index.delete(mw)
-		}
+		z.learnedWords.delete(old, mw)
+		
+		// if(old === WordEvent.rmb){
+		// 	z.rmbWord__index.delete(mw)
+		// }else if(old === WordEvent.fgt){
+		// 	z.fgtWord__index.delete(mw)
+		// }
+
 		z.emitter.emit(z.events.undo, mw, old)
 	}
 
 	/** 
 	 * @deprecated
+	 * @noref
 	 * 不合入 新ʹ事件
 	 * 建議用 @see mergeLearnedWords
 	 */
@@ -427,15 +498,22 @@ export abstract class LearnSvc{
 	mergeLearnedWords(){
 		const z = this
 		const learnedSvcWords = [] as SvcWord[]
-		for(const [word, index] of z.rmbWord__index){
-			z.wordsToLearn[index] = word.selfMerge()
-			learnedSvcWords.push(z.wordsToLearn[index])
-		}
-		for(const [word, index] of z.fgtWord__index){
-			z.wordsToLearn[index] = word.selfMerge()
-			learnedSvcWords.push(z.wordsToLearn[index])
+		for(const [k,wordSet] of z.learnedWords.event__wordSet){
+			for(const [word, v] of wordSet){
+				word.selfMerge()
+				learnedSvcWords.push(word)
+			}
 		}
 		return learnedSvcWords
+		// for(const [word, index] of z.rmbWord__index){
+		// 	z.wordsToLearn[index] = word.selfMerge()
+		// 	learnedSvcWords.push(z.wordsToLearn[index])
+		// }
+		// for(const [word, index] of z.fgtWord__index){
+		// 	z.wordsToLearn[index] = word.selfMerge()
+		// 	learnedSvcWords.push(z.wordsToLearn[index])
+		// }
+		// return learnedSvcWords
 	}
 
 	/**
@@ -443,12 +521,18 @@ export abstract class LearnSvc{
 	 */
 	clearLearnedWordRecordEtItsStatus(){
 		const z = this
-		const learnedWord__index = z.merge_LearnedWords__index()
-		for(const [word, index] of learnedWord__index){
-			word.clearStatus()
+		const learnedWord = z.mergeLearnedWords()
+		for(const lw of learnedWord){
+			lw.clearStatus()
 		}
-		z._rmbWord__index.clear()
-		z._fgtWord__index.clear()
+		z.learnedWords.clear(WordEvent.rmb)
+		z.learnedWords.clear(WordEvent.fgt)
+		// const learnedWord__index = z.merge_LearnedWords__index()
+		// for(const [word, index] of learnedWord__index){
+		// 	word.clearStatus()
+		// }
+		// z._rmbWord__index.clear()
+		// z._fgtWord__index.clear()
 	}
 
 	// freshLearnedWords(){
@@ -515,7 +599,7 @@ export abstract class LearnSvc{
 	 */
 	learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
 		const z = this
-		z.startedOp()
+		z.chkStart()
 		if(event === WordEvent.rmb){
 			return z.rmb(mw)
 		}else if(event === WordEvent.fgt){

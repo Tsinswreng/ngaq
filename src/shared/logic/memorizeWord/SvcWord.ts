@@ -7,10 +7,11 @@ import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Common";
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
-import type * as WordIf from "@shared/interfaces/I_SvcWord";
+import type * as WordIf from "@shared/interfaces/WordIf";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
 //import { algo } from "@shared/WordWeight/weightEnv";
 import {classify} from '@shared/tools/classify'
+import { key__arrMapPush } from "@shared/tools/key__arrMapPush";
 const algo = {
 	classify
 }
@@ -91,6 +92,7 @@ export class SvcWord implements
 
 	/** 
 	 * JoinedWord
+	 * 宜避 從類外 直ᵈ訪此成員
 	 */
 	protected _word:Word
 	get word(){return this._word}
@@ -112,25 +114,27 @@ export class SvcWord implements
 	get index(){return this._index}
 	set index(v){this._index = v}
 
-	protected _event__learns: Map<Row.LearnBelong, Mod.Learn[]> = new Map()
-	get learnBl__learns(){return this._event__learns}
-	protected set learnBl__learns(v){this._event__learns = v}
+	protected _learnBl__learns: Map<Row.LearnBelong, Mod.Learn[]> = new Map()
+	get learnBl__learns(){return this._learnBl__learns}
+	protected set learnBl__learns(v){this._learnBl__learns = v}
 
 	protected _propertyBl__propertys : Map<Row.PropertyBelong|str, Mod.Property[]> = new Map()
 	get propertyBl__propertys(){return this._propertyBl__propertys}
 	protected set propertyBl__propertys(v){this._propertyBl__propertys = v}
 	
-	
+	/** @deprecated */
 	get times_add():int{
-		return this._event__learns.get(LearnBelong.add)?.length??0
+		return this._learnBl__learns.get(LearnBelong.add)?.length??0
 	}
 
+	/** @deprecated */
 	get times_rmb():int{
-		return this._event__learns.get(LearnBelong.rmb)?.length??0
+		return this._learnBl__learns.get(LearnBelong.rmb)?.length??0
 	}
 
+	/** @deprecated */
 	get times_fgt():int{
-		return this._event__learns.get(LearnBelong.fgt)?.length??0
+		return this._learnBl__learns.get(LearnBelong.fgt)?.length??0
 	}
 
 	get learns(){
@@ -148,6 +152,12 @@ export class SvcWord implements
 	protected _id:str = ""
 	get id(){return this._id}
 	protected set id(v){this._id = v}
+
+	
+	countsOfEvent(event:Row.LearnBelong){
+		const z = this
+		return z._learnBl__learns.get(event)?.length??0
+	}
 	
 	protected _init_learnBl__learns(){
 		const z = this
@@ -254,8 +264,12 @@ export class SvcWord implements
 	// }
 	
 	/** 合入 新加ʹ背ˡ狀態及日期 */
+	//TODO 改名
 	selfMerge(){
 		const z = this
+		const neoEvent = z.status.memorize
+		const neoLearnObj = z.statusToLearnObj()
+		key__arrMapPush(z.learnBl__learns, neoEvent, neoLearnObj)
 		//z.innerWordMerge()
 		//z.sortDate__Event()
 		return z
@@ -267,14 +281,15 @@ export class SvcWord implements
 		if(z.status.memorize == void 0 || z.status.date == void 0){
 			return null
 		}
-		let belong:LearnBelong
-		if(z.status.memorize === WordEvent.rmb){
-			belong = LearnBelong.rmb
-		}else if(z.status.memorize === WordEvent.fgt){
-			belong = LearnBelong.fgt
-		}else{
-			throw new Error()
-		}
+		// let belong:LearnBelong
+		// if(z.status.memorize === WordEvent.rmb){
+		// 	belong = LearnBelong.rmb
+		// }else if(z.status.memorize === WordEvent.fgt){
+		// 	belong = LearnBelong.fgt
+		// }else{
+		// 	throw new Error()
+		// }
+		const belong = z.status.memorize
 		const learn = Mod.Learn.new({
 			id: NaN
 			,wid: $(Number(z.id))

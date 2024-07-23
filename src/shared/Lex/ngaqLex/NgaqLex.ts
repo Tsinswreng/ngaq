@@ -8,6 +8,7 @@ import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 import type { I_Segment } from "@shared/interfaces/I_Parse"
 import { splitStr } from "@shared/tools/splitStr"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
+import type * as WordIf from '@shared/interfaces/WordIf'
 
 /** @deprecated */
 function read_prop_deprecated(z:Lex):StrSegment|undef{
@@ -185,7 +186,8 @@ export class NgaqLex extends Lex{
 	get patterns(){return this._patterns}
 	protected set patterns(v){this._patterns = v}
 
-	read_tempus__wordBlocks(){
+	/** 調用ʹ入口 */
+	read_tempus__wordBlocks():Map<Tempus, WordIf.I_WordFromTxt[]>{
 		const z = this
 		const crude = z.crudeParse()
 		const ans = Fine.parse({

@@ -61,6 +61,8 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 		const z = this
 		z.emitter.on(z.name, listener)
 	}
+
+	
 }
 
 export interface I_EventEmitter{

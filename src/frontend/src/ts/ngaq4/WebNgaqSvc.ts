@@ -18,7 +18,7 @@ import { JoinedWord } from "@shared/model/word/JoinedWord";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
-import type * as WordIF from "@shared/interfaces/I_SvcWord";
+import type * as WordIF from "@shared/interfaces/WordIf";
 import { Learn } from "@shared/model/word/NgaqRows";
 
 

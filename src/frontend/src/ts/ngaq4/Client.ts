@@ -12,7 +12,9 @@ import { lsItems } from "@ts/localStorage/Items"
 import axios, { AxiosRequestConfig } from 'axios'
 import { Exception, Reason } from "@shared/error/Exception";
 import { JoinedRow } from "@shared/model/word/JoinedRow"
-import { I__ } from "@shared/Type"
+import type { I__ } from "@shared/Type"
+import type * as WordIf from '@shared/interfaces/WordIf'
+import { JoinedWord } from '@shared/model/word/JoinedWord'
 
 const GET = 'GET'
 const POST = 'POST'
@@ -229,6 +231,7 @@ export class Client{
 	 * ,照搬舊版、待重構
 	 * @param rows 
 	 * @returns 
+	 * @deprecated
 	 */
 	async saveWords(rows:WordDbRow[]){
 		const z = this
@@ -253,5 +256,13 @@ export class Client{
 		} catch (error) {
 			throw error
 		}
+	}
+
+	async AddNeoWords(words:JoinedWord[]){
+		const z = this
+		const rows = words.map(e=>e.toRow())
+		const url = new URL(`${urlB.user}/addNeoWords`, z.baseUrl)
+		const resp = await ApiRequest(url.toString(), POST, rows)
+		return resp
 	}
 }

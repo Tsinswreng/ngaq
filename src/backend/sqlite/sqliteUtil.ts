@@ -1,8 +1,11 @@
+/* 
+毫秒級時間戳	SELECT strftime('%s', 'now') || substr(strftime('%f', 'now'), 4) AS timestamp
+*/
+
 import type sqlite3 from "sqlite3"
 import type { SqliteDb } from "./Sqlite"
 import * as DbQry from '@shared/interfaces/DbQryResult'
-import Tempus from "@shared/Tempus"
-import { NullableEleArr } from "@shared/Type"
+import type { NullableEleArr } from "@shared/Type"
 
 /**
  * 若T是數組 如str[]、 則得 (str|undef)[]

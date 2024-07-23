@@ -1,7 +1,7 @@
 import type { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import type { Word_t } from "./main";
 import type { LearnBelong } from "@shared/model/word/NgaqRows";
-import type { I_Tempus_Event } from "@shared/interfaces/I_SvcWord";
+import type { I_Tempus_Event } from "@shared/interfaces/WordIf";
 import type * as Mod from "@shared/model/word/NgaqModels";
 import type * as Row from "@shared/model/word/NgaqRows"
 import { Tempus_Event } from "@shared/logic/memorizeWord/SvcWord";

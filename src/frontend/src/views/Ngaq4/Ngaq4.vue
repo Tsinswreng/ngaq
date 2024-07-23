@@ -7,6 +7,7 @@ import { $ } from '@shared/Ut';
 import { ref,Ref, onMounted, computed, onBeforeMount} from 'vue';
 import LS from '@ts/LocalStorage';
 import CtrlPanel from './cpnt/CtrlPanel.vue';
+import ModalInput from './cpnt/ModalInput.vue';
 
 //const { words } = defineProps(['words']);
 //const recite = Recite.getInstance();
@@ -57,6 +58,8 @@ const Pro = Promise
 <Suspense>
 
 <div class="MultiMode" v-if="loaded"> 
+	<!-- <ModalInput/> -->
+	
 <!-- <button @click="start()">開始</button> -->
 <!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->
 
