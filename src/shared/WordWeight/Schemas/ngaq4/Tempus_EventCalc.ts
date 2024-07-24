@@ -10,8 +10,8 @@ import type {
 import { LearnBelong } from '@shared/model/word/NgaqRows'
 import { TempusEventRecord } from "./ChangeRecord"
 import Tempus from "@shared/Tempus"
-import { N2S } from "@shared/Sros"
-import { Sros } from "@shared/Sros"
+import { N2S } from "@shared/tools/Sros"
+import { Sros } from "@shared/tools/Sros"
 import { $ } from "@shared/Common"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
 

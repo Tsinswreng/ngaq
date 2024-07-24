@@ -1,7 +1,5 @@
 import { InstanceType_ } from "@shared/Type";
-//import { Tempus_Event, Word, WordEvent } from "@shared/entities/Word/Word";
 import { JoinedWord } from "../../model/word/JoinedWord";
-//import { WordEvent, Tempus_Event } from "@shared/SingleWord2";
 import Tempus from "@shared/Tempus";
 import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Common";
@@ -9,9 +7,11 @@ import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
 import type * as WordIf from "@shared/interfaces/WordIf";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
-//import { algo } from "@shared/WordWeight/weightEnv";
 import {classify} from '@shared/tools/classify'
 import { key__arrMapPush } from "@shared/tools/key__arrMapPush";
+
+
+
 const algo = {
 	classify
 }
@@ -77,8 +77,9 @@ export class SvcWord implements
 
 	protected __init__(word:Word){
 		const z = this
-		z._word = word
+		z.word = word
 		z.id = word.textWord.id+''
+		z.wordText = word.textWord.text
 		z._status = Status.new()
 		z._init_learnBl__learns()
 		z._init_propertyBl_propertys()
@@ -96,6 +97,7 @@ export class SvcWord implements
 	 */
 	protected _word:Word
 	get word(){return this._word}
+	protected set word(v){this._word = v}
 
 	/** 權重 */
 	protected _weight:number|undef = void 0
@@ -122,21 +124,6 @@ export class SvcWord implements
 	get propertyBl__propertys(){return this._propertyBl__propertys}
 	protected set propertyBl__propertys(v){this._propertyBl__propertys = v}
 	
-	/** @deprecated */
-	get times_add():int{
-		return this._learnBl__learns.get(LearnBelong.add)?.length??0
-	}
-
-	/** @deprecated */
-	get times_rmb():int{
-		return this._learnBl__learns.get(LearnBelong.rmb)?.length??0
-	}
-
-	/** @deprecated */
-	get times_fgt():int{
-		return this._learnBl__learns.get(LearnBelong.fgt)?.length??0
-	}
-
 	get learns(){
 		return this.word.learns
 	}
@@ -149,15 +136,21 @@ export class SvcWord implements
 		return this.status.memorize !== null
 	}
 
-
 	/**
-	 * 待初始化
+	 * @lateinit
 	 */
 	protected _id:str = ""
 	get id(){return this._id}
 	protected set id(v){this._id = v}
 
-	
+	/**
+	 * @lateinit
+	 */
+	protected _wordText = ""
+	get wordText(){return this._wordText}
+	protected set wordText(v){this._wordText = v}
+
+
 	countsOfEvent(event:Row.LearnBelong){
 		const z = this
 		return z._learnBl__learns.get(event)?.length??0
@@ -302,5 +295,20 @@ export class SvcWord implements
 			,belong: belong
 		})
 		return learn
+	}
+
+	/** @deprecated */
+	get times_add():int{
+		return this._learnBl__learns.get(LearnBelong.add)?.length??0
+	}
+
+	/** @deprecated */
+	get times_rmb():int{
+		return this._learnBl__learns.get(LearnBelong.rmb)?.length??0
+	}
+
+	/** @deprecated */
+	get times_fgt():int{
+		return this._learnBl__learns.get(LearnBelong.fgt)?.length??0
 	}
 }

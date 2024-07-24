@@ -8,7 +8,7 @@ import { Exception } from "@shared/error/Exception"
 import * as Le from '@shared/linkedEvent'
 import EventEmitter3 from 'EventEmitter3'
 import * as frut from '@ts/frut'
-import { TagImg } from "@shared/TagImg"
+import { TagImg } from "@shared/tools/TagImg"
 import { Client } from "@ts/ngaq4/Client"
 import { LearnBelong } from "@shared/model/word/NgaqRows"
 const WordEvent = LearnBelong

@@ -2,7 +2,7 @@ import Tempus from "@shared/Tempus";
 import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import * as Word_ from '@shared/entities/Word/Word'
-import * as Sros_ from "@shared/Sros";
+import * as Sros_ from "@shared/tools/Sros";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'
 import * as Record from "@shared/WordWeight/ChangeRecord";

@@ -8,7 +8,7 @@ import now from 'performance-now';
 import _, { last } from 'lodash'
 import dayjs from 'dayjs';
 import * as readline from 'readline'
-import { Sros } from './Sros';
+import { Sros } from './tools/Sros';
 import util from 'util'
 //import * as ts from 'typescript'
 import ts from 'typescript'

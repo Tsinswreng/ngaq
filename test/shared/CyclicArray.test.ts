@@ -1,4 +1,4 @@
-import CyclicArray from '@shared/CyclicArray'
+import CyclicArray from '@shared/tools/CyclicArray'
 import lodash from 'lodash'
 const eq = lodash.isEqual
 const ast = (a, b:any=true)=>{

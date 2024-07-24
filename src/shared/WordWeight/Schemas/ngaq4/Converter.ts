@@ -36,6 +36,7 @@ class Word implements Word_t{
 	weight: number|undef
 	learnBl__learns: Map<LearnBelong, Mod.Learn[]>;
 	hasBeenLearned: boolean = false
+	index
 }
 
 export function converter(src:SvcWord[]):Word_t[]{

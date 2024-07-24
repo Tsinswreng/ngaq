@@ -152,7 +152,7 @@ export class UserSvc{
 	 */
 	async LoginById(id:str|int, password:str){
 		const z = this
-		const Seek = await z.dbSrc.Fn_seekPasswordByUserId()
+		const Seek = await z.dbSrc.Fn_SeekPasswordByUserId()
 		const got = await Seek(id)
 		const gotPswd = got?.data[0]
 		if(gotPswd == null){
@@ -184,7 +184,7 @@ export class UserSvc{
 				Tempus.toUnixTime_mills(Tempus.new())+1000*60*60*24 // 1 day
 			)
 		})
-		const AddSession = await z.dbSrc.GetFn_addInst(e=>e.session)
+		const AddSession = await z.dbSrc.GetFn_AddInst(e=>e.session)
 		const dbAns = await AddSession(session)
 		session.id = dbAns.lastId
 		z.emit(e=>e.login, id)
@@ -218,7 +218,7 @@ export class UserSvc{
 	 */
 	async LoginByName(uniqueName:str, password:str){
 		const z = this
-		const Seek = await z.dbSrc.Fn_seekIdByUniqueName()
+		const Seek = await z.dbSrc.Fn_SeekIdByUniqueName()
 		const got = await Seek(uniqueName)
 		const id = got.data[0]?._
 		if(id == void 0){
@@ -240,7 +240,7 @@ export class UserSvc{
 		const z = this
 		const uniqueName = opt.uniqueName
 		const password = opt.password
-		const Seek = await z.dbSrc.Fn_seekIdByUniqueName()
+		const Seek = await z.dbSrc.Fn_SeekIdByUniqueName()
 		const got = await Seek(uniqueName)
 		const oldId = got.data[0]?._
 		if(oldId != void 0){
@@ -254,8 +254,8 @@ export class UserSvc{
 			,mt: nunc
 			,uniqueName:uniqueName
 		})
-		const AddUser = await z.dbSrc.GetFn_addInst(e=>e.user)
-		const AddPswd = await z.dbSrc.GetFn_addInst(e=>e.password)
+		const AddUser = await z.dbSrc.GetFn_AddInst(e=>e.user)
+		const AddPswd = await z.dbSrc.GetFn_AddInst(e=>e.password)
 		await z.dbSrc.db.BeginTrans()
 		const addAns = await AddUser(userInst)
 		// 新用戶ʹid
@@ -309,7 +309,7 @@ export class UserSvc{
 		z.emit(e=>e.mkUserDb, opt.userId)
 
 		
-		const AddUserDb = await z.dbSrc.GetFn_addInst(e=>e.userDb)
+		const AddUserDb = await z.dbSrc.GetFn_AddInst(e=>e.userDb)
 		const nunc = Tempus.new()
 		const userDb = Mod.UserDb.new({
 			id:NaN
@@ -321,7 +321,7 @@ export class UserSvc{
 		})
 
 		const userDbAns = await AddUserDb(userDb)
-		const AddUser__db = await z.dbSrc.GetFn_addInst(e=>e.user__db)
+		const AddUser__db = await z.dbSrc.GetFn_AddInst(e=>e.user__db)
 		const user__dbInst = Mod.User__db.new({
 			id: NaN
 			,userId: Number(opt.userId)

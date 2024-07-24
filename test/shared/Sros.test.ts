@@ -1,6 +1,6 @@
 //require('module-alias/register');
 //import 'tsconfig-paths/register'
-import { Sros,Sros_number,Sros_big, SrosError } from "@shared/Sros";
+import { Sros,Sros_number,Sros_big, SrosError } from "@shared/tools/Sros";
 //import * as Ut from "../../src/shared/Ut"
 import * as Ut from "@shared/Ut"
 const sros_number = Sros.new()

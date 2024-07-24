@@ -9,8 +9,9 @@
 src/	#源碼
 	shared/	#共享代碼、內有諸工具函數等
 		Common.ts	#最常用的工具
-		tools/	#工具函數、每個函數一個文件
+		tools/	#工具
 		Ut.ts	#已廢棄
+		algo.ts	#已廢棄
 	backend/	#後端
 	frontend/	#前端
 out/	#產出目錄
@@ -44,6 +45,9 @@ npm run buildB
 
 #編譯前端 (報錯是正常的)
 npm run buildF
+
+#打包 單詞權重算法
+npx webpack --config webpack.config.weight.cjs
 
 ```
 

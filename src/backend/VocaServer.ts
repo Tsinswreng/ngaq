@@ -117,7 +117,7 @@ const post = <R>(old:(req:Request, res:Response)=>R)=>{
 }
 
 import { routes } from "@shared/Routes";
-import { BlobWithText } from "@shared/BlobWithText";
+import { BlobWithText } from "@shared/tools/BlobWithText";
 const RT = routes
 //console.log(RT)
 

@@ -58,6 +58,7 @@ const Pro = Promise
 <Suspense>
 
 <div class="MultiMode" v-if="loaded"> 
+	<h1 class="version">ngaq4</h1>
 	<!-- <ModalInput/> -->
 	
 <!-- <button @click="start()">開始</button> -->
@@ -110,6 +111,18 @@ baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 </template>
 
 <style scoped lang="scss">
+
+.version{
+	color: rgb(64, 64, 64);
+	position: relative;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -90%);
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	font-size: 600%;
+}
 
 .CtrlPanel{
 	margin: auto auto auto 5%;

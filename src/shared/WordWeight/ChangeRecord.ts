@@ -13,7 +13,7 @@ old deprecated
 
 import Tempus from "@shared/Tempus"
 import { WordEvent } from "@shared/SingleWord2"
-import type { N2S } from "@shared/Sros"
+import type { N2S } from "@shared/tools/Sros"
 import { Tempus_Event } from "@shared/entities/Word/Word"
 import { key__arrMapPush } from '@shared/tools/key__arrMapPush'
 //import * as Ut from "@shared/Ut"

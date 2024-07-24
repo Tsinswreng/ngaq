@@ -1,4 +1,4 @@
-import type { N4 } from "@shared/Sros"
+import type { N4 } from "@shared/tools/Sros"
 export type NumId_t = N4
 
 

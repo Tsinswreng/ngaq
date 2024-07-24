@@ -5,7 +5,7 @@ import { $, $a, getShuffle, lastOf, measurePromiseTime } from '@shared/Ut';
 import VocaClient from '@ts/voca/VocaClient';
 import { Priority } from 'shared/SingleWord2';
 import _ from 'lodash';
-import { Sros } from '@shared/Sros';
+import { Sros } from '@shared/tools/Sros';
 const sros = Sros.new()
 const s = sros.short
 const l = console

@@ -219,23 +219,10 @@ export abstract class LearnSvc{
 			const err = error as Error
 			throw Exception.for(z.errReasons.load_err, err)
 		}
-
 		z.status.load = true
 		return true
 	}
 
-	/**
-	 * 合併 忘˪ʹ詞與憶˪ʹ詞
-	 * @deprecated
-	 * @returns 
-	 */
-	merge_LearnedWords__index(){
-		const z = this
-		return new Map<SvcWord, int>([
-			...z.rmbWord__index
-			,...z.fgtWord__index
-		])
-	}
 
 	/** 蔿SvcWord實例 賦index字段 */
 	indexWord(){
@@ -260,7 +247,6 @@ export abstract class LearnSvc{
 		}
 		try {
 			z._weightAlgo = await z._LoadWeightAlgo()
-
 			return true
 		} catch (error) {
 			//throw Exception.for(z.errReasons.load_weight_err, error)
@@ -269,6 +255,14 @@ export abstract class LearnSvc{
 			return false
 		}finally{
 			//TODO 加載默認權重算法
+			z._weightAlgo = {
+				async Run(...args:any[]){
+					return args
+				}
+				,setParam(key, v) {
+					return true
+				}
+			}
 			z.status.loadWeightAlgo = true
 		}
 		return false
@@ -678,5 +672,18 @@ export abstract class LearnSvc{
 			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
 		} 
 		return ans
+	}
+
+	/**
+	 * 合併 忘˪ʹ詞與憶˪ʹ詞
+	 * @deprecated
+	 * @returns 
+	 */
+	merge_LearnedWords__index(){
+		const z = this
+		return new Map<SvcWord, int>([
+			...z.rmbWord__index
+			,...z.fgtWord__index
+		])
 	}
 }

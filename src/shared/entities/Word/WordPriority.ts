@@ -1,5 +1,5 @@
 
-import { Sros, N2} from '@shared/Sros';
+import { Sros, N2} from '@shared/tools/Sros';
 //import SingleWord2, { Tempus_Event, WordEvent } from './SingleWord2';
 import { Word, Tempus_Event, WordEvent } from "@shared/entities/Word/Word";
 import Tempus from '@shared/Tempus'

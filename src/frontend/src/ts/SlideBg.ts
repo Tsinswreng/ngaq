@@ -1,4 +1,4 @@
-import CyclicArray from "@shared/CyclicArray"
+import CyclicArray from "@shared/tools/CyclicArray"
 
 class Img{
 	

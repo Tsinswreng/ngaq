@@ -7,6 +7,7 @@ import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
 import Tempus from '@shared/Tempus';
+import { PropertyBelong } from '@shared/model/word/NgaqRows';
 const loaded = ref(false)
 let ui:WebNgaqUi
 ;(async()=>{
@@ -64,6 +65,20 @@ function addDates(ui:WebNgaqUi){
 	// return _(ui.curWord)
 	return ''
 }
+
+function mean(ui:WebNgaqUi){
+	const cur = ui.curWord
+	if(cur == void 0){
+		return ''
+	}
+	const means = cur.propertyBl__propertys.get(PropertyBelong.mean)
+	if(means == void 0){
+		return ''
+	}
+	return means.map(e=>e.text+'\n').join('')
+}
+
+
 </script>
 <template>
 	<div class="container" v-if="loaded"> <!-- 不用寫.vaule -->
@@ -75,14 +90,14 @@ function addDates(ui:WebNgaqUi){
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
 			<div>{{ addDates(ui) }}</div>
 			<hr class="w-hr">
-			<div class="w-shape">{{ ui.curWord?.word.textWord.text }}</div>
+			<div class="w-shape">{{ ui.curWord?.wordText }}</div>
 			<div>
 				<!-- <span>{{ ui.curWord?.word.annotation.length?'':ui.curWord?.word.annotation }}</span> -->
 				<span> {{ annotation(ui) }} </span>
 				<span>{{ tags(ui) }}</span>
 			</div>
 			<hr class="w-hr">
-			<div class="w-mean">{{ 'mean' }}</div>
+			<div class="w-mean">{{ mean(ui) }}</div>
 		</div>
 	</div>
 </template>

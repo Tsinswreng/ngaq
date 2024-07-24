@@ -66,7 +66,7 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		return this.factory.emptyRow
 	}
 
-	async Fn_addInst(db:SqliteDb, opt?:AddInstOpt){
+	async Fn_AddInst(db:SqliteDb, opt?:AddInstOpt){
 		const z = this
 		const tbl = z
 		if(opt == void 0){
@@ -85,6 +85,41 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 			return ans
 		}
 		return ans
+	}
+
+	/**
+	 * 運行旹判斷 是row抑inst
+	 * @param db 
+	 * @param opt 
+	 * @returns 
+	 */
+	async Fn_Add(db:SqliteDb, opt?:AddInstOpt){
+		const z = this
+		const tbl = z
+		if(opt == void 0){
+			opt = {ignoredKeys: [tbl.col.id]}
+		}
+
+		const emptyRow = tbl.factory.emptyRow
+		const objsql = ObjSql.new(emptyRow, opt)
+		const sql = objsql.geneFullInsertSql(tbl.name)
+		const stmt = await db.Prepare(sql)
+		const Ans = async(
+			target:InstanceType_<FactT['Row']>
+				|InstanceType_<FactT['Inst']>
+		)=>{
+			let row:InstanceType_<FactT['Row']>
+			if(target instanceof Mod.BaseInst){
+				row = target.toRow()
+			}else{
+				row = target
+			}
+			const params = objsql.getParams(row)
+			const runRes = await stmt.Run(params)
+			const ans = QryAns.fromRunResult(runRes)
+			return ans
+		}
+		return Ans
 	}
 
 
@@ -220,23 +255,35 @@ export class UserDbSrc{
 	protected set db(v){this._db = v}
 
 
+	async GetFn_Add<T extends Tbl<any>>(
+		fn: (tbl:typeof this.tbls)=>T
+		,opt?:AddInstOpt
+	){
+		const z = this
+		const tbl = fn(z.tbls)
+		const Fn = await tbl.Fn_Add(z.db, opt)
+		return Fn as ReturnType<T['Fn_Add']>
+	}
+
 	/* 
 	已知 如果tbl是Tbl<User>類型的、那麼tbl.Fn_addInst返回函數 (inst:User)=>any
 	下面的方法 如何推斷出傳入fn的tbl的泛型類型、使得返回正確類型的函數?
 	如 GetFn_addInst(e=>e.user) 則返回(inst:User)=>any、
 	傳入GetFn_addInst(e=>e.password) 則返回(inst:Password)=>any 已解決
 	*/
-	async GetFn_addInst<T extends Tbl<any>>(
+	async GetFn_AddInst<T extends Tbl<any>>(
 		fn: (tbl:typeof this.tbls)=>T
 		,opt?:AddInstOpt
 	){
 		const z = this
 		const tbl = fn(z.tbls)
-		const ans = await tbl.Fn_addInst(z.db, opt)
-		return ans as ReturnType<T['Fn_addInst']>
+		const ans = await tbl.Fn_AddInst(z.db, opt)
+		return ans as ReturnType<T['Fn_AddInst']>
 	}
 
-	async Fn_seekPasswordByUserId(){
+
+
+	async Fn_SeekPasswordByUserId(){
 		const z = this
 		const tbl = z.tbls.password
 		const sql = `SELECT * FROM ${tbl.name} WHERE ${tbl.col.fid}=?`
@@ -247,7 +294,7 @@ export class UserDbSrc{
 		}
 	}
 
-	async Fn_seekIdByUniqueName(colAlias='_'){
+	async Fn_SeekIdByUniqueName(colAlias='_'){
 		const z = this
 		const tbl = z.tbls.user
 		const sql = 
@@ -259,10 +306,10 @@ export class UserDbSrc{
 		}
 	}
 
-	async Fn_seekPasswordByUniqueName(){
+	async Fn_SeekPasswordByUniqueName(){
 		const z = this
-		const SeekIdByUniqueName = await z.Fn_seekIdByUniqueName()
-		const SeekPasswordByUserId = await z.Fn_seekPasswordByUserId()
+		const SeekIdByUniqueName = await z.Fn_SeekIdByUniqueName()
+		const SeekPasswordByUserId = await z.Fn_SeekPasswordByUserId()
 		const ans = async(uniqueName:str)=>{
 			const qry = await SeekIdByUniqueName(uniqueName)
 			const id = qry.data[0]?._

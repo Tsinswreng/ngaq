@@ -10,7 +10,7 @@
 import Tempus from "@shared/Tempus";
 import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import * as Word from '@shared/entities/Word/Word'
-import * as Sros from "@shared/Sros";
+import * as Sros from "@shared/tools/Sros";
 //import { WordWeight } from "@shared/WordWeight/_Base";
 import lodash from 'lodash'
 import * as Ut from '@shared/Ut'

@@ -1,5 +1,5 @@
 import Txt from '@shared/Txt'
-import { N3, N4, Sros } from '@shared/Sros'
+import { N3, N4, Sros } from '@shared/tools/Sros'
 import { $ } from '@shared/Ut'
 import * as fs from 'fs'
 const sros = Sros.new({})

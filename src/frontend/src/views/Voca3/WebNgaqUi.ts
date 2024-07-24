@@ -526,5 +526,5 @@ class BgImg{
 
 
 import * as frut from '@ts/frut'
-import { TagImg } from "@shared/TagImg"
+import { TagImg } from "@shared/tools/TagImg"
 
