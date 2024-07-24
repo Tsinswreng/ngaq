@@ -31,7 +31,7 @@ export interface I_id_index_weight extends I_id, I_index, I_weight{
 }
 
 export interface I_WordWithStatus extends
-	I_id, I_index, I_weight
+	I_id, I_index, I_weight, I_hasBeenLearnedInLastRound
 {
 	status:I_Status
 	reInit()
@@ -54,8 +54,9 @@ export interface I_LearnBl__Learns{
 	learnBl__learns: Map<LearnBelong, Learn[]>
 }
 
-export interface I_hasBeenLearned{
-	hasBeenLearned:bool
+export interface I_hasBeenLearnedInLastRound{
+	/** 可讀寫 */
+	hasBeenLearnedInLastRound:bool
 }
 
 export interface I_PropertyBl_Propertys{
@@ -84,7 +85,7 @@ export interface I_WordFromTxt extends
 }
 
 export interface I_WordForCalcWeight extends
-	I_id, I_weight, I_LearnBl__Learns, I_hasBeenLearned, I_index
+	I_id, I_weight, I_LearnBl__Learns, I_hasBeenLearnedInLastRound, I_index
 {
 	id:str
 	tempus_event_s:I_Tempus_Event[]

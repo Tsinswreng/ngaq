@@ -63,6 +63,7 @@ class Status{
 export class SvcWord implements
 	WordIf.I_WordWithStatus, WordIf.I_LearnBl__Learns, WordIf.I_weight
 	,WordIf.I_learns, WordIf.I_propertys, WordIf.I_PropertyBl_Propertys
+	,WordIf.I_hasBeenLearnedInLastRound
 {
 
 	protected constructor(){
@@ -96,7 +97,7 @@ export class SvcWord implements
 	 * 宜避 從類外 直ᵈ訪此成員
 	 */
 	protected _word:Word
-	get word(){return this._word}
+	protected get word(){return this._word}
 	protected set word(v){this._word = v}
 
 	/** 權重 */
@@ -132,14 +133,21 @@ export class SvcWord implements
 		return this.word.propertys
 	}
 
+	// get hasBeenLearnedInLastRound(){
+	// 	//return this.status.memorize !== null
+	// 	return this.historyStatus.backGet(0)?.memorize != null
+	// }
+
 	/**
 	 * 予 權重算法 讀
 	 * 若潙false且權重不爲空 則跳過而免冗算
+	 * 保存旹 設ʃ存ʹ詞ʹ此成員 潙true
+	 * 褈開ⁿ褈算權重旹、再設回蔿false
 	 */
-	get hasBeenLearnedInLastRound(){
-		//return this.status.memorize !== null
-		return this.historyStatus.backGet(0).memorize !== null
-	}
+	protected _hasBeenLearnedInLastRound = false
+	get hasBeenLearnedInLastRound(){return this._hasBeenLearnedInLastRound}
+	set hasBeenLearnedInLastRound(v){this._hasBeenLearnedInLastRound = v}
+	
 
 	/**
 	 * @lateinit
@@ -159,7 +167,9 @@ export class SvcWord implements
 	get wordText(){return this._wordText}
 	protected set wordText(v){this._wordText = v}
 
+	/** @noUsage */
 	protected _historyStatus = CyclicArray.new<Status>(16)
+	/** @noUsage */
 	get historyStatus(){return this._historyStatus}
 	protected set historyStatus(v){this._historyStatus = v}
 
@@ -256,7 +266,10 @@ export class SvcWord implements
 		const neoEvent = z.status.memorize
 		const neoLearnObj = z.statusToLearnObj()
 		key__arrMapPush(z.learnBl__learns, neoEvent, neoLearnObj)
-		return z
+		if(neoLearnObj!=null){
+			z.learns.push(neoLearnObj)
+		} //TODO 統一一處改learns
+		return neoLearnObj
 	}
 
 	statusToLearnObj(){

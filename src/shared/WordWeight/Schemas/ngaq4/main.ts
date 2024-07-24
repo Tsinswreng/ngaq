@@ -1,4 +1,4 @@
-import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeight"
 import { Derangement, Word_t as DWord } from "./Derangement"
 import { GroupByLang, Word_t as GWord } from "./GroupByLang";
 import { Tempus_EventCalc, Word_t as TWord } from "./Tempus_EventCalc";
@@ -33,9 +33,12 @@ class Main implements I_WordWeight<SvcWord, Word_t>{
 		return true
 	}
 	async Run0(words: Word_t[]):Task<Word_t[]>{
-		words = await Tempus_EventCalc.new().Run(words) as Word_t[]
-		words = await GroupByLang.new().Run(words) as Word_t[]
-		words = await Derangement.new().Run(words) as Word_t[]
+		const z = this
+		const te = Tempus_EventCalc.new()
+		words = await te.Run(words) as Word_t[]
+		// words = await GroupByLang.new().Run(words) as Word_t[]
+		// words = await Derangement.new().Run(words) as Word_t[] //t
+		z.wordId__changeRec = te.wordId__changeRec
 		return words
 	}
 
@@ -48,8 +51,8 @@ class Main implements I_WordWeight<SvcWord, Word_t>{
 			__return.err = err
 			throw err
 		}
-
 	}
+	wordId__changeRec?: Map<string, I_ChangeRecord[]> | undefined;
 }
 
 const ans = Main.new()

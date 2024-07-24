@@ -9,6 +9,7 @@ import * as Row from "@shared/model/word/NgaqRows";
 import {classify} from '@shared/tools/classify'
 import type * as WordIF from "@shared/interfaces/WordIf";
 import { $ } from "@shared/Common";
+import CyclicArray from "@shared/tools/CyclicArray";
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
 type SvcWord = I_WordWithStatus
@@ -145,7 +146,6 @@ export class LearnedWords{
 		if(event == null){
 			return true
 		}
-		//const got = z._event__wordSet.get(event)
 		const got = z.getWordSet(event)
 		return got?.delete(word)
 	}
@@ -176,7 +176,6 @@ export abstract class LearnSvc{
 	protected async __Init__(){
 		const z = this
 		z._events = Events.new(z.emitter)
-		//console.log(z.events, 5)//t -
 		return z
 	}
 
@@ -198,6 +197,11 @@ export abstract class LearnSvc{
 	protected _learnedWords = LearnedWords.new()
 	get learnedWords(){return this._learnedWords}
 	protected set learnedWords(v){this._learnedWords = v}
+
+	protected _historyLearnedWords = CyclicArray.new<SvcWord[]>(1)
+	get historyLearnedWords(){return this._historyLearnedWords}
+	protected set historyLearnedWords(v){this._historyLearnedWords = v}
+	
 	
 
 	/** 權重算法 */
@@ -338,6 +342,7 @@ export abstract class LearnSvc{
 
 	/** 
 	 * 可據SvcWord對象之Status 判斷此詞是否在上一輪中背ʴ過
+	 * //TODO 褈排序旹 每個SvcWord都經一次converter、縱未背過
 	 */
 	async Resort():Task<bool>{
 		const z = this
@@ -433,6 +438,8 @@ export abstract class LearnSvc{
 		z.clearLearnedWords()
 		z.status.start = false
 		z.status.save = true
+		wordsToSave.map(e=>e.hasBeenLearnedInLastRound = true)
+		z.historyLearnedWords.addBackF(wordsToSave)
 		return resp
 	}
 
@@ -465,6 +472,9 @@ export abstract class LearnSvc{
 		}
 		await z.Resort()
 		//z.clearLearnedWordRecordEtItsStatus()
+		z.historyLearnedWords.backGet(0).map(e=>
+			e.hasBeenLearnedInLastRound = false
+		)
 		z.status.start = true
 		return true
 	}
@@ -577,6 +587,9 @@ export abstract class LearnSvc{
 			refArr[i].index = i
 		}
 		for(const w of words){
+			// if(w.hasBeenLearnedInLastRound){//t
+			// 	console.log(w.weight, 'a0')
+			// }
 			const gotRef = id__ref.get(w.id)
 			if(gotRef == void 0){
 				w.weight = 0
@@ -584,6 +597,10 @@ export abstract class LearnSvc{
 			}
 			w.weight = gotRef[0]?.weight??0
 			w.index = gotRef[0]?.index
+			// if(w.hasBeenLearnedInLastRound){//t
+			// 	console.log(w.weight, 'a2')
+			// 	console.log(gotRef, 'a2')
+			// }
 		}
 	}
 

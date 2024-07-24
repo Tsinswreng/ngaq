@@ -1,3 +1,7 @@
+/**
+@deprecated
+*/
+
 //<@delete>
 import * as _ENV from '@shared/WordWeight/weightEnv'
 //type import
@@ -55,7 +59,7 @@ const Mod = _ENV.NgaqModels
 type Mod = typeof Mod
 
 class WordEvent{
-	static readonly ADD=Row.LearnBelong.add
+	static readonly add=Row.LearnBelong.add
 	static readonly RMB=Row.LearnBelong.rmb
 	static readonly FGT=Row.LearnBelong.fgt
 }
@@ -225,7 +229,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				z._statistics.curPos ++
 				const WE = WordEvent
 				switch (z._cur_tempus__event.event){
-					case WE.ADD:
+					case WE.add:
 						return z.handle_add()
 					break;
 					case WE.RMB:
@@ -270,12 +274,12 @@ class WordWeight implements I_WordWeight<Word_t>{
 				const lastRec = last(z._statistics.records) as TempusEventRecord
 				if(lastRec == void 0){
 					throw new Error('last changeRecord is undef')
-				}else if(WordEvent.ADD === lastRec.event){ //若上個事件潙 添
+				}else if(WordEvent.add === lastRec.event){ //若上個事件潙 添
 					st.weight = $n( s.d(st.weight, 1.1) ) //自除以1.1
 				}else{
 					weight_ = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
 					weight_ = s.d(
-						weight_, z._mw.word.times_add
+						weight_, z._mw.countsOfEvent(WordEvent.add)
 					)
 					if(s.c(weight_, 0)<=1){
 						weight_ = s.n(1.01)
@@ -287,6 +291,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				// }
 
 				// 算 debuff
+				
 				if(st.curPos >= st.finalAddEventPos && last(z._mw.date__event).event === WordEvent.RMB ){
 					//console.log(1)//t
 					let nowDiffThen = Tempus.diff_mills(st.nunc, z._cur_tempus__event.tempus)
@@ -294,7 +299,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 						s.m(
 							nowDiffThen
 							, sros.pow(
-								s.a(z.This.defaultOpt.base, z._mw.word.times_add)
+								s.a(z.This.defaultOpt.base, z._mw.countsOfEvent(WordEvent.add))
 								,st.cnt_add
 							)
 						),
@@ -341,7 +346,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 				const thatTime = z._cur_tempus__event.tempus
 				const nunc = _ENV.Tempus.new()
 				const diffMills = Tempus.diff_mills(nunc, thatTime)
-				if(curEv === WordEvent.ADD){
+				if(curEv === WordEvent.add){
 					const bonus = z._ww.calcLastAddBonus(diffMills)
 					z._statistics.weight = s.m(
 						z._statistics.weight, bonus
@@ -559,7 +564,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 	static finalAddEventPos(tempus__event:Tempus_Event[]){
 		let ans = 0
 		for(let i = tempus__event.length-1; i>=0; i--){
-			if(tempus__event[i].event === WordEvent.ADD){
+			if(tempus__event[i].event === WordEvent.add){
 				ans = i;
 				break
 			}

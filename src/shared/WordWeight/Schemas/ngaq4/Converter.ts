@@ -14,12 +14,13 @@ class Word implements Word_t{
 	protected __init__(...args: Parameters<typeof Word.new>){
 		const z = this
 		const svcWord = args[0]
-		const jword = svcWord.word
-		z.belong = jword.textWord.belong
+		//const jword = svcWord.word
+		z.belong = svcWord.belong
 		z.id = svcWord.id
 		z.learnBl__learns = svcWord.learnBl__learns
-		z.tempus_event_s = jword.learns.map(e=>Tempus_Event.new(e.ct, e.belong))
-		z.hasBeenLearned = svcWord.hasBeenLearnedInLastRound
+		z.tempus_event_s = svcWord.learns.map(e=>Tempus_Event.new(e.ct, e.belong))
+		z.hasBeenLearnedInLastRound = svcWord.hasBeenLearnedInLastRound
+		z.weight = svcWord.weight
 		return z
 	}
 
@@ -35,7 +36,7 @@ class Word implements Word_t{
 	tempus_event_s: I_Tempus_Event[];
 	weight: number|undef
 	learnBl__learns: Map<LearnBelong, Mod.Learn[]>;
-	hasBeenLearned: boolean = false
+	hasBeenLearnedInLastRound: boolean = false
 	index
 }
 

@@ -172,7 +172,6 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 			addRecord(record:ChangeRecord){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
-				//console.log(record)//t
 				z._statistics.records.push(record)
 			}
 
@@ -330,15 +329,16 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 
 	// }
 
-	async run0(words:Word_t[]) {
+	async Run0(words:Word_t[]) {
 		const z = this
 		for(let i = 0; i < words.length; i++){
 			const u = words[i]
 			try {
 				// 若已有匪權重 且未背過 則跳過 㕥應resort
-				if(u.weight != void 0 && !u.hasBeenLearned){
-					//console.log(ua.id, ua.weight)
+				if(u.weight != void 0 && !u.hasBeenLearnedInLastRound){
 					continue
+				}else{
+					//console.log(u.id, 'id')//t
 				}
 				z.calc0(u)
 			} catch (err) {
@@ -353,36 +353,29 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 
 	async Run(words:Word_t[]):Task<Word_t[]> {
 		const z = this
-		words = await z.run0(words)
+		words = await z.Run0(words)
 		return words
 	}
 	
-	calc0(mWord:Word_t){
+	calc0(word:Word_t){
 		const z = this
-		const finalAddEventPos = z.This.finalAddEventPos(mWord.tempus_event_s)
+		const finalAddEventPos = z.This.finalAddEventPos(word.tempus_event_s)
 		const st = z.This.Statistics.new(finalAddEventPos)
 		const Handle3Events = z.This.Handle3Events
 		const h3 = Handle3Events.new({
 			_ww: z
 			//,_tempus__event: mWord.date__event[0]
 			,_statistics: st
-			,_mw: mWord
+			,_mw: word
 		})
-		// for(const tempus__event of mWord.date__event){
-		// 	h3._cur_tempus__event = tempus__event
-		// 	const st = h3.handleOne()
-		// 	console.log(st.records.length)//t
-		// }
-		const ans = h3.handleAll(mWord.tempus_event_s)
-		mWord.weight = ans.weight
-		z.addChangeRecords(mWord.id, ans.records)
-		
-		// mWord.weight = h3._statistics.weight
-		// z.addChangeRecords(mWord.word, h3._statistics.records)
-		//t
-		// if(mWord.word.wordShape === 'disguise'){
-		// 	console.log(ans.records)//t *
-		// }
+
+		const ans = h3.handleAll(word.tempus_event_s)
+		if(word.id === '4387'){//t
+			console.log(ans.weight, '4387')//t
+			console.log(word.tempus_event_s)//t
+		}
+		word.weight = ans.weight
+		z.addChangeRecords(word.id, ans.records)
 	}
 
 	/**

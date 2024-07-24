@@ -114,7 +114,7 @@ function fmtDate(tempus:Tempus){
 			@click="ui.learnOrUndoByIndex(wordIndex, WordEvent.rmb)"
 			@contextmenu="rightClick"
 		>
-			{{ mw.word.textWord.text }}
+			{{ mw.wordText }}
 		</span>
 		<span class="w-lastEvent">{{ lastEventSymbol(mw) }}</span>
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
