@@ -38,8 +38,9 @@ export interface I_WordWithStatus extends
 	resetStatus()
 	setInitEvent(ev:LearnBelong.rmb|LearnBelong.fgt)
 	undo():RMB_FGT_nil
-	mergeNeoLearnRec()
+	mergeNeoLearnRec():Mod.Learn|null
 	statusToLearnObj():Mod.Learn|null
+	addLearnRec(learn:Mod.Learn)
 }
 
 

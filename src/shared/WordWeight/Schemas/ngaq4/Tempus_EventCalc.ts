@@ -370,10 +370,6 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 		})
 
 		const ans = h3.handleAll(word.tempus_event_s)
-		if(word.id === '4387'){//t
-			console.log(ans.weight, '4387')//t
-			console.log(word.tempus_event_s)//t
-		}
 		word.weight = ans.weight
 		z.addChangeRecords(word.id, ans.records)
 	}

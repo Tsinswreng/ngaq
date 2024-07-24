@@ -383,6 +383,7 @@ export abstract class LearnSvc{
 	 */
 	handleSavedWord(word:SvcWord){
 		word.mergeNeoLearnRec()
+		//word.addLearnRec(learn)
 		word.resetStatus()
 	}
 
@@ -587,9 +588,6 @@ export abstract class LearnSvc{
 			refArr[i].index = i
 		}
 		for(const w of words){
-			// if(w.hasBeenLearnedInLastRound){//t
-			// 	console.log(w.weight, 'a0')
-			// }
 			const gotRef = id__ref.get(w.id)
 			if(gotRef == void 0){
 				w.weight = 0
@@ -597,12 +595,10 @@ export abstract class LearnSvc{
 			}
 			w.weight = gotRef[0]?.weight??0
 			w.index = gotRef[0]?.index
-			// if(w.hasBeenLearnedInLastRound){//t
-			// 	console.log(w.weight, 'a2')
-			// 	console.log(gotRef, 'a2')
-			// }
 		}
 	}
+
+
 
 /** @deprecated -------------------------------------------------------------------------------- */
 

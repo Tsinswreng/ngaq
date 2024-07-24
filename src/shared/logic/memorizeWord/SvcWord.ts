@@ -57,6 +57,8 @@ class Status{
 	memorize:typeof WordEvent.rmb| typeof WordEvent.fgt|null = null
 	/** memorize狀態ˋ變ʹ時間 */
 	date:Tempus|undefined
+	/** 緩存 新ʹ事件 */
+	neoLearnRec:Mod.Learn|null = null
 }
 
 
@@ -259,21 +261,34 @@ export class SvcWord implements
 		z.historyStatus.addBackF(z.status)
 		z._status = new Status()
 	}
-	
+
+	addLearnRec(learn:Mod.Learn){
+		const z = this
+		key__arrMapPush(z.learnBl__learns, learn.belong, learn)
+		z.learns.push(learn)
+	}
+
 	/** 合入 新加ʹ背ˡ記錄 */
 	mergeNeoLearnRec(){
 		const z = this
-		const neoEvent = z.status.memorize
+		//const neoEvent = z.status.memorize
 		const neoLearnObj = z.statusToLearnObj()
-		key__arrMapPush(z.learnBl__learns, neoEvent, neoLearnObj)
-		if(neoLearnObj!=null){
-			z.learns.push(neoLearnObj)
-		} //TODO 統一一處改learns
+		//key__arrMapPush(z.learnBl__learns, neoEvent, neoLearnObj)
+		if(neoLearnObj != null){
+			//z.learns.push(neoLearnObj)
+			z.addLearnRec(neoLearnObj)
+		}
 		return neoLearnObj
 	}
 
+	/**
+	 * 有緩存旹直ᵈ返緩存
+	 */
 	statusToLearnObj(){
 		const z = this
+		if(z.status.neoLearnRec != null ){
+			return z.status.neoLearnRec
+		}
 		if(z.status.memorize == void 0 || z.status.date == void 0){
 			return null
 		}
@@ -285,6 +300,7 @@ export class SvcWord implements
 			,mt: z.status.date
 			,belong: belong
 		})
+		z.status.neoLearnRec = learn
 		return learn
 	}
 

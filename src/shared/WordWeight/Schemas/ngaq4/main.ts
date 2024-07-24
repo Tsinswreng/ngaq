@@ -36,8 +36,8 @@ class Main implements I_WordWeight<SvcWord, Word_t>{
 		const z = this
 		const te = Tempus_EventCalc.new()
 		words = await te.Run(words) as Word_t[]
-		// words = await GroupByLang.new().Run(words) as Word_t[]
-		// words = await Derangement.new().Run(words) as Word_t[] //t
+		words = await GroupByLang.new().Run(words) as Word_t[]
+		words = await Derangement.new().Run(words) as Word_t[]
 		z.wordId__changeRec = te.wordId__changeRec
 		return words
 	}
