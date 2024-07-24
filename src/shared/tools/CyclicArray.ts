@@ -167,6 +167,38 @@ export default class CyclicArray<T>{
 	}
 
 	/**
+	 * 強添于尾、若滿則擠出頭元素
+	 * @param ele 
+	 * @returns 被擠出之元素
+	 * //TODO test
+	 */
+	addBackF(ele:T){
+		const z = this
+		if(z.addBack(ele)){ //成功
+			return
+		}
+		const front = z.removeFront()
+		z.addBack(ele)
+		return front
+	}
+
+	/**
+	 * 強添于頭、若滿則擠出尾元素
+	 * @param ele 
+	 * @returns 被擠出之元素
+	 * //TODO test
+	 */
+	addFrontF(ele:T){
+		const z = this
+		if(z.addFront(ele)){ //成功
+			return
+		}
+		const back = z.removeBack()
+		z.addFront(ele)
+		return back
+	}
+
+	/**
 	 * 
 	 * @param index [0, capacity-1]
 	 * @param capacity when capacity is 5, index is in [0,4]

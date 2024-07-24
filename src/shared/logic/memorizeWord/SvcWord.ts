@@ -9,7 +9,7 @@ import type * as WordIf from "@shared/interfaces/WordIf";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
 import {classify} from '@shared/tools/classify'
 import { key__arrMapPush } from "@shared/tools/key__arrMapPush";
-
+import CyclicArray from "@shared/tools/CyclicArray";
 
 
 const algo = {
@@ -150,6 +150,11 @@ export class SvcWord implements
 	get wordText(){return this._wordText}
 	protected set wordText(v){this._wordText = v}
 
+	protected _historyStatus = CyclicArray.new<Status>(16)
+	get historyStatus(){return this._historyStatus}
+	protected set historyStatus(v){this._historyStatus = v}
+	
+
 
 	countsOfEvent(event:Row.LearnBelong){
 		const z = this
@@ -246,6 +251,7 @@ export class SvcWord implements
 
 	clearStatus(){
 		const z = this
+		z.historyStatus.addBack
 		z._status = new Status()
 	}
 	
