@@ -1,5 +1,6 @@
 /* 
-毫秒級時間戳	SELECT strftime('%s', 'now') || substr(strftime('%f', 'now'), 4) AS timestamp
+毫秒級時間戳
+SELECT strftime('%s', 'now') || substr(strftime('%f', 'now'), 4) AS timestamp
 */
 
 import type sqlite3 from "sqlite3"

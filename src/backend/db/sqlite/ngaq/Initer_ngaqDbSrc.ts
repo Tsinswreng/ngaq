@@ -204,7 +204,8 @@ export class InitSql_ngaqDbSrc{
 AFTER INSERT ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.wordRelation.name} SET ${c.mt} = NEW.${c.mt};
+	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans
@@ -221,7 +222,8 @@ END;
 AFTER INSERT ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt};
+	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans
@@ -238,7 +240,8 @@ END;
 AFTER UPDATE ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt};
+	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans

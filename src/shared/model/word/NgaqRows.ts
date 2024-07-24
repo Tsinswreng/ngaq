@@ -15,7 +15,8 @@ export class WidRow extends IdBlCtMt{
 }
 
 export class TextWord extends IdBlCtMt{
-	/** english, japanese, etc. */
+	/** belong: english, japanese, etc. */
+	
 	/** 詞形 */
 	text:str
 	/** 增 新ʹ learnStatus行 或 property行 旹、視潙更改 */

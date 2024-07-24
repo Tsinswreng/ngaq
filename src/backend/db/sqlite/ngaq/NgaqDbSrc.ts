@@ -169,20 +169,33 @@ export class SchemaItem extends SqliteUtil.SqliteMaster{
 	get This(){return SchemaItem}
 }
 
-class Trigger extends SchemaItem{
+class Trigger<Tbl_t extends Tbl<any>> extends SchemaItem{
 	protected constructor(){super()}
+	//@ts-ignore
 	protected __init__(...args: Parameters<typeof Trigger.new>){
 		const z = this
+		const name = args[0]
+		const tbl = args[1]
+		super.__init__(name, SqliteUtil.SqliteMasterType.trigger, tbl.name)
 		return z
 	}
 
-	static new(){
-		const z = new this()
-		z.__init__()
+	static new<Tbl_t extends Tbl<any>>(
+		name:str
+		,tbl:Tbl_t
+	){
+		const z = new this<Tbl_t>()
+		z.__init__(name, tbl)
 		return z
 	}
 
+	//@ts-ignore
 	get This(){return Trigger}
+
+	protected _tbl:Tbl_t
+	get tbl(){return this._tbl}
+	protected set tbl(v){this._tbl = v}
+	
 }
 
 export class Index extends SchemaItem{
@@ -209,7 +222,8 @@ export class Index extends SchemaItem{
 
 	//get This(){return Index}
 }
-const SI = SchemaItem.new.bind(SchemaItem)
+//const SI = SchemaItem.new.bind(SchemaItem)
+const TRIG = Trigger.new.bind(Trigger)
 const SMT = SqliteUtil.SqliteMasterType
 
 const IDX = <Fact>(
@@ -229,6 +243,8 @@ const IDX = <Fact>(
 	return ans
 }
 
+
+
 class SchemaItems{
 	//tbls=tbls
 	idx_wordText = IDX('idx_wordText', tbls.textWord, c=>[c.text])
@@ -239,9 +255,9 @@ class SchemaItems{
 	//idx_learnMt = IDX('idx_learnMt', tbls.learn, c=>[c.mt])
 	idx_propertyWid = IDX('idx_propertyWid', tbls.property, c=>[c.wid])
 
-	trig_aftIns_learnAltWordMt = SI('aftIns_learnAltWordMt', SMT.trigger, tbls.learn.name)
-	trig_aftIns_propertyAltWordMt = SI('aftIns_propertyAltWordMt', SMT.trigger, tbls.property.name)
-	trig_aftUpd_propertyAltWordMt = SI('aftUpd_propertyAltWordMt', SMT.trigger, tbls.property.name)
+	trig_aftIns_learnAltWordMt = TRIG('aftIns_learnAltWordMt', tbls.learn)
+	trig_aftIns_propertyAltWordMt = TRIG('aftIns_propertyAltWordMt', tbls.property)
+	trig_aftUpd_propertyAltWordMt = TRIG('aftUpd_propertyAltWordMt', tbls.property)
 }
 
 const schemaItems = new SchemaItems()
