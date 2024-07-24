@@ -19,7 +19,7 @@ class Word implements Word_t{
 		z.id = svcWord.id
 		z.learnBl__learns = svcWord.learnBl__learns
 		z.tempus_event_s = jword.learns.map(e=>Tempus_Event.new(e.ct, e.belong))
-		z.hasBeenLearned = svcWord.hasBeenLearned
+		z.hasBeenLearned = svcWord.hasBeenLearnedInLastRound
 		return z
 	}
 

@@ -1,5 +1,3 @@
-//import { SvcWord3, RMB_FGT, RMB_FGT_nil } from "@shared/entities/Word/SvcWord3";
-
 import { RMB_FGT, RMB_FGT_nil } from "@shared/logic/memorizeWord/LearnEvents";
 import { I_WordWithStatus } from "@shared/interfaces/WordIf";
 import { Exception, Reason } from "@shared/error/Exception";
@@ -10,6 +8,7 @@ import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
 import {classify} from '@shared/tools/classify'
 import type * as WordIF from "@shared/interfaces/WordIf";
+import { $ } from "@shared/Common";
 type WordEvent = Row.LearnBelong
 const WordEvent = Row.LearnBelong
 type SvcWord = I_WordWithStatus
@@ -85,7 +84,7 @@ export class SvcErrReason{
 	cant_start_when_unsave = Reason.new('cant_start_when_unsave')
 	cant_load_after_start = Reason.new('cant_load_after_start')
 	cant_learn_when_unstart = Reason.new('cant_learn_when_unstart')
-	/** 褈保存 */
+	/** 褈保存 @deprecated */
 	save_duplicated = RN('save_duplicated')
 }
 
@@ -124,20 +123,36 @@ export class LearnedWords{
 	get event__wordSet(){return this._event__wordSet}
 	protected set event__wordSet(v){this._event__wordSet = v}
 	
-	getWordSet(event:RMB_FGT){
+	protected getWordSet(event:RMB_FGT){
 		const z = this
-		const got = z._event__wordSet.get(event)
-		return got
+		let got = z._event__wordSet.get(event)
+		if(got == void 0){
+			z._event__wordSet.set(event, new Map())
+			got = z._event__wordSet.get(event)
+		}
+		return $(got)
 	}
 
+	set(event:RMB_FGT, word:SvcWord){
+		const z = this
+		const wordSet = z.getWordSet(event)
+		return wordSet?.set(word, void 0)
+	}
+
+	/** 用于undo */
 	delete(event:RMB_FGT_nil, word:SvcWord){
 		const z = this
 		if(event == null){
 			return true
 		}
-		const got = z._event__wordSet.get(event)
+		//const got = z._event__wordSet.get(event)
+		const got = z.getWordSet(event)
 		return got?.delete(word)
 	}
+
+	/**
+	 * 清除某事件下䀬ʹ詞
+	 */
 	clear(event:RMB_FGT){
 		const z = this
 		const words = z.getWordSet(event)
@@ -251,9 +266,6 @@ export abstract class LearnSvc{
 		} catch (error) {
 			//throw Exception.for(z.errReasons.load_weight_err, error)
 			//z.emitErr(z.errReasons.load_weight_err)
-			z.emitter.emit(z.events.load_weight_err, error)
-			return false
-		}finally{
 			//TODO 加載默認權重算法
 			z._weightAlgo = {
 				async Run(...args:any[]){
@@ -263,6 +275,9 @@ export abstract class LearnSvc{
 					return true
 				}
 			}
+			z.emitter.emit(z.events.load_weight_err, error)
+			return false
+		}finally{
 			z.status.loadWeightAlgo = true
 		}
 		return false
@@ -329,8 +344,6 @@ export abstract class LearnSvc{
 		return z._Resort()
 	}
 
-
-
 	/**
 	 * 始背單詞。
 	 * @noUsage
@@ -352,24 +365,73 @@ export abstract class LearnSvc{
 		return Promise.resolve(true)
 	}
 
+	/**
+	 * 
+	 * @param learnRows 
+	 * @throws 保存不成功旹
+	 */
 	protected abstract _Save(learnRows:Row.Learn[]):Task<any>
+
+	/**
+	 * 用于該詞ˋ保存成功後
+	 * @param word 
+	 */
+	handleSavedWord(word:SvcWord){
+		word.mergeNeoLearnRec()
+		word.resetStatus()
+	}
+
+
+	/**
+	 * z.learnedWords = LearnedWords.new()
+	 */
+	clearLearnedWords(){
+		const z = this
+		z.learnedWords = LearnedWords.new()
+	}
+
+	/**
+	 * 清ᵣ錄誧既學ʹ詞 及其中ʹ詞ʹ狀態
+	 * @deprecated
+	 */
+	clearLearnedWordRecordEtItsStatus(){
+		const z = this
+		const learnedWord = z.getLearnedWords()
+		for(const lw of learnedWord){
+			lw.resetStatus()
+		}
+		for(const ev in WordEvent){
+			//@ts-ignore
+			z.learnedWords.clear(ev)
+		}
+	}
 
 	/** 
 	 * 保存並合入事件
-	 * status會保留、下次褈算權重等旹有用
+	 * status會存入history、下次褈算權重等旹有用
 	 */
 	async Save():Task<any>{
 		const z = this
 		if(!z.status.start){
 			return
 		}
-		if(z.status.save){
-			z.errReasons.save_duplicated.throw()
+		// if(z.status.save){
+		// 	z.errReasons.save_duplicated.throw()
+		// }
+
+		const wordsToSave = z.getLearnedWords()
+		const learnObjs = wordsToSave.map(e=>e.statusToLearnObj())
+		const rows = [] as Row.Learn[]
+		for(const l of learnObjs){
+			if(l != null){
+				rows.push(l.toRow())
+			}
 		}
+		//const learnObjs = z.getLearnObjsToSave()
+		const resp = await z._Save(rows)
+		wordsToSave.map(e=>z.handleSavedWord(e))
+		z.clearLearnedWords()
 		z.status.start = false
-		const learnObjs = z.getLearnObjsToSave()
-		const resp = await z._Save(learnObjs.map(e=>e.toRow()))
-		z.mergeLearnedWords()
 		z.status.save = true
 		return resp
 	}
@@ -394,7 +456,6 @@ export abstract class LearnSvc{
 	}
 
 	/** 
-	 * 清 既學ʹ詞、褈排序
 	 * 
 	 */
 	async Restart(){
@@ -403,7 +464,7 @@ export abstract class LearnSvc{
 			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
 		await z.Resort()
-		z.clearLearnedWordRecordEtItsStatus()
+		//z.clearLearnedWordRecordEtItsStatus()
 		z.status.start = true
 		return true
 	}
@@ -424,6 +485,7 @@ export abstract class LearnSvc{
 		const z = this
 		z.chkStart()
 		const ans = mw.setInitEvent(event)
+		z.learnedWords.set(event, mw)
 		if(ans){
 			z.emitter.emit(z.events.learnBySvcWord, mw, event)
 		}
@@ -435,95 +497,31 @@ export abstract class LearnSvc{
 		z.chkStart()
 		const old = mw.undo()
 		z.learnedWords.delete(old, mw)
-		
-		// if(old === WordEvent.rmb){
-		// 	z.rmbWord__index.delete(mw)
-		// }else if(old === WordEvent.fgt){
-		// 	z.fgtWord__index.delete(mw)
-		// }
-
 		z.emitter.emit(z.events.undo, mw, old)
 	}
 
-
-
-
-	// static mergeSvcWords(toSave:SvcWord3[]){
-	// 	return toSave.map(e=>e.innerWordMerge())
-	// }
-
 	/**
-	 * 新ʹ事件ˇ合入已背ʹ單詞中、且在wordsToLearn中更新
+	 * O(n)
 	 */
-	mergeLearnedWords(){
+	getLearnedWords(){
 		const z = this
 		const learnedSvcWords = [] as SvcWord[]
 		for(const [k,wordSet] of z.learnedWords.event__wordSet){
 			for(const [word, v] of wordSet){
-				word.selfMerge()
 				learnedSvcWords.push(word)
 			}
 		}
 		return learnedSvcWords
-		// for(const [word, index] of z.rmbWord__index){
-		// 	z.wordsToLearn[index] = word.selfMerge()
-		// 	learnedSvcWords.push(z.wordsToLearn[index])
-		// }
-		// for(const [word, index] of z.fgtWord__index){
-		// 	z.wordsToLearn[index] = word.selfMerge()
-		// 	learnedSvcWords.push(z.wordsToLearn[index])
-		// }
-		// return learnedSvcWords
 	}
-
-	/**
-	 * 清ᵣ錄誧既學ʹ詞 及其中ʹ詞ʹ狀態
-	 */
-	clearLearnedWordRecordEtItsStatus(){
-		const z = this
-		const learnedWord = z.mergeLearnedWords()
-		for(const lw of learnedWord){
-			lw.clearStatus()
-		}
-		z.learnedWords.clear(WordEvent.rmb)
-		z.learnedWords.clear(WordEvent.fgt)
-		// const learnedWord__index = z.merge_LearnedWords__index()
-		// for(const [word, index] of learnedWord__index){
-		// 	word.clearStatus()
-		// }
-		// z._rmbWord__index.clear()
-		// z._fgtWord__index.clear()
-	}
-
-	// freshLearnedWords(){
-
-	// }
 
 	learnByIndex(index:int, event:RMB_FGT){
 		const z = this
-		// if(index +1 > z.wordsToLearn.length){
-		// 	return Promise.resolve(false)
-		// }
 		const word = z.wordsToLearn[index]
 		if(word == void 0){
 			return false
 		}
 		let ans:boolean
 		return z.learnWord(word, event)
-		// if(event === WordEvent.rmb){
-		// 	ans = z.rmb(word)
-		// 	if(ans){
-		// 		z.rmbWord__index.set(word, index)
-		// 	}
-		// }else if(event === WordEvent.fgt){
-		// 	ans = z.fgt(word)
-		// 	if(ans){
-		// 		z.fgtWord__index.set(word, index)
-		// 	}
-		// }else{
-		// 	throw new Error('else')
-		// }
-		//return ans
 	}
 
 	/**
@@ -552,27 +550,10 @@ export abstract class LearnSvc{
 		
 	}
 
-	// /**
-	//  * @deprecated
-	//  * @param mw 
-	//  * @param event 
-	//  * @returns 
-	//  */
-	// learnByWord(mw:SvcWord, event:RMB_FGT):boolean{
-	// 	const z = this
-	// 	z.chkStart()
-	// 	if(event === WordEvent.rmb){
-	// 		return z.rmb(mw)
-	// 	}else if(event === WordEvent.fgt){
-	// 		return z.fgt(mw)
-	// 	}else{
-	// 		throw new Error('WordEvent error')
-	// 	}
-	// }
-
 	/**
 	 * 捨變、清既學ʹ詞、褈置狀態、不存ʃ變
 	 * @returns 
+	 * //TODO 改實現
 	 */
 	discardChangeEtEnd(){
 		const z = this
@@ -606,11 +587,35 @@ export abstract class LearnSvc{
 		}
 	}
 
+/** @deprecated -------------------------------------------------------------------------------- */
+
+
+	/**
+	 * @deprecated
+	 */
 	getLearnObjsToSave(){
 		const z = this
 		const learns = z.wordsToLearn.map(e=>e.statusToLearnObj()).filter(e=>e!=null)
 		return learns
 	}
+
+	/**
+	 * 新ʹ事件ˇ合入已背ʹ單詞中、且在wordsToLearn中更新
+	 * @deprecated
+	 * @noUsage
+	 */
+	mergeLearnedWords(){
+		const z = this
+		const learnedSvcWords = [] as SvcWord[]
+		for(const [k,wordSet] of z.learnedWords.event__wordSet){
+			for(const [word, v] of wordSet){
+				word.mergeNeoLearnRec()
+				learnedSvcWords.push(word)
+			}
+		}
+		return learnedSvcWords
+	}
+
 
 	/** 已背ʹ單詞中 憶者 */
 	// protected _rmbWords:SvcWord3[] = []

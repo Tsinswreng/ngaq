@@ -394,7 +394,7 @@ export class UserSvc{
 	}
 
 	/**
-	 * //TODO 比較 末個learn之ct、若將加ʹlearnʹctˋ更小或等 則不加
+	 * 
 	 * @param userId 
 	 * @param learns 
 	 * @returns 
@@ -410,6 +410,7 @@ export class UserSvc{
 			ans.push(ua)
 		}
 		userDb.dbSrc.db.Commit()
+		console.log(learns)//t
 		return ans
 	}
 }

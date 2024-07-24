@@ -85,7 +85,7 @@ function mean(ui:WebNgaqUi){
 		<div class="wordInfo" v-if="ui.uiStuff.isShowWordInfo.value"> <!-- 要寫.value -->
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
 			<!-- <div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div> -->
-			<div>{{ 'belong+id' }}</div>
+			<div>{{ (ui.curWord?.belong??"")+ui.curWord?.id }}</div>
 			<div class="w-eventSymbols"> {{ eventsMark(ui) }} </div>
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
 			<div>{{ addDates(ui) }}</div>

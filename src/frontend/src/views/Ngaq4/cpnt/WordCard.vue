@@ -8,12 +8,6 @@ import Tempus from '@shared/Tempus';
 import { LearnBelong } from '@shared/model/word/NgaqRows';
 
 const WordEvent = LearnBelong
-// class WordEvent{
-// 	static ADD
-// 	static RMB
-// 	static FGT
-// }
-
 const loaded = ref(false)
 let ui:WebNgaqUi// = await WebVocaUi.getInstanceAsync()
 onBeforeMount( async() => {
@@ -38,44 +32,11 @@ function returnWordToParent(){
 	//reciteStatus.value = 'rmb'
 };
 
-// function handleWordEvent(event:WordEvent){
-// 	multiMode.showNextRandomBg()
-// 	multiMode.isSaved.value = false
-// 	if(reciteStatusRef.value === 'nil'){
-// 		recite.trigger(props.memorizeWord, event)
-// 		if(event === WordEvent.RMB){
-// 			reciteStatusRef.value = 'rmb'
-			
-// 		}else if(event === WordEvent.FGT){
-// 			reciteStatusRef.value = 'fgt'
-// 		}
-// 	}
-// 	else{
-// 		undo()
-// 	}
-// 	returnWordToParent()
-// }
-
-// function rightClick(event: MouseEvent){
-// 	event.preventDefault()
-// 	if(reciteStatusRef.value === 'nil'){
-// 		if(event.button === 2){
-// 			handleWordEvent(WordEvent.FGT)
-// 		}
-// 	}else{undo()}
-// }
 
 function rightClick(event:MouseEvent){
 	event.preventDefault()
 	ui.learnOrUndoByIndex(wordIndex, WordEvent.fgt)
 }
-
-// function undo(){
-// 	if(reciteStatusRef.value !== 'nil'){
-// 		recite.undo(props.memorizeWord)
-// 		reciteStatusRef.value = 'nil'
-// 	}
-// }
 
 function fmtNum(num:number, fix:number){
 	let exp = num.toExponential()
@@ -84,18 +45,6 @@ function fmtNum(num:number, fix:number){
 	baseStr = base.toFixed(fix)
 	return baseStr + 'e' + exponentialStr
 }
-
-// function rmb(){
-// 	ui.learnByWord($(mw), WordEvent.RMB)
-// }
-
-// function fgt(){
-// 	ui.learnByWord($(mw), WordEvent.FGT)
-// }
-
-// function undo(){
-// 	return ui.undoByWord($(mw))
-// }
 
 function lastEventSymbol(w:SvcWord){
 	switch(w.learns[w.learns.length-1].belong){
@@ -112,12 +61,6 @@ function lastEventSymbol(w:SvcWord){
 }
 
 const reciteStatusRef = mw.uiStuff.reciteStatusRef
-// const isAddTimeGeq3 = (wb:WebSvcWord)=>{
-// 	if(wb == void 0){
-// 		return false
-// 	}
-// 	return wb.word.times_add >= 3
-// }
 
 class WordColor{
 	gray = ref('gray')
@@ -177,11 +120,11 @@ function fmtDate(tempus:Tempus){
 		<!-- <span id="w-id" @click="testPrintPrio(props.wordB)">
 			{{ props.wordB.fw.id }}
 		</span> -->
-		<span class="timesCnt">{{ mw.times_add }}</span>
-		<span class="timesCnt">{{ mw.times_rmb }}</span>
-		<span class="timesCnt">{{ mw.times_fgt }}</span>
+		<span class="timesCnt">{{ mw.countsOfEvent(WordEvent.add) }}</span>
+		<span class="timesCnt">{{ mw.countsOfEvent(WordEvent.rmb) }}</span>
+		<span class="timesCnt">{{ mw.countsOfEvent(WordEvent.fgt) }}</span>
 		<!-- <span>_____</span> -->
-		<span class="w-weight">{{ fmtNum(mw.weight,2) }}</span>
+		<span class="w-weight">{{ fmtNum(mw.weight??0,2) }}</span>
 		<span class="w-lastRvwDate">{{ fmtDate($(mw.learns.at(-1)).ct) }}</span>
 		<!-- <span class="w-dates_add">{{ props.wordB.getAddDates() }}</span> -->
 		<!-- <span class="w-eventsSymbols">{{  }}</span> -->
@@ -356,5 +299,3 @@ span{
 	opacity: 0.95;
 }
 </style>
-
-../Status@shared/entities/Word/SvcWord3@ts/voca3/entities/WebSvcWord../WebNgaqUi../WebNgaqUi@shared/WordWeight/weightDependensy

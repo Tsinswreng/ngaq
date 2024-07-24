@@ -132,8 +132,13 @@ export class SvcWord implements
 		return this.word.propertys
 	}
 
-	get hasBeenLearned(){
-		return this.status.memorize !== null
+	/**
+	 * 予 權重算法 讀
+	 * 若潙false且權重不爲空 則跳過而免冗算
+	 */
+	get hasBeenLearnedInLastRound(){
+		//return this.status.memorize !== null
+		return this.historyStatus.backGet(0).memorize !== null
 	}
 
 	/**
@@ -142,6 +147,10 @@ export class SvcWord implements
 	protected _id:str = ""
 	get id(){return this._id}
 	protected set id(v){this._id = v}
+
+	get belong(){
+		return this.word.textWord.belong
+	}
 
 	/**
 	 * @lateinit
@@ -153,7 +162,6 @@ export class SvcWord implements
 	protected _historyStatus = CyclicArray.new<Status>(16)
 	get historyStatus(){return this._historyStatus}
 	protected set historyStatus(v){this._historyStatus = v}
-	
 
 
 	countsOfEvent(event:Row.LearnBelong){
@@ -224,24 +232,11 @@ export class SvcWord implements
 		//z.emitter.emit(z.events.undo, mw, oriMemorizeState)
 	}
 
-	// /**
-	//  * SvcWord實例中 新加ʹ背ˡ狀態及日期ˇ 合入 內ʹWord實例中
-	//  * 只合入內ʹword實例 洏 不改自ʹ_date__event
-	//  * 原地改
-	//  */
-	// innerWordMerge(){
-	// 	const z = this
-	// 	if(z.status.memorize === WordEvent.rmb){
-	// 		z.word.dates_rmb.push($(z.status.date))
-	// 	}else if(z.status.memorize === WordEvent.fgt){
-	// 		z.word.dates_fgt.push($(z.status.date))
-	// 	}else{
-
-	// 	}
-	// 	return z
-	// }
-
-	/** 褈初始化。清ᵣ己ʹ狀態與權重等。 */
+	
+	/** 
+	 * 褈初始化。清ᵣ己ʹ狀態與權重等。 
+	 * @noUsage
+	 */
 	reInit(){
 		const z = this
 		const word = z.word
@@ -249,49 +244,26 @@ export class SvcWord implements
 		return z
 	}
 
-	clearStatus(){
+	resetStatus(){
 		const z = this
-		z.historyStatus.addBack
+		z.historyStatus.addBackF(z.status)
 		z._status = new Status()
 	}
 	
-	/**
-	 * 合入 新加ʹ背ˡ狀態及日期後 褈初始化
-	 */
-	// selfMergeEtFresh(){
-	// 	const z = this
-	// 	z.innerWordMerge()
-	// 	const word = z.word
-	// 	z.__init__(word)
-	// 	return z
-	// }
-	
-	/** 合入 新加ʹ背ˡ狀態及日期 */
-	//TODO 改名
-	selfMerge(){
+	/** 合入 新加ʹ背ˡ記錄 */
+	mergeNeoLearnRec(){
 		const z = this
 		const neoEvent = z.status.memorize
 		const neoLearnObj = z.statusToLearnObj()
 		key__arrMapPush(z.learnBl__learns, neoEvent, neoLearnObj)
-		//z.innerWordMerge()
-		//z.sortDate__Event()
 		return z
 	}
 
-	
 	statusToLearnObj(){
 		const z = this
 		if(z.status.memorize == void 0 || z.status.date == void 0){
 			return null
 		}
-		// let belong:LearnBelong
-		// if(z.status.memorize === WordEvent.rmb){
-		// 	belong = LearnBelong.rmb
-		// }else if(z.status.memorize === WordEvent.fgt){
-		// 	belong = LearnBelong.fgt
-		// }else{
-		// 	throw new Error()
-		// }
 		const belong = z.status.memorize
 		const learn = Mod.Learn.new({
 			id: NaN
@@ -302,6 +274,9 @@ export class SvcWord implements
 		})
 		return learn
 	}
+
+
+/** @deprecated ---------------------------------------------------------------------------------------------------------------------------------------- */
 
 	/** @deprecated */
 	get times_add():int{

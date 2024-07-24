@@ -35,10 +35,10 @@ export interface I_WordWithStatus extends
 {
 	status:I_Status
 	reInit()
-	clearStatus()
+	resetStatus()
 	setInitEvent(ev:LearnBelong.rmb|LearnBelong.fgt)
 	undo():RMB_FGT_nil
-	selfMerge()
+	mergeNeoLearnRec()
 	statusToLearnObj():Mod.Learn|null
 }
 

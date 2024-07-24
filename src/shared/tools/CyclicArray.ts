@@ -226,8 +226,8 @@ export default class CyclicArray<T>{
 	}
 
 	/**
-	 * 從頭到尾 取第num個元素
-	 * @param num 
+	 * 從頭到尾 取num位之元素
+	 * @param num 從0始
 	 * @returns 
 	 */
 	frontGet(num:number){
@@ -235,6 +235,12 @@ export default class CyclicArray<T>{
 		return this._data[index]
 	}
 
+	/**
+	 * @see frontGet
+	 * @param num 
+	 * @param item 
+	 * @returns 
+	 */
 	frontSet(num:number, item:T){
 		let index = CyclicArray.posAdd(this._frontI, this.capacity, num)
 		this._data[index] = item
@@ -242,8 +248,8 @@ export default class CyclicArray<T>{
 	}
 
 	/**
-	 * 從尾到頭 取第num個元素
-	 * @param num 
+	 * 從尾到頭取num位之元素
+	 * @param num 從0始
 	 * @returns 
 	 */
 	backGet(num:number){
@@ -251,6 +257,12 @@ export default class CyclicArray<T>{
 		return this._data[index]
 	}
 
+	/**
+	 * @see backGet
+	 * @param num 
+	 * @param item 
+	 * @returns 
+	 */
 	backSet(num:number, item:T){
 		let index = CyclicArray.posSub(this._backI, this.capacity, num)
 		this._data[index] = item

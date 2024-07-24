@@ -53,23 +53,6 @@ export class WebNgaqSvc extends LearnSvc{
 	get weightAlgo(){return this._weightAlgo}
 	protected set weightAlgo(v){this._weightAlgo = v}
 	
-
-	// protected _weightAlgoParser:WeightCodeParser = 
-	// get weightAlgoParser(){return this._weightAlgoParser}
-	// set weightAlgoParser(v){this._weightAlgoParser = v}
-
-
-	// protected async _load(): Promise<boolean> {
-	// 	const z = this
-	// 	const jsonRows = await z.client.getWordsFromAllTables()
-	// 	const rows:WordDbRow[] = JSON.parse(jsonRows)
-	// 	const words = rows.map(e=>WordDbRow.toEntity(e))
-	// 	const memorizeWords = words.map(e=>WebSvcWord.new(e))
-	// 	z._wordsToLearn = memorizeWords
-	// 	z.svcStatus.load = true
-	// 	return Promise.resolve(true)
-	// }
-
 	protected override async _Load(){
 		const z = this
 		const jsonRows = await z.client.GetWordsFromAllTables()
@@ -99,31 +82,9 @@ export class WebNgaqSvc extends LearnSvc{
 		}
 	}
 
-
-	//TODO
-	// async sort(): Promise<boolean> {
-	// 	const z = this
-	// 	await z._initWeightAlgo()
-	// 	if(z.weightAlgo == void 0){
-	// 		throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
-	// 	}
-	// 	try {
-	// 		const gotWords = await z.weightAlgo.run(z.wordsToLearn)
-	// 		z._wordsToLearn = gotWords as WebSvcWord[]
-	// 		return true
-	// 	} catch (error) {
-	// 		const err = error as Error
-	// 		throw err //TODO 用exception
-	// 	}
-	// 	return false
-	// }
-
-
 	//TODO 用web worker、先隨機打亂ⁿ示、待算完權重後再排序ⁿ褈示
 	protected override async _SortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
-		//await z._initWeightAlgo_deprecated()
-		const code = await z.client.GetWeightAlgoJs0()
 		const calc = $(z.weightAlgo, 'z.weightAlgo')
 		const gotWords = await calc.Run(svcWords)
 		z.This.assignWeightByRef(svcWords, gotWords)
@@ -131,23 +92,6 @@ export class WebNgaqSvc extends LearnSvc{
 			return $(a.index) - $(b.index)
 		})
 		return svcWords
-		// const opus = Opus.mkByFn()
-		// opus.Run(code)
-		
-		// opus = Opus.fromCode(code)
-		
-		return svcWords
-		// await z.initWeightAlgo()
-		// if(z.weightAlgo == void 0){
-		// 	throw new Error(`z.weightAlgo == void 0`) //TODO 用exception
-		// }
-		// try {
-		// 	const gotWords = await z.weightAlgo.run(z.wordsToLearn)
-		// 	return gotWords
-		// } catch (error) {
-		// 	throw error //TODO 用exception
-		// }
-		
 	}
 
 	protected async _Save(learnRows: Learn[]): Task<any> {
@@ -168,17 +112,12 @@ export class WebNgaqSvc extends LearnSvc{
 		return true
 	}
 
-	// protected async _sort(): Promise<boolean> {
-	// 	return true
-	// }
-
 	protected async _Start(): Promise<boolean> {
 		return true
 	}
 
 	protected async GetImgResp(){
 		const z = this
-		//return z.client.get_randomImg2()
 		return z.client.get_randomImg4()
 	}
 
@@ -212,52 +151,6 @@ export class WebNgaqSvc extends LearnSvc{
 	// 	return arr
 	// }
 
-	
-
-	// rmb(mw:WebSvcWord){
-	// 	const z = this
-	// 	const ans = mw.setInitEvent(WordEvent.RMB)
-	// 	if(ans){
-	// 		z.rmbWords.push(mw)
-	// 		z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.RMB)
-	// 	}
-	// 	return ans
-	// }
-
-	// fgt(mw:WebSvcWord){
-	// 	const z = this
-	// 	const ans = mw.setInitEvent(WordEvent.FGT)
-	// 	if(ans){
-	// 		z.fgtWords.push(mw)
-	// 		z.emitter.emit(z.svcEvents.learnByMWord, mw, WordEvent.FGT)
-	// 	}
-	// 	return ans
-	// }
-
-	// async _save(): Promise<boolean> {
-	// 	const z = this
-	// 	z._svcStatus.start = false
-	// 	//merge all
-	// 	for(let i = 0; i < z.wordsToLearn.length; i++){
-	// 		z.wordsToLearn[i].merge()
-	// 	}
-	// 	const words = z.wordsToLearn.map(e=>e.word)
-	// 	const rows = words.map(e=>WordDbRow.toPlain(e))
-	// 	//const ans = await z.dbSrc.saveWords(words)
-	// 	const ans = await z.client.saveWords(rows)
-	// 	z.emitter.emit(z.svcEvents.save, ans)
-	// 	z._svcStatus.save = true
-	// 	return true
-	// }
-
-	//TODO 判斷狀態
-	// async _restart(): Promise<boolean> {
-	// 	const z = this
-	// 	await z._sort()
-	// 	await z._start()
-	// 	return true
-	// }
-	
 }
 
 
