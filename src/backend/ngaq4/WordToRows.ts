@@ -124,7 +124,7 @@ export class WordToRows{
 		const learns = z.geneLearnRows()
 		const propertys = z.genePropertyRows()
 		const ans = JoinedRow.new({
-			word:word
+			textWord:word
 			,learns:learns
 			,propertys:propertys
 		})

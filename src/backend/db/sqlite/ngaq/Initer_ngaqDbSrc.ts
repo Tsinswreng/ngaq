@@ -118,8 +118,8 @@ export class InitSql_ngaqDbSrc{
 	,${c.text} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,UNIQUE(${c.belong}, ${c.text})
-)`
+	,UNIQUE(${c.text}, ${c.belong})
+)`//褈複ˋ少者放UNIQUE()元組內ʹ前
 		return ans
 	}
 

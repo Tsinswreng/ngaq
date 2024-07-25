@@ -16,8 +16,11 @@ export class WidRow extends IdBlCtMt{
 
 export class TextWord extends IdBlCtMt{
 	/** belong: english, japanese, etc. */
-	
-	/** 詞形 */
+
+	/**
+	 * 詞形(不唯一)
+	 * UNIQUE(text, belong)
+	 */
 	text:str
 	/** 增 新ʹ learnStatus行 或 property行 旹、視潙更改 */
 }

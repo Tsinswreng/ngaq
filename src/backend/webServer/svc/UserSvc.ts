@@ -30,7 +30,8 @@ import { NgaqDbSrc } from "@backend/db/sqlite/ngaq/NgaqDbSrc"
 import { InitSql_ngaqDbSrc } from "@backend/db/sqlite/ngaq/Initer_ngaqDbSrc"
 import { getRelativePath } from "@backend/util/File"
 import { UserDb } from "./UserDb"
-import { JoinedWord } from "@shared/model/word/JoinedWord"
+import { JoinedRow } from '@shared/model/word/JoinedRow'
+import { JoinedWord } from '@shared/model/word/JoinedWord'
 import { SqliteQryResult } from "@backend/sqlite/sqliteUtil"
 
 const EV = Le.Event.new.bind(Le.Event)
@@ -410,7 +411,17 @@ export class UserSvc{
 			ans.push(ua)
 		}
 		userDb.dbSrc.db.Commit()
-		console.log(learns)//t
+		return ans
+	}
+
+	async AddWordsFromTxt(userId:Id_t, words:JoinedRow[]){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Add = await userDb.dbSrc.Fn_AddWordsFromTxt()
+		const jWords = words.map(e=>JoinedWord.fromRow(e))
+		await userDb.dbSrc.db.BeginTrans()
+		const ans = await Add(jWords)
+		await userDb.dbSrc.db.Commit()
 		return ans
 	}
 }

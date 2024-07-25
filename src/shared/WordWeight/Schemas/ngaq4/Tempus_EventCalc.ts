@@ -181,7 +181,9 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 					z._cur_tempus__event = t_e
 					z.handleOne()
 				}
-				z.extraHandleFinalEvent()
+				if(z._cur_tempus__event != void 0){ //不應該潙空、每詞必有加事件
+					z.extraHandleFinalEvent()
+				}
 				return z._statistics
 			}
 

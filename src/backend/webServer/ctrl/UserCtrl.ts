@@ -22,6 +22,8 @@ import type * as URow from '@shared/model/user/UserRows'
 
 import type * as NMod from '@shared/model/word/NgaqModels'
 import type * as NRow from '@shared/model/word/NgaqRows'
+import { JoinedRow } from '@shared/model/word/JoinedRow'
+import { JoinedWord } from '@shared/model/word/JoinedWord'
 const cwd = process.cwd()
 
 const configInst = Config.getInstance()
@@ -73,6 +75,12 @@ export class UserCtrl extends BaseCtrl{
 	// 	next();
 	// };
 
+	/**
+	 * 
+	 * @param req 
+	 * @param res 
+	 * @returns 通過旹返userId，否則返回null
+	 */
 	async ValidateHeaders(req:Request, res:Response){
 		try {
 			const z = this
@@ -187,6 +195,24 @@ export class UserCtrl extends BaseCtrl{
 				res.status(200).sendFile(
 					Path.resolve(cwd, `./bundle/weight.js`)
 				)
+			} catch (err) {
+				z.onErr(err, res)
+			}
+		})
+
+		r.post('/addNeoWords', async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){
+					return
+				}
+				const data = req.body as JoinedRow[]
+				const ans = await z.svc.AddWordsFromTxt(userId, data)
+				
+				res.status(200).json(ans)
+				import('util').then(util=>{
+					console.log(util.inspect(ans, false, 8, true))//t
+				})
 			} catch (err) {
 				z.onErr(err, res)
 			}

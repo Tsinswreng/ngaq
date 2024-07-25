@@ -1,14 +1,16 @@
 import { Lex, LocatePair, ParseError, SegmentLex, StrSegment } from "../Lex"
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Mod from '@shared/model/word/NgaqModels'
+import * as Row from '@shared/model/word/NgaqRows'
 import * as algo from '@shared/algo'
 import type { MakeOptional,PubNonFuncProp } from "@shared/Type"
 import Tempus from "@shared/Tempus"
 import { splitByFirstSep } from "@shared/tools/splitByFirstSep"
 import type { I_Segment } from "@shared/interfaces/I_Parse"
-import { splitStr } from "@shared/tools/StrSegment"
+//import { splitStr } from "@shared/tools/StrSegment"
 import {key__arrMapPush} from '@shared/tools/key__arrMapPush'
 import type * as WordIf from '@shared/interfaces/WordIf'
+const splitStr = StrSegment.split
 
 /** @deprecated */
 function read_prop_deprecated(z:Lex):StrSegment|undef{
@@ -26,6 +28,7 @@ function read_prop_deprecated(z:Lex):StrSegment|undef{
 }
 
 /**
+ * 除mean之外
  * [[tag|N1]] ->
  * like {belong: 'tag'
  * text: 'N1'}
@@ -196,9 +199,6 @@ export class NgaqLex extends Lex{
 		return ans
 	}
 
-
-
-	
 	protected read_white(){
 		const z = this
 		for(; z.index < z.text.length;){
@@ -459,20 +459,9 @@ class WordBlockParser extends SegmentLex{
 		const ans = z.readAll()
 		return ans
 	}
-
-
 	// in param
 	//segment:StrSegment
 	date:Tempus
-
-	// outcome
-	//result = WordBlock.new()
-	
-	// temp
-	//bodySb = [] as str[]
-	
-
-	//get This(){return WordBlockParser}
 
 	protected readAll(){
 		const z = this
@@ -594,7 +583,7 @@ class Fine{
 		return ans
 	}
 
-	/** @runAtInit */
+	/** @runOnInit */
 	protected parse_metadata(metadata:StrSegment){
 		const z = this
 		try {
@@ -648,9 +637,19 @@ class Fine{
 				})
 			)
 		}
+		const mean = Mod.Property.new({
+			id:NaN
+			,belong: Row.PropertyBelong.mean
+			,ct: date
+			,mt:date
+			,text: wordBlock.body.data
+			,wid: NaN
+		})
+		
 		const propertys = parseProperty(
 			[...wordBlock.commonProp, ...wordBlock.prop]
 		)
+		propertys.push(mean)
 		const ans = JoinedWord.new({
 			textWord: textWord
 			,propertys: propertys

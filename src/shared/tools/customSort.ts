@@ -1,6 +1,6 @@
 import {classify} from '@shared/tools/classify'
+import { diffMapByKey } from './diffMapByKey'
 
-//TODO test 返回的arr與傳入的arr長度不同
 
 /**
  * 例:
@@ -12,16 +12,19 @@ fn(arr, e=>e.belong, [
 執行上面的函數後，arr會按每個元素的belong成員的值分組
 a,a,b,b,c,a,a,b,b,c....一直循環下去
 考慮邊界情況、如belong爲a的元素率先耗盡則按b,b,c,b,b,c...來排。
+order元素潙null旹、表示此位接受任意值。
  * @param arr 
  * @param by 
  * @param order 
  * @returns 
  * 
  */
-export function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
+export function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:(Cri|null)[]){
 	const ans = [] as Ele[]
 	const belong__arr:Map<Cri, Ele[]> = classify(arr, by)
-
+	const orderSet = new Set(order)
+	// 取差集 belong - order
+	const belongDiffOrder = diffMapByKey(belong__arr, orderSet)
 	for(const [k,v] of belong__arr){
 		const reversed = v.reverse()
 		belong__arr.set(k,v)
@@ -40,10 +43,34 @@ export function customSort<Ele, Cri>(arr:Ele[], by:(e:Ele)=>Cri, order:Cri[]){
 			}
 		}
 		//const e = arr[i]
-		const belong:Cri = order[k]
-		if(belong == void 0){
+		const belong:Cri|null = order[k]
+		if(belong === void 0){
 			continue
 		}
+		if(belong === null){
+			// 若order[k]爲null、表示此位接受任意值
+			for(const [keyNotInOrder,v] of belongDiffOrder){
+				//@ts-ignore
+				const gotArr = belong__arr.get(keyNotInOrder)
+				if(gotArr == void 0){
+					//@ts-ignore
+					belong__arr.delete(keyNotInOrder)
+					continue
+				}
+				
+				const last = gotArr.pop()
+				if(last == void 0){
+					//@ts-ignore
+					belong__arr.delete(keyNotInOrder)
+					continue
+				}
+				ans.push(last)
+				added++
+				break
+			}
+			continue
+		}//~if(belong === null)
+
 		const gotArr = belong__arr.get(belong)
 		if(gotArr == void 0){
 			//@ts-ignore

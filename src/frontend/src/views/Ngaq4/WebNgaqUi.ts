@@ -11,6 +11,8 @@ import * as frut from '@ts/frut'
 import { TagImg } from "@shared/tools/TagImg"
 import { Client } from "@ts/ngaq4/Client"
 import { LearnBelong } from "@shared/model/word/NgaqRows"
+import { NgaqLex } from "@shared/Lex/ngaqLex/NgaqLex"
+import { AddWordsSvc } from "@ts/ngaq4/AddWordsSvc"
 const WordEvent = LearnBelong
 
 const EV = Le.Event.new.bind(Le.Event)
@@ -347,19 +349,6 @@ export class WebNgaqUi{
 	}
 
 
-	//TODO 把changeRecord作潙可選屬性 集于MemorizeWord
-	// seekChangeRec(index:int){
-	// 	const z = this
-	// 	const recs = z.svc.weightAlgo?.word__changeRecordOld
-	// 	if(recs == void 0){
-	// 		console.log(`recs == void 0`)
-	// 		return
-	// 	}
-	// 	const curWord = z.wordsToLearn[index]
-	// 	console.log(curWord)//t
-	// 	return recs.get(curWord.word)
-	// }
-
 	async nextBg(){
 		const z = this
 		if(z.uiStuff.lockBg.value == true){
@@ -403,6 +392,19 @@ export class WebNgaqUi{
 		const z = this
 		z.svc.discardChangeEtEnd()
 	}
+
+
+	/**
+	 * @test
+	 */
+	async AddNeoWords(){
+		const z = this
+		const ele = document.getElementById('neoWords') as HTMLTextAreaElement
+		const text = ele?.value??''
+		const addWordSvc = AddWordsSvc.new()
+		return await addWordSvc.AddJoinedRows(addWordSvc.parse(text))
+	}
+
 
 
 	// async tu(){

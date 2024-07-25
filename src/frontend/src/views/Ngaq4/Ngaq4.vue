@@ -59,7 +59,7 @@ const Pro = Promise
 
 <div class="MultiMode" v-if="loaded"> 
 	<h1 class="version">ngaq4</h1>
-	<!-- <ModalInput/> -->
+	<ModalInput/>
 	
 <!-- <button @click="start()">開始</button> -->
 <!-- <h2>{{ 'status.isShowWordInfo='+status.isShowWordInfo.value+' status.isShowCardBox='+status.isShowCardBox.value }}</h2> -->

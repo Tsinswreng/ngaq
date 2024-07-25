@@ -1,8 +1,9 @@
-import { KeyMirror, PubNonFuncProp } from "@shared/Type";
+import type { KeyMirror, PubNonFuncProp } from "@shared/Type";
 import { As } from "@shared/Common";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/model/word/NgaqRows"
 import { keyMirror } from "@shared/tools/keyMirror";
+import type * as WordIf from '@shared/interfaces/WordIf'
 
 function assign(a,b){
 	return Object.assign(a,b)

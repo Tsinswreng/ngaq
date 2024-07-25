@@ -11,6 +11,11 @@ import * as Row from '@shared/model/word/NgaqRows'
 import * as Mod from '@shared/model/word/NgaqModels'
 import Tempus from '@shared/Tempus'
 
+/* 
+//TODO
+刪詞
+由時間刪記錄
+*/
 
 const ObjSql = SqliteUtil.Sql.obj
 
@@ -102,7 +107,7 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 	 * @param opt 
 	 * @returns 
 	 */
-	async Fn_add(db:SqliteDb, opt?:AddInstOpt){
+	async Fn_Add(db:SqliteDb, opt?:AddInstOpt){
 		const z = this
 		const tbl = z
 		if(opt == void 0){
@@ -130,6 +135,12 @@ class Tbl<FactT extends Mod.BaseFactory<any, any>>{
 		}
 		return ans
 	}
+
+// 	async Fn_Seek(db:SqliteDb, opt?){
+// 		const z = this
+// 		const sql = 
+// `SELECT * FROM ${z.name} `
+// 	}
 
 }
 
@@ -288,7 +299,8 @@ class Qrys{
 	
 
 	/**
-	 * WHERE ${c.belong} = ? AND ${c.text} = ?
+	 * WHERE ${c.text} = ? AND ${c.belong} = ?
+	 * @deprecated
 	 * @returns 
 	 */
 	selectExistFromWord(colAlias='_'){
@@ -297,7 +309,7 @@ class Qrys{
 		const sql = 
 `SELECT EXISTS(
 	SELECT * FROM ${z.tbls.textWord.name} 
-	WHERE ${c.belong} = ? AND ${c.text} = ?
+	WHERE ${c.text} = ? AND ${c.belong} = ?
 ) AS "${colAlias}"`
 
 		return sql
@@ -428,19 +440,47 @@ export class NgaqDbSrc{
 	}
 
 
-	async GetFn_add<T extends Tbl<any>>(
+	async GetFn_Add<T extends Tbl<any>>(
 		fn: (tbl:typeof this.tbls)=>T
 		,opt?:AddInstOpt
 	){
 		const z = this
 		const tbl = fn(z.tbls)
-		const Fn = await tbl.Fn_add(z.db, opt)
-		return Fn as ReturnType<T['Fn_add']>
+		const Fn = await tbl.Fn_Add(z.db, opt)
+		return Fn as ReturnType<T['Fn_Add']>
 	}
-	
 
-	//TODO 褈構
-	async Fn_AddJoinedRows(){
+	/**
+	 * 
+	 * @returns textWordʹQryAns
+	 */
+	async Fn_AddJoined(){
+		const z = this
+		const AddTextWord = await z.GetFn_Add(e=>e.textWord)
+		const AddLearn = await z.GetFn_Add(e=>e.learn)
+		const AddProperty = await z.GetFn_Add(e=>e.property)
+
+		const Fn = async(joined:JoinedWord|JoinedRow)=>{
+			const twAns = await AddTextWord(joined.textWord)
+			const wid = $(twAns.lastId, 'tw.lastId')
+			for(const pr of joined.propertys){
+				pr.wid = wid
+				await AddProperty(pr)
+			}
+			for(const le of joined.learns){
+				le.wid = wid
+				await AddLearn(le)
+			}
+			return twAns
+		}
+		return Fn
+	}
+
+
+	/**
+	 * @deprecated 改用Fn_AddJoined
+	 */
+	async OldFn_AddJoinedRows(){
 		const z = this
 		const si = z.schemaItems
 		const tbls = z.tbls
@@ -464,7 +504,7 @@ export class NgaqDbSrc{
 		const fn = async(rows:JoinedRow[])=>{
 			for(let i = 0; i < rows.length; i++){
 				const jr = rows[i]
-				const res = await wordStmt.Run(wordSqlObj.getParams(jr.word))
+				const res = await wordStmt.Run(wordSqlObj.getParams(jr.textWord))
 				const lastId = res.lastID
 				for(let j = 0; j < jr.learns.length; j++){
 					jr.learns[j].wid = lastId
@@ -480,16 +520,40 @@ export class NgaqDbSrc{
 		return fn
 	}
 
+	async Fn_IsWordExist(){
+		const z = this
+		const c = z.tbls.textWord.col
+		const sql = 
+`SELECT EXISTS(
+	SELECT * FROM ${z.tbls.textWord.name} 
+	WHERE ${c.text} = ? AND ${c.belong} = ?
+) AS "_"`
+		
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(word:Mod.TextWord)=>{
+			const param = [word.text, word.belong]
+			const [,got] = await stmt.All<I__<int>>(param)
+			if(got[0]?._ === 0){
+				return false
+			}
+			return true
+		}
+		return Fn
+	}
+
+	/**
+	 * @deprecated
+	 */
 	async Fn_ClassifyWordsByIsExist(){
 		const z = this
 		const sql = z.qrys.selectExistFromWord('_')
 		const stmt = await z.db.Prepare(sql)
 
-		const fn = async(words:JoinedWord[])=>{
+		const Fn = async(words:JoinedWord[])=>{
 			const existingWords = [] as JoinedWord[]
 			const nonExistingWords = [] as JoinedWord[]
 			for(const w of words){
-				const param = [w.textWord.belong, w.textWord.text]
+				const param = [w.textWord.text, w.textWord.belong]
 				const [runRes, ua] = await stmt.All<{_:int}>(param)
 				if(ua[0]?._ === 1){ //exist
 					existingWords.push(w)
@@ -499,7 +563,7 @@ export class NgaqDbSrc{
 			}
 			return [existingWords, nonExistingWords]
 		}
-		return fn
+		return Fn
 	}
 
 	async GetAllJoinedRow(){
@@ -517,19 +581,108 @@ export class NgaqDbSrc{
 		return ans
 	}
 
+		/* 
+Tempus__WordIf.I_WordFromTxt
+先看待添ʹtextWord
+const gotOldWord = seekTextWordByWordText()
+if(newTextWord.ct = gotOldWord.ct){
+	捨; return
+}
+到此亦不可直ᵈ添textWord
+word一旦添入、則ct不變
+褈添(添芝將致times_addˋ增者)旹、新詞ʹct不同於舊ᐪ
+
+
+
+declare new is 待添ʹproperty
+SELECT * FROM property
+where ct = new.ct
+AND wid->textWord.text = newʹtextWord.text;
+若尋不見則直添新ʹproperty
+否則不添
+
+		*/
+
+	/**
+	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
+	 * 成功則自動添一Learn(belong=add)
+	 * @returns Task:[initAddAns, duplicatedWordPropAddAns] as [QryAns<any>[], QryAns<any>[]]
+	 */
+	async Fn_AddWordsFromTxt(){
+		const z = this
+		//let c = z.tbls.textWord.col
+// 		const seek_textWord_by_text_ct_belong = await z.db.Prepare(
+// `SELECT * FROM ${z.tbls.textWord.name}
+// WHERE ${c.text}=? AND ${c.ct}=? AND ${c.belong}=?`
+// 		)
+		//const AddTextWord = await z.GetFn_Add(e=>e.textWord)
+		//const IsExist = await z.Fn_IsWordExist()
+		const SeekJoinedRowByTextEtBelong = await z.Fn_SeekJoinedRowByTextEtBelong()
+		const AddJ = await z.Fn_AddJoined()
+		const AddLearn = await z.GetFn_Add(e=>e.learn)
+		const AddProp = await z.GetFn_Add(e=>e.property)
+		
+		const Fn = async(words:JoinedWord[])=>{
+			const initAddAns = [] as QryAns<any>[]
+			const duplicatedWordPropAddAns = [] as QryAns<any>[]
+			for(const word of words){
+				const tw = word.textWord.toRow()
+				const got = await SeekJoinedRowByTextEtBelong(tw.text, tw.belong)
+				if(got.length === 0){ //表中無此詞則直ᵈ添
+					const twAns = await AddJ(word)
+					const learn = Mod.Learn.new({
+						id: NaN
+						,wid: $(twAns.lastId)
+						,ct: word.textWord.ct
+						,mt: word.textWord.mt
+						,belong: Row.LearnBelong.add
+					})
+					await AddLearn(learn)
+					initAddAns.push(twAns)
+					continue
+				}
+
+//表中既有此詞>
+				//取差集 得 未添過之prop
+				const propToAdd = JoinedWord.diffProperty(word, JoinedWord.fromRow(got[0]))
+				let hasAddedProp = false
+				const oldWordId = $(got[0]?.textWord?.id)
+				for(const neoProp of propToAdd){
+					hasAddedProp = true
+					neoProp.wid = oldWordId
+					const ua = await AddProp(neoProp.toRow())
+					duplicatedWordPropAddAns.push(ua)
+				}
+				if(hasAddedProp){
+					const learn = Mod.Learn.new({
+						id: NaN
+						,wid: oldWordId
+						,ct: word.textWord.ct
+						,mt: word.textWord.mt
+						,belong: Row.LearnBelong.add
+					})
+					await AddLearn(learn)
+				}
+			} //~for(const word of words)
+			return [initAddAns, duplicatedWordPropAddAns] as [QryAns<any>[], QryAns<any>[]]
+		}
+		return Fn
+	}
+
 
 	/**
 	 * 加詞、能防褈添
 	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
 	 * @param words 
 	 * @returns 
+	 * @deprecated 未慮時間、Fn_SeekJoinedRowBy已棄用
 	 * //TODO
 	 */
-	async Fn_AddWordsDistinctProperty(words:JoinedWord[]){
+	async OldFn_AddWordsDistinctProperty(words:JoinedWord[]){
 		const z = this
 
 		const ClassifyWordsByIsExist = await z.Fn_ClassifyWordsByIsExist()
-		const AddJRows = await z.Fn_AddJoinedRows()
+		const AddJRow = await z.Fn_AddJoined()
 		const SeekById = await z.Fn_SeekJoinedRowById()
 		const SeekByText = await z.Fn_SeekJoinedRowBy(z.tbls.textWord.col.text)
 		const AddPr = await z.GetFn_addRow(e=>e.property)
@@ -552,7 +705,10 @@ export class NgaqDbSrc{
 			
 			//const addPr = await z.qrys.fn_addPropertyRow(z.db)
 			
-			await AddJRows(nonExistWords.map(e=>e.toRow()))
+			//await AddJRows(nonExistWords.map(e=>e.toRow()))
+			for(const w of nonExistWords){
+				await AddJRow(w)
+			}
 			for(const e of diffPropertys){
 				await AddPr(e.toRow())
 			}
@@ -562,6 +718,9 @@ export class NgaqDbSrc{
 	}
 
 
+	/**
+	 * 
+	 */
 	async Fn_SeekJoinedRowById(){
 		const z = this
 		const sqlTw = z.qrys.selectTextWordById()
@@ -571,7 +730,7 @@ export class NgaqDbSrc{
 		const sqlLe = z.qrys.selectLearnsByWid()
 		const stmtLe = await z.db.Prepare(sqlLe)
 
-		const fn = async(id:int|str)=>{
+		const Fn = async(id:int|str)=>{
 			const [,textWords] = await stmtTw.All<Row.TextWord>([id])
 			if(textWords.length === 0){
 				return null
@@ -584,24 +743,48 @@ export class NgaqDbSrc{
 			const [,propertys] = await stmtPr.All<Row.Property>([id])
 			const [,learns] = await stmtLe.All<Row.Learn>([id])
 			const jRow = JoinedRow.new({
-				word: textWord
+				textWord: textWord
 				,propertys: propertys
 				,learns: learns
 			})
 			return jRow
 		}
-		return fn
+		return Fn
+	}
+
+	async Fn_SeekJoinedRowByTextEtBelong(){
+		const z = this
+		const tbl = z.tbls.textWord
+		const SeekJoinedRowById = await z.Fn_SeekJoinedRowById()
+		const sql = 
+`SELECT ${tbl.col.id} FROM ${tbl.name}
+WHERE ${tbl.col.text}=? AND ${tbl.col.belong}=?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(text:str, belong:str)=>{
+			const [, gotWords] = await stmt.All<Row.TextWord>([text, belong])
+			const ans = [] as JoinedRow[]
+			for(const word of gotWords){
+				const id = word.id
+				const ua = await SeekJoinedRowById(id)
+				if(ua != null){
+					ans.push(ua)
+				}
+			}
+			return ans
+		}
+		return Fn
 	}
 
 	/**
 	 * WHERE ${col}=?
 	 * @returns fn: (val: str) => Promise<JoinedRow[]>
+	 * @deprecated 未檢查belong
 	 */
 	async Fn_SeekJoinedRowBy(col:str){
 		const z = this
 		const tbls = z.tbls
 		const tbl = tbls.textWord
-		const seekById = await z.Fn_SeekJoinedRowById()
+		const SeekById = await z.Fn_SeekJoinedRowById()
 		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
 		const stmt = await z.db.Prepare(sql)
 		const fn = async(val:str)=>{
@@ -609,7 +792,7 @@ export class NgaqDbSrc{
 			const ans = [] as JoinedRow[]
 			for(const word of gotWords){
 				const id = word.id
-				const ua = await seekById(id)
+				const ua = await SeekById(id)
 				if(ua != null){
 					ans.push(ua)
 				}
@@ -642,12 +825,13 @@ WHERE ${tbl.col.wid}=?`
 
 	/**
 	 * 確保 新加入ʹlearnˋ最新
+	 * 只用于rmb與fgt
 	 * @returns 
 	 */
 	async Fn_AddValidLearnRows(){
 		const z = this
 		const SeekLatestLearn = await z.Fn_SeekLatestLearnByWid()
-		const AddLearn = await z.GetFn_add(e=>e.learn)
+		const AddLearn = await z.GetFn_Add(e=>e.learn)
 		const Fn = async(learn:(Row.Learn))=>{
 			const latestLearnAns = await SeekLatestLearn(learn.wid)
 			const latestLearn = $(latestLearnAns.data[0])

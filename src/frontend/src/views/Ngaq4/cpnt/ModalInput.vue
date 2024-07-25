@@ -1,15 +1,12 @@
-<template>
-	<div v-if="isVisible" class="modal">
-		<div class="modal-content">
-			<textarea v-model="inputValue" class="input-box" placeholder="Enter text..." />
-			<button @click="hideModal">Close</button>
-		</div>
-	</div>
-</template>
-
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-
+import { WebNgaqUi } from '../WebNgaqUi';
+let ui: WebNgaqUi
+const loaded = ref(false)
+;(async()=>{
+	ui = await WebNgaqUi.getInstanceAsync()
+	loaded.value = true
+})()
 // 控制输入框的显示
 const isVisible = ref(false);
 
@@ -31,6 +28,18 @@ onMounted(() => {
 	showModal();
 });
 </script>
+
+<template>
+	<div v-if="loaded && isVisible" class="modal">
+		<div class="modal-content">
+			<textarea
+				v-model="inputValue" class="input-box" id="neoWords" placeholder="Enter text..."
+			/>
+			<button @click="hideModal">Close</button>
+			<button @click="ui.AddNeoWords()">Submit</button>
+		</div>
+	</div>
+</template>
 
 <style scoped lang="scss">
 .modal {

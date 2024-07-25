@@ -581,16 +581,20 @@ export abstract class LearnSvc{
 		z._status = new SvcStatus()
 	}
 
-	
 	static assignWeightByRef(words:SvcWord[], refArr:WordIF.I_WordForCalcWeight[]){
 		const id__ref = classify(refArr, e=>e.id)
-		for(let i = 0; i < refArr.length; i++){
-			refArr[i].index = i
+		let index = 0
+		for(; index < refArr.length; index++){
+			refArr[index].index = index
 		}
+		const noRefWordIds = [] as SvcWord[]
 		for(const w of words){
 			const gotRef = id__ref.get(w.id)
 			if(gotRef == void 0){
+				noRefWordIds.push(w)
 				w.weight = 0
+				index++
+				w.index = index
 				continue
 			}
 			w.weight = gotRef[0]?.weight??0

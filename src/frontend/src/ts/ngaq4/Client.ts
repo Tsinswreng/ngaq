@@ -191,10 +191,7 @@ export class Client{
 
 	async AddLearnRows(learnRows:NRow.Learn[]){
 		const z = this
-		//const json = JSON.stringify(learnRows)
 		const url = new URL(`${urlB.user}/addLearnRows`, z.baseUrl)
-		//console.log(learnRows)//t
-		//const data: I__ = {_: JSON.stringify(learnRows)}
 		const resp = await ApiRequest(url.toString(), POST, learnRows)
 		return resp.data
 	}
@@ -227,6 +224,19 @@ export class Client{
 		//return text
 	}
 
+	async AddNeoWords(words:JoinedRow[]){
+		const z = this
+		// const rows = words.map(e=>e.toRow())
+		const rows = words
+		const url = new URL(`${urlB.user}/addNeoWords`, z.baseUrl)
+		const resp = await ApiRequest(url.toString(), POST, rows)
+		return resp
+	}
+
+
+
+/** @deprecated ------------------------------------------------------------------------*/
+
 	/**
 	 * ,照搬舊版、待重構
 	 * @param rows 
@@ -256,13 +266,5 @@ export class Client{
 		} catch (error) {
 			throw error
 		}
-	}
-
-	async AddNeoWords(words:JoinedWord[]){
-		const z = this
-		const rows = words.map(e=>e.toRow())
-		const url = new URL(`${urlB.user}/addNeoWords`, z.baseUrl)
-		const resp = await ApiRequest(url.toString(), POST, rows)
-		return resp
 	}
 }

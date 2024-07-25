@@ -1,6 +1,8 @@
 import { $ } from '@shared/Common'
 import * as fs from 'fs'
 import srcMap from 'source-map'
+import * as RL from '@backend/util/readLine'
+
 type MP = srcMap.NullableMappedPosition
 class Source{
 	protected constructor(){}
@@ -46,14 +48,14 @@ async function Smc(path: str){
 	return got
 }
 
-async function Main(){
+async function Qry(line:int, column:int){
 	try {
 		//const tarCode = fs.readFileSync(`./bundle/weight.js`, {encoding: 'utf-8'})
 		const wpSmc = await Smc(`./bundle/weight.js.map`)
 		const wp = await wpSmc
 		const jsPos = wp.originalPositionFor({
-			line: 2
-			,column: 1055928
+			line: line
+			,column: column
 		})
 		const jsPath = replaceHead($(jsPos.source))
 		const tsMapPath = getTsMapPath(jsPath)
@@ -69,7 +71,16 @@ async function Main(){
 		console.error(err)
 	}
 }
-Main().catch()
+
+async function Main(){
+	for(;;){
+		const rl = RL.question_fn(RL.createInterface(), '')
+		const imput = await rl()
+		const [line, column] = imput.split(':')
+		await Qry(parseInt(line), parseInt(column))
+	}
+}
+Main().catch(e=>console.error(e))
 
 // class A{
 // 	constructor(){

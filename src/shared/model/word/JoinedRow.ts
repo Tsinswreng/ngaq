@@ -19,7 +19,7 @@ export class JoinedRow{
 
 	get This(){return JoinedRow}
 
-	word:Row.TextWord
+	textWord:Row.TextWord
 	learns:Row.Learn[]
 	propertys: Row.Property[]
 }

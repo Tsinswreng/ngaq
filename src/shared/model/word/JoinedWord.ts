@@ -1,13 +1,14 @@
 import * as Mod from '@shared/model/word/NgaqModels'
 import Tempus from "@shared/Tempus"
-import { classify } from "@shared/algo"
+//import { classify } from "@shared/algo"
 import * as Row from '@shared/model/word/NgaqRows'
-import { Word } from "@shared/entities/Word/Word"
-import { diffArrIntoMap } from "@shared/algo"
+//import { Word } from "@shared/entities/Word/Word"
 import { JoinedRow } from './JoinedRow'
 import { PubNonFuncProp } from '@shared/Type'
+import type * as WordIf from '@shared/interfaces/WordIf'
+import {diffArrIntoMap} from '@shared/tools/diffArrIntoMap'
 
-export class JoinedWord{
+export class JoinedWord implements WordIf.I_propertys, WordIf.I_learns{
 	protected constructor(){}
 
 	protected __init__(...args:Param<typeof JoinedWord.new>){
@@ -26,7 +27,7 @@ export class JoinedWord{
 	protected __init__fromRow(...args: Parameters<typeof JoinedWord.fromRow>){
 		const z = this
 		const row = args[0]
-		const textWord = Mod.TextWord.fromRow(row.word)
+		const textWord = Mod.TextWord.fromRow(row.textWord)
 		const propertys = row.propertys.map(e=>Mod.Property.fromRow(e))
 		const learns = row.learns.map(e=>Mod.Learn.fromRow(e))
 		z.__init__({
@@ -59,7 +60,7 @@ export class JoinedWord{
 
 	static toRow(j:JoinedWord):JoinedRow{
 		const ans = JoinedRow.new({
-			word: j.textWord.toRow()
+			textWord: j.textWord.toRow()
 			,learns: j.learns.map(e=>e.toRow())
 			,propertys: j.propertys.map(e=>e.toRow())
 		})
@@ -71,23 +72,23 @@ export class JoinedWord{
 		return z.This.toRow(z)
 	}
 
-	static toPlainWord(jw:JoinedWord){
-		const propMap = classify(jw.propertys, (e)=>e.belong)
-		const learnMap = classify(jw.learns, (e)=>e.belong)
-		const ans = Word.new({
-			id: jw.textWord.id
-			,table: jw.textWord.belong
-			,wordShape: jw.textWord.text
-			,mean: (propMap.get(Row.PropertyBelong.mean)??[]).map(e=>e.text)
-			,tag: (propMap.get(Row.PropertyBelong.tag)??[]).map(e=>e.text)
-			,annotation: (propMap.get(Row.PropertyBelong.annotation)??[]).map(e=>e.text)
-			,dates_add: (learnMap.get(Row.LearnBelong.add)??[]).map(e=>e.mt)
-			,dates_rmb: (learnMap.get(Row.LearnBelong.rmb)??[]).map(e=>e.mt)
-			,dates_fgt: (learnMap.get(Row.LearnBelong.fgt)??[]).map(e=>e.mt)
-		})
-		//ans.joinedWordOld = jw
-		return ans
-	}
+	// static toPlainWord(jw:JoinedWord){
+	// 	const propMap = classify(jw.propertys, (e)=>e.belong)
+	// 	const learnMap = classify(jw.learns, (e)=>e.belong)
+	// 	const ans = Word.new({
+	// 		id: jw.textWord.id
+	// 		,table: jw.textWord.belong
+	// 		,wordShape: jw.textWord.text
+	// 		,mean: (propMap.get(Row.PropertyBelong.mean)??[]).map(e=>e.text)
+	// 		,tag: (propMap.get(Row.PropertyBelong.tag)??[]).map(e=>e.text)
+	// 		,annotation: (propMap.get(Row.PropertyBelong.annotation)??[]).map(e=>e.text)
+	// 		,dates_add: (learnMap.get(Row.LearnBelong.add)??[]).map(e=>e.mt)
+	// 		,dates_rmb: (learnMap.get(Row.LearnBelong.rmb)??[]).map(e=>e.mt)
+	// 		,dates_fgt: (learnMap.get(Row.LearnBelong.fgt)??[]).map(e=>e.mt)
+	// 	})
+	// 	//ans.joinedWordOld = jw
+	// 	return ans
+	// }
 
 	/**
 	 * 升序
@@ -107,10 +108,14 @@ export class JoinedWord{
 	}
 
 
+
 	/**
 	 * 以mt潙準取差集
 	 * w1有洏w2無 者
 	 * //TODO test
+	 * @param w1 待加者
+	 * @param w2 已有者
+	 * @returns 未加過之prop
 	 */
 	static diffProperty(w1:JoinedWord, w2:JoinedWord){
 		if(w1.textWord.text !== w2.textWord.text
