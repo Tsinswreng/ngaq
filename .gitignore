@@ -24,3 +24,5 @@ crawler/
 *.wasm
 src/c/*
 .env
+self_clone/
+db/ignored/
