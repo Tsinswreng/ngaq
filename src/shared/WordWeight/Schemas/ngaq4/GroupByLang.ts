@@ -31,7 +31,7 @@ export class GroupByLang implements I_WordWeight<Word_t>{
 		let l = 'latin'
 		let i = 'italian'
 		words = customSort(words, e=>e.belong, [
-			null,e,j,e,j,l,e,j,e,j,l
+			null,e,j,e,j,i,e,j,e,j,l
 		])
 		return Promise.resolve(words)
 	}

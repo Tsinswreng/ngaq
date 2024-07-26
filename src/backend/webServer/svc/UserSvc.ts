@@ -404,13 +404,13 @@ export class UserSvc{
 		const z = this
 		const userDb = await z.GetUserDbByUserId(userId)
 		const Add = await userDb.dbSrc.Fn_AddValidLearnRows()
-		userDb.dbSrc.db.BeginTrans()
+		await userDb.dbSrc.db.BeginTrans()
 		const ans = [] as (SqliteQryResult<undef>|undef)[]
 		for(const l of learns){
 			const ua = await Add(l)
 			ans.push(ua)
 		}
-		userDb.dbSrc.db.Commit()
+		await userDb.dbSrc.db.Commit()
 		return ans
 	}
 

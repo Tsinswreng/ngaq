@@ -58,7 +58,7 @@ const Pro = Promise
 <Suspense>
 
 <div class="MultiMode" v-if="loaded"> 
-	<h1 class="version">ngaq4</h1>
+	<h1 class="version"></h1>
 	<ModalInput v-if="ui.uiStuff.isShowAddWordsBox.value"/>
 	
 <!-- <button @click="start()">開始</button> -->
@@ -113,7 +113,7 @@ baseUrl:&nbsp;{{ VocaClient.baseUrl}}&nbsp;,範圍:
 <style scoped lang="scss">
 
 .version{
-	color: rgb(64, 64, 64);
+	color: rgba(64, 64, 64, 0.5);
 	position: relative;
 	position: absolute;
 	top: 50%;
