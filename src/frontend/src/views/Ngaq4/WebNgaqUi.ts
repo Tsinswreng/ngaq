@@ -46,6 +46,7 @@ class UiStuff{
 	/** true 背景不再變 */
 	lockBg = ref(true)
 	cardsBox_key:Ref<number> = ref(0)
+	isShowAddWordsBox = ref(false)
 	//reciteStatusRef:Ref<'rmb'|'fgt'|'nil'> = ref('nil')
 }
 
@@ -394,6 +395,21 @@ export class WebNgaqUi{
 	}
 
 
+	showAddWordsBox(){
+		const z = this
+		z.uiStuff.isShowAddWordsBox.value = true
+	}
+
+	hideAddWordsBox(){
+		const z = this
+		z.uiStuff.isShowAddWordsBox.value = false
+	}
+
+	toggleAddWordsBox(){
+		const z = this
+		z.uiStuff.isShowAddWordsBox.value = !z.uiStuff.isShowAddWordsBox.value
+	}
+
 	/**
 	 * @test
 	 */
@@ -404,6 +420,8 @@ export class WebNgaqUi{
 		const addWordSvc = AddWordsSvc.new()
 		return await addWordSvc.AddJoinedRows(addWordSvc.parse(text))
 	}
+
+
 
 
 

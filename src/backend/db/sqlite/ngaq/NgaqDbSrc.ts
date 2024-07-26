@@ -188,6 +188,8 @@ class Trigger<Tbl_t extends Tbl<any>> extends SchemaItem{
 		const name = args[0]
 		const tbl = args[1]
 		super.__init__(name, SqliteUtil.SqliteMasterType.trigger, tbl.name)
+		//@ts-ignore
+		z.tbl = tbl
 		return z
 	}
 

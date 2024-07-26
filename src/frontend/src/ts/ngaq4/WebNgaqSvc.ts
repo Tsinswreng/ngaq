@@ -1,15 +1,13 @@
-//import { SvcWord3, RMB_FGT } from "@shared/entities/Word/SvcWord3";
 import { LinkedEmitter } from "@shared/linkedEvent";
 import * as Le from "@shared/linkedEvent";
 import { LearnSvc } from "@shared/logic/memorizeWord/LearnSvc";
 import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
-//import { Word } from "@shared/entities/Word/Word";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
-import { $ } from "@shared/Ut";
+import { $ } from "@shared/Common";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
-import { BlobWithText as BlobWithText } from "@shared/tools/BlobWithText";
+import { BlobWithText } from "@shared/tools/BlobWithText";
 import { TagImg } from "@shared/tools/TagImg";
 import { JoinedRow } from "@shared/model/word/JoinedRow";
 import { JoinedWord } from "@shared/model/word/JoinedWord";
@@ -98,15 +96,6 @@ export class WebNgaqSvc extends LearnSvc{
 		const z = this
 		return await z.client.AddLearnRows(learnRows)
 	}
-
-	// protected override async _saveOld(words: Word[]): Promise<any> {
-	// 	const z = this
-	// 	const rows = words.map(e=>WordDbRow.toPlain(e))
-	// 	//const ans = await z.dbSrc.saveWords(words)
-	// 	const ans = await z.client.saveWords(rows)
-	// 	return ans
-	// }
-
 
 	protected async _Restart(): Promise<boolean> {
 		return true

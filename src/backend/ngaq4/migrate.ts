@@ -6,6 +6,7 @@ import { WordToRows } from "./WordToRows"
 import { NgaqDbSrc } from "../db/sqlite/ngaq/NgaqDbSrc"
 import sqlite3 from 'sqlite3'
 import { SqliteDb } from "@backend/sqlite/Sqlite"
+import { InitSql_ngaqDbSrc } from "@backend/db/sqlite/ngaq/Initer_ngaqDbSrc"
 class Migrate{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof Migrate.new>){
@@ -68,9 +69,11 @@ class Migrate{
 			return wtr.geneJoinedRow()
 		})
 		//await z.ngaqDbSrc.test_addJoinedRows_deprecated(joinedRows)
-		const fn = await z.ngaqDbSrc.OldFn_AddJoinedRows()
+		const fn = await z.ngaqDbSrc.Fn_AddJoined()
 		z.ngaqDbSrc.db.BeginTrans()
-		await fn(joinedRows)
+		for(const j of joinedRows){
+			await fn(j)
+		}
 		z.ngaqDbSrc.db.Commit()
 		// z.ngaqDbSrc.db.beginTrans()
 		// for(const row of joinedRows){
@@ -91,9 +94,10 @@ async function main(){
 	const neoDbPath = './ngaq.sqlite'
 	const neoDbRaw = new sqlite3.Database(neoDbPath)
 	const neoDb = SqliteDb.new(neoDbRaw)
+	await InitSql_ngaqDbSrc.MkSchema(neoDb)
 	const neoDbSrc = NgaqDbSrc.new(neoDb)
 	const mig = Migrate.new(oldDbSrc, neoDbSrc, [
-		'english' , 'japanese'
+		'english' , 'japanese', 'latin', 'italian', 
 	])
 	const ans = await mig.migrate()
 	console.log(ans)

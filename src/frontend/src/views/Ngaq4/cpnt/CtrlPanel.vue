@@ -73,6 +73,7 @@ function set_page(){
 			<input type="text" id="paging" :value="LS.items.multiModePaging.get()">
 		</span>
 		<button @click="set_page()">設頁</button>
+		<button @click="ui.toggleAddWordsBox()">加詞</button>
 		<!-- <span>{{ isSaved? '':'未保存' }}</span> -->
 	</div>
 </template>
