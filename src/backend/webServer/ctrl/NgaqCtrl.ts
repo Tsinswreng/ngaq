@@ -11,16 +11,16 @@ const configInst = Config.getInstance()
 export class NgaqCtrl extends BaseCtrl{
 	protected constructor(){super()}
 	//@ts-ignore
-	protected __init__(...args: Parameters<typeof NgaqCtrl.new>){
+	protected __Init__(...args: Parameters<typeof NgaqCtrl.new>){
 		const z = this
 		z.svc = args[0]
-		super.__init__()
+		super.__Init__()
 		return z
 	}
 
 	static new(svc:NgaqDbSvc){
 		const z = new this()
-		z.__init__(svc)
+		z.__Init__(svc)
 		return z
 	}
 

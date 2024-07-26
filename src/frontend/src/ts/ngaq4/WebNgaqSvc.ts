@@ -5,7 +5,7 @@ import EventEmitter3 from 'EventEmitter3'
 import { Client } from "./Client";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
-import { $ } from "@shared/Common";
+import { $, As } from "@shared/Common";
 import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
 import { BlobWithText } from "@shared/tools/BlobWithText";
 import { TagImg } from "@shared/tools/TagImg";
@@ -107,22 +107,26 @@ export class WebNgaqSvc extends LearnSvc{
 
 	protected async GetImgResp(){
 		const z = this
-		return z.client.get_randomImg4()
+		const ans = await z.client.Get_randomImg()
+		// console.log(ans) ArrayBuffer
+		// console.log(typeof ans)
+		return As(ans, ArrayBuffer)
 	}
 
-	async GetImg_arrBuf(){
-		const z = this
-		const resp = await z.GetImgResp()
-		const buf = await resp.arrayBuffer()
-		const pack = BlobWithText.parse(buf)
-		console.log(pack.text)//t
-		return pack.arrBuf
-	}
+	// async GetImg_arrBuf(){
+	// 	const z = this
+	// 	// const resp = await z.GetImgResp()
+	// 	// const buf = await resp.arrayBuffer()
+	// 	const buf = await z.GetImgResp()
+	// 	const pack = BlobWithText.parse(buf)
+	// 	console.log(pack.text)//t
+	// 	return pack.arrBuf
+	// }
 
 	async GetImg(){
 		const z = this
 		const resp = await z.GetImgResp()
-		const buf = await resp.arrayBuffer()
+		const buf = resp
 		const pack = BlobWithText.parse(buf)
 		const tagImg = TagImg.new(pack.arrBuf, pack.text)
 		tagImg.url = pack.text

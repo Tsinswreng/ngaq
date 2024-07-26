@@ -22,6 +22,33 @@ type Req_method_t = 'GET' | 'POST'
 // 封装请求函数
 
 //function apiRequest(url:str, method:Req_method_t, data)
+
+function getAxiosOpt(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
+	const userId = lsItems.userId.get()
+	const token = lsItems.token.get()
+	const opt:AxiosRequestConfig<any> = {
+		method: method,
+		url: url,
+		//data: data,
+		headers: {
+			'Content-Type': 'application/json',
+//Bearer: HTTP 协议中用于身份验证的一种令牌类型。 持票人令牌
+			'Authorization': `Bearer ${token}`, 
+			'X-User-ID': userId
+		},
+	}
+	if(method === 'GET' && data != void 0){
+		opt.params = data
+	}else{ //POST
+		if(data != void 0){
+			opt.data = data
+		}else{
+			opt.data = {}
+		}
+	}
+	return opt
+}
+
 function ApiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 	const userId = lsItems.userId.get()
 	const token = lsItems.token.get()
@@ -47,6 +74,8 @@ function ApiRequest(url:str, method:Req_method_t = "GET", data?:kvobj|undef){
 	}
 	return axios(opt);
 };
+
+
 
 // 使用封装的请求函数发送请求
 // apiRequest('https://your-api-endpoint.com')
@@ -171,22 +200,14 @@ export class Client{
 		return session
 	}
 
-	/**
-	 * @deprecated
-	 * @returns 
-	 */
-	async get_randomImg2(){
-		const z = this
-		const url = new URL('/randomImg2', z.baseUrl)
-		const got = await fetch(url)
-		return got
-	}
 
-	async get_randomImg4(){
+	async Get_randomImg(){
 		const z = this
-		const url = new URL('/randomImg4', z.baseUrl)
-		const got = await fetch(url)
-		return got
+		const url = new URL(`${urlB.user}/randomImg`, z.baseUrl)
+		const opt = getAxiosOpt(url.toString(), GET)
+		opt.responseType = 'arraybuffer'
+		const resp = await axios(opt)
+		return resp.data
 	}
 
 	async AddLearnRows(learnRows:NRow.Learn[]){
@@ -204,14 +225,6 @@ export class Client{
 		const text = got.data
 		//const text = await got.text()
 		return text as str
-	}
-
-	async getWordsFromAllTables_old(){
-		const z = this
-		const url = new URL(`${ngaqUrl}/allWords`, z.baseUrl)
-		const got = await fetch(url)
-		const text = await got.text()
-		return text
 	}
 
 	async GetWordsFromAllTables(){

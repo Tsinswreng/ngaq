@@ -17,7 +17,7 @@ export function randomIntArr(min:number, max:number, howMany:number, allowDuplic
 	 */
 	function non_duplicateInt(min: number, max: number, howMany: number) {
 		if (max - min + 1 < howMany) {
-			throw new Error(`max - min + 1 < howMany`);
+			throw new RangeError(`max - min + 1 < howMany`);
 		}
 		//创建一个包含从 min 到 max 的所有整数的数组。
 		const integerArray = Array.from({ length: max - min + 1 }, (_, index) => index + min);

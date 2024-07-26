@@ -350,13 +350,11 @@ export class WebNgaqUi{
 	}
 
 
-	async nextBg(){
+	async NextBg(){
 		const z = this
 		if(z.uiStuff.lockBg.value == true){
 			return
 		}
-		// const arrBuf = await z.svc.getImg_arrBuf()
-		// return z.bgImg.setBg_arrBuf(arrBuf)
 		const img = await z.svc.GetImg()
 		z.emitter.emit(z.events.changeBg, img)
 		return z.bgImg.setBg_Img(img)
@@ -375,7 +373,7 @@ export class WebNgaqUi{
 				console.error(e)
 			})
 			z.svc.emitter.on(z.svc.events.learnBySvcWord, async(svcWord)=>{
-				await z.nextBg().catch(e=>{
+				await z.NextBg().catch(e=>{
 					hanErr(e)
 				})
 			})

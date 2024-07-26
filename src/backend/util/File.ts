@@ -100,6 +100,28 @@ export function getRelativePath(basePath:string, targetPath:string) {
 	return unixRelativePath;
 }
 
+/**
+ * recursiveReadDir('./db').then(d=>console.log(d))
+ * ['db\\DictDb.db', ...]
+ */
+export async function RecursiveReadDir(dir:string){
+	const ans = [] as str[]
+	const fn = async(dir:str)=>{
+		const files = await fs.promises.readdir(dir)
+		for(const file of files){
+			const filePath = Path.join(dir, file)
+			const stat = await fs.promises.stat(filePath)
+			if(stat.isDirectory()){
+				await fn(filePath)
+			}else{
+				ans.push(filePath)
+			}
+		}
+	}
+	await fn(dir)
+	return ans
+}
+
 
 // import { merge } from '@shared/Ut'
 // import * as fs from 'fs'

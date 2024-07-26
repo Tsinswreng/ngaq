@@ -64,7 +64,7 @@ class Server{
 		z.app.use(express.static('./out/frontend/dist')); //會攔截請求
 	}
 
-	initRoutes(){
+	async InitRoutes(){
 		const z = this
 
 		z.app.get('/tempus',(req,res)=>{
@@ -77,11 +77,10 @@ class Server{
 		// 	const rows = await mod.dbSrc.GetAllJoinedRow()
 		// 	res.json(rows)
 		// })
+	
+		const userCtrl = await UserCtrl.GetInstance()
+		z.app.use('/api/user', userCtrl.router)
 		
-		z.app.use('/api/user', UserCtrl.inst.router)
-		z.app.use('/api/ngaq', NgaqCtrl.inst.router)
-
-
 		// 在末
 		z.app.get('*', (req, res)=>{
 			console.log(`*`)
@@ -103,7 +102,7 @@ class Server{
 	async start(){
 		const z = this
 		z.initUse()
-		z.initRoutes()
+		await z.InitRoutes()
 		z.app.listen(z.port, ()=>{
 			console.log(z.port)
 		})

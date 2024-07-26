@@ -10,6 +10,7 @@
 			,password: 'ngaq'
 
 			,userDbPath: './db/userDb/ngaq.sqlite' //無效
+			//不效
 			,wordWeight: {
 				schemas: [
 					{
@@ -22,8 +23,12 @@
 							,3
 						]
 					}
-				]
-			}
+				]//~schemas
+			}//~wordWeight
+			,imgDir:[
+				`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
+				,`D:\\_\\視聽\\圖`
+			]
 		}
 		//web服務器
 		,server:{
@@ -31,7 +36,7 @@
 			,dbPath: "./db/server.sqlite" //服務器數據庫
 			,jwtKey: "TsinswrengGw'ang"
 		}
-	}
+	} //~ngaq
 	,userDb: {
 		baseDir: './db/userDb'
 		,prefix: 'user-'

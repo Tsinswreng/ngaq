@@ -24,6 +24,7 @@ import type * as NMod from '@shared/model/word/NgaqModels'
 import type * as NRow from '@shared/model/word/NgaqRows'
 import { JoinedRow } from '@shared/model/word/JoinedRow'
 import { JoinedWord } from '@shared/model/word/JoinedWord'
+import { RandomImgSvc } from "../svc/RandomImgSvc"
 const cwd = process.cwd()
 
 const configInst = Config.getInstance()
@@ -31,26 +32,39 @@ const configInst = Config.getInstance()
 export class UserCtrl extends BaseCtrl{
 	protected constructor(){super()}
 	//@ts-ignore
-	protected __init__(...args: Parameters<typeof UserCtrl.new>){
+	protected async __Init__(...args: Parameters<typeof UserCtrl.New>){
 		const z = this
+		await super.__Init__()
 		z.svc = args[0]
-		super.__init__()
+		z.randomImgSvc = await RandomImgSvc.GetInstance()
 		return z
 	}
 
-	static new(svc:UserSvc){
+	static async New(svc:UserSvc){
 		const z = new this()
-		z.__init__(svc)
+		await z.__Init__(svc)
 		return z
 	}
 
-	static inst = UserCtrl.new(UserSvc.inst)
+	protected static inst:UserCtrl
+	static async GetInstance(){
+		const z = this
+		if(!z.inst){
+			z.inst = await z.New(UserSvc.inst)
+		}
+		return z.inst
+	}
 
 	//get This(){return UserCtrl}
 
 	protected _svc:UserSvc
 	get svc(){return this._svc}
 	protected set svc(v){this._svc = v}
+
+	protected _randomImgSvc:RandomImgSvc
+	get randomImgSvc(){return this._randomImgSvc}
+	protected set randomImgSvc(v){this._randomImgSvc = v}
+	
 
 	// validateHeaders(req:Request, res:Response, next:NextFunction){
 	// 	// 检查 Authorization 头部是否存在且格式正确
@@ -114,6 +128,18 @@ export class UserCtrl extends BaseCtrl{
 		const r = z.router
 
 		r.get('/', (req,res)=>{
+			try {
+				res.send(Tempus.new())
+			} catch (err) {
+				if(err instanceof Exception){
+					res.status(401).json(err)
+				}
+				z.onErr(err)
+				res.status(401).send('')
+			}
+		})
+
+		r.get('/time', (req,res)=>{
 			try {
 				res.send(Tempus.new())
 			} catch (err) {
@@ -213,6 +239,20 @@ export class UserCtrl extends BaseCtrl{
 				import('util').then(util=>{
 					console.log(util.inspect(ans, false, 8, true))//t
 				})
+			} catch (err) {
+				z.onErr(err, res)
+			}
+		})
+
+		r.get('/randomImg', async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){return}
+				const img = await z.randomImgSvc.Next()
+				const u8arr = img.toUint8Arr()
+				res.setHeader('Content-Type', 'application/octet-stream')
+				res.setHeader('Content-Length', u8arr.byteLength.toString())
+				res.status(200).send(Buffer.from(u8arr.buffer))
 			} catch (err) {
 				z.onErr(err, res)
 			}

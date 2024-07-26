@@ -54,6 +54,7 @@ class DefaultUserConfig extends BaseConfig{
 	password = 'ngaq'
 	userDbPath = './db/userDb/ngaq.sqlite'
 	wordWeightConfig = new WordWeightConfig()
+	imgDir = [] as string[]
 }
 
 class UserDb extends BaseConfig{

@@ -11,15 +11,15 @@ export class CtrlEvents extends Le.Events{
 
 export class BaseCtrl{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof BaseCtrl.new>){
+	protected async __Init__(...args: Parameters<typeof BaseCtrl.New>){
 		const z = this
 		z.initRouter()
 		return z
 	}
 
-	static new(){
+	static async New(){
 		const z = new this()
-		z.__init__()
+		await z.__Init__()
 		return z
 	}
 	get This(){return BaseCtrl}
