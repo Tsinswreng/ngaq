@@ -114,6 +114,37 @@ to know
 
 重複添加旹 會自動過濾已經加過的內容。因此您可以一直在同一個文件中反複添加新詞並多次提交
 
+下面給出一個不帶註釋的單詞表示例
+```c
+<metadata>
+{
+	"belong": "italian"
+	,"delimiter": "-/-/-/-/-"
+}
+</metadata>
+
+
+[2024-07-26T10:39:42.262+08:00]
+[[source|歌曲]]
+{{
+
+sempre
+always
+
+-/-/-/-/-
+qui
+here
+[[pronounce|kʷi]]
+
+-/-/-/-/-
+sapere
+to know
+
+}}
+
+
+```
+
 
 ## config.js 結構
 
