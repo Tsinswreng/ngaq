@@ -7,16 +7,23 @@ import {WebNgaqUi} from '../WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
 import Tempus from '@shared/Tempus';
-import { PropertyBelong } from '@shared/model/word/NgaqRows';
+import { LearnBelong, PropertyBelong } from '@shared/model/word/NgaqRows';
 const loaded = ref(false)
 let ui:WebNgaqUi
+let fmt: typeof ui.fmt
 ;(async()=>{
 	ui = await WebNgaqUi.getInstanceAsync()
+	fmt = ui.fmt
 	loaded.value = true
 })()
 // const props = defineProps<{
 // 	memorizeWord: SvcWord|undefined
 // }>()
+
+
+
+
+
 
 function eventsMark(ui:WebNgaqUi){
 	const sb = [] as str[]
@@ -53,17 +60,14 @@ function tags(ui:WebNgaqUi){
 	return ''
 }
 
-//TODO
-function addDates(ui:WebNgaqUi){
-	// function _(svcWord:SvcWord){
-	// 	const dates = svcWord.word.dates_add
-	// 	return dates.map(e=>Tempus.format(e, 'YY.MM.DD')).join('|')
-	// }
-	// if(ui.curWord == void 0){
-	// 	return ''
-	// }
-	// return _(ui.curWord)
-	return ''
+/**
+ * 23.05.26|24.05.26
+ * @param ui 
+ */
+function fmtAddDates(ui:WebNgaqUi){
+	return ui.curWord?.learnBl__learns.get(LearnBelong.add)
+		?.map(e=>Tempus.format(e.ct, 'YY.MM.DD'))
+		.join('|')??''
 }
 
 function mean(ui:WebNgaqUi){
@@ -78,6 +82,10 @@ function mean(ui:WebNgaqUi){
 	return means.map(e=>e.text+'\n').join('')
 }
 
+function fmtProp(ui:WebNgaqUi){
+
+}
+
 
 </script>
 <template>
@@ -86,18 +94,19 @@ function mean(ui:WebNgaqUi){
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
 			<!-- <div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div> -->
 			<div>{{ (ui.curWord?.belong??"")+ui.curWord?.id }}</div>
-			<div class="w-eventSymbols"> {{ eventsMark(ui) }} </div>
+			<div class="w-eventSymbols"> {{ fmt.eventsMark() }} </div>
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
-			<div>{{ addDates(ui) }}</div>
+			<div>{{ fmt.fmtAddDates() }}</div>
 			<hr class="w-hr">
 			<div class="w-shape">{{ ui.curWord?.wordText }}</div>
 			<div>
 				<!-- <span>{{ ui.curWord?.word.annotation.length?'':ui.curWord?.word.annotation }}</span> -->
-				<span> {{ annotation(ui) }} </span>
-				<span>{{ tags(ui) }}</span>
+				<!-- <span> {{ annotation(ui) }} </span>
+				<span>{{ tags(ui) }}</span> -->
+				<span>{{ fmt.fmtProp() }}</span>
 			</div>
 			<hr class="w-hr">
-			<div class="w-mean">{{ mean(ui) }}</div>
+			<div class="w-mean">{{ fmt.mean() }}</div>
 		</div>
 	</div>
 </template>

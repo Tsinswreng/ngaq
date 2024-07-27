@@ -70,7 +70,7 @@ class WordColor{
 	red = ref('red')
 	get(svcWord:SvcWord){
 		const z = this
-		const c = svcWord.times_add
+		const c = svcWord.countsOfEvent(WordEvent.add)
 		//return ref('testDefault')
 		if(c<= 1){
 			return z.gray

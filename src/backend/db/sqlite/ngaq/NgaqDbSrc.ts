@@ -12,11 +12,6 @@ import * as Row from '@shared/model/word/NgaqRows'
 import * as Mod from '@shared/model/word/NgaqModels'
 import Tempus from '@shared/Tempus'
 
-/* 
-//TODO
-刪詞
-由時間刪記錄
-*/
 
 const ObjSql = SqliteUtil.Sql.obj
 
@@ -1011,3 +1006,27 @@ class Qrys{
 
 
 }
+
+
+
+
+/* 
+查詢未學習的詞、按語言分組
+O(learn表的记录数 + textWord表的记录数 * 子查询结果的记录数)
+SELECT belong, COUNT(*) AS _
+FROM textWord
+WHERE id NOT IN (
+	SELECT wid FROM learn
+	WHERE learn.belong <> 'add'
+)
+GROUP BY belong
+
+或
+O(textWord表的记录数 * learn表的记录数 + textWord表的记录数)，简化为 O(textWord表的记录数 * learn表的记录数)。
+SELECT tw.belong AS belong, COUNT(*) AS _
+FROM textWord tw
+LEFT JOIN learn l ON tw.id = l.wid AND l.belong <> 'add'
+WHERE l.wid IS NULL
+GROUP BY tw.belong
+
+*/

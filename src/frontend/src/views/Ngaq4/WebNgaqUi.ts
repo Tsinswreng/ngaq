@@ -10,9 +10,11 @@ import EventEmitter3 from 'EventEmitter3'
 import * as frut from '@ts/frut'
 import { TagImg } from "@shared/tools/TagImg"
 import { Client } from "@ts/ngaq4/Client"
-import { LearnBelong } from "@shared/model/word/NgaqRows"
+import { LearnBelong, PropertyBelong } from "@shared/model/word/NgaqRows"
 import { NgaqLex } from "@shared/Lex/ngaqLex/NgaqLex"
 import { AddWordsSvc } from "@ts/ngaq4/AddWordsSvc"
+import Tempus from "@shared/Tempus"
+import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
 const WordEvent = LearnBelong
 
 const EV = Le.Event.new.bind(Le.Event)
@@ -140,6 +142,11 @@ export class WebNgaqUi{
 
 	protected _htmlId = new HtmlId()
 	get htmlId(){return this._htmlId}
+
+	protected _fmt = Fmt.new(this)
+	get fmt(){return this._fmt}
+	protected set fmt(v){this._fmt = v}
+	
 
 
 	protected _initListener(){
@@ -534,5 +541,99 @@ class BgImg{
 	// 	const base64 = frut.u8ArrToBase64(z.curBg_bytes)
 
 	// }
+
+}
+
+
+
+class Fmt{
+
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Fmt.new>){
+		const z = this
+		z.ui = args[0]
+		return z
+	}
+
+	static new(ui:WebNgaqUi){
+		const z = new this()
+		z.__init__(ui)
+		return z
+	}
+
+	//get This(){return Fmt}
+
+	protected _ui:WebNgaqUi
+	get ui(){return this._ui}
+	protected set ui(v){this._ui = v}
+	
+	
+	fmtAddDates(){
+		const z = this
+		const ui = z.ui
+		return ui.curWord?.learnBl__learns.get(LearnBelong.add)
+			?.map(e=>Tempus.format(e.ct, 'YY.MM.DD'))
+			.join('|')??''
+	}
+
+	mean(){
+		const ui = this.ui
+		const cur = ui.curWord
+		if(cur == void 0){
+			return ''
+		}
+		const means = cur.propertyBl__propertys.get(PropertyBelong.mean)
+		if(means == void 0){
+			return ''
+		}
+		return means.map(e=>e.text+'\n').join('')
+	}
+
+	fmtProp(){
+		const z = this
+		const ui = z.ui
+		if(ui.curWord == void 0){
+			return ''
+		}
+		const kv = {}
+		let i = 0
+		for(const bl in PropertyBelong){
+			if(bl === PropertyBelong.mean){
+				continue
+			}
+			const prop = ui.curWord.propertyBl__propertys.get(bl)
+			const v = prop?.map(e=>e.text)??''
+			if(v !== ''){
+				kv[bl] = v
+			}else{
+				continue
+			}
+			i++
+		}
+		if(i === 0){
+			return ''
+		}
+		const ans = JSON.stringify(kv)
+		return ans
+	}
+
+	eventsMark(){
+		const ui = this.ui
+		const sb = [] as str[]
+		function _(word:SvcWord){
+			for(let i = 0; i < word.learns.length; i++){
+				//const event = word.date__event[i].event
+				const event = word.learns[i].belong
+				const ua = WebSvcWord.eventMark(event)
+				sb.push(ua)
+			}
+			return sb.join('')
+		}
+		if(ui.curWord!= void 0){
+			return _(ui.curWord)
+		}
+		return ''
+	}
+
 
 }
