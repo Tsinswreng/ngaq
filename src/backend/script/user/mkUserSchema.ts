@@ -1,7 +1,7 @@
 import Config from "@backend/Config";
 import { UserDbSrc } from "@backend/db/sqlite/user/UserDbSrc";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
-import { InitSql } from "@backend/db/sqlite/user/InitSql"
+import { UserInitSql } from "@backend/db/sqlite/user/UserInitSql"
 
 const configInst = Config.getInstance()
 
@@ -11,7 +11,7 @@ async function Main(){
 		const dbPath = configInst.config.ngaq.server.dbPath
 		const db = SqliteDb.fromPath(dbPath)
 		//const dbSrc = UserDbSrc.new(db)
-		const initer = InitSql.new()
+		const initer = UserInitSql.new()
 		await initer.MkSchema(db)
 		console.log('done')
 	} catch (err) {

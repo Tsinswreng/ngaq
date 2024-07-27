@@ -9,9 +9,9 @@ import * as Mod from '@shared/model/user/UserModel'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
-export class InitSql{
+export class UserInitSql{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof InitSql.new>){
+	protected __init__(...args: Parameters<typeof UserInitSql.new>){
 		const z = this
 		return z
 	}
@@ -22,7 +22,7 @@ export class InitSql{
 		return z
 	}
 
-	get This(){return InitSql}
+	get This(){return UserInitSql}
 
 	protected _tbls = UserDbSrc.tbls
 	get tbls(){return this._tbls}

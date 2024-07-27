@@ -172,6 +172,12 @@ class Snippet{
 `FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol})`
 		return ans
 	}
+
+	unixMills(alias='unixMills'){
+		const sql =
+`SELECT strftime('%s', 'now') || substr(strftime('%f', 'now'), 4) AS ${alias}`
+		return sql
+	}
 }
 
 export const snippet = new Snippet()

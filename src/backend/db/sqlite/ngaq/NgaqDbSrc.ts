@@ -4,6 +4,7 @@ import type { RunResult } from 'sqlite3'
 import * as SqliteUtil from '@backend/sqlite/sqliteUtil'
 import { $ } from '@shared/Common'
 import { SqliteDb } from '@backend/sqlite/Sqlite'
+import type * as Sqlite from '@backend/sqlite/Sqlite'
 
 import { JoinedRow } from '@shared/model/word/JoinedRow'
 import { JoinedWord } from '@shared/model/word/JoinedWord'
@@ -275,109 +276,6 @@ class SchemaItems{
 
 const schemaItems = new SchemaItems()
 
-class Qrys{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof Qrys.new>){
-		const z = this
-		return z
-	}
-
-	static new(){
-		const z = new this()
-		z.__init__()
-		return z
-	}
-
-	get This(){return Qrys}
-
-	protected _schemaItems = schemaItems
-	get schemaItems(){return this._schemaItems}
-	protected set schemaItems(v){this._schemaItems = v}
-
-	protected _tbls = tbls
-	get tbls(){return this._tbls}
-	protected set tbls(v){this._tbls = v}
-	
-	
-
-	/**
-	 * WHERE ${c.text} = ? AND ${c.belong} = ?
-	 * @deprecated
-	 * @returns 
-	 */
-	selectExistFromWord(colAlias='_'){
-		const z = this
-		const c = z.tbls.textWord.col
-		const sql = 
-`SELECT EXISTS(
-	SELECT * FROM ${z.tbls.textWord.name} 
-	WHERE ${c.text} = ? AND ${c.belong} = ?
-) AS "${colAlias}"`
-
-		return sql
-	}
-
-	selectTextWordById(){
-		const z = this
-		//const items = z.schemaItems
-		//const c = Rows.WordRow.col
-		const tbl = z.tbls.textWord
-		const sql = 
-`SELECT * FROM ${tbl.name} WHERE ${tbl.col.id} = ?`
-		return sql
-	}
-
-	selectPropertysByWid(){
-		const z = this
-		//const items = z.schemaItems
-		//const c = Rows.PropertyRow.col
-		
-		const sql = 
-`SELECT * FROM ${z.tbls.property.name} WHERE ${z.tbls.property.col.wid} = ?`
-		return sql
-	}
-
-	selectLearnsByWid(){
-		const z = this
-		const tbl = z.tbls.learn
-		const sql = 
-`SELECT * FROM ${tbl.name} WHERE ${tbl.col.wid} = ?`
-		return sql
-	}
-
-	async fn_addPropertyRow(db:SqliteDb){
-		const z = this
-		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Property())
-		const stmtPr = await db.Prepare(
-			sqlObjPr.geneFullInsertSql(z.tbls.property.name)
-		)
-		return async(e:Row.Property)=>{
-			return await stmtPr.Run(sqlObjPr.getParams(e))
-		}
-	}
-
-	async fn_addLearnRow(db:SqliteDb){
-		const z = this
-		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Learn())
-		const stmtPr = await db.Prepare(
-			sqlObjPr.geneFullInsertSql(z.tbls.learn.name)
-		)
-		return async(e:Row.Learn)=>{
-			return await stmtPr.Run(sqlObjPr.getParams(e))
-		}
-	}
-
-
-	getAllWordId(colAlias='_'){
-		const z = this
-		const tbl = z.tbls.textWord
-		const ans = 
-`SELECT ${tbl.col.id} AS "${colAlias}" FROM ${tbl.name}`
-		return ans
-	}
-
-
-}
 
 
 export class NgaqDbSrc{
@@ -479,48 +377,7 @@ export class NgaqDbSrc{
 	}
 
 
-	/**
-	 * @deprecated 改用Fn_AddJoined
-	 */
-	async OldFn_AddJoinedRows(){
-		const z = this
-		const si = z.schemaItems
-		const tbls = z.tbls
-		const db = z.db
-		const SqlObj = SqliteUtil.Sql.obj
-		
-		//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
-		const wordSqlObj = SqliteUtil.Sql.obj.new(new Row.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
-		const wordSql = wordSqlObj.geneFullInsertSql(tbls.textWord.name)
-		const wordStmt = await db.Prepare(wordSql)
-		
-		const learnSqlObj = SqlObj.new((new Row.Learn()))
-		const learnSql = learnSqlObj.geneFullInsertSql(tbls.learn.name)
-		const learnStmt = await db.Prepare(learnSql)
-
-		const propSqlObj = SqlObj.new((new Row.Property()))
-		const propSql = propSqlObj.geneFullInsertSql(tbls.property.name)
-		const propStmt = await db.Prepare(propSql)
-
-		
-		const fn = async(rows:JoinedRow[])=>{
-			for(let i = 0; i < rows.length; i++){
-				const jr = rows[i]
-				const res = await wordStmt.Run(wordSqlObj.getParams(jr.textWord))
-				const lastId = res.lastID
-				for(let j = 0; j < jr.learns.length; j++){
-					jr.learns[j].wid = lastId
-					await learnStmt.Run(learnSqlObj.getParams(jr.learns[j]))
-				}
-				for(let j = 0; j < jr.propertys.length; j++){
-					jr.propertys[j].wid = lastId
-					const cur = jr.propertys[j]
-					await propStmt.Run(propSqlObj.getParams(jr.propertys[j]))
-				}
-			}
-		}
-		return fn
-	}
+	
 
 	async Fn_IsWordExist(){
 		const z = this
@@ -543,30 +400,7 @@ export class NgaqDbSrc{
 		return Fn
 	}
 
-	/**
-	 * @deprecated
-	 */
-	async Fn_ClassifyWordsByIsExist(){
-		const z = this
-		const sql = z.qrys.selectExistFromWord('_')
-		const stmt = await z.db.Prepare(sql)
 
-		const Fn = async(words:JoinedWord[])=>{
-			const existingWords = [] as JoinedWord[]
-			const nonExistingWords = [] as JoinedWord[]
-			for(const w of words){
-				const param = [w.textWord.text, w.textWord.belong]
-				const [runRes, ua] = await stmt.All<{_:int}>(param)
-				if(ua[0]?._ === 1){ //exist
-					existingWords.push(w)
-				}else{
-					nonExistingWords.push(w)
-				}
-			}
-			return [existingWords, nonExistingWords]
-		}
-		return Fn
-	}
 
 	async GetAllJoinedRow(){
 		const z = this
@@ -672,52 +506,7 @@ AND wid->textWord.text = newʹtextWord.text;
 	}
 
 
-	/**
-	 * 加詞、能防褈添
-	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
-	 * @param words 
-	 * @returns 
-	 * @deprecated 未慮時間、Fn_SeekJoinedRowBy已棄用
-	 * //TODO
-	 */
-	async OldFn_AddWordsDistinctProperty(words:JoinedWord[]){
-		const z = this
 
-		const ClassifyWordsByIsExist = await z.Fn_ClassifyWordsByIsExist()
-		const AddJRow = await z.Fn_AddJoined()
-		const SeekById = await z.Fn_SeekJoinedRowById()
-		const SeekByText = await z.Fn_SeekJoinedRowBy(z.tbls.textWord.col.text)
-		const AddPr = await z.GetFn_addRow(e=>e.property)
-
-		const Fn = async()=>{
-			/** 㕥存 未加過之prop */
-			const diffPropertys = [] as Mod.Property[]
-			const [duplicateNeoWords, nonExistWords] = await ClassifyWordsByIsExist(words)
-			for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
-				//const oldRow = await seekById(neo.textWord.id)
-				const exsistingJoinedRows = await SeekByText(neo.textWord.text)
-				const oldRow = exsistingJoinedRows[0]
-				if(oldRow == void 0){
-					throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
-				}
-				const oldJw = JoinedWord.fromRow(oldRow)
-				const ua = JoinedWord.diffProperty(neo, oldJw)
-				diffPropertys.push(...ua)
-			}
-			
-			//const addPr = await z.qrys.fn_addPropertyRow(z.db)
-			
-			//await AddJRows(nonExistWords.map(e=>e.toRow()))
-			for(const w of nonExistWords){
-				await AddJRow(w)
-			}
-			for(const e of diffPropertys){
-				await AddPr(e.toRow())
-			}
-			return true
-		}
-		return Fn
-	}
 
 
 	/**
@@ -777,32 +566,7 @@ WHERE ${tbl.col.text}=? AND ${tbl.col.belong}=?`
 		return Fn
 	}
 
-	/**
-	 * WHERE ${col}=?
-	 * @returns fn: (val: str) => Promise<JoinedRow[]>
-	 * @deprecated 未檢查belong
-	 */
-	async Fn_SeekJoinedRowBy(col:str){
-		const z = this
-		const tbls = z.tbls
-		const tbl = tbls.textWord
-		const SeekById = await z.Fn_SeekJoinedRowById()
-		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
-		const stmt = await z.db.Prepare(sql)
-		const fn = async(val:str)=>{
-			const [, gotWords] = await stmt.All<Row.TextWord>([val])
-			const ans = [] as JoinedRow[]
-			for(const word of gotWords){
-				const id = word.id
-				const ua = await SeekById(id)
-				if(ua != null){
-					ans.push(ua)
-				}
-			}
-			return ans
-		}
-		return fn
-	}
+
 
 	/**
 	 * 尋 最晚近ʹ 學ʹ記錄
@@ -846,6 +610,274 @@ WHERE ${tbl.col.wid}=?`
 		return Fn
 	}
 
+	/**
+	 * !勿只刪textWord洏不刪他ʹ屬性
+	 * @returns 
+	 */
+	protected async Fn_Del_textWordById(){
+		const z = this
+		const tbl = z.tbls.textWord
+		const sql = `DELETE FROM ${tbl.name} WHERE ${tbl.col.id} = ?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(id:Id_t)=>{
+			const res = await stmt.Run([id])
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
+	/**
+	 * 
+	 * @param tbl 須有wid列
+	 * @returns 
+	 */
+	protected async Fn_Del_by_wid(tbl:Tbl<any>){
+		const z = this
+		const widCol = $(tbl.col?.wid, `${tbl.name}\ndo not have wid col`)
+		const sql = `DELETE FROM ${tbl.name} WHERE ${widCol} = ?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(wid:Id_t)=>{
+			const res = await stmt.Run([wid])
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
+	async Fn_Del_prop_by_Wid(){
+		const z = this
+		const DelProp = await z.Fn_Del_by_wid(z.tbls.property)
+		return DelProp
+	}
+
+	async Fn_Del_learn_by_wid(){
+		const z = this
+		const DelLearn = await z.Fn_Del_by_wid(z.tbls.learn)
+		return DelLearn
+	}
+
+	async Fn_Del_joined_by_wordId(){
+		const z = this
+		const DelTextWord = await z.Fn_Del_textWordById()
+		const DelProp = await z.Fn_Del_prop_by_Wid()
+		const DelLearn = await z.Fn_Del_learn_by_wid()
+
+		const Fn = async(id:Id_t)=>{
+			const ans = [] as QryAns<undef>[][]
+			const ua2 = await DelProp(id)
+			ans.push([ua2])
+			const ua3 = await DelLearn(id)
+			ans.push([ua3])
+			const ua1 = await DelTextWord(id)
+			ans.push([ua1])
+			return ans
+		}
+		return Fn
+	}
+
+
+
+	/**
+	 * WHERE ${unixMills} - ${tbl.col.ct} <= ?
+	 */
+	async Fn_Seek_recentLearnId(){
+		const z = this
+		const tbls = z.tbls
+		const tbl = tbls.learn
+		const unixMills = SqliteUtil.snippet.unixMills()
+		const sql = 
+`SELECT ${tbl.col.id} AS _ FROM ${tbl.name}
+WHERE ${unixMills} - ${tbl.col.ct} <= ?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(mills:int|str)=>{
+			const pair = await stmt.All<I__<int>>([mills])
+			const ans = QryAns.fromPair(pair)
+			return ans
+		}
+		return Fn
+	}
+
+
+/** @deprecated ---------------------------------------------------------------- */
+
+/**
+	 * @deprecated 改用Fn_AddJoined
+	 */
+async OldFn_AddJoinedRows(){
+	const z = this
+	const si = z.schemaItems
+	const tbls = z.tbls
+	const db = z.db
+	const SqlObj = SqliteUtil.Sql.obj
+	
+	//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
+	const wordSqlObj = SqliteUtil.Sql.obj.new(new Row.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
+	const wordSql = wordSqlObj.geneFullInsertSql(tbls.textWord.name)
+	const wordStmt = await db.Prepare(wordSql)
+	
+	const learnSqlObj = SqlObj.new((new Row.Learn()))
+	const learnSql = learnSqlObj.geneFullInsertSql(tbls.learn.name)
+	const learnStmt = await db.Prepare(learnSql)
+
+	const propSqlObj = SqlObj.new((new Row.Property()))
+	const propSql = propSqlObj.geneFullInsertSql(tbls.property.name)
+	const propStmt = await db.Prepare(propSql)
+
+	
+	const fn = async(rows:JoinedRow[])=>{
+		for(let i = 0; i < rows.length; i++){
+			const jr = rows[i]
+			const res = await wordStmt.Run(wordSqlObj.getParams(jr.textWord))
+			const lastId = res.lastID
+			for(let j = 0; j < jr.learns.length; j++){
+				jr.learns[j].wid = lastId
+				await learnStmt.Run(learnSqlObj.getParams(jr.learns[j]))
+			}
+			for(let j = 0; j < jr.propertys.length; j++){
+				jr.propertys[j].wid = lastId
+				const cur = jr.propertys[j]
+				await propStmt.Run(propSqlObj.getParams(jr.propertys[j]))
+			}
+		}
+	}
+	return fn
+}
+
+
+	/**
+	 * @deprecated
+	 */
+	async Fn_ClassifyWordsByIsExist(){
+		const z = this
+		const sql = z.qrys.selectExistFromWord('_')
+		const stmt = await z.db.Prepare(sql)
+
+		const Fn = async(words:JoinedWord[])=>{
+			const existingWords = [] as JoinedWord[]
+			const nonExistingWords = [] as JoinedWord[]
+			for(const w of words){
+				const param = [w.textWord.text, w.textWord.belong]
+				const [runRes, ua] = await stmt.All<{_:int}>(param)
+				if(ua[0]?._ === 1){ //exist
+					existingWords.push(w)
+				}else{
+					nonExistingWords.push(w)
+				}
+			}
+			return [existingWords, nonExistingWords]
+		}
+		return Fn
+	}
+
+	/**
+	 * 加詞、能防褈添
+	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
+	 * @param words 
+	 * @returns 
+	 * @deprecated 未慮時間、Fn_SeekJoinedRowBy已棄用
+	 * //TODO
+	 */
+	async OldFn_AddWordsDistinctProperty(words:JoinedWord[]){
+		const z = this
+
+		const ClassifyWordsByIsExist = await z.Fn_ClassifyWordsByIsExist()
+		const AddJRow = await z.Fn_AddJoined()
+		const SeekById = await z.Fn_SeekJoinedRowById()
+		const SeekByText = await z.Fn_SeekJoinedRowBy(z.tbls.textWord.col.text)
+		const AddPr = await z.GetFn_addRow(e=>e.property)
+
+		const Fn = async()=>{
+			/** 㕥存 未加過之prop */
+			const diffPropertys = [] as Mod.Property[]
+			const [duplicateNeoWords, nonExistWords] = await ClassifyWordsByIsExist(words)
+			for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
+				//const oldRow = await seekById(neo.textWord.id)
+				const exsistingJoinedRows = await SeekByText(neo.textWord.text)
+				const oldRow = exsistingJoinedRows[0]
+				if(oldRow == void 0){
+					throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
+				}
+				const oldJw = JoinedWord.fromRow(oldRow)
+				const ua = JoinedWord.diffProperty(neo, oldJw)
+				diffPropertys.push(...ua)
+			}
+			
+			//const addPr = await z.qrys.fn_addPropertyRow(z.db)
+			
+			//await AddJRows(nonExistWords.map(e=>e.toRow()))
+			for(const w of nonExistWords){
+				await AddJRow(w)
+			}
+			for(const e of diffPropertys){
+				await AddPr(e.toRow())
+			}
+			return true
+		}
+		return Fn
+	}
+
+
+	/**
+	 * WHERE ${col}=?
+	 * @returns fn: (val: str) => Promise<JoinedRow[]>
+	 * @deprecated 未檢查belong
+	 */
+	async Fn_SeekJoinedRowBy(col:str){
+		const z = this
+		const tbls = z.tbls
+		const tbl = tbls.textWord
+		const SeekById = await z.Fn_SeekJoinedRowById()
+		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
+		const stmt = await z.db.Prepare(sql)
+		const fn = async(val:str)=>{
+			const [, gotWords] = await stmt.All<Row.TextWord>([val])
+			const ans = [] as JoinedRow[]
+			for(const word of gotWords){
+				const id = word.id
+				const ua = await SeekById(id)
+				if(ua != null){
+					ans.push(ua)
+				}
+			}
+			return ans
+		}
+		return fn
+	}
+
+
+// 	/**
+// 	 * 
+// 	 */
+// 	async Fn_Del_joined_by_wordId(){
+// 		const z = this
+// 		const tbls = z.tbls
+// 		const sqls = 
+// 		[
+// `DELETE FROM ${tbls.textWord.name}
+// WHERE ${tbls.textWord.col.id} = ?`
+// ,`DELETE FROM ${tbls.property.name}
+// WHERE ${tbls.property.col.wid} = ?`
+// ,`DELETE FROM ${tbls.learn.name}
+//  WHERE ${tbls.learn.col.wid} = ?`
+// 		]
+// 		const stmts = [] as Sqlite.Statement[]
+// 		for(const sql of sqls){
+// 			const stmt = await z.db.Prepare(sql)
+// 			stmts.push(stmt)
+// 		}
+// 		const Fn = async(id:Id_t)=>{
+// 			const ans = [] as QryAns<undef>[]
+// 			for(const stmt of stmts){
+// 				const res = await stmt.Run([id])
+// 				const ua = QryAns.fromRunResult(res)
+// 				ans.push(ua)
+// 			}
+// 			return ans
+// 		}
+// 		return Fn
+// 	}
+
 	// /**
 	//  * @noUsage
 	//  */
@@ -867,6 +899,115 @@ WHERE ${tbl.col.wid}=?`
 	// 	}
 	// 	return Fn
 	// }
+
+
+}
+
+
+
+/**
+ * @deprecated
+ */
+class Qrys{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Qrys.new>){
+		const z = this
+		return z
+	}
+
+	static new(){
+		const z = new this()
+		z.__init__()
+		return z
+	}
+
+	get This(){return Qrys}
+
+	protected _schemaItems = schemaItems
+	get schemaItems(){return this._schemaItems}
+	protected set schemaItems(v){this._schemaItems = v}
+
+	protected _tbls = tbls
+	get tbls(){return this._tbls}
+	protected set tbls(v){this._tbls = v}
+	
+	
+
+	/**
+	 * WHERE ${c.text} = ? AND ${c.belong} = ?
+	 * @deprecated
+	 * @returns 
+	 */
+	selectExistFromWord(colAlias='_'){
+		const z = this
+		const c = z.tbls.textWord.col
+		const sql = 
+`SELECT EXISTS(
+	SELECT * FROM ${z.tbls.textWord.name} 
+	WHERE ${c.text} = ? AND ${c.belong} = ?
+) AS "${colAlias}"`
+
+		return sql
+	}
+
+	selectTextWordById(){
+		const z = this
+		//const items = z.schemaItems
+		//const c = Rows.WordRow.col
+		const tbl = z.tbls.textWord
+		const sql = 
+`SELECT * FROM ${tbl.name} WHERE ${tbl.col.id} = ?`
+		return sql
+	}
+
+	selectPropertysByWid(){
+		const z = this
+		//const items = z.schemaItems
+		//const c = Rows.PropertyRow.col
+		
+		const sql = 
+`SELECT * FROM ${z.tbls.property.name} WHERE ${z.tbls.property.col.wid} = ?`
+		return sql
+	}
+
+	selectLearnsByWid(){
+		const z = this
+		const tbl = z.tbls.learn
+		const sql = 
+`SELECT * FROM ${tbl.name} WHERE ${tbl.col.wid} = ?`
+		return sql
+	}
+
+	async fn_addPropertyRow(db:SqliteDb){
+		const z = this
+		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Property())
+		const stmtPr = await db.Prepare(
+			sqlObjPr.geneFullInsertSql(z.tbls.property.name)
+		)
+		return async(e:Row.Property)=>{
+			return await stmtPr.Run(sqlObjPr.getParams(e))
+		}
+	}
+
+	async fn_addLearnRow(db:SqliteDb){
+		const z = this
+		const sqlObjPr = SqliteUtil.Sql.obj.new(new Row.Learn())
+		const stmtPr = await db.Prepare(
+			sqlObjPr.geneFullInsertSql(z.tbls.learn.name)
+		)
+		return async(e:Row.Learn)=>{
+			return await stmtPr.Run(sqlObjPr.getParams(e))
+		}
+	}
+
+
+	getAllWordId(colAlias='_'){
+		const z = this
+		const tbl = z.tbls.textWord
+		const ans = 
+`SELECT ${tbl.col.id} AS "${colAlias}" FROM ${tbl.name}`
+		return ans
+	}
 
 
 }
