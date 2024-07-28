@@ -16,8 +16,53 @@ import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
 import type * as WordIf from "@shared/interfaces/WordIf";
 import { Learn } from "@shared/model/word/NgaqRows";
+import { ref } from "vue";
 
 type WeightAlgo_t = I_WordWeight<SvcWord, WordIf.I_WordForCalcWeight>
+
+
+class Statistics{
+	protected constructor(){}
+	protected __init__(...args: Parameters<typeof Statistics.new>){
+		const z = this
+		z.svc = args[0]
+		z.client = z.svc.client
+		z._Fetch()
+		return z
+	}
+
+	static new(svc:WebNgaqSvc){
+		const z = new this()
+		z.__init__(svc)
+		return z
+	}
+
+	protected _Fetch(){
+		const z = this
+		return z.client.Get_recentLearnCnt().then(cnt=>{
+			z.recentLearnCnt.value = cnt
+		}).catch(e=>z.onErr(e))
+	}
+
+	onErr(v){
+		console.error(v)
+	}
+
+	protected _svc:WebNgaqSvc
+	get svc(){return this._svc}
+	protected set svc(v){this._svc = v}
+
+	protected _client:Client
+	get client(){return this._client}
+	protected set client(v){this._client = v}
+
+	protected _recentLearnCnt = ref(0)
+	get recentLearnCnt(){return this._recentLearnCnt}
+	set recentLearnCnt(v){this._recentLearnCnt = v}
+
+
+}
+
 
 export class WebNgaqSvc extends LearnSvc{
 	
@@ -30,12 +75,14 @@ export class WebNgaqSvc extends LearnSvc{
 	static async New(){
 		const z = new this()
 		await z.__Init__()
+		
 		return z
 	}
 
 	protected async __Init__(){
 		const z = this
 		await super.__Init__()
+		z.statistics = Statistics.new(z)
 		return z
 	}
 
@@ -50,6 +97,13 @@ export class WebNgaqSvc extends LearnSvc{
 	declare protected _weightAlgo: WeightAlgo_t|undefined
 	get weightAlgo(){return this._weightAlgo}
 	protected set weightAlgo(v){this._weightAlgo = v}
+
+	/** @lateinit */
+	protected _statistics: Statistics
+	get statistics(){return this._statistics}
+	protected set statistics(v){this._statistics = v}
+
+
 	
 	protected override async _Load(){
 		const z = this

@@ -1,7 +1,7 @@
 import Config from "@backend/Config";
 import { RandomImg } from "./randomImg/RandomImg";
 import { ImgReader } from "./randomImg/ImgReader";
-import { MkRandomImg } from "./randomImg/mkRandomImg";
+import { MkRandomImg } from "./randomImg/MkRandomImg";
 const config = Config.getInstance().config
 
 export class RandomImgSvc{

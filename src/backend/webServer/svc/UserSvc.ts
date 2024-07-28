@@ -424,4 +424,17 @@ export class UserSvc{
 		await userDb.dbSrc.db.Commit()
 		return ans
 	}
+
+	/**
+	 * 最近24小時學習數量
+	 * @param userId 
+	 * @returns 
+	 */
+	async Cnt_recentLearn(userId:Id_t){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Cnt = await userDb.dbSrc.Fn_Cnt_recentLearn()
+		const ans = await Cnt()
+		return ans.data[0]?._??0
+	}
 }

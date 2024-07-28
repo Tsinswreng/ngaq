@@ -146,6 +146,11 @@ export class WebNgaqUi{
 	protected _fmt = Fmt.new(this)
 	get fmt(){return this._fmt}
 	protected set fmt(v){this._fmt = v}
+
+	protected _client = Client.inst
+	get client(){return this._client}
+	protected set client(v){this._client = v}
+	
 	
 
 
@@ -380,9 +385,14 @@ export class WebNgaqUi{
 				console.error(e)
 			})
 			z.svc.emitter.on(z.svc.events.learnBySvcWord, async(svcWord)=>{
+				z.svc.statistics.recentLearnCnt.value++
 				await z.NextBg().catch(e=>{
 					hanErr(e)
 				})
+			})
+
+			z.svc.emitter.on(z.svc.events.undo, (svcWord)=>{
+				z.svc.statistics.recentLearnCnt.value--
 			})
 			
 			z.svc.emitter.on(z.svc.events.load_weight_err, (err)=>{
@@ -425,6 +435,8 @@ export class WebNgaqUi{
 		const addWordSvc = AddWordsSvc.new()
 		return await addWordSvc.AddJoinedRows(addWordSvc.parse(text))
 	}
+
+
 
 
 

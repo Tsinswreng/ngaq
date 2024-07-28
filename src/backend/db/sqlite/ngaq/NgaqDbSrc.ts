@@ -683,10 +683,33 @@ WHERE ${tbl.col.wid}=?`
 		const unixMills = SqliteUtil.snippet.unixMills()
 		const sql = 
 `SELECT ${tbl.col.id} AS _ FROM ${tbl.name}
-WHERE ${unixMills} - ${tbl.col.ct} <= ?`
+WHERE (${unixMills}) - ${tbl.col.ct} <= ?`
 		const stmt = await z.db.Prepare(sql)
 		const Fn = async(mills:int|str)=>{
 			const pair = await stmt.All<I__<int>>([mills])
+			const ans = QryAns.fromPair(pair)
+			return ans
+		}
+		return Fn
+	}
+
+
+	/**
+	 * 
+	 * WHERE ${sn.unixMills()} - ${tbl.col.ct} <= ?
+	 * @returns 
+	 */
+	async Fn_Cnt_recentLearn(){
+		const z = this
+		const tbl = z.tbls.learn
+		const sn = SqliteUtil.snippet
+		const sql = 
+`SELECT COUNT(*) AS _
+FROM ${tbl.name}
+WHERE (${sn.unixMills()}) - ${tbl.col.ct} <= ?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(recentMills:int|str=1000*60*60*24)=>{
+			const pair = await stmt.All<I__<int>>([recentMills])
 			const ans = QryAns.fromPair(pair)
 			return ans
 		}
@@ -1003,6 +1026,8 @@ class Qrys{
 `SELECT ${tbl.col.id} AS "${colAlias}" FROM ${tbl.name}`
 		return ans
 	}
+
+
 
 
 }

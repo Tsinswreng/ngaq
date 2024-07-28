@@ -42,23 +42,7 @@ function eventsMark(ui:WebNgaqUi){
 	return ''
 }
 
-//TODO
-function annotation(ui:WebNgaqUi){
-	// const tar = ui.curWord?.propertys??''
-	// if(tar.length > 0){
-	// 	return JSON.stringify(tar)
-	// }
-	return ''
-}
 
-//TODO
-function tags(ui:WebNgaqUi){
-	// const tar = ui.curWord?.word.tag??''
-	// if(tar.length > 0){
-	// 	return JSON.stringify(tar)
-	// }
-	return ''
-}
 
 /**
  * 23.05.26|24.05.26
@@ -80,10 +64,6 @@ function mean(ui:WebNgaqUi){
 		return ''
 	}
 	return means.map(e=>e.text+'\n').join('')
-}
-
-function fmtProp(ui:WebNgaqUi){
-
 }
 
 

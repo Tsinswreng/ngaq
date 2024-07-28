@@ -1,8 +1,8 @@
 {
-	"name": "voca",
+	"name": "ngaq",
 	"version": "1.0.0",
-	"scripts": "out\\backend\\VocaServer.js",
+	"scripts": "app.js",
 	"targets": [
-		"node14-win-x64"
+		"node18-win-x64"
 	]
 }

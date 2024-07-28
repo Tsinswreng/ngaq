@@ -258,6 +258,17 @@ export class UserCtrl extends BaseCtrl{
 			}
 		})
 
+		r.get('/recentLearnCnt', async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){return}
+				const cnt = await z.svc.Cnt_recentLearn(userId)
+				res.status(200).send(cnt+'')
+			} catch (err) {
+				z.onErr(err, res)
+			}
+		})
+
 		return r
 	}
 }

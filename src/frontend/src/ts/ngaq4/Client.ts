@@ -246,6 +246,13 @@ export class Client{
 		return resp
 	}
 
+	async Get_recentLearnCnt(){
+		const z = this
+		const url = new URL(`${urlB.user}/recentLearnCnt`, z.baseUrl)
+		const got = await ApiRequest(url.toString(), GET)
+		return got.data
+	}
+
 
 
 /** @deprecated ------------------------------------------------------------------------*/
