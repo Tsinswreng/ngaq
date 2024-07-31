@@ -22,7 +22,11 @@ bundle/
 *.exe
 crawler/
 *.wasm
-src/c/*
 .env
 self_clone/
 db/ignored/
+c/build
+c/vcpkg_installed/*
+c/CMakeFiles/
+c/.cache/
+c/out

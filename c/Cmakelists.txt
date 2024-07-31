@@ -1,0 +1,82 @@
+# em++ testEmcc.cpp -o out/wasm.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s "EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
+# emcmake cmake ..
+# emcmake cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build -S .
+cmake_minimum_required(VERSION 3.5)
+
+
+# 设置 C 编译器和 C++ 编译器
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_C_COMPILER emcc)
+set(CMAKE_CXX_COMPILER em++)
+
+project(ngaq)
+# 有效>
+set(nlohmann_json_DIR "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows/share/nlohmann_json")
+# 不效>
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows/share/nlohmann_json" ${CMAKE_PREFIX_PATH})
+string(REPLACE ";" "\n" cmake_prefix_path_str "${CMAKE_PREFIX_PATH}")
+message(${cmake_prefix_path_str})
+message("114514___________")
+find_package(nlohmann_json REQUIRED)
+#add_executable(ngaq src/main.cc src/lex.h src/lex.cc src/common.h)
+#add_executable(ngaq src/main.cc)
+
+
+# file(GLOB ngaq_SRC
+# 	"src/**/*.h"
+# 	"src/**/*.cc"
+# )
+file(GLOB ngaq_SRC
+	"src/*.h"
+	"src/*.cc"
+)
+# 将文件列表转换为一个以分号分隔的字符串
+string(REPLACE ";" "\n" ngaq_SRC_STRING "${ngaq_SRC}")
+
+# 打印文件列表
+message("Found source files:\n${ngaq_SRC_STRING}")
+
+# add_executable(ngaq testEmcc.cpp)
+add_executable(ngaq ${ngaq_SRC})
+#add_library(ngaq STATIC ${ngaq_SRC})
+
+set_target_properties(ngaq PROPERTIES SUFFIX ".js")
+
+#不能有空格、[]內亦然
+target_link_options(ngaq PRIVATE
+	-sMODULARIZE=1
+	-sEXPORT_ES6=1
+	-sEXPORTED_RUNTIME_METHODS=['setValue','getValue','AsciiToString','UTF8ToString','cwrap']
+	-sEXPORTED_FUNCTIONS=['_add','_main'] #在原名前加「_」
+)
+
+
+target_link_libraries(ngaq nlohmann_json::nlohmann_json)
+
+# target_link_options(ngaq PRIVATE
+# 	-sMODULARIZE=1 -sEXPORT_ES6=1
+# 	-sEXPORTED_FUNCTIONS='["_parse", "_main"]'
+# )
+
+# target_link_options(ngaq PRIVATE 
+# 	"-s MODULARIZE=1"
+# 	"-s EXPORT_ES6=1"
+# 	"-s EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
+# )
+
+
+
+# add_compile_options(
+# 	-s MODULARIZE=1
+# 	-s EXPORT_ES6=1
+# 	-s "EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
+# )
+
+# set_property(TARGET ngaq PROPERTY COMPILE_OPTIONS
+# 	"-sMODULARIZE=1;-sEXPORT_ES6=1;-sEXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
+# )
+
+
+
+# 添加链接选项
+#target_link_options(ngaq PRIVATE "-s EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']")
