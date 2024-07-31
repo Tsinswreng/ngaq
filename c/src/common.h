@@ -1,9 +1,11 @@
 #pragma once
 
+//In included file: target of using declaration conflicts with declaration already in scopeclang(using_decl_conflict)
+#include <memory>
+
 #include <functional>
 #include <list>
 #include <map>
-#include <memory>
 #include <set>
 #include <string>
 #include <utility>
@@ -12,8 +14,11 @@
 #include <utility>
 #include <vector>
 
+// In included file: "Including files directly from the emscripten source tree is not supported.
+// Please use the cache/sysroot/include directory".clang(pp_hash_error)
 #include <emscripten.h>
 #define EXPORT EMSCRIPTEN_KEEPALIVE
+
 // #ifdef __EMSCRIPTEN__
 // 	#include <emscripten.h>
 // 	#define EXPORT EMSCRIPTEN_KEEPALIVE
@@ -22,6 +27,8 @@
 // #else
 // 	#define EXPORT
 // #endif
+
+
 
 
 namespace ngaq{
@@ -34,6 +41,7 @@ template <class T>
 using of = an<T>;
 template <class T>
 using weak = std::weak_ptr<T>;
+using i64 = long long;
 
 /**
  * 智能指針Y轉X

@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: [-target, wasm32-unknown-emscripten, -fignore-exceptions, -fvisibility=default, -mllvm, -combiner-global-alias-analysis=false, -mllvm, -enable-emscripten-sjlj, -mllvm, -disable-lsr, --sysroot='D:/ENV/emsdk/upstream/emscripten/cache/sysroot', -DEMSCRIPTEN, -Werror=implicit-function-declaration, -Xclang, -iwithsysroot/include/fakesdl, -Xclang, -iwithsysroot/include/compat]

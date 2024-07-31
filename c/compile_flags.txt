@@ -1,2 +1,5 @@
+#不效
 -std=c++23
--I
+-I"${EMSCRIPTEN_ROOT}/system/include"
+-ID:\ENV\emsdk\upstream\emscripten\system\include
+-ID:\ENV\_customCmd

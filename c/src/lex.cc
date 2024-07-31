@@ -9,6 +9,9 @@ string parse(string src){
 
 }//~namespace ngaq
 
+
+
+
 extern "C"{
 	EXPORT
 	const char* parse(const char* src){

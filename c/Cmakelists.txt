@@ -1,5 +1,5 @@
 # em++ testEmcc.cpp -o out/wasm.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s "EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
-# emcmake cmake ..
+# emcmake cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 # emcmake cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build -S .
 cmake_minimum_required(VERSION 3.5)
 
@@ -15,20 +15,29 @@ set(nlohmann_json_DIR "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows/share/nlo
 # 不效>
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows/share/nlohmann_json" ${CMAKE_PREFIX_PATH})
 string(REPLACE ";" "\n" cmake_prefix_path_str "${CMAKE_PREFIX_PATH}")
-message(${cmake_prefix_path_str})
-message("114514___________")
+# message(${cmake_prefix_path_str})
+# message("114514___________")
 find_package(nlohmann_json REQUIRED)
+
+
+
 #add_executable(ngaq src/main.cc src/lex.h src/lex.cc src/common.h)
 #add_executable(ngaq src/main.cc)
 
+#target_include_directories(ngaq PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
+# 從src根目錄開始找
+include_directories(${CMAKE_SOURCE_DIR}/src)
 # file(GLOB ngaq_SRC
 # 	"src/**/*.h"
 # 	"src/**/*.cc"
 # )
-file(GLOB ngaq_SRC
-	"src/*.h"
-	"src/*.cc"
+file(GLOB_RECURSE ngaq_SRC
+	"src/**.h"
+	"src/**.cc"
+	"src/**.hpp"
+	"src/**.cpp"
+	"src/**.c"
 )
 # 将文件列表转换为一个以分号分隔的字符串
 string(REPLACE ";" "\n" ngaq_SRC_STRING "${ngaq_SRC}")
@@ -39,6 +48,12 @@ message("Found source files:\n${ngaq_SRC_STRING}")
 # add_executable(ngaq testEmcc.cpp)
 add_executable(ngaq ${ngaq_SRC})
 #add_library(ngaq STATIC ${ngaq_SRC})
+
+execute_process(COMMAND em++ --cflags
+	OUTPUT_VARIABLE EM_CFLAGS
+)
+set_target_properties(ngaq PROPERTIES COMPILE_FLAGS "${EM_CFLAGS}")
+
 
 set_target_properties(ngaq PROPERTIES SUFFIX ".js")
 
@@ -52,6 +67,45 @@ target_link_options(ngaq PRIVATE
 
 
 target_link_libraries(ngaq nlohmann_json::nlohmann_json)
+
+
+#{
+#https://github.com/clangd/clangd/issues/1621
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#执行 em++ 命令以获取编译标志：
+execute_process(COMMAND em++ --cflags
+	OUTPUT_VARIABLE EM_CFLAGS
+)
+#设置目标 ngaq 的编译标志：
+set_target_properties(ngaq PROPERTIES COMPILE_FLAGS "${EM_CFLAGS}")
+#}
+
+
+#{
+#https://github.com/clangd/clangd/issues/1621
+set(CLANGD_FILE ${CMAKE_BINARY_DIR}/clangd)
+if(EMSCRIPTEN)
+	#执行编译器命令以获取编译器标志：
+	# message("____________")
+	execute_process(COMMAND ${CMAKE_C_COMPILER} --cflags OUTPUT_VARIABLE CLANGD_FLAGS_TO_ADD)
+	# message(${CLANGD_FLAGS_TO_ADD})
+	# win下路径分隔符为\，需要替换为/、若不換則「\」ˋ直ᵈ泯
+	string(REPLACE "\\" "/" CLANGD_FLAGS_TO_ADD ${CLANGD_FLAGS_TO_ADD})
+	#将 CLANGD_FLAGS_TO_ADD 变量中的标志按空格分隔成一个列表。
+	separate_arguments(CLANGD_FLAGS_TO_ADD UNIX_COMMAND "${CLANGD_FLAGS_TO_ADD}")
+	# message(2)
+	# message(${CLANGD_FLAGS_TO_ADD})
+	#将分隔开的标志列表重新连接成一个以逗号和空格分隔的字符串
+	list(JOIN CLANGD_FLAGS_TO_ADD ", " CLANGD_FLAGS_TO_ADD)
+	#设置 CLANGD_TEMPLATE 变量为模板文件的路径，该模板文件用于生成最终的 clangd 文件。
+	set(CLANGD_TEMPLATE ${PROJECT_SOURCE_DIR}/scripts/clangd.in)
+	configure_file(${CLANGD_TEMPLATE} ${CLANGD_FILE})
+else()
+	file(WRITE ${CLANGD_FILE} "")
+endif()
+#mklink ".clangd" "build/clangd"
+#}
+
 
 # target_link_options(ngaq PRIVATE
 # 	-sMODULARIZE=1 -sEXPORT_ES6=1

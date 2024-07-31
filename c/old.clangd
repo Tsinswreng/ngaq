@@ -1,0 +1,20 @@
+If: {
+  PathMatch: ^.*\.(h|hpp|c|cpp|cc)$
+}
+
+
+CompileFlags: {
+  Add: [
+    -std=c++23
+    ,-Wall
+    ,-Wextra
+    #,'-I"${EMSCRIPTEN_ROOT}/system/include"' #不效
+    # ,'-ID:\ENV\emsdk\upstream\emscripten\system\include'
+    ,'-ID:\ENV\_customCmd'
+    ,'-ID:\ENV\emsdk\upstream\emscripten\cache\sysroot\include'
+    ,'-I./src/**'
+  ]
+}
+
+
+---
