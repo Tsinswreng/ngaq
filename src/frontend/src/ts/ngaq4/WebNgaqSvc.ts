@@ -59,6 +59,7 @@ class Statistics{
 	protected _recentLearnCnt = ref(0)
 	get recentLearnCnt(){return this._recentLearnCnt}
 	set recentLearnCnt(v){this._recentLearnCnt = v}
+	
 
 
 }

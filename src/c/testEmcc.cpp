@@ -32,9 +32,9 @@ struct E_N
 
 extern "C" {
 
-    EXPORT const char* myFunction() {
-        return "hello wasm";
-    }
+	EXPORT const char* myFunction() {
+		return "hello wasm";
+	}
 
 	EXPORT int add(int a, int b){
 		return a+b;

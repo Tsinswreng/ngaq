@@ -58,10 +58,10 @@ class DefaultOpt{
 		return o
 	}
 	/** 加ˡ事件ᵗ權重 */
-	addWeightDefault = 0xfff
-	addWeight = [0x1, 0x1ff, 0x7f0, 0xff0]
+	addWeightDefault = 0x1f00
+	addWeight = [0x1, 0x7ff, 0xfff, 0x1f00]
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 599999*1000*3600*24*90
+	debuffNumerator = 599990*1000*3600*24*90
 	base = 20
 }
 
@@ -311,7 +311,8 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 				const nunc = Tempus.new()
 				const diffMills = Tempus.diff_mills(nunc, thatTime)
 				if(curEv === WordEvent.add){
-					const bonus = z._ww.calcLastAddBonus(diffMills)
+					let bonus = z._ww.calcLastAddBonus(diffMills)
+					bonus = sros.pow(bonus, 2)
 					z._statistics.weight = s.m(
 						z._statistics.weight, bonus
 					)

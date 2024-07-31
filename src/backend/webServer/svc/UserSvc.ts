@@ -361,6 +361,7 @@ export class UserSvc{
 		const row = got[0]?.data[0]
 		if(row === void 0){
 			throw Exception.for(z.errReasons.connect_userDb_err, userId)
+				
 		}
 		const fullPath = Path.resolve(
 			config.ngaq.userDb.baseDir

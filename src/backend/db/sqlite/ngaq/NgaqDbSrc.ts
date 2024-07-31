@@ -717,6 +717,61 @@ WHERE (${sn.unixMills()}) - ${tbl.col.ct} <= ?`
 	}
 
 
+	/**
+	 * 
+	 * WHERE ${sn.unixMills()} - ${tbl.col.ct} <= ?
+	 * @returns 
+	 */
+	async Fn_Cnt_recentLearn_gb_learnBelong(){
+		const z = this
+		const tbl = z.tbls.learn
+		const sn = SqliteUtil.snippet
+		const sql = 
+`SELECT ${tbl.col.belong}, COUNT(*) AS _
+FROM ${tbl.name}
+WHERE (${sn.unixMills()}) - ${tbl.col.ct} <= ?
+GROUP BY ${tbl.col.belong}`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(recentMills:int|str=1000*60*60*24)=>{
+			const pair = await stmt.All<{
+				[tbl.col.belong]:Row.LearnBelong
+				,_:int
+			}>([recentMills])
+			const ans = QryAns.fromPair(pair)
+			return ans
+		}
+		return Fn
+	}
+
+	/**
+	 * 未嘗學ʹ詞
+	 * @returns 
+	 */
+	async Fn_Cnt_unlearned(){
+		const z = this
+		const learnTbl = z.tbls.learn
+		const textWordTbl = z.tbls.textWord
+		const sql =
+`SELECT ${textWordTbl.col.belong}, COUNT(*) AS _
+FROM ${textWordTbl.name}
+WHERE ${textWordTbl.col.id} NOT IN (
+	SELECT ${learnTbl.col.wid} FROM ${learnTbl.name}
+	WHERE ${learnTbl.col.belong} <> '${Row.LearnBelong.add}'
+)
+GROUP BY ${textWordTbl.col.belong}`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async()=>{
+			const pair = await stmt.All<{
+				[textWordTbl.col.belong]:Row.LearnBelong
+				,_:int
+			}>()
+			const ans = QryAns.fromPair(pair)
+			return ans
+		}
+		return Fn
+	}
+
+
 /** @deprecated ---------------------------------------------------------------- */
 
 /**
