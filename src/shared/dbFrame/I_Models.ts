@@ -36,7 +36,7 @@ export interface I_Fact<
 
 export interface I_IdBlCtMtInst<RowT extends I_Row> extends I_Inst<RowT>{
 	id
-	bl:str
+	belong:str
 	ct:Tempus
 	mt:Tempus
 }

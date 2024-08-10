@@ -7,7 +7,7 @@ export class BaseRow implements I_Row{
 
 export class IdBlCtMtRow implements I_IdBlCtMtRow{
 	id:int
-	bl:str = ''
+	belong:str = ''
 	ct:int
 	mt:int
 }

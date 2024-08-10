@@ -1,9 +1,9 @@
 import { I_Fact } from "./I_Models"
 import { I_Tbl } from "./I_Tbl"
 
-export class Tbl<FactT extends I_Fact<any, any>> implements I_Tbl<FactT>{
+export class BaseTbl<FactT extends I_Fact<any, any>> implements I_Tbl<FactT>{
 	protected constructor(){}
-	protected __init__(...args: Parameters<typeof Tbl.new>){
+	protected __init__(...args: Parameters<typeof BaseTbl.new>){
 		const z = this
 		z.name = args[0]
 		//@ts-ignore
@@ -17,7 +17,7 @@ export class Tbl<FactT extends I_Fact<any, any>> implements I_Tbl<FactT>{
 		return z
 	}
 
-	get This(){return Tbl}
+	get This(){return BaseTbl}
 
 	protected _name:str
 	get name(){return this._name}

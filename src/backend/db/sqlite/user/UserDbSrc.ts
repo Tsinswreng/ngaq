@@ -7,6 +7,7 @@ import { SqliteDb } from '@backend/sqlite/Sqlite'
 
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/model/user/UserRows'
+import { Tbl } from '../dbFrame/Tbl'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
@@ -29,101 +30,7 @@ interface I_AddInstOpt extends NonNullable<AddInstOpt>{
 }
 
 
-class Tbl<FactT extends Mod.BaseFactory<any, any>>{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof Tbl.new>){
-		const z = this
-		z.name = args[0]
-		//@ts-ignore
-		z.factory = args[1]
-		//z._col = z.factory.col
-		//z._objSql = SqliteUitl.Sql.obj.new(new z.factory.Row())
-		return z
-	}
 
-	static new<FactT>(name:str, factory:FactT){
-		//@ts-ignore
-		const z = new this<FactT>()
-		z.__init__(name, factory)
-		return z
-	}
-
-	//get This(){return Tbl}
-	protected _name:str
-	get name(){return this._name}
-	protected set name(v){this._name = v}
-
-	protected _factory:FactT
-	get factory(){return this._factory}
-	protected set factory(v){this._factory = v}
-	
-	//protected _col:FactT['col']
-	get col():FactT['col']{
-		return this.factory.col
-	}
-
-	get emptyRow(){
-		return this.factory.emptyRow
-	}
-
-	async Fn_AddInst(db:SqliteDb, opt?:AddInstOpt){
-		const z = this
-		const tbl = z
-		if(opt == void 0){
-			opt = {ignoredKeys: [tbl.col.id]}
-		}
-
-		const row = tbl.factory.emptyRow
-		const objsql = ObjSql.new(row, opt)
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await db.Prepare(sql)
-		const ans = async(inst:InstanceType_<FactT['Inst']>)=>{
-			const row = inst.toRow()
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	/**
-	 * 運行旹判斷 是row抑inst
-	 * @param db 
-	 * @param opt 
-	 * @returns 
-	 */
-	async Fn_Add(db:SqliteDb, opt?:AddInstOpt){
-		const z = this
-		const tbl = z
-		if(opt == void 0){
-			opt = {ignoredKeys: [tbl.col.id]}
-		}
-
-		const emptyRow = tbl.factory.emptyRow
-		const objsql = ObjSql.new(emptyRow, opt)
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await db.Prepare(sql)
-		const Ans = async(
-			target:InstanceType_<FactT['Row']>
-				|InstanceType_<FactT['Inst']>
-		)=>{
-			let row:InstanceType_<FactT['Row']>
-			if(target instanceof Mod.BaseInst){
-				row = target.toRow()
-			}else{
-				row = target
-			}
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return Ans
-	}
-
-
-}
 const TBL = Tbl.new.bind(Tbl)
 class Tbls{
 	user = TBL('user', Mod.User)
