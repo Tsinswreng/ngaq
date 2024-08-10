@@ -1,0 +1,15 @@
+{
+  "name": "c",
+  "version": "1.0.0",
+  "description": "$x_{下標}$\r $x下標$",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+	,"emcmk": "cd build && emcmake cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+	,"mk": "cd build && sh ../mk.sh"
+	,"main": "esno ./run.ts"
+	,"mkRun": "cd build && sh ../mk.sh && cd .. && esno ./run.ts"
+  },
+  "author": "",
+  "license": "ISC"
+}

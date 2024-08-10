@@ -1,5 +1,5 @@
 
-#20240727213258069
+#20240809124717614
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -142,7 +142,6 @@ use_preset_vocabulary: true
 手	nʰuʔ	
 意	ʔəks	
 噫	ʔrˁəks	
-意	ʔə	
 讀	lˁok	
 讀	ŋˁok	
 犢	lˁok	
@@ -1104,7 +1103,7 @@ use_preset_vocabulary: true
 穿	tʰon	
 咳	kʰˁəks	
 專	ton	
-平	breŋ	
+平	beŋ	
 迎	ŋraŋ	
 畢	pik	
 嗶	pik	
@@ -1549,6 +1548,7 @@ use_preset_vocabulary: true
 逼	prək	
 輻	pək	
 蝠	pək	
+幅	pək	
 貧	brən	
 奪	lˁot	
 徹	tʰret	
@@ -2662,7 +2662,8 @@ use_preset_vocabulary: true
 霪	ləm	
 搦	nrˁewk	
 那	nˁal	
-哪	nˁalʔ	
+哪	nˁalʔ	0%
+哪	nʰˁalʔ	
 奈	nˁats	
 攝	nʰep	
 聶	nrep	
@@ -3772,6 +3773,7 @@ use_preset_vocabulary: true
 揄	lo	
 有	wuʔ	
 又	wus	
+尤	wu	
 聯	ron	
 給	krop	
 使	srə	
@@ -24132,7 +24134,6 @@ use_preset_vocabulary: true
 纋	ʔu	
 尢	wʷə	
 尢	ʔʷˁaŋ	
-尤	wʷə	
 尣	ʔʷˁaŋ	
 邮	dˁek	
 邮	lu	

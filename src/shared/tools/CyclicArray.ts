@@ -1,5 +1,12 @@
 /**
- * 2024-04-28T12:40:56.372+08:00
+ * Copyright (c) 2024 TsinswrengGwāng <tsinswreng@qq.com>
+ * This code is licensed under MIT License.
+ * https://github.com/Tsinswreng/rime-TswG
+ * 
+ */
+
+/**
+ * 2024-08-03T16:17:11.205+08:00
  */
 export default class CyclicArray<T>{
 	protected constructor(){

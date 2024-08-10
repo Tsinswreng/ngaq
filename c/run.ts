@@ -8,9 +8,9 @@ import * as Ty from './type.ts'
 async function Main(){
 	//await Module.default();
 	//console.log(await Module.default())
-	console.log(Module)
-	const def = await Module.default()
-	console.log(def._main())
+	//console.log(Module)
+	const def = await Module.default() //默認會調用main函數
+	//console.log(def._main())
 	// console.log(Object.keys(def))
 	// const fn = def.cwrap('parse', 'string', ['string']);
 	// const ans = fn('123')
@@ -20,7 +20,11 @@ async function Main(){
 Main();
 
 
+// function open(path:string, opt?:ReadOpt){
+// 	//opt.mode, opt.encoding, opt.flag ...
+// }
 
+// open('./test.txt', {mode:'r', encoding:'utf8'})
 
 
 // 动态导入 Emscripten 生成的模块

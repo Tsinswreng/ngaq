@@ -1,0 +1,1 @@
+ninja "$@" 2>&1 | awk '{gsub(/(FAILED|error|:[0-9]+:)/, "\033[31m&\033[0m"); print}'

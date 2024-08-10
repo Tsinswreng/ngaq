@@ -7,7 +7,8 @@ using string = std::string;
 
 string parse(const string src);
 
-class Status{
+struct Status{
+	i32 pos = 0;
 	
 };
 

@@ -1,8 +1,8 @@
 # em++ testEmcc.cpp -o out/wasm.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s "EXPORTED_RUNTIME_METHODS=['cwrap', 'setValue', 'getValue', 'AsciiToString']"
 # emcmake cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-# emcmake cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build -S .
+# <
 cmake_minimum_required(VERSION 3.5)
-
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # 设置 C 编译器和 C++ 编译器
 set(CMAKE_CXX_STANDARD 23)

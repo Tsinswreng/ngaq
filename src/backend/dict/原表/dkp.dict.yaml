@@ -12,6 +12,8 @@
 # 除 民 身 堅 訊 信 等字外、中古之/-n/不作/-ŋ/
 # <刪>原則: 儘量改常用字、如鈦泰太等字中太更常用則改音作tʰāts</刪>
 # 原則: 「他太大」留上古肰「它泰汏」取中古、「有又」取中古肰「友右」留上古。
+
+
 ---
 name: dkp
 version: ""
@@ -22,6 +24,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
   - nonKanji
   - chineseDict
 ...
+
+
+
+
 
 #<reset-weight>
 辣	rˁat	10000%
@@ -210,7 +216,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 手	nʰuʔ
 意	ʔəks
 噫	ʔrˁəks
-意	ʔə
+#意	ʔə
 讀	lˁok
 讀	ŋˁok	# ts
 犢	lˁok
@@ -1466,7 +1472,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 咳	kʰˁəks
 專	ton
 
-平	breŋ
+#平	breŋ
+平	beŋ
 
 迎	ŋraŋ
 #必	# 說文曰八亦聲
@@ -2018,6 +2025,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 碱	krˁəmʔ
 緘	krˁəm
 
+
+
 威	ʔuj
 葳	ʔuj
 畏	ʔujs
@@ -2037,6 +2046,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 逼	prək
 輻	pək
 蝠	pək
+幅	pək
+
+#逼	lʰrˁək	# ts
+#輻	kˡʰrˁək	# ts
+
 貧	brən
 奪	lˁot
 徹	tʰret	# bs
@@ -3424,7 +3438,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 霪	ləm
 搦	nrˁewk
 那	nˁal
-哪	nˁalʔ
+哪	nˁalʔ	0%
+哪	nʰˁalʔ
 奈	nˁats
 
 # 攝	nʰap	# ms
@@ -4941,8 +4956,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 揄	lˁo
 揄	lo
 
+
+
 有	wuʔ	# ts
 又	wus	# ts
+尤	wu	# ts
 聯	ron	# 自補
 給	krop	# ts
 使	srə	# ts
