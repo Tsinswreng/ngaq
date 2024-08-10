@@ -1,10 +1,12 @@
 import * as SqliteUtil from "@backend/sqlite/sqliteUtil"
-import { Index } from "./NgaqDbSrc"
+//import { Index } from "./NgaqDbSrc"
+import { Index } from "@shared/dbFrame/Index"
 import { NgaqDbSrc } from "./NgaqDbSrc"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
+import { DbIniter } from "../dbFrame/DbIniter"
 
-export class InitSql_ngaqDbSrc{
-	protected constructor(){}
+export class InitSql_ngaqDbSrc extends DbIniter{
+	protected constructor(){super()}
 	protected __init__(...args: Parameters<typeof InitSql_ngaqDbSrc.new>){
 		const z = this
 		return z
@@ -42,7 +44,7 @@ export class InitSql_ngaqDbSrc{
 			db: db
 			,initSql: x
 		}
-		const sqls = z.initSql.getAllMkTblSql()
+		const sqls = z.initSql.getAllTblSql()
 		await z.db.BeginTrans()
 		for(const sql of sqls){
 			await z.db.Run(sql)
@@ -62,7 +64,7 @@ export class InitSql_ngaqDbSrc{
 	}
 	
 
-	getAllMkTblSql(){
+	getAllTblSql(){
 		const z = this
 		const ans:str[] = [
 			z.mkTbl_word()
@@ -95,7 +97,7 @@ export class InitSql_ngaqDbSrc{
 			if(
 				!(
 					cur instanceof Index
-					&& cur.type === SqliteUtil.SqliteMasterType.index
+					//&& cur.type === SqliteUtil.SqliteMasterType.index
 				)
 			){
 				continue

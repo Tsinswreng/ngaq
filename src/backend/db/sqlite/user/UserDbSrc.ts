@@ -8,6 +8,8 @@ import { SqliteDb } from '@backend/sqlite/Sqlite'
 import * as Mod from '@shared/model/user/UserModel'
 import * as Row from '@shared/model/user/UserRows'
 import { Tbl } from '../dbFrame/Tbl'
+import { Index } from '@shared/dbFrame/Index'
+import { I_DbSrc } from '@shared/dbFrame/I_DbSrc'
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
@@ -68,66 +70,12 @@ class SchemaItem extends SqliteUtil.SqliteMaster{
 	get This(){return SchemaItem}
 }
 
-class Trigger extends SchemaItem{
-	protected constructor(){super()}
-	protected __init__(...args: Parameters<typeof Trigger.new>){
-		const z = this
-		return z
-	}
 
-	static new(){
-		const z = new this()
-		z.__init__()
-		return z
-	}
 
-	get This(){return Trigger}
-}
-
-class Index extends SchemaItem{
-	protected constructor(){super()}
-	protected __init__(...args: Parameters<typeof Index.new>){
-		const z = this
-		return z
-	}
-
-	static new(){
-		const z = new this()
-		z.__init__()
-		return z
-	}
-
-	protected _cols:str[]
-	get cols(){return this._cols}
-	set cols(v){this._cols = v}
-	
-	protected _tbl:Tbl<any>
-	get tbl(){return this._tbl}
-	set tbl(v){this._tbl = v}
-	
-
-	//get This(){return Index}
-}
 const SI = SchemaItem.new.bind(SchemaItem)
 const SMT = SqliteUtil.SqliteMasterType
 
-const IDX = <Fact>(
-	name:str
-	//@ts-ignore
-	, tbl:Tbl<Fact>
-	//@ts-ignore
-	, fn: (e:Tbl<Fact>['col'])=>str[]
-)=>{
-	const ans = Index.new()
-	ans.name = name
-	ans.type = SMT.index
-	ans.tbl = tbl
-	ans.tbl_name = tbl.name
-	ans.cols = fn(ans.tbl.col)
-	//SI(name, SMT.index, tbl.name)
-	return ans
-}
-
+const IDX = Index.IDX.bind(Index)
 class SchemaItems{
 	//tbls=tbls
 	idx_sessionFid = IDX('idx_sessionFid', tbls.session, c=>[c.userId])
@@ -136,7 +84,7 @@ class SchemaItems{
 const schemaItems = new SchemaItems()
 
 
-export class UserDbSrc{
+export class UserDbSrc implements I_DbSrc{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof UserDbSrc.new>){
 		const z = this
@@ -162,7 +110,7 @@ export class UserDbSrc{
 	protected set db(v){this._db = v}
 
 
-	async GetFn_Add<T extends Tbl<any>>(
+	async Fn_Add<T extends Tbl<any>>(
 		fn: (tbl:typeof this.tbls)=>T
 		,opt?:AddInstOpt
 	){

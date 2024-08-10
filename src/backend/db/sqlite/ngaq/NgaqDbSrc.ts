@@ -19,128 +19,10 @@ const QryAns = SqliteUtil.SqliteQryResult
 type QryAns<T> = SqliteUtil.SqliteQryResult<T>
 type Id_t = int|str
 type AddInstOpt = Parameters<typeof ObjSql.new>[1]
-class Tbl<FactT extends Mod.BaseFactory<any, any>>{
-	protected constructor(){}
-	protected __init__(...args: Parameters<typeof Tbl.new>){
-		const z = this
-		z.name = args[0]
-		//@ts-ignore
-		z.factory = args[1]
-		//z._col = z.factory.col
-		//z._objSql = SqliteUitl.Sql.obj.new(new z.factory.Row())
-		return z
-	}
 
-	static new<FactT>(name:str, factory:FactT){
-		//@ts-ignore
-		const z = new this<FactT>()
-		z.__init__(name, factory)
-		return z
-	}
-
-	//get This(){return Tbl}
-	protected _name:str
-	get name(){return this._name}
-	protected set name(v){this._name = v}
-
-	protected _factory:FactT
-	get factory(){return this._factory}
-	protected set factory(v){this._factory = v}
-	
-	//protected _col:FactT['col']
-	get col():FactT['col']{
-		return this.factory.col
-	}
-
-	get emptyRow(){
-		return this.factory.emptyRow
-	}
-
-	async Fn_addInst(db:SqliteDb, opt?:AddInstOpt){
-		const z = this
-		const tbl = z
-		if(opt == void 0){
-			opt = {ignoredKeys: [tbl.col.id]}
-		}
-
-		const emptyRow = tbl.factory.emptyRow
-		const objsql = ObjSql.new(emptyRow, opt)
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await db.Prepare(sql)
-		const ans = async(inst:InstanceType_<FactT['Inst']>)=>{
-			const row = inst.toRow()
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	async Fn_addRow(db:SqliteDb, opt?:AddInstOpt){
-		const z = this
-		const tbl = z
-		if(opt == void 0){
-			opt = {ignoredKeys: [tbl.col.id]}
-		}
-
-		const emptyRow = tbl.factory.emptyRow
-		const objsql = ObjSql.new(emptyRow, opt)
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await db.Prepare(sql)
-		const ans = async(row:InstanceType_<FactT['Row']>)=>{
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-	/**
-	 * 運行旹判斷 是row抑inst
-	 * @param db 
-	 * @param opt 
-	 * @returns 
-	 */
-	async Fn_Add(db:SqliteDb, opt?:AddInstOpt){
-		const z = this
-		const tbl = z
-		if(opt == void 0){
-			opt = {ignoredKeys: [tbl.col.id]}
-		}
-
-		const emptyRow = tbl.factory.emptyRow
-		const objsql = ObjSql.new(emptyRow, opt)
-		const sql = objsql.geneFullInsertSql(tbl.name)
-		const stmt = await db.Prepare(sql)
-		const ans = async(
-			target:InstanceType_<FactT['Row']>
-				|InstanceType_<FactT['Inst']>
-		)=>{
-			let row:InstanceType_<FactT['Row']>
-			if(target instanceof Mod.BaseInst){
-				row = target.toRow()
-			}else{
-				row = target
-			}
-			const params = objsql.getParams(row)
-			const runRes = await stmt.Run(params)
-			const ans = QryAns.fromRunResult(runRes)
-			return ans
-		}
-		return ans
-	}
-
-// 	async Fn_Seek(db:SqliteDb, opt?){
-// 		const z = this
-// 		const sql = 
-// `SELECT * FROM ${z.name} `
-// 	}
-
-}
-
+import { Tbl } from '../dbFrame/Tbl'
 const TBL = Tbl.new.bind(Tbl)
+
 class Tbls{
 	textWord = TBL('textWord', Mod.TextWord)
 	property = TBL('property', Mod.Property)
@@ -206,52 +88,12 @@ class Trigger<Tbl_t extends Tbl<any>> extends SchemaItem{
 	protected set tbl(v){this._tbl = v}
 	
 }
+import { Index } from '@shared/dbFrame/Index'
 
-export class Index extends SchemaItem{
-	protected constructor(){super()}
-	protected __init__(...args: Parameters<typeof Index.new>){
-		const z = this
-		return z
-	}
-
-	static new(){
-		const z = new this()
-		z.__init__()
-		return z
-	}
-
-	protected _cols:str[]
-	get cols(){return this._cols}
-	set cols(v){this._cols = v}
-	
-	protected _tbl:Tbl<any>
-	get tbl(){return this._tbl}
-	set tbl(v){this._tbl = v}
-	
-
-	//get This(){return Index}
-}
 //const SI = SchemaItem.new.bind(SchemaItem)
 const TRIG = Trigger.new.bind(Trigger)
 const SMT = SqliteUtil.SqliteMasterType
-
-const IDX = <Fact>(
-	name:str
-	//@ts-ignore
-	, tbl:Tbl<Fact>
-	//@ts-ignore
-	, fn: (e:Tbl<Fact>['col'])=>str[]
-)=>{
-	const ans = Index.new()
-	ans.name = name
-	ans.type = SMT.index
-	ans.tbl = tbl
-	ans.tbl_name = tbl.name
-	ans.cols = fn(ans.tbl.col)
-	//SI(name, SMT.index, tbl.name)
-	return ans
-}
-
+const IDX = Index.IDX.bind(Index)
 
 
 class SchemaItems{
@@ -320,8 +162,8 @@ export class NgaqDbSrc{
 	){
 		const z = this
 		const tbl = fn(z.tbls)
-		const ans = await tbl.Fn_addInst(z.db, opt)
-		return ans as ReturnType<T['Fn_addInst']>
+		const ans = await tbl.Fn_AddInst(z.db, opt)
+		return ans as ReturnType<T['Fn_AddInst']>
 	}
 
 	async GetFn_addRow<T extends Tbl<any>>(
@@ -330,8 +172,8 @@ export class NgaqDbSrc{
 	){
 		const z = this
 		const tbl = fn(z.tbls)
-		const ans = await tbl.Fn_addRow(z.db, opt)
-		return ans as ReturnType<T['Fn_addRow']>
+		const ans = await tbl.Fn_AddRow(z.db, opt)
+		return ans as ReturnType<T['Fn_AddRow']>
 	}
 
 

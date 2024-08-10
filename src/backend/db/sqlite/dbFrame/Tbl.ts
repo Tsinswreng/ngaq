@@ -19,9 +19,9 @@ export class Tbl<FactT extends I_Fact<any, any>> extends BaseTbl<FactT>{
 		return z
 	}
 
-	static new(...args: Parameters<typeof BaseTbl.new>){
-		const z = new this()
-		z.__init__(...args)
+	static new<FactT extends I_Fact<any, any>>(name, factory: FactT){
+		const z = new this<FactT>()
+		z.__init__(name, factory)
 		return z
 	}
 
