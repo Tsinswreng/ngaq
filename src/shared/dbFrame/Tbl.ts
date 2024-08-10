@@ -1,4 +1,4 @@
-import { I_Fact } from "./I_Entity"
+import { I_Fact } from "./I_Models"
 import { I_Tbl } from "./I_Tbl"
 
 export class Tbl<FactT extends I_Fact<any, any>> implements I_Tbl<FactT>{
@@ -19,7 +19,7 @@ export class Tbl<FactT extends I_Fact<any, any>> implements I_Tbl<FactT>{
 
 	get This(){return Tbl}
 
-	protected _name
+	protected _name:str
 	get name(){return this._name}
 	protected set name(v){this._name = v}
 	

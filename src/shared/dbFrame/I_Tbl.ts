@@ -1,4 +1,4 @@
-import { I_Fact } from "./I_Entity"
+import { I_Fact } from "./I_Models"
 
 export interface I_Tbl<FactT extends I_Fact<any, any>>{
 	/** The name of the table */
@@ -13,5 +13,5 @@ export interface I_Tbl<FactT extends I_Fact<any, any>>{
 
 
 export interface I_Fn_Add{
-	
+
 }

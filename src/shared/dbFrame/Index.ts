@@ -1,7 +1,7 @@
 import type { PubNonFuncProp } from "@shared/Type"
 import type { I_Index } from "./I_Index"
 import type { I_Tbl } from "./I_Tbl"
-import type { I_Fact } from "./I_Entity"
+import type { I_Fact } from "./I_Models"
 
 export class Index implements I_Index{
 	protected constructor(){}
