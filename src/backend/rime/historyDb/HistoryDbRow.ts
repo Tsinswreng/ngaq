@@ -4,8 +4,8 @@ class ColNames{
 	readonly belong='belong'
 	readonly text='text'
 	readonly cnt='cnt'
-	readonly createdTime='createdTime'
-	readonly modifiedTime='modifiedTime'
+	readonly ct='createdTime'
+	readonly mt='modifiedTime'
 }
 const col = new ColNames()
 
@@ -16,8 +16,8 @@ export class HistoryDbRow{
 	[col.belong]:Belong
 	[col.text]:str
 	[col.cnt]:int
-	[col.createdTime]:int
-	[col.modifiedTime]:int
+	[col.ct]:int
+	[col.mt]:int
 }
 
 export enum Belong{

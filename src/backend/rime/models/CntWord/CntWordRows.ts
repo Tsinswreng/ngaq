@@ -1,15 +1,7 @@
-export class BaseRow{
+import { BaseRow, IdBlCtMtRow } from "@shared/dbFrame/Rows";
 
-}
-
-export class IdCtMtBl extends BaseRow{
-	id:int
-	belong:str
-	ct:int
-	mt:int
-}
-
-export class CntWordRow extends IdCtMtBl{
+export class CntWordRow extends IdBlCtMtRow{
+	declare id:int
+	text:str
 	cnt:int
 }
-

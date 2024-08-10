@@ -19,8 +19,8 @@ export function assign(a,b){
 }
 
 
-export class BaseInst<RowT extends I_Row> implements I_Inst<RowT>{
-	get Row(){return BaseRow}
+export abstract class BaseInst<RowT extends I_Row> implements I_Inst<RowT>{
+	abstract get Row()//{return BaseRow}
 	toRow(): RowT {
 		const z = this
 		const ans = new z.Row()
@@ -33,12 +33,14 @@ export class BaseInst<RowT extends I_Row> implements I_Inst<RowT>{
 	}
 }
 
-export class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row>
+export abstract class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row>
 	implements I_Fact<InstT, RowT>
 {
-	Inst = BaseInst
-	Row = BaseRow
+	abstract Inst// = BaseInst
+	abstract Row// = BaseRow
+	/** @lateinit */
 	col:KeyMirror<RowT>
+	/** @lateinit */
 	emptyRow: RowT
 	new: (prop: PubNonFuncProp<InstT>) => InstT
 	fromRow(row: RowT): InstT {
@@ -59,6 +61,7 @@ export class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row>
 		z.col = keyMirror(z.emptyRow)
 	}
 	static new(){
+		//@ts-ignore
 		const z = new this()
 		z.__init__()
 		return z
@@ -67,10 +70,11 @@ export class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row>
 }
 
 
-export class IdBlCtMtInst<RowT extends I_IdBlCtMtRow>
+export abstract class IdBlCtMtInst<RowT extends I_IdBlCtMtRow>
 	extends BaseInst<RowT>
-	implements I_Inst<RowT>{
-	get Row(){return IdBlCtMtRow}
+	implements I_Inst<RowT>
+{
+	abstract get Row()//{return IdBlCtMtRow}
 	id:int|undef
 	belong:str
 	ct:Tempus
@@ -82,12 +86,11 @@ export class IdBlCtMtInst<RowT extends I_IdBlCtMtRow>
 	}
 }
 
-export class IdBlCtMtFact<
+export abstract class IdBlCtMtFact<
 	InstT extends I_IdBlCtMtInst<any>, RowT extends I_IdBlCtMtRow
 > extends BaseFactory<InstT, RowT>{
-	override Row = IdBlCtMtRow
-	//@ts-ignore
-	override Inst=IdBlCtMtInst
+	abstract Row// = IdBlCtMtRow
+	abstract Inst//=IdBlCtMtInst
 	override correctInst(inst) {
 		inst.ct = Tempus.new(As(inst.ct, 'number'))
 		inst.mt = Tempus.new(As(inst.mt, 'number'))

@@ -79,8 +79,8 @@ export class HistoryLine extends Line{
 				[c.text]: $(ar[0])
 				,[c.belong]: belong
 				,[c.cnt]: $n(ar[1])
-				,[c.modifiedTime]: $n(ar[2])
-				,[c.createdTime]: $n(ar[3])
+				,[c.mt]: $n(ar[2])
+				,[c.ct]: $n(ar[3])
 			}
 			return ans
 		} catch (error) {

@@ -20,7 +20,7 @@ export class Index implements I_Index{
 
 	static IDX<Fact extends I_Fact<any, any>>(
 		name:str
-		, tbl:I_Tbl<any>
+		, tbl:I_Tbl<Fact>
 		, fn: (e:I_Tbl<Fact>['col'])=>str[]
 	){
 		const ans = new Index()

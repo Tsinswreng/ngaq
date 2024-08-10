@@ -80,8 +80,8 @@ export class HistoryTbl{
 	,${c.belong} TEXT NOT NULL
 	,${c.text} TEXT NOT NULL
 	,${c.cnt} INT DEFAULT 1
-	,${c.createdTime} INTEGER DEFAULT (strftime('%s', 'now'))
-	,${c.modifiedTime} INTEGER DEFAULT (strftime('%s', 'now'))
+	,${c.ct} INTEGER DEFAULT (strftime('%s', 'now'))
+	,${c.mt} INTEGER DEFAULT (strftime('%s', 'now'))
 	,UNIQUE(${c.text},${c.belong})
 )`
 		return sql
@@ -129,20 +129,20 @@ FOR EACH ROW
 WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
 	WHERE ${c.text} = NEW.${c.text} AND ${c.belong} = NEW.${c.belong}
-	AND ${c.createdTime} >= NEW.${c.createdTime}
+	AND ${c.ct} >= NEW.${c.ct}
 )
 BEGIN
 	UPDATE "${tbl}"
 	SET
-	${c.createdTime} = NEW.${c.createdTime}
+	${c.ct} = NEW.${c.ct}
 	,${c.cnt} = CASE
 		WHEN NEW.${c.cnt} > ${c.cnt} THEN NEW.${c.cnt}
 		ELSE ${c.cnt}
 	END
-	,${c.modifiedTime}=
+	,${c.mt}=
 	CASE
-		WHEN NEW.${c.modifiedTime} > ${c.modifiedTime} THEN NEW.${c.modifiedTime}
-		ELSE ${c.modifiedTime}
+		WHEN NEW.${c.mt} > ${c.mt} THEN NEW.${c.mt}
+		ELSE ${c.mt}
 	END
 	WHERE ${c.text}=NEW.${c.text};
 	SELECT RAISE(IGNORE);
@@ -182,7 +182,7 @@ WHEN EXISTS(
 	SELECT 1 FROM "${tbl}"
 	WHERE ${c.text} = NEW.${c.text} 
 	AND ${c.belong} = NEW.${c.belong}
-	AND ${c.createdTime} < NEW.${c.createdTime}
+	AND ${c.ct} < NEW.${c.ct}
 )
 BEGIN
 	UPDATE "${tbl}"
@@ -192,11 +192,11 @@ BEGIN
 		WHEN NEW.${c.cnt} IS NULL THEN 1
 		ELSE NEW.${c.cnt}
 	END,
-	${c.modifiedTime}=
+	${c.mt}=
 	CASE
-		WHEN NEW.${c.modifiedTime} IS NULL THEN (strftime('%s', 'now'))
-		WHEN NEW.${c.modifiedTime} > ${c.modifiedTime} THEN NEW.${c.modifiedTime}
-		ELSE ${c.modifiedTime}
+		WHEN NEW.${c.mt} IS NULL THEN (strftime('%s', 'now'))
+		WHEN NEW.${c.mt} > ${c.mt} THEN NEW.${c.mt}
+		ELSE ${c.mt}
 	END
 	WHERE ${c.text}=NEW.${c.text};
 	SELECT RAISE(IGNORE);
@@ -233,7 +233,7 @@ END;
 `CREATE TRIGGER ${ifNE} "${trig}"
 BEFORE UPDATE ON "${tbl}"
 FOR EACH ROW
-WHEN NEW.${c.modifiedTime} < OLD.${c.createdTime}
+WHEN NEW.${c.mt} < OLD.${c.ct}
 BEGIN
 	SELECT RAISE(ABORT, '${errMsg}');
 END;
