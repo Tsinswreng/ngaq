@@ -10,10 +10,11 @@ import { SqliteDb } from "@backend/sqlite/Sqlite"
 class Names{
 	idx_text='idx_text'
 	//trig_updateOnDuplicateInsert='trig_onUuplicate_insert'
-	trig_chkModifiedTime = 'chkModifiedTime'
+	
 	errMsg_chkModifiedTime = 'modified_time cannot be earlier than created_time'
 	//trig_uniqueTextEtCreatedTime = 'trig_unique_text__created_time'
 	//errMsg_uniqueTextEtCreatedTime = '(text,created_time) is duplicated'
+	trig_chkModifiedTime = 'chkModifiedTime'
 	trig_earlierDuplicate = 'earlierDuplicate'
 	trig_laterDuplicate = 'laterDuplicate'
 }

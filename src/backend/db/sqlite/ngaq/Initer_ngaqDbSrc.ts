@@ -24,9 +24,17 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	get items(){return this._items}
 	protected set items(v){this._items = v}
 
-	protected _tbls = NgaqDbSrc.tbls
-	get tbls(){return this._tbls}
-	protected set tbls(v){this._tbls = v}
+	protected _tables = NgaqDbSrc.tbls
+	get tables(){return this._tables}
+	protected set tables(v){this._tables = v}
+
+	//TODO
+	protected _indexs
+	get indexs(){return this._indexs}
+	set indexs(v){this._indexs = v}
+
+	
+	
 
 	static async MkSchema(db:SqliteDb){
 		const z = InitSql_ngaqDbSrc.new()
@@ -111,7 +119,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTbl_word(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const tbl = z.tbls.textWord
+		const tbl = z.tables.textWord
 		const c = tbl.col
 		const ans = 
 `CREATE TABLE ${ifNE} "${tbl.name}"(
@@ -128,7 +136,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTbl_learn(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const tbl = z.tbls.learn
+		const tbl = z.tables.learn
 		const c = tbl.col
 		const ans = 
 `CREATE TABLE ${ifNE} "${tbl.name}"(
@@ -137,7 +145,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.belong} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tbls.textWord.name}(${z.tbls.textWord.col.id})
+	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
 )`
 		return ans
 	}
@@ -145,7 +153,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTbl_property(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const tbl = z.tbls.property
+		const tbl = z.tables.property
 		const c = tbl.col
 		const ans = 
 `CREATE TABLE ${ifNE} "${tbl.name}"(
@@ -155,7 +163,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.text} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tbls.textWord.name}(${z.tbls.textWord.col.id})
+	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
 )`
 		return ans
 	}
@@ -163,7 +171,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTbl_relation(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const tbl = z.tbls.relation
+		const tbl = z.tables.relation
 		const c = tbl.col
 		const ans = 
 `CREATE TABLE ${ifNE} "${tbl.name}"(
@@ -179,7 +187,7 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTbl_wordRelation(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const tbl = z.tbls.wordRelation
+		const tbl = z.tables.wordRelation
 		const c = tbl.col
 		const ans = 
 `CREATE TABLE ${ifNE} "${tbl.name}"(
@@ -188,8 +196,8 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.rid} INTEGER NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES "${z.tbls.textWord.name}"(${z.tbls.textWord.col.id})
-	,FOREIGN KEY(${c.rid}) REFERENCES "${z.tbls.textWord.name}"(${z.tbls.relation.col.id})
+	,FOREIGN KEY(${c.wid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.textWord.col.id})
+	,FOREIGN KEY(${c.rid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.relation.col.id})
 )`
 		return ans
 	}
@@ -200,14 +208,14 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const trig = z.items.trig_aftIns_learnAltWordMt
-		const c = z.tbls.learn.col
+		const c = z.tables.learn.col
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
 AFTER INSERT ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans
@@ -218,14 +226,14 @@ END;
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const item = z.items
 		const trig = z.items.trig_aftIns_propertyAltWordMt
-		const c = z.tbls.textWord.col
+		const c = z.tables.textWord.col
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
 AFTER INSERT ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans
@@ -236,14 +244,14 @@ END;
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
 		const item = z.items
 		const trig = z.items.trig_aftUpd_propertyAltWordMt
-		const c = z.tbls.textWord.col
+		const c = z.tables.textWord.col
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
 AFTER UPDATE ON ${trig.tbl_name}
 FOR EACH ROW
 BEGIN
-	UPDATE ${z.tbls.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tbls.textWord.name}.${z.tbls.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
 END;
 `
 		return ans

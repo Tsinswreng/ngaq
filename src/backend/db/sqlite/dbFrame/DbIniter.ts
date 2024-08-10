@@ -1,6 +1,8 @@
 import { I_DbIniter } from "@shared/dbFrame/I_DbIniter"
 import type { SqliteDb } from "@backend/sqlite/Sqlite"
-export class DbIniter implements I_DbIniter {
+import * as SqliteUtil from "@backend/sqlite/sqliteUtil"
+import { Index } from "@shared/dbFrame/Index"
+export abstract class DbIniter implements I_DbIniter {
 	protected constructor(){}
 
 	protected __init__(...args: Parameters<typeof DbIniter.new>){
@@ -9,12 +11,16 @@ export class DbIniter implements I_DbIniter {
 	}
 
 	static new(){
+		//@ts-ignore
 		const z = new this()
 		z.__init__()
 		return z
 	}
 
 	get This(){return DbIniter}
+	abstract tables:Object
+	abstract indexs:Object
+	//abstract triggers
 	async MkSchema(db:SqliteDb){
 		const x = this
 		const z = {
@@ -39,13 +45,28 @@ export class DbIniter implements I_DbIniter {
 		await z.db.Commit()
 		return true
 	}
-	getAllTblSql(): str[] {
-		return []
-	}
+	abstract getAllTblSql(): str[] 
+	abstract getAllTrigSql(): str[]
+
 	getAllIdxSql(): str[] {
-		return []
+		const z = this
+		const ifNE = SqliteUtil.IF_NOT_EXISTS
+		const keys = Object.keys(z.indexs)
+		const ans = [] as str[]
+		for(const k of keys){
+			const cur = z.indexs[k]
+			if(
+				!(
+					cur instanceof Index
+					//&& cur.type === SqliteUtil.SqliteMasterType.index
+				)
+			){
+				continue
+			}
+			const sql = SqliteUtil.Sql.create.index(cur.tbl_name, cur.name, cur.cols, {checkExist: false})
+			ans.push(sql)
+		}
+		return ans
 	}
-	getAllTrigSql(): str[] {
-		return []
-	}
+
 }
