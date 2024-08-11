@@ -1,31 +1,26 @@
-import Path from "path";
-import {merge} from '@shared/tools/merge'
-
+import { I_Config } from "./I_Config"
 
 export class ConfigManager{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof ConfigManager.new>){
 		const z = this
+		z.configInst = args[0]
 		return z
 	}
 
-	static new(){
+	static new(configInst?:I_Config){
 		const z = new this()
-		z.__init__()
+		z.__init__(configInst)
 		return z
 	}
 
 	get This(){return ConfigManager}
-
-	protected _outerConfigPath?:str
-	get outerConfigPath(){return this._outerConfigPath}
-	protected set outerConfigPath(v){this._outerConfigPath = v}
 	
-	merge(...args: Parameters<typeof merge>){
-		return merge(...args)
+	configInst?:I_Config
+	GetInst(){
+
 	}
 
-	
 
 }
 

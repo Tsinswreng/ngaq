@@ -6,8 +6,8 @@ import { HistoryDbSrc } from "@backend/rime/historyDb/HistoryDbSrc";
 import { HistoryTbl } from "@backend/rime/historyDb/HistoryTbl";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import sqlite3 from "sqlite3";
-import { historyOpt } from "./opt";
-import { stuff } from "./stuff";
+import { historyOpt } from "./old_opt";
+import { stuff } from "./old_stuff";
 
 const opt = historyOpt
 const mod = stuff

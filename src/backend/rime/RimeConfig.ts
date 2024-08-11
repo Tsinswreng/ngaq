@@ -1,4 +1,5 @@
 import {Config} from "@backend/util/Config"
+import { ConfigManager } from "@shared/infra/ConfigManager"
 
 export class RimeConfig extends Config{
 	protected constructor(){super()}
@@ -8,7 +9,7 @@ export class RimeConfig extends Config{
 		return z
 	}
 
-	protected static async New(){
+	static async New(){
 		const z = new this()
 		await z.__Init__()
 		return z
@@ -16,6 +17,7 @@ export class RimeConfig extends Config{
 
 	protected static inst?: RimeConfig
 	static async GetInst(){
+		const z = this
 		if(RimeConfig.inst == void 0){
 			RimeConfig.inst = await RimeConfig.New()
 		}
@@ -23,6 +25,7 @@ export class RimeConfig extends Config{
 	}
 
 	//get This(){return RimeConfig}
+	override outerConfigPath: string = './rimeOpt.json5'
 	override config = new DefaultConfig()
 }
 

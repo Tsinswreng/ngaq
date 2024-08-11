@@ -1,0 +1,5 @@
+{
+	"commitHistory": {
+		"sqlitePath": "./db/ignored/commitHistory.sqlite"
+	}
+}

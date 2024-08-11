@@ -1,6 +1,6 @@
 import { MkReadNRow } from "@backend/rime/historyDb/ReadFromTxt";
-import { historyOpt } from "./opt";
-import { stuff } from "./stuff";
+import { historyOpt } from "./old_opt";
+import { stuff } from "./old_stuff";
 import { DbErr } from "@backend/sqlite/Sqlite";
 import { LineParseErr } from "@backend/rime/historyDb/HistoryTsv";
 import { Belong } from "@backend/rime/historyDb/HistoryDbRow";
