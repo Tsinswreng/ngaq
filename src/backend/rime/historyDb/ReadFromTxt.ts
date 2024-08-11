@@ -41,7 +41,7 @@ export class MkReadNRow implements I_readN<Promise<HistoryDbRow[]>>{
 	protected set belong(v){this._belong = v}
 	
 	
-	async read(n: int): Promise<HistoryDbRow[]> {
+	async readN(n: int): Promise<HistoryDbRow[]> {
 		const z = this
 		const lines = await z.tsv.readLines(n)
 		const ans = [] as HistoryDbRow[]

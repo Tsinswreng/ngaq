@@ -278,7 +278,7 @@ END;
 	async insertStrm(readN:I_readN<Promise<HistoryDbRow[]>>, opt:I_perBatch){
 		let perBatch = opt?.perBatch??9999
 		const z = this
-		const rows = await readN.read(perBatch)
+		const rows = await readN.readN(perBatch)
 		if(rows != void 0 && rows.length > 0){
 			await z.insertRows(rows)
 		}

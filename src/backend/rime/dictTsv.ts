@@ -151,7 +151,7 @@ export class DictTsvParser extends Tsv{
 
 	async readLines(num:int){
 		const z = this
-		const lines = await z.reader.read(num)
+		const lines = await z.reader.readN(num)
 		if(lines == void 0 || lines.length === 0){
 			z.status.end = true
 			return []

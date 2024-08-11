@@ -33,7 +33,7 @@ export type ParseType<T extends string> =
 export type PrimitiveTypeStr = 'number' | 'string' | 'boolean' | 'null' | 'undefined' | 'bigint' | 'symbol';
 
 export interface I_readN<T>{
-	read(n:int):T
+	readN(n:int):T
 }
 
 export interface I_perBatch{
@@ -135,3 +135,5 @@ export interface I_data<T>{
 export interface I_id<T>{
 	id:T
 }
+
+export type Pair<A,B> = [A,B]

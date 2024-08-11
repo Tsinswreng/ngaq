@@ -167,7 +167,7 @@ class Snippet{
 	integerPrimaryKey = 'INTEGER PRIMARY KEY'
 	notNull = 'NOT NULL'
 	unique = 'UNIQUE'
-	now_unixMills = `strftime('%s', 'now') || substr(strftime('%f', 'now'), 4)`
+	now_unixMills = `(strftime('%s', 'now') || substr(strftime('%f', 'now'), 4))`
 	foreignKey(key:str, refTbl:str, refCol:str){
 		const ans = 
 `FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol})`

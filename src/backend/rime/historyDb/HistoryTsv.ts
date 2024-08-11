@@ -141,7 +141,7 @@ export class HistoryTsv extends Tsv{
 
 	override async readLines(num: int): Promise<HistoryLine[]> {
 		const z = this
-		const strArr = await z.reader.read(num)
+		const strArr = await z.reader.readN(num)
 		if(strArr ==void 0 || strArr.length === 0){
 			return []
 		}

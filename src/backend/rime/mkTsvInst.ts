@@ -8,7 +8,7 @@ export function mkReadN(...args:Parameters<typeof File.FileReadLine.new>){
 	const opt = args[1]
 	const frl = File.FileReadLine.new(path, opt)
 	const readN:I_readN<Promise<string[]>> = {
-		read(n:number){
+		readN(n:number){
 			return frl.read(n)
 		}
 	}
@@ -21,7 +21,7 @@ export function mkTsvInst(...args:Parameters<typeof File.FileReadLine.new>){
 	const opt = args[1]
 	const frl = File.FileReadLine.new(dictPath, opt)
 	const readN:I_readN<Promise<string[]>> = {
-		read(n:number){
+		readN(n:number){
 			return frl.read(n)
 		}
 	}
