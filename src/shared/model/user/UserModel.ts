@@ -9,8 +9,8 @@ import { BaseFactory } from "@shared/dbFrame/Models";
 import { IdBlCtMtInst } from "@shared/dbFrame/Models";
 import { IdBlCtMtFact } from "@shared/dbFrame/Models";
 
-export const IdBlCtMt = IdBlCtMtFact.new() as IdBlCtMtFact<any, any>
-export type IdBlCtMt<A extends Row.IdCtMtBl> = IdBlCtMtInst<A>
+// export const IdBlCtMt = IdBlCtMtFact.new() as IdBlCtMtFact<any, any>
+// export type IdBlCtMt<A extends Row.IdCtMtBl> = IdBlCtMtInst<A>
 
 import { UserInst, UserFact } from "./mods/User";
 export const User = UserFact.new() as unknown as UserFact

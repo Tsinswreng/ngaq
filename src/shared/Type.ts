@@ -118,7 +118,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>
  */
 export type NullableEleArr<T> = (T|undef)[]
 
-export type Asyncable<T> = T|Promise<T>
+export type Deferrable<T> = T|Promise<T>
 
 export interface I_belong<T>{
 	belong: T
