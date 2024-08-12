@@ -25,6 +25,7 @@ export abstract class BaseInst<RowT extends I_Row> implements I_Inst<RowT>{
 		const z = this
 		const ans = new z.Row()
 		assign(ans, z)
+		z.correctRow(ans)
 		return ans as RowT
 	}
 
@@ -42,12 +43,19 @@ export abstract class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row
 	col:KeyMirror<RowT>
 	/** @lateinit */
 	emptyRow: RowT
-	new: (prop: PubNonFuncProp<InstT>) => InstT
+	new(prop: PubNonFuncProp<InstT>):InstT{
+		const z = this
+		const ans = new z.Inst()
+		assign(ans, prop)
+		return ans
+	}
 	fromRow(row: RowT): InstT {
 		const z = this
 		const ans = new z.Inst()
 		assign(ans, row)
+		//console.log(0)
 		z.correctInst(ans as InstT)
+		//console.log(1) -
 		return ans as InstT
 	}
 	correctInst(inst: InstT): InstT {

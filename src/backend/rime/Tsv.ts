@@ -1,4 +1,4 @@
-import type { I_readN } from "@shared/Type"
+import type { I_GetN } from "@shared/Type"
 import { Line } from "./Line"
 
 
@@ -16,7 +16,7 @@ export class Tsv{
 		return z
 	}
 
-	static new(reader:I_readN<Promise<str[]>>){
+	static new(reader:I_GetN<Promise<str[]>>){
 		const z = new this()
 		z.__init__(reader)
 		return z
@@ -24,7 +24,7 @@ export class Tsv{
 
 	get This(){return Tsv}
 
-	protected _reader:I_readN<Promise<str[]>>
+	protected _reader:I_GetN<Promise<str[]>>
 	get reader(){return this._reader}
 	protected set reader(v){this._reader = v}
 
@@ -40,7 +40,7 @@ export class Tsv{
 
 	async readLines(num:int){
 		const z = this
-		const lines = await z.reader.readN(num)
+		const lines = await z.reader.GetN(num)
 		if(lines == void 0 || lines.length === 0){
 			z.status.end = true
 			return []

@@ -117,6 +117,7 @@ export class UserCtrl extends BaseCtrl{
 			}
 			return userId
 		} catch (err) {
+			console.error(err)//t
 			res.status(401).json({error: 'Unauthorized'})
 			return null
 		}

@@ -11,6 +11,7 @@ import * as Mod from '@backend/rime/models/CntWord/CntWordMods'
 import { Index } from '@shared/dbFrame/Index'
 import { Trigger } from '@shared/dbFrame/Trigger'
 
+
 const ObjSql = SqliteUtil.Sql.obj
 const ifNE = SqliteUtil.IF_NOT_EXISTS
 
@@ -22,6 +23,7 @@ export class Tbls{
 	protected constructor(){}
 	static tbls = new Tbls()
 	cntWord = TBL('cnt_word', Mod.CntWord)
+	;[key:str]:Tbl<any>
 }
 const IDX = Index.IDX.bind(Index)
 const tbls = Tbls.tbls

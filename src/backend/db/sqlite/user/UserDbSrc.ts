@@ -41,6 +41,7 @@ class Tbls{
 	profile = TBL('profile', Mod.Profile)
 	userDb = TBL('userDb', Mod.UserDb)
 	user__db = TBL('user__db', Mod.User__db)
+	;[key:str]:Tbl<any>
 }
 const tbls = new Tbls()
 

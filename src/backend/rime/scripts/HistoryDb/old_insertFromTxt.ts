@@ -1,9 +1,9 @@
-import { MkReadNRow } from "@backend/rime/historyDb/ReadFromTxt";
+import { MkReadNRow } from "@backend/rime/old_historyDb/ReadFromTxt";
 import { historyOpt } from "./old_opt";
 import { stuff } from "./old_stuff";
 import { DbErr } from "@backend/sqlite/Sqlite";
-import { LineParseErr } from "@backend/rime/historyDb/HistoryTsv";
-import { Belong } from "@backend/rime/historyDb/HistoryDbRow";
+import { LineParseErr } from "@backend/rime/old_historyDb/HistoryTsv";
+import { Belong } from "@backend/rime/old_historyDb/old_HistoryDbRow";
 
 const opt = historyOpt
 const dbSrc = stuff.dbSrc

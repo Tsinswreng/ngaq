@@ -5,7 +5,7 @@
 
 import { $, $a } from "@shared/Ut"
 import { Line } from "./Line"
-import {I_readN} from '@shared/Type'
+import {I_GetN} from '@shared/Type'
 import { Tsv, Status as Status_ } from "./Tsv"
 
 interface I_next<T>{
@@ -76,7 +76,7 @@ export class DictTsvParser extends Tsv{
 		return z
 	}
 
-	static new(readNObj:I_readN<Promise<str[]>>){
+	static new(readNObj:I_GetN<Promise<str[]>>){
 		const z = new this()
 		z.__init__(readNObj)
 		return z
@@ -151,7 +151,7 @@ export class DictTsvParser extends Tsv{
 
 	async readLines(num:int){
 		const z = this
-		const lines = await z.reader.readN(num)
+		const lines = await z.reader.GetN(num)
 		if(lines == void 0 || lines.length === 0){
 			z.status.end = true
 			return []

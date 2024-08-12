@@ -27,7 +27,7 @@
 			}//~wordWeight
 			,imgDir:[
 				`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
-				,`D:\\_\\視聽\\圖`
+				,`E:\\_\\視聽\\圖`
 			]
 		}
 		//web服務器

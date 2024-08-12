@@ -32,10 +32,12 @@ export type ParseType<T extends string> =
 /** 基本數據類型 */
 export type PrimitiveTypeStr = 'number' | 'string' | 'boolean' | 'null' | 'undefined' | 'bigint' | 'symbol';
 
-export interface I_readN<T>{
-	readN(n:int):T
+/** @deprecated */
+export interface I_GetN<T>{
+	GetN(n:int):T
 }
 
+/** @deprecated */
 export interface I_perBatch{
 	perBatch:num
 }

@@ -61,7 +61,7 @@ class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
 	//@ts-ignore
 	Inst = SessionInst
 	override correctInst(inst: SessionInst): SessionInst {
-		inst = super.correctInst(inst)
+		super.correctInst(inst)
 		inst.expirationTime = Tempus.new(As(inst.expirationTime, 'number'))
 		return inst
 	}

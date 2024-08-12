@@ -185,7 +185,7 @@ export class UserSvc{
 				Tempus.toUnixTime_mills(Tempus.new())+1000*60*60*24 // 1 day
 			)
 		})
-		const AddSession = await z.dbSrc.GetFn_AddInst(e=>e.session)
+		const AddSession = await z.dbSrc.Fn_Add(e=>e.session)
 		const dbAns = await AddSession(session)
 		session.id = dbAns.lastId
 		z.emit(e=>e.login, id)
@@ -207,6 +207,7 @@ export class UserSvc{
 		if(lastSession == void 0){
 			throw Exception.for(z.errReasons.validate_err, userId)
 		}
+		//console.log(lastSession)//t -
 		const session = Mod.Session.fromRow(lastSession)
 		return session.isValid()
 	}

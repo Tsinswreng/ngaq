@@ -2,8 +2,8 @@
 創庫與commit_history表
 */
 
-import { HistoryDbSrc } from "@backend/rime/historyDb/HistoryDbSrc";
-import { HistoryTbl } from "@backend/rime/historyDb/HistoryTbl";
+import { HistoryDbSrc } from "@backend/rime/old_historyDb/old_HistoryDbSrc";
+import { HistoryTbl } from "@backend/rime/old_historyDb/old_HistoryTbl";
 import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
 import sqlite3 from "sqlite3";
 import { historyOpt } from "./old_opt";

@@ -4,14 +4,14 @@ import type { SqliteDb } from "@backend/sqlite/Sqlite";
 import { InstanceType_ } from "@shared/Type";
 import * as SqliteUtil from "@backend/sqlite/sqliteUtil";
 import { BaseInst } from "@shared/dbFrame/Models";
+import { I_Tbl } from "@shared/dbFrame/I_Tbl";
 
 const ObjSql = SqliteUtil.Sql.obj
-type AddInstOpt = Parameters<typeof ObjSql.new>[1]
 const QryAns = SqliteUtil.SqliteQryResult
 type QryAns<T> = SqliteUtil.SqliteQryResult<T>
 type Id_t = int|str
-
-export class Tbl<FactT extends I_Fact<any, any>> extends BaseTbl<FactT>{
+export type AddInstOpt = Parameters<typeof ObjSql.new>[1]
+export class Tbl<FactT extends I_Fact<any, any>> extends BaseTbl<FactT> implements I_Tbl<FactT>{
 	protected constructor(){super()}
 	protected __init__(...args: Parameters<typeof Tbl.new>){
 		const z = this

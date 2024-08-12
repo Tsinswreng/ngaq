@@ -26,6 +26,8 @@ export class LoginUi{
 		} catch (err) {
 			if(err instanceof Exception){
 				alert(err.reason.name)
+			}else{
+				throw err
 			}
 		}
 	}

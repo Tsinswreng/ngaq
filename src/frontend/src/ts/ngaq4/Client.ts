@@ -91,7 +91,8 @@ axios.interceptors.response.use(
 	error => {
 		if (error?.response?.status === 401) {
 			// 重定向到登录页面或刷新令牌
-			window.location.href = '/login';
+			console.error(error)//t
+			//window.location.href = '/login';
 		}
 		return Promise.reject(error);
 	}
@@ -189,7 +190,6 @@ export class Client{
 			body: JSON.stringify(body), // 将数据对象转换为 JSON 字符串
 		};
 		const got = await fetch(url, requestOptions)
-
 		const json = await got.text()
 		if(!got.ok){
 			throw Exception.for(z.errReason.login_err, json)
