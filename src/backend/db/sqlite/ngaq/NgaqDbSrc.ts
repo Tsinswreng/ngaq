@@ -11,109 +11,14 @@ import { JoinedWord } from '@shared/model/word/JoinedWord'
 import * as Row from '@shared/model/word/NgaqRows'
 import * as Mod from '@shared/model/word/NgaqModels'
 import Tempus from '@shared/Tempus'
-
-
-const ObjSql = SqliteUtil.Sql.obj
-
+import { AddInstOpt } from '../dbFrame/Tbl'
+import { Tbl } from '../dbFrame/Tbl'
+type Id_t = int|str
 const QryAns = SqliteUtil.SqliteQryResult
 type QryAns<T> = SqliteUtil.SqliteQryResult<T>
-type Id_t = int|str
-type AddInstOpt = Parameters<typeof ObjSql.new>[1]
 
-import { Tbl } from '../dbFrame/Tbl'
-const TBL = Tbl.new.bind(Tbl)
-
-class Tbls{
-	textWord = TBL('textWord', Mod.TextWord)
-	property = TBL('property', Mod.Property)
-	learn = TBL('learn', Mod.Learn)
-	relation = TBL('relation', Mod.Relation)
-	wordRelation = TBL('wordRelation', Mod.WordRelation)
-}
-const tbls = new Tbls()
-
-
-export class SchemaItem extends SqliteUtil.SqliteMaster{
-	protected constructor(){super()}
-	protected __init__(...args: Parameters<typeof SchemaItem.new>){
-		const z = this
-		z.name = args[0]
-		z.type = args[1]
-		if(z.type === SMT.table){
-			z.tbl_name = z.name
-		}else{
-			z.tbl_name = $(args[2])
-		}
-		return z
-	}
-
-	static new(name:str, type:SqliteUtil.SqliteMasterType.table):SchemaItem
-	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str):SchemaItem
-	static new(name:str, type:SqliteUtil.SqliteMasterType, tbl_name?:str){
-		const z = new this()
-		z.__init__(name, type, tbl_name)
-		return z
-	}
-
-	get This(){return SchemaItem}
-}
-
-class Trigger<Tbl_t extends Tbl<any>> extends SchemaItem{
-	protected constructor(){super()}
-	//@ts-ignore
-	protected __init__(...args: Parameters<typeof Trigger.new>){
-		const z = this
-		const name = args[0]
-		const tbl = args[1]
-		super.__init__(name, SqliteUtil.SqliteMasterType.trigger, tbl.name)
-		//@ts-ignore
-		z.tbl = tbl
-		return z
-	}
-
-	static new<Tbl_t extends Tbl<any>>(
-		name:str
-		,tbl:Tbl_t
-	){
-		const z = new this<Tbl_t>()
-		z.__init__(name, tbl)
-		return z
-	}
-
-	//@ts-ignore
-	get This(){return Trigger}
-
-	protected _tbl:Tbl_t
-	get tbl(){return this._tbl}
-	protected set tbl(v){this._tbl = v}
-	
-}
-import { Index } from '@shared/dbFrame/Index'
-
-//const SI = SchemaItem.new.bind(SchemaItem)
-const TRIG = Trigger.new.bind(Trigger)
-const SMT = SqliteUtil.SqliteMasterType
-const IDX = Index.IDX.bind(Index)
-
-
-class SchemaItems{
-	//tbls=tbls
-	idx_wordText = IDX('idx_wordText', tbls.textWord, c=>[c.text])
-	idx_wordCt = IDX('idx_wordCt', tbls.textWord, c=>[c.ct])
-	idx_wordMt = IDX('idx_wordMt', tbls.textWord, c=>[c.mt])
-	idx_learnWid = IDX('idx_learnWid', tbls.learn, c=>[c.wid])
-	idx_learnCt = IDX('idx_learnCt', tbls.learn, c=>[c.ct])
-	//idx_learnMt = IDX('idx_learnMt', tbls.learn, c=>[c.mt])
-	idx_propertyWid = IDX('idx_propertyWid', tbls.property, c=>[c.wid])
-
-	trig_aftIns_learnAltWordMt = TRIG('aftIns_learnAltWordMt', tbls.learn)
-	trig_aftIns_propertyAltWordMt = TRIG('aftIns_propertyAltWordMt', tbls.property)
-	trig_aftUpd_propertyAltWordMt = TRIG('aftUpd_propertyAltWordMt', tbls.property)
-}
-
-const schemaItems = new SchemaItems()
-
-
+import { Tbls } from './NgaqDbStuff'
+const tbls = Tbls.inst
 
 export class NgaqDbSrc{
 	protected constructor(){}
@@ -133,16 +38,16 @@ export class NgaqDbSrc{
 	get This(){return NgaqDbSrc}
 
 	static tbls = tbls
-	static schemaItems = schemaItems
+	//static schemaItems = schemaItems
 
 	protected _db:SqliteDb
 	get db(){return this._db}
 	protected set db(v){this._db = v}
 	
 
-	protected _schemaItems = schemaItems
-	get schemaItems(){return this._schemaItems}
-	protected set schemaItems(v){this._schemaItems = v}
+	// protected _schemaItems = schemaItems
+	// get schemaItems(){return this._schemaItems}
+	// protected set schemaItems(v){this._schemaItems = v}
 
 	// protected _initSql = InitSql.new()
 	// get initSql(){return this._initSql}
@@ -614,208 +519,6 @@ GROUP BY ${textWordTbl.col.belong}`
 	}
 
 
-/** @deprecated ---------------------------------------------------------------- */
-
-/**
-	 * @deprecated 改用Fn_AddJoined
-	 */
-async OldFn_AddJoinedRows(){
-	const z = this
-	const si = z.schemaItems
-	const tbls = z.tbls
-	const db = z.db
-	const SqlObj = SqliteUtil.Sql.obj
-	
-	//const wordSqlObj = SqliteUitl.Sql.obj.new(rowFirst.word, {ignoredKeys: [Rows.WordRow.col.id]})
-	const wordSqlObj = SqliteUtil.Sql.obj.new(new Row.TextWord(), {ignoredKeys: [tbls.textWord.col.id]})
-	const wordSql = wordSqlObj.geneFullInsertSql(tbls.textWord.name)
-	const wordStmt = await db.Prepare(wordSql)
-	
-	const learnSqlObj = SqlObj.new((new Row.Learn()))
-	const learnSql = learnSqlObj.geneFullInsertSql(tbls.learn.name)
-	const learnStmt = await db.Prepare(learnSql)
-
-	const propSqlObj = SqlObj.new((new Row.Property()))
-	const propSql = propSqlObj.geneFullInsertSql(tbls.property.name)
-	const propStmt = await db.Prepare(propSql)
-
-	
-	const fn = async(rows:JoinedRow[])=>{
-		for(let i = 0; i < rows.length; i++){
-			const jr = rows[i]
-			const res = await wordStmt.Run(wordSqlObj.getParams(jr.textWord))
-			const lastId = res.lastID
-			for(let j = 0; j < jr.learns.length; j++){
-				jr.learns[j].wid = lastId
-				await learnStmt.Run(learnSqlObj.getParams(jr.learns[j]))
-			}
-			for(let j = 0; j < jr.propertys.length; j++){
-				jr.propertys[j].wid = lastId
-				const cur = jr.propertys[j]
-				await propStmt.Run(propSqlObj.getParams(jr.propertys[j]))
-			}
-		}
-	}
-	return fn
-}
-
-
-	/**
-	 * @deprecated
-	 */
-	async Fn_ClassifyWordsByIsExist(){
-		const z = this
-		const sql = z.qrys.selectExistFromWord('_')
-		const stmt = await z.db.Prepare(sql)
-
-		const Fn = async(words:JoinedWord[])=>{
-			const existingWords = [] as JoinedWord[]
-			const nonExistingWords = [] as JoinedWord[]
-			for(const w of words){
-				const param = [w.textWord.text, w.textWord.belong]
-				const [runRes, ua] = await stmt.All<{_:int}>(param)
-				if(ua[0]?._ === 1){ //exist
-					existingWords.push(w)
-				}else{
-					nonExistingWords.push(w)
-				}
-			}
-			return [existingWords, nonExistingWords]
-		}
-		return Fn
-	}
-
-	/**
-	 * 加詞、能防褈添
-	 * 用于 從txt詞表中取(無Learnˉ屬性 之 諸JoinedWordᵘ)後再添厥入庫
-	 * @param words 
-	 * @returns 
-	 * @deprecated 未慮時間、Fn_SeekJoinedRowBy已棄用
-	 * //TODO
-	 */
-	async OldFn_AddWordsDistinctProperty(words:JoinedWord[]){
-		const z = this
-
-		const ClassifyWordsByIsExist = await z.Fn_ClassifyWordsByIsExist()
-		const AddJRow = await z.Fn_AddJoined()
-		const SeekById = await z.Fn_SeekJoinedRowById()
-		const SeekByText = await z.Fn_SeekJoinedRowBy(z.tbls.textWord.col.text)
-		const AddPr = await z.GetFn_addRow(e=>e.property)
-
-		const Fn = async()=>{
-			/** 㕥存 未加過之prop */
-			const diffPropertys = [] as Mod.Property[]
-			const [duplicateNeoWords, nonExistWords] = await ClassifyWordsByIsExist(words)
-			for(const neo of duplicateNeoWords){ //遍歷 待加之褈複詞
-				//const oldRow = await seekById(neo.textWord.id)
-				const exsistingJoinedRows = await SeekByText(neo.textWord.text)
-				const oldRow = exsistingJoinedRows[0]
-				if(oldRow == void 0){
-					throw new Error(`oldRow == null\nthis should have been in db`) // duplicateNeoWords 當潙 既存于數據庫之詞
-				}
-				const oldJw = JoinedWord.fromRow(oldRow)
-				const ua = JoinedWord.diffProperty(neo, oldJw)
-				diffPropertys.push(...ua)
-			}
-			
-			//const addPr = await z.qrys.fn_addPropertyRow(z.db)
-			
-			//await AddJRows(nonExistWords.map(e=>e.toRow()))
-			for(const w of nonExistWords){
-				await AddJRow(w)
-			}
-			for(const e of diffPropertys){
-				await AddPr(e.toRow())
-			}
-			return true
-		}
-		return Fn
-	}
-
-
-	/**
-	 * WHERE ${col}=?
-	 * @returns fn: (val: str) => Promise<JoinedRow[]>
-	 * @deprecated 未檢查belong
-	 */
-	async Fn_SeekJoinedRowBy(col:str){
-		const z = this
-		const tbls = z.tbls
-		const tbl = tbls.textWord
-		const SeekById = await z.Fn_SeekJoinedRowById()
-		const sql = `SELECT ${tbl.col.id} FROM ${tbl.name} WHERE ${col}=?`
-		const stmt = await z.db.Prepare(sql)
-		const fn = async(val:str)=>{
-			const [, gotWords] = await stmt.All<Row.TextWord>([val])
-			const ans = [] as JoinedRow[]
-			for(const word of gotWords){
-				const id = word.id
-				const ua = await SeekById(id)
-				if(ua != null){
-					ans.push(ua)
-				}
-			}
-			return ans
-		}
-		return fn
-	}
-
-
-// 	/**
-// 	 * 
-// 	 */
-// 	async Fn_Del_joined_by_wordId(){
-// 		const z = this
-// 		const tbls = z.tbls
-// 		const sqls = 
-// 		[
-// `DELETE FROM ${tbls.textWord.name}
-// WHERE ${tbls.textWord.col.id} = ?`
-// ,`DELETE FROM ${tbls.property.name}
-// WHERE ${tbls.property.col.wid} = ?`
-// ,`DELETE FROM ${tbls.learn.name}
-//  WHERE ${tbls.learn.col.wid} = ?`
-// 		]
-// 		const stmts = [] as Sqlite.Statement[]
-// 		for(const sql of sqls){
-// 			const stmt = await z.db.Prepare(sql)
-// 			stmts.push(stmt)
-// 		}
-// 		const Fn = async(id:Id_t)=>{
-// 			const ans = [] as QryAns<undef>[]
-// 			for(const stmt of stmts){
-// 				const res = await stmt.Run([id])
-// 				const ua = QryAns.fromRunResult(res)
-// 				ans.push(ua)
-// 			}
-// 			return ans
-// 		}
-// 		return Fn
-// 	}
-
-	// /**
-	//  * @noUsage
-	//  */
-	// async Fn_addLearnRecords(){
-	// 	const z = this
-	// 	const tbl = z.tbls.learn
-	// 	const objSql = ObjSql.new(tbl.emptyRow)
-	// 	const sql = objSql.geneFullInsertSql(tbl.name)
-	// 	const stmt = await z.db.Prepare(sql)
-
-	// 	const Fn = async(rows:Row.Learn[])=>{
-	// 		const ans = [] as RunResult[]
-	// 		for(const row of rows){
-	// 			const params = objSql.getParams(row)
-	// 			const ua = await stmt.Run(params)
-	// 			ans.push(ua)
-	// 		}
-	// 		return ans
-	// 	}
-	// 	return Fn
-	// }
-
-
 }
 
 
@@ -838,9 +541,9 @@ class Qrys{
 
 	get This(){return Qrys}
 
-	protected _schemaItems = schemaItems
-	get schemaItems(){return this._schemaItems}
-	protected set schemaItems(v){this._schemaItems = v}
+	// protected _schemaItems = schemaItems
+	// get schemaItems(){return this._schemaItems}
+	// protected set schemaItems(v){this._schemaItems = v}
 
 	protected _tbls = tbls
 	get tbls(){return this._tbls}

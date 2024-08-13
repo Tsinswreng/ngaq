@@ -2,6 +2,7 @@ import * as SqliteUtil from "@backend/sqlite/sqliteUtil"
 //import { Index } from "./NgaqDbSrc"
 import { Index } from "@shared/dbFrame/Index"
 import { NgaqDbSrc } from "./NgaqDbSrc"
+import * as stf from "./NgaqDbStuff"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import { DbIniter } from "../dbFrame/DbIniter"
 
@@ -20,19 +21,21 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 
 	get This(){return InitSql_ngaqDbSrc}
 
-	protected _items = NgaqDbSrc.schemaItems
-	get items(){return this._items}
-	protected set items(v){this._items = v}
+	// protected _items = NgaqDbSrc.schemaItems
+	// get items(){return this._items}
+	// protected set items(v){this._items = v}
 
-	protected _tables = NgaqDbSrc.tbls
+	protected _tables = stf.Tbls.inst
 	get tables(){return this._tables}
 	protected set tables(v){this._tables = v}
 
-	//TODO
-	protected _indexs
+	protected _indexs = stf.Indexs.inst
 	get indexs(){return this._indexs}
 	set indexs(v){this._indexs = v}
 
+	protected _triggers = stf.Triggers.inst
+	get triggers(){return this._triggers}
+	protected set triggers(v){this._triggers = v}
 	
 	
 
@@ -98,10 +101,10 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	getAllIdxSql(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const keys = Object.keys(z.items)
+		const keys = Object.keys(z.indexs)
 		const ans = [] as str[]
 		for(const k of keys){
-			const cur = z.items[k]
+			const cur = z.indexs[k]
 			if(
 				!(
 					cur instanceof Index
@@ -207,15 +210,16 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	mkTrig_aftIns_learnAltWordMt(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const trig = z.items.trig_aftIns_learnAltWordMt
+		const trig = z.triggers.trig_aftIns_learnAltWordMt
 		const c = z.tables.learn.col
+		const tarTbl = z.tables.learn
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
-AFTER INSERT ON ${trig.tbl_name}
+AFTER INSERT ON ${tarTbl.name}
 FOR EACH ROW
 BEGIN
 	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${tarTbl.col.wid};
 END;
 `
 		return ans
@@ -224,16 +228,16 @@ END;
 	mkTrig_aftIns_propertyAltWordMt(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const item = z.items
-		const trig = z.items.trig_aftIns_propertyAltWordMt
+		const trig = z.triggers.trig_aftIns_propertyAltWordMt
+		const tarTbl = z.tables.property
 		const c = z.tables.textWord.col
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
-AFTER INSERT ON ${trig.tbl_name}
+AFTER INSERT ON ${tarTbl.name}
 FOR EACH ROW
 BEGIN
 	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${tarTbl.col.wid};
 END;
 `
 		return ans
@@ -242,16 +246,16 @@ END;
 	mkTrig_aftUpd_propertyAltWordMt(){
 		const z = this
 		const ifNE = SqliteUtil.IF_NOT_EXISTS
-		const item = z.items
-		const trig = z.items.trig_aftUpd_propertyAltWordMt
+		const trig = z.triggers.trig_aftUpd_propertyAltWordMt
 		const c = z.tables.textWord.col
+		const tarTbl = z.tables.property
 		const ans = 
 `CREATE TRIGGER ${ifNE} "${trig.name}"
-AFTER UPDATE ON ${trig.tbl_name}
+AFTER UPDATE ON ${tarTbl.name}
 FOR EACH ROW
 BEGIN
 	UPDATE ${z.tables.textWord.name} SET ${c.mt} = NEW.${c.mt}
-	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${trig.tbl.col.wid};
+	WHERE ${z.tables.textWord.name}.${z.tables.textWord.col.id} = NEW.${tarTbl.col.wid};
 END;
 `
 		return ans

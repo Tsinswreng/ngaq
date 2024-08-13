@@ -6,7 +6,7 @@ export class Trigger{
 		return z
 	}
 
-	static new(name:str){
+	static new(name:str, tbl?){
 		const z = new this()
 		z.__init__(name)
 		return z
