@@ -108,4 +108,3 @@ export class Tbl<FactT extends I_Fact<any, any>> extends BaseTbl<FactT> implemen
 	}
 }
 
-

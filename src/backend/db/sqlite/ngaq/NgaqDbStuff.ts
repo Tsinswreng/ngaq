@@ -21,9 +21,10 @@ const ObjSql = SqliteUtil.Sql.obj
 type AddInstOpt = Parameters<typeof ObjSql.new>[1]
 
 import { Tbl } from '../dbFrame/Tbl'
+import { I_Tbls } from '@shared/dbFrame/I_Tbls'
 const TBL = Tbl.new.bind(Tbl)
 
-export class Tbls{
+export class Tbls implements I_Tbls{
 	protected constructor(){}
 	static inst = new Tbls()
 	textWord = TBL('textWord', Mod.TextWord)
@@ -31,6 +32,7 @@ export class Tbls{
 	learn = TBL('learn', Mod.Learn)
 	relation = TBL('relation', Mod.Relation)
 	wordRelation = TBL('wordRelation', Mod.WordRelation)
+	;[key:str]:Tbl<any>
 }
 const tbls = Tbls.inst
 
