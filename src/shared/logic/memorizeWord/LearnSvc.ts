@@ -275,7 +275,7 @@ export abstract class LearnSvc{
 				async Run(...args:any[]){
 					return args
 				}
-				,setParam(key, v) {
+				,setArg(key, v) {
 					return true
 				}
 			}

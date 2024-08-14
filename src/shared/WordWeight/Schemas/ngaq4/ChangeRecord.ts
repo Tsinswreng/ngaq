@@ -65,7 +65,7 @@ export class TempusEventRecord implements I_ChangeRecord{
 		return z
 	}
 	
-	static new1(tempus_event:I_Tempus_Event, after:Num_t, dateWeight?:Num_t, debuff?:Num_t){
+	static new1(tempus_event:I_Tempus_Event, after:Num_t, dateWeight?:Num_t, debuff?:Num_t|undef){
 		const reason = StatisticsReason.new(
 			tempus_event.tempus, tempus_event.event
 		)

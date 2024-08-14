@@ -263,20 +263,20 @@ END;
 }
 
 
-import { SqlMker_select } from "@shared/dbFrame/SqlMker"
-const sqlMkr = SqlMker_select.new()
-const tbl = stf.Tbls.inst.textWord
-const learn = stf.Tbls.inst.learn
-const c = tbl.col
-const sql = sqlMkr.start()
-	.from(tbl.name+" tw")
-	.select([`tw.${c.belong} AS ${c.belong}`, `COUNT(*) AS _`])
-	.join(
-		learn.name+" l"
-		, `l.${learn.col.wid} = tw.${c.id} AND l.${learn.col.belong} <> 'add'`
-		, "LEFT"
-	).where(`l.${learn.col.wid} IS NULL`)
-	.groupBy([`tw.${c.belong}`])
-	.end()
+// import { SqlMker_select } from "@shared/dbFrame/SqlMker"
+// const sqlMkr = SqlMker_select.new()
+// const tbl = stf.Tbls.inst.textWord
+// const learn = stf.Tbls.inst.learn
+// const c = tbl.col
+// const sql = sqlMkr.start()
+// 	.from(tbl.name+" tw")
+// 	.select([`tw.${c.belong} AS ${c.belong}`, `COUNT(*) AS _`])
+// 	.join(
+// 		learn.name+" l"
+// 		, `l.${learn.col.wid} = tw.${c.id} AND l.${learn.col.belong} <> 'add'`
+// 		, "LEFT"
+// 	).where(`l.${learn.col.wid} IS NULL`)
+// 	.groupBy([`tw.${c.belong}`])
+// 	.end()
 
-console.log(sql)
+// console.log(sql)

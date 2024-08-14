@@ -361,6 +361,12 @@ export class WebNgaqUi{
 		return z.svc.weightAlgo?.wordId__changeRec
 	}
 
+	seekChangeRecByIdx(idx:int){
+		const z = this
+		const id = z.wordsToLearn[idx]?.id
+		return z.changeRec()?.get(id)
+	}
+
 
 	async NextBg(){
 		const z = this

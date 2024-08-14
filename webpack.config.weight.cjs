@@ -8,7 +8,7 @@ module.exports = {
 	,target: 'web',
 	bail: false,
 	//externals: [nodeExternals()], // removes node_modules from your final bundle
-	entry: './out/shared/WordWeight/Schemas/ngaq4/main.js', // make sure this matches the main root of your code 
+	entry: './out/shared/WordWeight/Schemas/ngaq4/wordWeightMain.js', // make sure this matches the main root of your code 
 	output: {
 		path: path.join(__dirname, 'bundle'), // this can be any path and directory you want
 		filename: 'weight.js',

@@ -162,7 +162,7 @@ class WordWeight implements I_WordWeight<Word_t>{
 		//this._paramOpt = v
 	}
 
-	setParam(key: string, v: any): boolean {
+	setArg(key: string, v: any): boolean {
 		return false
 	}
 

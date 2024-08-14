@@ -34,14 +34,15 @@ export class Derangement implements I_WordWeight<Word_t>{
 	}
 
 	//get This(){return Derangement}
-	setParam(key: string, v: any): boolean {
+	setArg(key: string, v: any): boolean {
 		return true
 	}
 	Run(words: any[]): Promise<any[]> {
-		const ans = getShuffle(
-			words, 8,
-			Math.floor(words.length / 8)
-		)
+		// const ans = getShuffle(
+		// 	words, 8,
+		// 	Math.floor(words.length / 8)
+		// )
+		const ans = words
 		return Promise.resolve(ans)
 	}
 	//wordId__changeRec?: Map<string, I_ChangeRecord[]>

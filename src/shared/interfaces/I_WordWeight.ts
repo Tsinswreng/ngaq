@@ -20,7 +20,7 @@ export interface I_WordWeight<Word_t, Ret=Word_t>{
 	 * }
 	 */
 	paramOpt?:kvobj
-	setParam(key:string, v):boolean
+	setArg(key:string, v):boolean
 }
 
 

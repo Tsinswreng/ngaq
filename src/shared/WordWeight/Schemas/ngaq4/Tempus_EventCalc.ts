@@ -125,7 +125,7 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 		//this._paramOpt = v
 	}
 
-	setParam(key: string, v: any): boolean {
+	setArg(key: string, v: any): boolean {
 		return false
 	}
 
@@ -169,7 +169,7 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 			_cur_tempus__event:I_Tempus_Event
 			static defaultOpt = Tempus_EventCalc.defaultOpt
 
-			addRecord(record:ChangeRecord){
+				addRecord(record:ChangeRecord){
 				const z = this
 				// z._ww.addChangeRecord(z._mw.word,record)
 				z._statistics.records.push(record)
@@ -183,6 +183,7 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 				}
 				if(z._cur_tempus__event != void 0){ //不應該潙空、每詞必有加事件
 					z.extraHandleFinalEvent()
+					z.extraHandleFinalEvent_Add()
 				}
 				return z._statistics
 			}
@@ -288,6 +289,9 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 				const z = this
 				const lastRec = $last(z._statistics.records) as TempusEventRecord
 				let weight = z._ww.getTimeWeightOfEvent(lastRec.tempus, z._cur_tempus__event.tempus)
+				const times_fgt = z._mw.learnBl__learns.get(WordEvent.fgt)?.length??0 //至此 不應潙0
+				weight = s.m(weight, sros.pow(times_fgt, 2))
+				weight = s.d(weight,2)
 				const st = z._statistics
 				if(st.cnt_add >= 3){
 					weight = s.m(
@@ -312,7 +316,38 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 				const diffMills = Tempus.diff_mills(nunc, thatTime)
 				if(curEv === WordEvent.add){
 					let bonus = z._ww.calcLastAddBonus(diffMills)
-					bonus = sros.pow(bonus, 2)
+					bonus = sros.pow(bonus, 3)
+					z._statistics.weight = s.m(
+						z._statistics.weight, bonus
+					)
+					const rec = TempusEventRecord.new1(
+						z._cur_tempus__event
+						, z._statistics.weight
+					)
+					rec.reason.comment = 'extraHandleFinalEvent'
+					z.addRecord(rec)
+				}
+			}
+			protected extraHandleFinalEvent_Add(){
+				const z = this
+				// const curEv = z._cur_tempus__event.event
+				// const thatTime = z._cur_tempus__event.tempus
+				const finalAddEventPos = z._statistics.finalAddEventPos
+				const finalAdd = z._mw.tempus_event_s[finalAddEventPos]
+				if(finalAdd == void 0){
+					return
+				}
+				const thatTime = finalAdd.tempus
+				const cnt_validRmb = z._statistics.cnt_validRmb
+				const nunc = Tempus.new()
+				const diffMills = Tempus.diff_mills(nunc, thatTime)
+				if(true){
+					let bonus = z._ww.calcLastAddBonus(diffMills)
+					bonus = sros.pow(bonus, 3)
+					bonus = s.d(bonus, cnt_validRmb||1)
+					if( s.c(bonus, 0) <= 1 ){
+						bonus = s.n(1)
+					}
 					z._statistics.weight = s.m(
 						z._statistics.weight, bonus
 					)
@@ -420,7 +455,7 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 	 */
 	getTimeWeightByMillS(dateDif:N2S){
 		let ans = s.n(dateDif)
-		ans = sros.pow(ans, 1/4) //1/2
+		ans = sros.pow(ans, 1/4)
 		ans = s.d(ans, 1) //100
 		if( s.c(ans,1) < 0 ){
 			ans = s.n(1.01)

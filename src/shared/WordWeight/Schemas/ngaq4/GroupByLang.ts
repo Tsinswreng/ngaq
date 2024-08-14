@@ -22,7 +22,7 @@ export class GroupByLang implements I_WordWeight<Word_t>{
 	}
 
 	//get This(){return GroupByLang}
-	setParam(key: string, v: any): boolean {
+	setArg(key: string, v: any): boolean {
 		return true
 	}
 	Run(words:Word_t[]){
@@ -31,7 +31,7 @@ export class GroupByLang implements I_WordWeight<Word_t>{
 		let l = 'latin'
 		let i = 'italian'
 		words = customSort(words, e=>e.belong, [
-			e,j,e,j,null
+			e,j,e,j,null,null
 		])
 		return Promise.resolve(words)
 	}
