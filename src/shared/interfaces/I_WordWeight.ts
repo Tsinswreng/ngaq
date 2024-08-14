@@ -11,6 +11,7 @@ export interface I_WordWeight<Word_t, Ret=Word_t>{
 	 * @param words 
 	 */
 	Run(words:Word_t[]):Task<Ret[]>
+	//TODO 
 	wordId__changeRec?: Map<str, I_ChangeRecord[]>
 	/**
 	 * 權重參數設置

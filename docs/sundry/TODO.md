@@ -1,4 +1,9 @@
 ###
+<2024-08-14T19:01:38.408+08:00>
+wordId__changeRec?: Map<str, I_ChangeRecord[]>
+值改用對象、其中I_ChangeRecord[]只潙該對象之其一成員。
+
+###
 <2024-07-25T17:39:26.058+08:00>
 完善setParam、動態ᵈ按語言分類
 

@@ -1,7 +1,8 @@
 import { $ } from '@shared/Common'
 import * as fs from 'fs'
 import srcMap from 'source-map'
-import * as RL from '@backend/util/readLine'
+import * as RL from '@backend/util/old_readLine'
+import { StdinReader } from '@backend/util/stdinReader'
 
 type MP = srcMap.NullableMappedPosition
 class Source{
@@ -73,9 +74,10 @@ async function Qry(line:int, column:int){
 }
 
 async function Main(){
+	const rl = StdinReader.new()
+
 	for(;;){
-		const rl = RL.question_fn(RL.createInterface(), '')
-		const imput = await rl()
+		const imput = await rl.Read()
 		const [line, column] = imput.split(':')
 		await Qry(parseInt(line), parseInt(column))
 	}

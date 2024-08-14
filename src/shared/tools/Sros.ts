@@ -377,7 +377,7 @@ export class Sros_number implements ISros<number, number>{
 		}
 
 	}
-
+	multiply(a:N4, b:N4, ...num: N4[]):num
 	public multiply(...num: N4[]){
 		if(num.length < 2) {
 			throw SrosError.new(`${num.length}\nnum.length < 2`)
@@ -540,6 +540,7 @@ export class Sros_big implements ISros<N4,BN>{
 		return ans.toNumber()
 	}
 
+	multiply(a:N4, b:N4, ...num: N4[]):BN
 	public multiply(...num:N4[]){
 		const bn = this.createNumber.bind(this)
 		const ma = this.ma

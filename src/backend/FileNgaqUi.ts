@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { createInterface as createInterface, question_fn } from '@backend/util/readLine';
+import { createInterface as createInterface, question_fn } from '@backend/util/old_readLine';
 import {WordDbSrc} from './db/sqlite/OldWord/DbSrc';
 import { Word } from '@shared/entities/Word/Word';
 import Config from '@backend/Config';

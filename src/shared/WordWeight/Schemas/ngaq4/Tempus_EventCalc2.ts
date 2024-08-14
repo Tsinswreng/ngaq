@@ -31,11 +31,12 @@ class Param{
 		return o
 	}
 	/** 加ˡ事件ᵗ權重 */
-	addWeightDefault = 0x1f00
-	addWeight = [0x1, 0x7ff, 0xfff, 0x1f00]
+	addWeightDefault = 0xffffff
+	addWeight = [0x1, 0x7ff, 0xffff, 0xfffff]
 	/** ˣ削弱ᵗ分母 */
-	debuffNumerator = 599990*inMills.DAY
+	debuffNumerator = 36*inMills.DAY
 	base = 20
+	finalAddBonusDenominator = inMills.DAY*300
 }
 const param = new Param()
 
@@ -90,13 +91,14 @@ class ForOne{
 		z.cnter.records.push(rec)
 	}
 
-	_getFinalAddPos(){
+	_assignFinalAddPos(){
 		const z = this
 		const tempus__event_s = z.word.tempus_event_s
 		for(let i = tempus__event_s.length -1; i >= 0; i--){
 			const tempus_event = tempus__event_s[i]
 			if(tempus_event.event === LearnBelong.add){
 				z.cnter.finalAddEventPos = i
+				break
 			}
 		}
 	}
@@ -104,7 +106,7 @@ class ForOne{
 	/** @runOnInit */
 	_precount(){
 		const z = this
-		z._getFinalAddPos()
+		z._assignFinalAddPos()
 	}
 
 	static run(word:Word_t){
@@ -149,13 +151,20 @@ class ForOne{
 		z.cnter.cnt_add++
 		const tempus_event = z.word.tempus_event_s[z.cnter.curPos]
 		z.cnter.cnt_validRmb = 0
-		let weight = param.addWeight[z.cnter.cnt_add]??param.addWeightDefault
+		let weight0 = param.addWeight[z.cnter.cnt_add-1]??param.addWeightDefault
+		let weight = weight0
+		let finalAddBonus:N2S|undef
+		if(z.cnter.curPos === z.cnter.finalAddEventPos){
+			finalAddBonus = z.calcFinalAddBonus()
+			weight = s.m(weight, finalAddBonus)
+		}
 		z.cnter.weight = s.m(z.cnter.weight, weight) // *= weight
 		const rec = TempusEventRecord.new1(
 			tempus_event
 			,z.cnter.weight
-			,weight
+			,weight0
 		)
+		rec.reason.finalAddBonus = finalAddBonus
 		z.addRecord(rec)
 	}
 
@@ -165,6 +174,8 @@ class ForOne{
 		const tempus_event = z.getCurEvent()
 		let weight0 = z.calcTimeWeightForCur()
 		let debuff:N2S|undef
+
+		//TOFIX 蠹:finalAddEventPos之前者亦有debuff
 		if(//若有debuff
 			z.cnter.curPos >= z.cnter.finalAddEventPos
 			&& z.getFinalEvent().event === LearnBelong.rmb
@@ -184,9 +195,15 @@ class ForOne{
 	handle_fgt(){
 		const z = this
 		z.cnter.cnt_fgt++
-		let weight0 = z.calcTimeWeightForCur()
-		weight0 = s.m(weight0, z.cnter.cnt_add) //curPos之後之cnt_add不算
-		weight0 = s.d(weight0, 10)
+		const prev = z.getPrevEvent()
+		let weight0:N2S
+		if(prev.event === LearnBelong.add){
+			weight0 = s.n(1.01)
+		}else{
+			weight0 = z.calcTimeWeightForCur()
+			weight0 = s.m(weight0, z.cnter.cnt_add) //curPos之後之cnt_add不算
+			weight0 = s.d(weight0, 10)
+		}
 		z.cnter.weight = s.m(z.cnter.weight, weight0)
 		const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, weight0)
 		z.addRecord(rec)
@@ -249,10 +266,9 @@ class ForOne{
 
 	nuncDiffFinalAdd(){
 		const z = this
-		const cur = z.getCurEvent()
-		const lastAdd = z.getFinalAddEvent()
+		const finalAdd = z.getFinalAddEvent()
 		const ans = Tempus.diff_mills(
-			cur.tempus, lastAdd.tempus
+			z.cnter.nunc, finalAdd.tempus
 		)
 		if(ans < 0){
 			throw new Error("ans < 0")
@@ -263,11 +279,12 @@ class ForOne{
 	calcFinalAddBonus(){
 		const z = this
 		const nuncDiffFinalAdd = z.nuncDiffFinalAdd()
+		//console.log(nuncDiffFinalAdd)//t 0
 		let ans = s.n(nuncDiffFinalAdd)
-		ans = s.d(inMills.DAY*30, ans) // 30天後過期
-		// const learnedTimes = z.word.tempus_event_s.length
-		// ans = s.d(ans ,s.m(learnedTimes, 100))
-		if(s.c(ans, 0) <= 0 ){
+		ans = s.d(param.finalAddBonusDenominator, ans) // 30天後過期
+		const learnedTimes = z.word.tempus_event_s.length
+		ans = s.d(ans ,s.m(learnedTimes, 1)) // 已學習次數越多 加成越少
+		if(s.c(ans, 0) <= 1 ){
 			ans = s.n(1)
 		}
 		return ans
@@ -282,7 +299,8 @@ class ForOne{
 	 */
 	calcTimeWeight(mills:N2S){
 		let ans = s.n(mills)
-		ans = sros.pow(ans, 1/2)
+		ans = s.d(ans ,1000)
+		ans = sros.pow(ans, 1/4)
 		if(s.c(ans, 1) < 0){
 			ans = s.n(1.01)
 		}
@@ -302,14 +320,14 @@ class ForOne{
 	calcDebuff(){
 		const z = this
 		let ans = s.n(1)
-		const diff = z.curDiffPrev_mills()
+		const diff = Tempus.diff_mills(
+			z.getNunc(), z.getCurEvent().tempus
+		)
 		ans = s.d(
 			param.debuffNumerator
 			,s.s(diff, inMills.MIN*100) // 冀 剛憶得之詞 于100分鍾內不複出
 		)
 		ans = sros.absolute(ans)
-		const finalAddBonus = z.calcFinalAddBonus()
-		ans = s.d(ans, finalAddBonus)
 		if(s.c(ans, 0) <= 1){
 			ans = s.n(1)
 		}

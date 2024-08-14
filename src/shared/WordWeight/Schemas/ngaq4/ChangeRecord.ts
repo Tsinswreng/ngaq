@@ -47,6 +47,7 @@ export class StatisticsReason extends ChangeReason{
 	
 	dateWeight?:Num_t
 	debuff?:Num_t
+	finalAddBonus?:Num_t
 }
 
 
