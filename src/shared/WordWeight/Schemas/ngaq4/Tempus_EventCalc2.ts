@@ -323,8 +323,12 @@ class ForOne{
 		const diff = Tempus.diff_mills(
 			z.getNunc(), z.getCurEvent().tempus
 		)
+		let debuffNumerator = param.debuffNumerator
+		if(diff < inMills.HOUR*12){
+			debuffNumerator = s.m(debuffNumerator, 100)
+		}
 		ans = s.d(
-			param.debuffNumerator
+			debuffNumerator
 			,s.s(diff, inMills.MIN*100) // 冀 剛憶得之詞 于100分鍾內不複出
 		)
 		ans = sros.absolute(ans)

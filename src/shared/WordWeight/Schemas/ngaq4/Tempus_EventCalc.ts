@@ -1,3 +1,9 @@
+/**
+ * @deprecated
+ *  */ 
+
+
+
 /* 
 處理 詞之tempus_event_s
 */
