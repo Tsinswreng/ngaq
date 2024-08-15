@@ -387,21 +387,21 @@ export class WebNgaqUi{
 			z.svc.emitErr(err)
 		}
 		try {
-			z.svc.emitter.on(z.svc.events.error, (e)=>{
+			z.svc.linkedEmitter.on(z.svc.events.error, (e)=>{
 				console.error(e)
 			})
-			z.svc.emitter.on(z.svc.events.learnBySvcWord, async(svcWord)=>{
+			z.svc.linkedEmitter.on(z.svc.events.learnBySvcWord, async(svcWord)=>{
 				z.svc.statistics.recentLearnCnt.value++
 				await z.NextBg().catch(e=>{
 					hanErr(e)
 				})
 			})
 
-			z.svc.emitter.on(z.svc.events.undo, (svcWord)=>{
+			z.svc.linkedEmitter.on(z.svc.events.undo, (svcWord)=>{
 				z.svc.statistics.recentLearnCnt.value--
 			})
 			
-			z.svc.emitter.on(z.svc.events.load_weight_err, (err)=>{
+			z.svc.linkedEmitter.on(z.svc.events.load_weight_err, (err)=>{
 				alert('load_weight_err')
 				console.error(err)
 			})

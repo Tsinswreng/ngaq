@@ -325,7 +325,7 @@ class ForOne{
 		)
 		let debuffNumerator = param.debuffNumerator
 		if(diff < inMills.HOUR*12){
-			debuffNumerator = s.m(debuffNumerator, 100)
+			debuffNumerator = s.m(debuffNumerator, 0xffff)
 		}
 		ans = s.d(
 			debuffNumerator

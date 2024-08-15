@@ -179,8 +179,8 @@ export abstract class LearnSvc implements Le.I_linkedEmittable{
 		return z
 	}
 
-	protected abstract _emitter:Le.LinkedEmitter
-	get linkedEmitter(){return this._emitter}
+	protected abstract _linkedEmitter:Le.LinkedEmitter
+	get linkedEmitter(){return this._linkedEmitter}
 
 	protected _events:Events
 	get events(){return this._events}

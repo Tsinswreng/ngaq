@@ -37,6 +37,7 @@ export const StrToNum = StrToNumFact.new() as unknown as StrToNumFact
 export type StrToNum = StrToNumInst
 
 
+
 // abstract class A{
 // 	protected constructor(){}
 // 	a

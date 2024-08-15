@@ -87,7 +87,7 @@ export class WebNgaqSvc extends LearnSvc{
 		return z
 	}
 
-	protected _emitter: LinkedEmitter = Le.LinkedEmitter.new(new EventEmitter3())
+	protected _linkedEmitter: LinkedEmitter = Le.LinkedEmitter.new(new EventEmitter3())
 
 	declare protected _wordsToLearn: WebSvcWord[];
 	get wordsToLearn(){return this._wordsToLearn}

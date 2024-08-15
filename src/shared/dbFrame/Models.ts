@@ -129,17 +129,8 @@ export function factMixin<
 		Inst = Inst
 		Row = Row
 		correctInst = correctInst??super.correctInst
-		// correctInst(inst:I){
-		// 	if(correctInst){
-		// 		return correctInst(inst)
-		// 	}else{
-		// 		return super.correctInst(inst)
-		// 	}
-		// }
 	}
 }
-
-
 
 // import type {MyInstance} from 'xxx'
 //type GetConstructor<T> = T extends InstanceType<infer C> ? Constructor<C> : never;
