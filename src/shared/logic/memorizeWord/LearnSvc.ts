@@ -165,7 +165,7 @@ export class LearnedWords{
 /**
  * 背單詞 流程 業務理則
  */
-export abstract class LearnSvc{
+export abstract class LearnSvc implements Le.I_linkedEmittable{
 	static async New():Promise<LearnSvc>{
 		//@ts-ignore
 		const z = new this()
@@ -175,12 +175,12 @@ export abstract class LearnSvc{
 
 	protected async __Init__(){
 		const z = this
-		z._events = Events.new(z.emitter)
+		z._events = Events.new(z.linkedEmitter)
 		return z
 	}
 
 	protected abstract _emitter:Le.LinkedEmitter
-	get emitter(){return this._emitter}
+	get linkedEmitter(){return this._emitter}
 
 	protected _events:Events
 	get events(){return this._events}
@@ -218,7 +218,7 @@ export abstract class LearnSvc{
 
 	emitErr(err:Error|any){
 		const z = this
-		z.emitter.emit(z.events.error, err)
+		z.linkedEmitter.emit(z.events.error, err)
 	}
 
 	/**
@@ -279,7 +279,7 @@ export abstract class LearnSvc{
 					return true
 				}
 			}
-			z.emitter.emit(z.events.load_weight_err, error)
+			z.linkedEmitter.emit(z.events.load_weight_err, error)
 			return false
 		}finally{
 			z.status.loadWeightAlgo = true
@@ -366,7 +366,7 @@ export abstract class LearnSvc{
 			throw Exception.for(z.errReasons.cant_start_when_unsave)
 		}
 		z.status.start = true
-		z.emitter.emit(z.events.start)
+		z.linkedEmitter.emit(z.events.start)
 		return Promise.resolve(true)
 	}
 
@@ -498,7 +498,7 @@ export abstract class LearnSvc{
 		const ans = mw.setInitEvent(event)
 		z.learnedWords.set(event, mw)
 		if(ans){
-			z.emitter.emit(z.events.learnBySvcWord, mw, event)
+			z.linkedEmitter.emit(z.events.learnBySvcWord, mw, event)
 		}
 		return ans
 	}
@@ -508,7 +508,7 @@ export abstract class LearnSvc{
 		z.chkStart()
 		const old = mw.undo()
 		z.learnedWords.delete(old, mw)
-		z.emitter.emit(z.events.undo, mw, old)
+		z.linkedEmitter.emit(z.events.undo, mw, old)
 	}
 
 	/**
@@ -680,7 +680,7 @@ export abstract class LearnSvc{
 		z.chkStart()
 		const ans = mw.setInitEvent(WordEvent.rmb)
 		if(ans){
-			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.rmb)
+			z.linkedEmitter.emit(z.events.learnBySvcWord, mw, WordEvent.rmb)
 		}
 		return ans
 	}
@@ -691,7 +691,7 @@ export abstract class LearnSvc{
 		z.chkStart()
 		const ans = mw.setInitEvent(WordEvent.fgt)
 		if(ans){
-			z.emitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
+			z.linkedEmitter.emit(z.events.learnBySvcWord, mw, WordEvent.fgt)
 		} 
 		return ans
 	}

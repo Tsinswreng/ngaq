@@ -157,4 +157,9 @@ extern "C"{
 	int add(int a, int b){
 		return a + b;
 	}
+	EXPORT
+	const char* concatStr(const char* a, const char* b){
+		static std::string s = std::string(a) + std::string(b);
+		return s.c_str();
+	}
 }

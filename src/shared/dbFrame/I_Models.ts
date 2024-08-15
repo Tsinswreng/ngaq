@@ -1,7 +1,7 @@
 import type Tempus from "@shared/Tempus"
-import type { KeyMirror, PubNonFuncProp } from "@shared/Type"
+import type { KeyMirror as KeyMirror_, PubNonFuncProp } from "@shared/Type"
 import type { I_Row } from "./I_Rows"
-
+export type KeyMirror<T> = KeyMirror_<T>
 /**
  * 實現類 成員字段名須同於列名
  * 約定 始以$號之字段 不入列名
@@ -27,7 +27,7 @@ export interface I_Fact<
 	/** 類 */
 	Row
 	/** 列名 */
-	col:KeyMirror<RowT>
+	col:KeyMirror_<RowT>
 	emptyRow:RowT
 	new:(prop:PubNonFuncProp<InstT>)=>InstT
 	fromRow(row:RowT):InstT

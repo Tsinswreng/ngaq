@@ -10,6 +10,13 @@
  * 適用于類芝厥ʹ構造函數ˋ非公開
  */
 export type InstanceType_<T extends { prototype: any }> = T["prototype"];
+
+
+/**
+ * T是實例類型
+ */
+export type Constructor<T> = T extends InstanceType_<infer C> ? C : never;
+
 //export type InstanceType_<T> = T["prototype"];
 
 
@@ -102,9 +109,8 @@ type Result = KeyAsValue<A>
 Result === {a:'a', b:'b', c:'c', d:'d'}
  */
 export type KeyMirror<T> = {
-	[K in keyof T]: K;
+	[K in keyof T & str]: K
 }
-
 
 /**
  * 创建一个新的类型，将指定的属性变为可选

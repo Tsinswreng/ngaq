@@ -49,6 +49,7 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 		return z
 	}
 
+	/** 自ᵈ注入 */
 	protected _emitter:LinkedEmitter
 	get emitter(){return this._emitter}
 	protected set emitter(v){this._emitter = v}
@@ -119,12 +120,12 @@ export class LinkedEmitter{
 
 export class Events{
 	constructor(){}
-	static new(){
+	static new(...args:any[]){
 		const o = new this()
 		o.__init__()
 		return o
 	}
-	protected __init__(){}
+	protected __init__(...args:any[]){}
 	error = Event.new<[any]>('error')
 }
 
@@ -155,6 +156,11 @@ export class SelfEmitEvents extends Events{
 	//get This(){return SelfEmitEvents}
 }
 
+
+export interface I_linkedEmittable{
+	linkedEmitter:LinkedEmitter
+	events:Events
+}
 
 // export const Emitter = _Emitter
 // export type Emitter = _Emitter

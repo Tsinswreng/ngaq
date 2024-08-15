@@ -2,7 +2,7 @@ import { $ } from '@shared/Common'
 import * as fs from 'fs'
 import srcMap from 'source-map'
 import * as RL from '@backend/util/old_readLine'
-import { StdinReader } from '@backend/util/stdinReader'
+import { StdinReader } from '@backend/util/StdinReader'
 
 type MP = srcMap.NullableMappedPosition
 class Source{

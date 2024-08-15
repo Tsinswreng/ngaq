@@ -12,9 +12,9 @@ async function Main(){
 	const def = await Module.default() //默認會調用main函數
 	//console.log(def._main())
 	// console.log(Object.keys(def))
-	// const fn = def.cwrap('parse', 'string', ['string']);
-	// const ans = fn('123')
-	// console.log(ans)
+	const fn = def.cwrap('concatStr', 'string', ['string', 'string']);
+	const ans = fn('123', '456')
+	console.log(ans)
 }
 
 Main();
