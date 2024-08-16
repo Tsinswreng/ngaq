@@ -1,7 +1,6 @@
-export class Row{
-
-}
-
+import { BaseRow } from "@shared/dbFrame/Rows"
+export const Row = BaseRow
+export type Row = BaseRow
 export class IdBlCtMt extends Row{
 	id:int
 	belong:str

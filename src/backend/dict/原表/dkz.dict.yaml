@@ -1,5 +1,5 @@
 
-#20240813012453205
+#20240816211200396
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2176,6 +2176,18 @@ use_preset_vocabulary: true
 鎮	triŋs	
 鎭	triŋ	
 鎭	triŋs	
+槇	tˁin	
+槙	tˁin	
+傎	tˁin	
+瘨	tˁin	
+厧	tˁin	
+齻	tˁin	
+蹎	tˁin	
+𧽍	tˁin	
+𧽍	dˁins	
+㒹	tˁin	
+𩥄	tˁin	
+𠑘	tˁin	
 臣	ɡiŋ	
 茞	ɡin	
 䢻	ɡin	
@@ -2940,6 +2952,9 @@ use_preset_vocabulary: true
 晪	tʰˁəlʔ	
 賟	tʰˁəlʔ	
 㥏	tʰˁəlʔ	
+婰	tˁəlʔ	
+敟	tˁəlʔ	
+𥮏	tˁəlʔ	
 佃	lˁin	
 佃	lˁins	
 畋	lˁin	
@@ -3556,6 +3571,7 @@ use_preset_vocabulary: true
 蹇	kranʔ	
 搴	kranʔ	
 藆	kranʔ	
+鬥	tˁoks	
 鈉	nəps	
 鈉	nˁəp	
 亞	ʔrˁaks	
@@ -4248,6 +4264,11 @@ use_preset_vocabulary: true
 渚	taʔ	
 諧	ɡrˁi	
 楷	kʰrˁiʔ	
+揩	kʰrˁi	
+揩	kʰrˁis	
+𢔡	kʰrˁi	
+𥻄	kʰrˁi	
+𦂄	kʰrˁi	
 陽	laŋ	
 陽	bAŋ	
 楊	laŋ	0%
@@ -7530,25 +7551,11 @@ use_preset_vocabulary: true
 敁	tˁem	
 掂	tˁem	
 𦕒	tˁem	
-厧	tˁen	
-傎	tˁen	
-槙	tˁen	
 𩬑	tˁem	
-瘨	tˁen	
-𧽍	dˁens	
-𧽍	tˁen	
-蹎	tˁen	
-𩥄	tˁen	
-㒹	tˁen	
-𠑘	tˁen	
-齻	tˁen	
 丶	troʔ	
 𦒻	tˁems	
 𦒻	tˁemʔ	
 䍄	tˁemʔ	
-婰	tˁenʔ	
-敟	tˁenʔ	
-𥮏	tˁenʔ	
 蕇	tˁenʔ	
 踮	tˁemʔ	
 㸃	tˁemʔ	
@@ -7790,7 +7797,6 @@ use_preset_vocabulary: true
 荳	dˁos	
 逗	dros	5%
 逗	dˁos	
-鬥	tˁos	
 浢	dˁos	
 㛒	dˁos	
 𠁁	dˁoʔ	
@@ -12563,13 +12569,8 @@ use_preset_vocabulary: true
 鉲	kʰrˁajʔ	
 奒	kʰˁə	
 𣓁	kʰˁan	
-揩	kʰrˁə	
-揩	kʰrˁəs	
 開	kʰˁə	
-𢔡	kʰrˁə	
 㚊	kʰˁə	
-𥻄	kʰrˁə	
-𦂄	kʰrˁə	
 䒓	kʰrˁeʔ	
 蒈	kʰrˁəʔ	
 剴	kˁə	
@@ -25435,8 +25436,6 @@ use_preset_vocabulary: true
 禎	treŋ	
 瑧	tsin	
 榛	tsrin	
-槇	tinʔ	
-槇	tˁen	
 碪	lim	
 碪	trəm	
 禛	tin	

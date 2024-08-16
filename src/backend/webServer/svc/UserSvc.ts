@@ -421,6 +421,7 @@ export class UserSvc{
 		const userDb = await z.GetUserDbByUserId(userId)
 		const Add = await userDb.dbSrc.Fn_AddWordsFromTxt()
 		const jWords = words.map(e=>JoinedWord.fromRow(e))
+		//console.log(jWords)//t -
 		await userDb.dbSrc.db.BeginTrans()
 		const ans = await Add(jWords)
 		await userDb.dbSrc.db.Commit()

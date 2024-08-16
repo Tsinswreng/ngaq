@@ -2808,6 +2808,19 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 鎭	triŋ
 鎭	triŋs
 
+槇	tˁin
+槙	tˁin
+傎	tˁin
+瘨	tˁin
+厧	tˁin
+齻	tˁin
+蹎	tˁin
+𧽍	tˁin
+𧽍	dˁins
+㒹	tˁin
+𩥄	tˁin
+𠑘	tˁin
+
 
 #旋
 臣	ɡiŋ
@@ -3807,6 +3820,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 晪	tʰˁəlʔ
 賟	tʰˁəlʔ
 㥏	tʰˁəlʔ
+婰	tˁəlʔ
+敟	tˁəlʔ
+𥮏	tˁəlʔ
+
+
+
 佃	lˁin
 佃	lˁins
 畋	lˁin
@@ -4542,6 +4561,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 搴	kranʔ
 藆	kranʔ
 
+鬥	tˁoks
 
 鈉	nəps
 鈉	nˁəp
@@ -5946,6 +5966,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 # 楷	木皆
 楷	kʰrˁiʔ
+揩	kʰrˁi
+揩	kʰrˁis
+𢔡	kʰrˁi
+𥻄	kʰrˁi
+𦂄	kʰrˁi
 
 
 # #丁	@丁
