@@ -3,7 +3,7 @@ import type {I_Row, I_IdBlCtMtRow } from "./I_Rows"
 import { BaseRow, IdBlCtMtRow } from "./Rows"
 import Tempus from "@shared/Tempus"
 import { As } from "@shared/Common"
-import { Constructor, InstanceType_, KeyMirror, PubNonFuncProp } from "@shared/Type"
+import { PubAbsConstructor, InstanceType_, KeyMirror, PubNonFuncProp } from "@shared/Type"
 import { keyMirror } from "@shared/algo"
 /* 
 㕥約束 取出ʹ實體ʹ接口
@@ -34,13 +34,13 @@ export abstract class BaseInst<RowT extends I_Row> implements I_Inst<RowT>{
 	}
 }
 
-export abstract class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row>
+export abstract class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row = InstT['Row']['prototype']>
 	implements I_Fact<InstT, RowT>
 {
-
-	protected constructor(){}
+	constructor(){} // 必潙public、否則無㕥mixin
 	protected __init__(){
 		const z = this
+		//z.Row = z.Inst.prototype.Row
 		z.emptyRow = new z.Row() as RowT
 		z.col = keyMirror(z.emptyRow)
 	}
@@ -51,34 +51,32 @@ export abstract class BaseFactory<InstT extends I_Inst<RowT>, RowT extends I_Row
 		return z
 	}
 
-	
-	abstract Inst// = BaseInst
-	abstract Row// = BaseRow
+	abstract Inst:PubAbsConstructor<InstT> // = BaseInst
+	///** @lateinit */
+	//Row: typeof this.Inst.prototype.Row
+	get Row(){return this.Inst.prototype.Row}
 	/** @lateinit */
 	col:KeyMirror<RowT>
 	/** @lateinit */
 	emptyRow: RowT
 	new(prop: PubNonFuncProp<InstT>):InstT{
 		const z = this
+		//@ts-ignore
 		const ans = new z.Inst()
 		assign(ans, prop)
 		return ans
 	}
 	fromRow(row: RowT): InstT {
 		const z = this
+		//@ts-ignore
 		const ans = new z.Inst()
 		assign(ans, row)
-		//console.log(0)
 		z.correctInst(ans as InstT)
-		//console.log(1) -
 		return ans as InstT
 	}
 	correctInst(inst: InstT): InstT {
 		return inst
 	}
-	
-
-	
 }
 
 
@@ -86,7 +84,7 @@ export abstract class IdBlCtMtInst<RowT extends I_IdBlCtMtRow>
 	extends BaseInst<RowT>
 	implements I_Inst<RowT>
 {
-	abstract get Row()//{return IdBlCtMtRow}
+	abstract get Row():PubAbsConstructor<RowT>
 	id:int|undef
 	belong:str
 	ct:Tempus
@@ -99,9 +97,9 @@ export abstract class IdBlCtMtInst<RowT extends I_IdBlCtMtRow>
 }
 
 export abstract class IdBlCtMtFact<
-	InstT extends IdBlCtMtInst<any>, RowT extends IdBlCtMtRow
-> extends BaseFactory<InstT, RowT>{
-	abstract Row// = IdBlCtMtRow
+	InstT extends IdBlCtMtInst<any>
+> extends BaseFactory<InstT>{
+	//abstract Row// = IdBlCtMtRow
 	abstract Inst//=IdBlCtMtInst
 	override correctInst(inst) {
 		inst.ct = Tempus.new(As(inst.ct, 'number'))
@@ -111,26 +109,73 @@ export abstract class IdBlCtMtFact<
 }
 
 //type Constructor_<T = {}> = abstract new (...args: any[]) => T;
-export function instMixin<I, R>(BaseInst:I, Row:R){
-	return class extends (BaseInst as any){
-		get Row(){return Row}
+//(this:InstanceType_<ICls>, row:InstanceType_<RCls>)=>InstanceType_<RCls>
+export function instMixin<
+	ICls extends PubAbsConstructor<BaseInst<InstanceType_<RCls>>>
+	,RCls extends PubAbsConstructor<BaseRow>
+>(
+	Base: ICls
+	, Row: RCls
+	, correctRow?: (this:InstanceType_<ICls>, row:InstanceType_<RCls>)=>InstanceType_<RCls>
+){
+	abstract class Cls extends (Base){
+		override get Row(){return Row}
+		correctRow = correctRow??super.correctRow
 	}
+	const ans = Cls
+	return ans
 }
 
+
+
+type Constructor<T> = 
+	(T extends InstanceType_<infer C> ? C : never) & PubAbsConstructor<T>;
+;
 export function factMixin<
 // 若寫 extends (typeof BaseFactory) 則col報錯
-	B extends {prototype:any}
-	, I extends I_Inst<any>
-	, R extends I_Row
+	FCl extends Constructor<BaseFactory<InstanceType_<ICl>>>
+	, ICl extends Constructor<BaseInst<BaseRow>>
 >(
-	Base:B, Inst:Constructor<I>, Row:Constructor<R>, correctInst?: (this:InstanceType_<B>, inst:I)=>I
+	Base: FCl
+	, Inst: ICl
+	, correctInst?: (this:InstanceType_<FCl>, inst:InstanceType_<ICl>)=>InstanceType_<ICl>
 ){
-	return class extends (Base as unknown as (typeof BaseFactory))<I, R>{
+	abstract class ans extends (Base){
 		Inst = Inst
-		Row = Row
 		correctInst = correctInst??super.correctInst
 	}
+	return ans
 }
+
+
+
+
+// export function instMixin<
+// 	I extends BaseInst<R>
+// 	, R extends BaseRow
+// >(
+// 	Base: Constructor<I>
+// 	, Row: Constructor<R>
+// ){
+// 	return class extends (Base)<R>{
+// 		get Row(){return Row}
+// 	}
+// }
+
+// export function factMixin<
+// // 若寫 extends (typeof BaseFactory) 則col報錯
+// 	F extends {prototype:any}
+// 	, I extends I_Inst<any>
+// 	, R extends I_Row
+// >(
+// 	Base:F, Inst:Constructor<I>, Row:Constructor<R>, correctInst?: (this:InstanceType_<F>, inst:I)=>I
+// ){
+// 	return class extends (Base as unknown as (typeof BaseFactory))<I, R>{
+// 		Inst = Inst
+// 		Row = Row
+// 		correctInst = correctInst??super.correctInst
+// 	}
+// }
 
 // import type {MyInstance} from 'xxx'
 //type GetConstructor<T> = T extends InstanceType<infer C> ? Constructor<C> : never;

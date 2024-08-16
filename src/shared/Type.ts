@@ -15,7 +15,9 @@ export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 /**
  * T是實例類型
  */
-export type Constructor<T> = T extends InstanceType_<infer C> ? C : never;
+export type PubAbsConstructor<T = {}> = abstract new (...args: any[]) => T;
+// ts似不支持ProctectedConstructor<T>
+//export type Constructor<T> = T extends InstanceType_<infer C> ? C : never;
 
 //export type InstanceType_<T> = T["prototype"];
 

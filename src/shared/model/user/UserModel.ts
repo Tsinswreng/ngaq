@@ -24,8 +24,8 @@ class PasswordInst extends IdBlCtMtInst<Row.Password>{
 	salt:str
 	text:str
 }
-class PasswordFact extends IdBlCtMtFact<PasswordInst, Row.Password>{
-	Row = Row.Password
+class PasswordFact extends IdBlCtMtFact<PasswordInst>{
+	//Row = Row.Password
 	//@ts-ignore
 	Inst = PasswordInst
 }
@@ -56,8 +56,8 @@ class SessionInst extends IdBlCtMtInst<Row.Session>{
 		return true
 	}
 }
-class SessionFact extends IdBlCtMtFact<SessionInst, Row.Session>{
-	Row = Row.Session
+class SessionFact extends IdBlCtMtFact<SessionInst>{
+	//Row = Row.Session
 	//@ts-ignore
 	Inst = SessionInst
 	override correctInst(inst: SessionInst): SessionInst {
@@ -86,8 +86,8 @@ class ProfileInst extends IdBlCtMtInst<Row.Profile>{
 		return row
 	}
 }
-class ProfileFact extends IdBlCtMtFact<ProfileInst, Row.Profile>{
-	Row = Row.Profile
+class ProfileFact extends IdBlCtMtFact<ProfileInst>{
+	//Row = Row.Profile
 	//@ts-ignore
 	Inst = ProfileInst
 	override correctInst(inst: ProfileInst): ProfileInst {
@@ -106,8 +106,8 @@ class UserDbInst extends IdBlCtMtInst<Row.UserDb>{
 	path:str
 	override get Row(){return Row.UserDb}
 }
-class UserDbFact extends IdBlCtMtFact<UserDbInst, Row.UserDb>{
-	Row = Row.UserDb
+class UserDbFact extends IdBlCtMtFact<UserDbInst>{
+	//Row = Row.UserDb
 	//@ts-ignore
 	Inst = UserDbInst
 }
@@ -120,8 +120,8 @@ class User__dbInst extends IdBlCtMtInst<Row.User__db>{
 	dbId:int
 	override get Row(){return Row.User__db}
 }
-class User__dbFact extends IdBlCtMtFact<User__dbInst, Row.User__db>{
-	Row = Row.User__db
+class User__dbFact extends IdBlCtMtFact<User__dbInst>{
+	//Row = Row.User__db
 	//@ts-ignore
 	Inst = User__dbInst
 }
