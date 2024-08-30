@@ -5,6 +5,9 @@
 #include "nlohmann/json.hpp"
 #include "models/WordModels.h"
 #include "tools/StrSegment.h"
+// #include <windows.h>
+// #include <iostream>
+
 
 namespace ngaq{
 
@@ -39,6 +42,16 @@ int _20240808182442(){
 }
 
 int _(){
+    // // 模拟按下右 Alt 键
+    // keybd_event(VK_RMENU, 0, 0, 0); // VK_RMENU 是右 Alt 键的虚拟键码
+
+    // // 这里可以添加您希望在按下右 Alt 键时执行的代码
+    // Sleep(1000); // 暂停 1 秒以便观察效果
+
+    // // 模拟释放右 Alt 键
+    // keybd_event(VK_RMENU, 0, KEYEVENTF_KEYUP, 0);
+
+    return 0;
 	// string a = "z一𠂇||b😍0||abc";
 	// auto ans = StrSegment::split(a, "||");
 	// for(const auto& e : ans){
@@ -46,8 +59,7 @@ int _(){
 	// 	println(e->start);
 	// 	println(e->end);
 	// }
-	println(12>>1);
-	return 0;
+
 }
 
 int _20240808181749(){

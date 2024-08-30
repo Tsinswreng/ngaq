@@ -1,4 +1,4 @@
-import { I_Config } from "./I_Config"
+import { I_Config } from "../interfaces/I_Config"
 
 export class ConfigManager{
 	protected constructor(){}

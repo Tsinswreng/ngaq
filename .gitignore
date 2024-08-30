@@ -5,7 +5,7 @@ node_modules/
 */dist/
 *.log
 log/
-
+src/backend/subModules/
 # src/backend/**/*.js
 # src/shared/**/*.js
 # src/**/*.js

@@ -2456,6 +2456,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 琖	tsrˁanʔ
 醆	tsrˁanʔ
 𧣴	tsrˁanʔ
+餞	dzans
+餞	dzanʔ
+諓	dzans
+諓	dzanʔ
+俴	dzanʔ
+俴	tsanʔ
+㣤	dzanʔ
+𤷃	dzanʔ
+𧗸	dzanʔ
+
 
 橘	kʷit
 繘	kʷit
@@ -5268,7 +5278,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #漿	tsˁaɑŋ	# ts
 
 #攬	rˁomʔ	# ts
-違	woj	# ts
+#違	woj	# ts
+園	won	# ts
+圍	woj	# ts
 謂	wuts	# ts
 政	tʰeŋs	# ts
 保	pˁowʔ	# ts
@@ -5427,6 +5439,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 拖	lʰˁajs	# ts
 駁	pʰrˁawk	# ts
 喋	lˁep
+褋	lˁep
+堞	lˁep
+蹀	lˁep
+惵	lˁep
+艓	lˁep
+
 姥	mˁuʔ
 
 腿	nʰˁujʔ	# ts
@@ -5449,6 +5467,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #摸	mˁas	# ts
 
 麋	mri
+
+妒	tˁaks
 
 
 瞪	drˁəŋs	# ts

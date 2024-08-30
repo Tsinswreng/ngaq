@@ -1,6 +1,6 @@
 import {merge} from '@shared/tools/merge'
 import { Deferrable } from "@shared/Type"
-import { I_Config } from "@shared/infra/I_Config"
+import { I_Config } from "@shared/interfaces/I_Config"
 import { $a } from '@shared/Common'
 import json5 from 'json5'
 import * as fs from 'fs'

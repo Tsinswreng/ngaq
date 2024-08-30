@@ -21,8 +21,7 @@ class StrToStrInst extends instMixin(
 }
 
 
-class StrToStrFact extends IdBlCtMtFact<StrToStrInst, Row.StrToStrRow> {
-	Row = Row.StrToStrRow
+class StrToStrFact extends IdBlCtMtFact<StrToStrInst> {
 	//@ts-ignore
 	Inst = StrToStrInst
 }

@@ -1,5 +1,5 @@
 
-#20240816211200396
+#20240829164128614
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -1880,6 +1880,15 @@ use_preset_vocabulary: true
 琖	tsrˁanʔ	
 醆	tsrˁanʔ	
 𧣴	tsrˁanʔ	
+餞	dzans	
+餞	dzanʔ	
+諓	dzans	
+諓	dzanʔ	
+俴	dzanʔ	
+俴	tsanʔ	
+㣤	dzanʔ	
+𤷃	dzanʔ	
+𧗸	dzanʔ	
 橘	kʷit	
 繘	kʷit	
 厥	kot	
@@ -3969,7 +3978,8 @@ use_preset_vocabulary: true
 版	pʰrˁanʔ	
 培	bˁo	
 培	bˁə	
-違	woj	
+園	won	
+圍	woj	
 謂	wuts	
 政	tʰeŋs	
 保	pˁowʔ	
@@ -4081,6 +4091,11 @@ use_preset_vocabulary: true
 拖	lʰˁajs	
 駁	pʰrˁawk	
 喋	lˁep	
+褋	lˁep	
+堞	lˁep	
+蹀	lˁep	
+惵	lˁep	
+艓	lˁep	
 姥	mˁuʔ	
 腿	nʰˁujʔ	
 褪	nʰˁujs	
@@ -4093,6 +4108,7 @@ use_preset_vocabulary: true
 搠	sŋrˁak	
 售	duks	
 麋	mri	
+妒	tˁaks	
 瞪	drˁəŋs	
 澄	drˁəŋ	
 騰	lˁəŋs	
@@ -4486,7 +4502,6 @@ use_preset_vocabulary: true
 透	ɕuk	1%
 土	dˁaʔ	1%
 万	mˁək	1%
-圍	wʷəjs	1%
 戲	hˁa	1%
 茲	dzə	1%
 兹	dzə	1%
@@ -7640,13 +7655,11 @@ use_preset_vocabulary: true
 啑	tˁes	
 𠗨	dˁep	
 𠗨	trˁap	
-堞	dˁep	
 揲	dˁep	
 揲	lap	
 揲	ʑet	
 耋	dˁet	
 㥈	dˁep	
-惵	dˁep	
 絰	dˁet	
 殜	drep	
 殜	lap	
@@ -7658,11 +7671,8 @@ use_preset_vocabulary: true
 嵽	dˁet	
 𣯉	dˁep	
 𡼄	dˁet	
-褋	dˁep	
 𤗨	dˁep	
-艓	dˁep	
 𥉺	tˁet	
-蹀	dˁep	
 褺	dˁep	
 𪀒	dˁet	
 䠟	dˁep	
@@ -7875,7 +7885,6 @@ use_preset_vocabulary: true
 杜	dˁaʔ	
 肚	dˁaʔ	
 肚	tˁaʔ	20%
-妒	tˁas	
 𤴱	tˁas	
 妬	tˁas	
 荰	dˁaʔ	
@@ -11407,12 +11416,9 @@ use_preset_vocabulary: true
 𧙧	krˁens	
 栫	dzˁins	
 栫	dzˁuns	
-俴	tsenʔ	
-俴	dzenʔ	
 健	ɡans	
 揵	ɡren	
 揵	kanʔ	
-㣤	dzenʔ	
 袸	dzˁins	
 袸	dzˁun	
 葥	tsens	
@@ -11426,17 +11432,13 @@ use_preset_vocabulary: true
 腱	kan	
 旔	kans	
 寋	ɡanʔ	
-𤷃	dzenʔ	
 蔪	dzemʔ	
 榗	tsens	
 𥯦	dzrˁep	
-𧗸	dzenʔ	
 趝	kˁems	
 䔵	krˁan	
 踺	ɡans	
 劍	kams	
-諓	dzens	
-諓	dzenʔ	
 澗	krˁans	
 㵎	krˁans	
 橌	ɡrˁanʔ	
@@ -11448,8 +11450,6 @@ use_preset_vocabulary: true
 鍵	ɡrenʔ	
 劒	kams	
 劔	kams	
-餞	dzens	
-餞	dzenʔ	
 諫	krˁans	
 鞬	kan	
 𦾶	dzemʔ	
@@ -20844,10 +20844,10 @@ use_preset_vocabulary: true
 嵬	ŋˁuj	
 嵬	ŋˁujʔ	
 幃	wʷəj	
-圍	wʷəj	99%
 溈	kroj	
 溈	wroj	
 湋	wʷəj	
+違	wʷəj	
 媁	ʔʷəj	
 媁	wʷəjʔ	
 𢾁	wʷəj	
@@ -24598,7 +24598,6 @@ use_preset_vocabulary: true
 𧻚	wʷan	
 蒝	ŋʷan	
 楥	hʷans	
-園	wʷan	
 猿	wʷan	
 獂	ŋʷan	
 溒	wʷan	

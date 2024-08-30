@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "ngaq",
+			"path": "../../.."
+		}
+	],
+	"settings": {
+		"editor.quickSuggestions": {
+			"comments": "on",
+			"strings": "on"
+		}
+	}
+}

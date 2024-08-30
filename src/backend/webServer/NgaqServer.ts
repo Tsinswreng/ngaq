@@ -9,12 +9,12 @@ import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import Config from '@backend/Config';
 
-dotenv.config()
-Config.readOuterConfig(process.env['CONFIG_PATH'] as str)
-const configJsStr = fs.readFileSync(
-	process.env['CONFIG_PATH'] as str
-	, {encoding:'utf-8'}
-)
+// dotenv.config()
+// Config.readOuterConfig(process.env['CONFIG_PATH'] as str)
+// const configJsStr = fs.readFileSync(
+// 	process.env['CONFIG_PATH'] as str
+// 	, {encoding:'utf-8'}
+// )
 const configInst = Config.getInstance()
 const config = configInst.config
 class Opt{
