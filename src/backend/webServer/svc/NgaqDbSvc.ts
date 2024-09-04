@@ -40,5 +40,9 @@ export class NgaqDbSvc{
 	async Save(){
 
 	}
+
+	mergeWord(w1:JoinedWord, w2:JoinedWord){
+		
+	}
 	
 }

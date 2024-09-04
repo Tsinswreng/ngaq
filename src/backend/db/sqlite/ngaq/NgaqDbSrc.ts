@@ -18,6 +18,7 @@ const QryAns = SqliteUtil.SqliteQryResult
 type QryAns<T> = SqliteUtil.SqliteQryResult<T>
 
 import { Tbls } from './NgaqDbStuff'
+import { I_Tbl } from '@shared/dbFrame/I_Tbl'
 const tbls = Tbls.inst
 
 export class NgaqDbSrc{
@@ -368,13 +369,13 @@ WHERE ${tbl.col.wid}=?`
 		}
 		return Fn
 	}
-
+	
 	/**
 	 * 
 	 * @param tbl 須有wid列
 	 * @returns 
 	 */
-	protected async Fn_Del_by_wid(tbl:Tbl<any>){
+	protected async Fn_Del_by_wid(tbl:I_Tbl<any>){
 		const z = this
 		const widCol = $(tbl.col?.wid, `${tbl.name}\ndo not have wid col`)
 		const sql = `DELETE FROM ${tbl.name} WHERE ${widCol} = ?`
@@ -517,6 +518,8 @@ GROUP BY ${textWordTbl.col.belong}`
 		}
 		return Fn
 	}
+
+	
 
 
 }

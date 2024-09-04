@@ -18,5 +18,7 @@ export class UserDb{
 	protected _dbSrc:NgaqDbSrc
 	get dbSrc(){return this._dbSrc}
 	protected set dbSrc(v){this._dbSrc = v}
+
+	
 	
 }

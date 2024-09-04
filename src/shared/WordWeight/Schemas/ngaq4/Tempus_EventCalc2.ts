@@ -210,7 +210,16 @@ class ForOne{
 	}
 
 	handleFinal(){
-
+		const z = this
+		if(!( z.getCurEvent().event === LearnBelong.add )){
+			return
+		}
+		let bonus = z.calcBonusWhenFinalIsAdd()
+		if(s.c(bonus, 1) > 0){
+			z.cnter.weight = s.m(z.cnter.weight, bonus)
+			const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
+			z.addRecord(rec)
+		}
 	}
 
 	getCurEvent(){
@@ -276,6 +285,11 @@ class ForOne{
 		return s.n(ans)
 	}
 
+	/**
+	 * 末次 加事件越近、加成越大。
+	 * 非 唯末事件潙加旹纔起效
+	 * @returns 
+	 */
 	calcFinalAddBonus(){
 		const z = this
 		const nuncDiffFinalAdd = z.nuncDiffFinalAdd()
@@ -346,7 +360,7 @@ class ForOne{
 		const z = this
 		const mills = Tempus.diff_mills(z.getNunc(), z.getCurEvent().tempus)
 		let ans = s.d(
-			s.m( inMills.DAY,30 )
+			s.m( inMills.DAY,360 )
 			,mills
 		)
 		if( s.c(ans,1)<0 ){

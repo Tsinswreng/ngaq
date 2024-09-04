@@ -1,5 +1,5 @@
 
-#20240829164128614
+#20240903112249162
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2864,6 +2864,9 @@ use_preset_vocabulary: true
 撈	rˁawʔ	
 勞	rˁaw	
 澇	rˁaws	
+煠	lep	
+煠	lʰrep	
+煠	dzrep	
 乇	trˁak	
 嫡	tˁek	
 誦	lʰoŋs	
@@ -4208,6 +4211,7 @@ use_preset_vocabulary: true
 駱	mrˁaks	
 駱	rˁak	0%
 酪	lrˁaks	
+酪	rˁak	0%
 齡	tʰrˁiŋ	
 齡	rˁeŋ	
 丙	praŋʔ	
@@ -25120,9 +25124,6 @@ use_preset_vocabulary: true
 閘	kˁap	
 閘	ʔrˁap	
 牐	dzrˁep	
-煠	lap	
-煠	tʰrep	
-煠	dzrˁep	
 𧶇	trˁat	
 𠍹	trˁep	
 霅	tap	

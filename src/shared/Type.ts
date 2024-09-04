@@ -11,7 +11,7 @@
  */
 export type InstanceType_<T extends { prototype: any }> = T["prototype"];
 
-
+export type PubConstructor<T = {}> = new (...args: any[]) => T;
 /**
  * T是實例類型
  */
