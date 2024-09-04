@@ -36,7 +36,7 @@ class Param{
 	/** ˣ削弱ᵗ分母 */
 	debuffNumerator = 36*inMills.DAY
 	base = 20
-	finalAddBonusDenominator = inMills.DAY*300
+	finalAddBonusDenominator = inMills.DAY*3000
 }
 const param = new Param()
 
@@ -197,12 +197,13 @@ class ForOne{
 		z.cnter.cnt_fgt++
 		const prev = z.getPrevEvent()
 		let weight0:N2S
+
+		weight0 = z.calcTimeWeightForCur()
+		weight0 = s.m(weight0, z.cnter.cnt_add) //curPos之後之cnt_add不算
+		weight0 = s.d(weight0, 10)
+
 		if(prev.event === LearnBelong.add){
-			weight0 = s.n(1.01)
-		}else{
-			weight0 = z.calcTimeWeightForCur()
-			weight0 = s.m(weight0, z.cnter.cnt_add) //curPos之後之cnt_add不算
-			weight0 = s.d(weight0, 10)
+			weight0 = s.m(weight0, 4)
 		}
 		z.cnter.weight = s.m(z.cnter.weight, weight0)
 		const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, weight0)
@@ -211,15 +212,32 @@ class ForOne{
 
 	handleFinal(){
 		const z = this
-		if(!( z.getCurEvent().event === LearnBelong.add )){
-			return
-		}
-		let bonus = z.calcBonusWhenFinalIsAdd()
-		if(s.c(bonus, 1) > 0){
+		if(  z.getCurEvent().event === LearnBelong.add  ){
+			let bonus = z.calcBonusWhenFinalIsAdd()
+			if(s.c(bonus, 1.1) < 0){
+				bonus = s.n(1.1)
+			}
 			z.cnter.weight = s.m(z.cnter.weight, bonus)
 			const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
+			rec.reason.comment = 'final add bonus'
 			z.addRecord(rec)
+		}//~if(  z.getCurEvent().event === LearnBelong.add  )
+		else if(  z.getCurEvent().event === LearnBelong.rmb  ){
+
 		}
+		else if(  z.getCurEvent().event === LearnBelong.fgt  ){
+			let bonus = z.calcBonusWhenFinalIsAdd()//借用
+			if(s.c(bonus, 1.1) < 0){
+				bonus = s.n(1.1)
+			}
+			//console.log(z.cnter.cnt_rmb, z.word.id)//t
+			bonus = s.m(bonus, (z.cnter.cnt_add+1)*2)
+			z.cnter.weight = s.m(z.cnter.weight, bonus)
+			const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
+			rec.reason.comment = 'final fgt bonus'
+			z.addRecord(rec)
+		}//~else if(  z.getCurEvent().event === LearnBelong.fgt  )
+
 	}
 
 	getCurEvent(){
@@ -295,7 +313,10 @@ class ForOne{
 		const nuncDiffFinalAdd = z.nuncDiffFinalAdd()
 		//console.log(nuncDiffFinalAdd)//t 0
 		let ans = s.n(nuncDiffFinalAdd)
-		ans = s.d(param.finalAddBonusDenominator, ans) // 30天後過期
+		ans = s.d(
+			param.finalAddBonusDenominator
+			, ans
+		) // 30天後過期
 		const learnedTimes = z.word.tempus_event_s.length
 		ans = s.d(ans ,s.m(learnedTimes, 1)) // 已學習次數越多 加成越少
 		if(s.c(ans, 0) <= 1 ){
@@ -355,12 +376,13 @@ class ForOne{
 	/**
 	 * 末ʹ事件潙加旹 算加成
 	 * 其日期距今ʹ期 越短 則加成越大、即他ʹ況ˋ同旹、ʃ被加ʹ期更近 之詞ˋ更優先
+	 * 未用!
 	 */
 	calcBonusWhenFinalIsAdd(){
 		const z = this
 		const mills = Tempus.diff_mills(z.getNunc(), z.getCurEvent().tempus)
 		let ans = s.d(
-			s.m( inMills.DAY,360 )
+			s.m( inMills.DAY,3600 )
 			,mills
 		)
 		if( s.c(ans,1)<0 ){
