@@ -1,11 +1,12 @@
 //import dayjs, { Dayjs } from "dayjs"
 import moment from "moment"
+import I_Tempus from "./IF/I_Tempus"
 
 /**
  * 手動封裝ᵗ類、㕥存日期時間。
  * 蔿省內存、此類ᵗ實例只有一 字串ᵗ形ᵗ屬性ˉ_time。餘ᵗ方法ˋ皆靜態。
  */
-export default class Tempus{
+export default class Tempus implements I_Tempus{
 	
 	private static readonly rely = moment
 	public static readonly ISO8601FULL_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
