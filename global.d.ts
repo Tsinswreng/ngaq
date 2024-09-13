@@ -11,4 +11,5 @@ declare type str = string
 declare type bool = boolean
 declare type undef = undefined
 declare type Task<T> = Promise<T>
+declare type Deferrable<T> = Promise<T> | T
 declare type Param<T> = Parameters<T>

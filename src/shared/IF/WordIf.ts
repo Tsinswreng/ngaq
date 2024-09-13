@@ -70,6 +70,10 @@ export interface I_textWord{
 	textWord:Mod.TextWord
 }
 
+export interface I_textWordRow{
+	textWord:Row.TextWord
+}
+
 export interface I_learns{
 	learns: Mod.Learn[]
 }
@@ -78,11 +82,23 @@ export interface I_propertys{
 	propertys: Mod.Property[]
 }
 
+export interface I_propertysRow{
+	propertys: Row.Property[]
+}
+
 /**
- * 從txt單詞表中讀入ʹ詞
+ * 從txt單詞表中讀入ʹ詞 model
  */
 export interface I_WordFromTxt extends
 	I_textWord, I_propertys
+{
+	
+}
+
+/**
+ * 從txt單詞表中讀入ʹ詞 row
+ */
+export interface I_WordRowFromTxt extends I_textWordRow, I_propertysRow
 {
 	
 }
