@@ -39,7 +39,8 @@ export class AddWordsSvc{
 
 	async AddJoinedRows(joinedRows:JoinedRow[]){
 		const z = this
-		return await z.client.AddNeoWords(joinedRows)
+		await z.client.AddNeoWords(joinedRows)
+		console.log('AddJoinedRows ok')//t
 	}
 
 	//get This(){return AddWordsSvc}

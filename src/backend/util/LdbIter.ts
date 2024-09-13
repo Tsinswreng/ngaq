@@ -1,6 +1,6 @@
 import {Level, Iterator} from 'level'
 import type { Pair } from '@shared/Type'
-import type { I_GetN } from '@shared/interfaces/StreamIf'
+import type { I_GetN } from '@shared/IF/StreamIf'
 import { I_LdbIter } from './I_LdbIter'
 type TPair = Pair<str,str>
 

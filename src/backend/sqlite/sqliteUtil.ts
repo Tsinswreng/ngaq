@@ -5,7 +5,7 @@ SELECT strftime('%s', 'now') || substr(strftime('%f', 'now'), 4) AS timestamp
 
 import type sqlite3 from "sqlite3"
 import type { SqliteDb } from "./Sqlite"
-import * as DbQry from '@shared/interfaces/DbQryResult'
+import * as DbQry from '@shared/IF/DbQryResult'
 import type { NullableEleArr } from "@shared/Type"
 
 /**

@@ -30,6 +30,9 @@ export interface I_id_index_weight extends I_id, I_index, I_weight{
 
 }
 
+/**
+ * 宜拆分
+ */
 export interface I_WordWithStatus extends
 	I_id, I_index, I_weight, I_hasBeenLearnedInLastRound
 {
@@ -42,7 +45,6 @@ export interface I_WordWithStatus extends
 	statusToLearnObj():Mod.Learn|null
 	addLearnRec(learn:Mod.Learn)
 }
-
 
 
 

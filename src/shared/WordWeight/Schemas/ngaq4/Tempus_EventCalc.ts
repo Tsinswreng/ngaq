@@ -7,12 +7,12 @@
 /* 
 處理 詞之tempus_event_s
 */
-import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { I_WordWeight } from "@shared/IF/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
 import type { 
 	I_WordForCalcWeight
 	,I_Tempus_Event
- } from "@shared/interfaces/WordIf"
+ } from "@shared/IF/WordIf"
 import { LearnBelong } from '@shared/model/word/NgaqRows'
 import { TempusEventRecord } from "./ChangeRecord"
 import Tempus from "@shared/Tempus"

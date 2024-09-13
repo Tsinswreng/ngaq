@@ -5,7 +5,7 @@ import * as Le from "@shared/linkedEvent"
 import { $ } from "@shared/Common";
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
-import type * as WordIf from "@shared/interfaces/WordIf";
+import type * as WordIf from "@shared/IF/WordIf";
 import { RMB_FGT, RMB_FGT_nil } from "./LearnEvents";
 import {classify} from '@shared/tools/classify'
 import { key__arrMapPush } from "@shared/tools/key__arrMapPush";

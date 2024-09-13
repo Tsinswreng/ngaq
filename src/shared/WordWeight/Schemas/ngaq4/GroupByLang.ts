@@ -2,7 +2,7 @@
 按詞ʹ語言 分組
 */
 
-import type { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { I_ChangeRecord, I_WordWeight } from "@shared/IF/I_WordWeight"
 import { customSort } from "@shared/tools/customSort"
 import { I_belong } from "@shared/Type"
 

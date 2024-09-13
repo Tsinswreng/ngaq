@@ -5,7 +5,7 @@
 //<@delete>
 import * as _ENV from '@shared/WordWeight/weightEnv'
 //type import
-import type { I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { I_WordWeight } from "@shared/IF/I_WordWeight"
 import type { InstanceType_ } from "@shared/Type"
 //</@delete>
 /* 

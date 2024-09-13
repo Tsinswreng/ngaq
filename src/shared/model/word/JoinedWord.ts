@@ -5,7 +5,7 @@ import * as Row from '@shared/model/word/NgaqRows'
 //import { Word } from "@shared/entities/Word/Word"
 import { JoinedRow } from './JoinedRow'
 import { PubNonFuncProp } from '@shared/Type'
-import type * as WordIf from '@shared/interfaces/WordIf'
+import type * as WordIf from '@shared/IF/WordIf'
 import {diffArrIntoMap} from '@shared/tools/diffArrIntoMap'
 
 export class JoinedWord implements WordIf.I_propertys, WordIf.I_learns{
