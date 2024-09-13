@@ -12,7 +12,6 @@ function assign(a,b){
 
 
 
-
 class TextWordInst extends Mods.instMixin(
 	Mods.IdBlCtMtInst<Row.TextWord>,
 	Row.TextWord,
@@ -26,6 +25,7 @@ class TextWordFact extends Mods.factMixin(
 ){
 
 }
+
 
 export const TextWord = TextWordFact.new() as TextWordFact
 export type TextWord = TextWordInst
@@ -45,6 +45,9 @@ class PropertyFact extends IdBlCtMtFact<PropertyInst>{
 }
 export const Property = PropertyFact.new() as PropertyFact
 export type Property = PropertyInst
+
+
+
 
 
 class LearnInst extends IdBlCtMtInst<Row.Learn>{
