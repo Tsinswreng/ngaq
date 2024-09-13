@@ -600,10 +600,11 @@ class Fmt{
 		if(cur == void 0){
 			return ''
 		}
-		const means = cur.propertyBl__propertys.get(PropertyBelong.mean)
+		let means = cur.propertyBl__propertys.get(PropertyBelong.mean)
 		if(means == void 0){
 			return ''
 		}
+		means = means.slice().reverse() //後加者先出
 		return means.map(e=>e.text+'\n').join('')
 	}
 

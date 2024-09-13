@@ -70,7 +70,12 @@
 	"ts-node": {
 		// Tell ts-node CLI to install the --loader automatically, explained below
 		"esm": true
+		// Do not forget to `npm i -D tsconfig-paths`
+		,"require": ["tsconfig-paths/register"]
 	}
+	// deepkit io runtime type
+	,"reflection": true
+
 	//"include": ["/*.ts"],
 	
 	// "include": [

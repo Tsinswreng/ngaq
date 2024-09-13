@@ -230,7 +230,6 @@ class ForOne{
 			if(s.c(bonus, 1.1) < 0){
 				bonus = s.n(1.1)
 			}
-			//console.log(z.cnter.cnt_rmb, z.word.id)//t
 			bonus = s.m(bonus, (z.cnter.cnt_add+1)*2)
 			z.cnter.weight = s.m(z.cnter.weight, bonus)
 			const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
@@ -311,7 +310,6 @@ class ForOne{
 	calcFinalAddBonus(){
 		const z = this
 		const nuncDiffFinalAdd = z.nuncDiffFinalAdd()
-		//console.log(nuncDiffFinalAdd)//t 0
 		let ans = s.n(nuncDiffFinalAdd)
 		ans = s.d(
 			param.finalAddBonusDenominator

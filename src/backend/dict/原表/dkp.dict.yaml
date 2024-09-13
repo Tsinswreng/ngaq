@@ -83,6 +83,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 潙	wraj	# ts
 蔿	wrajs	# ts
 的	tˁewks
+玓	tˁewk
+魡	tˁewk
+扚	tˁewʔ
+扚	tˁewk
+肑	tˁewk
+靮	tˁewk
+馰	tˁewk
+𥐝	tˁewk
+
+
 明	mraŋ
 朙	mraŋ
 甍	mrˁəŋ
@@ -283,6 +293,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 瞅	tsʰriwʔ
 
 修	siw
+樇	siw
+𩛢	siw
+𩝧	siw
+滫	siwʔ
+
 
 馬	mrˁaʔ
 醉	tsuts
@@ -501,6 +516,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 合	ɡˁop	# bs
 
 世	lʰaps
+貰	lʰaps
+丗	lʰaps
+貰	mlaps	# 廣韻: 神夜切
 
 啼	lˁe	#嗁
 嗁	lˁe
@@ -1855,6 +1873,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 歳	sʷats
 歲	sʷats
 劌	kʷats
+
+噦	hʷˤats
+翽	hʷˤats
+鐬	hʷˤats
+𧬨	hʷˤats
+
+
 喙	kʰlots
 餯	kʰlots
 𣨶	kʰlots
@@ -4154,6 +4179,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 漣	stran	# ts
 寡	kʷrˁaʔ
 雫	nrˁaʔ	# 奴寡
+雫	tˁek	# 滴
 戴	tˁəks	# bs 廣韻聲形考: 戠省聲
 稍	srˁews
 潲	srˁews
@@ -4453,10 +4479,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 誕	lˁanʔ
 鯰	nˁim
 換	wˁans
-唤	hʷˁans
-奂	hʷˁans
-涣	hʷˁans
-焕	hʷˁans
+喚	hʷˁans
+奐	hʷˁans
+渙	hʷˁans
+渙	hʷˤans
+煥	hʷˁans
+
+
 寬	kʰʷˁan	0%
 寬	kʰʷˁon	# ts
 寬	kʰˁon	# ts
@@ -5664,11 +5693,16 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 玲	rˁeŋ
 玲	ŋʷrˁiŋ	# ts
 
+伶	rˁeŋ
+伶	nʰrˁeŋ	# ts
+
+
 # 鈴	金令
 # 齡	齒令
 # 翎	羽令
 # 怜	心令
 # 伶	人令
+
 
 
 # #賣	@賣
@@ -6171,6 +6205,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 牴	tˁiʔ
 牴	ŋʷˁiʔ	# ts
+
+邸	tˁiʔ
+邸	ʔˁiʔ	# ts
+
 
 
 

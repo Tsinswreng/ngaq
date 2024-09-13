@@ -15,6 +15,7 @@ class Env{
 	opt = opt
 	dfltNgaqDb = SqliteDb.fromPath(opt.ngaqSqliteDbPath)
 	serverDb = SqliteDb.fromPath(opt.serverDbPath)
+	/** @deprecated */
 	ngaqDbSrc = NgaqDbSrc.new(this.dfltNgaqDb)
 	serverDbSrc = UserDbSrc.new(this.serverDb)
 }

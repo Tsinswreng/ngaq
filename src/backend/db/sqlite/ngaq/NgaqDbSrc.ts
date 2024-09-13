@@ -519,7 +519,7 @@ GROUP BY ${textWordTbl.col.belong}`
 		return Fn
 	}
 
-	
+
 
 
 }
