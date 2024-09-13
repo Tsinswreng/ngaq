@@ -110,6 +110,13 @@ export abstract class IdBlCtMtFact<
 
 //type Constructor_<T = {}> = abstract new (...args: any[]) => T;
 //(this:InstanceType_<ICls>, row:InstanceType_<RCls>)=>InstanceType_<RCls>
+/**
+ * 
+ * @param Base 父inst
+ * @param Row 對應之row
+ * @param correctRow 成員類型轉換方法
+ * @returns 
+ */
 export function instMixin<
 	ICls extends PubAbsConstructor<BaseInst<InstanceType_<RCls>>>
 	,RCls extends PubAbsConstructor<BaseRow>

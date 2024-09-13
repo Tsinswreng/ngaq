@@ -89,7 +89,9 @@ export const WordRelation = WordRelationFact.new() as WordRelationFact
 export type WordRelation = WordRelationInst
 
 
-
+import * as IntProp_ from './IntProp'
+export const IntProp = IntProp_.IntPropFact
+export type IntProp = IntProp_.IntPropInst
 
 // function isNumber(value: any): value is number {
 //     return typeof value === 'number';

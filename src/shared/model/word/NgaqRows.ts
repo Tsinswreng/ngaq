@@ -61,6 +61,10 @@ export class Property extends WidRow{
 	declare belong:PropertyBelong|str
 }
 
+export class IntProp extends WidRow{
+	value:int
+}
+
 export enum WordRelationBelong{
 	/** 變體: 如 realize, realise  */
 	variant='variant'
