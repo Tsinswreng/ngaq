@@ -13,7 +13,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { Exception, Reason } from "@shared/error/Exception";
 import { JoinedRow } from "@shared/model/word/JoinedRow"
 import type { I__ } from "@shared/Type"
-import type * as WordIf from '@shared/interfaces/WordIf'
+import type * as WordIf from '@shared/IF/WordIf'
 import { JoinedWord } from '@shared/model/word/JoinedWord'
 
 const GET = 'GET'

@@ -1,13 +1,13 @@
 import { RMB_FGT, RMB_FGT_nil } from "@shared/logic/memorizeWord/LearnEvents";
-import { I_WordWithStatus } from "@shared/interfaces/WordIf";
+import { I_WordWithStatus } from "@shared/IF/WordIf";
 import { Exception, Reason } from "@shared/error/Exception";
 import * as Le from '@shared/linkedEvent'
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { I_WordWeight } from "@shared/IF/I_WordWeight";
 import { LearnBelong } from "@shared/model/word/NgaqRows";
 import * as Mod from '@shared/model/word/NgaqModels'
 import * as Row from "@shared/model/word/NgaqRows";
 import {classify} from '@shared/tools/classify'
-import type * as WordIF from "@shared/interfaces/WordIf";
+import type * as WordIF from "@shared/IF/WordIf";
 import { $ } from "@shared/Common";
 import CyclicArray from "@shared/tools/CyclicArray";
 type WordEvent = Row.LearnBelong

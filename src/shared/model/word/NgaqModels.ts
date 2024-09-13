@@ -3,7 +3,7 @@ import { As } from "@shared/Common";
 import Tempus from "@shared/Tempus";
 import * as Row from "@shared/model/word/NgaqRows"
 import { keyMirror } from "@shared/tools/keyMirror";
-import type * as WordIf from '@shared/interfaces/WordIf'
+import type * as WordIf from '@shared/IF/WordIf'
 import * as Mods from '@shared/dbFrame/Models'
 
 function assign(a,b){

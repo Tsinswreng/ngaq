@@ -1,4 +1,4 @@
-import type { I_Segment } from "@shared/interfaces/I_Parse"
+import type { I_Segment } from "@shared/IF/I_Parse"
 import { StrSegment } from "@shared/tools/StrSegment"
 export { StrSegment }
 // export class StrSegment extends StrSegment{

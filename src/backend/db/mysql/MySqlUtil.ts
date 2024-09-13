@@ -1,4 +1,4 @@
-import * as DbQry from '@shared/interfaces/DbQryResult'
+import * as DbQry from '@shared/IF/DbQryResult'
 
 export class MysqlQryResult<T> implements
 DbQry.I_data<T>

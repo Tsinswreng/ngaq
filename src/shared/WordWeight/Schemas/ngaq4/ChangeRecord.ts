@@ -1,6 +1,6 @@
 import type { LearnBelong } from "@shared/model/word/NgaqRows";
-import type { I_Tempus_Event } from "@shared/interfaces/WordIf";
-import type { I_ChangeRecord, Num_t } from "@shared/interfaces/I_WordWeight";
+import type { I_Tempus_Event } from "@shared/IF/WordIf";
+import type { I_ChangeRecord, Num_t } from "@shared/IF/I_WordWeight";
 import type Tempus from "@shared/Tempus";
 
 export class ChangeReason{

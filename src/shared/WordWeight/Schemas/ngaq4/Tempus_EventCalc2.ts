@@ -1,8 +1,8 @@
-import { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import { I_ChangeRecord, I_WordWeight } from "@shared/IF/I_WordWeight"
 import type { 
 	I_WordForCalcWeight
 	,I_Tempus_Event
-} from "@shared/interfaces/WordIf"
+} from "@shared/IF/WordIf"
 import Tempus from "@shared/Tempus"
 
 export type Word_t = I_WordForCalcWeight

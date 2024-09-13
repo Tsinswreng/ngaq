@@ -1,4 +1,4 @@
-import { I_WordWeight } from '@shared/interfaces/I_WordWeight3'
+import { I_WordWeight } from '@shared/IF/I_WordWeight3'
 import { compileTs } from '@shared/Ut'
 import * as _ENV from '@shared/WordWeight/weightEnv'
 

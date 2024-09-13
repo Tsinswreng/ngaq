@@ -1,4 +1,4 @@
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight3";
+import { I_WordWeight } from "@shared/IF/I_WordWeight3";
 import { SvcWord3 } from "@shared/entities/Word/SvcWord3";
 import { TempusEventRecord } from "@shared/WordWeight/ChangeRecord";
 

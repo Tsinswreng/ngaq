@@ -1,7 +1,7 @@
 /* 
 打亂 過濾 處理標籤等
 */
-import type { I_ChangeRecord, I_WordWeight } from "@shared/interfaces/I_WordWeight"
+import type { I_ChangeRecord, I_WordWeight } from "@shared/IF/I_WordWeight"
 // import type { InstanceType_ } from "@shared/Type"
 // import type { 
 // 	I_Tempus_Event

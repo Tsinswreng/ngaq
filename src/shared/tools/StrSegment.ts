@@ -1,4 +1,4 @@
-import type { I_Segment } from "@shared/interfaces/I_Parse"
+import type { I_Segment } from "@shared/IF/I_Parse"
 export class StrSegment implements I_Segment<str>{
 
 	protected constructor(){}

@@ -6,7 +6,7 @@ import { Client } from "./Client";
 import { Exception } from "@shared/error/Exception";
 import { WebSvcWord } from "./entities/WebSvcWord";
 import { $, As } from "@shared/Common";
-import { I_WordWeight } from "@shared/interfaces/I_WordWeight";
+import { I_WordWeight } from "@shared/IF/I_WordWeight";
 import { BlobWithText } from "@shared/tools/BlobWithText";
 import { TagImg } from "@shared/tools/TagImg";
 import { JoinedRow } from "@shared/model/word/JoinedRow";
@@ -14,7 +14,7 @@ import { JoinedWord } from "@shared/model/word/JoinedWord";
 import { SvcWord } from "@shared/logic/memorizeWord/SvcWord";
 import { FnCodeParser } from "@shared/WordWeight/Schemas/ngaq4/FnCodeParser";
 import { Opus } from "@ts/Worker/Opus";
-import type * as WordIf from "@shared/interfaces/WordIf";
+import type * as WordIf from "@shared/IF/WordIf";
 import { Learn } from "@shared/model/word/NgaqRows";
 import { ref } from "vue";
 
