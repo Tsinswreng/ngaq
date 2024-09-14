@@ -1,9 +1,12 @@
+import { PubConstructor } from "@shared/Type"
+import * as IF from "./I_linkedEvent"
 
 type Args<T> = T extends any[] ? T : [T]
 
 
-
-export class Event<Arg extends any[] =any[]>{
+export class Event<Arg extends any[] =any[]>
+	implements IF.I_LinkedEvent<Arg>
+{
 	protected _name:string
 	/** unique */
 	get name(){return this._name}
@@ -28,10 +31,21 @@ export class Event<Arg extends any[] =any[]>{
 	}
 }
 
-export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
+
+/**
+ * 自觸發ʹ事件。
+ * 成員 含 事件觸發器
+ */
+export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>
+	implements IF.I_LinkedEvent<Arg>, IF.I_LinkedEvent
+{
 
 
-	static new<Arg extends any[] =any[]>(name:string, base?:Event<Arg>, emitter?:LinkedEmitter){
+	static new<Arg extends any[] =any[]>(
+		name:string
+		, base?:Event<Arg>
+		, emitter?:IF.I_LinkedEmitter // 事件列表構造旹 注入、可不傳。
+	){
 		const z = new this<Arg>()
 		z.__init__(name, base, emitter)
 		return z
@@ -40,8 +54,6 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 	//@ts-ignore
 	protected __init__(...args:Parameters<typeof SelfEmitEvent.new>){
 		const z = this
-		// z._name = args[0]
-		// z._base = args[1]
 		//@ts-ignore
 		super.__init__(...args)
 		//@ts-ignore
@@ -49,7 +61,7 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 		return z
 	}
 
-	/** 自ᵈ注入 */
+	/** 在事件列表初始化旹注入 */
 	protected _emitter:LinkedEmitter
 	get emitter(){return this._emitter}
 	protected set emitter(v){this._emitter = v}
@@ -63,17 +75,16 @@ export class SelfEmitEvent<Arg extends any[]> extends Event<Arg>{
 		const z = this
 		z.emitter.on(z, listener)
 	}
-
-	
-}
-
-export interface I_EventEmitter{
-	emit(eventName: string | symbol, ...args: any[]):unknown
-	on(eventName: string | symbol, listener: (...args: any[]) => void): this;
 }
 
 
-export class LinkedEmitter{
+export interface I_EventEmitter extends IF.I_EventEmitter{
+
+}
+
+
+
+export class LinkedEmitter implements IF.I_LinkedEmitter{
 	protected _eventEmitter: I_EventEmitter
 	get eventEmitter(){return this._eventEmitter}
 	protected constructor(){
@@ -118,7 +129,7 @@ export class LinkedEmitter{
 	}
 }
 
-export class Events{
+export class Events implements IF.I_Events{
 	constructor(){}
 	static new(...args:any[]){
 		const o = new this()
@@ -127,8 +138,12 @@ export class Events{
 	}
 	protected __init__(...args:any[]){}
 	error = Event.new<[any]>('error')
+	//;[key:string]:IF.I_LinkedEvent<any>
 }
 
+/**
+ * ev instanceof SelfEmitEvent旹注入emitter。
+ */
 export class SelfEmitEvents extends Events{
 	protected constructor(){super()}
 	//@ts-ignore
@@ -138,7 +153,9 @@ export class SelfEmitEvents extends Events{
 		const keys = Object.keys(z)
 		for(const k of keys){
 			const ev = z[k]
-			if(ev instanceof SelfEmitEvent){
+			if(
+				ev instanceof SelfEmitEvent
+			){
 				//@ts-ignore
 				ev.emitter = emitter
 			}
@@ -157,10 +174,27 @@ export class SelfEmitEvents extends Events{
 }
 
 
-export interface I_linkedEmittable{
-	linkedEmitter:LinkedEmitter
-	events:Events
+export interface I_linkedEmittable extends IF.I_linkedEmittable{
+
 }
+
+
+
+export function mixinLinkedEvent<
+	Cls extends PubConstructor
+>(
+	Base:Cls
+	,events_: SelfEmitEvents
+	,emitter: IF.I_LinkedEmitter
+){
+	class Ans extends Base implements I_linkedEmittable{
+		linkedEmitter: IF.I_LinkedEmitter = emitter
+		events: SelfEmitEvents = events_
+	}
+	return Ans
+}
+
+
 
 // export const Emitter = _Emitter
 // export type Emitter = _Emitter

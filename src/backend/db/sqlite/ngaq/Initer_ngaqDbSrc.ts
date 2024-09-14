@@ -5,6 +5,9 @@ import { NgaqDbSrc } from "./NgaqDbSrc"
 import * as stf from "./NgaqDbStuff"
 import { SqliteDb } from "@backend/sqlite/Sqlite"
 import { DbIniter } from "../dbFrame/DbIniter"
+const SNP = SqliteUtil.snippet
+
+const fKeyDC = SNP.foreignKey_onDelCasc.bind(SNP)
 
 export class InitSql_ngaqDbSrc extends DbIniter{
 	protected constructor(){super()}
@@ -148,8 +151,9 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.belong} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
+	,${fKeyDC(c.wid, z.tables.textWord.name, z.tables.textWord.col.id)}
 )`
+//,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
 		return ans
 	}
 
@@ -166,8 +170,9 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.text} TEXT NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
+	,${fKeyDC(c.wid, z.tables.textWord.name, z.tables.textWord.col.id)}
 )`
+//,FOREIGN KEY(${c.wid}) REFERENCES ${z.tables.textWord.name}(${z.tables.textWord.col.id})
 		return ans
 	}
 
@@ -199,9 +204,11 @@ export class InitSql_ngaqDbSrc extends DbIniter{
 	,${c.rid} INTEGER NOT NULL
 	,${c.ct} INTEGER NOT NULL
 	,${c.mt} INTEGER NOT NULL
-	,FOREIGN KEY(${c.wid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.textWord.col.id})
-	,FOREIGN KEY(${c.rid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.relation.col.id})
+	,${fKeyDC(c.wid, z.tables.textWord.name, z.tables.textWord.col.id)}
+	,${fKeyDC(c.rid, z.tables.relation.name, z.tables.relation.col.id)}
 )`
+// ,FOREIGN KEY(${c.wid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.textWord.col.id})
+// ,FOREIGN KEY(${c.rid}) REFERENCES "${z.tables.textWord.name}"(${z.tables.relation.col.id})
 		return ans
 	}
 

@@ -168,9 +168,15 @@ class Snippet{
 	notNull = 'NOT NULL'
 	unique = 'UNIQUE'
 	now_unixMills = `(strftime('%s', 'now') || substr(strftime('%f', 'now'), 4))`
-	foreignKey(key:str, refTbl:str, refCol:str){
+	foreignKey(key:str, refTbl:str, refCol:str):str{
 		const ans = 
 `FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol})`
+		return ans
+	}
+
+	foreignKey_onDelCasc(key:str, refTbl:str, refCol:str):str{
+		const ans = 
+`FOREIGN KEY(${key}) REFERENCES ${refTbl}(${refCol}) ON DELETE CASCADE ON DELETE CASCADE`
 		return ans
 	}
 
