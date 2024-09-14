@@ -1,6 +1,5 @@
 <script setup lang="ts">
 //import {ref} from 'vue'
-import Log from '@shared/Log';
 //import * as aaa from '@shared/entities/Word/MemorizeWord'
 import MultiMode from '../MultiMode';
 import Recite from '@ts/voca/Recite';

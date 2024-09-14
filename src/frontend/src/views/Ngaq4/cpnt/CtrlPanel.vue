@@ -1,7 +1,6 @@
 <!-- 控制板、含諸按鈕等 -->
 <script setup lang="ts">
 //import {ref} from 'vue'
-import Log from '@shared/Log';
 import {WebNgaqUi} from '../WebNgaqUi';
 import {ref, onBeforeMount} from 'vue'
 import LS from '@ts/LocalStorage';
