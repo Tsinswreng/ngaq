@@ -55,3 +55,14 @@ extends I_Fact<InstT, RowT>{
 
 // 如果我使用typeof、我可以通過type target = typeof Cl來獲取Cl的類型(不是Cl的實例)
 // 不能使用typeof旹、如何通過Cl_t 取得Cl本身的類型(不是Cl的實例)? 
+
+
+/* 
+
+typeorm 能不能 以鍵值對象的形式 獲取一個表 所有的列名?
+例如col是一個儲存了表的所有列名的對象、只有id text列。即:
+col.id === 'id'
+col.text === 'text'
+且要求在ts中、訪問不存在的例會在編譯時報錯、如我寫:
+col.aaa // Error: aaa does not exist in col (ts xxxx)
+*/
