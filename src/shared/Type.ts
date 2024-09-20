@@ -27,7 +27,7 @@ export type PubAbsConstructor<T = {}> = abstract new (...args: any[]) => T;
  * type a = ParseType<'number'>
  * a -> number
  */
-export type ParseType<T extends string> =
+export type Eval<T extends string> =
 	T extends 'string' ? string :
 	T extends 'number' ? number :
 	T extends 'boolean' ? boolean :
@@ -147,3 +147,33 @@ export interface I_id<T>{
 }
 
 export type Pair<A,B> = [A,B]
+
+
+export type MakeAllOptional<T> = {
+	[P in keyof T]?: T[P];
+};
+
+/**
+ * 把A之全部成員之類型都改為B
+ */
+export type UnifyPropType<Ori, TarType> = {
+	[K in keyof Ori]: TarType;
+};
+
+/**
+ * key : T -> key: (key:T) => Ret
+ * {
+ * 	name:str
+ * 	age:num
+ * }
+ * 
+ * ->
+ * 
+ * {
+ * 		name:(name:str) => Ret
+ * 		age:(age:num) => Ret
+ * }
+ */
+export type KeyHandlers<Ori, Ret> = {
+	[K in keyof Ori]: (k:Ori[K]) => Ret;
+};

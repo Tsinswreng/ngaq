@@ -1,5 +1,5 @@
 
-#20240913105539842
+#20240919231432996
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -886,7 +886,6 @@ use_preset_vocabulary: true
 醳	lak	
 㘁	lak	
 奕	jak	
-役	wek	
 弈	jak	
 腋	jak	
 射	mlAks	
@@ -2598,6 +2597,13 @@ use_preset_vocabulary: true
 晣	tat	
 翼	jək	
 鳥	tˁiwʔ	
+蔦	tˁiwʔ	
+蔦	tˁiws	
+窵	tˁiwʔ	
+窵	tˁiws	
+隝	tˁiwʔ	
+𧜣	tˁiw	
+𧜣	tˁiwʔ	
 裊	nˁiwʔ	
 吊	tˁiwk	
 弔	tˁiwk	
@@ -2626,6 +2632,16 @@ use_preset_vocabulary: true
 籠	kʷrˁoŋ	
 驗	ŋrams	
 念	nˁims	
+𦁇	nˁims	
+𦁤	nˁims	
+捻	nˁip	
+錜	nˁip	
+鉈	lʰaj	
+鉈	tʰˁaj	
+鍦	lʰaj	
+葹	lʰaj	
+絁	lʰaj	
+𢻫	lʰaj	
 沿	jon	
 鉛	jon	
 否	pəʔ	
@@ -3830,9 +3846,6 @@ use_preset_vocabulary: true
 給	krop	
 使	srə	
 何	ɡˁajʔ	
-行	ɡˁaŋs	
-航	ɡˁaŋ	
-航	ɡˁaŋs	
 啊	ʔA	
 啊	ʔˁajs	
 男	nˁom	
@@ -3917,7 +3930,7 @@ use_preset_vocabulary: true
 締	dˁeʔ	
 締	dˁes	%0
 液	rAk	
-疫	wˁek	
+役	wˁek	
 打	trˁaŋʔ	
 盯	trˁaŋʔ	
 盯	drˁaŋ	
@@ -4043,10 +4056,14 @@ use_preset_vocabulary: true
 慌	mʰˁaŋs	
 敏	mrəlʔ	
 嬌	kraw	
+灣	strˁon	
 敝	bet	
 㡀	bet	
 弊	bes	
-行	ɡrˁaŋs	
+行	ɡrˁAŋ	
+行	ɡˁAŋ	
+抗	kʰˁaŋs	
+航	ɡˁaŋs	
 氮	lˁamʔ	
 迫	prˁowk	
 啪	pʰˁak	
@@ -4305,6 +4322,26 @@ use_preset_vocabulary: true
 賭	taʔ	
 煮	taʔ	
 渚	taʔ	
+訪	pʰaŋs	
+訪	ŋAŋs	
+仿	pʰaŋʔ	
+仿	nAŋʔ	
+妨	pʰaŋ	
+妨	pʰaŋs	
+妨	nAŋ	
+肪	baŋ	
+肪	ŋʷAŋ	
+坊	paŋ	
+坊	baŋ	
+坊	tʰAŋ	
+紡	pʰaŋʔ	
+紡	sAŋ	
+彷	bˁaŋ	
+彷	pʰaŋʔ	
+彷	lʰAŋ	
+唸	tˁims	
+埝	tˁims	
+埝	nˁip	
 諧	ɡrˁi	
 楷	kʰrˁiʔ	
 揩	kʰrˁi	
@@ -7425,7 +7462,6 @@ use_preset_vocabulary: true
 𩕯	tˁaw	
 宲	pˁawʔ	
 禂	tˁawʔ	
-隝	tˁewʔ	
 㨶	tˁawʔ	
 㠀	tˁawʔ	
 壔	tˁawʔ	
@@ -7646,8 +7682,6 @@ use_preset_vocabulary: true
 𢁕	tˁewʔ	
 䄪	tˁewʔ	
 屌	tˁewʔ	
-𧜣	tˁew	
-𧜣	tˁewʔ	
 伄	tˁews	
 伄	tˁewʔ	
 𠤼	dˁew	
@@ -7659,9 +7693,6 @@ use_preset_vocabulary: true
 銱	tˁews	
 鋽	tʰˁews	
 瘹	tˁews	
-窵	lut	
-窵	tˁews	
-窵	tˁewʔ	
 爹	dˁajʔ	50%
 爹	traj	
 㦅	dˁet	
@@ -8390,8 +8421,6 @@ use_preset_vocabulary: true
 匚	pʷaŋ	
 邡	pʰʷaŋs	
 邡	pʷaŋ	
-坊	bʷaŋ	
-坊	pʷaŋ	
 芳	pʰʷaŋ	
 汸	pʷaŋ	
 枋	pʷaŋ	
@@ -8406,21 +8435,14 @@ use_preset_vocabulary: true
 鈁	pʷaŋ	
 鴋	bʷaŋ	
 鴋	pʷaŋ	
-妨	pʰʷaŋ	
-妨	pʰʷaŋs	
-肪	bʷaŋ	
-肪	pʷaŋ	
 房	bˁaŋ	3%
 房	bʷaŋ	
 魴	bʷaŋ	
-仿	pʰʷaŋʔ	
 昉	pʷaŋʔ	
 瓬	pʷaŋʔ	
 倣	pʷaŋʔ	
 舫	pˁaŋs	
 舫	pʷaŋs	
-紡	pʰʷaŋʔ	
-訪	pʰʷaŋs	
 髣	pʰʷaŋʔ	
 䲱	pʰʷaŋʔ	
 鶭	pʰʷaŋʔ	
@@ -12668,8 +12690,6 @@ use_preset_vocabulary: true
 邟	ɡˁaŋ	
 邟	kʰˁaŋ	
 邟	kʰˁaŋs	
-抗	ɡˁaŋ	
-抗	kʰˁaŋs	
 犺	kʰˁaŋs	
 忼	hˁaŋ	
 忼	kʰˁaŋʔ	
@@ -15888,7 +15908,6 @@ use_preset_vocabulary: true
 黏	nrem	
 㞋	nonʔ	
 㞋	nrenʔ	
-捻	nˁep	
 淰	nˁemʔ	
 淰	nrˁemʔ	
 淰	ɕəmʔ	
@@ -15901,12 +15920,6 @@ use_preset_vocabulary: true
 卄	koŋ	
 㲽	nˁens	
 㲽	ɕaŋ	
-埝	nˁep	
-埝	tˁems	
-唸	tˁems	
-唸	tˁens	
-𦁇	nˁems	
-𦁤	nˁems	
 娘	nraŋ	
 𥽬	nraŋs	
 釀	nraŋs	
@@ -15914,8 +15927,6 @@ use_preset_vocabulary: true
 䖆	nraŋs	
 嫋	nˁewʔ	
 𨲂	nˁewʔ	
-蔦	tˁews	
-蔦	tˁewʔ	
 𢴶	nˁewʔ	
 褭	nˁewʔ	
 嬝	nˁewʔ	
@@ -15966,7 +15977,6 @@ use_preset_vocabulary: true
 嶭	ŋˁet	
 篞	nˁet	
 臲	ŋˁet	
-錜	nˁep	
 𩣘	nrep	
 𩋏	nˁep	
 䳖	nrep	
@@ -16276,8 +16286,6 @@ use_preset_vocabulary: true
 𪐿	pʰrˁoŋ	
 𪔔	pʰrˁoŋ	
 霶	pʰˁaŋ	
-彷	bˁaŋ	
-彷	pʰʷaŋʔ	
 逄	brˁoŋ	
 旁	bˁaŋ	
 𨜷	bˁaŋ	
@@ -18951,14 +18959,11 @@ use_preset_vocabulary: true
 蕂	ɕəŋs	
 賸	ləŋs	
 賸	ʑəŋs	
-𢻫	ɕe	
 𢻱	ɕe	
 邿	ɕə	
 𣏚	de	
 呞	ɕə	
 虱	srit	
-絁	ɕe	
-葹	ɕe	
 䙾	ɕe	
 𧠜	ɕe	
 蓍	ɕi	
@@ -18971,9 +18976,6 @@ use_preset_vocabulary: true
 䗐	ɕes	
 蝨	srit	
 褷	sre	
-鍦	ɕe	
-鍦	ɕes	
-鍦	dæ	
 濕	ɕəp	
 濕	tʰˁəp	
 鯴	srit	
@@ -20612,8 +20614,6 @@ use_preset_vocabulary: true
 馱	dˁaj	
 馱	dˁajs	
 碢	dˁoj	
-鉈	ɕe	
-鉈	dæ	
 䭾	dˁaj	
 䭾	dˁajs	
 駄	dˁajs	
@@ -20708,7 +20708,6 @@ use_preset_vocabulary: true
 潫	ʔron	
 𩅦	ʔrˁon	
 彎	ʔrˁon	
-灣	ʔrˁon	
 䘎	ʔrˁon	
 刓	ŋˁon	
 汍	ɡˁon	
@@ -23617,6 +23616,7 @@ use_preset_vocabulary: true
 俋	drəp	
 㹭	lets	
 帟	lek	
+疫	wek	
 㤤	lo	
 㤤	loʔ	
 𢘽	lets	

@@ -105,17 +105,26 @@ export let replacePair:RegexReplacePair[] = [
 	{regex:/腹二(wks)/gm, replacement:'腹二尾一,尾二'},
 	{regex:/腹二(wk)/gm, replacement:'腹二尾一,尾二'},
 
-	{regex:/腹二(ws)/gm, replacement:'腹二尾一M尾二'},
-	{regex:/腹二(wʔ)/gm, replacement:'腹二尾一U尾二'},
-	{regex:/腹二(w)/gm, replacement:'腹二尾一J尾二'},
+	// {regex:/腹二(ws)/gm, replacement:'腹二尾一M尾二'},
+	// {regex:/腹二(wʔ)/gm, replacement:'腹二尾一U尾二'},
+	// {regex:/腹二(w)/gm, replacement:'腹二尾一J尾二'},
+
+	{regex:/腹二(ws)/gm, replacement:'腹二尾一Z尾二'},
+	{regex:/腹二(wʔ)/gm, replacement:'腹二尾一Q尾二'},
+	{regex:/腹二(w)/gm, replacement:'腹二尾一A尾二'},
 
 	{regex:/腹二(ls)/gm, replacement:'腹二尾一.尾二'},
 	{regex:/腹二(lʔ)/gm, replacement:'腹二尾一O尾二'},
 	{regex:/腹二(l)/gm, replacement:'腹二尾一L尾二'},
 
-	{regex:/腹二(s)/gm, replacement:'腹二尾一Z尾二'},
-	{regex:/腹二(ʔ)/gm, replacement:'腹二尾一Q尾二'},
-	{regex:/腹二$/gm, replacement:'腹二尾一A尾二'},
+	//2024-09-19T23:11:24.482+08:00 qaz與ujm兩列 易位
+	// {regex:/腹二(s)/gm, replacement:'腹二尾一Z尾二'},
+	// {regex:/腹二(ʔ)/gm, replacement:'腹二尾一Q尾二'},
+	// {regex:/腹二$/gm, replacement:'腹二尾一A尾二'},
+
+	{regex:/腹二(s)/gm, replacement:'腹二尾一M尾二'},
+	{regex:/腹二(ʔ)/gm, replacement:'腹二尾一U尾二'},
+	{regex:/腹二$/gm, replacement:'腹二尾一J尾二'},
 
 
 	{regex:/首一kl首二/gm, replacement:'首一I首二'},

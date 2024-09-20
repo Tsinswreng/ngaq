@@ -166,14 +166,14 @@ export function instanceAs<Target extends { prototype: any }>(src, TargetClass: 
  */
 export function primitiveAs<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
-	:null|Ty.ParseType<Target>
+	:null|Ty.Eval<Target>
 
 export function primitiveAs<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
-	:Ty.ParseType<Target>
+	:Ty.Eval<Target>
 export function primitiveAs<Target extends string>(src, target:Ty.PrimitiveTypeStr|Target, errMsg:any=''){
 	if(typeof src === target){
-		return src as Ty.ParseType<Target>
+		return src as Ty.Eval<Target>
 	}else{
 		if( typeof errMsg === 'string'){
 			throw new Error(errMsg)
@@ -206,12 +206,12 @@ export function As<Target extends { prototype: any }>
 /** primitiveAs */
 export function As<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
-	: Ty.ParseType<Target>|null
+	: Ty.Eval<Target>|null
 
 /** primitiveAs */
 export function As<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
-	: Ty.ParseType<Target>
+	: Ty.Eval<Target>
 
 /**
  * 
@@ -240,12 +240,12 @@ export function asrt<Target extends { prototype: any }>
 /** primitiveassert */
 export function asrt<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg:null)
-	: asserts src is Ty.ParseType<Target>|null
+	: asserts src is Ty.Eval<Target>|null
 
 /** primitiveassert */
 export function asrt<Target extends string>
 	(src, target:Ty.PrimitiveTypeStr|Target, errMsg?:any)
-	: asserts src is Ty.ParseType<Target>
+	: asserts src is Ty.Eval<Target>
 
 export function asrt<Target extends string|{ prototype: any }>(src, target:Target, errMsg:any=''){
 	if(typeof target === 'string'){

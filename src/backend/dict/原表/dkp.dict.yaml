@@ -186,6 +186,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 他	lʰˁaj	
 她	lʰˁajʔ
+
 #它	tʰˁaj
 
 # 他	tʰˁaj	# ts
@@ -1157,7 +1158,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 奕	jak
 
-役	wek
+
 弈	jak
 腋	jak
 射	mlAks
@@ -3362,6 +3363,14 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 晣	tat
 翼	jək	# ms
 鳥	tˁiwʔ
+蔦	tˁiwʔ
+蔦	tˁiws
+窵	tˁiwʔ
+窵	tˁiws
+隝	tˁiwʔ
+𧜣	tˁiw
+𧜣	tˁiwʔ
+
 裊	nˁiwʔ
 吊	tˁiwk	# bs
 弔	tˁiwk
@@ -3394,6 +3403,25 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 #駁	prˁawk
 驗	ŋrams
 念	nˁims
+𦁇	nˁims
+𦁤	nˁims
+捻	nˁip
+錜	nˁip
+
+
+鉈	lʰaj
+鉈	tʰˁaj	# ts
+鍦	lʰaj
+葹	lʰaj
+絁	lʰaj
+𢻫	lʰaj
+
+
+
+
+
+
+
 沿	jon	# ms
 鉛	jon
 
@@ -5031,9 +5059,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 給	krop	# ts
 使	srə	# ts
 何	ɡˁajʔ	# ts
-行	ɡˁaŋs	# ts
-航	ɡˁaŋ
-航	ɡˁaŋs	# ts
+#行	ɡˁaŋs	# ts
+
 #啊	ʔajs	# ts
 啊	ʔA	#ts
 啊	ʔˁajs	
@@ -5165,7 +5192,8 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 液	rAk	# ts
 
-疫	wˁek	# ts
+#疫	wˁek	# ts
+役	wˁek	# ts
 打	trˁaŋʔ	# 舍他音
 盯	trˁaŋʔ
 盯	drˁaŋ
@@ -5368,10 +5396,22 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 嬌	kraw	# ts
 #鼓	kʷrˁaʔ	# ts
 
+
+灣	strˁon	# ts
+
 敝	bet	# ts
 㡀	bet	# ts
 弊	bes	# ts
-行	ɡrˁaŋs	# ts
+#行	ɡrˁaŋs	# ts
+行	ɡrˁAŋ	# ts
+行	ɡˁAŋ	# ts
+抗	kʰˁaŋs	# 捨他音
+航	ɡˁaŋs	# ts
+#航	ɡˁaŋ
+
+
+#抗	ɡˁɑŋ 
+
 氮	lˁamʔ	# ts
 #伯	nʰrˁak	# ts
 迫	prˁowk	# ts
@@ -5982,6 +6022,33 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 # 訪	言方
 # 紡	絲方
 
+
+訪	pʰaŋs
+訪	ŋAŋs	# ts
+
+仿	pʰaŋʔ	
+仿	nAŋʔ	# ts
+
+妨	pʰaŋ
+妨	pʰaŋs
+妨	nAŋ	# ts
+
+肪	baŋ
+肪	ŋʷAŋ	# ts
+
+坊	paŋ
+坊	baŋ
+坊	tʰAŋ	# ts
+
+紡	pʰaŋʔ
+紡	sAŋ	# ts
+
+彷	bˁaŋ
+彷	pʰaŋʔ
+彷	lʰAŋ	# ts
+唸	tˁims
+埝	tˁims
+埝	nˁip
 
 
 

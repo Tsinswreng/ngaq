@@ -4,7 +4,6 @@ import {$} from '@shared/Common'
 
 
 export async function bootstrap() {
-
 	console.log($)//t
 	const app = await NestFactory.create(AppModule);
 	await app.listen(3001);

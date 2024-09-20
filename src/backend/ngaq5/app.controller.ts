@@ -1,8 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import chalk from 'chalk';
 import { Query } from '@nestjs/common';
-@Controller()
+@Controller('/app')
 export class AppController {
 	constructor(private readonly appService: AppService) {
 		console.log(arguments, 'app.controller')// {}
@@ -18,10 +17,11 @@ export class AppController {
 	@Get('/h')
 	getHello2(
 		@Query() query: any,
+		@Req() req: Request,
 	): string {
 		const z = this
-		console.log(z.appService)
 		console.log(query, 'query')
+		console.log(req, 'req')
 		return ''
 	}
 }

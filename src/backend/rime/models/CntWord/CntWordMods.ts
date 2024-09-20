@@ -7,8 +7,7 @@ class CntWordInst extends IdBlCtMtInst<Row.CntWordRow> {
 	cnt:int
 }
 
-class CntWordFact extends IdBlCtMtFact<CntWordInst, Row.CntWordRow> {
-	Row = Row.CntWordRow
+class CntWordFact extends IdBlCtMtFact<CntWordInst> {
 	//@ts-ignore
 	Inst = CntWordInst
 }

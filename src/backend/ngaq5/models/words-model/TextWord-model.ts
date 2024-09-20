@@ -6,12 +6,12 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class TextWord {
 	@PrimaryGeneratedColumn()
 	id: int;
-	@Column('text')
+	@Column({type: 'text'})
 	text: str;
-	@Column('text')
+	@Column({type: 'text'})
 	belong:str
-	@Column('int')
+	@Column({type: 'int'})
 	ct:int
-	@Column('int')
+	@Column({type: 'int'})
 	mt:int
 }

@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import Menu from "./components/Menu.vue";
-function test(){
-	console.log(
-		parseInt(
-			'123'
-		)
-	)
-}
+import MyComponent from "./tsx/MyComponent";
 </script>
 
 
 
 <template>
+	<!-- <MyComponent :message="'11'"/> -->
 	<Menu/>
 	<router-view></router-view>
 <!-- 	<br><br><br><br><br>
