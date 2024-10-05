@@ -83,12 +83,6 @@ export class Opus<Arg=any, Ret=any>{
 		return ans
 	}
 
-
-
-
-
-	
-
 	// test(){
 	// 	const worker = this.worker
 	// 	const self = worker

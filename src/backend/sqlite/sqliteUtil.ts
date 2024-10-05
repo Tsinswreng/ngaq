@@ -422,10 +422,9 @@ class ObjSql{
 		const placeholders = z.getPlaceholdersStr()
 		return `INSERT ${orIgnore} INTO '${tbl}' (${columns}) VALUES (${placeholders})`
 	}
-
-
-
 }
+
+
 
 
 class SelectSql{

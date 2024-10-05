@@ -26,5 +26,11 @@ describe('MkTbl', () => {
 
 
 
+// class User{
+// 	createTime:number
+// }
+// const user = new User()
 
+// const sql1 = `SELECT * FROM User where createTime = 1234567890`
 
+// const sql2 = `SELECT * FROM User where ${nameof(user.createTime)} = ?`

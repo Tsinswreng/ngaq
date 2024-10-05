@@ -139,6 +139,7 @@ export class WebNgaqSvc extends LearnSvc{
 	protected override async _SortWords(svcWords: SvcWord[]): Promise<SvcWord[]> {
 		const z = this
 		const calc = $(z.weightAlgo, 'z.weightAlgo')
+		//console.log(calc.Run.toString())//t
 		const gotWords = await calc.Run(svcWords)
 		z.This.assignWeightByRef(svcWords, gotWords)
 		svcWords.sort((a,b)=>{

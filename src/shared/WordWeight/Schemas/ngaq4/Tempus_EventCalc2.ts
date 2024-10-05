@@ -109,6 +109,12 @@ class ForOne{
 		z._assignFinalAddPos()
 	}
 
+	/* 
+	此文件會被打包成一個js文件 在瀏覽器上運行
+	需要計算約一萬個單詞的權重 每個單詞的權重計算相互獨立
+	Forone類的static run 方法用于給單個單詞計算權重
+	今有提升性能的需求、請你想辦法用利用多線程。
+	 */
 	static run(word:Word_t){
 		const z = this.new(word)
 		z.run()
@@ -414,3 +420,23 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 	}
 
 }
+
+
+// function getPos(out):int{
+// 	if(true){
+// 		out.x = 1
+// 		out.y = 2
+// 		return 0
+// 	}else{
+// 		return -1
+// 	}
+// }
+
+// const pos = {}
+// const statue = getPos(pos)
+// if(statue === 0){
+// 	console.log('suscess')
+// 	console.log(pos.x, pos.y)
+// }else{
+// 	console.log('fail')
+// }

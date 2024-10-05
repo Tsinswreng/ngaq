@@ -114,6 +114,34 @@ export type KeyMirror<T> = {
 	[K in keyof T & str]: K
 }
 
+/* 
+export function keyMirror<T extends kvobj>(obj:T){
+	const ans = {}
+	const keys = Object.keys(obj)
+	for(const k of keys){
+		ans[k] = k
+	}
+	return ans as Ty.KeyMirror<T>
+}
+
+usage:
+class Entity{
+	id:number
+	name:string
+	ct:number
+}
+
+const e = new Entity()
+const km = keyMirror(e)
+
+print(km.id) // 'id'
+print(km.name) // 'name'
+print(km.nonExistKey) //编译时报错，km上不存在nonExistKey
+
+
+
+*/
+
 /**
  * 创建一个新的类型，将指定的属性变为可选
  * type MyType = { name: string; age: number };
