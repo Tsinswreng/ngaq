@@ -1,43 +1,43 @@
-import sqlite3 from "sqlite3";
-import { NgaqDbSrcOld } from "./NgaqDbSrcOld";
-import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
-import Tempus from "@shared/Tempus";
+// import sqlite3 from "sqlite3";
+// import { NgaqDbSrcOld } from "./NgaqDbSrcOld";
+// import { DbErr, SqliteDb } from "@backend/sqlite/Sqlite";
+// import Tempus from "@shared/Tempus";
 
-const dbPath = './ngaq.sqlite'
-const dbRaw = new sqlite3.Database(dbPath)
-const db = SqliteDb.new(dbRaw)
-const dbSrc = NgaqDbSrcOld.new(db)
-async function init(){
-	try {
-		await dbSrc.init()
-	} catch (err) {
-		if(err instanceof DbErr){
-			console.error(err.sql)
-		}
-		throw err
-	}
+// const dbPath = './ngaq.sqlite'
+// const dbRaw = new sqlite3.Database(dbPath)
+// const db = SqliteDb.new(dbRaw)
+// const dbSrc = NgaqDbSrcOld.new(db)
+// async function init(){
+// 	try {
+// 		await dbSrc.init()
+// 	} catch (err) {
+// 		if(err instanceof DbErr){
+// 			console.error(err.sql)
+// 		}
+// 		throw err
+// 	}
 
-}
-init().catch(e=>console.error(e))
+// }
+// init().catch(e=>console.error(e))
 
-async function testSelect(){
+// async function testSelect(){
 	
-`SELECT
-    word.id
-     , word.belong
-     , word.text wt
-     , word.ct
-     , word.mt
-    , property.text "p.t"
-FROM word
-LEFT JOIN property on word.id = property.wid
-LEFT JOIN learn on word.id = learn.wid
-WHERE word.id = 1`
-	const sql = `SELECT EXISTS (SELECT * from word)`
-	const ans = await dbSrc.db.All(sql)
-	console.log(ans)
-}
-//testSelect()
+// `SELECT
+//     word.id
+//      , word.belong
+//      , word.text wt
+//      , word.ct
+//      , word.mt
+//     , property.text "p.t"
+// FROM word
+// LEFT JOIN property on word.id = property.wid
+// LEFT JOIN learn on word.id = learn.wid
+// WHERE word.id = 1`
+// 	const sql = `SELECT EXISTS (SELECT * from word)`
+// 	const ans = await dbSrc.db.All(sql)
+// 	console.log(ans)
+// }
+// //testSelect()
 
 
 

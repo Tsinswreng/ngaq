@@ -22,7 +22,9 @@ export class AddWordsSvc{
 
 	parse(text:str){
 		const lex = NgaqLex.new(text)
+		console.time(`lex.read_tempus__wordBlocks()`)//t
 		const map = lex.read_tempus__wordBlocks()
+		console.timeEnd(`lex.read_tempus__wordBlocks()`)//t
 		const jWords = [] as JoinedWord[]
 		for(const [tempus, words] of map){
 			for(const w of words){

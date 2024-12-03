@@ -315,8 +315,6 @@ export class NgaqLex extends Lex{
 		})
 		return ans
 	}
-
-	
 }
 
 
@@ -617,6 +615,7 @@ class Fine{
 	wordBlockToJoinedWord(wordBlock:WordBlock){
 		const z = this
 		const metadata = z.metadata
+		
 		const date = wordBlock.date
 		const textWord = Mod.TextWord.new({
 			id:NaN

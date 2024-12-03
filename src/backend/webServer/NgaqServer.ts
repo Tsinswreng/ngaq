@@ -17,6 +17,7 @@ import Config from '@backend/Config';
 // )
 const configInst = Config.getInstance()
 const config = configInst.config
+//unused
 class Opt{
 	_port:int = 6324
 	
@@ -103,7 +104,7 @@ class Server{
 		const z = this
 		z.initUse()
 		await z.InitRoutes()
-		z.app.listen(z.port, ()=>{
+		z.app.listen(z.port, ()=>{ // 第二個可選參數是IP地址
 			console.log(z.port)
 		})
 	}

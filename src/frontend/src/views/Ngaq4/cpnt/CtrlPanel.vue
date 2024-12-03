@@ -41,7 +41,7 @@ function set_page(){
 		<input type="checkbox" v-model="checkedTables[1]" id="japanese"><label for="japanese">日</label> -->
 		<!-- &nbsp;
 		<input type="checkbox" v-model="checkedTables[2]" id="latin"><label for="latin">拉</label> -->
-		
+
 		<!-- <p>checkedTables={{ checkedTables }}</p> -->
 		<!-- <button @click="ui.mkWordBox()">showWordBox</button>
 		<button @click="ui.rmWordBox()">hide</button> -->
