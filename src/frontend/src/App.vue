@@ -52,6 +52,7 @@ function startWorker(){
 <template>
 	<!-- <MyComponent :message="'11'"/> -->
 	<!-- <button @click="startWorker()">Start Worker</button> -->
+	
 	<Menu/>
 	<router-view></router-view>
 <!-- 	<br><br><br><br><br>

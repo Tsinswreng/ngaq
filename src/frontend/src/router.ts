@@ -10,6 +10,7 @@ import SignUp from '@views/SignUp/SignUp.vue'
 import Setttings from '@views/Settings/Settings.vue'
 import Voca3 from '@views/Voca3/Voca3.vue';
 import Ngaq4 from '@views/Ngaq4/Ngaq4.vue';
+import Manage4 from '@views/Manage4/Manage4.vue';
 
 /* interface Route{
 	path:string
@@ -45,6 +46,10 @@ const routes:RouteRecordRaw[] =
 	{
 		path: '/Manage',
 		component: Manage
+	},
+	{
+		path: '/Manage4',
+		component: Manage4
 	},
 	{
 		path: '/MultiMode',

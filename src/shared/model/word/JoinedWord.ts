@@ -144,6 +144,7 @@ w1 and w2 is not the same word`
 	 * @param w1 數據庫中既有ʹ詞
 	 * @param w2 待合入ʹ詞
 	 * @deprecated //TODO 考慮 順序不對應
+	 * @nousage
 	 */
 	static mergeProperty(w1:JoinedWord, w2:JoinedWord){
 		if(w1.textWord.text !== w2.textWord.text

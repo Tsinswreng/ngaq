@@ -87,7 +87,8 @@ function submitLogin(){
 
 .login button[type="submit"] {
 	padding: 10px;
-	background: #3b82f6;
+	//background: #3b82f6;
+	background: darkcyan;
 	color: white;
 	border: none;
 	//border-radius: 4px;
@@ -96,7 +97,8 @@ function submitLogin(){
 }
 
 .login button[type="submit"]:hover {
-	background: #2563eb;
+//	background: #2563eb;
+	background: green;
 }
 
 .signup-link {

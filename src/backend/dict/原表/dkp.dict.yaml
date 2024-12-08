@@ -662,9 +662,41 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 維	wuj	# bs
 惟	wi
 淮	wrˁi
-嘆	nʰˁans
-歎	nʰˁans
+
+漢	nʰˁans
+暵	nʰˁans
+𤳉	nʰˁans
+熯	nʰˁans
+𤅩	nʰˁans
+䎯	nʰˁans
+
+灘	nʰˁanʔ
+暵	nʰˁanʔ
+熯	nʰˁanʔ
+
+
+#難
+#𪇼
+#𩁚
+#𩁢
+
+歎	tʰˁans	# 从中古透母
+嘆	tʰˁans	# 从中古透母
+
+灘	tʰˁan	# 从中古透母
+嘆	tʰˁan	# 从中古透母
+擹	tʰˁan	# 从中古透母
+攤	tʰˁan	# 从中古透母
+
+#嘆	nʰˁans
+#歎	nʰˁans
+
 炭	lʰˁans
+湠	lʰˁans
+碳	lʰˁans
+𣁗	lʰˁans
+㛶	lʰˁans
+
 億	ʔək
 憶	ʔrək
 亦	jak
@@ -5500,7 +5532,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 #閣	krˁaks	# ts
 #們	mˁən	# ts
-漢	hˁans	# ts
+#漢	hˁans	# ts
 嘗	drAŋ	# ts
 #嘗	daŋ
 甞	drAŋ	# ts

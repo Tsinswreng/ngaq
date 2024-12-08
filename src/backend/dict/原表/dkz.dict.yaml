@@ -1,5 +1,5 @@
 
-#20241130231318153
+#20241203211927778
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -488,9 +488,26 @@ use_preset_vocabulary: true
 維	wuj	
 惟	wi	
 淮	wrˁi	
-嘆	nʰˁans	
-歎	nʰˁans	
+漢	nʰˁans	
+暵	nʰˁans	
+𤳉	nʰˁans	
+熯	nʰˁans	
+𤅩	nʰˁans	
+䎯	nʰˁans	
+灘	nʰˁanʔ	
+暵	nʰˁanʔ	
+熯	nʰˁanʔ	
+歎	tʰˁans	
+嘆	tʰˁans	
+灘	tʰˁan	
+嘆	tʰˁan	
+擹	tʰˁan	
+攤	tʰˁan	
 炭	lʰˁans	
+湠	lʰˁans	
+碳	lʰˁans	
+𣁗	lʰˁans	
+㛶	lʰˁans	
 億	ʔək	
 憶	ʔrək	
 亦	jak	
@@ -3303,7 +3320,7 @@ use_preset_vocabulary: true
 施	lʰaj	
 蝶	lˁep	
 疊	lˁip	
-墊	tˁims	
+墊	tˁims	1000%
 褶	lˁəp	
 牒	lˁep	
 鬧	nrˁews	
@@ -4171,7 +4188,6 @@ use_preset_vocabulary: true
 妝	dzraŋʔ	
 什	dəms	
 什	ɡrip	
-漢	hˁans	
 嘗	drAŋ	
 甞	drAŋ	
 嚐	drAŋs	
@@ -10180,21 +10196,14 @@ use_preset_vocabulary: true
 蜭	ɡˁəms	
 蜭	ɡˁəmʔ	
 䛞	ɡˁanʔ	
-暵	hˁans	
-暵	hˁanʔ	
 銲	ɡˁans	
-熯	hˁans	
-熯	hˁanʔ	
-熯	nenʔ	
 撼	ɡˁəmʔ	
 螒	ɡˁans	
 翰	ɡˁan	
 翰	ɡˁans	
-𤳉	hˁans	
 澣	ɡˁonʔ	
 憾	ɡˁəms	
 𡣊	ɡˁəmʔ	
-䎯	hˁans	
 駻	ɡˁans	
 䗣	ɡˁam	
 䗣	ɡˁams	
@@ -19926,15 +19935,7 @@ use_preset_vocabulary: true
 潬	dˁanʔ	
 䆱	tʰˁam	
 䆱	tʰˁams	
-擹	tʰˁan	
-攤	nˁans	
-攤	nˁanʔ	
-攤	tʰˁan	
-灘	hˁanʔ	
-灘	nˁans	
-灘	tʰˁan	
 癱	tʰˁan	
-𤅩	hˁans	
 𨝸	dˁəm	
 憛	tʰˁəms	
 壇	dˁan	
@@ -19976,13 +19977,9 @@ use_preset_vocabulary: true
 襢	dˁanʔ	
 襢	trens	
 襢	trenʔ	
-湠	tʰˁans	
-㛶	tʰˁans	
-𣁗	tʰˁans	
 僋	rˁəms	
 僋	tʰˁəm	
 僋	tʰˁəms	
-碳	tʰˁans	
 撢	lim	
 撢	tʰˁəm	
 撢	tʰˁəms	
