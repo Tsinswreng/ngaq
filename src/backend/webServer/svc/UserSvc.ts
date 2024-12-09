@@ -440,4 +440,22 @@ export class UserSvc{
 		const ans = await Cnt()
 		return ans.data[0]?._??0
 	}
+
+	async Rm_JoinedWord(userId:Id_t, wordId:Id_t){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Rm = await userDb.dbSrc.Fn_Del_joined_by_wordId()
+		await userDb.dbSrc.db.BeginTrans()
+		await Rm(wordId)
+		await userDb.dbSrc.db.Commit()
+	}
+
+	async Upd_property(userId:Id_t, prop:NRow.Property){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Upd = await userDb.dbSrc.Fn_Upd_property()
+		await userDb.dbSrc.db.BeginTrans()
+		await Upd(prop)
+		await userDb.dbSrc.db.Commit()
+	}
 }

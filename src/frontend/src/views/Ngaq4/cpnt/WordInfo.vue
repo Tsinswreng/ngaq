@@ -2,8 +2,7 @@
 <script setup lang="ts">
 import { $ } from '@shared/Ut';
 import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
-
-import {WebNgaqUi} from '../WebNgaqUi';
+import {WebNgaqUi} from '@views/Ngaq4/WebNgaqUi';
 import { ref } from 'vue';
 import { WebSvcWord } from '@ts/ngaq4/entities/WebSvcWord';
 import Tempus from '@shared/Tempus';
@@ -25,22 +24,6 @@ let fmt: typeof ui.fmt
 
 
 
-function eventsMark(ui:WebNgaqUi){
-	const sb = [] as str[]
-	function _(word:SvcWord){
-		for(let i = 0; i < word.learns.length; i++){
-			//const event = word.date__event[i].event
-			const event = word.learns[i].belong
-			const ua = WebSvcWord.eventMark(event)
-			sb.push(ua)
-		}
-		return sb.join('')
-	}
-	if(ui.curWord!= void 0){
-		return _(ui.curWord)
-	}
-	return ''
-}
 
 
 

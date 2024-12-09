@@ -5213,8 +5213,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 躲	tˁojʔ
 朵	tˁojʔ
 
-躲	zˁojs	# 避 輔助碼ᵗ亦同
-朵	zˁojʔ
+#躲	zˁojs	# 避 輔助碼ᵗ亦同
+#朵	zˁojʔ
+
+躲	trˁojs	# ts
+朵	trˁojʔ	# ts
 
 親	tsʰiŋ
 親	tsʰiŋs

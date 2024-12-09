@@ -237,11 +237,40 @@ export class UserCtrl extends BaseCtrl{
 				const ans = await z.svc.AddWordsFromTxt(userId, data)
 				
 				res.status(200).json(ans)
-				import('util').then(util=>{
-					console.log(util.inspect(ans, false, 8, true))//t
-				})
+				// import('util').then(util=>{
+				// 	console.log(util.inspect(ans, false, 8, true))//t
+				// })
 			} catch (err) {
 				z.onErr(err, res)
+			}
+		})
+
+		r.post("/rmWordById", async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){
+					return
+				}
+				const data = req.body
+				const id = data["id"]
+				const ans = await z.svc.Rm_JoinedWord(userId, id)
+				res.status(200).send('')
+			} catch (error) {
+				z.onErr(error,res)
+			}
+		})
+
+		r.post("/updProp", async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){
+					return
+				}
+				const prop = req.body as NRow.Property
+				await z.svc.Upd_property(userId, prop)
+				res.status(200).send('')
+			} catch (error) {
+				z.onErr(error,res)
 			}
 		})
 
@@ -269,6 +298,8 @@ export class UserCtrl extends BaseCtrl{
 				z.onErr(err, res)
 			}
 		})
+
+		
 
 		return r
 	}

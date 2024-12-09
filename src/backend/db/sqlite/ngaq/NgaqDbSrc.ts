@@ -400,6 +400,9 @@ WHERE ${tbl.col.wid}=?`
 		return DelLearn
 	}
 
+	/**
+	 * 刪除整個JoinedWord
+	 */
 	async Fn_Del_joined_by_wordId(){
 		const z = this
 		const DelTextWord = await z.Fn_Del_textWordById()
@@ -520,6 +523,27 @@ GROUP BY ${textWordTbl.col.belong}`
 	}
 
 
+	async Fn_Upd_property(){
+		const z = this
+		const tbls = z.tbls
+		const sql = 
+`UPDATE ${z.tbls.property.name}
+SET ${tbls.property.col.text} = ?
+, ${tbls.property.col.belong} = ?
+, ${tbls.property.col.mt} = ?
+WHERE ${tbls.property.col.id} = ?
+`
+		const Fn = async(prop: Row.Property)=>{
+			const stmt = await z.db.Prepare(sql)
+			const params = [prop.text, prop.belong, prop.mt, prop.id]
+			const res = await stmt.Run(params)
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
+
 
 
 }
@@ -629,6 +653,8 @@ class Qrys{
 `SELECT ${tbl.col.id} AS "${colAlias}" FROM ${tbl.name}`
 		return ans
 	}
+
+	
 
 
 
