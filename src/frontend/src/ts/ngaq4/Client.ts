@@ -117,6 +117,9 @@ class ErrReason{
 export class Client{
 
 	static inst = Client.new()
+	static getInst(){
+		return this.inst
+	}
 
 	get This(){return Client}
 	static new(){
@@ -251,6 +254,21 @@ export class Client{
 		const url = new URL(`${urlB.user}/recentLearnCnt`, z.baseUrl)
 		const got = await ApiRequest(url.toString(), GET)
 		return got.data
+	}
+
+	async Rm_wordById(id:int|str){
+		const z = this
+		id = id+''
+		const url = new URL(`${urlB.user}/rmWordById`, z.baseUrl)
+		const got = await ApiRequest(url.toString(), POST, {id:id})
+		return got.data
+	}
+
+	async Upd_prop(prop: NRow.Property){
+		const z = this
+		const url = new URL(`${urlB.user}/updProp`, z.baseUrl)
+		const resp = await ApiRequest(url.toString(), POST, prop)
+		return resp.data
 	}
 
 

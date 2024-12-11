@@ -245,6 +245,9 @@ export class UserCtrl extends BaseCtrl{
 			}
 		})
 
+		/**
+		 * {id: }
+		 */
 		r.post("/rmWordById", async(req, res)=>{
 			try {
 				const userId = await z.ValidateHeaders(req, res)

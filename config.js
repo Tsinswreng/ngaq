@@ -28,6 +28,7 @@
 			,imgDir:[
 				`C:\\Users\\lenovo\\Pictures\\屏保\\nizigenBito`
 				,`E:\\_\\視聽\\圖`
+				// `C:\\Users\\lenovo\\Pictures\\屏保\\scene`
 			]
 		}
 		//web服務器

@@ -1,16 +1,39 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
-import {Manage4} from "./Manage4.ts"
+import {Manage4} from "./Manage4"
 import WordInfo from "../Ngaq4/cpnt/WordInfo.vue"
 import {JoinedWord} from "@shared/model/word/JoinedWord"
 const manage = Manage4.getInst()
 const searchWord = ref('');
 const joinedWord:Ref<JoinedWord|undef> = ref()
+const neoProp = ref('')
 async function Search(){
 	// console.log(manage)
 	// console.log(Object.keys(manage))
 	const word = await manage.SeekWordByText(searchWord.value)
+	if(word == void 0){return}
 	joinedWord.value = word[0]
+}
+
+
+async function Del(){
+	const id = joinedWord.value?.textWord?.id
+	if(id == void 0){return }
+	await manage.Rm_Word(id)
+}
+
+
+async function Save(){
+	const prop = joinedWord.value?.propertys[0]
+	if(prop == void 0){return}
+	// console.log(prop)//t
+	// console.log(prop.text)//t
+	prop.text = neoProp.value
+	await manage.Upd_prop(prop)
+}
+
+async function Refresh(){
+	manage.reload()
 }
 
 // function makeAllChildrenEditable(parentElement) {
@@ -29,8 +52,9 @@ async function Search(){
 	search word by text:<br>
 	<input type="text" v-model="searchWord">
 	<button @click="Search">go</button>
-	<button @click="Search">del</button>
-	<button @click="Search">save</button>
+	<button @click="Del">del</button>
+	<button @click="Save">save</button>
+	<button @click="Refresh">🔄</button>
 
 	<div>
 		<span>id:</span>
@@ -39,6 +63,8 @@ async function Search(){
 		<hr>
 	
 		<span id="mean" class="editable" contenteditable="true">{{ joinedWord?.propertys[0]?.text }}</span>
+		<br>
+		<textarea type="text" id="mead" v-model="neoProp"></textarea>
 		<!-- <div v-for="(prop,i) in joinedWord?.propertys">
 			<span>{{prop.belong}}</span>
 			<hr>
@@ -77,8 +103,12 @@ input[type="text"]:focus{
 	outline: none;
 }
 
+textarea{
+	background: transparent;
+}
+
 button{
-	height: 5%;
+	height: 10%;
 	font-size: 16px;
 	padding: 1px;
 	background-color: darkcyan;
