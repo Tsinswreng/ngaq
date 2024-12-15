@@ -89,36 +89,37 @@ export class UserCtrl extends BaseCtrl{
 	// 	next();
 	// };
 
+	//通過旹返userId，否則返回null
 	/**
 	 * 
-	 * @param req 
-	 * @param res 
-	 * @returns 通過旹返userId，否則返回null
+	 * @param req 请求对象
+	 * @param res 响应对象
+	 * @returns 通过时返回userId，否则返回null
 	 */
 	async ValidateHeaders(req:Request, res:Response){
 		try {
 			const z = this
-			const userId = req.header('X-User-ID')
-			const authHead = req.header('authorization')
-			if(userId == void 0 || authHead == void 0){
-				res.status(401).json({error: 'Unauthorized'})
+			const userId = req.header('X-User-ID') //从请求头中获取userId
+			const authHead = req.header('authorization') //从请求头中获取Authorization (Bearer token)
+			if(userId == void 0 || authHead == void 0){ // 若userId或Authorization不存在
+				res.status(401).json({error: 'Unauthorized'}) // 响应401 Unauthorized
+				return null // 直接返回null
+			}
+			const bearer = 'Bearer ' // 前缀
+			const [gotBearer, token] = splitAtLength(authHead, bearer.length) // 切割Bearer和token
+			if(bearer !== gotBearer){ // 若前缀不匹配
+				res.status(401).json({error: 'Unauthorized: Invalid authorization header'}) // 响应401 Unauthorized
 				return null
 			}
-			const bearer = 'Bearer '
-			const [gotBearer, token] = splitAtLength(authHead, bearer.length)
-			if(bearer !== gotBearer){
-				res.status(401).json({error: 'Unauthorized: Invalid authorization header'})
+			const got = await z.svc.ValidateUserIdEtToken(userId, token) // 验证token
+			if(!got){ // 若验证失败
+				res.status(401).json({error: 'Unauthorized'}) // 响应401 Unauthorized
 				return null
 			}
-			const got = await z.svc.ValidateUserIdEtToken(userId, token)
-			if(!got){
-				res.status(401).json({error: 'Unauthorized'})
-				return null
-			}
-			return userId
+			return userId // 身份验证通过，返回userId
 		} catch (err) {
 			console.error(err)//t
-			res.status(401).json({error: 'Unauthorized'})
+			res.status(401).json({error: 'Unauthorized'}) // 响应401 Unauthorized
 			return null
 		}
 		return null

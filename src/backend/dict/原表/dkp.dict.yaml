@@ -848,6 +848,38 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 漓	raj
 縭	raj
 
+離	raj
+䍦	raj
+籬	raj
+醨	raj
+璃	raj
+𪖂	raj
+樆	raj
+𪅆	raj
+縭	raj
+褵	raj
+蘺	raj
+离	raj
+㰚	raj
+䅻	raj
+漓	raj
+灕	raj
+㷰	raj
+𧕮	raj
+攡	raj
+黐	raj
+𢟢	raj
+𢥗	raj
+謧	raj
+
+摛	lʰraj
+螭	lʰraj
+魑	lʰraj
+黐	lʰraj
+㷰	lʰraj
+离	lʰraj
+𡴥	lʰraj
+
 
 
 眾	tuŋs	# 舍他音
@@ -3023,6 +3055,13 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 
 滑	ɡrˁut
+猾	ɡrˁut
+䱻	ɡrˁut
+磆	ɡrˁut
+螖	ɡrˁut
+𧽌	ɡrˁut
+鶻	ɡrˁut
+
 幽	ʔiw
 銀	ŋrən
 畫	wrˁeks
@@ -4589,8 +4628,9 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 芹	ɡəl
 近	ɡəlʔ
 宙	lriws
-鏈	ran	0%
-鏈	kran	# ts
+#鏈	ran	0%
+#鏈	kran	# ts
+鏈	rans	# ts
 漣	ran
 漣	stran	# ts
 寡	kʷrˁaʔ

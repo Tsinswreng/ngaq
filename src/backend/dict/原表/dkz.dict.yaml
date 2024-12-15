@@ -1,5 +1,5 @@
 
-#20241209112459189
+#20241214213643602
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -2296,6 +2296,12 @@ use_preset_vocabulary: true
 颾	sˁu	
 㮴	sˁu	
 滑	ɡrˁut	
+猾	ɡrˁut	
+䱻	ɡrˁut	
+磆	ɡrˁut	
+螖	ɡrˁut	
+𧽌	ɡrˁut	
+鶻	ɡrˁut	
 幽	ʔiw	
 銀	ŋrən	
 畫	wrˁeks	
@@ -3534,8 +3540,7 @@ use_preset_vocabulary: true
 芹	ɡəl	
 近	ɡəlʔ	
 宙	lriws	
-鏈	ran	0%
-鏈	kran	
+鏈	rans	
 漣	ran	
 漣	stran	
 寡	kʷrˁaʔ	
@@ -9752,9 +9757,6 @@ use_preset_vocabulary: true
 盬	kˁaʔ	
 瀔	kˁok	
 𩌥	hrˁok	
-鶻	ɡʷrˁet	5%
-鶻	ɡˁut	
-鶻	kˁut	5%
 䶜	ɡˁok	
 䶜	kˁuk	
 𪕸	kˁok	
@@ -10758,15 +10760,10 @@ use_preset_vocabulary: true
 𩝨	hʷrˁe	
 蘤	wrojʔ	
 𤾸	wrojʔ	
-猾	ɡʷrˁet	
-磆	ɡʷrˁet	
 𦧠	ɡrˁot	
-螖	ɡʷrˁet	
-𧽌	ɡʷrˁet	
 䴳	ɡʷrˁet	
 𧑍	ɡrˁoj	
 𤁪	ɡrˁot	
-䱻	ɡʷrˁet	
 鷨	ɡrˁoj	
 鷨	hrˁoj	
 𩪲	ɡrˁet	

@@ -91,7 +91,14 @@ class WordColor{
 const wordColorRef = new WordColor()
 
 function fmtDate(tempus:Tempus){
-	return Tempus.format(tempus, 'YY.MM.DD')
+	//return Tempus.format(tempus, 'YY.MM.DD')
+	const day = 1000*60*60*24
+	const timeDiff = Tempus.diff_mills(
+		Tempus.new()
+		,tempus
+	)
+	const dayCnt = timeDiff/day
+	return dayCnt.toFixed(0)
 }
 
 

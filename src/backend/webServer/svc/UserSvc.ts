@@ -147,49 +147,51 @@ export class UserSvc{
 
 	/**
 	 * 
-	 * @param id 
-	 * @param password 
-	 * @returns session實例
+	 * @param id 用户id
+	 * @param password 密码明文
+	 * @returns session instance
 	 */
 	async LoginById(id:str|int, password:str){
 		const z = this
-		const Seek = await z.dbSrc.Fn_SeekPasswordByUserId()
-		const got = await Seek(id)
+		const Seek = await z.dbSrc.Fn_SeekPasswordByUserId() // 从数据访问层 获取 由用户id查询密码的函数
+		const got = await Seek(id) // 查询用户密码(密文)
 		const gotPswd = got?.data[0]
-		if(gotPswd == null){
-			throw Exception.for(z.errReasons.no_such_user)
+		if(gotPswd == null){ // 查询不到密码
+			throw Exception.for(z.errReasons.no_such_user) // 抛出异常: 无此用户
 		}
-		// 自動處理鹽
+		// 验证传入的密码明文和密文是否匹配(内部逻辑为 再用相同加密算法和盐值加密一次，再比较两个加密结果是否一致)
 		const b = await argon2.verify(
 			gotPswd.text,
 			password
-			//salt(password, gotPswd.salt)
+			//salt(password, gotPswd.salt) // 自动处理盐
 		)
-		if(!b){
-			throw Exception.for(z.errReasons.pswd_not_match)
+		if(!b){ // 密码不匹配
+			throw Exception.for(z.errReasons.pswd_not_match) // 抛出异常: 密码不匹配
 		}
 		
+		// 生成令牌
 		const token = jwt.sign(
-			{userId: gotPswd.fid+''}
-			, configInst.config.ngaq.server.jwtKey
-			, { expiresIn: '1d' }
+			{userId: gotPswd.fid+''} // 用户id
+			, configInst.config.ngaq.server.jwtKey // 密钥
+			, { expiresIn: '1d' } // 过期时间: 1天
 		)
+		// 生成session实例
 		const session = Mod.Session.new({
-			id:NaN
+			id:NaN // 稍后赋值
 			,belong: ""
-			,userId:gotPswd.fid
-			,token:token
-			,ct: Tempus.new()
-			,mt: Tempus.new()
-			,expirationTime: Tempus.new(
+			,userId:gotPswd.fid // 用户id
+			,token:token // 令牌
+			,ct: Tempus.new() // 创建时间
+			,mt: Tempus.new() // 修改时间
+			,expirationTime: Tempus.new( // 过期时间
 				Tempus.toUnixTime_mills(Tempus.new())+1000*60*60*24 // 1 day
 			)
 		})
-		const AddSession = await z.dbSrc.Fn_Add(e=>e.session)
-		const dbAns = await AddSession(session)
-		session.id = dbAns.lastId
-		z.emit(e=>e.login, id)
-		return session
+		const AddSession = await z.dbSrc.Fn_Add(e=>e.session) // 从数据访问层 获取 增加session的函数
+		const dbAns = await AddSession(session) // 增加session
+		session.id = dbAns.lastId // 填充session的id
+		z.emit(e=>e.login, id) // 触发登录事件
+		return session	// 返回session实例
 	}
 
 	/**

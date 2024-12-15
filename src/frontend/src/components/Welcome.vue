@@ -6,7 +6,8 @@
 
 <template>
 	<div class="welcome-box">
-		<h1>joːkoso!</h1>
+		<!-- <h1>joːkoso!</h1> -->
+		<h1>Welcome</h1>
 	</div>
 </template>
 

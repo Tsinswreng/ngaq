@@ -27,6 +27,15 @@ function set_page(){
 	ui.set_page(value)
 	ui.uiStuff.cardsBox_key.value++
 }
+
+function help(){
+	const msg = 
+`鼠标左键点击单词 标记为记得
+鼠标右键点击单词 标记为忘记
+鼠标中键点击单词: 保存学习记录并重新排序`
+	alert(msg)
+}
+
 </script>
 
 <template>
@@ -47,12 +56,12 @@ function set_page(){
 		<button @click="ui.rmWordBox()">hide</button> -->
 		<button @click="ui.prepareEtStart()">始</button>
 		<button @click="ui.Save()">存</button>
-		<button>改</button>
+		<!-- <button>改</button> -->
 		<button @click="ui.Restart()">🔄</button>
 		<button @click="ui.uiStuff.lockBg.value = !ui.uiStuff.lockBg.value">
 			{{ ui.uiStuff.lockBg.value==true?
-				'變景'
-				:'定景'
+				'✅bg'
+				:'❌bg'
 			}}
 		</button>
 		<!-- <button @click="recite.finalFilter()">比例</button> -->
@@ -69,10 +78,11 @@ function set_page(){
 		</span>
 		<span>
 			<!-- <input type="text" v-model="multiMode.paging.value" id="paging"> -->
-			<input type="text" id="paging" :value="LS.items.multiModePaging.get()">
+			<!-- <input type="text" id="paging" :value="LS.items.multiModePaging.get()"> -->
 		</span>
-		<button @click="set_page()">設頁</button>
-		<button @click="ui.toggleAddWordsBox()">加詞</button>
+		<!-- <button @click="set_page()">設頁</button> -->
+		<button @click="ui.toggleAddWordsBox()">➕</button>
+		<button @click="help()">❓</button>
 		<!-- <span>{{ isSaved? '':'未保存' }}</span> -->
 	</div>
 </template>

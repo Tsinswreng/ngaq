@@ -32,7 +32,8 @@ class Param{
 	}
 	/** 加ˡ事件ᵗ權重 */
 	addWeightDefault = 0xffffff
-	addWeight = [0x1, 0x7ff, 0xffff, 0xfffff]
+	addWeight = [0x1, 0xff, 0xffff, 0xfffff]
+	//addWeight = [0x1, 0x2, 0xfffffffff, 0xffffffffff] // temp 20241212223953
 	/** ˣ削弱ᵗ分母 */
 	debuffNumerator = 36*inMills.DAY
 	base = 20
@@ -228,8 +229,21 @@ class ForOne{
 			rec.reason.comment = 'final add bonus'
 			z.addRecord(rec)
 		}//~if(  z.getCurEvent().event === LearnBelong.add  )
-		else if(  z.getCurEvent().event === LearnBelong.rmb  ){
 
+		//加ʹ次ˋ大於三之詞 若逾幾日未學習 則增權重
+		else if(  z.getCurEvent().event === LearnBelong.rmb  ){
+			if(z.cnter.cnt_add >= 3){
+				const timeDiff = Tempus.diff_mills(
+					z.getNunc()
+					,z.getCurEvent().tempus
+				)
+				if(timeDiff > inMills.DAY*14){
+					z.cnter.weight = s.m(z.cnter.weight, 0xffff)
+					const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
+					rec.reason.comment = '重詞'
+					z.addRecord(rec)
+				}
+			}
 		}
 		else if(  z.getCurEvent().event === LearnBelong.fgt  ){
 			let bonus = z.calcBonusWhenFinalIsAdd()//借用
@@ -410,6 +424,12 @@ export class Tempus_EventCalc implements I_WordWeight<Word_t>{
 			const cnter = ForOne.run(w)
 			z.wordId__changeRec.set(w.id, cnter.records)
 		}
+		// words.map(e=>{
+		// 	if(e['belong']==="english" && e.weight != void 0){
+		// 		console.log(e)
+		// 		e.weight *= 0xffffffff
+		// 	}
+		// })//temp 20241212223943
 		words.sort((b,a)=>s.c($(a.weight), $(b.weight)))
 		return Promise.resolve(words)
 	}
