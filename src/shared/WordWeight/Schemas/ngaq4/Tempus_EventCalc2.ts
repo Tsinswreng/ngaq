@@ -237,8 +237,9 @@ class ForOne{
 					z.getNunc()
 					,z.getCurEvent().tempus
 				)
-				if(timeDiff > inMills.DAY*14){
-					z.cnter.weight = s.m(z.cnter.weight, 0xffff)
+				if(timeDiff > inMills.DAY*30){
+					const days = s.d(timeDiff, inMills.DAY)
+					z.cnter.weight = s.m(z.cnter.weight, s.m(days, 0xfff))
 					const rec = TempusEventRecord.new1(z.getCurEvent(), z.cnter.weight, 0)
 					rec.reason.comment = '重詞'
 					z.addRecord(rec)
