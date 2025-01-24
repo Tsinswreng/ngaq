@@ -309,6 +309,72 @@ WHERE ${tbl.col.text}=? AND ${tbl.col.belong}=?`
 		return Fn
 	}
 
+	/**
+	 * 由id改詞頭
+	 * @returns 
+	 */
+	async Fn_Upd_wordText_by_id(){
+		const z = this
+		const tbl = z.tbls.textWord
+		const sql = 
+`UPDATE ${tbl.name}
+SET ${tbl.col.text}=?
+WHERE ${tbl.col.id}=?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(id:Id_t, newText:str)=>{
+			//console.log(newText)//t
+			const res = await stmt.Run([newText, id])
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
+	/**
+	 * 改prop所屬之詞
+	 * 用于詞ˇʹ合併 等
+	 * @returns 
+	 */
+	async Fn_Upd_prop_Wid_by_id(){
+		const z = this
+		const tbl = z.tbls.property
+		const sql = 
+`UPDATE ${tbl.name}
+SET ${tbl.col.wid}=?
+WHERE ${tbl.col.id}=?`
+		const stmt = await z.db.Prepare(sql)
+		/**
+		 * @param propId
+		 */
+		const Fn = async(propId:Id_t, newWid:Id_t)=>{
+			const res = await stmt.Run([newWid, propId])
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
+	/**
+	 * 改learn所屬之詞
+	 * 用于詞ˇʹ合併 等
+	 * @returns 
+	 */
+	async Fn_Upd_learn_Wid_by_id(){
+		const z = this
+		const tbl = z.tbls.learn
+		const sql = 
+`UPDATE ${tbl.name}
+SET ${tbl.col.wid}=?
+WHERE ${tbl.col.id}=?`
+		const stmt = await z.db.Prepare(sql)
+		const Fn = async(learnId:Id_t, newWid:Id_t)=>{
+			const res = await stmt.Run([newWid, learnId])
+			const ua = QryAns.fromRunResult(res)
+			return ua
+		}
+		return Fn
+	}
+
 
 
 	/**
@@ -418,6 +484,76 @@ WHERE ${tbl.col.wid}=?`
 			const ua1 = await DelTextWord(id)
 			ans.push([ua1])
 			return ans
+		}
+		return Fn
+	}
+
+	
+	/**
+	 * 改詞頭、若新詞頭已存則與彼詞合併
+	 * @returns 
+	 */
+	async Fn_Upd_WordText_by_id(){
+		const z = this
+		const SeekJoinedRowByTextEtBelong = await z.Fn_SeekJoinedRowByTextEtBelong()
+		const SeekJoinedRowById = await z.Fn_SeekJoinedRowById()
+		const UpdWordTextById = await z.Fn_Upd_wordText_by_id()
+		const MergeJoinedRow = await z.Fn_Merge_JoinedRow()
+		const Fn = async(id:Id_t, neoWordText:str)=>{
+			//console.log(id, neoWordText)+
+			const oldWord = await SeekJoinedRowById(id)
+			if(oldWord == null){
+				throw new Error(`id ${id} not found`)
+			}
+			const oldWordText = oldWord.textWord.text
+			const conflictWordWithSameText = await SeekJoinedRowByTextEtBelong(
+				neoWordText
+				,oldWord.textWord.belong
+			)
+			
+			//console.log(conflictWordWithSameText)
+			if(conflictWordWithSameText.length === 0){//不衝突
+				await UpdWordTextById(id, neoWordText)
+				return
+			}else{
+				if(conflictWordWithSameText.length !== 1){
+					throw new Error(`conflictWordWithSameText.length !== 1`)
+				}
+				const targetWord = conflictWordWithSameText[0]
+				await MergeJoinedRow(oldWord, targetWord)
+			}
+		}
+		return Fn
+	}
+
+	/**
+	 * 合併JoinedRow
+	 * 把src之 propertys 與 learns 變成 tar之 propertys 與 learns
+	 * 然後刪除src
+	 */
+	async Fn_Merge_JoinedRow(){
+		const z = this
+		const UpdPropWidById = await z.Fn_Upd_prop_Wid_by_id()
+		const UpdLearnWidById = await z.Fn_Upd_learn_Wid_by_id()
+		const DelJoinedWordById = await z.Fn_Del_joined_by_wordId()
+		const Fn = async(
+			src:JoinedRow
+			,tar:JoinedRow
+		)=>{
+			if(src.textWord.id === tar.textWord.id){
+				return
+			}
+			for(const prop of src.propertys){
+				await UpdPropWidById(
+					prop.id, tar.textWord.id
+				)
+			}
+			for(const learn of src.learns){
+				await UpdLearnWidById(
+					learn.id, tar.textWord.id
+				)
+			}
+			await DelJoinedWordById(src.textWord.id)
 		}
 		return Fn
 	}

@@ -56,12 +56,17 @@ function mean(ui:WebNgaqUi){
 		<div class="wordInfo" v-if="ui.uiStuff.isShowWordInfo.value"> <!-- 要寫.value -->
 			<!-- <CtrlPanel class="CtrlPanel" @CtrlPanel:start="ui.uiStuff.isShowCardBox.value=true;"></CtrlPanel> -->
 			<!-- <div>{{ ui.curWord?.word.table??'' + ui.curWord?.word.id??'' }}</div> -->
-			<div>{{ (ui.curWord?.belong??"")+ui.curWord?.id }}</div>
+			<div>
+				<span contenteditable id="w-id">{{ ui.curWord?.id }}</span>
+				<span>{{ (ui.curWord?.belong??"")}}</span>
+			</div>
 			<div class="w-eventSymbols"> {{ fmt.eventsMark() }} </div>
 			<!-- <div>MemorizeWord.style_getAddDates(wordB_nn)</div> -->
 			<div>{{ fmt.fmtAddDates() }}</div>
 			<hr class="w-hr">
-			<div class="w-shape">{{ ui.curWord?.wordText }}</div>
+			<div class="w-shape" id="w-shape" contenteditable>
+				{{ ui.curWord?.wordText }}
+			</div>
 			<div>
 				<!-- <span>{{ ui.curWord?.word.annotation.length?'':ui.curWord?.word.annotation }}</span> -->
 				<!-- <span> {{ annotation(ui) }} </span>
@@ -69,7 +74,9 @@ function mean(ui:WebNgaqUi){
 				<span>{{ fmt.fmtProp() }}</span>
 			</div>
 			<hr class="w-hr">
-			<div class="w-mean">{{ fmt.mean() }}</div>
+			<div class="w-mean" id="w-mean" contenteditable>
+				{{ fmt.mean() }}
+			</div>
 		</div>
 	</div>
 </template>

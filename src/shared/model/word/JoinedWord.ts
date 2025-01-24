@@ -8,7 +8,10 @@ import { PubNonFuncProp } from '@shared/Type'
 import type * as WordIf from '@shared/IF/WordIf'
 import {diffArrIntoMap} from '@shared/tools/diffArrIntoMap'
 
-export class JoinedWord implements WordIf.I_propertys, WordIf.I_learns{
+export class JoinedWord implements
+	WordIf.I_propertys
+	, WordIf.I_learns
+{
 	protected constructor(){}
 
 	protected __init__(...args:Param<typeof JoinedWord.new>){

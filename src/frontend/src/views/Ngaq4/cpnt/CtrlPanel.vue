@@ -82,7 +82,10 @@ function help(){
 		</span>
 		<!-- <button @click="set_page()">設頁</button> -->
 		<button @click="ui.toggleAddWordsBox()">➕</button>
-		<button @click="help()">❓</button>
+		<button @click="ui.Upd_wordText()">改詞頭</button>
+		<button @click="ui.Add_Prop()">增鍵值</button>
+		<!-- <button @click="help()">❓</button> -->
+
 		<!-- <span>{{ isSaved? '':'未保存' }}</span> -->
 	</div>
 </template>

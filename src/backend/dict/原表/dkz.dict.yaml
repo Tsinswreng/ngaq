@@ -1,5 +1,5 @@
 
-#20241229145131876
+#20250115103729769
 # Rime dictionary
 # encoding: utf-8
 ---
@@ -15,6 +15,7 @@ use_preset_vocabulary: true
 征	teŋ	10000%
 旨	kiʔ	10000%
 趣	tsʰos	10000%
+蔽	pets	10000%
 ⿰	;;;	
 ⿱	;;;	
 ⿲	;;;	
@@ -1107,6 +1108,7 @@ use_preset_vocabulary: true
 届	krˁits	
 捲	kronʔ	
 卷	krons	
+巻	krons	
 圈	kʰron	
 獲	ɡʷrˁak	
 獲	ɡʷrˁek	
@@ -1776,7 +1778,7 @@ use_preset_vocabulary: true
 幅	pək	
 貧	brən	
 奪	dˁot	
-奪	lˁot	0%
+奪	lˁot	
 𡙜	lˁot	
 敓	lˁot	
 敚	lˁot	
@@ -2123,6 +2125,12 @@ use_preset_vocabulary: true
 笆	brˁaʔ	
 笆	prˁa	
 跁	brˁaʔ	
+葩	pʰrˁa	
+妑	pʰrˁa	
+舥	pʰrˁa	
+蚆	pʰrˁa	
+𧣃	pʰrˁa	
+蚆	prˁa	
 罷	brˁajʔ	
 擺	prˁajʔ	
 䇑	brˁeʔ	
@@ -2130,6 +2138,7 @@ use_preset_vocabulary: true
 㔥	brˁajʔ	
 䥯	brˁajʔ	
 疲	braj	
+頗	pʰrˁaj	
 昊	ɡˁuʔ	
 皓	ɡˁuʔ	
 浩	ɡˁuʔ	
@@ -2955,9 +2964,11 @@ use_preset_vocabulary: true
 否	pəʔ	
 痞	brəʔ	
 永	wraŋʔ	
-詠	wraŋs	
+詠	wraŋs	0%
+詠	ŋraŋs	
 咏	wraŋs	
-泳	wraŋs	
+泳	wraŋs	0%
+泳	straŋs	
 談	lˁam	
 痰	lˁam	
 郯	lˁam	
@@ -3680,6 +3691,7 @@ use_preset_vocabulary: true
 姢	ʔʷen	
 蜎	ʔʷen	
 悁	ʔʷen	
+塾	tʰuk	
 繞	ŋews	
 饒	ŋew	
 橈	ŋew	
@@ -3818,6 +3830,7 @@ use_preset_vocabulary: true
 桅	kojʔ	
 佹	kojʔ	
 扮	prˁəns	
+頒	prˁən	
 只	teʔ	
 只	kejʔ	
 咫	keʔ	
@@ -3911,7 +3924,6 @@ use_preset_vocabulary: true
 俞	lo	
 逾	tʰos	
 逾	lo	
-陝	lʰemʔ	
 硬	ŋrˁeŋs	
 硬	ŋrˁaŋs	
 垣	wal	
@@ -4245,6 +4257,8 @@ use_preset_vocabulary: true
 沽	stˁas	
 菇	kˁa	
 菇	tsʰˁa	
+佈	pˁas	0%
+佈	nʰˁas	
 鄉	nʰaŋ	
 鄉	hAŋ	
 郷	hAŋ	
@@ -4345,9 +4359,9 @@ use_preset_vocabulary: true
 購	prˁos	
 車	kʰra	
 車	kʰˡa	
-支	ke	
-枝	kej	
-肢	kej	
+支	ke	1000%
+枝	ke	
+肢	ke	
 徒	dˁa	0%
 徒	drˁa	
 屠	dˁa	0%
@@ -4979,6 +4993,14 @@ use_preset_vocabulary: true
 菱	rəŋ	
 棱	rˁəŋ	
 棱	mrəŋʔ	
+峽	ɡrˁep	0%
+峽	srˁep	
+狹	ɡrˁep	0%
+狹	kʰʷrˁep	
+俠	ɡˁep	0%
+俠	nrˁep	
+挾	ɡˁep	0%
+挾	nʰrˁep	
 慕	zˁaks	
 慕	mˁas	
  		
@@ -5236,8 +5258,6 @@ use_preset_vocabulary: true
 㿬	prˁaj	
 捌	prˁat	
 捌	prˁet	
-蚆	pʰrˁaj	
-蚆	prˁaj	
 哵	prˁet	
 釟	prˁet	
 羓	prˁaj	
@@ -5309,8 +5329,6 @@ use_preset_vocabulary: true
 𠦒	pit	
 𠦒	pˁan	
 攽	prən	
-頒	bən	2%
-頒	prˁan	
 斒	prˁan	
 斒	prˁen	
 𠔯	prˁan	
@@ -5665,7 +5683,6 @@ use_preset_vocabulary: true
 𢳋	peʔ	
 䩛	bit	
 鞁	bajs	
-蔽	pets	
 㮿	pit	
 㪤	pit	
 稫	pʰək	
@@ -6148,7 +6165,6 @@ use_preset_vocabulary: true
 𪇰	pˁuk	
 布	pˁas	
 步	bˁas	
-佈	pˁas	
 抪	pˁa	
 抪	pˁas	
 怖	pʰˁas	
@@ -16352,12 +16368,8 @@ use_preset_vocabulary: true
 慪	ʔˁos	
 慪	ʔˁoʔ	
 𥐙	pʰrˁet	
-妑	pʰrˁaj	
 趴	pʰrˁet	
-舥	pʰrˁaj	
 𨋐	pʰrˁet	
-𧣃	pʰrˁaj	
-葩	pʰrˁaj	
 掱	brˁaj	
 筢	brˁaj	
 𪗔	pʰrˁet	
@@ -18789,6 +18801,7 @@ use_preset_vocabulary: true
 㚒	ɕek	
 㚒	ɕamʔ	
 炶	ɡˁam	
+陝	ɕamʔ	
 𧴭	ɕamʔ	
 𧵏	ɕamʔ	
 𡟨	ɕamʔ	
@@ -19273,7 +19286,6 @@ use_preset_vocabulary: true
 秫	ʑut	
 孰	duk	
 婌	duk	
-塾	duk	
 䴰	ʑok	
 㒔	dˁok	
 㒔	dok	
@@ -21650,11 +21662,8 @@ use_preset_vocabulary: true
 𢘉	ɡrˁap	
 柙	ɡrˁap	
 𠩘	krˁap	
-俠	ɡˁep	
 炠	ɡrˁap	
 陜	ɡrˁep	
-峽	ɡrˁep	
-狹	ɡrˁep	
 𢈙	ɡrˁep	
 𧆥	ɡrˁap	
 翈	ɡrˁap	
@@ -22076,7 +22085,6 @@ use_preset_vocabulary: true
 𠗉	ɡˁep	
 𠗉	ɡrˁap	
 㢵	hap	
-挾	ɡˁep	
 𤙒	ɡˁep	
 𢓬	hrˁə	
 衺	zæ	

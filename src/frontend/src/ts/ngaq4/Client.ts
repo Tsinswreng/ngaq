@@ -271,6 +271,22 @@ export class Client{
 		return resp.data
 	}
 
+	//[2025-01-24T17:16:02.604+08:00_W4-5]
+	async Upd_wordText(textWord:NRow.TextWord){
+		const z = this
+		const url = new URL(`${urlB.user}/updWordText`, z.baseUrl)
+		const resp = await ApiRequest(url.toString(), POST, textWord)
+		return resp.data
+	}
+	
+	//[2025-01-24T17:16:44.350+08:00_W4-5]
+	async Add_Prop(prop: NRow.Property){
+		const z = this
+		const url = new URL(`${urlB.user}/addProp`, z.baseUrl)
+		const resp = await ApiRequest(url.toString(), POST, prop)
+		return resp.data
+	}
+
 
 
 /** @deprecated ------------------------------------------------------------------------*/

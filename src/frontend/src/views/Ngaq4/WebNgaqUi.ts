@@ -15,6 +15,10 @@ import { NgaqLex } from "@shared/Lex/ngaqLex/NgaqLex"
 import { AddWordsSvc } from "@ts/ngaq4/AddWordsSvc"
 import Tempus from "@shared/Tempus"
 import {SvcWord} from '@shared/logic/memorizeWord/SvcWord'
+
+import * as NMod from '@shared/model/word/NgaqModels'
+import * as NRow from '@shared/model/word/NgaqRows'
+
 const WordEvent = LearnBelong
 
 const EV = Le.Event.new.bind(Le.Event)
@@ -378,6 +382,70 @@ export class WebNgaqUi{
 		return z.bgImg.setBg_Img(img)
 	}
 
+	//[2025-01-24T17:35:05.593+08:00_W4-5]
+	async Upd_wordText(){
+		const z = this
+		const neoText = document.getElementById('w-shape')?.innerText??""
+		const idStr = document.getElementById('w-id')?.innerText??""
+		const id = parseInt(idStr)
+		if(neoText === "" || isNaN(id)){
+			return
+		}
+		const textWord = NMod.TextWord.new({
+			id:id
+			,text:neoText
+			,belong:''//無關
+			,ct:Tempus.new()//無關
+			,mt:Tempus.new()//無關
+		})
+		textWord.id = id
+		await Client.getInst().Upd_wordText(
+			textWord.toRow()
+		)
+	}
+
+	async Add_Prop(){
+		const z = this
+		const text = document.getElementById('w-mean')?.innerText??""
+		const idStr = document.getElementById('w-id')?.innerText??""
+		const wordId = parseInt(idStr)
+		
+		let [propKey, propVal] = splitStringByNewline(text)
+		propKey = propKey.trim()
+		propVal = propVal.trim()
+		if(propKey === "" || isNaN(wordId)){
+			return
+		}
+
+		const prop = NMod.Property.new({
+			id:NaN
+			,belong: propKey
+			,ct: Tempus.new()
+			,mt: Tempus.new()
+			,text: propVal
+			,wid: wordId
+		})
+		
+		await Client.getInst().Add_Prop(
+			prop.toRow()
+		)
+		return
+
+		//ts 幫我寫一個函數、傳入一個字符串、按第一個\n潙界、把字符串分潙兩半。返回[string, string]
+		function splitStringByNewline(input: string): [string, string] {
+			const index = input.indexOf('\n'); // 找到第一個 \n 的索引
+			if (index === -1) {
+				// 如果沒有找到 \n，返回原字符串和空字符串
+				return [input, ''];
+			}
+		
+			const firstPart = input.substring(0, index); // 獲取第一部分
+			const secondPart = input.substring(index + 1); // 獲取第二部分（從 \n 之後開始）
+		
+			return [firstPart, secondPart]; // 返回結果
+		}
+	}
+
 	protected _initSvcListeners(){
 		const z = this
 		const recErr = new Error()
@@ -653,6 +721,10 @@ class Fmt{
 		}
 		return ''
 	}
+
+
+
+
 
 
 }

@@ -1,3 +1,5 @@
+/** @deprecated */
+
 //import _ from 'lodash';
 //export type { IVocaRow } from 'backend/VocaSqlite';
 //import "reflect-metadata"
@@ -16,7 +18,7 @@ import type { JoinedWordOld } from './JoinedWordOld';
 // const $n = sros.createNumber.bind(sros)
 
 
-
+/** @deprecated */
 class WordRows{
 	protected constructor(){}
 	protected __init__(...args: Parameters<typeof WordRows.new>){
@@ -64,14 +66,14 @@ const Ut = {
 // 	RMB=1, // remember
 // 	FGT=-1	// forget
 // }
-
+/** @deprecated */
 export class WordEvent{
 	protected constructor(){}
 	static readonly ADD = 0
 	static readonly RMB = 1
 	static readonly FGT = -1
 }
-
+/** @deprecated */
 export class Word{
 	/**
 	 * 空例
@@ -418,7 +420,10 @@ export class Word{
 /**
  * 日期對事件
  */
+/** @deprecated */
 export const Tempus_Event = Word.Tempus_Event
+/** @deprecated */
 export type Tempus_Event = InstanceType_<typeof Word.Tempus_Event>
-
+/** @deprecated */
 export{WordPriority as Priority}
+

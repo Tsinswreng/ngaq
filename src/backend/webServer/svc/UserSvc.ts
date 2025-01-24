@@ -460,4 +460,25 @@ export class UserSvc{
 		await Upd(prop)
 		await userDb.dbSrc.db.Commit()
 	}
+
+	async Upd_wordText(userId:Id_t, wordId:Id_t, neoText:str){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const Upd = await userDb.dbSrc.Fn_Upd_WordText_by_id()
+		//console.log(arguments)//t+
+		await userDb.dbSrc.db.BeginTrans()
+		await Upd(wordId, neoText)
+		await userDb.dbSrc.db.Commit()
+	}
+
+	async Add_Prop(userId:Id_t, prop:NRow.Property){
+		const z = this
+		const userDb = await z.GetUserDbByUserId(userId)
+		const AddRow = await userDb.dbSrc.GetFn_addRow(e=>e.property)
+		await userDb.dbSrc.db.BeginTrans()
+		await AddRow(prop)
+		await userDb.dbSrc.db.Commit()
+	}
+
+	
 }

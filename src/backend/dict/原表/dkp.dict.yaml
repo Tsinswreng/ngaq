@@ -37,6 +37,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 征	teŋ	10000%
 旨	kiʔ	10000%
 趣	tsʰos	10000%
+蔽	pets	10000%
 #</reset-weight>
 ⿰	;;;
 ⿱	;;;
@@ -98,6 +99,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 潙	wraj	# ts
 蔿	wrajs	# ts
 的	tˁewks
+旳	tˁewks
 玓	tˁewk
 魡	tˁewk
 扚	tˁewʔ
@@ -801,6 +803,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 但	dˁans	# 舍他音
 #彈	dˁan	# 舍他音
 對	tˁups
+対	tˁups
+轛	tˁups
+𡭊	tˁups
+𣝉	tˁups
+
 沒	mˁət	# ms
 歿	mˁut	# bs
 竟	kraŋs
@@ -1469,8 +1476,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 屆	krˁits
 届	krˁits
 
+
+
+
 捲	kronʔ
 卷	krons
+巻	krons
 圈	kʰron
 
 獲	ɡʷrˁak
@@ -2372,7 +2383,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 
 貧	brən
 奪	dˁot	# ts
-奪	lˁot	0%
+奪	lˁot
 𡙜	lˁot
 敓	lˁot
 敚	lˁot
@@ -2808,6 +2819,12 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 笆	brˁaʔ
 笆	prˁa
 跁	brˁaʔ
+葩	pʰrˁa
+妑	pʰrˁa
+舥	pʰrˁa
+蚆	pʰrˁa
+𧣃	pʰrˁa
+蚆	prˁa
 
 罷	brˁajʔ	# 薄蟹切: 止也休也 
 #罷	braj	# 倦也亦止也
@@ -2819,6 +2836,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 䥯	brˁajʔ
 
 疲	braj	# 加r
+頗	pʰrˁaj	# ts
 
 昊	ɡˁuʔ
 皓	ɡˁuʔ
@@ -3861,9 +3879,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 否	pəʔ
 痞	brəʔ	# ptl
 永	wraŋʔ
-詠	wraŋs
+詠	wraŋs	0%
+詠	ŋraŋs	# ts
 咏	wraŋs
-泳	wraŋs
+泳	wraŋs	0%
+泳	straŋs	# ts
 
 談	lˁam
 痰	lˁam
@@ -4764,6 +4784,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 蜎	ʔʷen
 悁	ʔʷen
 
+
+塾	tʰuk	# ts
+
+
 繞	ŋews	# 舍他音
 饒	ŋew
 橈	ŋew
@@ -4945,6 +4969,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 佹	kojʔ
 
 扮	prˁəns
+頒	prˁən	# ts
 
 只	teʔ	#ts
 只	kejʔ
@@ -5053,7 +5078,7 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 俞	lo
 逾	tʰos	# ts
 逾	lo
-陝	lʰemʔ	# ts
+
 硬	ŋrˁeŋs
 硬	ŋrˁaŋs
 垣	wal
@@ -5599,6 +5624,10 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 沽	stˁas	# ts
 菇	kˁa
 菇	tsʰˁa	# ts
+
+佈	pˁas	0%
+佈	nʰˁas	# ts
+
 鄉	nʰaŋ	# ts
 鄉	hAŋ	# ptl
 郷	hAŋ	# ptl
@@ -5769,9 +5798,11 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 車	kʰra	# ts
 車	kʰˡa
 
-支	ke
-枝	kej	# ts
-肢	kej	# ts
+支	ke	1000%
+枝	ke
+肢	ke
+#枝	kej	# ts
+#肢	kej	# ts
 
 徒	dˁa	0%
 徒	drˁa	# ts
@@ -7812,6 +7843,17 @@ import_tables:  #加載其它外部碼表 似不支持多級引入
 菱	rəŋ
 棱	rˁəŋ
 棱	mrəŋʔ	# ts
+
+
+#陝	lʰemʔ	# ts 異於「陜」
+峽	ɡrˁep	0%
+峽	srˁep	# ts
+狹	ɡrˁep	0%
+狹	kʰʷrˁep	# ts
+俠	ɡˁep	0%
+俠	nrˁep	# ts
+挾	ɡˁep	0%
+挾	nʰrˁep	# ts
 
 
 

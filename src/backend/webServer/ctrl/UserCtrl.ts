@@ -278,6 +278,47 @@ export class UserCtrl extends BaseCtrl{
 			}
 		})
 
+		//[2025-01-24T17:13:24.387+08:00_W4-5]
+		r.post("/updWordText", async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){
+					return
+				}
+				//const prop = req.body as NRow.Property
+				const body = req.body as NRow.TextWord
+				//console.log(body)//t +
+				const neoText = body.text
+				const wordId = body.id
+				await z.svc.Upd_wordText(userId, wordId, neoText)
+				res.status(200).send('')
+			} catch (error) {
+				z.onErr(error,res)
+			}
+		})
+
+		//[2025-01-24T17:13:24.387+08:00_W4-5]
+		r.post("/addProp", async(req, res)=>{
+			try {
+				const userId = await z.ValidateHeaders(req, res)
+				if(userId == null){
+					return
+				}
+				//const prop = req.body as NRow.Property
+				const body = req.body as NRow.Property
+				await z.svc.Add_Prop(userId, body)
+				res.status(200).send('')
+			} catch (error) {
+				z.onErr(error,res)
+			}
+		})
+
+	
+
+		
+
+
+
 		r.get('/randomImg', async(req, res)=>{
 			try {
 				const userId = await z.ValidateHeaders(req, res)
