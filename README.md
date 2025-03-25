@@ -1,6 +1,6 @@
 # ngaq (ŋaʔ)
 
-**Warning: This project has not been done yet. It is still unusable.**
+
 
 ## 開發文檔 dev doc
 
